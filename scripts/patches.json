@@ -1,0 +1,18 @@
+{
+  "overrides": {
+    "AUS": { "waterAccess": "coastal" },
+    "LKA": { "waterAccess": "island", "borders": [] }
+  },
+  "additions": [
+    {
+      "code": "XKX",
+      "nameCanonical": "Kosovo",
+      "flagEmoji": "🇽🇰",
+      "continent": "europe",
+      "waterAccess": "landlocked",
+      "borders": ["ALB", "MKD", "MNE", "SRB"],
+      "areaKm2": 10887,
+      "officialLanguages": ["sq", "sr"]
+    }
+  ]
+}

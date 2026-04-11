@@ -1,0 +1,3296 @@
+[
+  {
+    "code": "AFG",
+    "nameCanonical": "Afghanistan",
+    "flagEmoji": "🇦🇫",
+    "continent": "asia",
+    "waterAccess": "landlocked",
+    "borders": [
+      "IRN",
+      "PAK",
+      "TKM",
+      "UZB",
+      "TJK",
+      "CHN"
+    ],
+    "areaKm2": 652230,
+    "officialLanguages": [
+      "prs",
+      "ps",
+      "tk"
+    ]
+  },
+  {
+    "code": "AGO",
+    "nameCanonical": "Angola",
+    "flagEmoji": "🇦🇴",
+    "continent": "africa",
+    "waterAccess": "coastal",
+    "borders": [
+      "COG",
+      "COD",
+      "ZMB",
+      "NAM"
+    ],
+    "areaKm2": 1246700,
+    "officialLanguages": [
+      "pt"
+    ]
+  },
+  {
+    "code": "ALB",
+    "nameCanonical": "Albania",
+    "flagEmoji": "🇦🇱",
+    "continent": "europe",
+    "waterAccess": "coastal",
+    "borders": [
+      "MNE",
+      "GRC",
+      "MKD",
+      "UNK"
+    ],
+    "areaKm2": 28748,
+    "officialLanguages": [
+      "sq"
+    ]
+  },
+  {
+    "code": "AND",
+    "nameCanonical": "Andorra",
+    "flagEmoji": "🇦🇩",
+    "continent": "europe",
+    "waterAccess": "landlocked",
+    "borders": [
+      "FRA",
+      "ESP"
+    ],
+    "areaKm2": 468,
+    "officialLanguages": [
+      "ca"
+    ]
+  },
+  {
+    "code": "ARE",
+    "nameCanonical": "United Arab Emirates",
+    "flagEmoji": "🇦🇪",
+    "continent": "asia",
+    "waterAccess": "coastal",
+    "borders": [
+      "OMN",
+      "SAU"
+    ],
+    "areaKm2": 83600,
+    "officialLanguages": [
+      "ar"
+    ]
+  },
+  {
+    "code": "ARG",
+    "nameCanonical": "Argentina",
+    "flagEmoji": "🇦🇷",
+    "continent": "south_america",
+    "waterAccess": "coastal",
+    "borders": [
+      "BOL",
+      "BRA",
+      "CHL",
+      "PRY",
+      "URY"
+    ],
+    "areaKm2": 2780400,
+    "officialLanguages": [
+      "gn",
+      "es"
+    ]
+  },
+  {
+    "code": "ARM",
+    "nameCanonical": "Armenia",
+    "flagEmoji": "🇦🇲",
+    "continent": "asia",
+    "waterAccess": "landlocked",
+    "borders": [
+      "AZE",
+      "GEO",
+      "IRN",
+      "TUR"
+    ],
+    "areaKm2": 29743,
+    "officialLanguages": [
+      "hy"
+    ]
+  },
+  {
+    "code": "ATG",
+    "nameCanonical": "Antigua and Barbuda",
+    "flagEmoji": "🇦🇬",
+    "continent": "north_america",
+    "waterAccess": "island",
+    "borders": [],
+    "areaKm2": 442,
+    "officialLanguages": [
+      "en"
+    ]
+  },
+  {
+    "code": "AUS",
+    "nameCanonical": "Australia",
+    "flagEmoji": "🇦🇺",
+    "continent": "oceania",
+    "waterAccess": "coastal",
+    "borders": [],
+    "areaKm2": 7692024,
+    "officialLanguages": [
+      "en"
+    ]
+  },
+  {
+    "code": "AUT",
+    "nameCanonical": "Austria",
+    "flagEmoji": "🇦🇹",
+    "continent": "europe",
+    "waterAccess": "landlocked",
+    "borders": [
+      "CZE",
+      "DEU",
+      "HUN",
+      "ITA",
+      "LIE",
+      "SVK",
+      "SVN",
+      "CHE"
+    ],
+    "areaKm2": 83871,
+    "officialLanguages": [
+      "bar"
+    ]
+  },
+  {
+    "code": "AZE",
+    "nameCanonical": "Azerbaijan",
+    "flagEmoji": "🇦🇿",
+    "continent": "asia",
+    "waterAccess": "landlocked",
+    "borders": [
+      "ARM",
+      "GEO",
+      "IRN",
+      "RUS",
+      "TUR"
+    ],
+    "areaKm2": 86600,
+    "officialLanguages": [
+      "az",
+      "ru"
+    ]
+  },
+  {
+    "code": "BDI",
+    "nameCanonical": "Burundi",
+    "flagEmoji": "🇧🇮",
+    "continent": "africa",
+    "waterAccess": "landlocked",
+    "borders": [
+      "COD",
+      "RWA",
+      "TZA"
+    ],
+    "areaKm2": 27834,
+    "officialLanguages": [
+      "fr",
+      "rn"
+    ]
+  },
+  {
+    "code": "BEL",
+    "nameCanonical": "Belgium",
+    "flagEmoji": "🇧🇪",
+    "continent": "europe",
+    "waterAccess": "coastal",
+    "borders": [
+      "FRA",
+      "DEU",
+      "LUX",
+      "NLD"
+    ],
+    "areaKm2": 30528,
+    "officialLanguages": [
+      "de",
+      "fr",
+      "nl"
+    ]
+  },
+  {
+    "code": "BEN",
+    "nameCanonical": "Benin",
+    "flagEmoji": "🇧🇯",
+    "continent": "africa",
+    "waterAccess": "coastal",
+    "borders": [
+      "BFA",
+      "NER",
+      "NGA",
+      "TGO"
+    ],
+    "areaKm2": 112622,
+    "officialLanguages": [
+      "fr"
+    ]
+  },
+  {
+    "code": "BFA",
+    "nameCanonical": "Burkina Faso",
+    "flagEmoji": "🇧🇫",
+    "continent": "africa",
+    "waterAccess": "landlocked",
+    "borders": [
+      "BEN",
+      "CIV",
+      "GHA",
+      "MLI",
+      "NER",
+      "TGO"
+    ],
+    "areaKm2": 272967,
+    "officialLanguages": [
+      "fr"
+    ]
+  },
+  {
+    "code": "BGD",
+    "nameCanonical": "Bangladesh",
+    "flagEmoji": "🇧🇩",
+    "continent": "asia",
+    "waterAccess": "coastal",
+    "borders": [
+      "MMR",
+      "IND"
+    ],
+    "areaKm2": 147570,
+    "officialLanguages": [
+      "bn"
+    ]
+  },
+  {
+    "code": "BGR",
+    "nameCanonical": "Bulgaria",
+    "flagEmoji": "🇧🇬",
+    "continent": "europe",
+    "waterAccess": "coastal",
+    "borders": [
+      "GRC",
+      "MKD",
+      "ROU",
+      "SRB",
+      "TUR"
+    ],
+    "areaKm2": 110879,
+    "officialLanguages": [
+      "bg"
+    ]
+  },
+  {
+    "code": "BHR",
+    "nameCanonical": "Bahrain",
+    "flagEmoji": "🇧🇭",
+    "continent": "asia",
+    "waterAccess": "island",
+    "borders": [],
+    "areaKm2": 765,
+    "officialLanguages": [
+      "ar"
+    ]
+  },
+  {
+    "code": "BHS",
+    "nameCanonical": "Bahamas",
+    "flagEmoji": "🇧🇸",
+    "continent": "north_america",
+    "waterAccess": "island",
+    "borders": [],
+    "areaKm2": 13943,
+    "officialLanguages": [
+      "en"
+    ]
+  },
+  {
+    "code": "BIH",
+    "nameCanonical": "Bosnia and Herzegovina",
+    "flagEmoji": "🇧🇦",
+    "continent": "europe",
+    "waterAccess": "coastal",
+    "borders": [
+      "HRV",
+      "MNE",
+      "SRB"
+    ],
+    "areaKm2": 51209,
+    "officialLanguages": [
+      "bs",
+      "hr",
+      "sr"
+    ]
+  },
+  {
+    "code": "BLR",
+    "nameCanonical": "Belarus",
+    "flagEmoji": "🇧🇾",
+    "continent": "europe",
+    "waterAccess": "landlocked",
+    "borders": [
+      "LVA",
+      "LTU",
+      "POL",
+      "RUS",
+      "UKR"
+    ],
+    "areaKm2": 207600,
+    "officialLanguages": [
+      "be",
+      "ru"
+    ]
+  },
+  {
+    "code": "BLZ",
+    "nameCanonical": "Belize",
+    "flagEmoji": "🇧🇿",
+    "continent": "north_america",
+    "waterAccess": "coastal",
+    "borders": [
+      "GTM",
+      "MEX"
+    ],
+    "areaKm2": 22966,
+    "officialLanguages": [
+      "bjz",
+      "en",
+      "es"
+    ]
+  },
+  {
+    "code": "BOL",
+    "nameCanonical": "Bolivia",
+    "flagEmoji": "🇧🇴",
+    "continent": "south_america",
+    "waterAccess": "landlocked",
+    "borders": [
+      "ARG",
+      "BRA",
+      "CHL",
+      "PRY",
+      "PER"
+    ],
+    "areaKm2": 1098581,
+    "officialLanguages": [
+      "ay",
+      "gn",
+      "qu",
+      "es"
+    ]
+  },
+  {
+    "code": "BRA",
+    "nameCanonical": "Brazil",
+    "flagEmoji": "🇧🇷",
+    "continent": "south_america",
+    "waterAccess": "coastal",
+    "borders": [
+      "ARG",
+      "BOL",
+      "COL",
+      "GUF",
+      "GUY",
+      "PRY",
+      "PER",
+      "SUR",
+      "URY",
+      "VEN"
+    ],
+    "areaKm2": 8515767,
+    "officialLanguages": [
+      "pt"
+    ]
+  },
+  {
+    "code": "BRB",
+    "nameCanonical": "Barbados",
+    "flagEmoji": "🇧🇧",
+    "continent": "north_america",
+    "waterAccess": "island",
+    "borders": [],
+    "areaKm2": 430,
+    "officialLanguages": [
+      "en"
+    ]
+  },
+  {
+    "code": "BRN",
+    "nameCanonical": "Brunei",
+    "flagEmoji": "🇧🇳",
+    "continent": "asia",
+    "waterAccess": "coastal",
+    "borders": [
+      "MYS"
+    ],
+    "areaKm2": 5765,
+    "officialLanguages": [
+      "ms"
+    ]
+  },
+  {
+    "code": "BTN",
+    "nameCanonical": "Bhutan",
+    "flagEmoji": "🇧🇹",
+    "continent": "asia",
+    "waterAccess": "landlocked",
+    "borders": [
+      "CHN",
+      "IND"
+    ],
+    "areaKm2": 38394,
+    "officialLanguages": [
+      "dz"
+    ]
+  },
+  {
+    "code": "BWA",
+    "nameCanonical": "Botswana",
+    "flagEmoji": "🇧🇼",
+    "continent": "africa",
+    "waterAccess": "landlocked",
+    "borders": [
+      "NAM",
+      "ZAF",
+      "ZMB",
+      "ZWE"
+    ],
+    "areaKm2": 582000,
+    "officialLanguages": [
+      "en",
+      "tn"
+    ]
+  },
+  {
+    "code": "CAF",
+    "nameCanonical": "Central African Republic",
+    "flagEmoji": "🇨🇫",
+    "continent": "africa",
+    "waterAccess": "landlocked",
+    "borders": [
+      "CMR",
+      "TCD",
+      "COD",
+      "COG",
+      "SSD",
+      "SDN"
+    ],
+    "areaKm2": 622984,
+    "officialLanguages": [
+      "fr",
+      "sg"
+    ]
+  },
+  {
+    "code": "CAN",
+    "nameCanonical": "Canada",
+    "flagEmoji": "🇨🇦",
+    "continent": "north_america",
+    "waterAccess": "coastal",
+    "borders": [
+      "USA"
+    ],
+    "areaKm2": 9984670,
+    "officialLanguages": [
+      "en",
+      "fr"
+    ]
+  },
+  {
+    "code": "CHE",
+    "nameCanonical": "Switzerland",
+    "flagEmoji": "🇨🇭",
+    "continent": "europe",
+    "waterAccess": "landlocked",
+    "borders": [
+      "AUT",
+      "FRA",
+      "ITA",
+      "LIE",
+      "DEU"
+    ],
+    "areaKm2": 41284,
+    "officialLanguages": [
+      "fr",
+      "gsw",
+      "it",
+      "rm"
+    ]
+  },
+  {
+    "code": "CHL",
+    "nameCanonical": "Chile",
+    "flagEmoji": "🇨🇱",
+    "continent": "south_america",
+    "waterAccess": "coastal",
+    "borders": [
+      "ARG",
+      "BOL",
+      "PER"
+    ],
+    "areaKm2": 756102,
+    "officialLanguages": [
+      "es"
+    ]
+  },
+  {
+    "code": "CHN",
+    "nameCanonical": "China",
+    "flagEmoji": "🇨🇳",
+    "continent": "asia",
+    "waterAccess": "coastal",
+    "borders": [
+      "AFG",
+      "BTN",
+      "MMR",
+      "HKG",
+      "IND",
+      "KAZ",
+      "NPL",
+      "PRK",
+      "KGZ",
+      "LAO",
+      "MAC",
+      "MNG",
+      "PAK",
+      "RUS",
+      "TJK",
+      "VNM"
+    ],
+    "areaKm2": 9706961,
+    "officialLanguages": [
+      "zh"
+    ]
+  },
+  {
+    "code": "CIV",
+    "nameCanonical": "Ivory Coast",
+    "flagEmoji": "🇨🇮",
+    "continent": "africa",
+    "waterAccess": "coastal",
+    "borders": [
+      "BFA",
+      "GHA",
+      "GIN",
+      "LBR",
+      "MLI"
+    ],
+    "areaKm2": 322463,
+    "officialLanguages": [
+      "fr"
+    ]
+  },
+  {
+    "code": "CMR",
+    "nameCanonical": "Cameroon",
+    "flagEmoji": "🇨🇲",
+    "continent": "africa",
+    "waterAccess": "coastal",
+    "borders": [
+      "CAF",
+      "TCD",
+      "COG",
+      "GNQ",
+      "GAB",
+      "NGA"
+    ],
+    "areaKm2": 475442,
+    "officialLanguages": [
+      "en",
+      "fr"
+    ]
+  },
+  {
+    "code": "COD",
+    "nameCanonical": "DR Congo",
+    "flagEmoji": "🇨🇩",
+    "continent": "africa",
+    "waterAccess": "coastal",
+    "borders": [
+      "AGO",
+      "BDI",
+      "CAF",
+      "COG",
+      "RWA",
+      "SSD",
+      "TZA",
+      "UGA",
+      "ZMB"
+    ],
+    "areaKm2": 2344858,
+    "officialLanguages": [
+      "fr",
+      "kg",
+      "ln",
+      "lua",
+      "sw"
+    ]
+  },
+  {
+    "code": "COG",
+    "nameCanonical": "Republic of the Congo",
+    "flagEmoji": "🇨🇬",
+    "continent": "africa",
+    "waterAccess": "coastal",
+    "borders": [
+      "AGO",
+      "CMR",
+      "CAF",
+      "COD",
+      "GAB"
+    ],
+    "areaKm2": 342000,
+    "officialLanguages": [
+      "fr",
+      "kg",
+      "ln"
+    ]
+  },
+  {
+    "code": "COL",
+    "nameCanonical": "Colombia",
+    "flagEmoji": "🇨🇴",
+    "continent": "south_america",
+    "waterAccess": "coastal",
+    "borders": [
+      "BRA",
+      "ECU",
+      "PAN",
+      "PER",
+      "VEN"
+    ],
+    "areaKm2": 1141748,
+    "officialLanguages": [
+      "es"
+    ]
+  },
+  {
+    "code": "COM",
+    "nameCanonical": "Comoros",
+    "flagEmoji": "🇰🇲",
+    "continent": "africa",
+    "waterAccess": "island",
+    "borders": [],
+    "areaKm2": 1862,
+    "officialLanguages": [
+      "ar",
+      "fr",
+      "zdj"
+    ]
+  },
+  {
+    "code": "CPV",
+    "nameCanonical": "Cape Verde",
+    "flagEmoji": "🇨🇻",
+    "continent": "africa",
+    "waterAccess": "island",
+    "borders": [],
+    "areaKm2": 4033,
+    "officialLanguages": [
+      "pt"
+    ]
+  },
+  {
+    "code": "CRI",
+    "nameCanonical": "Costa Rica",
+    "flagEmoji": "🇨🇷",
+    "continent": "north_america",
+    "waterAccess": "coastal",
+    "borders": [
+      "NIC",
+      "PAN"
+    ],
+    "areaKm2": 51100,
+    "officialLanguages": [
+      "es"
+    ]
+  },
+  {
+    "code": "CUB",
+    "nameCanonical": "Cuba",
+    "flagEmoji": "🇨🇺",
+    "continent": "north_america",
+    "waterAccess": "island",
+    "borders": [],
+    "areaKm2": 109884,
+    "officialLanguages": [
+      "es"
+    ]
+  },
+  {
+    "code": "CYP",
+    "nameCanonical": "Cyprus",
+    "flagEmoji": "🇨🇾",
+    "continent": "europe",
+    "waterAccess": "island",
+    "borders": [],
+    "areaKm2": 9251,
+    "officialLanguages": [
+      "el",
+      "tr"
+    ]
+  },
+  {
+    "code": "CZE",
+    "nameCanonical": "Czechia",
+    "flagEmoji": "🇨🇿",
+    "continent": "europe",
+    "waterAccess": "landlocked",
+    "borders": [
+      "AUT",
+      "DEU",
+      "POL",
+      "SVK"
+    ],
+    "areaKm2": 78865,
+    "officialLanguages": [
+      "cs",
+      "sk"
+    ]
+  },
+  {
+    "code": "DEU",
+    "nameCanonical": "Germany",
+    "flagEmoji": "🇩🇪",
+    "continent": "europe",
+    "waterAccess": "coastal",
+    "borders": [
+      "AUT",
+      "BEL",
+      "CZE",
+      "DNK",
+      "FRA",
+      "LUX",
+      "NLD",
+      "POL",
+      "CHE"
+    ],
+    "areaKm2": 357114,
+    "officialLanguages": [
+      "de"
+    ]
+  },
+  {
+    "code": "DJI",
+    "nameCanonical": "Djibouti",
+    "flagEmoji": "🇩🇯",
+    "continent": "africa",
+    "waterAccess": "coastal",
+    "borders": [
+      "ERI",
+      "ETH",
+      "SOM"
+    ],
+    "areaKm2": 23200,
+    "officialLanguages": [
+      "ar",
+      "fr"
+    ]
+  },
+  {
+    "code": "DMA",
+    "nameCanonical": "Dominica",
+    "flagEmoji": "🇩🇲",
+    "continent": "north_america",
+    "waterAccess": "island",
+    "borders": [],
+    "areaKm2": 751,
+    "officialLanguages": [
+      "en"
+    ]
+  },
+  {
+    "code": "DNK",
+    "nameCanonical": "Denmark",
+    "flagEmoji": "🇩🇰",
+    "continent": "europe",
+    "waterAccess": "coastal",
+    "borders": [
+      "DEU"
+    ],
+    "areaKm2": 43094,
+    "officialLanguages": [
+      "da"
+    ]
+  },
+  {
+    "code": "DOM",
+    "nameCanonical": "Dominican Republic",
+    "flagEmoji": "🇩🇴",
+    "continent": "north_america",
+    "waterAccess": "coastal",
+    "borders": [
+      "HTI"
+    ],
+    "areaKm2": 48671,
+    "officialLanguages": [
+      "es"
+    ]
+  },
+  {
+    "code": "DZA",
+    "nameCanonical": "Algeria",
+    "flagEmoji": "🇩🇿",
+    "continent": "africa",
+    "waterAccess": "coastal",
+    "borders": [
+      "TUN",
+      "LBY",
+      "NER",
+      "ESH",
+      "MRT",
+      "MLI",
+      "MAR"
+    ],
+    "areaKm2": 2381741,
+    "officialLanguages": [
+      "ar"
+    ]
+  },
+  {
+    "code": "ECU",
+    "nameCanonical": "Ecuador",
+    "flagEmoji": "🇪🇨",
+    "continent": "south_america",
+    "waterAccess": "coastal",
+    "borders": [
+      "COL",
+      "PER"
+    ],
+    "areaKm2": 276841,
+    "officialLanguages": [
+      "es"
+    ]
+  },
+  {
+    "code": "EGY",
+    "nameCanonical": "Egypt",
+    "flagEmoji": "🇪🇬",
+    "continent": "africa",
+    "waterAccess": "coastal",
+    "borders": [
+      "ISR",
+      "LBY",
+      "PSE",
+      "SDN"
+    ],
+    "areaKm2": 1002450,
+    "officialLanguages": [
+      "ar"
+    ]
+  },
+  {
+    "code": "ERI",
+    "nameCanonical": "Eritrea",
+    "flagEmoji": "🇪🇷",
+    "continent": "africa",
+    "waterAccess": "coastal",
+    "borders": [
+      "DJI",
+      "ETH",
+      "SDN"
+    ],
+    "areaKm2": 117600,
+    "officialLanguages": [
+      "ar",
+      "en",
+      "ti"
+    ]
+  },
+  {
+    "code": "ESP",
+    "nameCanonical": "Spain",
+    "flagEmoji": "🇪🇸",
+    "continent": "europe",
+    "waterAccess": "coastal",
+    "borders": [
+      "AND",
+      "FRA",
+      "GIB",
+      "PRT",
+      "MAR"
+    ],
+    "areaKm2": 505992,
+    "officialLanguages": [
+      "es"
+    ]
+  },
+  {
+    "code": "EST",
+    "nameCanonical": "Estonia",
+    "flagEmoji": "🇪🇪",
+    "continent": "europe",
+    "waterAccess": "coastal",
+    "borders": [
+      "LVA",
+      "RUS"
+    ],
+    "areaKm2": 45227,
+    "officialLanguages": [
+      "et"
+    ]
+  },
+  {
+    "code": "ETH",
+    "nameCanonical": "Ethiopia",
+    "flagEmoji": "🇪🇹",
+    "continent": "africa",
+    "waterAccess": "landlocked",
+    "borders": [
+      "DJI",
+      "ERI",
+      "KEN",
+      "SOM",
+      "SSD",
+      "SDN"
+    ],
+    "areaKm2": 1104300,
+    "officialLanguages": [
+      "am"
+    ]
+  },
+  {
+    "code": "FIN",
+    "nameCanonical": "Finland",
+    "flagEmoji": "🇫🇮",
+    "continent": "europe",
+    "waterAccess": "coastal",
+    "borders": [
+      "NOR",
+      "SWE",
+      "RUS"
+    ],
+    "areaKm2": 338424,
+    "officialLanguages": [
+      "fi",
+      "sv"
+    ]
+  },
+  {
+    "code": "FJI",
+    "nameCanonical": "Fiji",
+    "flagEmoji": "🇫🇯",
+    "continent": "oceania",
+    "waterAccess": "island",
+    "borders": [],
+    "areaKm2": 18272,
+    "officialLanguages": [
+      "en",
+      "fj",
+      "hif"
+    ]
+  },
+  {
+    "code": "FRA",
+    "nameCanonical": "France",
+    "flagEmoji": "🇫🇷",
+    "continent": "europe",
+    "waterAccess": "coastal",
+    "borders": [
+      "AND",
+      "BEL",
+      "DEU",
+      "ITA",
+      "LUX",
+      "MCO",
+      "ESP",
+      "CHE"
+    ],
+    "areaKm2": 551695,
+    "officialLanguages": [
+      "fr"
+    ]
+  },
+  {
+    "code": "FSM",
+    "nameCanonical": "Micronesia",
+    "flagEmoji": "🇫🇲",
+    "continent": "oceania",
+    "waterAccess": "island",
+    "borders": [],
+    "areaKm2": 702,
+    "officialLanguages": [
+      "en"
+    ]
+  },
+  {
+    "code": "GAB",
+    "nameCanonical": "Gabon",
+    "flagEmoji": "🇬🇦",
+    "continent": "africa",
+    "waterAccess": "coastal",
+    "borders": [
+      "CMR",
+      "COG",
+      "GNQ"
+    ],
+    "areaKm2": 267668,
+    "officialLanguages": [
+      "fr"
+    ]
+  },
+  {
+    "code": "GBR",
+    "nameCanonical": "United Kingdom",
+    "flagEmoji": "🇬🇧",
+    "continent": "europe",
+    "waterAccess": "coastal",
+    "borders": [
+      "IRL"
+    ],
+    "areaKm2": 242900,
+    "officialLanguages": [
+      "en"
+    ]
+  },
+  {
+    "code": "GEO",
+    "nameCanonical": "Georgia",
+    "flagEmoji": "🇬🇪",
+    "continent": "asia",
+    "waterAccess": "coastal",
+    "borders": [
+      "ARM",
+      "AZE",
+      "RUS",
+      "TUR"
+    ],
+    "areaKm2": 69700,
+    "officialLanguages": [
+      "ka"
+    ]
+  },
+  {
+    "code": "GHA",
+    "nameCanonical": "Ghana",
+    "flagEmoji": "🇬🇭",
+    "continent": "africa",
+    "waterAccess": "coastal",
+    "borders": [
+      "BFA",
+      "CIV",
+      "TGO"
+    ],
+    "areaKm2": 238533,
+    "officialLanguages": [
+      "en"
+    ]
+  },
+  {
+    "code": "GIN",
+    "nameCanonical": "Guinea",
+    "flagEmoji": "🇬🇳",
+    "continent": "africa",
+    "waterAccess": "coastal",
+    "borders": [
+      "CIV",
+      "GNB",
+      "LBR",
+      "MLI",
+      "SEN",
+      "SLE"
+    ],
+    "areaKm2": 245857,
+    "officialLanguages": [
+      "fr"
+    ]
+  },
+  {
+    "code": "GMB",
+    "nameCanonical": "Gambia",
+    "flagEmoji": "🇬🇲",
+    "continent": "africa",
+    "waterAccess": "coastal",
+    "borders": [
+      "SEN"
+    ],
+    "areaKm2": 10689,
+    "officialLanguages": [
+      "en"
+    ]
+  },
+  {
+    "code": "GNB",
+    "nameCanonical": "Guinea-Bissau",
+    "flagEmoji": "🇬🇼",
+    "continent": "africa",
+    "waterAccess": "coastal",
+    "borders": [
+      "GIN",
+      "SEN"
+    ],
+    "areaKm2": 36125,
+    "officialLanguages": [
+      "pt",
+      "pov"
+    ]
+  },
+  {
+    "code": "GNQ",
+    "nameCanonical": "Equatorial Guinea",
+    "flagEmoji": "🇬🇶",
+    "continent": "africa",
+    "waterAccess": "coastal",
+    "borders": [
+      "CMR",
+      "GAB"
+    ],
+    "areaKm2": 28051,
+    "officialLanguages": [
+      "fr",
+      "pt",
+      "es"
+    ]
+  },
+  {
+    "code": "GRC",
+    "nameCanonical": "Greece",
+    "flagEmoji": "🇬🇷",
+    "continent": "europe",
+    "waterAccess": "coastal",
+    "borders": [
+      "ALB",
+      "BGR",
+      "TUR",
+      "MKD"
+    ],
+    "areaKm2": 131990,
+    "officialLanguages": [
+      "el"
+    ]
+  },
+  {
+    "code": "GRD",
+    "nameCanonical": "Grenada",
+    "flagEmoji": "🇬🇩",
+    "continent": "north_america",
+    "waterAccess": "island",
+    "borders": [],
+    "areaKm2": 344,
+    "officialLanguages": [
+      "en"
+    ]
+  },
+  {
+    "code": "GTM",
+    "nameCanonical": "Guatemala",
+    "flagEmoji": "🇬🇹",
+    "continent": "north_america",
+    "waterAccess": "coastal",
+    "borders": [
+      "BLZ",
+      "SLV",
+      "HND",
+      "MEX"
+    ],
+    "areaKm2": 108889,
+    "officialLanguages": [
+      "es"
+    ]
+  },
+  {
+    "code": "GUY",
+    "nameCanonical": "Guyana",
+    "flagEmoji": "🇬🇾",
+    "continent": "south_america",
+    "waterAccess": "coastal",
+    "borders": [
+      "BRA",
+      "SUR",
+      "VEN"
+    ],
+    "areaKm2": 214969,
+    "officialLanguages": [
+      "en"
+    ]
+  },
+  {
+    "code": "HND",
+    "nameCanonical": "Honduras",
+    "flagEmoji": "🇭🇳",
+    "continent": "north_america",
+    "waterAccess": "coastal",
+    "borders": [
+      "GTM",
+      "SLV",
+      "NIC"
+    ],
+    "areaKm2": 112492,
+    "officialLanguages": [
+      "es"
+    ]
+  },
+  {
+    "code": "HRV",
+    "nameCanonical": "Croatia",
+    "flagEmoji": "🇭🇷",
+    "continent": "europe",
+    "waterAccess": "coastal",
+    "borders": [
+      "BIH",
+      "HUN",
+      "MNE",
+      "SRB",
+      "SVN"
+    ],
+    "areaKm2": 56594,
+    "officialLanguages": [
+      "hr"
+    ]
+  },
+  {
+    "code": "HTI",
+    "nameCanonical": "Haiti",
+    "flagEmoji": "🇭🇹",
+    "continent": "north_america",
+    "waterAccess": "coastal",
+    "borders": [
+      "DOM"
+    ],
+    "areaKm2": 27750,
+    "officialLanguages": [
+      "fr",
+      "hat"
+    ]
+  },
+  {
+    "code": "HUN",
+    "nameCanonical": "Hungary",
+    "flagEmoji": "🇭🇺",
+    "continent": "europe",
+    "waterAccess": "landlocked",
+    "borders": [
+      "AUT",
+      "HRV",
+      "ROU",
+      "SRB",
+      "SVK",
+      "SVN",
+      "UKR"
+    ],
+    "areaKm2": 93028,
+    "officialLanguages": [
+      "hu"
+    ]
+  },
+  {
+    "code": "IDN",
+    "nameCanonical": "Indonesia",
+    "flagEmoji": "🇮🇩",
+    "continent": "asia",
+    "waterAccess": "coastal",
+    "borders": [
+      "TLS",
+      "MYS",
+      "PNG"
+    ],
+    "areaKm2": 1904569,
+    "officialLanguages": [
+      "id"
+    ]
+  },
+  {
+    "code": "IND",
+    "nameCanonical": "India",
+    "flagEmoji": "🇮🇳",
+    "continent": "asia",
+    "waterAccess": "coastal",
+    "borders": [
+      "BGD",
+      "BTN",
+      "MMR",
+      "CHN",
+      "NPL",
+      "PAK"
+    ],
+    "areaKm2": 3287590,
+    "officialLanguages": [
+      "en",
+      "hi",
+      "ta"
+    ]
+  },
+  {
+    "code": "IRL",
+    "nameCanonical": "Ireland",
+    "flagEmoji": "🇮🇪",
+    "continent": "europe",
+    "waterAccess": "coastal",
+    "borders": [
+      "GBR"
+    ],
+    "areaKm2": 70273,
+    "officialLanguages": [
+      "en",
+      "ga"
+    ]
+  },
+  {
+    "code": "IRN",
+    "nameCanonical": "Iran",
+    "flagEmoji": "🇮🇷",
+    "continent": "asia",
+    "waterAccess": "coastal",
+    "borders": [
+      "AFG",
+      "ARM",
+      "AZE",
+      "IRQ",
+      "PAK",
+      "TUR",
+      "TKM"
+    ],
+    "areaKm2": 1648195,
+    "officialLanguages": [
+      "fas"
+    ]
+  },
+  {
+    "code": "IRQ",
+    "nameCanonical": "Iraq",
+    "flagEmoji": "🇮🇶",
+    "continent": "asia",
+    "waterAccess": "coastal",
+    "borders": [
+      "IRN",
+      "JOR",
+      "KWT",
+      "SAU",
+      "SYR",
+      "TUR"
+    ],
+    "areaKm2": 438317,
+    "officialLanguages": [
+      "ar",
+      "arc",
+      "ckb"
+    ]
+  },
+  {
+    "code": "ISL",
+    "nameCanonical": "Iceland",
+    "flagEmoji": "🇮🇸",
+    "continent": "europe",
+    "waterAccess": "island",
+    "borders": [],
+    "areaKm2": 103000,
+    "officialLanguages": [
+      "is"
+    ]
+  },
+  {
+    "code": "ISR",
+    "nameCanonical": "Israel",
+    "flagEmoji": "🇮🇱",
+    "continent": "asia",
+    "waterAccess": "coastal",
+    "borders": [
+      "EGY",
+      "JOR",
+      "LBN",
+      "PSE",
+      "SYR"
+    ],
+    "areaKm2": 20770,
+    "officialLanguages": [
+      "ar",
+      "he"
+    ]
+  },
+  {
+    "code": "ITA",
+    "nameCanonical": "Italy",
+    "flagEmoji": "🇮🇹",
+    "continent": "europe",
+    "waterAccess": "coastal",
+    "borders": [
+      "AUT",
+      "FRA",
+      "SMR",
+      "SVN",
+      "CHE",
+      "VAT"
+    ],
+    "areaKm2": 301336,
+    "officialLanguages": [
+      "it"
+    ]
+  },
+  {
+    "code": "JAM",
+    "nameCanonical": "Jamaica",
+    "flagEmoji": "🇯🇲",
+    "continent": "north_america",
+    "waterAccess": "island",
+    "borders": [],
+    "areaKm2": 10991,
+    "officialLanguages": [
+      "en",
+      "jam"
+    ]
+  },
+  {
+    "code": "JOR",
+    "nameCanonical": "Jordan",
+    "flagEmoji": "🇯🇴",
+    "continent": "asia",
+    "waterAccess": "coastal",
+    "borders": [
+      "IRQ",
+      "ISR",
+      "PSE",
+      "SAU",
+      "SYR"
+    ],
+    "areaKm2": 89342,
+    "officialLanguages": [
+      "ar"
+    ]
+  },
+  {
+    "code": "JPN",
+    "nameCanonical": "Japan",
+    "flagEmoji": "🇯🇵",
+    "continent": "asia",
+    "waterAccess": "island",
+    "borders": [],
+    "areaKm2": 377930,
+    "officialLanguages": [
+      "ja"
+    ]
+  },
+  {
+    "code": "KAZ",
+    "nameCanonical": "Kazakhstan",
+    "flagEmoji": "🇰🇿",
+    "continent": "asia",
+    "waterAccess": "landlocked",
+    "borders": [
+      "CHN",
+      "KGZ",
+      "RUS",
+      "TKM",
+      "UZB"
+    ],
+    "areaKm2": 2724900,
+    "officialLanguages": [
+      "kk",
+      "ru"
+    ]
+  },
+  {
+    "code": "KEN",
+    "nameCanonical": "Kenya",
+    "flagEmoji": "🇰🇪",
+    "continent": "africa",
+    "waterAccess": "coastal",
+    "borders": [
+      "ETH",
+      "SOM",
+      "SSD",
+      "TZA",
+      "UGA"
+    ],
+    "areaKm2": 580367,
+    "officialLanguages": [
+      "en",
+      "sw"
+    ]
+  },
+  {
+    "code": "KGZ",
+    "nameCanonical": "Kyrgyzstan",
+    "flagEmoji": "🇰🇬",
+    "continent": "asia",
+    "waterAccess": "landlocked",
+    "borders": [
+      "CHN",
+      "KAZ",
+      "TJK",
+      "UZB"
+    ],
+    "areaKm2": 199951,
+    "officialLanguages": [
+      "ky",
+      "ru"
+    ]
+  },
+  {
+    "code": "KHM",
+    "nameCanonical": "Cambodia",
+    "flagEmoji": "🇰🇭",
+    "continent": "asia",
+    "waterAccess": "coastal",
+    "borders": [
+      "LAO",
+      "THA",
+      "VNM"
+    ],
+    "areaKm2": 181035,
+    "officialLanguages": [
+      "km"
+    ]
+  },
+  {
+    "code": "KIR",
+    "nameCanonical": "Kiribati",
+    "flagEmoji": "🇰🇮",
+    "continent": "oceania",
+    "waterAccess": "island",
+    "borders": [],
+    "areaKm2": 811,
+    "officialLanguages": [
+      "en",
+      "gil"
+    ]
+  },
+  {
+    "code": "KNA",
+    "nameCanonical": "Saint Kitts and Nevis",
+    "flagEmoji": "🇰🇳",
+    "continent": "north_america",
+    "waterAccess": "island",
+    "borders": [],
+    "areaKm2": 261,
+    "officialLanguages": [
+      "en"
+    ]
+  },
+  {
+    "code": "KOR",
+    "nameCanonical": "South Korea",
+    "flagEmoji": "🇰🇷",
+    "continent": "asia",
+    "waterAccess": "coastal",
+    "borders": [
+      "PRK"
+    ],
+    "areaKm2": 100210,
+    "officialLanguages": [
+      "ko"
+    ]
+  },
+  {
+    "code": "KWT",
+    "nameCanonical": "Kuwait",
+    "flagEmoji": "🇰🇼",
+    "continent": "asia",
+    "waterAccess": "coastal",
+    "borders": [
+      "IRQ",
+      "SAU"
+    ],
+    "areaKm2": 17818,
+    "officialLanguages": [
+      "ar"
+    ]
+  },
+  {
+    "code": "LAO",
+    "nameCanonical": "Laos",
+    "flagEmoji": "🇱🇦",
+    "continent": "asia",
+    "waterAccess": "landlocked",
+    "borders": [
+      "MMR",
+      "KHM",
+      "CHN",
+      "THA",
+      "VNM"
+    ],
+    "areaKm2": 236800,
+    "officialLanguages": [
+      "lo"
+    ]
+  },
+  {
+    "code": "LBN",
+    "nameCanonical": "Lebanon",
+    "flagEmoji": "🇱🇧",
+    "continent": "asia",
+    "waterAccess": "coastal",
+    "borders": [
+      "ISR",
+      "SYR"
+    ],
+    "areaKm2": 10452,
+    "officialLanguages": [
+      "ar",
+      "fr"
+    ]
+  },
+  {
+    "code": "LBR",
+    "nameCanonical": "Liberia",
+    "flagEmoji": "🇱🇷",
+    "continent": "africa",
+    "waterAccess": "coastal",
+    "borders": [
+      "GIN",
+      "CIV",
+      "SLE"
+    ],
+    "areaKm2": 111369,
+    "officialLanguages": [
+      "en"
+    ]
+  },
+  {
+    "code": "LBY",
+    "nameCanonical": "Libya",
+    "flagEmoji": "🇱🇾",
+    "continent": "africa",
+    "waterAccess": "coastal",
+    "borders": [
+      "DZA",
+      "TCD",
+      "EGY",
+      "NER",
+      "SDN",
+      "TUN"
+    ],
+    "areaKm2": 1759540,
+    "officialLanguages": [
+      "ar"
+    ]
+  },
+  {
+    "code": "LCA",
+    "nameCanonical": "Saint Lucia",
+    "flagEmoji": "🇱🇨",
+    "continent": "north_america",
+    "waterAccess": "island",
+    "borders": [],
+    "areaKm2": 616,
+    "officialLanguages": [
+      "en"
+    ]
+  },
+  {
+    "code": "LIE",
+    "nameCanonical": "Liechtenstein",
+    "flagEmoji": "🇱🇮",
+    "continent": "europe",
+    "waterAccess": "landlocked",
+    "borders": [
+      "AUT",
+      "CHE"
+    ],
+    "areaKm2": 160,
+    "officialLanguages": [
+      "de"
+    ]
+  },
+  {
+    "code": "LKA",
+    "nameCanonical": "Sri Lanka",
+    "flagEmoji": "🇱🇰",
+    "continent": "asia",
+    "waterAccess": "island",
+    "borders": [],
+    "areaKm2": 65610,
+    "officialLanguages": [
+      "si",
+      "ta"
+    ]
+  },
+  {
+    "code": "LSO",
+    "nameCanonical": "Lesotho",
+    "flagEmoji": "🇱🇸",
+    "continent": "africa",
+    "waterAccess": "landlocked",
+    "borders": [
+      "ZAF"
+    ],
+    "areaKm2": 30355,
+    "officialLanguages": [
+      "en",
+      "st"
+    ]
+  },
+  {
+    "code": "LTU",
+    "nameCanonical": "Lithuania",
+    "flagEmoji": "🇱🇹",
+    "continent": "europe",
+    "waterAccess": "coastal",
+    "borders": [
+      "BLR",
+      "LVA",
+      "POL",
+      "RUS"
+    ],
+    "areaKm2": 65300,
+    "officialLanguages": [
+      "lt"
+    ]
+  },
+  {
+    "code": "LUX",
+    "nameCanonical": "Luxembourg",
+    "flagEmoji": "🇱🇺",
+    "continent": "europe",
+    "waterAccess": "landlocked",
+    "borders": [
+      "BEL",
+      "FRA",
+      "DEU"
+    ],
+    "areaKm2": 2586,
+    "officialLanguages": [
+      "de",
+      "fr",
+      "lb"
+    ]
+  },
+  {
+    "code": "LVA",
+    "nameCanonical": "Latvia",
+    "flagEmoji": "🇱🇻",
+    "continent": "europe",
+    "waterAccess": "coastal",
+    "borders": [
+      "BLR",
+      "EST",
+      "LTU",
+      "RUS"
+    ],
+    "areaKm2": 64559,
+    "officialLanguages": [
+      "lv"
+    ]
+  },
+  {
+    "code": "MAR",
+    "nameCanonical": "Morocco",
+    "flagEmoji": "🇲🇦",
+    "continent": "africa",
+    "waterAccess": "coastal",
+    "borders": [
+      "DZA",
+      "ESH",
+      "ESP"
+    ],
+    "areaKm2": 446550,
+    "officialLanguages": [
+      "ar",
+      "ber"
+    ]
+  },
+  {
+    "code": "MCO",
+    "nameCanonical": "Monaco",
+    "flagEmoji": "🇲🇨",
+    "continent": "europe",
+    "waterAccess": "coastal",
+    "borders": [
+      "FRA"
+    ],
+    "areaKm2": 2.02,
+    "officialLanguages": [
+      "fr"
+    ]
+  },
+  {
+    "code": "MDA",
+    "nameCanonical": "Moldova",
+    "flagEmoji": "🇲🇩",
+    "continent": "europe",
+    "waterAccess": "landlocked",
+    "borders": [
+      "ROU",
+      "UKR"
+    ],
+    "areaKm2": 33846,
+    "officialLanguages": [
+      "ro"
+    ]
+  },
+  {
+    "code": "MDG",
+    "nameCanonical": "Madagascar",
+    "flagEmoji": "🇲🇬",
+    "continent": "africa",
+    "waterAccess": "island",
+    "borders": [],
+    "areaKm2": 587041,
+    "officialLanguages": [
+      "fr",
+      "mg"
+    ]
+  },
+  {
+    "code": "MDV",
+    "nameCanonical": "Maldives",
+    "flagEmoji": "🇲🇻",
+    "continent": "asia",
+    "waterAccess": "island",
+    "borders": [],
+    "areaKm2": 300,
+    "officialLanguages": [
+      "dv"
+    ]
+  },
+  {
+    "code": "MEX",
+    "nameCanonical": "Mexico",
+    "flagEmoji": "🇲🇽",
+    "continent": "north_america",
+    "waterAccess": "coastal",
+    "borders": [
+      "BLZ",
+      "GTM",
+      "USA"
+    ],
+    "areaKm2": 1964375,
+    "officialLanguages": [
+      "es"
+    ]
+  },
+  {
+    "code": "MHL",
+    "nameCanonical": "Marshall Islands",
+    "flagEmoji": "🇲🇭",
+    "continent": "oceania",
+    "waterAccess": "island",
+    "borders": [],
+    "areaKm2": 181,
+    "officialLanguages": [
+      "en",
+      "mah"
+    ]
+  },
+  {
+    "code": "MKD",
+    "nameCanonical": "North Macedonia",
+    "flagEmoji": "🇲🇰",
+    "continent": "europe",
+    "waterAccess": "landlocked",
+    "borders": [
+      "ALB",
+      "BGR",
+      "GRC",
+      "UNK",
+      "SRB"
+    ],
+    "areaKm2": 25713,
+    "officialLanguages": [
+      "mk"
+    ]
+  },
+  {
+    "code": "MLI",
+    "nameCanonical": "Mali",
+    "flagEmoji": "🇲🇱",
+    "continent": "africa",
+    "waterAccess": "landlocked",
+    "borders": [
+      "DZA",
+      "BFA",
+      "GIN",
+      "CIV",
+      "MRT",
+      "NER",
+      "SEN"
+    ],
+    "areaKm2": 1240192,
+    "officialLanguages": [
+      "fr"
+    ]
+  },
+  {
+    "code": "MLT",
+    "nameCanonical": "Malta",
+    "flagEmoji": "🇲🇹",
+    "continent": "europe",
+    "waterAccess": "island",
+    "borders": [],
+    "areaKm2": 316,
+    "officialLanguages": [
+      "en",
+      "mt"
+    ]
+  },
+  {
+    "code": "MMR",
+    "nameCanonical": "Myanmar",
+    "flagEmoji": "🇲🇲",
+    "continent": "asia",
+    "waterAccess": "coastal",
+    "borders": [
+      "BGD",
+      "CHN",
+      "IND",
+      "LAO",
+      "THA"
+    ],
+    "areaKm2": 676578,
+    "officialLanguages": [
+      "my"
+    ]
+  },
+  {
+    "code": "MNE",
+    "nameCanonical": "Montenegro",
+    "flagEmoji": "🇲🇪",
+    "continent": "europe",
+    "waterAccess": "coastal",
+    "borders": [
+      "ALB",
+      "BIH",
+      "HRV",
+      "UNK",
+      "SRB"
+    ],
+    "areaKm2": 13812,
+    "officialLanguages": [
+      "cnr"
+    ]
+  },
+  {
+    "code": "MNG",
+    "nameCanonical": "Mongolia",
+    "flagEmoji": "🇲🇳",
+    "continent": "asia",
+    "waterAccess": "landlocked",
+    "borders": [
+      "CHN",
+      "RUS"
+    ],
+    "areaKm2": 1564110,
+    "officialLanguages": [
+      "mn"
+    ]
+  },
+  {
+    "code": "MOZ",
+    "nameCanonical": "Mozambique",
+    "flagEmoji": "🇲🇿",
+    "continent": "africa",
+    "waterAccess": "coastal",
+    "borders": [
+      "MWI",
+      "ZAF",
+      "SWZ",
+      "TZA",
+      "ZMB",
+      "ZWE"
+    ],
+    "areaKm2": 801590,
+    "officialLanguages": [
+      "pt"
+    ]
+  },
+  {
+    "code": "MRT",
+    "nameCanonical": "Mauritania",
+    "flagEmoji": "🇲🇷",
+    "continent": "africa",
+    "waterAccess": "coastal",
+    "borders": [
+      "DZA",
+      "MLI",
+      "SEN",
+      "ESH"
+    ],
+    "areaKm2": 1030700,
+    "officialLanguages": [
+      "ar"
+    ]
+  },
+  {
+    "code": "MUS",
+    "nameCanonical": "Mauritius",
+    "flagEmoji": "🇲🇺",
+    "continent": "africa",
+    "waterAccess": "island",
+    "borders": [],
+    "areaKm2": 2040,
+    "officialLanguages": [
+      "en",
+      "fr",
+      "mfe"
+    ]
+  },
+  {
+    "code": "MWI",
+    "nameCanonical": "Malawi",
+    "flagEmoji": "🇲🇼",
+    "continent": "africa",
+    "waterAccess": "landlocked",
+    "borders": [
+      "MOZ",
+      "TZA",
+      "ZMB"
+    ],
+    "areaKm2": 118484,
+    "officialLanguages": [
+      "en",
+      "ny"
+    ]
+  },
+  {
+    "code": "MYS",
+    "nameCanonical": "Malaysia",
+    "flagEmoji": "🇲🇾",
+    "continent": "asia",
+    "waterAccess": "coastal",
+    "borders": [
+      "BRN",
+      "IDN",
+      "THA"
+    ],
+    "areaKm2": 330803,
+    "officialLanguages": [
+      "en",
+      "ms"
+    ]
+  },
+  {
+    "code": "NAM",
+    "nameCanonical": "Namibia",
+    "flagEmoji": "🇳🇦",
+    "continent": "africa",
+    "waterAccess": "coastal",
+    "borders": [
+      "AGO",
+      "BWA",
+      "ZAF",
+      "ZMB"
+    ],
+    "areaKm2": 825615,
+    "officialLanguages": [
+      "af",
+      "de",
+      "en",
+      "hz",
+      "hgm",
+      "kwn",
+      "loz",
+      "ng",
+      "tn"
+    ]
+  },
+  {
+    "code": "NER",
+    "nameCanonical": "Niger",
+    "flagEmoji": "🇳🇪",
+    "continent": "africa",
+    "waterAccess": "landlocked",
+    "borders": [
+      "DZA",
+      "BEN",
+      "BFA",
+      "TCD",
+      "LBY",
+      "MLI",
+      "NGA"
+    ],
+    "areaKm2": 1267000,
+    "officialLanguages": [
+      "fr"
+    ]
+  },
+  {
+    "code": "NGA",
+    "nameCanonical": "Nigeria",
+    "flagEmoji": "🇳🇬",
+    "continent": "africa",
+    "waterAccess": "coastal",
+    "borders": [
+      "BEN",
+      "CMR",
+      "TCD",
+      "NER"
+    ],
+    "areaKm2": 923768,
+    "officialLanguages": [
+      "en"
+    ]
+  },
+  {
+    "code": "NIC",
+    "nameCanonical": "Nicaragua",
+    "flagEmoji": "🇳🇮",
+    "continent": "north_america",
+    "waterAccess": "coastal",
+    "borders": [
+      "CRI",
+      "HND"
+    ],
+    "areaKm2": 130373,
+    "officialLanguages": [
+      "es"
+    ]
+  },
+  {
+    "code": "NLD",
+    "nameCanonical": "Netherlands",
+    "flagEmoji": "🇳🇱",
+    "continent": "europe",
+    "waterAccess": "coastal",
+    "borders": [
+      "BEL",
+      "DEU"
+    ],
+    "areaKm2": 41850,
+    "officialLanguages": [
+      "nl"
+    ]
+  },
+  {
+    "code": "NOR",
+    "nameCanonical": "Norway",
+    "flagEmoji": "🇳🇴",
+    "continent": "europe",
+    "waterAccess": "coastal",
+    "borders": [
+      "FIN",
+      "SWE",
+      "RUS"
+    ],
+    "areaKm2": 323802,
+    "officialLanguages": [
+      "nn",
+      "nb",
+      "se"
+    ]
+  },
+  {
+    "code": "NPL",
+    "nameCanonical": "Nepal",
+    "flagEmoji": "🇳🇵",
+    "continent": "asia",
+    "waterAccess": "landlocked",
+    "borders": [
+      "CHN",
+      "IND"
+    ],
+    "areaKm2": 147181,
+    "officialLanguages": [
+      "ne"
+    ]
+  },
+  {
+    "code": "NRU",
+    "nameCanonical": "Nauru",
+    "flagEmoji": "🇳🇷",
+    "continent": "oceania",
+    "waterAccess": "island",
+    "borders": [],
+    "areaKm2": 21,
+    "officialLanguages": [
+      "en",
+      "na"
+    ]
+  },
+  {
+    "code": "NZL",
+    "nameCanonical": "New Zealand",
+    "flagEmoji": "🇳🇿",
+    "continent": "oceania",
+    "waterAccess": "island",
+    "borders": [],
+    "areaKm2": 270467,
+    "officialLanguages": [
+      "en",
+      "mi",
+      "nzs"
+    ]
+  },
+  {
+    "code": "OMN",
+    "nameCanonical": "Oman",
+    "flagEmoji": "🇴🇲",
+    "continent": "asia",
+    "waterAccess": "coastal",
+    "borders": [
+      "SAU",
+      "ARE",
+      "YEM"
+    ],
+    "areaKm2": 309500,
+    "officialLanguages": [
+      "ar"
+    ]
+  },
+  {
+    "code": "PAK",
+    "nameCanonical": "Pakistan",
+    "flagEmoji": "🇵🇰",
+    "continent": "asia",
+    "waterAccess": "coastal",
+    "borders": [
+      "AFG",
+      "CHN",
+      "IND",
+      "IRN"
+    ],
+    "areaKm2": 881912,
+    "officialLanguages": [
+      "en",
+      "ur"
+    ]
+  },
+  {
+    "code": "PAN",
+    "nameCanonical": "Panama",
+    "flagEmoji": "🇵🇦",
+    "continent": "north_america",
+    "waterAccess": "coastal",
+    "borders": [
+      "COL",
+      "CRI"
+    ],
+    "areaKm2": 75417,
+    "officialLanguages": [
+      "es"
+    ]
+  },
+  {
+    "code": "PER",
+    "nameCanonical": "Peru",
+    "flagEmoji": "🇵🇪",
+    "continent": "south_america",
+    "waterAccess": "coastal",
+    "borders": [
+      "BOL",
+      "BRA",
+      "CHL",
+      "COL",
+      "ECU"
+    ],
+    "areaKm2": 1285216,
+    "officialLanguages": [
+      "ay",
+      "qu",
+      "es"
+    ]
+  },
+  {
+    "code": "PHL",
+    "nameCanonical": "Philippines",
+    "flagEmoji": "🇵🇭",
+    "continent": "asia",
+    "waterAccess": "island",
+    "borders": [],
+    "areaKm2": 342353,
+    "officialLanguages": [
+      "en",
+      "fil"
+    ]
+  },
+  {
+    "code": "PLW",
+    "nameCanonical": "Palau",
+    "flagEmoji": "🇵🇼",
+    "continent": "oceania",
+    "waterAccess": "island",
+    "borders": [],
+    "areaKm2": 459,
+    "officialLanguages": [
+      "en",
+      "pau"
+    ]
+  },
+  {
+    "code": "PNG",
+    "nameCanonical": "Papua New Guinea",
+    "flagEmoji": "🇵🇬",
+    "continent": "oceania",
+    "waterAccess": "coastal",
+    "borders": [
+      "IDN"
+    ],
+    "areaKm2": 462840,
+    "officialLanguages": [
+      "en",
+      "hmo",
+      "tpi"
+    ]
+  },
+  {
+    "code": "POL",
+    "nameCanonical": "Poland",
+    "flagEmoji": "🇵🇱",
+    "continent": "europe",
+    "waterAccess": "coastal",
+    "borders": [
+      "BLR",
+      "CZE",
+      "DEU",
+      "LTU",
+      "RUS",
+      "SVK",
+      "UKR"
+    ],
+    "areaKm2": 312679,
+    "officialLanguages": [
+      "pl"
+    ]
+  },
+  {
+    "code": "PRK",
+    "nameCanonical": "North Korea",
+    "flagEmoji": "🇰🇵",
+    "continent": "asia",
+    "waterAccess": "coastal",
+    "borders": [
+      "CHN",
+      "KOR",
+      "RUS"
+    ],
+    "areaKm2": 120538,
+    "officialLanguages": [
+      "ko"
+    ]
+  },
+  {
+    "code": "PRT",
+    "nameCanonical": "Portugal",
+    "flagEmoji": "🇵🇹",
+    "continent": "europe",
+    "waterAccess": "coastal",
+    "borders": [
+      "ESP"
+    ],
+    "areaKm2": 92090,
+    "officialLanguages": [
+      "pt"
+    ]
+  },
+  {
+    "code": "PRY",
+    "nameCanonical": "Paraguay",
+    "flagEmoji": "🇵🇾",
+    "continent": "south_america",
+    "waterAccess": "landlocked",
+    "borders": [
+      "ARG",
+      "BOL",
+      "BRA"
+    ],
+    "areaKm2": 406752,
+    "officialLanguages": [
+      "gn",
+      "es"
+    ]
+  },
+  {
+    "code": "PSE",
+    "nameCanonical": "Palestine",
+    "flagEmoji": "🇵🇸",
+    "continent": "asia",
+    "waterAccess": "coastal",
+    "borders": [
+      "ISR",
+      "EGY",
+      "JOR"
+    ],
+    "areaKm2": 6220,
+    "officialLanguages": [
+      "ar"
+    ]
+  },
+  {
+    "code": "QAT",
+    "nameCanonical": "Qatar",
+    "flagEmoji": "🇶🇦",
+    "continent": "asia",
+    "waterAccess": "coastal",
+    "borders": [
+      "SAU"
+    ],
+    "areaKm2": 11586,
+    "officialLanguages": [
+      "ar"
+    ]
+  },
+  {
+    "code": "ROU",
+    "nameCanonical": "Romania",
+    "flagEmoji": "🇷🇴",
+    "continent": "europe",
+    "waterAccess": "coastal",
+    "borders": [
+      "BGR",
+      "HUN",
+      "MDA",
+      "SRB",
+      "UKR"
+    ],
+    "areaKm2": 238391,
+    "officialLanguages": [
+      "ro"
+    ]
+  },
+  {
+    "code": "RUS",
+    "nameCanonical": "Russia",
+    "flagEmoji": "🇷🇺",
+    "continent": "europe",
+    "waterAccess": "coastal",
+    "borders": [
+      "AZE",
+      "BLR",
+      "CHN",
+      "EST",
+      "FIN",
+      "GEO",
+      "KAZ",
+      "PRK",
+      "LVA",
+      "LTU",
+      "MNG",
+      "NOR",
+      "POL",
+      "UKR"
+    ],
+    "areaKm2": 17098242,
+    "officialLanguages": [
+      "ru"
+    ]
+  },
+  {
+    "code": "RWA",
+    "nameCanonical": "Rwanda",
+    "flagEmoji": "🇷🇼",
+    "continent": "africa",
+    "waterAccess": "landlocked",
+    "borders": [
+      "BDI",
+      "COD",
+      "TZA",
+      "UGA"
+    ],
+    "areaKm2": 26338,
+    "officialLanguages": [
+      "en",
+      "fr",
+      "rw"
+    ]
+  },
+  {
+    "code": "SAU",
+    "nameCanonical": "Saudi Arabia",
+    "flagEmoji": "🇸🇦",
+    "continent": "asia",
+    "waterAccess": "coastal",
+    "borders": [
+      "IRQ",
+      "JOR",
+      "KWT",
+      "OMN",
+      "QAT",
+      "ARE",
+      "YEM"
+    ],
+    "areaKm2": 2149690,
+    "officialLanguages": [
+      "ar"
+    ]
+  },
+  {
+    "code": "SDN",
+    "nameCanonical": "Sudan",
+    "flagEmoji": "🇸🇩",
+    "continent": "africa",
+    "waterAccess": "coastal",
+    "borders": [
+      "CAF",
+      "TCD",
+      "EGY",
+      "ERI",
+      "ETH",
+      "LBY",
+      "SSD"
+    ],
+    "areaKm2": 1886068,
+    "officialLanguages": [
+      "ar",
+      "en"
+    ]
+  },
+  {
+    "code": "SEN",
+    "nameCanonical": "Senegal",
+    "flagEmoji": "🇸🇳",
+    "continent": "africa",
+    "waterAccess": "coastal",
+    "borders": [
+      "GMB",
+      "GIN",
+      "GNB",
+      "MLI",
+      "MRT"
+    ],
+    "areaKm2": 196722,
+    "officialLanguages": [
+      "fr"
+    ]
+  },
+  {
+    "code": "SGP",
+    "nameCanonical": "Singapore",
+    "flagEmoji": "🇸🇬",
+    "continent": "asia",
+    "waterAccess": "island",
+    "borders": [],
+    "areaKm2": 710,
+    "officialLanguages": [
+      "en",
+      "ms",
+      "ta",
+      "zh"
+    ]
+  },
+  {
+    "code": "SLB",
+    "nameCanonical": "Solomon Islands",
+    "flagEmoji": "🇸🇧",
+    "continent": "oceania",
+    "waterAccess": "island",
+    "borders": [],
+    "areaKm2": 28896,
+    "officialLanguages": [
+      "en"
+    ]
+  },
+  {
+    "code": "SLE",
+    "nameCanonical": "Sierra Leone",
+    "flagEmoji": "🇸🇱",
+    "continent": "africa",
+    "waterAccess": "coastal",
+    "borders": [
+      "GIN",
+      "LBR"
+    ],
+    "areaKm2": 71740,
+    "officialLanguages": [
+      "en"
+    ]
+  },
+  {
+    "code": "SLV",
+    "nameCanonical": "El Salvador",
+    "flagEmoji": "🇸🇻",
+    "continent": "north_america",
+    "waterAccess": "coastal",
+    "borders": [
+      "GTM",
+      "HND"
+    ],
+    "areaKm2": 21041,
+    "officialLanguages": [
+      "es"
+    ]
+  },
+  {
+    "code": "SMR",
+    "nameCanonical": "San Marino",
+    "flagEmoji": "🇸🇲",
+    "continent": "europe",
+    "waterAccess": "landlocked",
+    "borders": [
+      "ITA"
+    ],
+    "areaKm2": 61,
+    "officialLanguages": [
+      "it"
+    ]
+  },
+  {
+    "code": "SOM",
+    "nameCanonical": "Somalia",
+    "flagEmoji": "🇸🇴",
+    "continent": "africa",
+    "waterAccess": "coastal",
+    "borders": [
+      "DJI",
+      "ETH",
+      "KEN"
+    ],
+    "areaKm2": 637657,
+    "officialLanguages": [
+      "ar",
+      "so"
+    ]
+  },
+  {
+    "code": "SRB",
+    "nameCanonical": "Serbia",
+    "flagEmoji": "🇷🇸",
+    "continent": "europe",
+    "waterAccess": "landlocked",
+    "borders": [
+      "BIH",
+      "BGR",
+      "HRV",
+      "HUN",
+      "UNK",
+      "MKD",
+      "MNE",
+      "ROU"
+    ],
+    "areaKm2": 88361,
+    "officialLanguages": [
+      "sr"
+    ]
+  },
+  {
+    "code": "SSD",
+    "nameCanonical": "South Sudan",
+    "flagEmoji": "🇸🇸",
+    "continent": "africa",
+    "waterAccess": "landlocked",
+    "borders": [
+      "CAF",
+      "COD",
+      "ETH",
+      "KEN",
+      "SDN",
+      "UGA"
+    ],
+    "areaKm2": 619745,
+    "officialLanguages": [
+      "en"
+    ]
+  },
+  {
+    "code": "STP",
+    "nameCanonical": "São Tomé and Príncipe",
+    "flagEmoji": "🇸🇹",
+    "continent": "africa",
+    "waterAccess": "island",
+    "borders": [],
+    "areaKm2": 964,
+    "officialLanguages": [
+      "pt"
+    ]
+  },
+  {
+    "code": "SUR",
+    "nameCanonical": "Suriname",
+    "flagEmoji": "🇸🇷",
+    "continent": "south_america",
+    "waterAccess": "coastal",
+    "borders": [
+      "BRA",
+      "GUF",
+      "GUY"
+    ],
+    "areaKm2": 163820,
+    "officialLanguages": [
+      "nl"
+    ]
+  },
+  {
+    "code": "SVK",
+    "nameCanonical": "Slovakia",
+    "flagEmoji": "🇸🇰",
+    "continent": "europe",
+    "waterAccess": "landlocked",
+    "borders": [
+      "AUT",
+      "CZE",
+      "HUN",
+      "POL",
+      "UKR"
+    ],
+    "areaKm2": 49037,
+    "officialLanguages": [
+      "sk"
+    ]
+  },
+  {
+    "code": "SVN",
+    "nameCanonical": "Slovenia",
+    "flagEmoji": "🇸🇮",
+    "continent": "europe",
+    "waterAccess": "coastal",
+    "borders": [
+      "AUT",
+      "HRV",
+      "ITA",
+      "HUN"
+    ],
+    "areaKm2": 20273,
+    "officialLanguages": [
+      "sl"
+    ]
+  },
+  {
+    "code": "SWE",
+    "nameCanonical": "Sweden",
+    "flagEmoji": "🇸🇪",
+    "continent": "europe",
+    "waterAccess": "coastal",
+    "borders": [
+      "FIN",
+      "NOR"
+    ],
+    "areaKm2": 450295,
+    "officialLanguages": [
+      "sv"
+    ]
+  },
+  {
+    "code": "SWZ",
+    "nameCanonical": "Eswatini",
+    "flagEmoji": "🇸🇿",
+    "continent": "africa",
+    "waterAccess": "landlocked",
+    "borders": [
+      "MOZ",
+      "ZAF"
+    ],
+    "areaKm2": 17364,
+    "officialLanguages": [
+      "en",
+      "ss"
+    ]
+  },
+  {
+    "code": "SYC",
+    "nameCanonical": "Seychelles",
+    "flagEmoji": "🇸🇨",
+    "continent": "africa",
+    "waterAccess": "island",
+    "borders": [],
+    "areaKm2": 452,
+    "officialLanguages": [
+      "crs",
+      "en",
+      "fr"
+    ]
+  },
+  {
+    "code": "SYR",
+    "nameCanonical": "Syria",
+    "flagEmoji": "🇸🇾",
+    "continent": "asia",
+    "waterAccess": "coastal",
+    "borders": [
+      "IRQ",
+      "ISR",
+      "JOR",
+      "LBN",
+      "TUR"
+    ],
+    "areaKm2": 185180,
+    "officialLanguages": [
+      "ar"
+    ]
+  },
+  {
+    "code": "TCD",
+    "nameCanonical": "Chad",
+    "flagEmoji": "🇹🇩",
+    "continent": "africa",
+    "waterAccess": "landlocked",
+    "borders": [
+      "CMR",
+      "CAF",
+      "LBY",
+      "NER",
+      "NGA",
+      "SDN"
+    ],
+    "areaKm2": 1284000,
+    "officialLanguages": [
+      "ar",
+      "fr"
+    ]
+  },
+  {
+    "code": "TGO",
+    "nameCanonical": "Togo",
+    "flagEmoji": "🇹🇬",
+    "continent": "africa",
+    "waterAccess": "coastal",
+    "borders": [
+      "BEN",
+      "BFA",
+      "GHA"
+    ],
+    "areaKm2": 56785,
+    "officialLanguages": [
+      "fr"
+    ]
+  },
+  {
+    "code": "THA",
+    "nameCanonical": "Thailand",
+    "flagEmoji": "🇹🇭",
+    "continent": "asia",
+    "waterAccess": "coastal",
+    "borders": [
+      "MMR",
+      "KHM",
+      "LAO",
+      "MYS"
+    ],
+    "areaKm2": 513120,
+    "officialLanguages": [
+      "th"
+    ]
+  },
+  {
+    "code": "TJK",
+    "nameCanonical": "Tajikistan",
+    "flagEmoji": "🇹🇯",
+    "continent": "asia",
+    "waterAccess": "landlocked",
+    "borders": [
+      "AFG",
+      "CHN",
+      "KGZ",
+      "UZB"
+    ],
+    "areaKm2": 143100,
+    "officialLanguages": [
+      "ru",
+      "tg"
+    ]
+  },
+  {
+    "code": "TKM",
+    "nameCanonical": "Turkmenistan",
+    "flagEmoji": "🇹🇲",
+    "continent": "asia",
+    "waterAccess": "landlocked",
+    "borders": [
+      "AFG",
+      "IRN",
+      "KAZ",
+      "UZB"
+    ],
+    "areaKm2": 488100,
+    "officialLanguages": [
+      "ru",
+      "tk"
+    ]
+  },
+  {
+    "code": "TLS",
+    "nameCanonical": "Timor-Leste",
+    "flagEmoji": "🇹🇱",
+    "continent": "asia",
+    "waterAccess": "coastal",
+    "borders": [
+      "IDN"
+    ],
+    "areaKm2": 14874,
+    "officialLanguages": [
+      "pt",
+      "tet"
+    ]
+  },
+  {
+    "code": "TON",
+    "nameCanonical": "Tonga",
+    "flagEmoji": "🇹🇴",
+    "continent": "oceania",
+    "waterAccess": "island",
+    "borders": [],
+    "areaKm2": 747,
+    "officialLanguages": [
+      "en",
+      "to"
+    ]
+  },
+  {
+    "code": "TTO",
+    "nameCanonical": "Trinidad and Tobago",
+    "flagEmoji": "🇹🇹",
+    "continent": "north_america",
+    "waterAccess": "island",
+    "borders": [],
+    "areaKm2": 5130,
+    "officialLanguages": [
+      "en"
+    ]
+  },
+  {
+    "code": "TUN",
+    "nameCanonical": "Tunisia",
+    "flagEmoji": "🇹🇳",
+    "continent": "africa",
+    "waterAccess": "coastal",
+    "borders": [
+      "DZA",
+      "LBY"
+    ],
+    "areaKm2": 163610,
+    "officialLanguages": [
+      "ar"
+    ]
+  },
+  {
+    "code": "TUR",
+    "nameCanonical": "Türkiye",
+    "flagEmoji": "🇹🇷",
+    "continent": "asia",
+    "waterAccess": "coastal",
+    "borders": [
+      "ARM",
+      "AZE",
+      "BGR",
+      "GEO",
+      "GRC",
+      "IRN",
+      "IRQ",
+      "SYR"
+    ],
+    "areaKm2": 783562,
+    "officialLanguages": [
+      "tr"
+    ]
+  },
+  {
+    "code": "TUV",
+    "nameCanonical": "Tuvalu",
+    "flagEmoji": "🇹🇻",
+    "continent": "oceania",
+    "waterAccess": "island",
+    "borders": [],
+    "areaKm2": 26,
+    "officialLanguages": [
+      "en",
+      "tvl"
+    ]
+  },
+  {
+    "code": "TWN",
+    "nameCanonical": "Taiwan",
+    "flagEmoji": "🇹🇼",
+    "continent": "asia",
+    "waterAccess": "island",
+    "borders": [],
+    "areaKm2": 36193,
+    "officialLanguages": [
+      "zh"
+    ]
+  },
+  {
+    "code": "TZA",
+    "nameCanonical": "Tanzania",
+    "flagEmoji": "🇹🇿",
+    "continent": "africa",
+    "waterAccess": "coastal",
+    "borders": [
+      "BDI",
+      "COD",
+      "KEN",
+      "MWI",
+      "MOZ",
+      "RWA",
+      "UGA",
+      "ZMB"
+    ],
+    "areaKm2": 945087,
+    "officialLanguages": [
+      "en",
+      "sw"
+    ]
+  },
+  {
+    "code": "UGA",
+    "nameCanonical": "Uganda",
+    "flagEmoji": "🇺🇬",
+    "continent": "africa",
+    "waterAccess": "landlocked",
+    "borders": [
+      "COD",
+      "KEN",
+      "RWA",
+      "SSD",
+      "TZA"
+    ],
+    "areaKm2": 241550,
+    "officialLanguages": [
+      "en",
+      "sw"
+    ]
+  },
+  {
+    "code": "UKR",
+    "nameCanonical": "Ukraine",
+    "flagEmoji": "🇺🇦",
+    "continent": "europe",
+    "waterAccess": "coastal",
+    "borders": [
+      "BLR",
+      "HUN",
+      "MDA",
+      "POL",
+      "ROU",
+      "RUS",
+      "SVK"
+    ],
+    "areaKm2": 603500,
+    "officialLanguages": [
+      "uk"
+    ]
+  },
+  {
+    "code": "URY",
+    "nameCanonical": "Uruguay",
+    "flagEmoji": "🇺🇾",
+    "continent": "south_america",
+    "waterAccess": "coastal",
+    "borders": [
+      "ARG",
+      "BRA"
+    ],
+    "areaKm2": 181034,
+    "officialLanguages": [
+      "es"
+    ]
+  },
+  {
+    "code": "USA",
+    "nameCanonical": "United States",
+    "flagEmoji": "🇺🇸",
+    "continent": "north_america",
+    "waterAccess": "coastal",
+    "borders": [
+      "CAN",
+      "MEX"
+    ],
+    "areaKm2": 9372610,
+    "officialLanguages": [
+      "en"
+    ]
+  },
+  {
+    "code": "UZB",
+    "nameCanonical": "Uzbekistan",
+    "flagEmoji": "🇺🇿",
+    "continent": "asia",
+    "waterAccess": "landlocked",
+    "borders": [
+      "AFG",
+      "KAZ",
+      "KGZ",
+      "TJK",
+      "TKM"
+    ],
+    "areaKm2": 447400,
+    "officialLanguages": [
+      "ru",
+      "uz"
+    ]
+  },
+  {
+    "code": "VAT",
+    "nameCanonical": "Vatican City",
+    "flagEmoji": "🇻🇦",
+    "continent": "europe",
+    "waterAccess": "landlocked",
+    "borders": [
+      "ITA"
+    ],
+    "areaKm2": 0.44,
+    "officialLanguages": [
+      "it",
+      "la"
+    ]
+  },
+  {
+    "code": "VCT",
+    "nameCanonical": "Saint Vincent and the Grenadines",
+    "flagEmoji": "🇻🇨",
+    "continent": "north_america",
+    "waterAccess": "island",
+    "borders": [],
+    "areaKm2": 389,
+    "officialLanguages": [
+      "en"
+    ]
+  },
+  {
+    "code": "VEN",
+    "nameCanonical": "Venezuela",
+    "flagEmoji": "🇻🇪",
+    "continent": "south_america",
+    "waterAccess": "coastal",
+    "borders": [
+      "BRA",
+      "COL",
+      "GUY"
+    ],
+    "areaKm2": 916445,
+    "officialLanguages": [
+      "es"
+    ]
+  },
+  {
+    "code": "VNM",
+    "nameCanonical": "Vietnam",
+    "flagEmoji": "🇻🇳",
+    "continent": "asia",
+    "waterAccess": "coastal",
+    "borders": [
+      "KHM",
+      "CHN",
+      "LAO"
+    ],
+    "areaKm2": 331212,
+    "officialLanguages": [
+      "vi"
+    ]
+  },
+  {
+    "code": "VUT",
+    "nameCanonical": "Vanuatu",
+    "flagEmoji": "🇻🇺",
+    "continent": "oceania",
+    "waterAccess": "island",
+    "borders": [],
+    "areaKm2": 12189,
+    "officialLanguages": [
+      "bi",
+      "en",
+      "fr"
+    ]
+  },
+  {
+    "code": "WSM",
+    "nameCanonical": "Samoa",
+    "flagEmoji": "🇼🇸",
+    "continent": "oceania",
+    "waterAccess": "island",
+    "borders": [],
+    "areaKm2": 2842,
+    "officialLanguages": [
+      "en",
+      "sm"
+    ]
+  },
+  {
+    "code": "XKX",
+    "nameCanonical": "Kosovo",
+    "flagEmoji": "🇽🇰",
+    "continent": "europe",
+    "waterAccess": "landlocked",
+    "borders": [
+      "ALB",
+      "MKD",
+      "MNE",
+      "SRB"
+    ],
+    "areaKm2": 10887,
+    "officialLanguages": [
+      "sq",
+      "sr"
+    ]
+  },
+  {
+    "code": "YEM",
+    "nameCanonical": "Yemen",
+    "flagEmoji": "🇾🇪",
+    "continent": "asia",
+    "waterAccess": "coastal",
+    "borders": [
+      "OMN",
+      "SAU"
+    ],
+    "areaKm2": 527968,
+    "officialLanguages": [
+      "ar"
+    ]
+  },
+  {
+    "code": "ZAF",
+    "nameCanonical": "South Africa",
+    "flagEmoji": "🇿🇦",
+    "continent": "africa",
+    "waterAccess": "coastal",
+    "borders": [
+      "BWA",
+      "LSO",
+      "MOZ",
+      "NAM",
+      "SWZ",
+      "ZWE"
+    ],
+    "areaKm2": 1221037,
+    "officialLanguages": [
+      "af",
+      "en",
+      "nr",
+      "nso",
+      "st",
+      "ss",
+      "tn",
+      "ts",
+      "ve",
+      "xh",
+      "zu"
+    ]
+  },
+  {
+    "code": "ZMB",
+    "nameCanonical": "Zambia",
+    "flagEmoji": "🇿🇲",
+    "continent": "africa",
+    "waterAccess": "landlocked",
+    "borders": [
+      "AGO",
+      "BWA",
+      "COD",
+      "MWI",
+      "MOZ",
+      "NAM",
+      "TZA",
+      "ZWE"
+    ],
+    "areaKm2": 752612,
+    "officialLanguages": [
+      "en"
+    ]
+  },
+  {
+    "code": "ZWE",
+    "nameCanonical": "Zimbabwe",
+    "flagEmoji": "🇿🇼",
+    "continent": "africa",
+    "waterAccess": "landlocked",
+    "borders": [
+      "BWA",
+      "MOZ",
+      "ZAF",
+      "ZMB"
+    ],
+    "areaKm2": 390757,
+    "officialLanguages": [
+      "bwg",
+      "en",
+      "kck",
+      "khi",
+      "ndc",
+      "nd",
+      "ny",
+      "sn",
+      "st",
+      "toi",
+      "tn",
+      "ts",
+      "ve",
+      "xh",
+      "zib"
+    ]
+  }
+]

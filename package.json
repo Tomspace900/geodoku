@@ -6,6 +6,8 @@
   "scripts": {
     "dev": "vite",
     "build": "tsc --noEmit && vite build",
+    "build:countries": "tsx scripts/build-countries.ts",
+    "validate:constraints": "tsx scripts/validate-constraints.ts",
     "preview": "vite preview",
     "test": "vitest run --passWithNoTests",
     "lint": "biome check .",
@@ -22,7 +24,10 @@
     "tailwind-merge": "^2.5.4"
   },
   "pnpm": {
-    "onlyBuiltDependencies": ["@biomejs/biome", "esbuild"]
+    "onlyBuiltDependencies": [
+      "@biomejs/biome",
+      "esbuild"
+    ]
   },
   "devDependencies": {
     "@biomejs/biome": "^1.9.4",
@@ -35,8 +40,10 @@
     "happy-dom": "^15.10.2",
     "postcss": "^8.4.49",
     "tailwindcss": "^3.4.17",
+    "tsx": "^4.21.0",
     "typescript": "^5.7.2",
     "vite": "^6.0.7",
-    "vitest": "^2.1.8"
+    "vitest": "^2.1.8",
+    "world-countries": "^5.1.0"
   }
 }
