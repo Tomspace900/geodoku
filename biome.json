@@ -18,6 +18,6 @@
     }
   },
   "files": {
-    "ignore": ["node_modules", "dist", "convex/_generated"]
+    "ignore": ["node_modules", "dist", "convex/_generated", "src/components/ui"]
   }
 }
