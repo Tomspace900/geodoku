@@ -8,6 +8,7 @@ export type ConstraintCategory =
   | "borders_count"
   | "borders_pivot"
   | "area"
+  | "population"
   | "language";
 
 export type Constraint = {
@@ -24,6 +25,15 @@ const AREA_GT_1M = 1_000_000;
 const AREA_GT_500K = 500_000;
 const AREA_LT_10K = 10_000;
 const AREA_LT_1K = 1_000;
+
+// ─── Population thresholds (hab.) — calibrés sur countries.json (197 pays) ─────
+// Effectifs cibles ~ sweet-spot [8, 60] : >100M:16, >50M:30, >30M:50, <2,5M:57, <1M:38
+
+const POP_GT_100M = 100_000_000;
+const POP_GT_50M = 50_000_000;
+const POP_GT_30M = 30_000_000;
+const POP_LT_2_5M = 2_500_000;
+const POP_LT_1M = 1_000_000;
 
 // ─── Border count thresholds ──────────────────────────────────────────────────
 
@@ -193,33 +203,65 @@ export const CONSTRAINTS: Constraint[] = [
   // ── Superficie ─────────────────────────────────────────────────────────────
   {
     id: "area_gt_2M",
-    label: "Superficie supérieure à 2 000 000 km²",
+    label: "Pays gigantesques (> 2 M km²)",
     category: "area",
     predicate: (c) => c.areaKm2 > AREA_GT_2M,
   },
   {
     id: "area_gt_1M",
-    label: "Superficie supérieure à 1 000 000 km²",
+    label: "Très grand pays (> 1 M km²)",
     category: "area",
     predicate: (c) => c.areaKm2 > AREA_GT_1M,
   },
   {
     id: "area_gt_500k",
-    label: "Superficie supérieure à 500 000 km²",
+    label: "Grand pays (> 500 000 km²)",
     category: "area",
     predicate: (c) => c.areaKm2 > AREA_GT_500K,
   },
   {
     id: "area_lt_10k",
-    label: "Superficie inférieure à 10 000 km²",
+    label: "Petit pays (< 10 000 km²)",
     category: "area",
     predicate: (c) => c.areaKm2 < AREA_LT_10K,
   },
   {
     id: "area_lt_1k",
-    label: "Superficie inférieure à 1 000 km²",
+    label: "Micro-État (< 1 000 km²)",
     category: "area",
     predicate: (c) => c.areaKm2 < AREA_LT_1K,
+  },
+
+  // ── Population ─────────────────────────────────────────────────────────────
+  {
+    id: "population_gt_100M",
+    label: "Population supérieure à 100 millions",
+    category: "population",
+    predicate: (c) => c.population > POP_GT_100M,
+  },
+  {
+    id: "population_gt_50M",
+    label: "Population supérieure à 50 millions",
+    category: "population",
+    predicate: (c) => c.population > POP_GT_50M,
+  },
+  {
+    id: "population_gt_30M",
+    label: "Population supérieure à 30 millions",
+    category: "population",
+    predicate: (c) => c.population > POP_GT_30M,
+  },
+  {
+    id: "population_lt_2_5M",
+    label: "Population inférieure à 2,5 millions",
+    category: "population",
+    predicate: (c) => c.population < POP_LT_2_5M,
+  },
+  {
+    id: "population_lt_1M",
+    label: "Population inférieure à 1 million",
+    category: "population",
+    predicate: (c) => c.population < POP_LT_1M,
   },
 
   // ── Langue ─────────────────────────────────────────────────────────────────

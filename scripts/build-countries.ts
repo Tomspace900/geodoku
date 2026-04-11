@@ -1,12 +1,16 @@
 /**
  * Generates src/features/countries/data/countries.json
- * Sources: world-countries npm package (v5) + scripts/patches.json
- * Run: pnpm build:countries
+ * Sources: world-countries npm (v5) + REST Countries (population) + scripts/patches.json
+ * Run: pnpm build:countries (requires network for population fetch)
  */
 import { readFileSync, writeFileSync } from "node:fs";
 import { resolve } from "node:path";
 import rawWorldCountries from "world-countries";
-import type { Continent, Country, WaterAccess } from "../src/features/countries/types.ts";
+import type {
+  Continent,
+  Country,
+  WaterAccess,
+} from "../src/features/countries/types.ts";
 
 // ─── World-countries shape (fields we consume) ────────────────────────────────
 
@@ -28,6 +32,15 @@ interface Patches {
   additions: Country[];
 }
 
+/** REST Countries v3.1 minimal row (fields=cca3,population) */
+interface RcEntry {
+  cca3?: string | string[];
+  population: number;
+}
+
+const REST_COUNTRIES_URL =
+  "https://restcountries.com/v3.1/all?fields=cca3,population";
+
 // ─── Constants ────────────────────────────────────────────────────────────────
 
 /**
@@ -44,31 +57,131 @@ const EXPECTED_COUNT = 197;
  * null = the language has no ISO 639-1 code; the 639-3 code is kept as fallback.
  */
 const ISO639_3_TO_1: Readonly<Record<string, string | null>> = {
-  afr: "af", aka: "ak", amh: "am", ara: "ar", aym: "ay",
-  aze: "az", bel: "be", ben: "bn", bis: "bi", bos: "bs",
-  bul: "bg", cat: "ca", ces: "cs", cha: "ch", cnr: null,
-  dan: "da", deu: "de", div: "dv", dzo: "dz", ell: "el",
-  eng: "en", est: "et", fij: "fj", fin: "fi", fra: "fr",
-  gil: null, gle: "ga", glv: "gv", grn: "gn", gsw: null,
-  hau: "ha", hbs: "sr", heb: "he", her: "hz", hin: "hi",
-  hmo: null, hrv: "hr", hun: "hu", hye: "hy", ind: "id",
-  isl: "is", ita: "it", jpn: "ja", kal: "kl", kat: "ka",
-  kaz: "kk", khm: "km", kik: "ki", kin: "rw", kir: "ky",
-  kon: "kg", kor: "ko", lao: "lo", lat: "la", lav: "lv",
-  lin: "ln", lit: "lt", lub: "lu", lug: "lg", ltz: "lb",
-  mfe: null, mkd: "mk", mlg: "mg", mlt: "mt", mon: "mn",
-  mri: "mi", msa: "ms", mya: "my", nau: "na", nbl: "nr",
-  nde: "nd", ndo: "ng", nep: "ne", nld: "nl", nno: "nn",
-  nob: "nb", nor: "no", nya: "ny", orm: "om", pan: "pa",
-  pol: "pl", por: "pt", pov: null, pus: "ps", que: "qu",
-  roh: "rm", ron: "ro", run: "rn", rus: "ru", sag: "sg",
-  sin: "si", slk: "sk", slv: "sl", smi: "se", smo: "sm",
-  sna: "sn", som: "so", sot: "st", spa: "es", sqi: "sq",
-  srp: "sr", ssw: "ss", swa: "sw", swe: "sv", tam: "ta",
-  tet: null, tgk: "tg", tha: "th", tir: "ti", tkl: null,
-  ton: "to", tpi: null, tsn: "tn", tso: "ts", tuk: "tk",
-  tur: "tr", tvl: null, uig: "ug", ukr: "uk", urd: "ur",
-  uzb: "uz", ven: "ve", vie: "vi", xho: "xh", zho: "zh",
+  afr: "af",
+  aka: "ak",
+  amh: "am",
+  ara: "ar",
+  aym: "ay",
+  aze: "az",
+  bel: "be",
+  ben: "bn",
+  bis: "bi",
+  bos: "bs",
+  bul: "bg",
+  cat: "ca",
+  ces: "cs",
+  cha: "ch",
+  cnr: null,
+  dan: "da",
+  deu: "de",
+  div: "dv",
+  dzo: "dz",
+  ell: "el",
+  eng: "en",
+  est: "et",
+  fij: "fj",
+  fin: "fi",
+  fra: "fr",
+  gil: null,
+  gle: "ga",
+  glv: "gv",
+  grn: "gn",
+  gsw: null,
+  hau: "ha",
+  hbs: "sr",
+  heb: "he",
+  her: "hz",
+  hin: "hi",
+  hmo: null,
+  hrv: "hr",
+  hun: "hu",
+  hye: "hy",
+  ind: "id",
+  isl: "is",
+  ita: "it",
+  jpn: "ja",
+  kal: "kl",
+  kat: "ka",
+  kaz: "kk",
+  khm: "km",
+  kik: "ki",
+  kin: "rw",
+  kir: "ky",
+  kon: "kg",
+  kor: "ko",
+  lao: "lo",
+  lat: "la",
+  lav: "lv",
+  lin: "ln",
+  lit: "lt",
+  lub: "lu",
+  lug: "lg",
+  ltz: "lb",
+  mfe: null,
+  mkd: "mk",
+  mlg: "mg",
+  mlt: "mt",
+  mon: "mn",
+  mri: "mi",
+  msa: "ms",
+  mya: "my",
+  nau: "na",
+  nbl: "nr",
+  nde: "nd",
+  ndo: "ng",
+  nep: "ne",
+  nld: "nl",
+  nno: "nn",
+  nob: "nb",
+  nor: "no",
+  nya: "ny",
+  orm: "om",
+  pan: "pa",
+  pol: "pl",
+  por: "pt",
+  pov: null,
+  pus: "ps",
+  que: "qu",
+  roh: "rm",
+  ron: "ro",
+  run: "rn",
+  rus: "ru",
+  sag: "sg",
+  sin: "si",
+  slk: "sk",
+  slv: "sl",
+  smi: "se",
+  smo: "sm",
+  sna: "sn",
+  som: "so",
+  sot: "st",
+  spa: "es",
+  sqi: "sq",
+  srp: "sr",
+  ssw: "ss",
+  swa: "sw",
+  swe: "sv",
+  tam: "ta",
+  tet: null,
+  tgk: "tg",
+  tha: "th",
+  tir: "ti",
+  tkl: null,
+  ton: "to",
+  tpi: null,
+  tsn: "tn",
+  tso: "ts",
+  tuk: "tk",
+  tur: "tr",
+  tvl: null,
+  uig: "ug",
+  ukr: "uk",
+  urd: "ur",
+  uzb: "uz",
+  ven: "ve",
+  vie: "vi",
+  xho: "xh",
+  zho: "zh",
   zul: "zu",
 };
 
@@ -87,11 +200,16 @@ function deriveContinent(region: string, subregion: string): Continent {
     case "Americas":
       return subregion === "South America" ? "south_america" : "north_america";
     default:
-      throw new Error(`Unknown region: "${region}" (subregion: "${subregion}")`);
+      throw new Error(
+        `Unknown region: "${region}" (subregion: "${subregion}")`,
+      );
   }
 }
 
-function deriveWaterAccess(landlocked: boolean, borderCount: number): WaterAccess {
+function deriveWaterAccess(
+  landlocked: boolean,
+  borderCount: number,
+): WaterAccess {
   if (landlocked) return "landlocked";
   if (borderCount === 0) return "island";
   return "coastal";
@@ -106,10 +224,39 @@ function mapLanguages(raw: Record<string, string>): string[] {
   });
 }
 
+function populationMapFromRc(rows: RcEntry[]): Map<string, number> {
+  const map = new Map<string, number>();
+  for (const row of rows) {
+    const raw = row.cca3;
+    if (raw == null) continue;
+    const codes = Array.isArray(raw) ? raw : [raw];
+    for (const code of codes) {
+      if (typeof code === "string" && /^[A-Z]{3}$/.test(code)) {
+        map.set(code, row.population);
+      }
+    }
+  }
+  return map;
+}
+
+async function fetchPopulationByCca3(): Promise<Map<string, number>> {
+  const res = await fetch(REST_COUNTRIES_URL);
+  if (!res.ok) {
+    throw new Error(`REST Countries failed: ${res.status} ${res.statusText}`);
+  }
+  const data = (await res.json()) as RcEntry[];
+  if (!Array.isArray(data) || data.length === 0) {
+    throw new Error("REST Countries: expected non-empty array");
+  }
+  return populationMapFromRc(data);
+}
+
 // ─── Main ─────────────────────────────────────────────────────────────────────
 
-function main(): void {
+async function main(): Promise<void> {
   const root = process.cwd();
+
+  const populationByCca3 = await fetchPopulationByCca3();
 
   // 1. Load patches
   const patches = JSON.parse(
@@ -120,8 +267,9 @@ function main(): void {
   const wc = rawWorldCountries as unknown as WCEntry[];
   const filtered = wc.filter((c) => c.unMember || EXPLICIT_CODES.has(c.cca3));
 
-  // 3. Transform to Country, applying overrides from patches
+  // 3. Transform to Country, merge population from REST Countries, then overrides
   const fromWC: Country[] = filtered.map((c) => {
+    const pop = populationByCca3.get(c.cca3);
     const country: Country = {
       code: c.cca3,
       nameCanonical: c.name.common,
@@ -130,6 +278,7 @@ function main(): void {
       waterAccess: deriveWaterAccess(c.landlocked, c.borders.length),
       borders: c.borders,
       areaKm2: c.area,
+      population: pop ?? 0,
       officialLanguages: mapLanguages(c.languages),
     };
 
@@ -146,7 +295,9 @@ function main(): void {
 
   // 5. Validate
   if (result.length !== EXPECTED_COUNT) {
-    throw new Error(`Expected ${EXPECTED_COUNT} countries, got ${result.length}`);
+    throw new Error(
+      `Expected ${EXPECTED_COUNT} countries, got ${result.length}`,
+    );
   }
 
   const seenCodes = new Set<string>();
@@ -163,6 +314,11 @@ function main(): void {
     }
     if (c.areaKm2 <= 0) {
       throw new Error(`${c.code}: areaKm2 must be > 0 (got ${c.areaKm2})`);
+    }
+    if (!Number.isFinite(c.population) || c.population <= 0) {
+      throw new Error(
+        `${c.code}: population must be a finite number > 0 (got ${c.population})`,
+      );
     }
     if (c.officialLanguages.length === 0) {
       throw new Error(`${c.code}: no officialLanguages`);
@@ -191,4 +347,7 @@ function main(): void {
   }
 }
 
-main();
+void main().catch((err: unknown) => {
+  console.error(err);
+  process.exit(1);
+});

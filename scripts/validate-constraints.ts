@@ -7,8 +7,8 @@
  */
 import { readFileSync } from "node:fs";
 import { resolve } from "node:path";
-import { CONSTRAINTS } from "../src/features/game/logic/constraints.ts";
 import type { Country } from "../src/features/countries/types.ts";
+import { CONSTRAINTS } from "../src/features/game/logic/constraints.ts";
 
 const SWEET_SPOT_PIVOT: [number, number] = [5, 20];
 const SWEET_SPOT_DEFAULT: [number, number] = [8, 60];
@@ -35,7 +35,13 @@ const rows: Row[] = CONSTRAINTS.map((constraint) => {
       ? SWEET_SPOT_PIVOT
       : SWEET_SPOT_DEFAULT;
   const flag = count < lo ? "⚠️  TROP PEU" : count > hi ? "⚠️  TROP LARGE" : "✓";
-  return { id: constraint.id, label: constraint.label, category: constraint.category, count, flag };
+  return {
+    id: constraint.id,
+    label: constraint.label,
+    category: constraint.category,
+    count,
+    flag,
+  };
 });
 
 // Print grouped by category
@@ -52,7 +58,7 @@ for (const cat of categories) {
   }
 }
 
-console.log(`\n── RÉSUMÉ ────────────────────────────────────────`);
+console.log("\n── RÉSUMÉ ────────────────────────────────────────");
 console.log(`  Total contraintes : ${CONSTRAINTS.length}`);
 console.log(`  Hors sweet-spot   : ${warnings}`);
 if (warnings === 0) {

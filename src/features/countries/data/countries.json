@@ -5,20 +5,10 @@
     "flagEmoji": "🇦🇫",
     "continent": "asia",
     "waterAccess": "landlocked",
-    "borders": [
-      "IRN",
-      "PAK",
-      "TKM",
-      "UZB",
-      "TJK",
-      "CHN"
-    ],
+    "borders": ["IRN", "PAK", "TKM", "UZB", "TJK", "CHN"],
     "areaKm2": 652230,
-    "officialLanguages": [
-      "prs",
-      "ps",
-      "tk"
-    ]
+    "population": 43844000,
+    "officialLanguages": ["prs", "ps", "tk"]
   },
   {
     "code": "AGO",
@@ -26,16 +16,10 @@
     "flagEmoji": "🇦🇴",
     "continent": "africa",
     "waterAccess": "coastal",
-    "borders": [
-      "COG",
-      "COD",
-      "ZMB",
-      "NAM"
-    ],
+    "borders": ["COG", "COD", "ZMB", "NAM"],
     "areaKm2": 1246700,
-    "officialLanguages": [
-      "pt"
-    ]
+    "population": 36170961,
+    "officialLanguages": ["pt"]
   },
   {
     "code": "ALB",
@@ -43,16 +27,10 @@
     "flagEmoji": "🇦🇱",
     "continent": "europe",
     "waterAccess": "coastal",
-    "borders": [
-      "MNE",
-      "GRC",
-      "MKD",
-      "UNK"
-    ],
+    "borders": ["MNE", "GRC", "MKD", "UNK"],
     "areaKm2": 28748,
-    "officialLanguages": [
-      "sq"
-    ]
+    "population": 2363314,
+    "officialLanguages": ["sq"]
   },
   {
     "code": "AND",
@@ -60,14 +38,10 @@
     "flagEmoji": "🇦🇩",
     "continent": "europe",
     "waterAccess": "landlocked",
-    "borders": [
-      "FRA",
-      "ESP"
-    ],
+    "borders": ["FRA", "ESP"],
     "areaKm2": 468,
-    "officialLanguages": [
-      "ca"
-    ]
+    "population": 88406,
+    "officialLanguages": ["ca"]
   },
   {
     "code": "ARE",
@@ -75,14 +49,10 @@
     "flagEmoji": "🇦🇪",
     "continent": "asia",
     "waterAccess": "coastal",
-    "borders": [
-      "OMN",
-      "SAU"
-    ],
+    "borders": ["OMN", "SAU"],
     "areaKm2": 83600,
-    "officialLanguages": [
-      "ar"
-    ]
+    "population": 11294243,
+    "officialLanguages": ["ar"]
   },
   {
     "code": "ARG",
@@ -90,18 +60,10 @@
     "flagEmoji": "🇦🇷",
     "continent": "south_america",
     "waterAccess": "coastal",
-    "borders": [
-      "BOL",
-      "BRA",
-      "CHL",
-      "PRY",
-      "URY"
-    ],
+    "borders": ["BOL", "BRA", "CHL", "PRY", "URY"],
     "areaKm2": 2780400,
-    "officialLanguages": [
-      "gn",
-      "es"
-    ]
+    "population": 46735004,
+    "officialLanguages": ["gn", "es"]
   },
   {
     "code": "ARM",
@@ -109,16 +71,10 @@
     "flagEmoji": "🇦🇲",
     "continent": "asia",
     "waterAccess": "landlocked",
-    "borders": [
-      "AZE",
-      "GEO",
-      "IRN",
-      "TUR"
-    ],
+    "borders": ["AZE", "GEO", "IRN", "TUR"],
     "areaKm2": 29743,
-    "officialLanguages": [
-      "hy"
-    ]
+    "population": 3076200,
+    "officialLanguages": ["hy"]
   },
   {
     "code": "ATG",
@@ -128,9 +84,8 @@
     "waterAccess": "island",
     "borders": [],
     "areaKm2": 442,
-    "officialLanguages": [
-      "en"
-    ]
+    "population": 103603,
+    "officialLanguages": ["en"]
   },
   {
     "code": "AUS",
@@ -140,9 +95,8 @@
     "waterAccess": "coastal",
     "borders": [],
     "areaKm2": 7692024,
-    "officialLanguages": [
-      "en"
-    ]
+    "population": 27536874,
+    "officialLanguages": ["en"]
   },
   {
     "code": "AUT",
@@ -150,20 +104,10 @@
     "flagEmoji": "🇦🇹",
     "continent": "europe",
     "waterAccess": "landlocked",
-    "borders": [
-      "CZE",
-      "DEU",
-      "HUN",
-      "ITA",
-      "LIE",
-      "SVK",
-      "SVN",
-      "CHE"
-    ],
+    "borders": ["CZE", "DEU", "HUN", "ITA", "LIE", "SVK", "SVN", "CHE"],
     "areaKm2": 83871,
-    "officialLanguages": [
-      "bar"
-    ]
+    "population": 9200931,
+    "officialLanguages": ["bar"]
   },
   {
     "code": "AZE",
@@ -171,18 +115,10 @@
     "flagEmoji": "🇦🇿",
     "continent": "asia",
     "waterAccess": "landlocked",
-    "borders": [
-      "ARM",
-      "GEO",
-      "IRN",
-      "RUS",
-      "TUR"
-    ],
+    "borders": ["ARM", "GEO", "IRN", "RUS", "TUR"],
     "areaKm2": 86600,
-    "officialLanguages": [
-      "az",
-      "ru"
-    ]
+    "population": 10241722,
+    "officialLanguages": ["az", "ru"]
   },
   {
     "code": "BDI",
@@ -190,16 +126,10 @@
     "flagEmoji": "🇧🇮",
     "continent": "africa",
     "waterAccess": "landlocked",
-    "borders": [
-      "COD",
-      "RWA",
-      "TZA"
-    ],
+    "borders": ["COD", "RWA", "TZA"],
     "areaKm2": 27834,
-    "officialLanguages": [
-      "fr",
-      "rn"
-    ]
+    "population": 12332788,
+    "officialLanguages": ["fr", "rn"]
   },
   {
     "code": "BEL",
@@ -207,18 +137,10 @@
     "flagEmoji": "🇧🇪",
     "continent": "europe",
     "waterAccess": "coastal",
-    "borders": [
-      "FRA",
-      "DEU",
-      "LUX",
-      "NLD"
-    ],
+    "borders": ["FRA", "DEU", "LUX", "NLD"],
     "areaKm2": 30528,
-    "officialLanguages": [
-      "de",
-      "fr",
-      "nl"
-    ]
+    "population": 11825551,
+    "officialLanguages": ["de", "fr", "nl"]
   },
   {
     "code": "BEN",
@@ -226,16 +148,10 @@
     "flagEmoji": "🇧🇯",
     "continent": "africa",
     "waterAccess": "coastal",
-    "borders": [
-      "BFA",
-      "NER",
-      "NGA",
-      "TGO"
-    ],
+    "borders": ["BFA", "NER", "NGA", "TGO"],
     "areaKm2": 112622,
-    "officialLanguages": [
-      "fr"
-    ]
+    "population": 13224860,
+    "officialLanguages": ["fr"]
   },
   {
     "code": "BFA",
@@ -243,18 +159,10 @@
     "flagEmoji": "🇧🇫",
     "continent": "africa",
     "waterAccess": "landlocked",
-    "borders": [
-      "BEN",
-      "CIV",
-      "GHA",
-      "MLI",
-      "NER",
-      "TGO"
-    ],
+    "borders": ["BEN", "CIV", "GHA", "MLI", "NER", "TGO"],
     "areaKm2": 272967,
-    "officialLanguages": [
-      "fr"
-    ]
+    "population": 24070553,
+    "officialLanguages": ["fr"]
   },
   {
     "code": "BGD",
@@ -262,14 +170,10 @@
     "flagEmoji": "🇧🇩",
     "continent": "asia",
     "waterAccess": "coastal",
-    "borders": [
-      "MMR",
-      "IND"
-    ],
+    "borders": ["MMR", "IND"],
     "areaKm2": 147570,
-    "officialLanguages": [
-      "bn"
-    ]
+    "population": 169828911,
+    "officialLanguages": ["bn"]
   },
   {
     "code": "BGR",
@@ -277,17 +181,10 @@
     "flagEmoji": "🇧🇬",
     "continent": "europe",
     "waterAccess": "coastal",
-    "borders": [
-      "GRC",
-      "MKD",
-      "ROU",
-      "SRB",
-      "TUR"
-    ],
+    "borders": ["GRC", "MKD", "ROU", "SRB", "TUR"],
     "areaKm2": 110879,
-    "officialLanguages": [
-      "bg"
-    ]
+    "population": 6437360,
+    "officialLanguages": ["bg"]
   },
   {
     "code": "BHR",
@@ -297,9 +194,8 @@
     "waterAccess": "island",
     "borders": [],
     "areaKm2": 765,
-    "officialLanguages": [
-      "ar"
-    ]
+    "population": 1594654,
+    "officialLanguages": ["ar"]
   },
   {
     "code": "BHS",
@@ -309,9 +205,8 @@
     "waterAccess": "island",
     "borders": [],
     "areaKm2": 13943,
-    "officialLanguages": [
-      "en"
-    ]
+    "population": 398165,
+    "officialLanguages": ["en"]
   },
   {
     "code": "BIH",
@@ -319,17 +214,10 @@
     "flagEmoji": "🇧🇦",
     "continent": "europe",
     "waterAccess": "coastal",
-    "borders": [
-      "HRV",
-      "MNE",
-      "SRB"
-    ],
+    "borders": ["HRV", "MNE", "SRB"],
     "areaKm2": 51209,
-    "officialLanguages": [
-      "bs",
-      "hr",
-      "sr"
-    ]
+    "population": 3422000,
+    "officialLanguages": ["bs", "hr", "sr"]
   },
   {
     "code": "BLR",
@@ -337,18 +225,10 @@
     "flagEmoji": "🇧🇾",
     "continent": "europe",
     "waterAccess": "landlocked",
-    "borders": [
-      "LVA",
-      "LTU",
-      "POL",
-      "RUS",
-      "UKR"
-    ],
+    "borders": ["LVA", "LTU", "POL", "RUS", "UKR"],
     "areaKm2": 207600,
-    "officialLanguages": [
-      "be",
-      "ru"
-    ]
+    "population": 9109280,
+    "officialLanguages": ["be", "ru"]
   },
   {
     "code": "BLZ",
@@ -356,16 +236,10 @@
     "flagEmoji": "🇧🇿",
     "continent": "north_america",
     "waterAccess": "coastal",
-    "borders": [
-      "GTM",
-      "MEX"
-    ],
+    "borders": ["GTM", "MEX"],
     "areaKm2": 22966,
-    "officialLanguages": [
-      "bjz",
-      "en",
-      "es"
-    ]
+    "population": 417634,
+    "officialLanguages": ["bjz", "en", "es"]
   },
   {
     "code": "BOL",
@@ -373,20 +247,10 @@
     "flagEmoji": "🇧🇴",
     "continent": "south_america",
     "waterAccess": "landlocked",
-    "borders": [
-      "ARG",
-      "BRA",
-      "CHL",
-      "PRY",
-      "PER"
-    ],
+    "borders": ["ARG", "BRA", "CHL", "PRY", "PER"],
     "areaKm2": 1098581,
-    "officialLanguages": [
-      "ay",
-      "gn",
-      "qu",
-      "es"
-    ]
+    "population": 11365333,
+    "officialLanguages": ["ay", "gn", "qu", "es"]
   },
   {
     "code": "BRA",
@@ -407,9 +271,8 @@
       "VEN"
     ],
     "areaKm2": 8515767,
-    "officialLanguages": [
-      "pt"
-    ]
+    "population": 213421037,
+    "officialLanguages": ["pt"]
   },
   {
     "code": "BRB",
@@ -419,9 +282,8 @@
     "waterAccess": "island",
     "borders": [],
     "areaKm2": 430,
-    "officialLanguages": [
-      "en"
-    ]
+    "population": 267800,
+    "officialLanguages": ["en"]
   },
   {
     "code": "BRN",
@@ -429,13 +291,10 @@
     "flagEmoji": "🇧🇳",
     "continent": "asia",
     "waterAccess": "coastal",
-    "borders": [
-      "MYS"
-    ],
+    "borders": ["MYS"],
     "areaKm2": 5765,
-    "officialLanguages": [
-      "ms"
-    ]
+    "population": 455500,
+    "officialLanguages": ["ms"]
   },
   {
     "code": "BTN",
@@ -443,14 +302,10 @@
     "flagEmoji": "🇧🇹",
     "continent": "asia",
     "waterAccess": "landlocked",
-    "borders": [
-      "CHN",
-      "IND"
-    ],
+    "borders": ["CHN", "IND"],
     "areaKm2": 38394,
-    "officialLanguages": [
-      "dz"
-    ]
+    "population": 784043,
+    "officialLanguages": ["dz"]
   },
   {
     "code": "BWA",
@@ -458,17 +313,10 @@
     "flagEmoji": "🇧🇼",
     "continent": "africa",
     "waterAccess": "landlocked",
-    "borders": [
-      "NAM",
-      "ZAF",
-      "ZMB",
-      "ZWE"
-    ],
+    "borders": ["NAM", "ZAF", "ZMB", "ZWE"],
     "areaKm2": 582000,
-    "officialLanguages": [
-      "en",
-      "tn"
-    ]
+    "population": 2359609,
+    "officialLanguages": ["en", "tn"]
   },
   {
     "code": "CAF",
@@ -476,19 +324,10 @@
     "flagEmoji": "🇨🇫",
     "continent": "africa",
     "waterAccess": "landlocked",
-    "borders": [
-      "CMR",
-      "TCD",
-      "COD",
-      "COG",
-      "SSD",
-      "SDN"
-    ],
+    "borders": ["CMR", "TCD", "COD", "COG", "SSD", "SDN"],
     "areaKm2": 622984,
-    "officialLanguages": [
-      "fr",
-      "sg"
-    ]
+    "population": 6470307,
+    "officialLanguages": ["fr", "sg"]
   },
   {
     "code": "CAN",
@@ -496,14 +335,10 @@
     "flagEmoji": "🇨🇦",
     "continent": "north_america",
     "waterAccess": "coastal",
-    "borders": [
-      "USA"
-    ],
+    "borders": ["USA"],
     "areaKm2": 9984670,
-    "officialLanguages": [
-      "en",
-      "fr"
-    ]
+    "population": 41651653,
+    "officialLanguages": ["en", "fr"]
   },
   {
     "code": "CHE",
@@ -511,20 +346,10 @@
     "flagEmoji": "🇨🇭",
     "continent": "europe",
     "waterAccess": "landlocked",
-    "borders": [
-      "AUT",
-      "FRA",
-      "ITA",
-      "LIE",
-      "DEU"
-    ],
+    "borders": ["AUT", "FRA", "ITA", "LIE", "DEU"],
     "areaKm2": 41284,
-    "officialLanguages": [
-      "fr",
-      "gsw",
-      "it",
-      "rm"
-    ]
+    "population": 9082848,
+    "officialLanguages": ["fr", "gsw", "it", "rm"]
   },
   {
     "code": "CHL",
@@ -532,15 +357,10 @@
     "flagEmoji": "🇨🇱",
     "continent": "south_america",
     "waterAccess": "coastal",
-    "borders": [
-      "ARG",
-      "BOL",
-      "PER"
-    ],
+    "borders": ["ARG", "BOL", "PER"],
     "areaKm2": 756102,
-    "officialLanguages": [
-      "es"
-    ]
+    "population": 20206953,
+    "officialLanguages": ["es"]
   },
   {
     "code": "CHN",
@@ -567,9 +387,8 @@
       "VNM"
     ],
     "areaKm2": 9706961,
-    "officialLanguages": [
-      "zh"
-    ]
+    "population": 1408280000,
+    "officialLanguages": ["zh"]
   },
   {
     "code": "CIV",
@@ -577,17 +396,10 @@
     "flagEmoji": "🇨🇮",
     "continent": "africa",
     "waterAccess": "coastal",
-    "borders": [
-      "BFA",
-      "GHA",
-      "GIN",
-      "LBR",
-      "MLI"
-    ],
+    "borders": ["BFA", "GHA", "GIN", "LBR", "MLI"],
     "areaKm2": 322463,
-    "officialLanguages": [
-      "fr"
-    ]
+    "population": 31719275,
+    "officialLanguages": ["fr"]
   },
   {
     "code": "CMR",
@@ -595,19 +407,10 @@
     "flagEmoji": "🇨🇲",
     "continent": "africa",
     "waterAccess": "coastal",
-    "borders": [
-      "CAF",
-      "TCD",
-      "COG",
-      "GNQ",
-      "GAB",
-      "NGA"
-    ],
+    "borders": ["CAF", "TCD", "COG", "GNQ", "GAB", "NGA"],
     "areaKm2": 475442,
-    "officialLanguages": [
-      "en",
-      "fr"
-    ]
+    "population": 29442327,
+    "officialLanguages": ["en", "fr"]
   },
   {
     "code": "COD",
@@ -615,25 +418,10 @@
     "flagEmoji": "🇨🇩",
     "continent": "africa",
     "waterAccess": "coastal",
-    "borders": [
-      "AGO",
-      "BDI",
-      "CAF",
-      "COG",
-      "RWA",
-      "SSD",
-      "TZA",
-      "UGA",
-      "ZMB"
-    ],
+    "borders": ["AGO", "BDI", "CAF", "COG", "RWA", "SSD", "TZA", "UGA", "ZMB"],
     "areaKm2": 2344858,
-    "officialLanguages": [
-      "fr",
-      "kg",
-      "ln",
-      "lua",
-      "sw"
-    ]
+    "population": 112832000,
+    "officialLanguages": ["fr", "kg", "ln", "lua", "sw"]
   },
   {
     "code": "COG",
@@ -641,19 +429,10 @@
     "flagEmoji": "🇨🇬",
     "continent": "africa",
     "waterAccess": "coastal",
-    "borders": [
-      "AGO",
-      "CMR",
-      "CAF",
-      "COD",
-      "GAB"
-    ],
+    "borders": ["AGO", "CMR", "CAF", "COD", "GAB"],
     "areaKm2": 342000,
-    "officialLanguages": [
-      "fr",
-      "kg",
-      "ln"
-    ]
+    "population": 6142180,
+    "officialLanguages": ["fr", "kg", "ln"]
   },
   {
     "code": "COL",
@@ -661,17 +440,10 @@
     "flagEmoji": "🇨🇴",
     "continent": "south_america",
     "waterAccess": "coastal",
-    "borders": [
-      "BRA",
-      "ECU",
-      "PAN",
-      "PER",
-      "VEN"
-    ],
+    "borders": ["BRA", "ECU", "PAN", "PER", "VEN"],
     "areaKm2": 1141748,
-    "officialLanguages": [
-      "es"
-    ]
+    "population": 53057212,
+    "officialLanguages": ["es"]
   },
   {
     "code": "COM",
@@ -681,11 +453,8 @@
     "waterAccess": "island",
     "borders": [],
     "areaKm2": 1862,
-    "officialLanguages": [
-      "ar",
-      "fr",
-      "zdj"
-    ]
+    "population": 919901,
+    "officialLanguages": ["ar", "fr", "zdj"]
   },
   {
     "code": "CPV",
@@ -695,9 +464,8 @@
     "waterAccess": "island",
     "borders": [],
     "areaKm2": 4033,
-    "officialLanguages": [
-      "pt"
-    ]
+    "population": 491233,
+    "officialLanguages": ["pt"]
   },
   {
     "code": "CRI",
@@ -705,14 +473,10 @@
     "flagEmoji": "🇨🇷",
     "continent": "north_america",
     "waterAccess": "coastal",
-    "borders": [
-      "NIC",
-      "PAN"
-    ],
+    "borders": ["NIC", "PAN"],
     "areaKm2": 51100,
-    "officialLanguages": [
-      "es"
-    ]
+    "population": 5309625,
+    "officialLanguages": ["es"]
   },
   {
     "code": "CUB",
@@ -722,9 +486,8 @@
     "waterAccess": "island",
     "borders": [],
     "areaKm2": 109884,
-    "officialLanguages": [
-      "es"
-    ]
+    "population": 9748007,
+    "officialLanguages": ["es"]
   },
   {
     "code": "CYP",
@@ -734,10 +497,8 @@
     "waterAccess": "island",
     "borders": [],
     "areaKm2": 9251,
-    "officialLanguages": [
-      "el",
-      "tr"
-    ]
+    "population": 1442614,
+    "officialLanguages": ["el", "tr"]
   },
   {
     "code": "CZE",
@@ -745,17 +506,10 @@
     "flagEmoji": "🇨🇿",
     "continent": "europe",
     "waterAccess": "landlocked",
-    "borders": [
-      "AUT",
-      "DEU",
-      "POL",
-      "SVK"
-    ],
+    "borders": ["AUT", "DEU", "POL", "SVK"],
     "areaKm2": 78865,
-    "officialLanguages": [
-      "cs",
-      "sk"
-    ]
+    "population": 10882341,
+    "officialLanguages": ["cs", "sk"]
   },
   {
     "code": "DEU",
@@ -763,21 +517,10 @@
     "flagEmoji": "🇩🇪",
     "continent": "europe",
     "waterAccess": "coastal",
-    "borders": [
-      "AUT",
-      "BEL",
-      "CZE",
-      "DNK",
-      "FRA",
-      "LUX",
-      "NLD",
-      "POL",
-      "CHE"
-    ],
+    "borders": ["AUT", "BEL", "CZE", "DNK", "FRA", "LUX", "NLD", "POL", "CHE"],
     "areaKm2": 357114,
-    "officialLanguages": [
-      "de"
-    ]
+    "population": 83491249,
+    "officialLanguages": ["de"]
   },
   {
     "code": "DJI",
@@ -785,16 +528,10 @@
     "flagEmoji": "🇩🇯",
     "continent": "africa",
     "waterAccess": "coastal",
-    "borders": [
-      "ERI",
-      "ETH",
-      "SOM"
-    ],
+    "borders": ["ERI", "ETH", "SOM"],
     "areaKm2": 23200,
-    "officialLanguages": [
-      "ar",
-      "fr"
-    ]
+    "population": 1066809,
+    "officialLanguages": ["ar", "fr"]
   },
   {
     "code": "DMA",
@@ -804,9 +541,8 @@
     "waterAccess": "island",
     "borders": [],
     "areaKm2": 751,
-    "officialLanguages": [
-      "en"
-    ]
+    "population": 67408,
+    "officialLanguages": ["en"]
   },
   {
     "code": "DNK",
@@ -814,13 +550,10 @@
     "flagEmoji": "🇩🇰",
     "continent": "europe",
     "waterAccess": "coastal",
-    "borders": [
-      "DEU"
-    ],
+    "borders": ["DEU"],
     "areaKm2": 43094,
-    "officialLanguages": [
-      "da"
-    ]
+    "population": 6011488,
+    "officialLanguages": ["da"]
   },
   {
     "code": "DOM",
@@ -828,13 +561,10 @@
     "flagEmoji": "🇩🇴",
     "continent": "north_america",
     "waterAccess": "coastal",
-    "borders": [
-      "HTI"
-    ],
+    "borders": ["HTI"],
     "areaKm2": 48671,
-    "officialLanguages": [
-      "es"
-    ]
+    "population": 10771504,
+    "officialLanguages": ["es"]
   },
   {
     "code": "DZA",
@@ -842,19 +572,10 @@
     "flagEmoji": "🇩🇿",
     "continent": "africa",
     "waterAccess": "coastal",
-    "borders": [
-      "TUN",
-      "LBY",
-      "NER",
-      "ESH",
-      "MRT",
-      "MLI",
-      "MAR"
-    ],
+    "borders": ["TUN", "LBY", "NER", "ESH", "MRT", "MLI", "MAR"],
     "areaKm2": 2381741,
-    "officialLanguages": [
-      "ar"
-    ]
+    "population": 47400000,
+    "officialLanguages": ["ar"]
   },
   {
     "code": "ECU",
@@ -862,14 +583,10 @@
     "flagEmoji": "🇪🇨",
     "continent": "south_america",
     "waterAccess": "coastal",
-    "borders": [
-      "COL",
-      "PER"
-    ],
+    "borders": ["COL", "PER"],
     "areaKm2": 276841,
-    "officialLanguages": [
-      "es"
-    ]
+    "population": 18103660,
+    "officialLanguages": ["es"]
   },
   {
     "code": "EGY",
@@ -877,16 +594,10 @@
     "flagEmoji": "🇪🇬",
     "continent": "africa",
     "waterAccess": "coastal",
-    "borders": [
-      "ISR",
-      "LBY",
-      "PSE",
-      "SDN"
-    ],
+    "borders": ["ISR", "LBY", "PSE", "SDN"],
     "areaKm2": 1002450,
-    "officialLanguages": [
-      "ar"
-    ]
+    "population": 107271260,
+    "officialLanguages": ["ar"]
   },
   {
     "code": "ERI",
@@ -894,17 +605,10 @@
     "flagEmoji": "🇪🇷",
     "continent": "africa",
     "waterAccess": "coastal",
-    "borders": [
-      "DJI",
-      "ETH",
-      "SDN"
-    ],
+    "borders": ["DJI", "ETH", "SDN"],
     "areaKm2": 117600,
-    "officialLanguages": [
-      "ar",
-      "en",
-      "ti"
-    ]
+    "population": 3607000,
+    "officialLanguages": ["ar", "en", "ti"]
   },
   {
     "code": "ESP",
@@ -912,17 +616,10 @@
     "flagEmoji": "🇪🇸",
     "continent": "europe",
     "waterAccess": "coastal",
-    "borders": [
-      "AND",
-      "FRA",
-      "GIB",
-      "PRT",
-      "MAR"
-    ],
+    "borders": ["AND", "FRA", "GIB", "PRT", "MAR"],
     "areaKm2": 505992,
-    "officialLanguages": [
-      "es"
-    ]
+    "population": 49315949,
+    "officialLanguages": ["es"]
   },
   {
     "code": "EST",
@@ -930,14 +627,10 @@
     "flagEmoji": "🇪🇪",
     "continent": "europe",
     "waterAccess": "coastal",
-    "borders": [
-      "LVA",
-      "RUS"
-    ],
+    "borders": ["LVA", "RUS"],
     "areaKm2": 45227,
-    "officialLanguages": [
-      "et"
-    ]
+    "population": 1369995,
+    "officialLanguages": ["et"]
   },
   {
     "code": "ETH",
@@ -945,18 +638,10 @@
     "flagEmoji": "🇪🇹",
     "continent": "africa",
     "waterAccess": "landlocked",
-    "borders": [
-      "DJI",
-      "ERI",
-      "KEN",
-      "SOM",
-      "SSD",
-      "SDN"
-    ],
+    "borders": ["DJI", "ERI", "KEN", "SOM", "SSD", "SDN"],
     "areaKm2": 1104300,
-    "officialLanguages": [
-      "am"
-    ]
+    "population": 111652998,
+    "officialLanguages": ["am"]
   },
   {
     "code": "FIN",
@@ -964,16 +649,10 @@
     "flagEmoji": "🇫🇮",
     "continent": "europe",
     "waterAccess": "coastal",
-    "borders": [
-      "NOR",
-      "SWE",
-      "RUS"
-    ],
+    "borders": ["NOR", "SWE", "RUS"],
     "areaKm2": 338424,
-    "officialLanguages": [
-      "fi",
-      "sv"
-    ]
+    "population": 5650325,
+    "officialLanguages": ["fi", "sv"]
   },
   {
     "code": "FJI",
@@ -983,11 +662,8 @@
     "waterAccess": "island",
     "borders": [],
     "areaKm2": 18272,
-    "officialLanguages": [
-      "en",
-      "fj",
-      "hif"
-    ]
+    "population": 900869,
+    "officialLanguages": ["en", "fj", "hif"]
   },
   {
     "code": "FRA",
@@ -995,20 +671,10 @@
     "flagEmoji": "🇫🇷",
     "continent": "europe",
     "waterAccess": "coastal",
-    "borders": [
-      "AND",
-      "BEL",
-      "DEU",
-      "ITA",
-      "LUX",
-      "MCO",
-      "ESP",
-      "CHE"
-    ],
+    "borders": ["AND", "BEL", "DEU", "ITA", "LUX", "MCO", "ESP", "CHE"],
     "areaKm2": 551695,
-    "officialLanguages": [
-      "fr"
-    ]
+    "population": 66351959,
+    "officialLanguages": ["fr"]
   },
   {
     "code": "FSM",
@@ -1018,9 +684,8 @@
     "waterAccess": "island",
     "borders": [],
     "areaKm2": 702,
-    "officialLanguages": [
-      "en"
-    ]
+    "population": 105564,
+    "officialLanguages": ["en"]
   },
   {
     "code": "GAB",
@@ -1028,15 +693,10 @@
     "flagEmoji": "🇬🇦",
     "continent": "africa",
     "waterAccess": "coastal",
-    "borders": [
-      "CMR",
-      "COG",
-      "GNQ"
-    ],
+    "borders": ["CMR", "COG", "GNQ"],
     "areaKm2": 267668,
-    "officialLanguages": [
-      "fr"
-    ]
+    "population": 2469296,
+    "officialLanguages": ["fr"]
   },
   {
     "code": "GBR",
@@ -1044,13 +704,10 @@
     "flagEmoji": "🇬🇧",
     "continent": "europe",
     "waterAccess": "coastal",
-    "borders": [
-      "IRL"
-    ],
+    "borders": ["IRL"],
     "areaKm2": 242900,
-    "officialLanguages": [
-      "en"
-    ]
+    "population": 69281437,
+    "officialLanguages": ["en"]
   },
   {
     "code": "GEO",
@@ -1058,16 +715,10 @@
     "flagEmoji": "🇬🇪",
     "continent": "asia",
     "waterAccess": "coastal",
-    "borders": [
-      "ARM",
-      "AZE",
-      "RUS",
-      "TUR"
-    ],
+    "borders": ["ARM", "AZE", "RUS", "TUR"],
     "areaKm2": 69700,
-    "officialLanguages": [
-      "ka"
-    ]
+    "population": 4000921,
+    "officialLanguages": ["ka"]
   },
   {
     "code": "GHA",
@@ -1075,15 +726,10 @@
     "flagEmoji": "🇬🇭",
     "continent": "africa",
     "waterAccess": "coastal",
-    "borders": [
-      "BFA",
-      "CIV",
-      "TGO"
-    ],
+    "borders": ["BFA", "CIV", "TGO"],
     "areaKm2": 238533,
-    "officialLanguages": [
-      "en"
-    ]
+    "population": 33742380,
+    "officialLanguages": ["en"]
   },
   {
     "code": "GIN",
@@ -1091,18 +737,10 @@
     "flagEmoji": "🇬🇳",
     "continent": "africa",
     "waterAccess": "coastal",
-    "borders": [
-      "CIV",
-      "GNB",
-      "LBR",
-      "MLI",
-      "SEN",
-      "SLE"
-    ],
+    "borders": ["CIV", "GNB", "LBR", "MLI", "SEN", "SLE"],
     "areaKm2": 245857,
-    "officialLanguages": [
-      "fr"
-    ]
+    "population": 14363931,
+    "officialLanguages": ["fr"]
   },
   {
     "code": "GMB",
@@ -1110,13 +748,10 @@
     "flagEmoji": "🇬🇲",
     "continent": "africa",
     "waterAccess": "coastal",
-    "borders": [
-      "SEN"
-    ],
+    "borders": ["SEN"],
     "areaKm2": 10689,
-    "officialLanguages": [
-      "en"
-    ]
+    "population": 2422712,
+    "officialLanguages": ["en"]
   },
   {
     "code": "GNB",
@@ -1124,15 +759,10 @@
     "flagEmoji": "🇬🇼",
     "continent": "africa",
     "waterAccess": "coastal",
-    "borders": [
-      "GIN",
-      "SEN"
-    ],
+    "borders": ["GIN", "SEN"],
     "areaKm2": 36125,
-    "officialLanguages": [
-      "pt",
-      "pov"
-    ]
+    "population": 1781308,
+    "officialLanguages": ["pt", "pov"]
   },
   {
     "code": "GNQ",
@@ -1140,16 +770,10 @@
     "flagEmoji": "🇬🇶",
     "continent": "africa",
     "waterAccess": "coastal",
-    "borders": [
-      "CMR",
-      "GAB"
-    ],
+    "borders": ["CMR", "GAB"],
     "areaKm2": 28051,
-    "officialLanguages": [
-      "fr",
-      "pt",
-      "es"
-    ]
+    "population": 1668768,
+    "officialLanguages": ["fr", "pt", "es"]
   },
   {
     "code": "GRC",
@@ -1157,16 +781,10 @@
     "flagEmoji": "🇬🇷",
     "continent": "europe",
     "waterAccess": "coastal",
-    "borders": [
-      "ALB",
-      "BGR",
-      "TUR",
-      "MKD"
-    ],
+    "borders": ["ALB", "BGR", "TUR", "MKD"],
     "areaKm2": 131990,
-    "officialLanguages": [
-      "el"
-    ]
+    "population": 10400720,
+    "officialLanguages": ["el"]
   },
   {
     "code": "GRD",
@@ -1176,9 +794,8 @@
     "waterAccess": "island",
     "borders": [],
     "areaKm2": 344,
-    "officialLanguages": [
-      "en"
-    ]
+    "population": 109021,
+    "officialLanguages": ["en"]
   },
   {
     "code": "GTM",
@@ -1186,16 +803,10 @@
     "flagEmoji": "🇬🇹",
     "continent": "north_america",
     "waterAccess": "coastal",
-    "borders": [
-      "BLZ",
-      "SLV",
-      "HND",
-      "MEX"
-    ],
+    "borders": ["BLZ", "SLV", "HND", "MEX"],
     "areaKm2": 108889,
-    "officialLanguages": [
-      "es"
-    ]
+    "population": 18079810,
+    "officialLanguages": ["es"]
   },
   {
     "code": "GUY",
@@ -1203,15 +814,10 @@
     "flagEmoji": "🇬🇾",
     "continent": "south_america",
     "waterAccess": "coastal",
-    "borders": [
-      "BRA",
-      "SUR",
-      "VEN"
-    ],
+    "borders": ["BRA", "SUR", "VEN"],
     "areaKm2": 214969,
-    "officialLanguages": [
-      "en"
-    ]
+    "population": 772975,
+    "officialLanguages": ["en"]
   },
   {
     "code": "HND",
@@ -1219,15 +825,10 @@
     "flagEmoji": "🇭🇳",
     "continent": "north_america",
     "waterAccess": "coastal",
-    "borders": [
-      "GTM",
-      "SLV",
-      "NIC"
-    ],
+    "borders": ["GTM", "SLV", "NIC"],
     "areaKm2": 112492,
-    "officialLanguages": [
-      "es"
-    ]
+    "population": 9892632,
+    "officialLanguages": ["es"]
   },
   {
     "code": "HRV",
@@ -1235,17 +836,10 @@
     "flagEmoji": "🇭🇷",
     "continent": "europe",
     "waterAccess": "coastal",
-    "borders": [
-      "BIH",
-      "HUN",
-      "MNE",
-      "SRB",
-      "SVN"
-    ],
+    "borders": ["BIH", "HUN", "MNE", "SRB", "SVN"],
     "areaKm2": 56594,
-    "officialLanguages": [
-      "hr"
-    ]
+    "population": 3866233,
+    "officialLanguages": ["hr"]
   },
   {
     "code": "HTI",
@@ -1253,14 +847,10 @@
     "flagEmoji": "🇭🇹",
     "continent": "north_america",
     "waterAccess": "coastal",
-    "borders": [
-      "DOM"
-    ],
+    "borders": ["DOM"],
     "areaKm2": 27750,
-    "officialLanguages": [
-      "fr",
-      "hat"
-    ]
+    "population": 11867032,
+    "officialLanguages": ["fr", "hat"]
   },
   {
     "code": "HUN",
@@ -1268,19 +858,10 @@
     "flagEmoji": "🇭🇺",
     "continent": "europe",
     "waterAccess": "landlocked",
-    "borders": [
-      "AUT",
-      "HRV",
-      "ROU",
-      "SRB",
-      "SVK",
-      "SVN",
-      "UKR"
-    ],
+    "borders": ["AUT", "HRV", "ROU", "SRB", "SVK", "SVN", "UKR"],
     "areaKm2": 93028,
-    "officialLanguages": [
-      "hu"
-    ]
+    "population": 9539502,
+    "officialLanguages": ["hu"]
   },
   {
     "code": "IDN",
@@ -1288,15 +869,10 @@
     "flagEmoji": "🇮🇩",
     "continent": "asia",
     "waterAccess": "coastal",
-    "borders": [
-      "TLS",
-      "MYS",
-      "PNG"
-    ],
+    "borders": ["TLS", "MYS", "PNG"],
     "areaKm2": 1904569,
-    "officialLanguages": [
-      "id"
-    ]
+    "population": 284438782,
+    "officialLanguages": ["id"]
   },
   {
     "code": "IND",
@@ -1304,20 +880,10 @@
     "flagEmoji": "🇮🇳",
     "continent": "asia",
     "waterAccess": "coastal",
-    "borders": [
-      "BGD",
-      "BTN",
-      "MMR",
-      "CHN",
-      "NPL",
-      "PAK"
-    ],
+    "borders": ["BGD", "BTN", "MMR", "CHN", "NPL", "PAK"],
     "areaKm2": 3287590,
-    "officialLanguages": [
-      "en",
-      "hi",
-      "ta"
-    ]
+    "population": 1417492000,
+    "officialLanguages": ["en", "hi", "ta"]
   },
   {
     "code": "IRL",
@@ -1325,14 +891,10 @@
     "flagEmoji": "🇮🇪",
     "continent": "europe",
     "waterAccess": "coastal",
-    "borders": [
-      "GBR"
-    ],
+    "borders": ["GBR"],
     "areaKm2": 70273,
-    "officialLanguages": [
-      "en",
-      "ga"
-    ]
+    "population": 5458600,
+    "officialLanguages": ["en", "ga"]
   },
   {
     "code": "IRN",
@@ -1340,19 +902,10 @@
     "flagEmoji": "🇮🇷",
     "continent": "asia",
     "waterAccess": "coastal",
-    "borders": [
-      "AFG",
-      "ARM",
-      "AZE",
-      "IRQ",
-      "PAK",
-      "TUR",
-      "TKM"
-    ],
+    "borders": ["AFG", "ARM", "AZE", "IRQ", "PAK", "TUR", "TKM"],
     "areaKm2": 1648195,
-    "officialLanguages": [
-      "fas"
-    ]
+    "population": 85961000,
+    "officialLanguages": ["fas"]
   },
   {
     "code": "IRQ",
@@ -1360,20 +913,10 @@
     "flagEmoji": "🇮🇶",
     "continent": "asia",
     "waterAccess": "coastal",
-    "borders": [
-      "IRN",
-      "JOR",
-      "KWT",
-      "SAU",
-      "SYR",
-      "TUR"
-    ],
+    "borders": ["IRN", "JOR", "KWT", "SAU", "SYR", "TUR"],
     "areaKm2": 438317,
-    "officialLanguages": [
-      "ar",
-      "arc",
-      "ckb"
-    ]
+    "population": 46118793,
+    "officialLanguages": ["ar", "arc", "ckb"]
   },
   {
     "code": "ISL",
@@ -1383,9 +926,8 @@
     "waterAccess": "island",
     "borders": [],
     "areaKm2": 103000,
-    "officialLanguages": [
-      "is"
-    ]
+    "population": 391810,
+    "officialLanguages": ["is"]
   },
   {
     "code": "ISR",
@@ -1393,18 +935,10 @@
     "flagEmoji": "🇮🇱",
     "continent": "asia",
     "waterAccess": "coastal",
-    "borders": [
-      "EGY",
-      "JOR",
-      "LBN",
-      "PSE",
-      "SYR"
-    ],
+    "borders": ["EGY", "JOR", "LBN", "PSE", "SYR"],
     "areaKm2": 20770,
-    "officialLanguages": [
-      "ar",
-      "he"
-    ]
+    "population": 10134800,
+    "officialLanguages": ["ar", "he"]
   },
   {
     "code": "ITA",
@@ -1412,18 +946,10 @@
     "flagEmoji": "🇮🇹",
     "continent": "europe",
     "waterAccess": "coastal",
-    "borders": [
-      "AUT",
-      "FRA",
-      "SMR",
-      "SVN",
-      "CHE",
-      "VAT"
-    ],
+    "borders": ["AUT", "FRA", "SMR", "SVN", "CHE", "VAT"],
     "areaKm2": 301336,
-    "officialLanguages": [
-      "it"
-    ]
+    "population": 58927633,
+    "officialLanguages": ["it"]
   },
   {
     "code": "JAM",
@@ -1433,10 +959,8 @@
     "waterAccess": "island",
     "borders": [],
     "areaKm2": 10991,
-    "officialLanguages": [
-      "en",
-      "jam"
-    ]
+    "population": 2825544,
+    "officialLanguages": ["en", "jam"]
   },
   {
     "code": "JOR",
@@ -1444,17 +968,10 @@
     "flagEmoji": "🇯🇴",
     "continent": "asia",
     "waterAccess": "coastal",
-    "borders": [
-      "IRQ",
-      "ISR",
-      "PSE",
-      "SAU",
-      "SYR"
-    ],
+    "borders": ["IRQ", "ISR", "PSE", "SAU", "SYR"],
     "areaKm2": 89342,
-    "officialLanguages": [
-      "ar"
-    ]
+    "population": 11734000,
+    "officialLanguages": ["ar"]
   },
   {
     "code": "JPN",
@@ -1464,9 +981,8 @@
     "waterAccess": "island",
     "borders": [],
     "areaKm2": 377930,
-    "officialLanguages": [
-      "ja"
-    ]
+    "population": 123210000,
+    "officialLanguages": ["ja"]
   },
   {
     "code": "KAZ",
@@ -1474,18 +990,10 @@
     "flagEmoji": "🇰🇿",
     "continent": "asia",
     "waterAccess": "landlocked",
-    "borders": [
-      "CHN",
-      "KGZ",
-      "RUS",
-      "TKM",
-      "UZB"
-    ],
+    "borders": ["CHN", "KGZ", "RUS", "TKM", "UZB"],
     "areaKm2": 2724900,
-    "officialLanguages": [
-      "kk",
-      "ru"
-    ]
+    "population": 20426568,
+    "officialLanguages": ["kk", "ru"]
   },
   {
     "code": "KEN",
@@ -1493,18 +1001,10 @@
     "flagEmoji": "🇰🇪",
     "continent": "africa",
     "waterAccess": "coastal",
-    "borders": [
-      "ETH",
-      "SOM",
-      "SSD",
-      "TZA",
-      "UGA"
-    ],
+    "borders": ["ETH", "SOM", "SSD", "TZA", "UGA"],
     "areaKm2": 580367,
-    "officialLanguages": [
-      "en",
-      "sw"
-    ]
+    "population": 53330978,
+    "officialLanguages": ["en", "sw"]
   },
   {
     "code": "KGZ",
@@ -1512,17 +1012,10 @@
     "flagEmoji": "🇰🇬",
     "continent": "asia",
     "waterAccess": "landlocked",
-    "borders": [
-      "CHN",
-      "KAZ",
-      "TJK",
-      "UZB"
-    ],
+    "borders": ["CHN", "KAZ", "TJK", "UZB"],
     "areaKm2": 199951,
-    "officialLanguages": [
-      "ky",
-      "ru"
-    ]
+    "population": 7281800,
+    "officialLanguages": ["ky", "ru"]
   },
   {
     "code": "KHM",
@@ -1530,15 +1023,10 @@
     "flagEmoji": "🇰🇭",
     "continent": "asia",
     "waterAccess": "coastal",
-    "borders": [
-      "LAO",
-      "THA",
-      "VNM"
-    ],
+    "borders": ["LAO", "THA", "VNM"],
     "areaKm2": 181035,
-    "officialLanguages": [
-      "km"
-    ]
+    "population": 17577760,
+    "officialLanguages": ["km"]
   },
   {
     "code": "KIR",
@@ -1548,10 +1036,8 @@
     "waterAccess": "island",
     "borders": [],
     "areaKm2": 811,
-    "officialLanguages": [
-      "en",
-      "gil"
-    ]
+    "population": 120740,
+    "officialLanguages": ["en", "gil"]
   },
   {
     "code": "KNA",
@@ -1561,9 +1047,8 @@
     "waterAccess": "island",
     "borders": [],
     "areaKm2": 261,
-    "officialLanguages": [
-      "en"
-    ]
+    "population": 51320,
+    "officialLanguages": ["en"]
   },
   {
     "code": "KOR",
@@ -1571,13 +1056,10 @@
     "flagEmoji": "🇰🇷",
     "continent": "asia",
     "waterAccess": "coastal",
-    "borders": [
-      "PRK"
-    ],
+    "borders": ["PRK"],
     "areaKm2": 100210,
-    "officialLanguages": [
-      "ko"
-    ]
+    "population": 51159889,
+    "officialLanguages": ["ko"]
   },
   {
     "code": "KWT",
@@ -1585,14 +1067,10 @@
     "flagEmoji": "🇰🇼",
     "continent": "asia",
     "waterAccess": "coastal",
-    "borders": [
-      "IRQ",
-      "SAU"
-    ],
+    "borders": ["IRQ", "SAU"],
     "areaKm2": 17818,
-    "officialLanguages": [
-      "ar"
-    ]
+    "population": 4881254,
+    "officialLanguages": ["ar"]
   },
   {
     "code": "LAO",
@@ -1600,17 +1078,10 @@
     "flagEmoji": "🇱🇦",
     "continent": "asia",
     "waterAccess": "landlocked",
-    "borders": [
-      "MMR",
-      "KHM",
-      "CHN",
-      "THA",
-      "VNM"
-    ],
+    "borders": ["MMR", "KHM", "CHN", "THA", "VNM"],
     "areaKm2": 236800,
-    "officialLanguages": [
-      "lo"
-    ]
+    "population": 7647000,
+    "officialLanguages": ["lo"]
   },
   {
     "code": "LBN",
@@ -1618,15 +1089,10 @@
     "flagEmoji": "🇱🇧",
     "continent": "asia",
     "waterAccess": "coastal",
-    "borders": [
-      "ISR",
-      "SYR"
-    ],
+    "borders": ["ISR", "SYR"],
     "areaKm2": 10452,
-    "officialLanguages": [
-      "ar",
-      "fr"
-    ]
+    "population": 5490000,
+    "officialLanguages": ["ar", "fr"]
   },
   {
     "code": "LBR",
@@ -1634,15 +1100,10 @@
     "flagEmoji": "🇱🇷",
     "continent": "africa",
     "waterAccess": "coastal",
-    "borders": [
-      "GIN",
-      "CIV",
-      "SLE"
-    ],
+    "borders": ["GIN", "CIV", "SLE"],
     "areaKm2": 111369,
-    "officialLanguages": [
-      "en"
-    ]
+    "population": 5248621,
+    "officialLanguages": ["en"]
   },
   {
     "code": "LBY",
@@ -1650,18 +1111,10 @@
     "flagEmoji": "🇱🇾",
     "continent": "africa",
     "waterAccess": "coastal",
-    "borders": [
-      "DZA",
-      "TCD",
-      "EGY",
-      "NER",
-      "SDN",
-      "TUN"
-    ],
+    "borders": ["DZA", "TCD", "EGY", "NER", "SDN", "TUN"],
     "areaKm2": 1759540,
-    "officialLanguages": [
-      "ar"
-    ]
+    "population": 7459000,
+    "officialLanguages": ["ar"]
   },
   {
     "code": "LCA",
@@ -1671,9 +1124,8 @@
     "waterAccess": "island",
     "borders": [],
     "areaKm2": 616,
-    "officialLanguages": [
-      "en"
-    ]
+    "population": 184100,
+    "officialLanguages": ["en"]
   },
   {
     "code": "LIE",
@@ -1681,14 +1133,10 @@
     "flagEmoji": "🇱🇮",
     "continent": "europe",
     "waterAccess": "landlocked",
-    "borders": [
-      "AUT",
-      "CHE"
-    ],
+    "borders": ["AUT", "CHE"],
     "areaKm2": 160,
-    "officialLanguages": [
-      "de"
-    ]
+    "population": 40900,
+    "officialLanguages": ["de"]
   },
   {
     "code": "LKA",
@@ -1698,10 +1146,8 @@
     "waterAccess": "island",
     "borders": [],
     "areaKm2": 65610,
-    "officialLanguages": [
-      "si",
-      "ta"
-    ]
+    "population": 21763170,
+    "officialLanguages": ["si", "ta"]
   },
   {
     "code": "LSO",
@@ -1709,14 +1155,10 @@
     "flagEmoji": "🇱🇸",
     "continent": "africa",
     "waterAccess": "landlocked",
-    "borders": [
-      "ZAF"
-    ],
+    "borders": ["ZAF"],
     "areaKm2": 30355,
-    "officialLanguages": [
-      "en",
-      "st"
-    ]
+    "population": 2116427,
+    "officialLanguages": ["en", "st"]
   },
   {
     "code": "LTU",
@@ -1724,16 +1166,10 @@
     "flagEmoji": "🇱🇹",
     "continent": "europe",
     "waterAccess": "coastal",
-    "borders": [
-      "BLR",
-      "LVA",
-      "POL",
-      "RUS"
-    ],
+    "borders": ["BLR", "LVA", "POL", "RUS"],
     "areaKm2": 65300,
-    "officialLanguages": [
-      "lt"
-    ]
+    "population": 2894886,
+    "officialLanguages": ["lt"]
   },
   {
     "code": "LUX",
@@ -1741,17 +1177,10 @@
     "flagEmoji": "🇱🇺",
     "continent": "europe",
     "waterAccess": "landlocked",
-    "borders": [
-      "BEL",
-      "FRA",
-      "DEU"
-    ],
+    "borders": ["BEL", "FRA", "DEU"],
     "areaKm2": 2586,
-    "officialLanguages": [
-      "de",
-      "fr",
-      "lb"
-    ]
+    "population": 681973,
+    "officialLanguages": ["de", "fr", "lb"]
   },
   {
     "code": "LVA",
@@ -1759,16 +1188,10 @@
     "flagEmoji": "🇱🇻",
     "continent": "europe",
     "waterAccess": "coastal",
-    "borders": [
-      "BLR",
-      "EST",
-      "LTU",
-      "RUS"
-    ],
+    "borders": ["BLR", "EST", "LTU", "RUS"],
     "areaKm2": 64559,
-    "officialLanguages": [
-      "lv"
-    ]
+    "population": 1829000,
+    "officialLanguages": ["lv"]
   },
   {
     "code": "MAR",
@@ -1776,16 +1199,10 @@
     "flagEmoji": "🇲🇦",
     "continent": "africa",
     "waterAccess": "coastal",
-    "borders": [
-      "DZA",
-      "ESH",
-      "ESP"
-    ],
+    "borders": ["DZA", "ESH", "ESP"],
     "areaKm2": 446550,
-    "officialLanguages": [
-      "ar",
-      "ber"
-    ]
+    "population": 36828330,
+    "officialLanguages": ["ar", "ber"]
   },
   {
     "code": "MCO",
@@ -1793,13 +1210,10 @@
     "flagEmoji": "🇲🇨",
     "continent": "europe",
     "waterAccess": "coastal",
-    "borders": [
-      "FRA"
-    ],
+    "borders": ["FRA"],
     "areaKm2": 2.02,
-    "officialLanguages": [
-      "fr"
-    ]
+    "population": 38423,
+    "officialLanguages": ["fr"]
   },
   {
     "code": "MDA",
@@ -1807,14 +1221,10 @@
     "flagEmoji": "🇲🇩",
     "continent": "europe",
     "waterAccess": "landlocked",
-    "borders": [
-      "ROU",
-      "UKR"
-    ],
+    "borders": ["ROU", "UKR"],
     "areaKm2": 33846,
-    "officialLanguages": [
-      "ro"
-    ]
+    "population": 2749076,
+    "officialLanguages": ["ro"]
   },
   {
     "code": "MDG",
@@ -1824,10 +1234,8 @@
     "waterAccess": "island",
     "borders": [],
     "areaKm2": 587041,
-    "officialLanguages": [
-      "fr",
-      "mg"
-    ]
+    "population": 31727042,
+    "officialLanguages": ["fr", "mg"]
   },
   {
     "code": "MDV",
@@ -1837,9 +1245,8 @@
     "waterAccess": "island",
     "borders": [],
     "areaKm2": 300,
-    "officialLanguages": [
-      "dv"
-    ]
+    "population": 515132,
+    "officialLanguages": ["dv"]
   },
   {
     "code": "MEX",
@@ -1847,15 +1254,10 @@
     "flagEmoji": "🇲🇽",
     "continent": "north_america",
     "waterAccess": "coastal",
-    "borders": [
-      "BLZ",
-      "GTM",
-      "USA"
-    ],
+    "borders": ["BLZ", "GTM", "USA"],
     "areaKm2": 1964375,
-    "officialLanguages": [
-      "es"
-    ]
+    "population": 130575786,
+    "officialLanguages": ["es"]
   },
   {
     "code": "MHL",
@@ -1865,10 +1267,8 @@
     "waterAccess": "island",
     "borders": [],
     "areaKm2": 181,
-    "officialLanguages": [
-      "en",
-      "mah"
-    ]
+    "population": 42418,
+    "officialLanguages": ["en", "mah"]
   },
   {
     "code": "MKD",
@@ -1876,17 +1276,10 @@
     "flagEmoji": "🇲🇰",
     "continent": "europe",
     "waterAccess": "landlocked",
-    "borders": [
-      "ALB",
-      "BGR",
-      "GRC",
-      "UNK",
-      "SRB"
-    ],
+    "borders": ["ALB", "BGR", "GRC", "UNK", "SRB"],
     "areaKm2": 25713,
-    "officialLanguages": [
-      "mk"
-    ]
+    "population": 1822612,
+    "officialLanguages": ["mk"]
   },
   {
     "code": "MLI",
@@ -1894,19 +1287,10 @@
     "flagEmoji": "🇲🇱",
     "continent": "africa",
     "waterAccess": "landlocked",
-    "borders": [
-      "DZA",
-      "BFA",
-      "GIN",
-      "CIV",
-      "MRT",
-      "NER",
-      "SEN"
-    ],
+    "borders": ["DZA", "BFA", "GIN", "CIV", "MRT", "NER", "SEN"],
     "areaKm2": 1240192,
-    "officialLanguages": [
-      "fr"
-    ]
+    "population": 22395489,
+    "officialLanguages": ["fr"]
   },
   {
     "code": "MLT",
@@ -1916,10 +1300,8 @@
     "waterAccess": "island",
     "borders": [],
     "areaKm2": 316,
-    "officialLanguages": [
-      "en",
-      "mt"
-    ]
+    "population": 574250,
+    "officialLanguages": ["en", "mt"]
   },
   {
     "code": "MMR",
@@ -1927,17 +1309,10 @@
     "flagEmoji": "🇲🇲",
     "continent": "asia",
     "waterAccess": "coastal",
-    "borders": [
-      "BGD",
-      "CHN",
-      "IND",
-      "LAO",
-      "THA"
-    ],
+    "borders": ["BGD", "CHN", "IND", "LAO", "THA"],
     "areaKm2": 676578,
-    "officialLanguages": [
-      "my"
-    ]
+    "population": 51316756,
+    "officialLanguages": ["my"]
   },
   {
     "code": "MNE",
@@ -1945,17 +1320,10 @@
     "flagEmoji": "🇲🇪",
     "continent": "europe",
     "waterAccess": "coastal",
-    "borders": [
-      "ALB",
-      "BIH",
-      "HRV",
-      "UNK",
-      "SRB"
-    ],
+    "borders": ["ALB", "BIH", "HRV", "UNK", "SRB"],
     "areaKm2": 13812,
-    "officialLanguages": [
-      "cnr"
-    ]
+    "population": 623327,
+    "officialLanguages": ["cnr"]
   },
   {
     "code": "MNG",
@@ -1963,14 +1331,10 @@
     "flagEmoji": "🇲🇳",
     "continent": "asia",
     "waterAccess": "landlocked",
-    "borders": [
-      "CHN",
-      "RUS"
-    ],
+    "borders": ["CHN", "RUS"],
     "areaKm2": 1564110,
-    "officialLanguages": [
-      "mn"
-    ]
+    "population": 3544835,
+    "officialLanguages": ["mn"]
   },
   {
     "code": "MOZ",
@@ -1978,18 +1342,10 @@
     "flagEmoji": "🇲🇿",
     "continent": "africa",
     "waterAccess": "coastal",
-    "borders": [
-      "MWI",
-      "ZAF",
-      "SWZ",
-      "TZA",
-      "ZMB",
-      "ZWE"
-    ],
+    "borders": ["MWI", "ZAF", "SWZ", "TZA", "ZMB", "ZWE"],
     "areaKm2": 801590,
-    "officialLanguages": [
-      "pt"
-    ]
+    "population": 34090466,
+    "officialLanguages": ["pt"]
   },
   {
     "code": "MRT",
@@ -1997,16 +1353,10 @@
     "flagEmoji": "🇲🇷",
     "continent": "africa",
     "waterAccess": "coastal",
-    "borders": [
-      "DZA",
-      "MLI",
-      "SEN",
-      "ESH"
-    ],
+    "borders": ["DZA", "MLI", "SEN", "ESH"],
     "areaKm2": 1030700,
-    "officialLanguages": [
-      "ar"
-    ]
+    "population": 4927532,
+    "officialLanguages": ["ar"]
   },
   {
     "code": "MUS",
@@ -2016,11 +1366,8 @@
     "waterAccess": "island",
     "borders": [],
     "areaKm2": 2040,
-    "officialLanguages": [
-      "en",
-      "fr",
-      "mfe"
-    ]
+    "population": 1243741,
+    "officialLanguages": ["en", "fr", "mfe"]
   },
   {
     "code": "MWI",
@@ -2028,16 +1375,10 @@
     "flagEmoji": "🇲🇼",
     "continent": "africa",
     "waterAccess": "landlocked",
-    "borders": [
-      "MOZ",
-      "TZA",
-      "ZMB"
-    ],
+    "borders": ["MOZ", "TZA", "ZMB"],
     "areaKm2": 118484,
-    "officialLanguages": [
-      "en",
-      "ny"
-    ]
+    "population": 20734262,
+    "officialLanguages": ["en", "ny"]
   },
   {
     "code": "MYS",
@@ -2045,16 +1386,10 @@
     "flagEmoji": "🇲🇾",
     "continent": "asia",
     "waterAccess": "coastal",
-    "borders": [
-      "BRN",
-      "IDN",
-      "THA"
-    ],
+    "borders": ["BRN", "IDN", "THA"],
     "areaKm2": 330803,
-    "officialLanguages": [
-      "en",
-      "ms"
-    ]
+    "population": 34231700,
+    "officialLanguages": ["en", "ms"]
   },
   {
     "code": "NAM",
@@ -2062,13 +1397,9 @@
     "flagEmoji": "🇳🇦",
     "continent": "africa",
     "waterAccess": "coastal",
-    "borders": [
-      "AGO",
-      "BWA",
-      "ZAF",
-      "ZMB"
-    ],
+    "borders": ["AGO", "BWA", "ZAF", "ZMB"],
     "areaKm2": 825615,
+    "population": 3022401,
     "officialLanguages": [
       "af",
       "de",
@@ -2087,19 +1418,10 @@
     "flagEmoji": "🇳🇪",
     "continent": "africa",
     "waterAccess": "landlocked",
-    "borders": [
-      "DZA",
-      "BEN",
-      "BFA",
-      "TCD",
-      "LBY",
-      "MLI",
-      "NGA"
-    ],
+    "borders": ["DZA", "BEN", "BFA", "TCD", "LBY", "MLI", "NGA"],
     "areaKm2": 1267000,
-    "officialLanguages": [
-      "fr"
-    ]
+    "population": 26312034,
+    "officialLanguages": ["fr"]
   },
   {
     "code": "NGA",
@@ -2107,16 +1429,10 @@
     "flagEmoji": "🇳🇬",
     "continent": "africa",
     "waterAccess": "coastal",
-    "borders": [
-      "BEN",
-      "CMR",
-      "TCD",
-      "NER"
-    ],
+    "borders": ["BEN", "CMR", "TCD", "NER"],
     "areaKm2": 923768,
-    "officialLanguages": [
-      "en"
-    ]
+    "population": 223800000,
+    "officialLanguages": ["en"]
   },
   {
     "code": "NIC",
@@ -2124,14 +1440,10 @@
     "flagEmoji": "🇳🇮",
     "continent": "north_america",
     "waterAccess": "coastal",
-    "borders": [
-      "CRI",
-      "HND"
-    ],
+    "borders": ["CRI", "HND"],
     "areaKm2": 130373,
-    "officialLanguages": [
-      "es"
-    ]
+    "population": 6803886,
+    "officialLanguages": ["es"]
   },
   {
     "code": "NLD",
@@ -2139,14 +1451,10 @@
     "flagEmoji": "🇳🇱",
     "continent": "europe",
     "waterAccess": "coastal",
-    "borders": [
-      "BEL",
-      "DEU"
-    ],
+    "borders": ["BEL", "DEU"],
     "areaKm2": 41850,
-    "officialLanguages": [
-      "nl"
-    ]
+    "population": 18100436,
+    "officialLanguages": ["nl"]
   },
   {
     "code": "NOR",
@@ -2154,17 +1462,10 @@
     "flagEmoji": "🇳🇴",
     "continent": "europe",
     "waterAccess": "coastal",
-    "borders": [
-      "FIN",
-      "SWE",
-      "RUS"
-    ],
+    "borders": ["FIN", "SWE", "RUS"],
     "areaKm2": 323802,
-    "officialLanguages": [
-      "nn",
-      "nb",
-      "se"
-    ]
+    "population": 5606944,
+    "officialLanguages": ["nn", "nb", "se"]
   },
   {
     "code": "NPL",
@@ -2172,14 +1473,10 @@
     "flagEmoji": "🇳🇵",
     "continent": "asia",
     "waterAccess": "landlocked",
-    "borders": [
-      "CHN",
-      "IND"
-    ],
+    "borders": ["CHN", "IND"],
     "areaKm2": 147181,
-    "officialLanguages": [
-      "ne"
-    ]
+    "population": 29911840,
+    "officialLanguages": ["ne"]
   },
   {
     "code": "NRU",
@@ -2189,10 +1486,8 @@
     "waterAccess": "island",
     "borders": [],
     "areaKm2": 21,
-    "officialLanguages": [
-      "en",
-      "na"
-    ]
+    "population": 11680,
+    "officialLanguages": ["en", "na"]
   },
   {
     "code": "NZL",
@@ -2202,11 +1497,8 @@
     "waterAccess": "island",
     "borders": [],
     "areaKm2": 270467,
-    "officialLanguages": [
-      "en",
-      "mi",
-      "nzs"
-    ]
+    "population": 5324700,
+    "officialLanguages": ["en", "mi", "nzs"]
   },
   {
     "code": "OMN",
@@ -2214,15 +1506,10 @@
     "flagEmoji": "🇴🇲",
     "continent": "asia",
     "waterAccess": "coastal",
-    "borders": [
-      "SAU",
-      "ARE",
-      "YEM"
-    ],
+    "borders": ["SAU", "ARE", "YEM"],
     "areaKm2": 309500,
-    "officialLanguages": [
-      "ar"
-    ]
+    "population": 5343630,
+    "officialLanguages": ["ar"]
   },
   {
     "code": "PAK",
@@ -2230,17 +1517,10 @@
     "flagEmoji": "🇵🇰",
     "continent": "asia",
     "waterAccess": "coastal",
-    "borders": [
-      "AFG",
-      "CHN",
-      "IND",
-      "IRN"
-    ],
+    "borders": ["AFG", "CHN", "IND", "IRN"],
     "areaKm2": 881912,
-    "officialLanguages": [
-      "en",
-      "ur"
-    ]
+    "population": 241499431,
+    "officialLanguages": ["en", "ur"]
   },
   {
     "code": "PAN",
@@ -2248,14 +1528,10 @@
     "flagEmoji": "🇵🇦",
     "continent": "north_america",
     "waterAccess": "coastal",
-    "borders": [
-      "COL",
-      "CRI"
-    ],
+    "borders": ["COL", "CRI"],
     "areaKm2": 75417,
-    "officialLanguages": [
-      "es"
-    ]
+    "population": 4064780,
+    "officialLanguages": ["es"]
   },
   {
     "code": "PER",
@@ -2263,19 +1539,10 @@
     "flagEmoji": "🇵🇪",
     "continent": "south_america",
     "waterAccess": "coastal",
-    "borders": [
-      "BOL",
-      "BRA",
-      "CHL",
-      "COL",
-      "ECU"
-    ],
+    "borders": ["BOL", "BRA", "CHL", "COL", "ECU"],
     "areaKm2": 1285216,
-    "officialLanguages": [
-      "ay",
-      "qu",
-      "es"
-    ]
+    "population": 34350244,
+    "officialLanguages": ["ay", "qu", "es"]
   },
   {
     "code": "PHL",
@@ -2285,10 +1552,8 @@
     "waterAccess": "island",
     "borders": [],
     "areaKm2": 342353,
-    "officialLanguages": [
-      "en",
-      "fil"
-    ]
+    "population": 114123600,
+    "officialLanguages": ["en", "fil"]
   },
   {
     "code": "PLW",
@@ -2298,10 +1563,8 @@
     "waterAccess": "island",
     "borders": [],
     "areaKm2": 459,
-    "officialLanguages": [
-      "en",
-      "pau"
-    ]
+    "population": 16733,
+    "officialLanguages": ["en", "pau"]
   },
   {
     "code": "PNG",
@@ -2309,15 +1572,10 @@
     "flagEmoji": "🇵🇬",
     "continent": "oceania",
     "waterAccess": "coastal",
-    "borders": [
-      "IDN"
-    ],
+    "borders": ["IDN"],
     "areaKm2": 462840,
-    "officialLanguages": [
-      "en",
-      "hmo",
-      "tpi"
-    ]
+    "population": 11781559,
+    "officialLanguages": ["en", "hmo", "tpi"]
   },
   {
     "code": "POL",
@@ -2325,19 +1583,10 @@
     "flagEmoji": "🇵🇱",
     "continent": "europe",
     "waterAccess": "coastal",
-    "borders": [
-      "BLR",
-      "CZE",
-      "DEU",
-      "LTU",
-      "RUS",
-      "SVK",
-      "UKR"
-    ],
+    "borders": ["BLR", "CZE", "DEU", "LTU", "RUS", "SVK", "UKR"],
     "areaKm2": 312679,
-    "officialLanguages": [
-      "pl"
-    ]
+    "population": 37392000,
+    "officialLanguages": ["pl"]
   },
   {
     "code": "PRK",
@@ -2345,15 +1594,10 @@
     "flagEmoji": "🇰🇵",
     "continent": "asia",
     "waterAccess": "coastal",
-    "borders": [
-      "CHN",
-      "KOR",
-      "RUS"
-    ],
+    "borders": ["CHN", "KOR", "RUS"],
     "areaKm2": 120538,
-    "officialLanguages": [
-      "ko"
-    ]
+    "population": 25950000,
+    "officialLanguages": ["ko"]
   },
   {
     "code": "PRT",
@@ -2361,13 +1605,10 @@
     "flagEmoji": "🇵🇹",
     "continent": "europe",
     "waterAccess": "coastal",
-    "borders": [
-      "ESP"
-    ],
+    "borders": ["ESP"],
     "areaKm2": 92090,
-    "officialLanguages": [
-      "pt"
-    ]
+    "population": 10749635,
+    "officialLanguages": ["pt"]
   },
   {
     "code": "PRY",
@@ -2375,16 +1616,10 @@
     "flagEmoji": "🇵🇾",
     "continent": "south_america",
     "waterAccess": "landlocked",
-    "borders": [
-      "ARG",
-      "BOL",
-      "BRA"
-    ],
+    "borders": ["ARG", "BOL", "BRA"],
     "areaKm2": 406752,
-    "officialLanguages": [
-      "gn",
-      "es"
-    ]
+    "population": 6109644,
+    "officialLanguages": ["gn", "es"]
   },
   {
     "code": "PSE",
@@ -2392,15 +1627,10 @@
     "flagEmoji": "🇵🇸",
     "continent": "asia",
     "waterAccess": "coastal",
-    "borders": [
-      "ISR",
-      "EGY",
-      "JOR"
-    ],
+    "borders": ["ISR", "EGY", "JOR"],
     "areaKm2": 6220,
-    "officialLanguages": [
-      "ar"
-    ]
+    "population": 5483450,
+    "officialLanguages": ["ar"]
   },
   {
     "code": "QAT",
@@ -2408,13 +1638,10 @@
     "flagEmoji": "🇶🇦",
     "continent": "asia",
     "waterAccess": "coastal",
-    "borders": [
-      "SAU"
-    ],
+    "borders": ["SAU"],
     "areaKm2": 11586,
-    "officialLanguages": [
-      "ar"
-    ]
+    "population": 3173024,
+    "officialLanguages": ["ar"]
   },
   {
     "code": "ROU",
@@ -2422,17 +1649,10 @@
     "flagEmoji": "🇷🇴",
     "continent": "europe",
     "waterAccess": "coastal",
-    "borders": [
-      "BGR",
-      "HUN",
-      "MDA",
-      "SRB",
-      "UKR"
-    ],
+    "borders": ["BGR", "HUN", "MDA", "SRB", "UKR"],
     "areaKm2": 238391,
-    "officialLanguages": [
-      "ro"
-    ]
+    "population": 19036031,
+    "officialLanguages": ["ro"]
   },
   {
     "code": "RUS",
@@ -2457,9 +1677,8 @@
       "UKR"
     ],
     "areaKm2": 17098242,
-    "officialLanguages": [
-      "ru"
-    ]
+    "population": 146028325,
+    "officialLanguages": ["ru"]
   },
   {
     "code": "RWA",
@@ -2467,18 +1686,10 @@
     "flagEmoji": "🇷🇼",
     "continent": "africa",
     "waterAccess": "landlocked",
-    "borders": [
-      "BDI",
-      "COD",
-      "TZA",
-      "UGA"
-    ],
+    "borders": ["BDI", "COD", "TZA", "UGA"],
     "areaKm2": 26338,
-    "officialLanguages": [
-      "en",
-      "fr",
-      "rw"
-    ]
+    "population": 14104969,
+    "officialLanguages": ["en", "fr", "rw"]
   },
   {
     "code": "SAU",
@@ -2486,19 +1697,10 @@
     "flagEmoji": "🇸🇦",
     "continent": "asia",
     "waterAccess": "coastal",
-    "borders": [
-      "IRQ",
-      "JOR",
-      "KWT",
-      "OMN",
-      "QAT",
-      "ARE",
-      "YEM"
-    ],
+    "borders": ["IRQ", "JOR", "KWT", "OMN", "QAT", "ARE", "YEM"],
     "areaKm2": 2149690,
-    "officialLanguages": [
-      "ar"
-    ]
+    "population": 35300280,
+    "officialLanguages": ["ar"]
   },
   {
     "code": "SDN",
@@ -2506,20 +1708,10 @@
     "flagEmoji": "🇸🇩",
     "continent": "africa",
     "waterAccess": "coastal",
-    "borders": [
-      "CAF",
-      "TCD",
-      "EGY",
-      "ERI",
-      "ETH",
-      "LBY",
-      "SSD"
-    ],
+    "borders": ["CAF", "TCD", "EGY", "ERI", "ETH", "LBY", "SSD"],
     "areaKm2": 1886068,
-    "officialLanguages": [
-      "ar",
-      "en"
-    ]
+    "population": 51662000,
+    "officialLanguages": ["ar", "en"]
   },
   {
     "code": "SEN",
@@ -2527,17 +1719,10 @@
     "flagEmoji": "🇸🇳",
     "continent": "africa",
     "waterAccess": "coastal",
-    "borders": [
-      "GMB",
-      "GIN",
-      "GNB",
-      "MLI",
-      "MRT"
-    ],
+    "borders": ["GMB", "GIN", "GNB", "MLI", "MRT"],
     "areaKm2": 196722,
-    "officialLanguages": [
-      "fr"
-    ]
+    "population": 18593258,
+    "officialLanguages": ["fr"]
   },
   {
     "code": "SGP",
@@ -2547,12 +1732,8 @@
     "waterAccess": "island",
     "borders": [],
     "areaKm2": 710,
-    "officialLanguages": [
-      "en",
-      "ms",
-      "ta",
-      "zh"
-    ]
+    "population": 6110200,
+    "officialLanguages": ["en", "ms", "ta", "zh"]
   },
   {
     "code": "SLB",
@@ -2562,9 +1743,8 @@
     "waterAccess": "island",
     "borders": [],
     "areaKm2": 28896,
-    "officialLanguages": [
-      "en"
-    ]
+    "population": 750325,
+    "officialLanguages": ["en"]
   },
   {
     "code": "SLE",
@@ -2572,14 +1752,10 @@
     "flagEmoji": "🇸🇱",
     "continent": "africa",
     "waterAccess": "coastal",
-    "borders": [
-      "GIN",
-      "LBR"
-    ],
+    "borders": ["GIN", "LBR"],
     "areaKm2": 71740,
-    "officialLanguages": [
-      "en"
-    ]
+    "population": 9077691,
+    "officialLanguages": ["en"]
   },
   {
     "code": "SLV",
@@ -2587,14 +1763,10 @@
     "flagEmoji": "🇸🇻",
     "continent": "north_america",
     "waterAccess": "coastal",
-    "borders": [
-      "GTM",
-      "HND"
-    ],
+    "borders": ["GTM", "HND"],
     "areaKm2": 21041,
-    "officialLanguages": [
-      "es"
-    ]
+    "population": 6029976,
+    "officialLanguages": ["es"]
   },
   {
     "code": "SMR",
@@ -2602,13 +1774,10 @@
     "flagEmoji": "🇸🇲",
     "continent": "europe",
     "waterAccess": "landlocked",
-    "borders": [
-      "ITA"
-    ],
+    "borders": ["ITA"],
     "areaKm2": 61,
-    "officialLanguages": [
-      "it"
-    ]
+    "population": 34132,
+    "officialLanguages": ["it"]
   },
   {
     "code": "SOM",
@@ -2616,16 +1785,10 @@
     "flagEmoji": "🇸🇴",
     "continent": "africa",
     "waterAccess": "coastal",
-    "borders": [
-      "DJI",
-      "ETH",
-      "KEN"
-    ],
+    "borders": ["DJI", "ETH", "KEN"],
     "areaKm2": 637657,
-    "officialLanguages": [
-      "ar",
-      "so"
-    ]
+    "population": 19655000,
+    "officialLanguages": ["ar", "so"]
   },
   {
     "code": "SRB",
@@ -2633,20 +1796,10 @@
     "flagEmoji": "🇷🇸",
     "continent": "europe",
     "waterAccess": "landlocked",
-    "borders": [
-      "BIH",
-      "BGR",
-      "HRV",
-      "HUN",
-      "UNK",
-      "MKD",
-      "MNE",
-      "ROU"
-    ],
+    "borders": ["BIH", "BGR", "HRV", "HUN", "UNK", "MKD", "MNE", "ROU"],
     "areaKm2": 88361,
-    "officialLanguages": [
-      "sr"
-    ]
+    "population": 6567783,
+    "officialLanguages": ["sr"]
   },
   {
     "code": "SSD",
@@ -2654,18 +1807,10 @@
     "flagEmoji": "🇸🇸",
     "continent": "africa",
     "waterAccess": "landlocked",
-    "borders": [
-      "CAF",
-      "COD",
-      "ETH",
-      "KEN",
-      "SDN",
-      "UGA"
-    ],
+    "borders": ["CAF", "COD", "ETH", "KEN", "SDN", "UGA"],
     "areaKm2": 619745,
-    "officialLanguages": [
-      "en"
-    ]
+    "population": 15786898,
+    "officialLanguages": ["en"]
   },
   {
     "code": "STP",
@@ -2675,9 +1820,8 @@
     "waterAccess": "island",
     "borders": [],
     "areaKm2": 964,
-    "officialLanguages": [
-      "pt"
-    ]
+    "population": 209607,
+    "officialLanguages": ["pt"]
   },
   {
     "code": "SUR",
@@ -2685,15 +1829,10 @@
     "flagEmoji": "🇸🇷",
     "continent": "south_america",
     "waterAccess": "coastal",
-    "borders": [
-      "BRA",
-      "GUF",
-      "GUY"
-    ],
+    "borders": ["BRA", "GUF", "GUY"],
     "areaKm2": 163820,
-    "officialLanguages": [
-      "nl"
-    ]
+    "population": 616500,
+    "officialLanguages": ["nl"]
   },
   {
     "code": "SVK",
@@ -2701,17 +1840,10 @@
     "flagEmoji": "🇸🇰",
     "continent": "europe",
     "waterAccess": "landlocked",
-    "borders": [
-      "AUT",
-      "CZE",
-      "HUN",
-      "POL",
-      "UKR"
-    ],
+    "borders": ["AUT", "CZE", "HUN", "POL", "UKR"],
     "areaKm2": 49037,
-    "officialLanguages": [
-      "sk"
-    ]
+    "population": 5413813,
+    "officialLanguages": ["sk"]
   },
   {
     "code": "SVN",
@@ -2719,16 +1851,10 @@
     "flagEmoji": "🇸🇮",
     "continent": "europe",
     "waterAccess": "coastal",
-    "borders": [
-      "AUT",
-      "HRV",
-      "ITA",
-      "HUN"
-    ],
+    "borders": ["AUT", "HRV", "ITA", "HUN"],
     "areaKm2": 20273,
-    "officialLanguages": [
-      "sl"
-    ]
+    "population": 2130638,
+    "officialLanguages": ["sl"]
   },
   {
     "code": "SWE",
@@ -2736,14 +1862,10 @@
     "flagEmoji": "🇸🇪",
     "continent": "europe",
     "waterAccess": "coastal",
-    "borders": [
-      "FIN",
-      "NOR"
-    ],
+    "borders": ["FIN", "NOR"],
     "areaKm2": 450295,
-    "officialLanguages": [
-      "sv"
-    ]
+    "population": 10605098,
+    "officialLanguages": ["sv"]
   },
   {
     "code": "SWZ",
@@ -2751,15 +1873,10 @@
     "flagEmoji": "🇸🇿",
     "continent": "africa",
     "waterAccess": "landlocked",
-    "borders": [
-      "MOZ",
-      "ZAF"
-    ],
+    "borders": ["MOZ", "ZAF"],
     "areaKm2": 17364,
-    "officialLanguages": [
-      "en",
-      "ss"
-    ]
+    "population": 1235549,
+    "officialLanguages": ["en", "ss"]
   },
   {
     "code": "SYC",
@@ -2769,11 +1886,8 @@
     "waterAccess": "island",
     "borders": [],
     "areaKm2": 452,
-    "officialLanguages": [
-      "crs",
-      "en",
-      "fr"
-    ]
+    "population": 122729,
+    "officialLanguages": ["crs", "en", "fr"]
   },
   {
     "code": "SYR",
@@ -2781,17 +1895,10 @@
     "flagEmoji": "🇸🇾",
     "continent": "asia",
     "waterAccess": "coastal",
-    "borders": [
-      "IRQ",
-      "ISR",
-      "JOR",
-      "LBN",
-      "TUR"
-    ],
+    "borders": ["IRQ", "ISR", "JOR", "LBN", "TUR"],
     "areaKm2": 185180,
-    "officialLanguages": [
-      "ar"
-    ]
+    "population": 25620000,
+    "officialLanguages": ["ar"]
   },
   {
     "code": "TCD",
@@ -2799,19 +1906,10 @@
     "flagEmoji": "🇹🇩",
     "continent": "africa",
     "waterAccess": "landlocked",
-    "borders": [
-      "CMR",
-      "CAF",
-      "LBY",
-      "NER",
-      "NGA",
-      "SDN"
-    ],
+    "borders": ["CMR", "CAF", "LBY", "NER", "NGA", "SDN"],
     "areaKm2": 1284000,
-    "officialLanguages": [
-      "ar",
-      "fr"
-    ]
+    "population": 19340757,
+    "officialLanguages": ["ar", "fr"]
   },
   {
     "code": "TGO",
@@ -2819,15 +1917,10 @@
     "flagEmoji": "🇹🇬",
     "continent": "africa",
     "waterAccess": "coastal",
-    "borders": [
-      "BEN",
-      "BFA",
-      "GHA"
-    ],
+    "borders": ["BEN", "BFA", "GHA"],
     "areaKm2": 56785,
-    "officialLanguages": [
-      "fr"
-    ]
+    "population": 8095498,
+    "officialLanguages": ["fr"]
   },
   {
     "code": "THA",
@@ -2835,16 +1928,10 @@
     "flagEmoji": "🇹🇭",
     "continent": "asia",
     "waterAccess": "coastal",
-    "borders": [
-      "MMR",
-      "KHM",
-      "LAO",
-      "MYS"
-    ],
+    "borders": ["MMR", "KHM", "LAO", "MYS"],
     "areaKm2": 513120,
-    "officialLanguages": [
-      "th"
-    ]
+    "population": 65859640,
+    "officialLanguages": ["th"]
   },
   {
     "code": "TJK",
@@ -2852,17 +1939,10 @@
     "flagEmoji": "🇹🇯",
     "continent": "asia",
     "waterAccess": "landlocked",
-    "borders": [
-      "AFG",
-      "CHN",
-      "KGZ",
-      "UZB"
-    ],
+    "borders": ["AFG", "CHN", "KGZ", "UZB"],
     "areaKm2": 143100,
-    "officialLanguages": [
-      "ru",
-      "tg"
-    ]
+    "population": 10499000,
+    "officialLanguages": ["ru", "tg"]
   },
   {
     "code": "TKM",
@@ -2870,17 +1950,10 @@
     "flagEmoji": "🇹🇲",
     "continent": "asia",
     "waterAccess": "landlocked",
-    "borders": [
-      "AFG",
-      "IRN",
-      "KAZ",
-      "UZB"
-    ],
+    "borders": ["AFG", "IRN", "KAZ", "UZB"],
     "areaKm2": 488100,
-    "officialLanguages": [
-      "ru",
-      "tk"
-    ]
+    "population": 7057841,
+    "officialLanguages": ["ru", "tk"]
   },
   {
     "code": "TLS",
@@ -2888,14 +1961,10 @@
     "flagEmoji": "🇹🇱",
     "continent": "asia",
     "waterAccess": "coastal",
-    "borders": [
-      "IDN"
-    ],
+    "borders": ["IDN"],
     "areaKm2": 14874,
-    "officialLanguages": [
-      "pt",
-      "tet"
-    ]
+    "population": 1391221,
+    "officialLanguages": ["pt", "tet"]
   },
   {
     "code": "TON",
@@ -2905,10 +1974,8 @@
     "waterAccess": "island",
     "borders": [],
     "areaKm2": 747,
-    "officialLanguages": [
-      "en",
-      "to"
-    ]
+    "population": 100179,
+    "officialLanguages": ["en", "to"]
   },
   {
     "code": "TTO",
@@ -2918,9 +1985,8 @@
     "waterAccess": "island",
     "borders": [],
     "areaKm2": 5130,
-    "officialLanguages": [
-      "en"
-    ]
+    "population": 1367764,
+    "officialLanguages": ["en"]
   },
   {
     "code": "TUN",
@@ -2928,14 +1994,10 @@
     "flagEmoji": "🇹🇳",
     "continent": "africa",
     "waterAccess": "coastal",
-    "borders": [
-      "DZA",
-      "LBY"
-    ],
+    "borders": ["DZA", "LBY"],
     "areaKm2": 163610,
-    "officialLanguages": [
-      "ar"
-    ]
+    "population": 11972169,
+    "officialLanguages": ["ar"]
   },
   {
     "code": "TUR",
@@ -2943,20 +2005,10 @@
     "flagEmoji": "🇹🇷",
     "continent": "asia",
     "waterAccess": "coastal",
-    "borders": [
-      "ARM",
-      "AZE",
-      "BGR",
-      "GEO",
-      "GRC",
-      "IRN",
-      "IRQ",
-      "SYR"
-    ],
+    "borders": ["ARM", "AZE", "BGR", "GEO", "GRC", "IRN", "IRQ", "SYR"],
     "areaKm2": 783562,
-    "officialLanguages": [
-      "tr"
-    ]
+    "population": 85664944,
+    "officialLanguages": ["tr"]
   },
   {
     "code": "TUV",
@@ -2966,10 +2018,8 @@
     "waterAccess": "island",
     "borders": [],
     "areaKm2": 26,
-    "officialLanguages": [
-      "en",
-      "tvl"
-    ]
+    "population": 10643,
+    "officialLanguages": ["en", "tvl"]
   },
   {
     "code": "TWN",
@@ -2979,9 +2029,8 @@
     "waterAccess": "island",
     "borders": [],
     "areaKm2": 36193,
-    "officialLanguages": [
-      "zh"
-    ]
+    "population": 23317031,
+    "officialLanguages": ["zh"]
   },
   {
     "code": "TZA",
@@ -2989,21 +2038,10 @@
     "flagEmoji": "🇹🇿",
     "continent": "africa",
     "waterAccess": "coastal",
-    "borders": [
-      "BDI",
-      "COD",
-      "KEN",
-      "MWI",
-      "MOZ",
-      "RWA",
-      "UGA",
-      "ZMB"
-    ],
+    "borders": ["BDI", "COD", "KEN", "MWI", "MOZ", "RWA", "UGA", "ZMB"],
     "areaKm2": 945087,
-    "officialLanguages": [
-      "en",
-      "sw"
-    ]
+    "population": 68153004,
+    "officialLanguages": ["en", "sw"]
   },
   {
     "code": "UGA",
@@ -3011,18 +2049,10 @@
     "flagEmoji": "🇺🇬",
     "continent": "africa",
     "waterAccess": "landlocked",
-    "borders": [
-      "COD",
-      "KEN",
-      "RWA",
-      "SSD",
-      "TZA"
-    ],
+    "borders": ["COD", "KEN", "RWA", "SSD", "TZA"],
     "areaKm2": 241550,
-    "officialLanguages": [
-      "en",
-      "sw"
-    ]
+    "population": 45905417,
+    "officialLanguages": ["en", "sw"]
   },
   {
     "code": "UKR",
@@ -3030,19 +2060,10 @@
     "flagEmoji": "🇺🇦",
     "continent": "europe",
     "waterAccess": "coastal",
-    "borders": [
-      "BLR",
-      "HUN",
-      "MDA",
-      "POL",
-      "ROU",
-      "RUS",
-      "SVK"
-    ],
+    "borders": ["BLR", "HUN", "MDA", "POL", "ROU", "RUS", "SVK"],
     "areaKm2": 603500,
-    "officialLanguages": [
-      "uk"
-    ]
+    "population": 32862000,
+    "officialLanguages": ["uk"]
   },
   {
     "code": "URY",
@@ -3050,14 +2071,10 @@
     "flagEmoji": "🇺🇾",
     "continent": "south_america",
     "waterAccess": "coastal",
-    "borders": [
-      "ARG",
-      "BRA"
-    ],
+    "borders": ["ARG", "BRA"],
     "areaKm2": 181034,
-    "officialLanguages": [
-      "es"
-    ]
+    "population": 3499451,
+    "officialLanguages": ["es"]
   },
   {
     "code": "USA",
@@ -3065,14 +2082,10 @@
     "flagEmoji": "🇺🇸",
     "continent": "north_america",
     "waterAccess": "coastal",
-    "borders": [
-      "CAN",
-      "MEX"
-    ],
+    "borders": ["CAN", "MEX"],
     "areaKm2": 9372610,
-    "officialLanguages": [
-      "en"
-    ]
+    "population": 340110988,
+    "officialLanguages": ["en"]
   },
   {
     "code": "UZB",
@@ -3080,18 +2093,10 @@
     "flagEmoji": "🇺🇿",
     "continent": "asia",
     "waterAccess": "landlocked",
-    "borders": [
-      "AFG",
-      "KAZ",
-      "KGZ",
-      "TJK",
-      "TKM"
-    ],
+    "borders": ["AFG", "KAZ", "KGZ", "TJK", "TKM"],
     "areaKm2": 447400,
-    "officialLanguages": [
-      "ru",
-      "uz"
-    ]
+    "population": 37859698,
+    "officialLanguages": ["ru", "uz"]
   },
   {
     "code": "VAT",
@@ -3099,14 +2104,10 @@
     "flagEmoji": "🇻🇦",
     "continent": "europe",
     "waterAccess": "landlocked",
-    "borders": [
-      "ITA"
-    ],
+    "borders": ["ITA"],
     "areaKm2": 0.44,
-    "officialLanguages": [
-      "it",
-      "la"
-    ]
+    "population": 882,
+    "officialLanguages": ["it", "la"]
   },
   {
     "code": "VCT",
@@ -3116,9 +2117,8 @@
     "waterAccess": "island",
     "borders": [],
     "areaKm2": 389,
-    "officialLanguages": [
-      "en"
-    ]
+    "population": 110872,
+    "officialLanguages": ["en"]
   },
   {
     "code": "VEN",
@@ -3126,15 +2126,10 @@
     "flagEmoji": "🇻🇪",
     "continent": "south_america",
     "waterAccess": "coastal",
-    "borders": [
-      "BRA",
-      "COL",
-      "GUY"
-    ],
+    "borders": ["BRA", "COL", "GUY"],
     "areaKm2": 916445,
-    "officialLanguages": [
-      "es"
-    ]
+    "population": 28517000,
+    "officialLanguages": ["es"]
   },
   {
     "code": "VNM",
@@ -3142,15 +2137,10 @@
     "flagEmoji": "🇻🇳",
     "continent": "asia",
     "waterAccess": "coastal",
-    "borders": [
-      "KHM",
-      "CHN",
-      "LAO"
-    ],
+    "borders": ["KHM", "CHN", "LAO"],
     "areaKm2": 331212,
-    "officialLanguages": [
-      "vi"
-    ]
+    "population": 101343800,
+    "officialLanguages": ["vi"]
   },
   {
     "code": "VUT",
@@ -3160,11 +2150,8 @@
     "waterAccess": "island",
     "borders": [],
     "areaKm2": 12189,
-    "officialLanguages": [
-      "bi",
-      "en",
-      "fr"
-    ]
+    "population": 321409,
+    "officialLanguages": ["bi", "en", "fr"]
   },
   {
     "code": "WSM",
@@ -3174,10 +2161,8 @@
     "waterAccess": "island",
     "borders": [],
     "areaKm2": 2842,
-    "officialLanguages": [
-      "en",
-      "sm"
-    ]
+    "population": 205557,
+    "officialLanguages": ["en", "sm"]
   },
   {
     "code": "XKX",
@@ -3185,17 +2170,10 @@
     "flagEmoji": "🇽🇰",
     "continent": "europe",
     "waterAccess": "landlocked",
-    "borders": [
-      "ALB",
-      "MKD",
-      "MNE",
-      "SRB"
-    ],
+    "borders": ["ALB", "MKD", "MNE", "SRB"],
     "areaKm2": 10887,
-    "officialLanguages": [
-      "sq",
-      "sr"
-    ]
+    "population": 1585566,
+    "officialLanguages": ["sq", "sr"]
   },
   {
     "code": "YEM",
@@ -3203,14 +2181,10 @@
     "flagEmoji": "🇾🇪",
     "continent": "asia",
     "waterAccess": "coastal",
-    "borders": [
-      "OMN",
-      "SAU"
-    ],
+    "borders": ["OMN", "SAU"],
     "areaKm2": 527968,
-    "officialLanguages": [
-      "ar"
-    ]
+    "population": 32684503,
+    "officialLanguages": ["ar"]
   },
   {
     "code": "ZAF",
@@ -3218,15 +2192,9 @@
     "flagEmoji": "🇿🇦",
     "continent": "africa",
     "waterAccess": "coastal",
-    "borders": [
-      "BWA",
-      "LSO",
-      "MOZ",
-      "NAM",
-      "SWZ",
-      "ZWE"
-    ],
+    "borders": ["BWA", "LSO", "MOZ", "NAM", "SWZ", "ZWE"],
     "areaKm2": 1221037,
+    "population": 63100945,
     "officialLanguages": [
       "af",
       "en",
@@ -3247,20 +2215,10 @@
     "flagEmoji": "🇿🇲",
     "continent": "africa",
     "waterAccess": "landlocked",
-    "borders": [
-      "AGO",
-      "BWA",
-      "COD",
-      "MWI",
-      "MOZ",
-      "NAM",
-      "TZA",
-      "ZWE"
-    ],
+    "borders": ["AGO", "BWA", "COD", "MWI", "MOZ", "NAM", "TZA", "ZWE"],
     "areaKm2": 752612,
-    "officialLanguages": [
-      "en"
-    ]
+    "population": 19693423,
+    "officialLanguages": ["en"]
   },
   {
     "code": "ZWE",
@@ -3268,13 +2226,9 @@
     "flagEmoji": "🇿🇼",
     "continent": "africa",
     "waterAccess": "landlocked",
-    "borders": [
-      "BWA",
-      "MOZ",
-      "ZAF",
-      "ZMB"
-    ],
+    "borders": ["BWA", "MOZ", "ZAF", "ZMB"],
     "areaKm2": 390757,
+    "population": 17073087,
     "officialLanguages": [
       "bwg",
       "en",

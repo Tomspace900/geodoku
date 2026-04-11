@@ -12,6 +12,7 @@
       "waterAccess": "landlocked",
       "borders": ["ALB", "MKD", "MNE", "SRB"],
       "areaKm2": 10887,
+      "population": 1585566,
       "officialLanguages": ["sq", "sr"]
     }
   ]
