@@ -69,37 +69,37 @@ export const CONSTRAINTS: Constraint[] = [
   // ── Continent ──────────────────────────────────────────────────────────────
   {
     id: "continent_africa",
-    label: "Est en Afrique",
+    label: "Pays d'Afrique",
     category: "continent",
     predicate: (c) => c.continent === "africa",
   },
   {
     id: "continent_asia",
-    label: "Est en Asie",
+    label: "Pays d'Asie",
     category: "continent",
     predicate: (c) => c.continent === "asia",
   },
   {
     id: "continent_europe",
-    label: "Est en Europe",
+    label: "Pays d'Europe",
     category: "continent",
     predicate: (c) => c.continent === "europe",
   },
   {
     id: "continent_north_america",
-    label: "Est en Amérique du Nord",
+    label: "Pays d'Amérique du Nord",
     category: "continent",
     predicate: (c) => c.continent === "north_america",
   },
   {
     id: "continent_south_america",
-    label: "Est en Amérique du Sud",
+    label: "Pays d'Amérique du Sud",
     category: "continent",
     predicate: (c) => c.continent === "south_america",
   },
   {
     id: "continent_oceania",
-    label: "Est en Océanie",
+    label: "Pays d'Océanie",
     category: "continent",
     predicate: (c) => c.continent === "oceania",
   },
@@ -107,13 +107,13 @@ export const CONSTRAINTS: Constraint[] = [
   // ── Accès à l'eau ──────────────────────────────────────────────────────────
   {
     id: "water_island",
-    label: "Est une île ou un archipel",
+    label: "Île ou archipel",
     category: "water_access",
     predicate: (c) => c.waterAccess === "island",
   },
   {
     id: "water_landlocked",
-    label: "Est enclavé (sans accès à la mer)",
+    label: "Enclavé (sans accès à la mer)",
     category: "water_access",
     predicate: (c) => c.waterAccess === "landlocked",
   },
@@ -121,19 +121,19 @@ export const CONSTRAINTS: Constraint[] = [
   // ── Frontières — nombre ────────────────────────────────────────────────────
   {
     id: "borders_solo",
-    label: "N'a qu'un seul voisin terrestre",
+    label: "Un seul voisin terrestre",
     category: "borders_count",
     predicate: (c) => c.borders.length === BORDERS_SOLO,
   },
   {
     id: "borders_min_5",
-    label: "A au moins 5 voisins terrestres",
+    label: "Au moins 5 voisins terrestres",
     category: "borders_count",
     predicate: (c) => c.borders.length >= BORDERS_MIN_5,
   },
   {
     id: "borders_min_7",
-    label: "A au moins 7 voisins terrestres",
+    label: "Au moins 7 voisins terrestres",
     category: "borders_count",
     predicate: (c) => c.borders.length >= BORDERS_MIN_7,
   },
@@ -203,7 +203,7 @@ export const CONSTRAINTS: Constraint[] = [
   // ── Superficie ─────────────────────────────────────────────────────────────
   {
     id: "area_gt_2M",
-    label: "Pays gigantesques (> 2 M km²)",
+    label: "Pays gigantesque (> 2 M km²)",
     category: "area",
     predicate: (c) => c.areaKm2 > AREA_GT_2M,
   },

@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { CONSTRAINTS } from "./constraintsData";
+import { CONSTRAINTS } from "../../src/features/game/logic/constraints";
 import {
   MIN_CATEGORIES,
   MIN_CELL_SIZE,

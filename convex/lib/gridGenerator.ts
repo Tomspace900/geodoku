@@ -2,9 +2,11 @@
  * Pure TypeScript grid generation — no Convex runtime dependencies.
  * Safe to import in Convex actions and in Vitest tests alike.
  */
-import { CONSTRAINTS } from "./constraintsData";
-import { COUNTRIES } from "./countriesData";
-import type { Country } from "./types";
+import countriesJson from "../../src/features/countries/data/countries.json";
+import type { Country } from "../../src/features/countries/types";
+import { CONSTRAINTS } from "../../src/features/game/logic/constraints";
+
+const COUNTRIES: Country[] = countriesJson as Country[];
 
 // ─── Constants ────────────────────────────────────────────────────────────────
 
@@ -37,6 +39,9 @@ export type GridCandidate = {
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
 
+// TODO: enrichir avec les pageviews Wikipedia pour mieux capturer
+// la notoriété perçue (Singapour, Vatican, Monaco sont sous-évalués
+// par la population seule).
 const MIN_POP_LOG = Math.log10(10_000); // ~0
 const MAX_POP_LOG = Math.log10(1_500_000_000); // ~1 (Inde/Chine)
 function getNotorietyIndex(c: Country): number {
