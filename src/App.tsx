@@ -1,5 +1,6 @@
 import { Providers } from "@/app/providers";
 import { AdminPage } from "@/features/admin/AdminPage";
+import { GamePage } from "@/features/game/components/GamePage";
 
 function App() {
   if (window.location.pathname === "/admin") {
@@ -12,9 +13,7 @@ function App() {
 
   return (
     <Providers>
-      <div className="flex min-h-screen items-center justify-center">
-        <h1 className="text-4xl font-bold">Geodoku</h1>
-      </div>
+      <GamePage />
     </Providers>
   );
 }
