@@ -12,6 +12,10 @@ const config: Config = {
       },
     },
     extend: {
+      fontFamily: {
+        serif: ["Newsreader", "Georgia", "serif"],
+        sans: ["Inter", "system-ui", "sans-serif"],
+      },
       colors: {
         border: "hsl(var(--border))",
         input: "hsl(var(--input))",
@@ -46,6 +50,26 @@ const config: Config = {
           DEFAULT: "hsl(var(--card))",
           foreground: "hsl(var(--card-foreground))",
         },
+        surface: {
+          DEFAULT: "#f9f9f9",
+          low: "#f2f4f4",
+          lowest: "#ffffff",
+          highest: "#dde4e5",
+        },
+        "on-surface": {
+          DEFAULT: "#2d3435",
+          variant: "#56606e",
+        },
+        "outline-variant": "#adb3b4",
+        rarity: {
+          common: "#56606e",
+          uncommon: "#e5e2e1",
+          rare: "#842cd3",
+          ultra: "#9f403d",
+        },
+      },
+      boxShadow: {
+        editorial: "0 20px 40px rgba(45, 52, 53, 0.06)",
       },
       borderRadius: {
         lg: "var(--radius)",
