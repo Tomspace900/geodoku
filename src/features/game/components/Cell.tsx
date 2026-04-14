@@ -5,10 +5,10 @@ import { cn } from "@/lib/utils";
 import { Plus } from "lucide-react";
 
 const RARITY_STYLES: Record<RarityTier, string> = {
-  common: "bg-[#56606e]/10 text-[#56606e]",
-  uncommon: "bg-[#e5e2e1] text-[#56606e]",
-  rare: "bg-[#842cd3]/10 text-[#842cd3]",
-  ultra: "bg-[#9f403d]/10 text-[#9f403d]",
+  common: "bg-rarity-common/10 text-rarity-common",
+  uncommon: "bg-rarity-uncommon text-rarity-common",
+  rare: "bg-rarity-rare/10 text-rarity-rare",
+  ultra: "bg-rarity-ultra/10 text-rarity-ultra",
 };
 
 type RarityBadgeProps = {

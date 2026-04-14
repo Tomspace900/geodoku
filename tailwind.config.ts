@@ -61,6 +61,9 @@ const config: Config = {
           variant: "#56606e",
         },
         "outline-variant": "#adb3b4",
+        brand: {
+          DEFAULT: "#842cd3",
+        },
         rarity: {
           common: "#56606e",
           uncommon: "#e5e2e1",

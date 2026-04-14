@@ -48,7 +48,7 @@ export function ResultScreen({ state, gridNumber }: Props) {
           <h2 className="font-serif text-3xl italic text-on-surface">
             {isWon ? "Magnifique !" : "Dommage..."}
           </h2>
-          <div className="w-12 h-1 bg-rarity-rare rounded-full" />
+          <div className="w-12 h-1 bg-brand rounded-full" />
           <p className="text-[10px] tracking-widest text-on-surface-variant uppercase mt-1">
             Résultat final
           </p>
@@ -56,7 +56,7 @@ export function ResultScreen({ state, gridNumber }: Props) {
 
         {/* Score */}
         <div className="flex flex-col items-center gap-1">
-          <span className="font-serif text-5xl font-medium text-rarity-rare">
+          <span className="font-serif text-5xl font-medium text-brand">
             {score.percent}%
           </span>
           <span className="text-xs text-on-surface-variant">

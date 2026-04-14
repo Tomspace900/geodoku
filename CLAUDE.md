@@ -125,7 +125,8 @@ Inspiration : publications digitales haut de gamme type NYT Games. Spacieux, sop
 
 - **Newsreader** (serif) : titres, display, headlines. Jamais pour du texte long.
 - **Inter** (sans-serif) : body, labels, données, boutons.
-- **Règle éditoriale** : toujours associer un titre serif avec un label sans-serif en ALL CAPS espacé (tracking wide) pour créer un effet de « caption » magazine.
+- **Règle éditoriale n°1** : toujours associer un titre serif avec un label sans-serif en ALL CAPS espacé (tracking wide) pour créer un effet de « caption » magazine.
+- **Règle éditoriale n°2 — l'accentuation d'un mot.** Dans une phrase en body, on peut mettre **un seul mot** (rarement deux) en `text-brand font-medium` pour porter la phrase. C'est notre équivalent du mot en italique dans un journal. Règles : un seul accent par phrase, jamais deux accents côte-à-côte, jamais sur un mot-outil (article, préposition), toujours sur le mot qui porte le sens. Si tu hésites entre deux mots, n'en accentue aucun.
 
 ### 5.2 Palette
 
@@ -140,6 +141,16 @@ Inspiration : publications digitales haut de gamme type NYT Games. Spacieux, sop
 | `on-surface`         | `#2d3435` | Texte principal (charcoal, jamais `#000`)               |
 | `on-surface-variant` | `#56606e` | Texte secondaire, labels                                |
 | `outline-variant`    | `#adb3b4` | Séparateurs, à utiliser à **15% opacity max**           |
+
+**Accent éditorial.**
+
+| Token   | Hex       | Usage                                                              |
+| ------- | --------- | ------------------------------------------------------------------ |
+| `brand` | `#842cd3` | Accent de marque unique : titres, chiffres hero, mots mis en valeur, underline bar, icônes décoratives de trophée |
+
+`brand` est **la seule couleur chaude** du système. Elle signifie « moment fort » : un score, un achievement, un mot qui porte la phrase. Règle d'application : texte à 100%, background à 10% opacity (`bg-brand/10`). Pas de gradient, pas de deuxième teinte violette, pas d'utilisation décorative gratuite — si tout est accentué, rien ne l'est.
+
+Le hex est identique à `rarity.rare` mais les deux tokens sont **sémantiquement distincts** : `rarity.rare` qualifie la rareté fonctionnelle d'une cellule (peut évoluer indépendamment si le tiering de rareté change), `brand` est l'identité éditoriale. Ne pas utiliser `rarity.rare` pour du branding ou inversement.
 
 **Rarity tiers (couleurs fonctionnelles).**
 
@@ -204,7 +215,40 @@ Inspiration : publications digitales haut de gamme type NYT Games. Spacieux, sop
   - Background différent (cellule vide `surface-low`, cellule remplie `surface-lowest`).
   - Un `gap-1` ou `gap-2` maximum qui laisse transparaître le fond de section.
 
-### 5.5 Typographie suggérée (classes Tailwind)
+### 5.5 Patterns éditoriaux nommés
+
+Les patterns ci-dessous ont un **nom canonique**. La référence visuelle pour tous est `src/features/game/components/ResultScreen.tsx`. Avant d'en composer un à la main, relire ce fichier.
+
+**`display-header`** — triplette titre + barre + eyebrow.
+
+Trois éléments superposés, empilés verticalement, centrés (ou légèrement off-center pour les écrans de contenu) :
+
+1. Un titre serif italique (`font-serif italic font-medium`), taille `text-3xl` (header de modale) à `text-5xl` (hero de page).
+2. Une barre d'accent `w-12 h-1 bg-brand rounded-full`. Pas plus large, pas plus épaisse — la discrétion est le point.
+3. Un eyebrow label : `text-[10px] tracking-widest text-on-surface-variant uppercase`, en dessous de la barre (pas au-dessus du titre comme les kickers de presse classique — ici l'eyebrow est une **légende**, pas une introduction).
+
+Exemple de référence : `ResultScreen.tsx` ll. 47-55.
+
+**`hero-number`** — un chiffre ou un score mis en évidence.
+
+- `font-serif font-medium text-brand`.
+- Taille `text-5xl` (score final, modale) à `text-6xl` (landing, si jamais).
+- Accompagné obligatoirement d'une ligne de caption juste en dessous : `text-xs text-on-surface-variant`, décrivant ce que le chiffre mesure.
+- Jamais deux `hero-number` dans la même vue. Si deux chiffres se disputent l'attention, l'un doit être un `hero-number` et l'autre en body.
+
+Exemple de référence : `ResultScreen.tsx` ll. 58-65.
+
+**`accent-word`** — un mot en violet dans une phrase.
+
+Voir §5.1 règle éditoriale n°2. Implémentation : `<span className="text-brand font-medium">mot</span>`. Pas de composant dédié — c'est une micro-convention typographique, pas un atome d'UI.
+
+**`eyebrow`** — les micro-labels all-caps.
+
+- `text-[10px] tracking-widest uppercase text-on-surface-variant`.
+- Toujours associés à un élément serif au-dessus ou en dessous (jamais seuls). Leur rôle est de légender un bloc, pas de titrer.
+- En alternative plus grande : `label-md` (voir §5.6).
+
+### 5.6 Typographie suggérée (classes Tailwind)
 
 ```
 display-lg    → font-serif text-4xl md:text-5xl font-medium italic

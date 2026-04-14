@@ -94,8 +94,8 @@ export function AchievementCard({ state }: Props) {
           {achievement.description}
         </p>
       </div>
-      <div className="flex-shrink-0 w-10 h-10 rounded-lg bg-[#842cd3]/20 flex items-center justify-center">
-        <Award size={20} className="text-rarity-rare" />
+      <div className="flex-shrink-0 w-10 h-10 rounded-lg bg-brand/20 flex items-center justify-center">
+        <Award size={20} className="text-brand" />
       </div>
     </div>
   );
