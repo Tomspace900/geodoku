@@ -27,5 +27,3 @@ convex/_generated/
 # Agents and Claude files
 .agents/
 .claude/
-AGENTS.md
-CLAUDE.md
