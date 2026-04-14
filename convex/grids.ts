@@ -13,6 +13,15 @@ function todayUTC(): string {
   return `${y}-${m}-${day}`;
 }
 
+function daysAgoUTC(n: number): string {
+  const d = new Date();
+  d.setUTCDate(d.getUTCDate() - n);
+  const y = d.getUTCFullYear();
+  const m = String(d.getUTCMonth() + 1).padStart(2, "0");
+  const day = String(d.getUTCDate()).padStart(2, "0");
+  return `${y}-${m}-${day}`;
+}
+
 function checkAdminToken(provided: string): void {
   const expected = process.env.ADMIN_TOKEN;
   if (!expected || provided !== expected) {
@@ -119,6 +128,22 @@ export const getTodayGrid = query({
       .query("grids")
       .withIndex("by_date", (q) => q.eq("date", today))
       .unique();
+  },
+});
+
+/**
+ * Returns all grids scheduled from the past 30 days onwards.
+ * Used by the admin calendar to visualise scheduled grids and their difficulties.
+ */
+export const getScheduledGrids = query({
+  args: {},
+  handler: async (ctx) => {
+    const cutoff = daysAgoUTC(30);
+    return await ctx.db
+      .query("grids")
+      .withIndex("by_date", (q) => q.gte("date", cutoff))
+      .order("asc")
+      .take(500);
   },
 });
 
@@ -243,6 +268,33 @@ export const approveCandidate = mutation({
         reviewedAt: now,
       });
     }
+  },
+});
+
+/**
+ * Déprogramme une grille d'une date donnée : supprime la ligne dans grids
+ * et remet le candidat en statut "approved" pour qu'il puisse être replanifié.
+ */
+export const unscheduleGrid = mutation({
+  args: {
+    date: v.string(), // "YYYY-MM-DD"
+    adminToken: v.string(),
+  },
+  handler: async (ctx, args) => {
+    checkAdminToken(args.adminToken);
+
+    const grid = await ctx.db
+      .query("grids")
+      .withIndex("by_date", (q) => q.eq("date", args.date))
+      .unique();
+
+    if (!grid) throw new ConvexError(`Aucune grille trouvée pour ${args.date}`);
+
+    // Remettre le candidat dans la queue approuvée
+    await ctx.db.patch(grid.candidateId, { status: "approved" });
+
+    // Supprimer la grille planifiée
+    await ctx.db.delete(grid._id);
   },
 });
 
