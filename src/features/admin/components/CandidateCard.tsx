@@ -1,11 +1,5 @@
-import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import {
-  Card,
-  CardContent,
-  CardFooter,
-  CardHeader,
-} from "@/components/ui/card";
+import { Calendar } from "@/components/ui/calendar";
 import {
   Dialog,
   DialogContent,
@@ -13,15 +7,20 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import { Input } from "@/components/ui/input";
-import { Separator } from "@/components/ui/separator";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
 import { Textarea } from "@/components/ui/textarea";
 import { useMutation } from "convex/react";
 import { ConvexError } from "convex/values";
+import { CalendarDays } from "lucide-react";
 import { useState } from "react";
 import { api } from "../../../../convex/_generated/api";
 import type { Id } from "../../../../convex/_generated/dataModel";
-import { CONSTRAINTS } from "../../../features/game/logic/constraints";
+import { dateToStr } from "../logic/scheduling";
+import { GridPreview } from "./GridPreview";
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -47,104 +46,55 @@ type Props = {
   candidate: Candidate;
   adminToken: string;
   onUnauthorized: () => void;
+  /** Prochain jour sans grille planifiée, calculé dans AdminPage. */
+  nextAvailableDate: string;
+  /** Dates déjà planifiées, pour désactiver les jours dans le picker. */
+  scheduledDates: ReadonlySet<string>;
 };
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
 
-const CONSTRAINT_MAP = new Map(CONSTRAINTS.map((c) => [c.id, c]));
-
-function difficultyStars(difficulty: number): string {
+function difficultyLabel(difficulty: number): string {
   const stars = Math.round((difficulty / 100) * 5);
   return "★".repeat(stars) + "☆".repeat(5 - stars);
 }
 
-// ─── Mini grid preview ────────────────────────────────────────────────────────
+// ─── Pill méta-donnée ─────────────────────────────────────────────────────────
 
-function GridPreview({
-  candidate,
-}: {
-  candidate: Candidate;
-}) {
+function Pill({ children }: { children: React.ReactNode }) {
   return (
-    <div className="overflow-auto">
-      <table className="w-full text-xs border-collapse">
-        <thead>
-          <tr>
-            <th className="p-1 text-left text-muted-foreground" />
-            {candidate.cols.map((colId) => (
-              <th
-                key={colId}
-                className="p-1 text-center font-medium border border-border bg-muted max-w-[120px]"
-              >
-                {CONSTRAINT_MAP.get(colId)?.label ?? colId}
-              </th>
-            ))}
-          </tr>
-        </thead>
-        <tbody>
-          {candidate.rows.map((rowId, r) => (
-            <tr key={rowId}>
-              <th className="p-1 text-left font-medium border border-border bg-muted max-w-[120px] whitespace-nowrap">
-                {CONSTRAINT_MAP.get(rowId)?.label ?? rowId}
-              </th>
-              {candidate.cols.map((_, c) => {
-                const key = `${r},${c}`;
-                const codes = candidate.validAnswers[key] ?? [];
-                const preview = codes.slice(0, 3);
-                const rest = codes.length - preview.length;
-                return (
-                  <td key={key} className="p-1 border border-border align-top">
-                    <div className="font-semibold text-center">
-                      {codes.length}
-                    </div>
-                    <div className="text-muted-foreground space-y-0.5">
-                      {preview.map((code) => (
-                        <div key={code} className="truncate">
-                          {code}
-                        </div>
-                      ))}
-                      {rest > 0 && (
-                        <div className="text-muted-foreground/60">
-                          +{rest} autres
-                        </div>
-                      )}
-                    </div>
-                  </td>
-                );
-              })}
-            </tr>
-          ))}
-        </tbody>
-      </table>
-    </div>
+    <span className="text-[10px] font-semibold bg-surface-highest text-on-surface-variant rounded-full px-2.5 py-1">
+      {children}
+    </span>
   );
 }
 
-// ─── Main component ───────────────────────────────────────────────────────────
+// ─── Composant principal ──────────────────────────────────────────────────────
 
 export function CandidateCard({
   candidate,
   adminToken,
   onUnauthorized,
+  nextAvailableDate,
+  scheduledDates,
 }: Props) {
   const approve = useMutation(api.grids.approveCandidate);
   const reject = useMutation(api.grids.rejectCandidate);
 
-  const [scheduleOpen, setScheduleOpen] = useState(false);
+  const [calendarOpen, setCalendarOpen] = useState(false);
   const [rejectOpen, setRejectOpen] = useState(false);
-  const [scheduleDate, setScheduleDate] = useState("");
+  const [scheduleDate, setScheduleDate] = useState<Date | undefined>(undefined);
   const [rejectReason, setRejectReason] = useState("");
   const [loading, setLoading] = useState(false);
+
+  const todayStr = dateToStr(new Date());
 
   async function handleApprove(scheduledDate?: string) {
     setLoading(true);
     try {
-      await approve({
-        candidateId: candidate._id,
-        scheduledDate,
-        adminToken,
-      });
-      setScheduleOpen(false);
+      await approve({ candidateId: candidate._id, scheduledDate, adminToken });
+      setCalendarOpen(false);
+      setScheduleDate(undefined);
     } catch (err) {
       if (
         err instanceof ConvexError &&
@@ -181,96 +131,118 @@ export function CandidateCard({
 
   return (
     <>
-      <Card>
-        <CardHeader className="pb-2">
-          <div className="flex items-center justify-between gap-2 flex-wrap">
-            <div className="flex gap-2 flex-wrap">
-              <Badge variant="outline">
-                Score {candidate.score.toFixed(1)}
-              </Badge>
-              <Badge variant="outline">
-                {difficultyStars(candidate.difficulty)}
-              </Badge>
-              <Badge variant="outline">
-                {candidate.metadata.categoryCount} catégories
-              </Badge>
-              <Badge variant="outline">
-                min {candidate.metadata.minCellSize} / moy{" "}
-                {candidate.metadata.avgCellSize.toFixed(1)} pays/cellule
-              </Badge>
-            </div>
-            <span className="text-xs text-muted-foreground">
-              {new Date(candidate.generatedAt).toLocaleDateString("fr-FR")}
-            </span>
+      <div className="bg-surface-lowest rounded-xl shadow-editorial overflow-hidden">
+        {/* Méta-données */}
+        <div className="px-4 pt-4 pb-3 flex items-center justify-between gap-2 flex-wrap">
+          <div className="flex gap-1.5 flex-wrap">
+            <Pill>Score {candidate.score.toFixed(1)}</Pill>
+            <Pill>{difficultyLabel(candidate.difficulty)}</Pill>
+            <Pill>{candidate.metadata.categoryCount} catégories</Pill>
+            <Pill>
+              min {candidate.metadata.minCellSize} / moy{" "}
+              {candidate.metadata.avgCellSize.toFixed(1)} pays/cellule
+            </Pill>
           </div>
-        </CardHeader>
+          <span className="text-xs text-on-surface-variant">
+            {new Date(candidate.generatedAt).toLocaleDateString("fr-FR")}
+          </span>
+        </div>
 
-        <CardContent>
-          <GridPreview candidate={candidate} />
-        </CardContent>
+        {/* Grille */}
+        <div className="px-4 pb-4">
+          <div className="mx-auto w-full max-w-[800px]">
+            <GridPreview
+              rows={candidate.rows}
+              cols={candidate.cols}
+              validAnswers={candidate.validAnswers}
+              mode="detailed"
+            />
+          </div>
+        </div>
+      </div>
 
-        {candidate.status === "pending" && (
-          <>
-            <Separator />
-            <CardFooter className="pt-4 flex gap-2 flex-wrap">
-              <Button
-                size="sm"
-                onClick={() => handleApprove()}
-                disabled={loading}
-              >
-                Approuver
-              </Button>
-              <Button
-                size="sm"
-                variant="outline"
-                onClick={() => setScheduleOpen(true)}
-                disabled={loading}
-              >
-                Approuver &amp; programmer
-              </Button>
-              <Button
-                size="sm"
-                variant="destructive"
-                onClick={() => setRejectOpen(true)}
-                disabled={loading}
-              >
-                Rejeter
-              </Button>
-            </CardFooter>
-          </>
-        )}
-      </Card>
-
-      {/* Schedule dialog */}
-      <Dialog open={scheduleOpen} onOpenChange={setScheduleOpen}>
-        <DialogContent>
-          <DialogHeader>
-            <DialogTitle>Programmer pour une date</DialogTitle>
-          </DialogHeader>
-          <Input
-            type="date"
-            value={scheduleDate}
-            onChange={(e) => setScheduleDate(e.target.value)}
-          />
-          <DialogFooter>
-            <Button variant="outline" onClick={() => setScheduleOpen(false)}>
-              Annuler
-            </Button>
+      {/* Actions */}
+      {candidate.status === "pending" && (
+        <div className="mt-3 flex items-center gap-2 px-1">
+          <div className="inline-flex items-center overflow-hidden rounded-md bg-on-surface text-surface-lowest">
             <Button
-              onClick={() => handleApprove(scheduleDate)}
-              disabled={!scheduleDate || loading}
+              size="sm"
+              onClick={() => handleApprove(nextAvailableDate)}
+              disabled={loading}
+              className="rounded-none bg-transparent hover:bg-on-surface/90"
             >
-              Confirmer
+              Approuver
             </Button>
-          </DialogFooter>
-        </DialogContent>
-      </Dialog>
+            <Popover open={calendarOpen} onOpenChange={setCalendarOpen}>
+              <PopoverTrigger asChild>
+                <Button
+                  size="sm"
+                  disabled={loading}
+                  className="rounded-none border-l border-surface-lowest/20 bg-transparent px-2 hover:bg-on-surface/90"
+                  aria-label="Choisir une date de programmation"
+                >
+                  <CalendarDays className="size-4" />
+                </Button>
+              </PopoverTrigger>
+              <PopoverContent className="w-auto p-0" align="start">
+                <div className="space-y-2 p-2">
+                  <Calendar
+                    mode="single"
+                    selected={scheduleDate}
+                    onSelect={setScheduleDate}
+                    disabled={(date) =>
+                      dateToStr(date) <= todayStr ||
+                      scheduledDates.has(dateToStr(date))
+                    }
+                    autoFocus
+                  />
+                  <div className="px-1 pb-1">
+                    <Button
+                      size="sm"
+                      className="w-full bg-on-surface text-surface-lowest hover:bg-on-surface/90"
+                      disabled={!scheduleDate || loading}
+                      onClick={() =>
+                        scheduleDate && handleApprove(dateToStr(scheduleDate))
+                      }
+                    >
+                      Approuver
+                    </Button>
+                  </div>
+                </div>
+              </PopoverContent>
+            </Popover>
+          </div>
+          <Button
+            size="sm"
+            variant="destructive"
+            onClick={() => setRejectOpen(true)}
+            disabled={loading}
+          >
+            Rejeter
+          </Button>
+          <span className="ml-auto text-[10px] text-on-surface-variant">
+            Prochain slot libre :{" "}
+            <span className="font-semibold text-on-surface">
+              {new Date(
+                Number(nextAvailableDate.split("-")[0]),
+                Number(nextAvailableDate.split("-")[1]) - 1,
+                Number(nextAvailableDate.split("-")[2]),
+              ).toLocaleDateString("fr-FR", {
+                day: "numeric",
+                month: "short",
+              })}
+            </span>
+          </span>
+        </div>
+      )}
 
-      {/* Reject dialog */}
+      {/* Dialog — rejeter */}
       <Dialog open={rejectOpen} onOpenChange={setRejectOpen}>
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>Raison du rejet</DialogTitle>
+            <DialogTitle className="font-serif text-lg">
+              Raison du rejet
+            </DialogTitle>
           </DialogHeader>
           <Textarea
             placeholder="Pourquoi rejeter cette grille ?"
@@ -279,7 +251,11 @@ export function CandidateCard({
             rows={3}
           />
           <DialogFooter>
-            <Button variant="outline" onClick={() => setRejectOpen(false)}>
+            <Button
+              variant="ghost"
+              onClick={() => setRejectOpen(false)}
+              className="text-on-surface-variant"
+            >
               Annuler
             </Button>
             <Button

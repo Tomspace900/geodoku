@@ -1,5 +1,4 @@
-import { Badge } from "@/components/ui/badge";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { cn } from "@/lib/utils";
 import { useQuery } from "convex/react";
 import { api } from "../../../../convex/_generated/api";
 
@@ -8,37 +7,47 @@ export function QueueStats() {
 
   if (!stats) {
     return (
-      <Card>
-        <CardContent className="pt-6 text-muted-foreground">
-          Chargement des stats…
-        </CardContent>
-      </Card>
+      <div className="bg-surface-low rounded-xl p-4 text-sm text-on-surface-variant">
+        Chargement des stats…
+      </div>
     );
   }
 
-  const runwayColor =
+  const runwayClass =
     stats.daysOfRunway > 7
-      ? "bg-green-500"
+      ? "bg-green-500/15 text-green-800"
       : stats.daysOfRunway >= 3
-        ? "bg-orange-500"
-        : "bg-red-500";
+        ? "bg-orange-400/15 text-orange-800"
+        : "bg-red-500/15 text-red-800";
 
   return (
-    <Card>
-      <CardHeader>
-        <CardTitle className="text-base">État de la queue</CardTitle>
-      </CardHeader>
-      <CardContent className="flex flex-wrap gap-3">
-        <Badge variant="secondary">{stats.pending} en attente</Badge>
-        <Badge variant="secondary">
-          {stats.approvedQueued} approuvés (queue)
-        </Badge>
-        <Badge variant="secondary">{stats.scheduledFuture} programmés</Badge>
-        <Badge className={`${runwayColor} text-white`}>
+    <div className="bg-surface-low rounded-xl p-4">
+      <p className="text-[10px] font-semibold text-on-surface-variant tracking-widest uppercase mb-3">
+        État de la queue
+      </p>
+      <div className="flex flex-wrap gap-2">
+        {[
+          `${stats.pending} en attente`,
+          `${stats.approvedQueued} approuvés (queue)`,
+          `${stats.scheduledFuture} programmés`,
+        ].map((label) => (
+          <span
+            key={label}
+            className="text-xs font-medium bg-surface-highest text-on-surface rounded-full px-3 py-1"
+          >
+            {label}
+          </span>
+        ))}
+        <span
+          className={cn(
+            "text-xs font-semibold rounded-full px-3 py-1",
+            runwayClass,
+          )}
+        >
           {stats.daysOfRunway} jour{stats.daysOfRunway !== 1 ? "s" : ""} de
           contenu
-        </Badge>
-      </CardContent>
-    </Card>
+        </span>
+      </div>
+    </div>
   );
 }
