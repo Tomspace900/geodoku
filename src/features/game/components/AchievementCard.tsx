@@ -2,6 +2,7 @@ import { getCountryByCode } from "@/features/countries/lib/search";
 import { computeScore } from "@/features/game/logic/rarity";
 import type { FilledCell, GameState } from "@/features/game/types";
 import { Award } from "lucide-react";
+import { STARTING_LIVES } from "../logic/constants";
 
 type Achievement = {
   id: string;
@@ -33,7 +34,7 @@ function getUnlockedAchievement(state: GameState): Achievement | null {
   }
 
   // "Sans Faute" — victoire sans erreur
-  if (state.status === "won" && state.remainingLives === 3) {
+  if (state.status === "won" && state.remainingLives === STARTING_LIVES) {
     return {
       id: "sans_faute",
       emoji: "💎",

@@ -1,4 +1,5 @@
 import { Heart } from "lucide-react";
+import { STARTING_LIVES } from "../logic/constants";
 
 type Props = {
   remainingLives: number;
@@ -30,9 +31,9 @@ export function Header({ remainingLives, date }: Props) {
       </div>
 
       <div className="flex items-center gap-0.5">
-        {([0, 1, 2] as const).map((i) => (
+        {Array.from({ length: STARTING_LIVES }, (_, i) => (
           <Heart
-            key={i}
+            key={`heart-${i + 1}`}
             size={18}
             className={
               i < remainingLives

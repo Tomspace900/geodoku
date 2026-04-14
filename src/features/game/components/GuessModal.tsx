@@ -83,7 +83,7 @@ export function GuessModal({ cell, state, onClose, onSubmit }: Props) {
     CONSTRAINT_MAP.get(state.cols[cell.col])?.label ?? state.cols[cell.col];
 
   const results =
-    query.length >= 1
+    query.length >= 3
       ? searchCountries(query, 12).filter(
           (c) => !state.usedCountries.has(c.code),
         )
@@ -123,9 +123,9 @@ export function GuessModal({ cell, state, onClose, onSubmit }: Props) {
             />
           </div>
           <CommandList className="max-h-[50vh] overflow-y-auto px-2 pb-4">
-            {query.length < 1 ? (
+            {query.length < 3 ? (
               <p className="text-center text-sm text-on-surface-variant py-6">
-                Saisissez au moins 1 caractère
+                Saisissez au moins 3 caractères
               </p>
             ) : results.length === 0 ? (
               <CommandEmpty className="text-center text-sm text-on-surface-variant py-6">
