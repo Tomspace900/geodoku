@@ -1,5 +1,6 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import {
+  PERSISTENCE_STORAGE_KEY,
   clearPersistedGame,
   isPersistedForToday,
   loadPersistedGame,
@@ -42,7 +43,7 @@ describe("savePersistedGame / loadPersistedGame", () => {
     });
     savePersistedGame(state);
 
-    const raw = JSON.parse(localStorage.getItem("geodoku.currentGame")!);
+    const raw = JSON.parse(localStorage.getItem(PERSISTENCE_STORAGE_KEY)!);
     expect(Array.isArray(raw.usedCountries)).toBe(true);
     expect(raw.usedCountries).toContain("FRA");
 
@@ -58,7 +59,7 @@ describe("loadPersistedGame", () => {
   });
 
   it("returns null when JSON is corrupted", () => {
-    localStorage.setItem("geodoku.currentGame", "{invalid json}");
+    localStorage.setItem(PERSISTENCE_STORAGE_KEY, "{invalid json}");
     expect(loadPersistedGame()).toBeNull();
   });
 
@@ -69,9 +70,9 @@ describe("loadPersistedGame", () => {
       ["c0", "c1", "c2"],
     );
     savePersistedGame(state);
-    const raw = JSON.parse(localStorage.getItem("geodoku.currentGame")!);
+    const raw = JSON.parse(localStorage.getItem(PERSISTENCE_STORAGE_KEY)!);
     raw.version = 99;
-    localStorage.setItem("geodoku.currentGame", JSON.stringify(raw));
+    localStorage.setItem(PERSISTENCE_STORAGE_KEY, JSON.stringify(raw));
     expect(loadPersistedGame()).toBeNull();
   });
 });

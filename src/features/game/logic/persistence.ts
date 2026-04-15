@@ -1,6 +1,7 @@
 import type { Cell, CellKey, GameState, GameStatus } from "../types";
 
-const STORAGE_KEY = "geodoku.currentGame";
+/** Clé localStorage — exportée pour les tests uniquement. */
+export const PERSISTENCE_STORAGE_KEY = "geodoku.currentGame";
 const STORAGE_VERSION = 1;
 
 export type PersistedGame = {
@@ -16,7 +17,7 @@ export type PersistedGame = {
 
 export function loadPersistedGame(): PersistedGame | null {
   try {
-    const raw = window.localStorage.getItem(STORAGE_KEY);
+    const raw = window.localStorage.getItem(PERSISTENCE_STORAGE_KEY);
     if (!raw) return null;
     const parsed = JSON.parse(raw) as PersistedGame;
     if (parsed.version !== STORAGE_VERSION) return null;
@@ -38,7 +39,7 @@ export function savePersistedGame(state: GameState): void {
       startedAt: state.startedAt,
       finishedAt: state.finishedAt,
     };
-    window.localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+    window.localStorage.setItem(PERSISTENCE_STORAGE_KEY, JSON.stringify(data));
   } catch {
     // localStorage plein ou désactivé → le jeu continue sans persistance
   }
@@ -46,8 +47,10 @@ export function savePersistedGame(state: GameState): void {
 
 export function clearPersistedGame(): void {
   try {
-    window.localStorage.removeItem(STORAGE_KEY);
-  } catch {}
+    window.localStorage.removeItem(PERSISTENCE_STORAGE_KEY);
+  } catch {
+    // même politique que save : storage indisponible → no-op
+  }
 }
 
 export function isPersistedForToday(
