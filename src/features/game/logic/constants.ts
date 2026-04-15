@@ -20,9 +20,9 @@ export const MAX_SCORE =
   9 * COMPLETION_POINTS_PER_CELL + 9 * RARITY_POINTS.ultra; // 405
 
 export const SHARE_EMOJIS = {
-  common: "🟩",
-  uncommon: "🟨",
-  rare: "🟧",
-  ultra: "🟥",
-  failed: "⬛",
+  failed: "⬜", // Noir : pas de pays trouvé
+  common: "🟪", // Blanc : le plus commun
+  uncommon: "🟦", // Jaune : moins commun
+  rare: "🟨", // Bleu : plus rare
+  ultra: "🟥", // Violet : ultra rare (le meilleur)
 } as const;

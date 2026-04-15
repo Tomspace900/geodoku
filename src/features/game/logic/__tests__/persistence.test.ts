@@ -8,6 +8,17 @@ import {
 } from "../persistence";
 import { createInitialState, gameReducer } from "../reducer";
 
+const TEST_ROWS = [
+  "continent_europe",
+  "continent_asia",
+  "continent_africa",
+] as const;
+const TEST_COLS = [
+  "water_landlocked",
+  "water_island",
+  "borders_min_5",
+] as const;
+
 beforeEach(() => {
   localStorage.clear();
 });
@@ -16,8 +27,8 @@ describe("savePersistedGame / loadPersistedGame", () => {
   it("round-trip preserves all persisted fields", () => {
     const state = createInitialState(
       "2026-04-15",
-      ["r0", "r1", "r2"],
-      ["c0", "c1", "c2"],
+      [...TEST_ROWS],
+      [...TEST_COLS],
     );
     savePersistedGame(state);
     const loaded = loadPersistedGame();
@@ -32,8 +43,8 @@ describe("savePersistedGame / loadPersistedGame", () => {
   it("serialises usedCountries Set as array and deserialises it", () => {
     let state = createInitialState(
       "2026-04-15",
-      ["r0", "r1", "r2"],
-      ["c0", "c1", "c2"],
+      [...TEST_ROWS],
+      [...TEST_COLS],
     );
     state = gameReducer(state, {
       type: "guessSuccess",
@@ -66,8 +77,8 @@ describe("loadPersistedGame", () => {
   it("returns null when version does not match", () => {
     const state = createInitialState(
       "2026-04-15",
-      ["r0", "r1", "r2"],
-      ["c0", "c1", "c2"],
+      [...TEST_ROWS],
+      [...TEST_COLS],
     );
     savePersistedGame(state);
     const raw = JSON.parse(localStorage.getItem(PERSISTENCE_STORAGE_KEY)!);
@@ -81,8 +92,8 @@ describe("clearPersistedGame", () => {
   it("removes the entry from storage", () => {
     const state = createInitialState(
       "2026-04-15",
-      ["r0", "r1", "r2"],
-      ["c0", "c1", "c2"],
+      [...TEST_ROWS],
+      [...TEST_COLS],
     );
     savePersistedGame(state);
     expect(loadPersistedGame()).not.toBeNull();
@@ -95,8 +106,8 @@ describe("isPersistedForToday", () => {
   it("returns true when dates match", () => {
     const state = createInitialState(
       "2026-04-15",
-      ["r0", "r1", "r2"],
-      ["c0", "c1", "c2"],
+      [...TEST_ROWS],
+      [...TEST_COLS],
     );
     savePersistedGame(state);
     const persisted = loadPersistedGame()!;
@@ -106,8 +117,8 @@ describe("isPersistedForToday", () => {
   it("returns false when dates differ", () => {
     const state = createInitialState(
       "2026-04-14",
-      ["r0", "r1", "r2"],
-      ["c0", "c1", "c2"],
+      [...TEST_ROWS],
+      [...TEST_COLS],
     );
     savePersistedGame(state);
     const persisted = loadPersistedGame()!;
@@ -124,8 +135,8 @@ describe("savePersistedGame — resilience", () => {
       });
     const state = createInitialState(
       "2026-04-15",
-      ["r0", "r1", "r2"],
-      ["c0", "c1", "c2"],
+      [...TEST_ROWS],
+      [...TEST_COLS],
     );
     expect(() => savePersistedGame(state)).not.toThrow();
     spy.mockRestore();

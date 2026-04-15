@@ -1,3 +1,4 @@
+import { CONSTRAINTS } from "@/features/game/logic/constraints";
 import { describe, expect, it } from "vitest";
 import { translate } from "../index";
 import type { TKey } from "../types";
@@ -83,48 +84,9 @@ describe("translate", () => {
     );
   });
 
-  it("handles all 37 constraint keys without returning raw key", () => {
-    const constraintIds = [
-      "continent_africa",
-      "continent_asia",
-      "continent_europe",
-      "continent_north_america",
-      "continent_south_america",
-      "continent_oceania",
-      "water_island",
-      "water_landlocked",
-      "borders_solo",
-      "borders_min_5",
-      "borders_min_7",
-      "borders_france",
-      "borders_germany",
-      "borders_russia",
-      "borders_china",
-      "borders_brazil",
-      "borders_drc",
-      "borders_turkey",
-      "borders_tanzania",
-      "borders_india",
-      "borders_niger",
-      "area_gt_2M",
-      "area_gt_1M",
-      "area_gt_500k",
-      "area_lt_10k",
-      "area_lt_1k",
-      "population_gt_100M",
-      "population_gt_50M",
-      "population_gt_30M",
-      "population_lt_2_5M",
-      "population_lt_1M",
-      "language_french",
-      "language_arabic",
-      "language_spanish",
-      "language_english",
-      "language_portuguese",
-      "language_russian",
-    ];
-    for (const id of constraintIds) {
-      const key = `constraint.${id}` as TKey;
+  it("handles all constraint keys without returning raw key", () => {
+    for (const c of CONSTRAINTS) {
+      const key = `constraint.${c.id}` as TKey;
       const frResult = translate("fr", key);
       const enResult = translate("en", key);
       expect(frResult).not.toBe(key);

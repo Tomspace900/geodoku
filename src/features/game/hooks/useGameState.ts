@@ -2,6 +2,7 @@ import { getCountryByCode } from "@/features/countries/lib/search";
 import { useMutation, useQuery } from "convex/react";
 import { useCallback, useEffect, useReducer } from "react";
 import { api } from "../../../../convex/_generated/api";
+import type { ConstraintId } from "../logic/constraints";
 import {
   type PersistedGame,
   clearPersistedGame,
@@ -44,15 +45,15 @@ export function useGameState() {
       dispatch({
         type: "rehydrate",
         persisted: rehydratePayload,
-        rows: todayGrid.rows,
-        cols: todayGrid.cols,
+        rows: todayGrid.rows as ConstraintId[],
+        cols: todayGrid.cols as ConstraintId[],
       });
     } else {
       dispatch({
         type: "init",
         date: todayGrid.date,
-        rows: todayGrid.rows,
-        cols: todayGrid.cols,
+        rows: todayGrid.rows as ConstraintId[],
+        cols: todayGrid.cols as ConstraintId[],
       });
     }
   }, [todayGrid, state.date]);

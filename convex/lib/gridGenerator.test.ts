@@ -15,7 +15,7 @@ import {
 describe("intersect", () => {
   it("returns a sorted, stable result", () => {
     const matches = buildConstraintMatches();
-    const result = intersect("continent_europe", "area_lt_10k", matches);
+    const result = intersect("continent_europe", "area_lt_1k", matches);
     expect(result).toEqual([...result].sort());
     expect(result.length).toBeGreaterThan(0);
   });
@@ -58,8 +58,8 @@ describe("finalizeAndScore", () => {
     const matches = buildConstraintMatches();
     // Only 3 categories: continent (2), area (2), language (2)
     const result = finalizeAndScore(
-      ["continent_africa", "continent_asia", "area_gt_1M"],
-      ["area_gt_500k", "language_arabic", "language_english"],
+      ["continent_africa", "continent_asia", "continent_europe"],
+      ["area_gt_2M", "area_gt_500k", "area_lt_1k"],
       matches,
     );
     expect(result).toBeNull();

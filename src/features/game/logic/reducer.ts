@@ -1,10 +1,11 @@
 import type { Cell, CellKey, CellPosition, GameState } from "../types";
 import { STARTING_LIVES } from "./constants";
+import type { ConstraintId } from "./constraints";
 import type { PersistedGame } from "./persistence";
 import { rarityToTier } from "./rarity";
 
 export type GameAction =
-  | { type: "init"; date: string; rows: string[]; cols: string[] }
+  | { type: "init"; date: string; rows: ConstraintId[]; cols: ConstraintId[] }
   | { type: "selectCell"; cell: CellPosition | null }
   | {
       type: "guessSuccess";
@@ -16,14 +17,14 @@ export type GameAction =
   | {
       type: "rehydrate";
       persisted: PersistedGame;
-      rows: string[];
-      cols: string[];
+      rows: ConstraintId[];
+      cols: ConstraintId[];
     };
 
 export function createInitialState(
   date: string,
-  rows: string[],
-  cols: string[],
+  rows: ConstraintId[],
+  cols: ConstraintId[],
 ): GameState {
   const cells = {} as Record<CellKey, Cell>;
   for (let i = 0 as 0 | 1 | 2; i <= 2; i++)

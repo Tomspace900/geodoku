@@ -1,3 +1,5 @@
+import type { ConstraintId } from "./logic/constraints";
+
 export type CellPosition = { row: 0 | 1 | 2; col: 0 | 1 | 2 };
 export type CellKey = `${0 | 1 | 2},${0 | 1 | 2}`;
 
@@ -17,8 +19,8 @@ export type GameStatus = "playing" | "won" | "lost";
 
 export type GameState = {
   date: string;
-  rows: string[];
-  cols: string[];
+  rows: ConstraintId[];
+  cols: ConstraintId[];
   cells: Record<CellKey, Cell>;
   remainingLives: number;
   selectedCell: CellPosition | null;

@@ -1,9 +1,9 @@
 import type { Country } from "@/features/countries/types";
-import { CONSTRAINTS } from "./constraints";
+import { CONSTRAINTS, type ConstraintId } from "./constraints";
 
 export type ValidationContext = {
-  rowConstraintId: string;
-  colConstraintId: string;
+  rowConstraintId: ConstraintId;
+  colConstraintId: ConstraintId;
   country: Country;
   usedCountries: Set<string>;
 };

@@ -1,6 +1,6 @@
-import type { fr } from "./locales/fr";
+import type { en } from "./locales/en";
 
-export type Translations = typeof fr;
+export type Translations = typeof en | typeof en;
 export type Locale = "fr" | "en";
 
 // Recursively generates all "dot-path" keys from the translations object.

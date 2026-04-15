@@ -1,12 +1,13 @@
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { cn } from "@/lib/utils";
-import { useQuery } from "convex/react";
+import { useAction, useMutation, useQuery } from "convex/react";
+import { ConvexError } from "convex/values";
+import { AlertTriangle, CheckCircle } from "lucide-react";
 import { useState } from "react";
 import { api } from "../../../convex/_generated/api";
 import { CandidateCard } from "./components/CandidateCard";
 import { GridDetail } from "./components/GridDetail";
-import { QueueStats } from "./components/QueueStats";
 import { ScheduleCalendar } from "./components/ScheduleCalendar";
 import { useAdminToken } from "./hooks/useAdminToken";
 import { dateToStr, getNextAvailableDate } from "./logic/scheduling";
@@ -23,22 +24,25 @@ const TAB_LABELS: Record<Tab, string> = {
 
 function AdminHeader({ onLogout }: { onLogout: () => void }) {
   return (
-    <header className="flex items-center justify-between py-2">
-      <div className="flex flex-col">
-        <h1 className="font-serif text-2xl font-medium italic text-on-surface leading-none">
-          Geodoku
-        </h1>
-        <p className="text-[10px] text-on-surface-variant tracking-widest mt-1 uppercase">
-          Administration
-        </p>
+    <header className="rounded-2xl bg-surface-low p-5 md:p-6">
+      <div className="flex items-start justify-between gap-4">
+        <div className="flex flex-col gap-2">
+          <h1 className="font-serif text-3xl font-medium italic text-on-surface leading-none">
+            Geodoku
+          </h1>
+          <div className="h-1 w-12 rounded-full bg-brand" />
+          <p className="text-[10px] text-on-surface-variant tracking-widest uppercase">
+            Dashboard administration
+          </p>
+        </div>
+        <button
+          type="button"
+          onClick={onLogout}
+          className="text-[10px] font-semibold text-on-surface-variant tracking-widest uppercase transition-colors hover:text-on-surface"
+        >
+          Déconnexion
+        </button>
       </div>
-      <button
-        type="button"
-        onClick={onLogout}
-        className="text-[10px] font-semibold text-on-surface-variant tracking-widest uppercase hover:text-on-surface transition-colors"
-      >
-        Déconnexion
-      </button>
     </header>
   );
 }
@@ -49,9 +53,21 @@ export function AdminPage() {
   const [token, setToken, clearToken] = useAdminToken();
   const [tokenInput, setTokenInput] = useState("");
   const [activeTab, setActiveTab] = useState<Tab>("pending");
+  const [candidateLimit, setCandidateLimit] = useState(12);
   const [selectedDate, setSelectedDate] = useState<string | null>(
     dateToStr(new Date()),
   );
+  const [isPurgingCandidates, setIsPurgingCandidates] = useState(false);
+  const [isGeneratingCandidates, setIsGeneratingCandidates] = useState(false);
+  const [purgeMessage, setPurgeMessage] = useState<string | null>(null);
+  const [generationMessage, setGenerationMessage] = useState<string | null>(
+    null,
+  );
+
+  const purgeUnlinkedCandidates = useMutation(
+    api.grids.purgeUnlinkedCandidates,
+  );
+  const triggerGeneration = useAction(api.grids.triggerGeneration);
 
   const scheduledGrids = useQuery(
     api.grids.getScheduledGrids,
@@ -63,7 +79,7 @@ export function AdminPage() {
     token
       ? {
           status: activeTab,
-          limit: 20,
+          limit: candidateLimit,
           sortBy: activeTab === "pending" ? "score" : "date",
         }
       : "skip",
@@ -87,22 +103,82 @@ export function AdminPage() {
       ? ((scheduledGrids ?? []).find((g) => g.date === selectedDate) ?? null)
       : null;
 
+  async function handlePurgeUnlinkedCandidates() {
+    if (!token) return;
+    const confirmed = window.confirm(
+      "Supprimer toutes les candidates non liées à une grille planifiée/passée ?",
+    );
+    if (!confirmed) return;
+
+    setIsPurgingCandidates(true);
+    setPurgeMessage(null);
+    try {
+      const result = await purgeUnlinkedCandidates({ adminToken: token });
+      setPurgeMessage(
+        `${result.deleted} candidates supprimées (${result.keptLinked} conservées car liées).`,
+      );
+    } catch (err) {
+      if (
+        err instanceof ConvexError &&
+        String(err.message).includes("Unauthorized")
+      ) {
+        clearToken();
+        return;
+      }
+      setPurgeMessage("Impossible de purger les candidates pour le moment.");
+    } finally {
+      setIsPurgingCandidates(false);
+    }
+  }
+
+  async function handleTriggerGeneration() {
+    if (!token) return;
+    setIsGeneratingCandidates(true);
+    setGenerationMessage(null);
+    try {
+      await triggerGeneration({ adminToken: token });
+      setGenerationMessage("Génération lancée avec succès.");
+    } catch (err) {
+      if (
+        err instanceof ConvexError &&
+        String(err.message).includes("Unauthorized")
+      ) {
+        clearToken();
+        return;
+      }
+      setGenerationMessage(
+        "Impossible de lancer la génération pour le moment.",
+      );
+    } finally {
+      setIsGeneratingCandidates(false);
+    }
+  }
+
+  function handleTabChange(tab: Tab) {
+    setActiveTab(tab);
+    setCandidateLimit(12);
+  }
+
   // ── Écran de connexion ────────────────────────────────────────────────────
 
   if (!token) {
     return (
-      <div className="min-h-screen bg-surface flex flex-col items-center px-4 py-6">
-        <div className="w-full max-w-[400px] flex flex-col gap-8">
-          <header className="py-2">
-            <h1 className="font-serif text-2xl font-medium italic text-on-surface leading-none">
+      <div className="min-h-screen bg-surface px-4 py-8">
+        <div className="mx-auto flex w-full max-w-[460px] flex-col gap-6">
+          <header className="rounded-2xl bg-surface-low p-6">
+            <h1 className="font-serif text-3xl font-medium italic text-on-surface leading-none">
               Geodoku
             </h1>
-            <p className="text-[10px] text-on-surface-variant tracking-widest mt-1 uppercase">
+            <div className="mt-2 h-1 w-12 rounded-full bg-brand" />
+            <p className="mt-2 text-[10px] text-on-surface-variant tracking-widest uppercase">
               Administration
             </p>
           </header>
 
-          <div className="flex flex-col gap-4">
+          <div className="rounded-2xl bg-surface-lowest p-6 shadow-editorial">
+            <p className="mb-4 text-[10px] font-semibold text-on-surface-variant tracking-widest uppercase">
+              Accès sécurisé
+            </p>
             <p className="text-sm text-on-surface-variant">
               Saisissez votre token pour accéder au panneau d'administration.
             </p>
@@ -114,12 +190,12 @@ export function AdminPage() {
               onKeyDown={(e) => {
                 if (e.key === "Enter" && tokenInput) setToken(tokenInput);
               }}
-              className="border-0 border-b border-outline-variant/40 rounded-none px-0 focus-visible:ring-0 bg-transparent"
+              className="mt-4 rounded-none border-0 border-b border-outline-variant/40 bg-transparent px-0 focus-visible:ring-0"
             />
             <Button
               onClick={() => setToken(tokenInput)}
               disabled={!tokenInput}
-              className="bg-on-surface text-surface-lowest hover:bg-on-surface/90 self-start"
+              className="mt-5 bg-on-surface text-surface-lowest hover:bg-on-surface/90"
             >
               Connexion
             </Button>
@@ -133,86 +209,152 @@ export function AdminPage() {
 
   return (
     <div className="min-h-screen bg-surface">
-      <div className="max-w-5xl mx-auto px-4 py-6 flex flex-col gap-6">
+      <div className="mx-auto flex max-w-6xl flex-col gap-6 px-4 py-8">
         <AdminHeader onLogout={clearToken} />
 
-        {/* Alerte si aucune grille pour demain */}
-        {!hasTomorrowGrid && scheduledGrids !== undefined && (
-          <div className="bg-red-500/10 text-red-800 rounded-xl px-4 py-3 text-sm font-medium">
-            Aucune grille planifiée pour demain ({tomorrowStr}) !
+        <section className="rounded-2xl bg-surface-low p-4 md:p-5">
+          <div className="mb-3 flex flex-wrap items-center justify-between gap-3">
+            <p className="text-[10px] font-semibold text-on-surface-variant tracking-widest uppercase">
+              Planification
+            </p>
           </div>
-        )}
-
-        <QueueStats />
-
-        <div className="h-px bg-surface-highest" />
-
-        {/* Calendrier + détail de la grille sélectionnée */}
-        <div className="grid grid-cols-1 gap-4 items-stretch md:grid-cols-5">
-          <div className="col-span-1 h-full md:col-span-2">
-            <ScheduleCalendar
-              scheduledGrids={scheduledGrids ?? []}
-              selectedDate={selectedDate}
-              onSelectDate={setSelectedDate}
-            />
+          {!hasTomorrowGrid && scheduledGrids !== undefined ? (
+            <div className="mb-3 rounded-lg bg-rarity-ultra/10 px-3 py-2 text-sm text-rarity-ultra flex items-center gap-2">
+              <AlertTriangle className="w-4 h-4" />
+              Aucune grille planifiée pour demain ({tomorrowStr}).
+            </div>
+          ) : (
+            <div className="mb-3 rounded-lg bg-brand/10 px-3 py-2 text-sm text-brand flex items-center gap-2">
+              <CheckCircle className="w-4 h-4" />
+              Il y a bien une grille planifiée pour demain ({tomorrowStr}).
+            </div>
+          )}
+          <div className="grid grid-cols-1 items-stretch gap-4 md:grid-cols-5">
+            <div className="col-span-1 h-full md:col-span-2">
+              <ScheduleCalendar
+                scheduledGrids={scheduledGrids ?? []}
+                selectedDate={selectedDate}
+                onSelectDate={setSelectedDate}
+              />
+            </div>
+            <div className="col-span-1 h-full md:col-span-3">
+              <GridDetail
+                grid={selectedGrid}
+                selectedDate={selectedDate}
+                adminToken={token}
+                onUnauthorized={clearToken}
+                onUnscheduled={() => setSelectedDate(null)}
+              />
+            </div>
           </div>
-          <div className="col-span-1 h-full md:col-span-3">
-            <GridDetail
-              grid={selectedGrid}
-              selectedDate={selectedDate}
-              adminToken={token}
-              onUnauthorized={clearToken}
-              onUnscheduled={() => setSelectedDate(null)}
-            />
+        </section>
+
+        <section className="rounded-2xl bg-surface-low p-4 md:p-5">
+          <div className="mb-4 flex flex-wrap items-center justify-between gap-3">
+            <p className="text-[10px] font-semibold text-on-surface-variant tracking-widest uppercase">
+              Revue des candidates
+            </p>
+            <div className="inline-flex rounded-lg bg-surface-highest p-1">
+              {(["pending", "approved", "rejected"] as Tab[]).map((tab) => (
+                <button
+                  key={tab}
+                  type="button"
+                  onClick={() => handleTabChange(tab)}
+                  className={cn(
+                    "rounded-md px-3 py-1.5 text-xs font-semibold tracking-wide transition-colors",
+                    activeTab === tab
+                      ? "bg-on-surface text-surface-lowest"
+                      : "text-on-surface-variant hover:text-on-surface",
+                  )}
+                >
+                  {TAB_LABELS[tab]}
+                </button>
+              ))}
+            </div>
           </div>
-        </div>
 
-        <div className="h-px bg-surface-highest" />
-
-        {/* Tabs */}
-        <div className="flex gap-1.5">
-          {(["pending", "approved", "rejected"] as Tab[]).map((tab) => (
-            <button
-              key={tab}
-              type="button"
-              onClick={() => setActiveTab(tab)}
-              className={cn(
-                "px-4 py-1.5 rounded-lg text-xs font-semibold tracking-wide transition-colors",
-                activeTab === tab
-                  ? "bg-on-surface text-surface-lowest"
-                  : "text-on-surface-variant hover:bg-surface-highest",
-              )}
-            >
-              {TAB_LABELS[tab]}
-            </button>
-          ))}
-        </div>
-
-        {/* Liste des candidats */}
-        {candidates === undefined ? (
-          <p className="text-sm text-on-surface-variant">Chargement…</p>
-        ) : candidates.length === 0 ? (
-          <p className="text-sm text-on-surface-variant">
-            Aucune grille dans l'onglet «{TAB_LABELS[activeTab]}».
-          </p>
-        ) : (
-          <div className="flex flex-col">
-            {candidates.map((candidate, index) => (
-              <div key={candidate._id} className="py-4 first:pt-0 last:pb-0">
-                <CandidateCard
-                  candidate={candidate}
-                  adminToken={token}
-                  onUnauthorized={clearToken}
-                  nextAvailableDate={nextAvailableDate}
-                  scheduledDates={scheduledDates}
-                />
-                {index < candidates.length - 1 && (
-                  <div className="mt-4 h-px bg-surface-highest" />
+          <div className="mb-4 rounded-xl bg-surface-lowest p-3">
+            <p className="mb-2 text-[10px] font-semibold text-on-surface-variant tracking-widest uppercase">
+              Actions maintenance
+            </p>
+            <div className="flex flex-wrap items-center gap-2">
+              <Button
+                type="button"
+                size="sm"
+                variant="secondary"
+                onClick={handlePurgeUnlinkedCandidates}
+                disabled={isPurgingCandidates}
+                className="bg-surface-highest text-on-surface hover:bg-surface-highest/80"
+              >
+                {isPurgingCandidates
+                  ? "Purge en cours…"
+                  : "Purger les candidates non liées"}
+              </Button>
+              <Button
+                type="button"
+                size="sm"
+                variant="secondary"
+                onClick={handleTriggerGeneration}
+                disabled={isGeneratingCandidates}
+                className="bg-surface-highest text-on-surface hover:bg-surface-highest/80"
+              >
+                {isGeneratingCandidates
+                  ? "Génération en cours…"
+                  : "Générer des candidates"}
+              </Button>
+            </div>
+            {(purgeMessage || generationMessage) && (
+              <div className="mt-2 space-y-1">
+                {purgeMessage && (
+                  <p className="text-xs text-on-surface-variant">
+                    {purgeMessage}
+                  </p>
+                )}
+                {generationMessage && (
+                  <p className="text-xs text-on-surface-variant">
+                    {generationMessage}
+                  </p>
                 )}
               </div>
-            ))}
+            )}
           </div>
-        )}
+
+          {candidates === undefined ? (
+            <p className="text-sm text-on-surface-variant">Chargement…</p>
+          ) : candidates.length === 0 ? (
+            <div className="rounded-xl bg-surface-lowest p-5 text-sm text-on-surface-variant">
+              Aucune grille dans l'onglet «{TAB_LABELS[activeTab]}».
+            </div>
+          ) : (
+            <>
+              <div className="space-y-4">
+                {candidates.map((candidate) => (
+                  <CandidateCard
+                    key={candidate._id}
+                    candidate={candidate}
+                    adminToken={token}
+                    onUnauthorized={clearToken}
+                    nextAvailableDate={nextAvailableDate}
+                    scheduledDates={scheduledDates}
+                  />
+                ))}
+              </div>
+              {candidateLimit < 50 && candidates.length >= candidateLimit && (
+                <div className="mt-4 flex justify-center">
+                  <Button
+                    type="button"
+                    variant="secondary"
+                    size="sm"
+                    onClick={() => setCandidateLimit(50)}
+                    className="bg-surface-highest text-on-surface hover:bg-surface-highest/80"
+                  >
+                    Afficher plus de candidates
+                  </Button>
+                </div>
+              )}
+            </>
+          )}
+        </section>
       </div>
     </div>
   );

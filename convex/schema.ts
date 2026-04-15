@@ -6,14 +6,37 @@ export default defineSchema({
     rows: v.array(v.string()), // 3 constraint IDs
     cols: v.array(v.string()), // 3 constraint IDs
     validAnswers: v.record(v.string(), v.array(v.string())), // "0,0" → ISO3[]
-    score: v.number(),
-    difficulty: v.number(), // 0-100
+    score: v.number(), // qualityScore 0-100 (intrinsèque)
+    difficulty: v.number(), // 0-100, dérivé des cellMetrics
+    contextScore: v.optional(v.number()), // 0-100, renseigné en phase 2
     metadata: v.object({
+      // Agrégats cellule
       minCellSize: v.number(),
       maxCellSize: v.number(),
       avgCellSize: v.number(),
+      cellSizeVariance: v.number(),
+      solutionPoolSize: v.number(),
+      // Catégories & notoriété
       categoryCount: v.number(),
-      avgObscurity: v.number(),
+      avgNotoriety: v.number(),
+      // Dérivés des cellMetrics
+      obviousCellCount: v.number(),
+      cellsWithNoObvious: v.number(),
+      difficultyVariance: v.number(),
+      criteriaOverlapScore: v.number(),
+      difficultyMixNorm: v.number(),
+      // Granularité cellule : 9 entrées
+      cellMetrics: v.array(
+        v.object({
+          cellKey: v.string(),
+          solutionCount: v.number(),
+          popularCount: v.number(),
+          maxPopularity: v.number(),
+          avgPopularity: v.number(),
+          entropy: v.number(),
+          hasObviousAnswer: v.boolean(),
+        }),
+      ),
     }),
     status: v.union(
       v.literal("pending"),
@@ -52,4 +75,17 @@ export default defineSchema({
     cellKey: v.string(),
     totalGuesses: v.number(),
   }).index("by_date_and_cell", ["date", "cellKey"]),
+
+  gridFeedback: defineTable({
+    date: v.string(), // "YYYY-MM-DD"
+    tooEasyCount: v.number(),
+    balancedCount: v.number(),
+    tooHardCount: v.number(),
+    totalRatings: v.number(),
+    wins: v.number(),
+    losses: v.number(),
+    totalLivesLeft: v.number(),
+    totalFilledCells: v.number(),
+    totalGuessesSubmitted: v.number(),
+  }).index("by_date", ["date"]),
 });

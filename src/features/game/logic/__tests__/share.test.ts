@@ -42,7 +42,7 @@ describe("formatShareString", () => {
     const state = makeState({ status: "won", remainingLives: 2 });
     const result = formatShareString(state, 42);
     expect(result).toContain("Geodoku #42");
-    expect(result).toContain("❤️❤️🖤"); // 2 hearts + 1 black
+    expect(result).toContain("❤️❤️🤍"); // 2 hearts + 1 white
   });
 
   it("shows skull for a lost state", () => {
@@ -60,13 +60,13 @@ describe("formatShareString", () => {
     state = fillCell(state, "1,0", "ultra");
 
     const result = formatShareString(state, 1);
-    // Row 0: common uncommon rare → 🟩🟨🟧
-    // Row 1: ultra empty empty  → 🟥⬛⬛
-    // Row 2: empty empty empty  → ⬛⬛⬛
+    // Row 0: common uncommon rare → 🟪🟦🟨
+    // Row 1: ultra empty empty  → 🟥⬜⬜
+    // Row 2: empty empty empty  → ⬜⬜⬜
     const lines = result.split("\n");
-    expect(lines[2]).toBe("🟩🟨🟧");
-    expect(lines[3]).toBe("🟥⬛⬛");
-    expect(lines[4]).toBe("⬛⬛⬛");
+    expect(lines[2]).toBe("🟪🟦🟨");
+    expect(lines[3]).toBe("🟥⬜⬜");
+    expect(lines[4]).toBe("⬜⬜⬜");
   });
 
   it("includes site URL at the end", () => {

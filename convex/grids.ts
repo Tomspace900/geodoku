@@ -1,7 +1,23 @@
 import { ConvexError, v } from "convex/values";
 import { internal } from "./_generated/api";
 import { action, internalAction, mutation, query } from "./_generated/server";
-import { generateBatch } from "./lib/gridGenerator";
+import {
+  CONTEXT_HISTORY_WINDOW,
+  type GridContextInput,
+  computeGridContext,
+} from "./lib/gridContext";
+import {
+  BATCH_GENERATE_N,
+  BATCH_STORE_N,
+  generateBatch,
+} from "./lib/gridGenerator";
+
+// Phase 2 pool: on garde la moitié haute du batch pour laisser du jeu
+// au scoring contextuel (= 15 candidates sur 30 générées).
+const PHASE_2_POOL_SIZE = Math.floor(BATCH_GENERATE_N / 2);
+
+// Pondération finalScore = alpha * quality + (1 - alpha) * context.
+const FINAL_SCORE_QUALITY_WEIGHT = 0.6;
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
 
@@ -32,7 +48,10 @@ function checkAdminToken(provided: string): void {
 // ─── Internal actions (called by crons) ───────────────────────────────────────
 
 /**
- * Generates 5 new grid candidates and saves them as "pending".
+ * Two-phase candidate generation:
+ *   1. Generate BATCH_GENERATE_N intrinsically-scored candidates (pure backtracking).
+ *   2. Score the top PHASE_2_POOL_SIZE against the recent published history,
+ *      then pick BATCH_STORE_N with the best finalScore = 0.6 × quality + 0.4 × context.
  * Cron: every day at 23:00 UTC.
  */
 export const generateDailyCandidates = internalAction({
@@ -45,7 +64,7 @@ export const generateDailyCandidates = internalAction({
       await ctx.runQuery(internal.gridData.getAllGridsForCheck);
 
     const allExisting = [...existing, ...publishedGrids];
-    const batch = generateBatch(5, allExisting);
+    const batch = generateBatch(BATCH_GENERATE_N, allExisting);
 
     if (batch.length === 0) {
       console.log(
@@ -54,19 +73,45 @@ export const generateDailyCandidates = internalAction({
       return;
     }
 
+    // Phase 2 — contextual scoring against recent published history.
+    const history: GridContextInput[] = await ctx.runQuery(
+      internal.gridData.getRecentPublishedGrids,
+      { limit: CONTEXT_HISTORY_WINDOW },
+    );
+
+    const pool = batch.slice(0, PHASE_2_POOL_SIZE);
+    const scored = pool.map((candidate) => {
+      const ctxMetrics = computeGridContext(
+        {
+          rows: candidate.rows,
+          cols: candidate.cols,
+          validAnswers: candidate.validAnswers,
+        },
+        history,
+      );
+      const finalScore =
+        FINAL_SCORE_QUALITY_WEIGHT * candidate.score +
+        (1 - FINAL_SCORE_QUALITY_WEIGHT) * ctxMetrics.contextScore;
+      return { candidate, contextScore: ctxMetrics.contextScore, finalScore };
+    });
+
+    scored.sort((a, b) => b.finalScore - a.finalScore);
+    const selected = scored.slice(0, BATCH_STORE_N);
+
     await ctx.runMutation(internal.gridData.insertCandidates, {
-      candidates: batch.map((c) => ({
-        rows: c.rows,
-        cols: c.cols,
-        validAnswers: c.validAnswers,
-        score: c.score,
-        difficulty: c.difficulty,
-        metadata: c.metadata,
+      candidates: selected.map(({ candidate, contextScore }) => ({
+        rows: candidate.rows,
+        cols: candidate.cols,
+        validAnswers: candidate.validAnswers,
+        score: candidate.score,
+        difficulty: candidate.difficulty,
+        contextScore,
+        metadata: candidate.metadata,
       })),
     });
 
     console.log(
-      `[generateDailyCandidates] Inserted ${batch.length} candidates`,
+      `[generateDailyCandidates] Generated ${batch.length}, pool ${pool.length}, stored ${selected.length}`,
     );
   },
 });
@@ -132,6 +177,47 @@ export const getTodayGrid = query({
 });
 
 /**
+ * Returns a scheduled grid + its linked candidate's cellMetrics and scores.
+ * Used by the admin GridDetail panel to surface per-cell signals for a
+ * grid that's already been promoted to the `grids` table.
+ */
+export const getGridDetailByDate = query({
+  args: { date: v.string() },
+  handler: async (ctx, args) => {
+    const grid = await ctx.db
+      .query("grids")
+      .withIndex("by_date", (q) => q.eq("date", args.date))
+      .unique();
+    if (!grid) return null;
+
+    const candidate = await ctx.db.get(grid.candidateId);
+    if (!candidate) {
+      return {
+        date: grid.date,
+        rows: grid.rows,
+        cols: grid.cols,
+        validAnswers: grid.validAnswers,
+        difficulty: grid.difficulty,
+        qualityScore: null,
+        contextScore: null,
+        metadata: null,
+      };
+    }
+
+    return {
+      date: grid.date,
+      rows: grid.rows,
+      cols: grid.cols,
+      validAnswers: grid.validAnswers,
+      difficulty: grid.difficulty,
+      qualityScore: candidate.score,
+      contextScore: candidate.contextScore ?? null,
+      metadata: candidate.metadata,
+    };
+  },
+});
+
+/**
  * Returns all grids scheduled from the past 30 days onwards.
  * Used by the admin calendar to visualise scheduled grids and their difficulties.
  */
@@ -179,37 +265,45 @@ export const getCandidates = query({
   },
 });
 
-/** Returns queue health stats for the admin dashboard. */
-export const getQueueStats = query({
-  args: {},
-  handler: async (ctx) => {
-    const today = todayUTC();
+/** Returns recent observed feedback metrics for scheduled grids. */
+export const getGridFeedbackStats = query({
+  args: {
+    limit: v.optional(v.number()),
+  },
+  handler: async (ctx, args) => {
+    const limit = Math.min(args.limit ?? 60, 180);
+    const feedbackRows = await ctx.db
+      .query("gridFeedback")
+      .withIndex("by_date")
+      .order("desc")
+      .take(limit);
 
-    const pending = await ctx.db
-      .query("gridCandidates")
-      .withIndex("by_status", (q) => q.eq("status", "pending"))
-      .take(500);
+    return feedbackRows.map((row) => {
+      const total = row.totalRatings;
+      const difficultyObserved100 =
+        total === 0
+          ? null
+          : Math.round(
+              (row.balancedCount * 50 + row.tooHardCount * 100) / total,
+            );
 
-    const approved = await ctx.db
-      .query("gridCandidates")
-      .withIndex("by_status", (q) => q.eq("status", "approved"))
-      .take(500);
-
-    const futureGrids = await ctx.db
-      .query("grids")
-      .withIndex("by_date", (q) => q.gt("date", today))
-      .take(500);
-
-    const approvedQueued = approved.length;
-    const scheduledFuture = futureGrids.length;
-    const daysOfRunway = approvedQueued + scheduledFuture;
-
-    return {
-      pending: pending.length,
-      approvedQueued,
-      scheduledFuture,
-      daysOfRunway,
-    };
+      return {
+        date: row.date,
+        ratingCount: row.totalRatings,
+        difficultyObserved100,
+        winRate: total === 0 ? null : Number((row.wins / total).toFixed(3)),
+        avgLivesLeft:
+          total === 0 ? null : Number((row.totalLivesLeft / total).toFixed(2)),
+        avgFilledCells:
+          total === 0
+            ? null
+            : Number((row.totalFilledCells / total).toFixed(2)),
+        avgGuessesSubmitted:
+          total === 0
+            ? null
+            : Number((row.totalGuessesSubmitted / total).toFixed(2)),
+      };
+    });
   },
 });
 
@@ -318,6 +412,101 @@ export const rejectCandidate = mutation({
       reviewedAt: Date.now(),
       rejectionReason: args.reason,
     });
+  },
+});
+
+/** Saves end-of-game feedback and aggregates lightweight session metrics. */
+export const submitGridFeedback = mutation({
+  args: {
+    date: v.string(),
+    rating: v.union(
+      v.literal("too_easy"),
+      v.literal("balanced"),
+      v.literal("too_hard"),
+    ),
+    won: v.boolean(),
+    livesLeft: v.number(),
+    filledCells: v.number(),
+    guessesSubmitted: v.number(),
+  },
+  handler: async (ctx, args) => {
+    const existing = await ctx.db
+      .query("gridFeedback")
+      .withIndex("by_date", (q) => q.eq("date", args.date))
+      .unique();
+
+    const tooEasyIncrement = args.rating === "too_easy" ? 1 : 0;
+    const balancedIncrement = args.rating === "balanced" ? 1 : 0;
+    const tooHardIncrement = args.rating === "too_hard" ? 1 : 0;
+    const winsIncrement = args.won ? 1 : 0;
+    const lossesIncrement = args.won ? 0 : 1;
+
+    if (existing) {
+      await ctx.db.patch(existing._id, {
+        tooEasyCount: existing.tooEasyCount + tooEasyIncrement,
+        balancedCount: existing.balancedCount + balancedIncrement,
+        tooHardCount: existing.tooHardCount + tooHardIncrement,
+        totalRatings: existing.totalRatings + 1,
+        wins: existing.wins + winsIncrement,
+        losses: existing.losses + lossesIncrement,
+        totalLivesLeft: existing.totalLivesLeft + args.livesLeft,
+        totalFilledCells: existing.totalFilledCells + args.filledCells,
+        totalGuessesSubmitted:
+          existing.totalGuessesSubmitted + args.guessesSubmitted,
+      });
+      return;
+    }
+
+    await ctx.db.insert("gridFeedback", {
+      date: args.date,
+      tooEasyCount: tooEasyIncrement,
+      balancedCount: balancedIncrement,
+      tooHardCount: tooHardIncrement,
+      totalRatings: 1,
+      wins: winsIncrement,
+      losses: lossesIncrement,
+      totalLivesLeft: args.livesLeft,
+      totalFilledCells: args.filledCells,
+      totalGuessesSubmitted: args.guessesSubmitted,
+    });
+  },
+});
+
+/**
+ * Deletes candidate rows that are not referenced by any scheduled/past grid.
+ * Useful after generator formula updates to rebuild the queue from scratch.
+ */
+export const purgeUnlinkedCandidates = mutation({
+  args: {
+    adminToken: v.string(),
+  },
+  handler: async (ctx, args) => {
+    checkAdminToken(args.adminToken);
+
+    const linkedIds = new Set<string>();
+    const grids = await ctx.db.query("grids").take(500);
+    for (const grid of grids) {
+      linkedIds.add(grid.candidateId);
+    }
+
+    const candidates = await ctx.db.query("gridCandidates").take(500);
+    let deleted = 0;
+    let keptLinked = 0;
+
+    for (const candidate of candidates) {
+      if (linkedIds.has(candidate._id)) {
+        keptLinked += 1;
+        continue;
+      }
+      await ctx.db.delete(candidate._id);
+      deleted += 1;
+    }
+
+    return {
+      scannedCandidates: candidates.length,
+      deleted,
+      keptLinked,
+    };
   },
 });
 

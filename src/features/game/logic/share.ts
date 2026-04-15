@@ -15,7 +15,7 @@ export function formatShareString(
   const { percent } = computeScore(state);
   const hearts =
     "❤️".repeat(state.remainingLives) +
-    "🖤".repeat(STARTING_LIVES - state.remainingLives);
+    "🤍".repeat(STARTING_LIVES - state.remainingLives);
 
   let header = `Geodoku #${gridNumber} — ${percent}%`;
   if (state.status === "won") header += ` ${hearts}`;

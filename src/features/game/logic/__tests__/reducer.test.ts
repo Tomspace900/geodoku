@@ -6,8 +6,8 @@ import { createInitialState, gameReducer } from "../reducer";
 function freshState(): GameState {
   return createInitialState(
     "2024-01-01",
-    ["r0", "r1", "r2"],
-    ["c0", "c1", "c2"],
+    ["continent_europe", "continent_asia", "continent_africa"],
+    ["water_landlocked", "water_island", "borders_min_5"],
   );
 }
 
@@ -239,12 +239,20 @@ describe("gameReducer — rehydrate", () => {
     const state = gameReducer(freshState(), {
       type: "rehydrate",
       persisted,
-      rows: ["rowA", "rowB", "rowC"],
-      cols: ["colA", "colB", "colC"],
+      rows: ["borders_france", "borders_germany", "borders_russia"],
+      cols: ["population_gt_30M", "area_gt_500k", "flag_has_blue"],
     });
     expect(state.date).toBe("2026-04-15");
-    expect(state.rows).toEqual(["rowA", "rowB", "rowC"]);
-    expect(state.cols).toEqual(["colA", "colB", "colC"]);
+    expect(state.rows).toEqual([
+      "borders_france",
+      "borders_germany",
+      "borders_russia",
+    ]);
+    expect(state.cols).toEqual([
+      "population_gt_30M",
+      "area_gt_500k",
+      "flag_has_blue",
+    ]);
     expect(state.remainingLives).toBe(2);
     expect(state.status).toBe("playing");
     expect(state.cells["0,0"].status).toBe("filled");
@@ -258,8 +266,8 @@ describe("gameReducer — rehydrate", () => {
     const state = gameReducer(freshState(), {
       type: "rehydrate",
       persisted,
-      rows: ["rowA", "rowB", "rowC"],
-      cols: ["colA", "colB", "colC"],
+      rows: ["borders_france", "borders_germany", "borders_russia"],
+      cols: ["population_gt_30M", "area_gt_500k", "flag_has_blue"],
     });
     expect(state.usedCountries).toBeInstanceOf(Set);
     expect(state.usedCountries.has("FRA")).toBe(true);

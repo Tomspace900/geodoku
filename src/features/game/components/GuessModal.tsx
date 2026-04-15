@@ -106,7 +106,7 @@ export function GuessModal({ cell, state, onClose, onSubmit }: Props) {
         if (!v) handleClose();
       }}
     >
-      <DrawerContent className="max-h-[90vh]">
+      <DrawerContent className="max-h-[90vh] w-full sm:mx-auto sm:max-w-xl">
         <DrawerHeader className="text-left pb-2 px-4 pt-4">
           <DrawerTitle className="font-serif text-lg font-medium text-on-surface leading-snug">
             {rowLabel} × {colLabel}

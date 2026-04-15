@@ -35,6 +35,35 @@ export const getAllGridsForCheck = internalQuery({
   },
 });
 
+/**
+ * Returns the N most-recently published grids (ordered by date desc).
+ * Feeds phase 2 contextual scoring.
+ */
+export const getRecentPublishedGrids = internalQuery({
+  args: { limit: v.number() },
+  handler: async (
+    ctx,
+    args,
+  ): Promise<
+    {
+      rows: string[];
+      cols: string[];
+      validAnswers: Record<string, string[]>;
+    }[]
+  > => {
+    const grids = await ctx.db
+      .query("grids")
+      .withIndex("by_date")
+      .order("desc")
+      .take(args.limit);
+    return grids.map((g) => ({
+      rows: g.rows,
+      cols: g.cols,
+      validAnswers: g.validAnswers,
+    }));
+  },
+});
+
 /** Returns today's grid doc, or null. */
 export const getTodayGridInternal = internalQuery({
   args: {},
@@ -85,12 +114,31 @@ export const insertCandidates = internalMutation({
         validAnswers: v.record(v.string(), v.array(v.string())),
         score: v.number(),
         difficulty: v.number(),
+        contextScore: v.optional(v.number()),
         metadata: v.object({
           minCellSize: v.number(),
           maxCellSize: v.number(),
           avgCellSize: v.number(),
+          cellSizeVariance: v.number(),
+          solutionPoolSize: v.number(),
           categoryCount: v.number(),
-          avgObscurity: v.number(),
+          avgNotoriety: v.number(),
+          obviousCellCount: v.number(),
+          cellsWithNoObvious: v.number(),
+          difficultyVariance: v.number(),
+          criteriaOverlapScore: v.number(),
+          difficultyMixNorm: v.number(),
+          cellMetrics: v.array(
+            v.object({
+              cellKey: v.string(),
+              solutionCount: v.number(),
+              popularCount: v.number(),
+              maxPopularity: v.number(),
+              avgPopularity: v.number(),
+              entropy: v.number(),
+              hasObviousAnswer: v.boolean(),
+            }),
+          ),
         }),
       }),
     ),

@@ -15,7 +15,16 @@
     "borders": ["IRN", "PAK", "TKM", "UZB", "TJK", "CHN"],
     "areaKm2": 652230,
     "population": 43844000,
-    "officialLanguages": ["prs", "ps", "tk"]
+    "officialLanguages": ["prs", "ps", "tk"],
+    "latitude": 33,
+    "subregion": "Southern Asia",
+    "flagColors": ["white", "black"],
+    "flagSymbols": [],
+    "events": [],
+    "groups": [],
+    "geoTags": [],
+    "wikipediaMonthlyViews": 241478,
+    "popularityIndex": 0.7303780539016587
   },
   {
     "code": "AGO",
@@ -33,7 +42,16 @@
     "borders": ["COG", "COD", "ZMB", "NAM"],
     "areaKm2": 1246700,
     "population": 36170961,
-    "officialLanguages": ["pt"]
+    "officialLanguages": ["pt"],
+    "latitude": -12.5,
+    "subregion": "Middle Africa",
+    "flagColors": ["red", "yellow", "black"],
+    "flagSymbols": ["star"],
+    "events": [],
+    "groups": [],
+    "geoTags": [],
+    "wikipediaMonthlyViews": 88450,
+    "popularityIndex": 0.5418552526238193
   },
   {
     "code": "ALB",
@@ -51,7 +69,16 @@
     "borders": ["MNE", "GRC", "MKD", "UNK"],
     "areaKm2": 28748,
     "population": 2363314,
-    "officialLanguages": ["sq"]
+    "officialLanguages": ["sq"],
+    "latitude": 41,
+    "subregion": "Southeast Europe",
+    "flagColors": ["red", "black"],
+    "flagSymbols": ["animal"],
+    "events": [],
+    "groups": [],
+    "geoTags": [],
+    "wikipediaMonthlyViews": 183279,
+    "popularityIndex": 0.6786140541622382
   },
   {
     "code": "AND",
@@ -69,7 +96,16 @@
     "borders": ["FRA", "ESP"],
     "areaKm2": 468,
     "population": 88406,
-    "officialLanguages": ["ca"]
+    "officialLanguages": ["ca"],
+    "latitude": 42.5,
+    "subregion": "Southern Europe",
+    "flagColors": ["red", "blue", "yellow"],
+    "flagSymbols": [],
+    "events": [],
+    "groups": [],
+    "geoTags": [],
+    "wikipediaMonthlyViews": 131095,
+    "popularityIndex": 0.6157154914711783
   },
   {
     "code": "ARE",
@@ -87,7 +123,16 @@
     "borders": ["OMN", "SAU"],
     "areaKm2": 83600,
     "population": 11294243,
-    "officialLanguages": ["ar"]
+    "officialLanguages": ["ar"],
+    "latitude": 24,
+    "subregion": "Western Asia",
+    "flagColors": ["red", "green", "white", "black"],
+    "flagSymbols": [],
+    "events": [],
+    "groups": [],
+    "geoTags": ["middle_east"],
+    "wikipediaMonthlyViews": 301594,
+    "popularityIndex": 0.7721061683221628
   },
   {
     "code": "ARG",
@@ -105,7 +150,16 @@
     "borders": ["BOL", "BRA", "CHL", "PRY", "URY"],
     "areaKm2": 2780400,
     "population": 46735004,
-    "officialLanguages": ["gn", "es"]
+    "officialLanguages": ["gn", "es"],
+    "latitude": -34,
+    "subregion": "South America",
+    "flagColors": ["blue", "yellow", "white"],
+    "flagSymbols": ["sun"],
+    "events": ["fifa_wc_host"],
+    "groups": ["g20"],
+    "geoTags": [],
+    "wikipediaMonthlyViews": 191864,
+    "popularityIndex": 0.6872068005262288
   },
   {
     "code": "ARM",
@@ -123,7 +177,16 @@
     "borders": ["AZE", "GEO", "IRN", "TUR"],
     "areaKm2": 29743,
     "population": 3076200,
-    "officialLanguages": ["hy"]
+    "officialLanguages": ["hy"],
+    "latitude": 40,
+    "subregion": "Western Asia",
+    "flagColors": ["red", "blue", "orange"],
+    "flagSymbols": [],
+    "events": [],
+    "groups": [],
+    "geoTags": [],
+    "wikipediaMonthlyViews": 196724,
+    "popularityIndex": 0.6919023047874837
   },
   {
     "code": "ATG",
@@ -141,7 +204,16 @@
     "borders": [],
     "areaKm2": 442,
     "population": 103603,
-    "officialLanguages": ["en"]
+    "officialLanguages": ["en"],
+    "latitude": 17.05,
+    "subregion": "Caribbean",
+    "flagColors": ["red", "blue", "yellow", "white", "black"],
+    "flagSymbols": ["sun", "triangle"],
+    "events": [],
+    "groups": [],
+    "geoTags": [],
+    "wikipediaMonthlyViews": 45339,
+    "popularityIndex": 0.4164156790542353
   },
   {
     "code": "AUS",
@@ -159,7 +231,16 @@
     "borders": [],
     "areaKm2": 7692024,
     "population": 27536874,
-    "officialLanguages": ["en"]
+    "officialLanguages": ["en"],
+    "latitude": -27,
+    "subregion": "Australia and New Zealand",
+    "flagColors": ["blue", "white"],
+    "flagSymbols": ["star", "cross"],
+    "events": ["summer_olympics_host"],
+    "groups": ["g20"],
+    "geoTags": [],
+    "wikipediaMonthlyViews": 349949,
+    "popularityIndex": 0.8000194110839615
   },
   {
     "code": "AUT",
@@ -177,7 +258,16 @@
     "borders": ["CZE", "DEU", "HUN", "ITA", "LIE", "SVK", "SVN", "CHE"],
     "areaKm2": 83871,
     "population": 9200931,
-    "officialLanguages": ["bar"]
+    "officialLanguages": ["bar"],
+    "latitude": 47.33333333,
+    "subregion": "Central Europe",
+    "flagColors": ["red", "white"],
+    "flagSymbols": [],
+    "events": [],
+    "groups": ["eu"],
+    "geoTags": [],
+    "wikipediaMonthlyViews": 161354,
+    "popularityIndex": 0.6546983932333861
   },
   {
     "code": "AZE",
@@ -195,7 +285,16 @@
     "borders": ["ARM", "GEO", "IRN", "RUS", "TUR"],
     "areaKm2": 86600,
     "population": 10241722,
-    "officialLanguages": ["az", "ru"]
+    "officialLanguages": ["az", "ru"],
+    "latitude": 40.5,
+    "subregion": "Western Asia",
+    "flagColors": ["red", "blue", "green", "white"],
+    "flagSymbols": ["star", "crescent"],
+    "events": [],
+    "groups": [],
+    "geoTags": [],
+    "wikipediaMonthlyViews": 195673,
+    "popularityIndex": 0.6908967846208706
   },
   {
     "code": "BDI",
@@ -213,7 +312,16 @@
     "borders": ["COD", "RWA", "TZA"],
     "areaKm2": 27834,
     "population": 12332788,
-    "officialLanguages": ["fr", "rn"]
+    "officialLanguages": ["fr", "rn"],
+    "latitude": -3.5,
+    "subregion": "Eastern Africa",
+    "flagColors": ["red", "green", "white"],
+    "flagSymbols": ["star", "cross", "circle", "triangle"],
+    "events": [],
+    "groups": [],
+    "geoTags": [],
+    "wikipediaMonthlyViews": 64728,
+    "popularityIndex": 0.4832446503861516
   },
   {
     "code": "BEL",
@@ -231,7 +339,16 @@
     "borders": ["FRA", "DEU", "LUX", "NLD"],
     "areaKm2": 30528,
     "population": 11825551,
-    "officialLanguages": ["de", "fr", "nl"]
+    "officialLanguages": ["de", "fr", "nl"],
+    "latitude": 50.83333333,
+    "subregion": "Western Europe",
+    "flagColors": ["red", "yellow", "black"],
+    "flagSymbols": [],
+    "events": ["summer_olympics_host"],
+    "groups": ["eu"],
+    "geoTags": [],
+    "wikipediaMonthlyViews": 161843,
+    "popularityIndex": 0.6552664013984073
   },
   {
     "code": "BEN",
@@ -249,7 +366,16 @@
     "borders": ["BFA", "NER", "NGA", "TGO"],
     "areaKm2": 112622,
     "population": 13224860,
-    "officialLanguages": ["fr"]
+    "officialLanguages": ["fr"],
+    "latitude": 9.5,
+    "subregion": "Western Africa",
+    "flagColors": ["red", "green", "yellow"],
+    "flagSymbols": [],
+    "events": [],
+    "groups": [],
+    "geoTags": [],
+    "wikipediaMonthlyViews": 88358,
+    "popularityIndex": 0.5416599092591036
   },
   {
     "code": "BFA",
@@ -267,7 +393,16 @@
     "borders": ["BEN", "CIV", "GHA", "MLI", "NER", "TGO"],
     "areaKm2": 272967,
     "population": 24070553,
-    "officialLanguages": ["fr"]
+    "officialLanguages": ["fr"],
+    "latitude": 13,
+    "subregion": "Western Africa",
+    "flagColors": ["red", "green", "yellow"],
+    "flagSymbols": ["star"],
+    "events": [],
+    "groups": [],
+    "geoTags": [],
+    "wikipediaMonthlyViews": 199538,
+    "popularityIndex": 0.6945683141824311
   },
   {
     "code": "BGD",
@@ -285,7 +420,16 @@
     "borders": ["MMR", "IND"],
     "areaKm2": 147570,
     "population": 169828911,
-    "officialLanguages": ["bn"]
+    "officialLanguages": ["bn"],
+    "latitude": 24,
+    "subregion": "Southern Asia",
+    "flagColors": ["red", "green"],
+    "flagSymbols": ["circle"],
+    "events": [],
+    "groups": [],
+    "geoTags": [],
+    "wikipediaMonthlyViews": 240996,
+    "popularityIndex": 0.7300030066588147
   },
   {
     "code": "BGR",
@@ -303,7 +447,16 @@
     "borders": ["GRC", "MKD", "ROU", "SRB", "TUR"],
     "areaKm2": 110879,
     "population": 6437360,
-    "officialLanguages": ["bg"]
+    "officialLanguages": ["bg"],
+    "latitude": 43,
+    "subregion": "Southeast Europe",
+    "flagColors": ["red", "green", "white"],
+    "flagSymbols": [],
+    "events": [],
+    "groups": ["eu"],
+    "geoTags": [],
+    "wikipediaMonthlyViews": 139093,
+    "popularityIndex": 0.6268316556243408
   },
   {
     "code": "BHR",
@@ -321,7 +474,16 @@
     "borders": [],
     "areaKm2": 765,
     "population": 1594654,
-    "officialLanguages": ["ar"]
+    "officialLanguages": ["ar"],
+    "latitude": 26,
+    "subregion": "Western Asia",
+    "flagColors": ["red", "white"],
+    "flagSymbols": [],
+    "events": [],
+    "groups": [],
+    "geoTags": ["middle_east"],
+    "wikipediaMonthlyViews": 163317,
+    "popularityIndex": 0.6569682309178844
   },
   {
     "code": "BHS",
@@ -339,7 +501,16 @@
     "borders": [],
     "areaKm2": 13943,
     "population": 398165,
-    "officialLanguages": ["en"]
+    "officialLanguages": ["en"],
+    "latitude": 24.25,
+    "subregion": "Caribbean",
+    "flagColors": ["yellow", "black"],
+    "flagSymbols": ["triangle"],
+    "events": [],
+    "groups": [],
+    "geoTags": [],
+    "wikipediaMonthlyViews": 9886,
+    "popularityIndex": 0.13052743531099423
   },
   {
     "code": "BIH",
@@ -357,7 +528,16 @@
     "borders": ["HRV", "MNE", "SRB"],
     "areaKm2": 51209,
     "population": 3422000,
-    "officialLanguages": ["bs", "hr", "sr"]
+    "officialLanguages": ["bs", "hr", "sr"],
+    "latitude": 44,
+    "subregion": "Southeast Europe",
+    "flagColors": ["blue", "yellow", "white"],
+    "flagSymbols": ["star", "triangle"],
+    "events": [],
+    "groups": [],
+    "geoTags": [],
+    "wikipediaMonthlyViews": 145543,
+    "popularityIndex": 0.6353402329332496
   },
   {
     "code": "BLR",
@@ -375,7 +555,16 @@
     "borders": ["LVA", "LTU", "POL", "RUS", "UKR"],
     "areaKm2": 207600,
     "population": 9109280,
-    "officialLanguages": ["be", "ru"]
+    "officialLanguages": ["be", "ru"],
+    "latitude": 53,
+    "subregion": "Eastern Europe",
+    "flagColors": ["red", "green", "white"],
+    "flagSymbols": [],
+    "events": [],
+    "groups": [],
+    "geoTags": [],
+    "wikipediaMonthlyViews": 182895,
+    "popularityIndex": 0.6782203621635224
   },
   {
     "code": "BLZ",
@@ -393,7 +582,16 @@
     "borders": ["GTM", "MEX"],
     "areaKm2": 22966,
     "population": 417634,
-    "officialLanguages": ["bjz", "en", "es"]
+    "officialLanguages": ["bjz", "en", "es"],
+    "latitude": 17.25,
+    "subregion": "Central America",
+    "flagColors": ["red", "blue"],
+    "flagSymbols": [],
+    "events": [],
+    "groups": [],
+    "geoTags": [],
+    "wikipediaMonthlyViews": 107758,
+    "popularityIndex": 0.5789182948667229
   },
   {
     "code": "BOL",
@@ -411,7 +609,16 @@
     "borders": ["ARG", "BRA", "CHL", "PRY", "PER"],
     "areaKm2": 1098581,
     "population": 11365333,
-    "officialLanguages": ["ay", "gn", "qu", "es"]
+    "officialLanguages": ["ay", "gn", "qu", "es"],
+    "latitude": -17,
+    "subregion": "South America",
+    "flagColors": ["red", "green", "yellow"],
+    "flagSymbols": [],
+    "events": [],
+    "groups": [],
+    "geoTags": [],
+    "wikipediaMonthlyViews": 94141,
+    "popularityIndex": 0.5535600154465335
   },
   {
     "code": "BRA",
@@ -440,7 +647,16 @@
     ],
     "areaKm2": 8515767,
     "population": 213421037,
-    "officialLanguages": ["pt"]
+    "officialLanguages": ["pt"],
+    "latitude": -10,
+    "subregion": "South America",
+    "flagColors": ["blue", "green", "yellow", "white"],
+    "flagSymbols": ["star"],
+    "events": ["fifa_wc_host", "summer_olympics_host"],
+    "groups": ["g20"],
+    "geoTags": [],
+    "wikipediaMonthlyViews": 231851,
+    "popularityIndex": 0.7227414465194013
   },
   {
     "code": "BRB",
@@ -458,7 +674,16 @@
     "borders": [],
     "areaKm2": 430,
     "population": 267800,
-    "officialLanguages": ["en"]
+    "officialLanguages": ["en"],
+    "latitude": 13.16666666,
+    "subregion": "Caribbean",
+    "flagColors": ["yellow", "black"],
+    "flagSymbols": [],
+    "events": [],
+    "groups": [],
+    "geoTags": [],
+    "wikipediaMonthlyViews": 102832,
+    "popularityIndex": 0.5701351792411876
   },
   {
     "code": "BRN",
@@ -476,7 +701,16 @@
     "borders": ["MYS"],
     "areaKm2": 5765,
     "population": 455500,
-    "officialLanguages": ["ms"]
+    "officialLanguages": ["ms"],
+    "latitude": 4.5,
+    "subregion": "South-Eastern Asia",
+    "flagColors": ["red", "yellow", "white", "black"],
+    "flagSymbols": [],
+    "events": [],
+    "groups": [],
+    "geoTags": [],
+    "wikipediaMonthlyViews": 115590,
+    "popularityIndex": 0.5920881629492619
   },
   {
     "code": "BTN",
@@ -494,7 +728,16 @@
     "borders": ["CHN", "IND"],
     "areaKm2": 38394,
     "population": 784043,
-    "officialLanguages": ["dz"]
+    "officialLanguages": ["dz"],
+    "latitude": 27.5,
+    "subregion": "Southern Asia",
+    "flagColors": ["yellow", "white", "orange"],
+    "flagSymbols": ["triangle", "animal"],
+    "events": [],
+    "groups": [],
+    "geoTags": [],
+    "wikipediaMonthlyViews": 121899,
+    "popularityIndex": 0.6020636000074233
   },
   {
     "code": "BWA",
@@ -512,7 +755,16 @@
     "borders": ["NAM", "ZAF", "ZMB", "ZWE"],
     "areaKm2": 582000,
     "population": 2359609,
-    "officialLanguages": ["en", "tn"]
+    "officialLanguages": ["en", "tn"],
+    "latitude": -22,
+    "subregion": "Southern Africa",
+    "flagColors": ["blue", "white", "black"],
+    "flagSymbols": [],
+    "events": [],
+    "groups": [],
+    "geoTags": [],
+    "wikipediaMonthlyViews": 81539,
+    "popularityIndex": 0.5265840854034274
   },
   {
     "code": "CAF",
@@ -530,7 +782,16 @@
     "borders": ["CMR", "TCD", "COD", "COG", "SSD", "SDN"],
     "areaKm2": 622984,
     "population": 6470307,
-    "officialLanguages": ["fr", "sg"]
+    "officialLanguages": ["fr", "sg"],
+    "latitude": 7,
+    "subregion": "Middle Africa",
+    "flagColors": ["red", "blue", "green", "yellow", "white"],
+    "flagSymbols": ["star"],
+    "events": [],
+    "groups": [],
+    "geoTags": [],
+    "wikipediaMonthlyViews": 65522,
+    "popularityIndex": 0.48553320277785406
   },
   {
     "code": "CAN",
@@ -548,7 +809,16 @@
     "borders": ["USA"],
     "areaKm2": 9984670,
     "population": 41651653,
-    "officialLanguages": ["en", "fr"]
+    "officialLanguages": ["en", "fr"],
+    "latitude": 60,
+    "subregion": "North America",
+    "flagColors": ["red", "white"],
+    "flagSymbols": [],
+    "events": ["summer_olympics_host"],
+    "groups": ["g20"],
+    "geoTags": [],
+    "wikipediaMonthlyViews": 373967,
+    "popularityIndex": 0.812479490292033
   },
   {
     "code": "CHE",
@@ -566,7 +836,16 @@
     "borders": ["AUT", "FRA", "ITA", "LIE", "DEU"],
     "areaKm2": 41284,
     "population": 9082848,
-    "officialLanguages": ["fr", "gsw", "it", "rm"]
+    "officialLanguages": ["fr", "gsw", "it", "rm"],
+    "latitude": 47,
+    "subregion": "Western Europe",
+    "flagColors": ["red", "white"],
+    "flagSymbols": ["cross"],
+    "events": ["fifa_wc_host"],
+    "groups": [],
+    "geoTags": [],
+    "wikipediaMonthlyViews": 233824,
+    "popularityIndex": 0.7243320409949854
   },
   {
     "code": "CHL",
@@ -584,7 +863,16 @@
     "borders": ["ARG", "BOL", "PER"],
     "areaKm2": 756102,
     "population": 20206953,
-    "officialLanguages": ["es"]
+    "officialLanguages": ["es"],
+    "latitude": -30,
+    "subregion": "South America",
+    "flagColors": ["red", "blue", "white"],
+    "flagSymbols": ["star"],
+    "events": ["fifa_wc_host"],
+    "groups": [],
+    "geoTags": [],
+    "wikipediaMonthlyViews": 123924,
+    "popularityIndex": 0.6051562092248702
   },
   {
     "code": "CHN",
@@ -619,7 +907,16 @@
     ],
     "areaKm2": 9706961,
     "population": 1408280000,
-    "officialLanguages": ["zh"]
+    "officialLanguages": ["zh"],
+    "latitude": 35,
+    "subregion": "Eastern Asia",
+    "flagColors": ["red", "yellow"],
+    "flagSymbols": ["star"],
+    "events": ["summer_olympics_host"],
+    "groups": ["g20"],
+    "geoTags": [],
+    "wikipediaMonthlyViews": 418545,
+    "popularityIndex": 0.8336185711388376
   },
   {
     "code": "CIV",
@@ -637,7 +934,16 @@
     "borders": ["BFA", "GHA", "GIN", "LBR", "MLI"],
     "areaKm2": 322463,
     "population": 31719275,
-    "officialLanguages": ["fr"]
+    "officialLanguages": ["fr"],
+    "latitude": 8,
+    "subregion": "Western Africa",
+    "flagColors": ["green", "white", "orange"],
+    "flagSymbols": [],
+    "events": [],
+    "groups": [],
+    "geoTags": [],
+    "wikipediaMonthlyViews": 90681,
+    "popularityIndex": 0.5465311393938138
   },
   {
     "code": "CMR",
@@ -655,7 +961,16 @@
     "borders": ["CAF", "TCD", "COG", "GNQ", "GAB", "NGA"],
     "areaKm2": 475442,
     "population": 29442327,
-    "officialLanguages": ["en", "fr"]
+    "officialLanguages": ["en", "fr"],
+    "latitude": 6,
+    "subregion": "Middle Africa",
+    "flagColors": ["red", "green", "yellow"],
+    "flagSymbols": ["star"],
+    "events": [],
+    "groups": [],
+    "geoTags": [],
+    "wikipediaMonthlyViews": 85100,
+    "popularityIndex": 0.5346077756229569
   },
   {
     "code": "COD",
@@ -680,7 +995,16 @@
     "borders": ["AGO", "BDI", "CAF", "COG", "RWA", "SSD", "TZA", "UGA", "ZMB"],
     "areaKm2": 2344858,
     "population": 112832000,
-    "officialLanguages": ["fr", "kg", "ln", "lua", "sw"]
+    "officialLanguages": ["fr", "kg", "ln", "lua", "sw"],
+    "latitude": 0,
+    "subregion": "Middle Africa",
+    "flagColors": ["red", "blue", "yellow"],
+    "flagSymbols": ["star"],
+    "events": [],
+    "groups": [],
+    "geoTags": [],
+    "wikipediaMonthlyViews": 165378,
+    "popularityIndex": 0.6593222137692101
   },
   {
     "code": "COG",
@@ -698,7 +1022,16 @@
     "borders": ["AGO", "CMR", "CAF", "COD", "GAB"],
     "areaKm2": 342000,
     "population": 6142180,
-    "officialLanguages": ["fr", "kg", "ln"]
+    "officialLanguages": ["fr", "kg", "ln"],
+    "latitude": -1,
+    "subregion": "Middle Africa",
+    "flagColors": ["red", "green", "yellow"],
+    "flagSymbols": ["triangle"],
+    "events": [],
+    "groups": [],
+    "geoTags": [],
+    "wikipediaMonthlyViews": 54967,
+    "popularityIndex": 0.45256174239889424
   },
   {
     "code": "COL",
@@ -716,7 +1049,16 @@
     "borders": ["BRA", "ECU", "PAN", "PER", "VEN"],
     "areaKm2": 1141748,
     "population": 53057212,
-    "officialLanguages": ["es"]
+    "officialLanguages": ["es"],
+    "latitude": 4,
+    "subregion": "South America",
+    "flagColors": ["red", "blue", "yellow"],
+    "flagSymbols": [],
+    "events": [],
+    "groups": [],
+    "geoTags": [],
+    "wikipediaMonthlyViews": 163116,
+    "popularityIndex": 0.6567370698111777
   },
   {
     "code": "COM",
@@ -734,7 +1076,16 @@
     "borders": [],
     "areaKm2": 1862,
     "population": 919901,
-    "officialLanguages": ["ar", "fr", "zdj"]
+    "officialLanguages": ["ar", "fr", "zdj"],
+    "latitude": -12.16666666,
+    "subregion": "Eastern Africa",
+    "flagColors": ["red", "blue", "green", "yellow", "white"],
+    "flagSymbols": ["star", "crescent", "triangle"],
+    "events": [],
+    "groups": [],
+    "geoTags": [],
+    "wikipediaMonthlyViews": 55303,
+    "popularityIndex": 0.45370566319642525
   },
   {
     "code": "CPV",
@@ -752,7 +1103,16 @@
     "borders": [],
     "areaKm2": 4033,
     "population": 491233,
-    "officialLanguages": ["pt"]
+    "officialLanguages": ["pt"],
+    "latitude": 16,
+    "subregion": "Western Africa",
+    "flagColors": ["red", "blue", "yellow", "white"],
+    "flagSymbols": ["star"],
+    "events": [],
+    "groups": [],
+    "geoTags": [],
+    "wikipediaMonthlyViews": 146811,
+    "popularityIndex": 0.6369685000248513
   },
   {
     "code": "CRI",
@@ -770,7 +1130,16 @@
     "borders": ["NIC", "PAN"],
     "areaKm2": 51100,
     "population": 5309625,
-    "officialLanguages": ["es"]
+    "officialLanguages": ["es"],
+    "latitude": 10,
+    "subregion": "Central America",
+    "flagColors": ["red", "blue", "white"],
+    "flagSymbols": ["circle"],
+    "events": [],
+    "groups": [],
+    "geoTags": [],
+    "wikipediaMonthlyViews": 86944,
+    "popularityIndex": 0.5386317084827483
   },
   {
     "code": "CUB",
@@ -788,7 +1157,16 @@
     "borders": [],
     "areaKm2": 109884,
     "population": 9748007,
-    "officialLanguages": ["es"]
+    "officialLanguages": ["es"],
+    "latitude": 21.5,
+    "subregion": "Caribbean",
+    "flagColors": ["red", "blue", "white"],
+    "flagSymbols": ["star", "triangle"],
+    "events": [],
+    "groups": [],
+    "geoTags": [],
+    "wikipediaMonthlyViews": 163526,
+    "popularityIndex": 0.6572082909535163
   },
   {
     "code": "CYP",
@@ -806,7 +1184,16 @@
     "borders": [],
     "areaKm2": 9251,
     "population": 1442614,
-    "officialLanguages": ["el", "tr"]
+    "officialLanguages": ["el", "tr"],
+    "latitude": 35,
+    "subregion": "Southern Europe",
+    "flagColors": ["green", "white"],
+    "flagSymbols": [],
+    "events": [],
+    "groups": ["eu"],
+    "geoTags": ["middle_east"],
+    "wikipediaMonthlyViews": 249597,
+    "popularityIndex": 0.7365854148604097
   },
   {
     "code": "CZE",
@@ -824,7 +1211,16 @@
     "borders": ["AUT", "DEU", "POL", "SVK"],
     "areaKm2": 78865,
     "population": 10882341,
-    "officialLanguages": ["cs", "sk"]
+    "officialLanguages": ["cs", "sk"],
+    "latitude": 49.75,
+    "subregion": "Central Europe",
+    "flagColors": ["red", "blue", "white"],
+    "flagSymbols": ["triangle"],
+    "events": [],
+    "groups": ["eu"],
+    "geoTags": [],
+    "wikipediaMonthlyViews": 234560,
+    "popularityIndex": 0.7249219551669228
   },
   {
     "code": "DEU",
@@ -842,7 +1238,16 @@
     "borders": ["AUT", "BEL", "CZE", "DNK", "FRA", "LUX", "NLD", "POL", "CHE"],
     "areaKm2": 357114,
     "population": 83491249,
-    "officialLanguages": ["de"]
+    "officialLanguages": ["de"],
+    "latitude": 51,
+    "subregion": "Western Europe",
+    "flagColors": ["red", "yellow", "black"],
+    "flagSymbols": [],
+    "events": ["fifa_wc_host", "summer_olympics_host"],
+    "groups": ["eu", "g20"],
+    "geoTags": [],
+    "wikipediaMonthlyViews": 312376,
+    "popularityIndex": 0.7786995700247178
   },
   {
     "code": "DJI",
@@ -860,7 +1265,16 @@
     "borders": ["ERI", "ETH", "SOM"],
     "areaKm2": 23200,
     "population": 1066809,
-    "officialLanguages": ["ar", "fr"]
+    "officialLanguages": ["ar", "fr"],
+    "latitude": 11.5,
+    "subregion": "Eastern Africa",
+    "flagColors": ["red", "blue", "green", "white"],
+    "flagSymbols": ["star", "triangle"],
+    "events": [],
+    "groups": [],
+    "geoTags": [],
+    "wikipediaMonthlyViews": 68008,
+    "popularityIndex": 0.49252333143440385
   },
   {
     "code": "DMA",
@@ -878,7 +1292,16 @@
     "borders": [],
     "areaKm2": 751,
     "population": 67408,
-    "officialLanguages": ["en"]
+    "officialLanguages": ["en"],
+    "latitude": 15.41666666,
+    "subregion": "Caribbean",
+    "flagColors": ["red", "green", "yellow", "white", "black"],
+    "flagSymbols": ["star", "cross", "circle"],
+    "events": [],
+    "groups": [],
+    "geoTags": [],
+    "wikipediaMonthlyViews": 61090,
+    "popularityIndex": 0.47238655373779864
   },
   {
     "code": "DNK",
@@ -896,7 +1319,16 @@
     "borders": ["DEU"],
     "areaKm2": 43094,
     "population": 6011488,
-    "officialLanguages": ["da"]
+    "officialLanguages": ["da"],
+    "latitude": 56,
+    "subregion": "Northern Europe",
+    "flagColors": ["red", "white"],
+    "flagSymbols": ["cross"],
+    "events": [],
+    "groups": ["eu"],
+    "geoTags": [],
+    "wikipediaMonthlyViews": 179618,
+    "popularityIndex": 0.6748266313232916
   },
   {
     "code": "DOM",
@@ -914,7 +1346,16 @@
     "borders": ["HTI"],
     "areaKm2": 48671,
     "population": 10771504,
-    "officialLanguages": ["es"]
+    "officialLanguages": ["es"],
+    "latitude": 19,
+    "subregion": "Caribbean",
+    "flagColors": ["red", "blue", "white"],
+    "flagSymbols": ["cross"],
+    "events": [],
+    "groups": [],
+    "geoTags": [],
+    "wikipediaMonthlyViews": 131168,
+    "popularityIndex": 0.6158199872039076
   },
   {
     "code": "DZA",
@@ -932,7 +1373,16 @@
     "borders": ["TUN", "LBY", "NER", "ESH", "MRT", "MLI", "MAR"],
     "areaKm2": 2381741,
     "population": 47400000,
-    "officialLanguages": ["ar"]
+    "officialLanguages": ["ar"],
+    "latitude": 28,
+    "subregion": "Northern Africa",
+    "flagColors": ["red", "green", "white"],
+    "flagSymbols": ["star", "crescent"],
+    "events": [],
+    "groups": [],
+    "geoTags": [],
+    "wikipediaMonthlyViews": 145756,
+    "popularityIndex": 0.6356147399159181
   },
   {
     "code": "ECU",
@@ -950,7 +1400,16 @@
     "borders": ["COL", "PER"],
     "areaKm2": 276841,
     "population": 18103660,
-    "officialLanguages": ["es"]
+    "officialLanguages": ["es"],
+    "latitude": -2,
+    "subregion": "South America",
+    "flagColors": ["red", "blue", "yellow"],
+    "flagSymbols": [],
+    "events": [],
+    "groups": [],
+    "geoTags": [],
+    "wikipediaMonthlyViews": 82329,
+    "popularityIndex": 0.528393962197897
   },
   {
     "code": "EGY",
@@ -968,7 +1427,16 @@
     "borders": ["ISR", "LBY", "PSE", "SDN"],
     "areaKm2": 1002450,
     "population": 107271260,
-    "officialLanguages": ["ar"]
+    "officialLanguages": ["ar"],
+    "latitude": 27,
+    "subregion": "Northern Africa",
+    "flagColors": ["red", "yellow", "white", "black"],
+    "flagSymbols": ["animal"],
+    "events": [],
+    "groups": [],
+    "geoTags": ["middle_east"],
+    "wikipediaMonthlyViews": 179523,
+    "popularityIndex": 0.6747273262727282
   },
   {
     "code": "ERI",
@@ -986,7 +1454,16 @@
     "borders": ["DJI", "ETH", "SDN"],
     "areaKm2": 117600,
     "population": 3607000,
-    "officialLanguages": ["ar", "en", "ti"]
+    "officialLanguages": ["ar", "en", "ti"],
+    "latitude": 15,
+    "subregion": "Eastern Africa",
+    "flagColors": ["red", "blue", "green", "yellow"],
+    "flagSymbols": ["triangle"],
+    "events": [],
+    "groups": [],
+    "geoTags": [],
+    "wikipediaMonthlyViews": 128710,
+    "popularityIndex": 0.6122690906307113
   },
   {
     "code": "ESP",
@@ -1004,7 +1481,16 @@
     "borders": ["AND", "FRA", "GIB", "PRT", "MAR"],
     "areaKm2": 505992,
     "population": 49315949,
-    "officialLanguages": ["es"]
+    "officialLanguages": ["es"],
+    "latitude": 40,
+    "subregion": "Southern Europe",
+    "flagColors": ["red", "yellow"],
+    "flagSymbols": [],
+    "events": ["fifa_wc_host", "summer_olympics_host"],
+    "groups": ["eu"],
+    "geoTags": [],
+    "wikipediaMonthlyViews": 245316,
+    "popularityIndex": 0.7333379840467967
   },
   {
     "code": "EST",
@@ -1022,7 +1508,16 @@
     "borders": ["LVA", "RUS"],
     "areaKm2": 45227,
     "population": 1369995,
-    "officialLanguages": ["et"]
+    "officialLanguages": ["et"],
+    "latitude": 59,
+    "subregion": "Northern Europe",
+    "flagColors": ["blue", "white", "black"],
+    "flagSymbols": [],
+    "events": [],
+    "groups": ["eu"],
+    "geoTags": [],
+    "wikipediaMonthlyViews": 128145,
+    "popularityIndex": 0.6114432926185998
   },
   {
     "code": "ETH",
@@ -1040,7 +1535,16 @@
     "borders": ["DJI", "ERI", "KEN", "SOM", "SSD", "SDN"],
     "areaKm2": 1104300,
     "population": 111652998,
-    "officialLanguages": ["am"]
+    "officialLanguages": ["am"],
+    "latitude": 8,
+    "subregion": "Eastern Africa",
+    "flagColors": ["red", "blue", "green", "yellow"],
+    "flagSymbols": ["circle"],
+    "events": [],
+    "groups": [],
+    "geoTags": [],
+    "wikipediaMonthlyViews": 160609,
+    "popularityIndex": 0.653829705294936
   },
   {
     "code": "FIN",
@@ -1058,7 +1562,16 @@
     "borders": ["NOR", "SWE", "RUS"],
     "areaKm2": 338424,
     "population": 5650325,
-    "officialLanguages": ["fi", "sv"]
+    "officialLanguages": ["fi", "sv"],
+    "latitude": 64,
+    "subregion": "Northern Europe",
+    "flagColors": ["blue", "white"],
+    "flagSymbols": ["cross"],
+    "events": ["summer_olympics_host"],
+    "groups": ["eu"],
+    "geoTags": [],
+    "wikipediaMonthlyViews": 166004,
+    "popularityIndex": 0.6600313973042349
   },
   {
     "code": "FJI",
@@ -1076,7 +1589,16 @@
     "borders": [],
     "areaKm2": 18272,
     "population": 900869,
-    "officialLanguages": ["en", "fj", "hif"]
+    "officialLanguages": ["en", "fj", "hif"],
+    "latitude": -18,
+    "subregion": "Melanesia",
+    "flagColors": ["blue"],
+    "flagSymbols": [],
+    "events": [],
+    "groups": [],
+    "geoTags": [],
+    "wikipediaMonthlyViews": 107505,
+    "popularityIndex": 0.5784770658740934
   },
   {
     "code": "FRA",
@@ -1094,7 +1616,16 @@
     "borders": ["AND", "BEL", "DEU", "ITA", "LUX", "MCO", "ESP", "CHE"],
     "areaKm2": 551695,
     "population": 66351959,
-    "officialLanguages": ["fr"]
+    "officialLanguages": ["fr"],
+    "latitude": 46,
+    "subregion": "Western Europe",
+    "flagColors": ["red", "blue", "white"],
+    "flagSymbols": [],
+    "events": ["fifa_wc_host", "summer_olympics_host"],
+    "groups": ["eu", "g20"],
+    "geoTags": [],
+    "wikipediaMonthlyViews": 278366,
+    "popularityIndex": 0.7570623229128198
   },
   {
     "code": "FSM",
@@ -1112,7 +1643,16 @@
     "borders": [],
     "areaKm2": 702,
     "population": 105564,
-    "officialLanguages": ["en"]
+    "officialLanguages": ["en"],
+    "latitude": 6.91666666,
+    "subregion": "Micronesia",
+    "flagColors": ["blue", "white"],
+    "flagSymbols": ["star"],
+    "events": [],
+    "groups": [],
+    "geoTags": [],
+    "wikipediaMonthlyViews": 39978,
+    "popularityIndex": 0.39279482973527413
   },
   {
     "code": "GAB",
@@ -1130,7 +1670,16 @@
     "borders": ["CMR", "COG", "GNQ"],
     "areaKm2": 267668,
     "population": 2469296,
-    "officialLanguages": ["fr"]
+    "officialLanguages": ["fr"],
+    "latitude": -1,
+    "subregion": "Middle Africa",
+    "flagColors": ["blue", "green", "yellow"],
+    "flagSymbols": [],
+    "events": [],
+    "groups": [],
+    "geoTags": [],
+    "wikipediaMonthlyViews": 60827,
+    "popularityIndex": 0.4715767032209277
   },
   {
     "code": "GBR",
@@ -1148,7 +1697,16 @@
     "borders": ["IRL"],
     "areaKm2": 242900,
     "population": 69281437,
-    "officialLanguages": ["en"]
+    "officialLanguages": ["en"],
+    "latitude": 54,
+    "subregion": "Northern Europe",
+    "flagColors": ["red", "blue", "white"],
+    "flagSymbols": ["cross"],
+    "events": ["fifa_wc_host", "summer_olympics_host"],
+    "groups": ["g20"],
+    "geoTags": [],
+    "wikipediaMonthlyViews": 519766,
+    "popularityIndex": 0.8742750474045103
   },
   {
     "code": "GEO",
@@ -1166,7 +1724,16 @@
     "borders": ["ARM", "AZE", "RUS", "TUR"],
     "areaKm2": 69700,
     "population": 4000921,
-    "officialLanguages": ["ka"]
+    "officialLanguages": ["ka"],
+    "latitude": 42,
+    "subregion": "Western Asia",
+    "flagColors": ["red", "white"],
+    "flagSymbols": ["cross"],
+    "events": [],
+    "groups": [],
+    "geoTags": [],
+    "wikipediaMonthlyViews": 7020,
+    "popularityIndex": 0.06626441098356466
   },
   {
     "code": "GHA",
@@ -1184,7 +1751,16 @@
     "borders": ["BFA", "CIV", "TGO"],
     "areaKm2": 238533,
     "population": 33742380,
-    "officialLanguages": ["en"]
+    "officialLanguages": ["en"],
+    "latitude": 8,
+    "subregion": "Western Africa",
+    "flagColors": ["red", "green", "yellow", "black"],
+    "flagSymbols": ["star"],
+    "events": [],
+    "groups": [],
+    "geoTags": [],
+    "wikipediaMonthlyViews": 124134,
+    "popularityIndex": 0.6054740275024751
   },
   {
     "code": "GIN",
@@ -1202,7 +1778,16 @@
     "borders": ["CIV", "GNB", "LBR", "MLI", "SEN", "SLE"],
     "areaKm2": 245857,
     "population": 14363931,
-    "officialLanguages": ["fr"]
+    "officialLanguages": ["fr"],
+    "latitude": 11,
+    "subregion": "Western Africa",
+    "flagColors": ["red", "green", "yellow"],
+    "flagSymbols": [],
+    "events": [],
+    "groups": [],
+    "geoTags": [],
+    "wikipediaMonthlyViews": 62970,
+    "popularityIndex": 0.47807602658255605
   },
   {
     "code": "GMB",
@@ -1220,7 +1805,16 @@
     "borders": ["SEN"],
     "areaKm2": 10689,
     "population": 2422712,
-    "officialLanguages": ["en"]
+    "officialLanguages": ["en"],
+    "latitude": 13.46666666,
+    "subregion": "Western Africa",
+    "flagColors": ["red", "blue", "green", "white"],
+    "flagSymbols": [],
+    "events": [],
+    "groups": [],
+    "geoTags": [],
+    "wikipediaMonthlyViews": 4932,
+    "popularityIndex": 0
   },
   {
     "code": "GNB",
@@ -1238,7 +1832,16 @@
     "borders": ["GIN", "SEN"],
     "areaKm2": 36125,
     "population": 1781308,
-    "officialLanguages": ["pt", "pov"]
+    "officialLanguages": ["pt", "pov"],
+    "latitude": 12,
+    "subregion": "Western Africa",
+    "flagColors": ["red", "green", "yellow", "black"],
+    "flagSymbols": ["star"],
+    "events": [],
+    "groups": [],
+    "geoTags": [],
+    "wikipediaMonthlyViews": 58301,
+    "popularityIndex": 0.4636151591131488
   },
   {
     "code": "GNQ",
@@ -1256,7 +1859,16 @@
     "borders": ["CMR", "GAB"],
     "areaKm2": 28051,
     "population": 1668768,
-    "officialLanguages": ["fr", "pt", "es"]
+    "officialLanguages": ["fr", "pt", "es"],
+    "latitude": 2,
+    "subregion": "Middle Africa",
+    "flagColors": ["red", "blue", "green", "white"],
+    "flagSymbols": ["triangle"],
+    "events": [],
+    "groups": [],
+    "geoTags": [],
+    "wikipediaMonthlyViews": 74059,
+    "popularityIndex": 0.5085229445400837
   },
   {
     "code": "GRC",
@@ -1274,7 +1886,16 @@
     "borders": ["ALB", "BGR", "TUR", "MKD"],
     "areaKm2": 131990,
     "population": 10400720,
-    "officialLanguages": ["el"]
+    "officialLanguages": ["el"],
+    "latitude": 39,
+    "subregion": "Southern Europe",
+    "flagColors": ["blue", "white"],
+    "flagSymbols": ["cross"],
+    "events": ["summer_olympics_host"],
+    "groups": ["eu"],
+    "geoTags": [],
+    "wikipediaMonthlyViews": 157622,
+    "popularityIndex": 0.6503058488915848
   },
   {
     "code": "GRD",
@@ -1292,7 +1913,16 @@
     "borders": [],
     "areaKm2": 344,
     "population": 109021,
-    "officialLanguages": ["en"]
+    "officialLanguages": ["en"],
+    "latitude": 12.11666666,
+    "subregion": "Caribbean",
+    "flagColors": ["red", "green", "yellow"],
+    "flagSymbols": ["star", "circle", "triangle"],
+    "events": [],
+    "groups": [],
+    "geoTags": [],
+    "wikipediaMonthlyViews": 73923,
+    "popularityIndex": 0.5081779256711596
   },
   {
     "code": "GTM",
@@ -1310,7 +1940,16 @@
     "borders": ["BLZ", "SLV", "HND", "MEX"],
     "areaKm2": 108889,
     "population": 18079810,
-    "officialLanguages": ["es"]
+    "officialLanguages": ["es"],
+    "latitude": 15.5,
+    "subregion": "Central America",
+    "flagColors": ["blue", "white"],
+    "flagSymbols": [],
+    "events": [],
+    "groups": [],
+    "geoTags": [],
+    "wikipediaMonthlyViews": 87363,
+    "popularityIndex": 0.5395341368532545
   },
   {
     "code": "GUY",
@@ -1328,7 +1967,16 @@
     "borders": ["BRA", "SUR", "VEN"],
     "areaKm2": 214969,
     "population": 772975,
-    "officialLanguages": ["en"]
+    "officialLanguages": ["en"],
+    "latitude": 5,
+    "subregion": "South America",
+    "flagColors": ["red", "green", "yellow", "white", "black"],
+    "flagSymbols": ["triangle"],
+    "events": [],
+    "groups": [],
+    "geoTags": [],
+    "wikipediaMonthlyViews": 163975,
+    "popularityIndex": 0.657722982092854
   },
   {
     "code": "HND",
@@ -1346,7 +1994,16 @@
     "borders": ["GTM", "SLV", "NIC"],
     "areaKm2": 112492,
     "population": 9892632,
-    "officialLanguages": ["es"]
+    "officialLanguages": ["es"],
+    "latitude": 15,
+    "subregion": "Central America",
+    "flagColors": ["white"],
+    "flagSymbols": ["star"],
+    "events": [],
+    "groups": [],
+    "geoTags": [],
+    "wikipediaMonthlyViews": 71904,
+    "popularityIndex": 0.5029798949892849
   },
   {
     "code": "HRV",
@@ -1364,7 +2021,16 @@
     "borders": ["BIH", "HUN", "MNE", "SRB", "SVN"],
     "areaKm2": 56594,
     "population": 3866233,
-    "officialLanguages": ["hr"]
+    "officialLanguages": ["hr"],
+    "latitude": 45.16666666,
+    "subregion": "Southeast Europe",
+    "flagColors": ["red", "blue", "white"],
+    "flagSymbols": [],
+    "events": [],
+    "groups": ["eu"],
+    "geoTags": [],
+    "wikipediaMonthlyViews": 185204,
+    "popularityIndex": 0.6805752905274344
   },
   {
     "code": "HTI",
@@ -1382,7 +2048,16 @@
     "borders": ["DOM"],
     "areaKm2": 27750,
     "population": 11867032,
-    "officialLanguages": ["fr", "hat"]
+    "officialLanguages": ["fr", "hat"],
+    "latitude": 19,
+    "subregion": "Caribbean",
+    "flagColors": ["red", "blue", "white"],
+    "flagSymbols": [],
+    "events": [],
+    "groups": [],
+    "geoTags": [],
+    "wikipediaMonthlyViews": 115996,
+    "popularityIndex": 0.5927463159806658
   },
   {
     "code": "HUN",
@@ -1400,7 +2075,16 @@
     "borders": ["AUT", "HRV", "ROU", "SRB", "SVK", "SVN", "UKR"],
     "areaKm2": 93028,
     "population": 9539502,
-    "officialLanguages": ["hu"]
+    "officialLanguages": ["hu"],
+    "latitude": 47,
+    "subregion": "Central Europe",
+    "flagColors": ["red", "green", "white"],
+    "flagSymbols": [],
+    "events": [],
+    "groups": ["eu"],
+    "geoTags": [],
+    "wikipediaMonthlyViews": 142257,
+    "popularityIndex": 0.6310536784160281
   },
   {
     "code": "IDN",
@@ -1418,7 +2102,16 @@
     "borders": ["TLS", "MYS", "PNG"],
     "areaKm2": 1904569,
     "population": 284438782,
-    "officialLanguages": ["id"]
+    "officialLanguages": ["id"],
+    "latitude": -5,
+    "subregion": "South-Eastern Asia",
+    "flagColors": ["red", "white"],
+    "flagSymbols": [],
+    "events": [],
+    "groups": ["g20"],
+    "geoTags": [],
+    "wikipediaMonthlyViews": 299043,
+    "popularityIndex": 0.7705117080704035
   },
   {
     "code": "IND",
@@ -1436,7 +2129,16 @@
     "borders": ["BGD", "BTN", "MMR", "CHN", "NPL", "PAK"],
     "areaKm2": 3287590,
     "population": 1417492000,
-    "officialLanguages": ["en", "hi", "ta"]
+    "officialLanguages": ["en", "hi", "ta"],
+    "latitude": 20,
+    "subregion": "Southern Asia",
+    "flagColors": ["blue", "green", "white"],
+    "flagSymbols": [],
+    "events": [],
+    "groups": ["g20"],
+    "geoTags": [],
+    "wikipediaMonthlyViews": 585315,
+    "popularityIndex": 0.8965693958659969
   },
   {
     "code": "IRL",
@@ -1454,7 +2156,16 @@
     "borders": ["GBR"],
     "areaKm2": 70273,
     "population": 5458600,
-    "officialLanguages": ["en", "ga"]
+    "officialLanguages": ["en", "ga"],
+    "latitude": 53,
+    "subregion": "Northern Europe",
+    "flagColors": ["green", "white", "orange"],
+    "flagSymbols": [],
+    "events": [],
+    "groups": ["eu"],
+    "geoTags": [],
+    "wikipediaMonthlyViews": 158826,
+    "popularityIndex": 0.6517342130248551
   },
   {
     "code": "IRN",
@@ -1472,7 +2183,16 @@
     "borders": ["AFG", "ARM", "AZE", "IRQ", "PAK", "TUR", "TKM"],
     "areaKm2": 1648195,
     "population": 85961000,
-    "officialLanguages": ["fas"]
+    "officialLanguages": ["fas"],
+    "latitude": 32,
+    "subregion": "Southern Asia",
+    "flagColors": ["red", "green", "white"],
+    "flagSymbols": [],
+    "events": [],
+    "groups": [],
+    "geoTags": ["middle_east"],
+    "wikipediaMonthlyViews": 614397,
+    "popularityIndex": 0.905671568417657
   },
   {
     "code": "IRQ",
@@ -1490,7 +2210,16 @@
     "borders": ["IRN", "JOR", "KWT", "SAU", "SYR", "TUR"],
     "areaKm2": 438317,
     "population": 46118793,
-    "officialLanguages": ["ar", "arc", "ckb"]
+    "officialLanguages": ["ar", "arc", "ckb"],
+    "latitude": 33,
+    "subregion": "Western Asia",
+    "flagColors": ["red", "green", "white", "black"],
+    "flagSymbols": [],
+    "events": [],
+    "groups": [],
+    "geoTags": ["middle_east"],
+    "wikipediaMonthlyViews": 162036,
+    "popularityIndex": 0.6554901123678205
   },
   {
     "code": "ISL",
@@ -1508,7 +2237,16 @@
     "borders": [],
     "areaKm2": 103000,
     "population": 391810,
-    "officialLanguages": ["is"]
+    "officialLanguages": ["is"],
+    "latitude": 65,
+    "subregion": "Northern Europe",
+    "flagColors": ["red", "blue", "white"],
+    "flagSymbols": ["cross"],
+    "events": [],
+    "groups": [],
+    "geoTags": [],
+    "wikipediaMonthlyViews": 176687,
+    "popularityIndex": 0.671738353185823
   },
   {
     "code": "ISR",
@@ -1526,7 +2264,16 @@
     "borders": ["EGY", "JOR", "LBN", "PSE", "SYR"],
     "areaKm2": 20770,
     "population": 10134800,
-    "officialLanguages": ["ar", "he"]
+    "officialLanguages": ["ar", "he"],
+    "latitude": 31.47,
+    "subregion": "Western Asia",
+    "flagColors": ["blue", "white"],
+    "flagSymbols": [],
+    "events": [],
+    "groups": [],
+    "geoTags": ["middle_east"],
+    "wikipediaMonthlyViews": 490350,
+    "popularityIndex": 0.863339314624649
   },
   {
     "code": "ITA",
@@ -1544,7 +2291,16 @@
     "borders": ["AUT", "FRA", "SMR", "SVN", "CHE", "VAT"],
     "areaKm2": 301336,
     "population": 58927633,
-    "officialLanguages": ["it"]
+    "officialLanguages": ["it"],
+    "latitude": 42.83333333,
+    "subregion": "Southern Europe",
+    "flagColors": ["red", "green", "white"],
+    "flagSymbols": [],
+    "events": ["fifa_wc_host", "summer_olympics_host"],
+    "groups": ["eu", "g20"],
+    "geoTags": [],
+    "wikipediaMonthlyViews": 224113,
+    "popularityIndex": 0.7163697867523332
   },
   {
     "code": "JAM",
@@ -1562,7 +2318,16 @@
     "borders": [],
     "areaKm2": 10991,
     "population": 2825544,
-    "officialLanguages": ["en", "jam"]
+    "officialLanguages": ["en", "jam"],
+    "latitude": 18.25,
+    "subregion": "Caribbean",
+    "flagColors": ["green", "yellow", "black"],
+    "flagSymbols": ["cross"],
+    "events": [],
+    "groups": [],
+    "geoTags": [],
+    "wikipediaMonthlyViews": 134144,
+    "popularityIndex": 0.6200311977756553
   },
   {
     "code": "JOR",
@@ -1580,7 +2345,16 @@
     "borders": ["IRQ", "ISR", "PSE", "SAU", "SYR"],
     "areaKm2": 89342,
     "population": 11734000,
-    "officialLanguages": ["ar"]
+    "officialLanguages": ["ar"],
+    "latitude": 31,
+    "subregion": "Western Asia",
+    "flagColors": ["red", "green", "white", "black"],
+    "flagSymbols": ["star", "triangle"],
+    "events": [],
+    "groups": [],
+    "geoTags": ["middle_east"],
+    "wikipediaMonthlyViews": 142288,
+    "popularityIndex": 0.6310945784290195
   },
   {
     "code": "JPN",
@@ -1598,7 +2372,16 @@
     "borders": [],
     "areaKm2": 377930,
     "population": 123210000,
-    "officialLanguages": ["ja"]
+    "officialLanguages": ["ja"],
+    "latitude": 36,
+    "subregion": "Eastern Asia",
+    "flagColors": ["red", "white"],
+    "flagSymbols": ["circle"],
+    "events": ["fifa_wc_host", "summer_olympics_host"],
+    "groups": ["g20"],
+    "geoTags": [],
+    "wikipediaMonthlyViews": 375606,
+    "popularityIndex": 0.8133003679208226
   },
   {
     "code": "KAZ",
@@ -1616,7 +2399,16 @@
     "borders": ["CHN", "KGZ", "RUS", "TKM", "UZB"],
     "areaKm2": 2724900,
     "population": 20426568,
-    "officialLanguages": ["kk", "ru"]
+    "officialLanguages": ["kk", "ru"],
+    "latitude": 48,
+    "subregion": "Central Asia",
+    "flagColors": ["yellow"],
+    "flagSymbols": ["sun", "animal"],
+    "events": [],
+    "groups": [],
+    "geoTags": [],
+    "wikipediaMonthlyViews": 217710,
+    "popularityIndex": 0.710928792118298
   },
   {
     "code": "KEN",
@@ -1634,7 +2426,16 @@
     "borders": ["ETH", "SOM", "SSD", "TZA", "UGA"],
     "areaKm2": 580367,
     "population": 53330978,
-    "officialLanguages": ["en", "sw"]
+    "officialLanguages": ["en", "sw"],
+    "latitude": 1,
+    "subregion": "Eastern Africa",
+    "flagColors": ["red", "green", "white", "black"],
+    "flagSymbols": [],
+    "events": [],
+    "groups": [],
+    "geoTags": [],
+    "wikipediaMonthlyViews": 106639,
+    "popularityIndex": 0.5769588726179734
   },
   {
     "code": "KGZ",
@@ -1652,7 +2453,16 @@
     "borders": ["CHN", "KAZ", "TJK", "UZB"],
     "areaKm2": 199951,
     "population": 7281800,
-    "officialLanguages": ["ky", "ru"]
+    "officialLanguages": ["ky", "ru"],
+    "latitude": 41,
+    "subregion": "Central Asia",
+    "flagColors": ["red", "yellow"],
+    "flagSymbols": ["sun"],
+    "events": [],
+    "groups": [],
+    "geoTags": [],
+    "wikipediaMonthlyViews": 137305,
+    "popularityIndex": 0.62440308137718
   },
   {
     "code": "KHM",
@@ -1670,7 +2480,16 @@
     "borders": ["LAO", "THA", "VNM"],
     "areaKm2": 181035,
     "population": 17577760,
-    "officialLanguages": ["km"]
+    "officialLanguages": ["km"],
+    "latitude": 13,
+    "subregion": "South-Eastern Asia",
+    "flagColors": ["red", "blue", "white"],
+    "flagSymbols": [],
+    "events": [],
+    "groups": [],
+    "geoTags": [],
+    "wikipediaMonthlyViews": 166197,
+    "popularityIndex": 0.6602495040668219
   },
   {
     "code": "KIR",
@@ -1688,7 +2507,16 @@
     "borders": [],
     "areaKm2": 811,
     "population": 120740,
-    "officialLanguages": ["en", "gil"]
+    "officialLanguages": ["en", "gil"],
+    "latitude": 1.41666666,
+    "subregion": "Micronesia",
+    "flagColors": ["red", "blue", "yellow", "white"],
+    "flagSymbols": ["sun"],
+    "events": [],
+    "groups": [],
+    "geoTags": [],
+    "wikipediaMonthlyViews": 95352,
+    "popularityIndex": 0.5559592327957256
   },
   {
     "code": "KNA",
@@ -1706,7 +2534,16 @@
     "borders": [],
     "areaKm2": 261,
     "population": 51320,
-    "officialLanguages": ["en"]
+    "officialLanguages": ["en"],
+    "latitude": 17.33333333,
+    "subregion": "Caribbean",
+    "flagColors": ["red", "green", "yellow", "white", "black"],
+    "flagSymbols": ["star", "triangle"],
+    "events": [],
+    "groups": [],
+    "geoTags": [],
+    "wikipediaMonthlyViews": 57148,
+    "popularityIndex": 0.45986572021507327
   },
   {
     "code": "KOR",
@@ -1724,7 +2561,16 @@
     "borders": ["PRK"],
     "areaKm2": 100210,
     "population": 51159889,
-    "officialLanguages": ["ko"]
+    "officialLanguages": ["ko"],
+    "latitude": 37,
+    "subregion": "Eastern Asia",
+    "flagColors": ["red", "blue", "white", "black"],
+    "flagSymbols": ["circle"],
+    "events": ["fifa_wc_host", "summer_olympics_host"],
+    "groups": ["g20"],
+    "geoTags": [],
+    "wikipediaMonthlyViews": 198479,
+    "popularityIndex": 0.6935694462471778
   },
   {
     "code": "KWT",
@@ -1742,7 +2588,16 @@
     "borders": ["IRQ", "SAU"],
     "areaKm2": 17818,
     "population": 4881254,
-    "officialLanguages": ["ar"]
+    "officialLanguages": ["ar"],
+    "latitude": 29.5,
+    "subregion": "Western Asia",
+    "flagColors": ["red", "green", "white", "black"],
+    "flagSymbols": [],
+    "events": [],
+    "groups": [],
+    "geoTags": ["middle_east"],
+    "wikipediaMonthlyViews": 121427,
+    "popularityIndex": 0.6013353730769193
   },
   {
     "code": "LAO",
@@ -1760,7 +2615,16 @@
     "borders": ["MMR", "KHM", "CHN", "THA", "VNM"],
     "areaKm2": 236800,
     "population": 7647000,
-    "officialLanguages": ["lo"]
+    "officialLanguages": ["lo"],
+    "latitude": 18,
+    "subregion": "South-Eastern Asia",
+    "flagColors": ["red", "blue", "white"],
+    "flagSymbols": ["circle"],
+    "events": [],
+    "groups": [],
+    "geoTags": [],
+    "wikipediaMonthlyViews": 107691,
+    "popularityIndex": 0.5788015485888852
   },
   {
     "code": "LBN",
@@ -1778,7 +2642,16 @@
     "borders": ["ISR", "SYR"],
     "areaKm2": 10452,
     "population": 5490000,
-    "officialLanguages": ["ar", "fr"]
+    "officialLanguages": ["ar", "fr"],
+    "latitude": 33.83333333,
+    "subregion": "Western Asia",
+    "flagColors": ["red", "green", "white"],
+    "flagSymbols": [],
+    "events": [],
+    "groups": [],
+    "geoTags": ["middle_east"],
+    "wikipediaMonthlyViews": 152108,
+    "popularityIndex": 0.6436217620263494
   },
   {
     "code": "LBR",
@@ -1796,7 +2669,16 @@
     "borders": ["GIN", "CIV", "SLE"],
     "areaKm2": 111369,
     "population": 5248621,
-    "officialLanguages": ["en"]
+    "officialLanguages": ["en"],
+    "latitude": 6.5,
+    "subregion": "Western Africa",
+    "flagColors": ["red", "blue", "white"],
+    "flagSymbols": ["star"],
+    "events": [],
+    "groups": [],
+    "geoTags": [],
+    "wikipediaMonthlyViews": 132497,
+    "popularityIndex": 0.6177122823895347
   },
   {
     "code": "LBY",
@@ -1814,7 +2696,16 @@
     "borders": ["DZA", "TCD", "EGY", "NER", "SDN", "TUN"],
     "areaKm2": 1759540,
     "population": 7459000,
-    "officialLanguages": ["ar"]
+    "officialLanguages": ["ar"],
+    "latitude": 25,
+    "subregion": "Northern Africa",
+    "flagColors": ["red", "green", "white", "black"],
+    "flagSymbols": ["star", "crescent"],
+    "events": [],
+    "groups": [],
+    "geoTags": [],
+    "wikipediaMonthlyViews": 121685,
+    "popularityIndex": 0.6017337793627864
   },
   {
     "code": "LCA",
@@ -1832,7 +2723,16 @@
     "borders": [],
     "areaKm2": 616,
     "population": 184100,
-    "officialLanguages": ["en"]
+    "officialLanguages": ["en"],
+    "latitude": 13.88333333,
+    "subregion": "Caribbean",
+    "flagColors": ["blue", "yellow", "white", "black"],
+    "flagSymbols": ["triangle"],
+    "events": [],
+    "groups": [],
+    "geoTags": [],
+    "wikipediaMonthlyViews": 72315,
+    "popularityIndex": 0.5040497704508421
   },
   {
     "code": "LIE",
@@ -1850,7 +2750,16 @@
     "borders": ["AUT", "CHE"],
     "areaKm2": 160,
     "population": 40900,
-    "officialLanguages": ["de"]
+    "officialLanguages": ["de"],
+    "latitude": 47.26666666,
+    "subregion": "Western Europe",
+    "flagColors": ["red", "blue", "yellow"],
+    "flagSymbols": [],
+    "events": [],
+    "groups": [],
+    "geoTags": [],
+    "wikipediaMonthlyViews": 141321,
+    "popularityIndex": 0.6298145463386526
   },
   {
     "code": "LKA",
@@ -1868,7 +2777,16 @@
     "borders": [],
     "areaKm2": 65610,
     "population": 21763170,
-    "officialLanguages": ["si", "ta"]
+    "officialLanguages": ["si", "ta"],
+    "latitude": 7,
+    "subregion": "Southern Asia",
+    "flagColors": ["yellow", "orange"],
+    "flagSymbols": ["animal"],
+    "events": [],
+    "groups": [],
+    "geoTags": [],
+    "wikipediaMonthlyViews": 211118,
+    "popularityIndex": 0.7051573946453455
   },
   {
     "code": "LSO",
@@ -1886,7 +2804,16 @@
     "borders": ["ZAF"],
     "areaKm2": 30355,
     "population": 2116427,
-    "officialLanguages": ["en", "st"]
+    "officialLanguages": ["en", "st"],
+    "latitude": -29.5,
+    "subregion": "Southern Africa",
+    "flagColors": ["blue", "green", "white", "black"],
+    "flagSymbols": [],
+    "events": [],
+    "groups": [],
+    "geoTags": [],
+    "wikipediaMonthlyViews": 79764,
+    "popularityIndex": 0.522452790927026
   },
   {
     "code": "LTU",
@@ -1904,7 +2831,16 @@
     "borders": ["BLR", "LVA", "POL", "RUS"],
     "areaKm2": 65300,
     "population": 2894886,
-    "officialLanguages": ["lt"]
+    "officialLanguages": ["lt"],
+    "latitude": 56,
+    "subregion": "Northern Europe",
+    "flagColors": ["red", "green", "yellow"],
+    "flagSymbols": [],
+    "events": [],
+    "groups": ["eu"],
+    "geoTags": [],
+    "wikipediaMonthlyViews": 151695,
+    "popularityIndex": 0.6431114086760735
   },
   {
     "code": "LUX",
@@ -1922,7 +2858,16 @@
     "borders": ["BEL", "FRA", "DEU"],
     "areaKm2": 2586,
     "population": 681973,
-    "officialLanguages": ["de", "fr", "lb"]
+    "officialLanguages": ["de", "fr", "lb"],
+    "latitude": 49.75,
+    "subregion": "Western Europe",
+    "flagColors": ["red", "blue", "white"],
+    "flagSymbols": [],
+    "events": [],
+    "groups": ["eu"],
+    "geoTags": [],
+    "wikipediaMonthlyViews": 144701,
+    "popularityIndex": 0.6342511454464329
   },
   {
     "code": "LVA",
@@ -1940,7 +2885,16 @@
     "borders": ["BLR", "EST", "LTU", "RUS"],
     "areaKm2": 64559,
     "population": 1829000,
-    "officialLanguages": ["lv"]
+    "officialLanguages": ["lv"],
+    "latitude": 57,
+    "subregion": "Northern Europe",
+    "flagColors": ["red", "white"],
+    "flagSymbols": [],
+    "events": [],
+    "groups": ["eu"],
+    "geoTags": [],
+    "wikipediaMonthlyViews": 129793,
+    "popularityIndex": 0.6138419073568209
   },
   {
     "code": "MAR",
@@ -1958,7 +2912,16 @@
     "borders": ["DZA", "ESH", "ESP"],
     "areaKm2": 446550,
     "population": 36828330,
-    "officialLanguages": ["ar", "ber"]
+    "officialLanguages": ["ar", "ber"],
+    "latitude": 32,
+    "subregion": "Northern Africa",
+    "flagColors": ["red", "green"],
+    "flagSymbols": ["star"],
+    "events": [],
+    "groups": [],
+    "geoTags": [],
+    "wikipediaMonthlyViews": 190204,
+    "popularityIndex": 0.6855756919739472
   },
   {
     "code": "MCO",
@@ -1976,7 +2939,16 @@
     "borders": ["FRA"],
     "areaKm2": 2.02,
     "population": 38423,
-    "officialLanguages": ["fr"]
+    "officialLanguages": ["fr"],
+    "latitude": 43.73333333,
+    "subregion": "Western Europe",
+    "flagColors": ["red", "white"],
+    "flagSymbols": [],
+    "events": [],
+    "groups": [],
+    "geoTags": [],
+    "wikipediaMonthlyViews": 218001,
+    "popularityIndex": 0.7111795226596043
   },
   {
     "code": "MDA",
@@ -1994,7 +2966,16 @@
     "borders": ["ROU", "UKR"],
     "areaKm2": 33846,
     "population": 2749076,
-    "officialLanguages": ["ro"]
+    "officialLanguages": ["ro"],
+    "latitude": 47,
+    "subregion": "Eastern Europe",
+    "flagColors": ["red", "blue", "yellow"],
+    "flagSymbols": [],
+    "events": [],
+    "groups": [],
+    "geoTags": [],
+    "wikipediaMonthlyViews": 113566,
+    "popularityIndex": 0.5887722487991752
   },
   {
     "code": "MDG",
@@ -2012,7 +2993,16 @@
     "borders": [],
     "areaKm2": 587041,
     "population": 31727042,
-    "officialLanguages": ["fr", "mg"]
+    "officialLanguages": ["fr", "mg"],
+    "latitude": -20,
+    "subregion": "Eastern Africa",
+    "flagColors": ["red", "green", "white"],
+    "flagSymbols": [],
+    "events": [],
+    "groups": [],
+    "geoTags": [],
+    "wikipediaMonthlyViews": 151225,
+    "popularityIndex": 0.6425289260616858
   },
   {
     "code": "MDV",
@@ -2030,7 +3020,16 @@
     "borders": [],
     "areaKm2": 300,
     "population": 515132,
-    "officialLanguages": ["dv"]
+    "officialLanguages": ["dv"],
+    "latitude": 3.25,
+    "subregion": "Southern Asia",
+    "flagColors": ["red", "green", "white"],
+    "flagSymbols": ["crescent"],
+    "events": [],
+    "groups": [],
+    "geoTags": [],
+    "wikipediaMonthlyViews": 182984,
+    "popularityIndex": 0.6783116820243225
   },
   {
     "code": "MEX",
@@ -2048,7 +3047,16 @@
     "borders": ["BLZ", "GTM", "USA"],
     "areaKm2": 1964375,
     "population": 130575786,
-    "officialLanguages": ["es"]
+    "officialLanguages": ["es"],
+    "latitude": 23,
+    "subregion": "North America",
+    "flagColors": ["red", "green", "white"],
+    "flagSymbols": [],
+    "events": ["fifa_wc_host", "summer_olympics_host"],
+    "groups": ["g20"],
+    "geoTags": [],
+    "wikipediaMonthlyViews": 255010,
+    "popularityIndex": 0.7406127161808165
   },
   {
     "code": "MHL",
@@ -2066,7 +3074,16 @@
     "borders": [],
     "areaKm2": 181,
     "population": 42418,
-    "officialLanguages": ["en", "mah"]
+    "officialLanguages": ["en", "mah"],
+    "latitude": 9,
+    "subregion": "Micronesia",
+    "flagColors": ["blue", "white", "orange"],
+    "flagSymbols": ["star"],
+    "events": [],
+    "groups": [],
+    "geoTags": [],
+    "wikipediaMonthlyViews": 56329,
+    "popularityIndex": 0.45715617560331034
   },
   {
     "code": "MKD",
@@ -2084,7 +3101,16 @@
     "borders": ["ALB", "BGR", "GRC", "UNK", "SRB"],
     "areaKm2": 25713,
     "population": 1822612,
-    "officialLanguages": ["mk"]
+    "officialLanguages": ["mk"],
+    "latitude": 41.83333333,
+    "subregion": "Southeast Europe",
+    "flagColors": ["red", "yellow"],
+    "flagSymbols": ["sun"],
+    "events": [],
+    "groups": [],
+    "geoTags": [],
+    "wikipediaMonthlyViews": 123218,
+    "popularityIndex": 0.6040837716187657
   },
   {
     "code": "MLI",
@@ -2102,7 +3128,16 @@
     "borders": ["DZA", "BFA", "GIN", "CIV", "MRT", "NER", "SEN"],
     "areaKm2": 1240192,
     "population": 22395489,
-    "officialLanguages": ["fr"]
+    "officialLanguages": ["fr"],
+    "latitude": 17,
+    "subregion": "Western Africa",
+    "flagColors": ["red", "green", "yellow"],
+    "flagSymbols": [],
+    "events": [],
+    "groups": [],
+    "geoTags": [],
+    "wikipediaMonthlyViews": 85742,
+    "popularityIndex": 0.5360185421102207
   },
   {
     "code": "MLT",
@@ -2120,7 +3155,16 @@
     "borders": [],
     "areaKm2": 316,
     "population": 574250,
-    "officialLanguages": ["en", "mt"]
+    "officialLanguages": ["en", "mt"],
+    "latitude": 35.83333333,
+    "subregion": "Southern Europe",
+    "flagColors": ["red", "white"],
+    "flagSymbols": ["cross"],
+    "events": [],
+    "groups": ["eu"],
+    "geoTags": [],
+    "wikipediaMonthlyViews": 192547,
+    "popularityIndex": 0.6878738193083849
   },
   {
     "code": "MMR",
@@ -2138,7 +3182,16 @@
     "borders": ["BGD", "CHN", "IND", "LAO", "THA"],
     "areaKm2": 676578,
     "population": 51316756,
-    "officialLanguages": ["my"]
+    "officialLanguages": ["my"],
+    "latitude": 22,
+    "subregion": "South-Eastern Asia",
+    "flagColors": ["red", "green", "yellow", "white"],
+    "flagSymbols": ["star"],
+    "events": [],
+    "groups": [],
+    "geoTags": [],
+    "wikipediaMonthlyViews": 202888,
+    "popularityIndex": 0.6976935408125973
   },
   {
     "code": "MNE",
@@ -2156,7 +3209,16 @@
     "borders": ["ALB", "BIH", "HRV", "UNK", "SRB"],
     "areaKm2": 13812,
     "population": 623327,
-    "officialLanguages": ["cnr"]
+    "officialLanguages": ["cnr"],
+    "latitude": 42.5,
+    "subregion": "Southeast Europe",
+    "flagColors": ["red", "yellow"],
+    "flagSymbols": [],
+    "events": [],
+    "groups": [],
+    "geoTags": [],
+    "wikipediaMonthlyViews": 139706,
+    "popularityIndex": 0.6276570902287504
   },
   {
     "code": "MNG",
@@ -2174,7 +3236,16 @@
     "borders": ["CHN", "RUS"],
     "areaKm2": 1564110,
     "population": 3544835,
-    "officialLanguages": ["mn"]
+    "officialLanguages": ["mn"],
+    "latitude": 46,
+    "subregion": "Eastern Asia",
+    "flagColors": ["red", "blue", "yellow"],
+    "flagSymbols": [],
+    "events": [],
+    "groups": [],
+    "geoTags": [],
+    "wikipediaMonthlyViews": 143003,
+    "popularityIndex": 0.6320354526919435
   },
   {
     "code": "MOZ",
@@ -2192,7 +3263,16 @@
     "borders": ["MWI", "ZAF", "SWZ", "TZA", "ZMB", "ZWE"],
     "areaKm2": 801590,
     "population": 34090466,
-    "officialLanguages": ["pt"]
+    "officialLanguages": ["pt"],
+    "latitude": -18.25,
+    "subregion": "Eastern Africa",
+    "flagColors": ["red", "yellow", "white", "black"],
+    "flagSymbols": ["star", "triangle"],
+    "events": [],
+    "groups": [],
+    "geoTags": [],
+    "wikipediaMonthlyViews": 71064,
+    "popularityIndex": 0.5007741355279497
   },
   {
     "code": "MRT",
@@ -2210,7 +3290,16 @@
     "borders": ["DZA", "MLI", "SEN", "ESH"],
     "areaKm2": 1030700,
     "population": 4927532,
-    "officialLanguages": ["ar"]
+    "officialLanguages": ["ar"],
+    "latitude": 20,
+    "subregion": "Western Africa",
+    "flagColors": ["red", "green", "yellow"],
+    "flagSymbols": ["star", "crescent"],
+    "events": [],
+    "groups": [],
+    "geoTags": [],
+    "wikipediaMonthlyViews": 102896,
+    "popularityIndex": 0.5702519675293984
   },
   {
     "code": "MUS",
@@ -2228,7 +3317,16 @@
     "borders": [],
     "areaKm2": 2040,
     "population": 1243741,
-    "officialLanguages": ["en", "fr", "mfe"]
+    "officialLanguages": ["en", "fr", "mfe"],
+    "latitude": -20.28333333,
+    "subregion": "Eastern Africa",
+    "flagColors": ["red", "blue", "green", "yellow"],
+    "flagSymbols": [],
+    "events": [],
+    "groups": [],
+    "geoTags": [],
+    "wikipediaMonthlyViews": 235812,
+    "popularityIndex": 0.7259212107929185
   },
   {
     "code": "MWI",
@@ -2246,7 +3344,16 @@
     "borders": ["MOZ", "TZA", "ZMB"],
     "areaKm2": 118484,
     "population": 20734262,
-    "officialLanguages": ["en", "ny"]
+    "officialLanguages": ["en", "ny"],
+    "latitude": -13.5,
+    "subregion": "Eastern Africa",
+    "flagColors": ["red", "green", "black"],
+    "flagSymbols": ["sun"],
+    "events": [],
+    "groups": [],
+    "geoTags": [],
+    "wikipediaMonthlyViews": 54519,
+    "popularityIndex": 0.4510255891012742
   },
   {
     "code": "MYS",
@@ -2264,7 +3371,16 @@
     "borders": ["BRN", "IDN", "THA"],
     "areaKm2": 330803,
     "population": 34231700,
-    "officialLanguages": ["en", "ms"]
+    "officialLanguages": ["en", "ms"],
+    "latitude": 2.5,
+    "subregion": "South-Eastern Asia",
+    "flagColors": ["red", "blue", "yellow", "white"],
+    "flagSymbols": ["star", "crescent"],
+    "events": [],
+    "groups": [],
+    "geoTags": [],
+    "wikipediaMonthlyViews": 214388,
+    "popularityIndex": 0.7080425109370356
   },
   {
     "code": "NAM",
@@ -2292,7 +3408,16 @@
       "loz",
       "ng",
       "tn"
-    ]
+    ],
+    "latitude": -22,
+    "subregion": "Southern Africa",
+    "flagColors": ["red", "blue", "green", "yellow", "white"],
+    "flagSymbols": ["sun", "triangle"],
+    "events": [],
+    "groups": [],
+    "geoTags": [],
+    "wikipediaMonthlyViews": 125196,
+    "popularityIndex": 0.6070730895478557
   },
   {
     "code": "NER",
@@ -2310,7 +3435,16 @@
     "borders": ["DZA", "BEN", "BFA", "TCD", "LBY", "MLI", "NGA"],
     "areaKm2": 1267000,
     "population": 26312034,
-    "officialLanguages": ["fr"]
+    "officialLanguages": ["fr"],
+    "latitude": 16,
+    "subregion": "Western Africa",
+    "flagColors": ["green", "white", "orange"],
+    "flagSymbols": ["circle"],
+    "events": [],
+    "groups": [],
+    "geoTags": [],
+    "wikipediaMonthlyViews": 77881,
+    "popularityIndex": 0.5179683998119926
   },
   {
     "code": "NGA",
@@ -2328,7 +3462,16 @@
     "borders": ["BEN", "CMR", "TCD", "NER"],
     "areaKm2": 923768,
     "population": 223800000,
-    "officialLanguages": ["en"]
+    "officialLanguages": ["en"],
+    "latitude": 10,
+    "subregion": "Western Africa",
+    "flagColors": ["green", "white"],
+    "flagSymbols": [],
+    "events": [],
+    "groups": [],
+    "geoTags": [],
+    "wikipediaMonthlyViews": 204904,
+    "popularityIndex": 0.6995494985105618
   },
   {
     "code": "NIC",
@@ -2346,7 +3489,16 @@
     "borders": ["CRI", "HND"],
     "areaKm2": 130373,
     "population": 6803886,
-    "officialLanguages": ["es"]
+    "officialLanguages": ["es"],
+    "latitude": 13,
+    "subregion": "Central America",
+    "flagColors": ["blue", "white"],
+    "flagSymbols": [],
+    "events": [],
+    "groups": [],
+    "geoTags": [],
+    "wikipediaMonthlyViews": 85917,
+    "popularityIndex": 0.5364012649055304
   },
   {
     "code": "NLD",
@@ -2364,7 +3516,16 @@
     "borders": ["BEL", "DEU"],
     "areaKm2": 41850,
     "population": 18100436,
-    "officialLanguages": ["nl"]
+    "officialLanguages": ["nl"],
+    "latitude": 52.5,
+    "subregion": "Western Europe",
+    "flagColors": ["red", "blue", "white"],
+    "flagSymbols": [],
+    "events": ["summer_olympics_host"],
+    "groups": ["eu"],
+    "geoTags": [],
+    "wikipediaMonthlyViews": 252487,
+    "popularityIndex": 0.7387463362399206
   },
   {
     "code": "NOR",
@@ -2382,7 +3543,16 @@
     "borders": ["FIN", "SWE", "RUS"],
     "areaKm2": 323802,
     "population": 5606944,
-    "officialLanguages": ["nn", "nb", "se"]
+    "officialLanguages": ["nn", "nb", "se"],
+    "latitude": 62,
+    "subregion": "Northern Europe",
+    "flagColors": ["red", "blue", "white"],
+    "flagSymbols": ["cross"],
+    "events": [],
+    "groups": [],
+    "geoTags": [],
+    "wikipediaMonthlyViews": 175311,
+    "popularityIndex": 0.6702708023326587
   },
   {
     "code": "NPL",
@@ -2400,7 +3570,16 @@
     "borders": ["CHN", "IND"],
     "areaKm2": 147181,
     "population": 29911840,
-    "officialLanguages": ["ne"]
+    "officialLanguages": ["ne"],
+    "latitude": 28,
+    "subregion": "Southern Asia",
+    "flagColors": ["red", "blue", "white"],
+    "flagSymbols": ["crescent", "sun", "triangle"],
+    "events": [],
+    "groups": [],
+    "geoTags": [],
+    "wikipediaMonthlyViews": 234208,
+    "popularityIndex": 0.724640053595489
   },
   {
     "code": "NRU",
@@ -2418,7 +3597,16 @@
     "borders": [],
     "areaKm2": 21,
     "population": 11680,
-    "officialLanguages": ["en", "na"]
+    "officialLanguages": ["en", "na"],
+    "latitude": -0.53333333,
+    "subregion": "Micronesia",
+    "flagColors": ["blue", "yellow", "white"],
+    "flagSymbols": ["star"],
+    "events": [],
+    "groups": [],
+    "geoTags": [],
+    "wikipediaMonthlyViews": 74309,
+    "popularityIndex": 0.5091555207958133
   },
   {
     "code": "NZL",
@@ -2436,7 +3624,16 @@
     "borders": [],
     "areaKm2": 270467,
     "population": 5324700,
-    "officialLanguages": ["en", "mi", "nzs"]
+    "officialLanguages": ["en", "mi", "nzs"],
+    "latitude": -41,
+    "subregion": "Australia and New Zealand",
+    "flagColors": ["red", "blue", "white"],
+    "flagSymbols": ["star", "cross"],
+    "events": [],
+    "groups": [],
+    "geoTags": [],
+    "wikipediaMonthlyViews": 244361,
+    "popularityIndex": 0.732605822484013
   },
   {
     "code": "OMN",
@@ -2454,7 +3651,16 @@
     "borders": ["SAU", "ARE", "YEM"],
     "areaKm2": 309500,
     "population": 5343630,
-    "officialLanguages": ["ar"]
+    "officialLanguages": ["ar"],
+    "latitude": 21,
+    "subregion": "Western Asia",
+    "flagColors": ["red", "green", "white"],
+    "flagSymbols": [],
+    "events": [],
+    "groups": [],
+    "geoTags": ["middle_east"],
+    "wikipediaMonthlyViews": 150005,
+    "popularityIndex": 0.64100846013374
   },
   {
     "code": "PAK",
@@ -2472,7 +3678,16 @@
     "borders": ["AFG", "CHN", "IND", "IRN"],
     "areaKm2": 881912,
     "population": 241499431,
-    "officialLanguages": ["en", "ur"]
+    "officialLanguages": ["en", "ur"],
+    "latitude": 30,
+    "subregion": "Southern Asia",
+    "flagColors": ["green", "white"],
+    "flagSymbols": ["star", "crescent"],
+    "events": [],
+    "groups": [],
+    "geoTags": [],
+    "wikipediaMonthlyViews": 352461,
+    "popularityIndex": 0.8013620013981236
   },
   {
     "code": "PAN",
@@ -2490,7 +3705,16 @@
     "borders": ["COL", "CRI"],
     "areaKm2": 75417,
     "population": 4064780,
-    "officialLanguages": ["es"]
+    "officialLanguages": ["es"],
+    "latitude": 9,
+    "subregion": "Central America",
+    "flagColors": ["red", "blue", "white"],
+    "flagSymbols": ["star"],
+    "events": [],
+    "groups": [],
+    "geoTags": [],
+    "wikipediaMonthlyViews": 77526,
+    "popularityIndex": 0.5171108265325762
   },
   {
     "code": "PER",
@@ -2508,7 +3732,16 @@
     "borders": ["BOL", "BRA", "CHL", "COL", "ECU"],
     "areaKm2": 1285216,
     "population": 34350244,
-    "officialLanguages": ["ay", "qu", "es"]
+    "officialLanguages": ["ay", "qu", "es"],
+    "latitude": -10,
+    "subregion": "South America",
+    "flagColors": ["red", "white"],
+    "flagSymbols": [],
+    "events": [],
+    "groups": [],
+    "geoTags": [],
+    "wikipediaMonthlyViews": 102845,
+    "popularityIndex": 0.5701589077437959
   },
   {
     "code": "PHL",
@@ -2526,7 +3759,16 @@
     "borders": [],
     "areaKm2": 342353,
     "population": 114123600,
-    "officialLanguages": ["en", "fil"]
+    "officialLanguages": ["en", "fil"],
+    "latitude": 13,
+    "subregion": "South-Eastern Asia",
+    "flagColors": ["red", "blue", "yellow", "white"],
+    "flagSymbols": ["star", "sun", "triangle"],
+    "events": [],
+    "groups": [],
+    "geoTags": [],
+    "wikipediaMonthlyViews": 300617,
+    "popularityIndex": 0.7714971098766847
   },
   {
     "code": "PLW",
@@ -2544,7 +3786,16 @@
     "borders": [],
     "areaKm2": 459,
     "population": 16733,
-    "officialLanguages": ["en", "pau"]
+    "officialLanguages": ["en", "pau"],
+    "latitude": 7.5,
+    "subregion": "Micronesia",
+    "flagColors": ["blue", "yellow"],
+    "flagSymbols": ["circle"],
+    "events": [],
+    "groups": [],
+    "geoTags": [],
+    "wikipediaMonthlyViews": 77378,
+    "popularityIndex": 0.5167521425988029
   },
   {
     "code": "PNG",
@@ -2562,7 +3813,16 @@
     "borders": ["IDN"],
     "areaKm2": 462840,
     "population": 11781559,
-    "officialLanguages": ["en", "hmo", "tpi"]
+    "officialLanguages": ["en", "hmo", "tpi"],
+    "latitude": -6,
+    "subregion": "Melanesia",
+    "flagColors": ["red", "yellow", "white", "black"],
+    "flagSymbols": ["star", "cross", "triangle"],
+    "events": [],
+    "groups": [],
+    "geoTags": [],
+    "wikipediaMonthlyViews": 114977,
+    "popularityIndex": 0.5910900560490702
   },
   {
     "code": "POL",
@@ -2580,7 +3840,16 @@
     "borders": ["BLR", "CZE", "DEU", "LTU", "RUS", "SVK", "UKR"],
     "areaKm2": 312679,
     "population": 37392000,
-    "officialLanguages": ["pl"]
+    "officialLanguages": ["pl"],
+    "latitude": 52,
+    "subregion": "Central Europe",
+    "flagColors": ["red", "white"],
+    "flagSymbols": [],
+    "events": [],
+    "groups": ["eu"],
+    "geoTags": [],
+    "wikipediaMonthlyViews": 229608,
+    "popularityIndex": 0.7209166590825911
   },
   {
     "code": "PRK",
@@ -2598,7 +3867,16 @@
     "borders": ["CHN", "KOR", "RUS"],
     "areaKm2": 120538,
     "population": 25950000,
-    "officialLanguages": ["ko"]
+    "officialLanguages": ["ko"],
+    "latitude": 40,
+    "subregion": "Eastern Asia",
+    "flagColors": ["red", "blue", "white"],
+    "flagSymbols": ["star", "circle"],
+    "events": [],
+    "groups": [],
+    "geoTags": [],
+    "wikipediaMonthlyViews": 222305,
+    "popularityIndex": 0.714849337910031
   },
   {
     "code": "PRT",
@@ -2616,7 +3894,16 @@
     "borders": ["ESP"],
     "areaKm2": 92090,
     "population": 10749635,
-    "officialLanguages": ["pt"]
+    "officialLanguages": ["pt"],
+    "latitude": 39.5,
+    "subregion": "Southern Europe",
+    "flagColors": ["red", "green"],
+    "flagSymbols": [],
+    "events": [],
+    "groups": ["eu"],
+    "geoTags": [],
+    "wikipediaMonthlyViews": 163789,
+    "popularityIndex": 0.6575099404763267
   },
   {
     "code": "PRY",
@@ -2634,7 +3921,16 @@
     "borders": ["ARG", "BOL", "BRA"],
     "areaKm2": 406752,
     "population": 6109644,
-    "officialLanguages": ["gn", "es"]
+    "officialLanguages": ["gn", "es"],
+    "latitude": -23,
+    "subregion": "South America",
+    "flagColors": ["red", "blue", "white"],
+    "flagSymbols": [],
+    "events": [],
+    "groups": [],
+    "geoTags": [],
+    "wikipediaMonthlyViews": 67414,
+    "popularityIndex": 0.49087663814453997
   },
   {
     "code": "PSE",
@@ -2652,7 +3948,16 @@
     "borders": ["ISR", "EGY", "JOR"],
     "areaKm2": 6220,
     "population": 5483450,
-    "officialLanguages": ["ar"]
+    "officialLanguages": ["ar"],
+    "latitude": 31.9,
+    "subregion": "Western Asia",
+    "flagColors": ["red", "green", "white", "black"],
+    "flagSymbols": ["triangle"],
+    "events": [],
+    "groups": [],
+    "geoTags": ["middle_east"],
+    "wikipediaMonthlyViews": 329549,
+    "popularityIndex": 0.7887452243023635
   },
   {
     "code": "QAT",
@@ -2670,7 +3975,16 @@
     "borders": ["SAU"],
     "areaKm2": 11586,
     "population": 3173024,
-    "officialLanguages": ["ar"]
+    "officialLanguages": ["ar"],
+    "latitude": 25.5,
+    "subregion": "Western Asia",
+    "flagColors": ["white"],
+    "flagSymbols": [],
+    "events": ["fifa_wc_host"],
+    "groups": [],
+    "geoTags": ["middle_east"],
+    "wikipediaMonthlyViews": 193675,
+    "popularityIndex": 0.6889702622473266
   },
   {
     "code": "ROU",
@@ -2688,7 +4002,16 @@
     "borders": ["BGR", "HUN", "MDA", "SRB", "UKR"],
     "areaKm2": 238391,
     "population": 19036031,
-    "officialLanguages": ["ro"]
+    "officialLanguages": ["ro"],
+    "latitude": 46,
+    "subregion": "Southeast Europe",
+    "flagColors": ["red", "blue", "yellow"],
+    "flagSymbols": [],
+    "events": [],
+    "groups": ["eu"],
+    "geoTags": [],
+    "wikipediaMonthlyViews": 171473,
+    "popularityIndex": 0.6661157513155206
   },
   {
     "code": "RUS",
@@ -2721,7 +4044,16 @@
     ],
     "areaKm2": 17098242,
     "population": 146028325,
-    "officialLanguages": ["ru"]
+    "officialLanguages": ["ru"],
+    "latitude": 60,
+    "subregion": "Eastern Europe",
+    "flagColors": ["red", "blue", "white"],
+    "flagSymbols": [],
+    "events": ["fifa_wc_host", "summer_olympics_host"],
+    "groups": ["g20"],
+    "geoTags": [],
+    "wikipediaMonthlyViews": 375891,
+    "popularityIndex": 0.8134427418067163
   },
   {
     "code": "RWA",
@@ -2739,7 +4071,16 @@
     "borders": ["BDI", "COD", "TZA", "UGA"],
     "areaKm2": 26338,
     "population": 14104969,
-    "officialLanguages": ["en", "fr", "rw"]
+    "officialLanguages": ["en", "fr", "rw"],
+    "latitude": -2,
+    "subregion": "Eastern Africa",
+    "flagColors": ["blue", "green", "yellow"],
+    "flagSymbols": ["sun"],
+    "events": [],
+    "groups": [],
+    "geoTags": [],
+    "wikipediaMonthlyViews": 102146,
+    "popularityIndex": 0.5688787697895296
   },
   {
     "code": "SAU",
@@ -2757,7 +4098,16 @@
     "borders": ["IRQ", "JOR", "KWT", "OMN", "QAT", "ARE", "YEM"],
     "areaKm2": 2149690,
     "population": 35300280,
-    "officialLanguages": ["ar"]
+    "officialLanguages": ["ar"],
+    "latitude": 25,
+    "subregion": "Western Asia",
+    "flagColors": ["green", "white"],
+    "flagSymbols": [],
+    "events": [],
+    "groups": ["g20"],
+    "geoTags": ["middle_east"],
+    "wikipediaMonthlyViews": 261481,
+    "popularityIndex": 0.7453164644979343
   },
   {
     "code": "SDN",
@@ -2775,7 +4125,16 @@
     "borders": ["CAF", "TCD", "EGY", "ERI", "ETH", "LBY", "SSD"],
     "areaKm2": 1886068,
     "population": 51662000,
-    "officialLanguages": ["ar", "en"]
+    "officialLanguages": ["ar", "en"],
+    "latitude": 15,
+    "subregion": "Northern Africa",
+    "flagColors": ["red", "green", "white", "black"],
+    "flagSymbols": ["triangle"],
+    "events": [],
+    "groups": [],
+    "geoTags": [],
+    "wikipediaMonthlyViews": 147290,
+    "popularityIndex": 0.6375799375732704
   },
   {
     "code": "SEN",
@@ -2793,7 +4152,16 @@
     "borders": ["GMB", "GIN", "GNB", "MLI", "MRT"],
     "areaKm2": 196722,
     "population": 18593258,
-    "officialLanguages": ["fr"]
+    "officialLanguages": ["fr"],
+    "latitude": 14,
+    "subregion": "Western Africa",
+    "flagColors": ["red", "green", "yellow"],
+    "flagSymbols": ["star"],
+    "events": [],
+    "groups": [],
+    "geoTags": [],
+    "wikipediaMonthlyViews": 98535,
+    "popularityIndex": 0.562122907028421
   },
   {
     "code": "SGP",
@@ -2811,7 +4179,16 @@
     "borders": [],
     "areaKm2": 710,
     "population": 6110200,
-    "officialLanguages": ["en", "ms", "ta", "zh"]
+    "officialLanguages": ["en", "ms", "ta", "zh"],
+    "latitude": 1.36666666,
+    "subregion": "South-Eastern Asia",
+    "flagColors": ["red", "white"],
+    "flagSymbols": ["star", "crescent"],
+    "events": [],
+    "groups": [],
+    "geoTags": [],
+    "wikipediaMonthlyViews": 360627,
+    "popularityIndex": 0.8056613032910038
   },
   {
     "code": "SLB",
@@ -2829,7 +4206,16 @@
     "borders": [],
     "areaKm2": 28896,
     "population": 750325,
-    "officialLanguages": ["en"]
+    "officialLanguages": ["en"],
+    "latitude": -8,
+    "subregion": "Melanesia",
+    "flagColors": ["blue", "green", "yellow", "white"],
+    "flagSymbols": ["star", "triangle"],
+    "events": [],
+    "groups": [],
+    "geoTags": [],
+    "wikipediaMonthlyViews": 46674,
+    "popularityIndex": 0.42186290338042876
   },
   {
     "code": "SLE",
@@ -2847,7 +4233,16 @@
     "borders": ["GIN", "LBR"],
     "areaKm2": 71740,
     "population": 9077691,
-    "officialLanguages": ["en"]
+    "officialLanguages": ["en"],
+    "latitude": 8.5,
+    "subregion": "Western Africa",
+    "flagColors": ["blue", "green", "white"],
+    "flagSymbols": [],
+    "events": [],
+    "groups": [],
+    "geoTags": [],
+    "wikipediaMonthlyViews": 78383,
+    "popularityIndex": 0.5191744322338513
   },
   {
     "code": "SLV",
@@ -2865,7 +4260,16 @@
     "borders": ["GTM", "HND"],
     "areaKm2": 21041,
     "population": 6029976,
-    "officialLanguages": ["es"]
+    "officialLanguages": ["es"],
+    "latitude": 13.83333333,
+    "subregion": "Central America",
+    "flagColors": ["blue", "white"],
+    "flagSymbols": [],
+    "events": [],
+    "groups": [],
+    "geoTags": [],
+    "wikipediaMonthlyViews": 130211,
+    "popularityIndex": 0.6144454519109764
   },
   {
     "code": "SMR",
@@ -2883,7 +4287,16 @@
     "borders": ["ITA"],
     "areaKm2": 61,
     "population": 34132,
-    "officialLanguages": ["it"]
+    "officialLanguages": ["it"],
+    "latitude": 43.76666666,
+    "subregion": "Southern Europe",
+    "flagColors": ["blue", "white"],
+    "flagSymbols": [],
+    "events": [],
+    "groups": [],
+    "geoTags": [],
+    "wikipediaMonthlyViews": 104347,
+    "popularityIndex": 0.5728804636938069
   },
   {
     "code": "SOM",
@@ -2901,7 +4314,16 @@
     "borders": ["DJI", "ETH", "KEN"],
     "areaKm2": 637657,
     "population": 19655000,
-    "officialLanguages": ["ar", "so"]
+    "officialLanguages": ["ar", "so"],
+    "latitude": 10,
+    "subregion": "Eastern Africa",
+    "flagColors": ["blue", "white"],
+    "flagSymbols": ["star"],
+    "events": [],
+    "groups": [],
+    "geoTags": [],
+    "wikipediaMonthlyViews": 159213,
+    "popularityIndex": 0.6521910313415402
   },
   {
     "code": "SRB",
@@ -2919,7 +4341,16 @@
     "borders": ["BIH", "BGR", "HRV", "HUN", "UNK", "MKD", "MNE", "ROU"],
     "areaKm2": 88361,
     "population": 6567783,
-    "officialLanguages": ["sr"]
+    "officialLanguages": ["sr"],
+    "latitude": 44,
+    "subregion": "Southeast Europe",
+    "flagColors": ["red", "blue", "white"],
+    "flagSymbols": [],
+    "events": [],
+    "groups": [],
+    "geoTags": [],
+    "wikipediaMonthlyViews": 177544,
+    "popularityIndex": 0.6726466082188066
   },
   {
     "code": "SSD",
@@ -2937,7 +4368,16 @@
     "borders": ["CAF", "COD", "ETH", "KEN", "SDN", "UGA"],
     "areaKm2": 619745,
     "population": 15786898,
-    "officialLanguages": ["en"]
+    "officialLanguages": ["en"],
+    "latitude": 7,
+    "subregion": "Middle Africa",
+    "flagColors": ["red", "blue", "green", "yellow", "white", "black"],
+    "flagSymbols": ["star", "triangle"],
+    "events": [],
+    "groups": [],
+    "geoTags": [],
+    "wikipediaMonthlyViews": 110250,
+    "popularityIndex": 0.583209776248449
   },
   {
     "code": "STP",
@@ -2955,7 +4395,16 @@
     "borders": [],
     "areaKm2": 964,
     "population": 209607,
-    "officialLanguages": ["pt"]
+    "officialLanguages": ["pt"],
+    "latitude": 1,
+    "subregion": "Middle Africa",
+    "flagColors": ["red", "green", "yellow", "black"],
+    "flagSymbols": ["star", "triangle"],
+    "events": [],
+    "groups": [],
+    "geoTags": [],
+    "wikipediaMonthlyViews": 46355,
+    "popularityIndex": 0.4205755827131616
   },
   {
     "code": "SUR",
@@ -2973,7 +4422,16 @@
     "borders": ["BRA", "GUF", "GUY"],
     "areaKm2": 163820,
     "population": 616500,
-    "officialLanguages": ["nl"]
+    "officialLanguages": ["nl"],
+    "latitude": 4,
+    "subregion": "South America",
+    "flagColors": ["red", "green", "yellow", "white"],
+    "flagSymbols": ["star"],
+    "events": [],
+    "groups": [],
+    "geoTags": [],
+    "wikipediaMonthlyViews": 124343,
+    "popularityIndex": 0.6057897989824729
   },
   {
     "code": "SVK",
@@ -2991,7 +4449,16 @@
     "borders": ["AUT", "CZE", "HUN", "POL", "UKR"],
     "areaKm2": 49037,
     "population": 5413813,
-    "officialLanguages": ["sk"]
+    "officialLanguages": ["sk"],
+    "latitude": 48.66666666,
+    "subregion": "Central Europe",
+    "flagColors": ["red", "blue", "white"],
+    "flagSymbols": [],
+    "events": [],
+    "groups": ["eu"],
+    "geoTags": [],
+    "wikipediaMonthlyViews": 126378,
+    "popularityIndex": 0.6088369638224167
   },
   {
     "code": "SVN",
@@ -3009,7 +4476,16 @@
     "borders": ["AUT", "HRV", "ITA", "HUN"],
     "areaKm2": 20273,
     "population": 2130638,
-    "officialLanguages": ["sl"]
+    "officialLanguages": ["sl"],
+    "latitude": 46.11666666,
+    "subregion": "Central Europe",
+    "flagColors": ["red", "blue", "white"],
+    "flagSymbols": [],
+    "events": [],
+    "groups": ["eu"],
+    "geoTags": [],
+    "wikipediaMonthlyViews": 126125,
+    "popularityIndex": 0.6084608088274595
   },
   {
     "code": "SWE",
@@ -3027,7 +4503,16 @@
     "borders": ["FIN", "NOR"],
     "areaKm2": 450295,
     "population": 10605098,
-    "officialLanguages": ["sv"]
+    "officialLanguages": ["sv"],
+    "latitude": 62,
+    "subregion": "Northern Europe",
+    "flagColors": ["blue", "yellow"],
+    "flagSymbols": ["cross"],
+    "events": ["fifa_wc_host", "summer_olympics_host"],
+    "groups": ["eu"],
+    "geoTags": [],
+    "wikipediaMonthlyViews": 177793,
+    "popularityIndex": 0.67290967844354
   },
   {
     "code": "SWZ",
@@ -3045,7 +4530,16 @@
     "borders": ["MOZ", "ZAF"],
     "areaKm2": 17364,
     "population": 1235549,
-    "officialLanguages": ["en", "ss"]
+    "officialLanguages": ["en", "ss"],
+    "latitude": -26.5,
+    "subregion": "Southern Africa",
+    "flagColors": ["red", "blue", "yellow", "white", "black"],
+    "flagSymbols": [],
+    "events": [],
+    "groups": [],
+    "geoTags": [],
+    "wikipediaMonthlyViews": 149768,
+    "popularityIndex": 0.640711656897962
   },
   {
     "code": "SYC",
@@ -3063,7 +4557,16 @@
     "borders": [],
     "areaKm2": 452,
     "population": 122729,
-    "officialLanguages": ["crs", "en", "fr"]
+    "officialLanguages": ["crs", "en", "fr"],
+    "latitude": -4.58333333,
+    "subregion": "Eastern Africa",
+    "flagColors": ["red", "blue", "green", "yellow", "white"],
+    "flagSymbols": [],
+    "events": [],
+    "groups": [],
+    "geoTags": [],
+    "wikipediaMonthlyViews": 120259,
+    "popularityIndex": 0.5995210800189721
   },
   {
     "code": "SYR",
@@ -3081,7 +4584,16 @@
     "borders": ["IRQ", "ISR", "JOR", "LBN", "TUR"],
     "areaKm2": 185180,
     "population": 25620000,
-    "officialLanguages": ["ar"]
+    "officialLanguages": ["ar"],
+    "latitude": 35,
+    "subregion": "Western Asia",
+    "flagColors": ["red", "green", "white", "black"],
+    "flagSymbols": ["star"],
+    "events": [],
+    "groups": [],
+    "geoTags": ["middle_east"],
+    "wikipediaMonthlyViews": 232370,
+    "popularityIndex": 0.7231611624611993
   },
   {
     "code": "TCD",
@@ -3099,7 +4611,16 @@
     "borders": ["CMR", "CAF", "LBY", "NER", "NGA", "SDN"],
     "areaKm2": 1284000,
     "population": 19340757,
-    "officialLanguages": ["ar", "fr"]
+    "officialLanguages": ["ar", "fr"],
+    "latitude": 15,
+    "subregion": "Middle Africa",
+    "flagColors": ["red", "blue", "yellow"],
+    "flagSymbols": [],
+    "events": [],
+    "groups": [],
+    "geoTags": [],
+    "wikipediaMonthlyViews": 71731,
+    "popularityIndex": 0.5025277281143229
   },
   {
     "code": "TGO",
@@ -3117,7 +4638,16 @@
     "borders": ["BEN", "BFA", "GHA"],
     "areaKm2": 56785,
     "population": 8095498,
-    "officialLanguages": ["fr"]
+    "officialLanguages": ["fr"],
+    "latitude": 8,
+    "subregion": "Western Africa",
+    "flagColors": ["red", "green", "yellow", "white"],
+    "flagSymbols": ["star"],
+    "events": [],
+    "groups": [],
+    "geoTags": [],
+    "wikipediaMonthlyViews": 51789,
+    "popularityIndex": 0.44138275037586977
   },
   {
     "code": "THA",
@@ -3135,7 +4665,16 @@
     "borders": ["MMR", "KHM", "LAO", "MYS"],
     "areaKm2": 513120,
     "population": 65859640,
-    "officialLanguages": ["th"]
+    "officialLanguages": ["th"],
+    "latitude": 15,
+    "subregion": "South-Eastern Asia",
+    "flagColors": ["red", "blue", "white"],
+    "flagSymbols": [],
+    "events": [],
+    "groups": [],
+    "geoTags": [],
+    "wikipediaMonthlyViews": 267736,
+    "popularityIndex": 0.7497538428564319
   },
   {
     "code": "TJK",
@@ -3153,7 +4692,16 @@
     "borders": ["AFG", "CHN", "KGZ", "UZB"],
     "areaKm2": 143100,
     "population": 10499000,
-    "officialLanguages": ["ru", "tg"]
+    "officialLanguages": ["ru", "tg"],
+    "latitude": 39,
+    "subregion": "Central Asia",
+    "flagColors": ["red", "green", "yellow", "white"],
+    "flagSymbols": ["star"],
+    "events": [],
+    "groups": [],
+    "geoTags": [],
+    "wikipediaMonthlyViews": 95402,
+    "popularityIndex": 0.5560576359613056
   },
   {
     "code": "TKM",
@@ -3171,7 +4719,16 @@
     "borders": ["AFG", "IRN", "KAZ", "UZB"],
     "areaKm2": 488100,
     "population": 7057841,
-    "officialLanguages": ["ru", "tk"]
+    "officialLanguages": ["ru", "tk"],
+    "latitude": 40,
+    "subregion": "Central Asia",
+    "flagColors": ["red", "green", "white"],
+    "flagSymbols": ["star", "crescent"],
+    "events": [],
+    "groups": [],
+    "geoTags": [],
+    "wikipediaMonthlyViews": 116761,
+    "popularityIndex": 0.5939801960722966
   },
   {
     "code": "TLS",
@@ -3189,7 +4746,16 @@
     "borders": ["IDN"],
     "areaKm2": 14874,
     "population": 1391221,
-    "officialLanguages": ["pt", "tet"]
+    "officialLanguages": ["pt", "tet"],
+    "latitude": -8.83333333,
+    "subregion": "South-Eastern Asia",
+    "flagColors": ["red", "yellow", "white", "black"],
+    "flagSymbols": ["star", "triangle"],
+    "events": [],
+    "groups": [],
+    "geoTags": [],
+    "wikipediaMonthlyViews": 102216,
+    "popularityIndex": 0.569007360803768
   },
   {
     "code": "TON",
@@ -3207,7 +4773,16 @@
     "borders": [],
     "areaKm2": 747,
     "population": 100179,
-    "officialLanguages": ["en", "to"]
+    "officialLanguages": ["en", "to"],
+    "latitude": -20,
+    "subregion": "Polynesia",
+    "flagColors": ["red", "white"],
+    "flagSymbols": ["cross"],
+    "events": [],
+    "groups": [],
+    "geoTags": [],
+    "wikipediaMonthlyViews": 65085,
+    "popularityIndex": 0.4842770880355541
   },
   {
     "code": "TTO",
@@ -3225,7 +4800,16 @@
     "borders": [],
     "areaKm2": 5130,
     "population": 1367764,
-    "officialLanguages": ["en"]
+    "officialLanguages": ["en"],
+    "latitude": 11,
+    "subregion": "Caribbean",
+    "flagColors": ["red", "white", "black"],
+    "flagSymbols": [],
+    "events": [],
+    "groups": [],
+    "geoTags": [],
+    "wikipediaMonthlyViews": 111033,
+    "popularityIndex": 0.5845381743093815
   },
   {
     "code": "TUN",
@@ -3243,7 +4827,16 @@
     "borders": ["DZA", "LBY"],
     "areaKm2": 163610,
     "population": 11972169,
-    "officialLanguages": ["ar"]
+    "officialLanguages": ["ar"],
+    "latitude": 34,
+    "subregion": "Northern Africa",
+    "flagColors": ["red", "white"],
+    "flagSymbols": ["star", "crescent", "circle"],
+    "events": [],
+    "groups": [],
+    "geoTags": [],
+    "wikipediaMonthlyViews": 107079,
+    "popularityIndex": 0.5777317754484957
   },
   {
     "code": "TUR",
@@ -3261,7 +4854,16 @@
     "borders": ["ARM", "AZE", "BGR", "GEO", "GRC", "IRN", "IRQ", "SYR"],
     "areaKm2": 783562,
     "population": 85664944,
-    "officialLanguages": ["tr"]
+    "officialLanguages": ["tr"],
+    "latitude": 39,
+    "subregion": "Western Asia",
+    "flagColors": ["red", "white"],
+    "flagSymbols": ["star", "crescent"],
+    "events": [],
+    "groups": ["g20"],
+    "geoTags": ["middle_east"],
+    "wikipediaMonthlyViews": 311237,
+    "popularityIndex": 0.7780138895922512
   },
   {
     "code": "TUV",
@@ -3279,7 +4881,16 @@
     "borders": [],
     "areaKm2": 26,
     "population": 10643,
-    "officialLanguages": ["en", "tvl"]
+    "officialLanguages": ["en", "tvl"],
+    "latitude": -8,
+    "subregion": "Polynesia",
+    "flagColors": ["blue", "yellow"],
+    "flagSymbols": ["star"],
+    "events": [],
+    "groups": [],
+    "geoTags": [],
+    "wikipediaMonthlyViews": 71753,
+    "popularityIndex": 0.5025852895898344
   },
   {
     "code": "TWN",
@@ -3297,7 +4908,16 @@
     "borders": [],
     "areaKm2": 36193,
     "population": 23317031,
-    "officialLanguages": ["zh"]
+    "officialLanguages": ["zh"],
+    "latitude": 23.5,
+    "subregion": "Eastern Asia",
+    "flagColors": ["red", "blue", "white"],
+    "flagSymbols": ["sun"],
+    "events": [],
+    "groups": [],
+    "geoTags": [],
+    "wikipediaMonthlyViews": 308644,
+    "popularityIndex": 0.7764434926754245
   },
   {
     "code": "TZA",
@@ -3315,7 +4935,16 @@
     "borders": ["BDI", "COD", "KEN", "MWI", "MOZ", "RWA", "UGA", "ZMB"],
     "areaKm2": 945087,
     "population": 68153004,
-    "officialLanguages": ["en", "sw"]
+    "officialLanguages": ["en", "sw"],
+    "latitude": -6,
+    "subregion": "Eastern Africa",
+    "flagColors": ["blue", "green", "yellow", "black"],
+    "flagSymbols": ["triangle"],
+    "events": [],
+    "groups": [],
+    "geoTags": [],
+    "wikipediaMonthlyViews": 131275,
+    "popularityIndex": 0.6159730471363213
   },
   {
     "code": "UGA",
@@ -3333,7 +4962,16 @@
     "borders": ["COD", "KEN", "RWA", "SSD", "TZA"],
     "areaKm2": 241550,
     "population": 45905417,
-    "officialLanguages": ["en", "sw"]
+    "officialLanguages": ["en", "sw"],
+    "latitude": 1,
+    "subregion": "Eastern Africa",
+    "flagColors": ["red", "yellow", "white", "black"],
+    "flagSymbols": ["circle"],
+    "events": [],
+    "groups": [],
+    "geoTags": [],
+    "wikipediaMonthlyViews": 116402,
+    "popularityIndex": 0.59340216941676
   },
   {
     "code": "UKR",
@@ -3351,7 +4989,16 @@
     "borders": ["BLR", "HUN", "MDA", "POL", "ROU", "RUS", "SVK"],
     "areaKm2": 603500,
     "population": 32862000,
-    "officialLanguages": ["uk"]
+    "officialLanguages": ["uk"],
+    "latitude": 49,
+    "subregion": "Eastern Europe",
+    "flagColors": ["blue", "yellow"],
+    "flagSymbols": [],
+    "events": [],
+    "groups": [],
+    "geoTags": [],
+    "wikipediaMonthlyViews": 231151,
+    "popularityIndex": 0.7221738650435843
   },
   {
     "code": "URY",
@@ -3369,7 +5016,16 @@
     "borders": ["ARG", "BRA"],
     "areaKm2": 181034,
     "population": 3499451,
-    "officialLanguages": ["es"]
+    "officialLanguages": ["es"],
+    "latitude": -33,
+    "subregion": "South America",
+    "flagColors": ["blue", "yellow", "white"],
+    "flagSymbols": ["sun"],
+    "events": ["fifa_wc_host"],
+    "groups": [],
+    "geoTags": [],
+    "wikipediaMonthlyViews": 92027,
+    "popularityIndex": 0.5492968584503098
   },
   {
     "code": "USA",
@@ -3393,7 +5049,16 @@
     "borders": ["CAN", "MEX"],
     "areaKm2": 9372610,
     "population": 340110988,
-    "officialLanguages": ["en"]
+    "officialLanguages": ["en"],
+    "latitude": 38,
+    "subregion": "North America",
+    "flagColors": ["red", "blue", "white"],
+    "flagSymbols": ["star"],
+    "events": ["fifa_wc_host", "summer_olympics_host"],
+    "groups": ["g20"],
+    "geoTags": [],
+    "wikipediaMonthlyViews": 1015533,
+    "popularityIndex": 1
   },
   {
     "code": "UZB",
@@ -3411,7 +5076,16 @@
     "borders": ["AFG", "KAZ", "KGZ", "TJK", "TKM"],
     "areaKm2": 447400,
     "population": 37859698,
-    "officialLanguages": ["ru", "uz"]
+    "officialLanguages": ["ru", "uz"],
+    "latitude": 41,
+    "subregion": "Central Asia",
+    "flagColors": ["red", "green", "white"],
+    "flagSymbols": ["star", "crescent"],
+    "events": [],
+    "groups": [],
+    "geoTags": [],
+    "wikipediaMonthlyViews": 146849,
+    "popularityIndex": 0.6370170793540506
   },
   {
     "code": "VAT",
@@ -3429,7 +5103,16 @@
     "borders": ["ITA"],
     "areaKm2": 0.44,
     "population": 882,
-    "officialLanguages": ["it", "la"]
+    "officialLanguages": ["it", "la"],
+    "latitude": 41.9,
+    "subregion": "Southern Europe",
+    "flagColors": ["yellow", "white"],
+    "flagSymbols": [],
+    "events": [],
+    "groups": [],
+    "geoTags": [],
+    "wikipediaMonthlyViews": 189574,
+    "popularityIndex": 0.6849529274658303
   },
   {
     "code": "VCT",
@@ -3447,7 +5130,16 @@
     "borders": [],
     "areaKm2": 389,
     "population": 110872,
-    "officialLanguages": ["en"]
+    "officialLanguages": ["en"],
+    "latitude": 13.25,
+    "subregion": "Caribbean",
+    "flagColors": ["blue", "green", "yellow"],
+    "flagSymbols": [],
+    "events": [],
+    "groups": [],
+    "geoTags": [],
+    "wikipediaMonthlyViews": 45704,
+    "popularityIndex": 0.41792076513849286
   },
   {
     "code": "VEN",
@@ -3465,7 +5157,16 @@
     "borders": ["BRA", "COL", "GUY"],
     "areaKm2": 916445,
     "population": 28517000,
-    "officialLanguages": ["es"]
+    "officialLanguages": ["es"],
+    "latitude": 8,
+    "subregion": "South America",
+    "flagColors": ["red", "blue", "yellow", "white"],
+    "flagSymbols": ["star"],
+    "events": [],
+    "groups": [],
+    "geoTags": [],
+    "wikipediaMonthlyViews": 458285,
+    "popularityIndex": 0.8506449698885116
   },
   {
     "code": "VNM",
@@ -3483,7 +5184,16 @@
     "borders": ["KHM", "CHN", "LAO"],
     "areaKm2": 331212,
     "population": 101343800,
-    "officialLanguages": ["vi"]
+    "officialLanguages": ["vi"],
+    "latitude": 16.16666666,
+    "subregion": "South-Eastern Asia",
+    "flagColors": ["red", "yellow"],
+    "flagSymbols": ["star"],
+    "events": [],
+    "groups": [],
+    "geoTags": [],
+    "wikipediaMonthlyViews": 231299,
+    "popularityIndex": 0.7222940111373627
   },
   {
     "code": "VUT",
@@ -3501,7 +5211,16 @@
     "borders": [],
     "areaKm2": 12189,
     "population": 321409,
-    "officialLanguages": ["bi", "en", "fr"]
+    "officialLanguages": ["bi", "en", "fr"],
+    "latitude": -16,
+    "subregion": "Melanesia",
+    "flagColors": ["red", "green", "yellow", "black"],
+    "flagSymbols": ["triangle"],
+    "events": [],
+    "groups": [],
+    "geoTags": [],
+    "wikipediaMonthlyViews": 70171,
+    "popularityIndex": 0.4984004257371845
   },
   {
     "code": "WSM",
@@ -3519,7 +5238,16 @@
     "borders": [],
     "areaKm2": 2842,
     "population": 205557,
-    "officialLanguages": ["en", "sm"]
+    "officialLanguages": ["en", "sm"],
+    "latitude": -13.58333333,
+    "subregion": "Polynesia",
+    "flagColors": ["red", "blue", "white"],
+    "flagSymbols": ["star", "cross"],
+    "events": [],
+    "groups": [],
+    "geoTags": [],
+    "wikipediaMonthlyViews": 80384,
+    "popularityIndex": 0.5239061905690614
   },
   {
     "code": "XKX",
@@ -3537,7 +5265,16 @@
     "borders": ["ALB", "MKD", "MNE", "SRB"],
     "areaKm2": 10887,
     "population": 1585566,
-    "officialLanguages": ["sq", "sr"]
+    "officialLanguages": ["sq", "sr"],
+    "latitude": 42.6,
+    "subregion": "Southeast Europe",
+    "flagColors": ["blue", "yellow", "white"],
+    "flagSymbols": ["other"],
+    "events": [],
+    "groups": [],
+    "geoTags": [],
+    "wikipediaMonthlyViews": 169136,
+    "popularityIndex": 0.6635398921324701
   },
   {
     "code": "YEM",
@@ -3555,7 +5292,16 @@
     "borders": ["OMN", "SAU"],
     "areaKm2": 527968,
     "population": 32684503,
-    "officialLanguages": ["ar"]
+    "officialLanguages": ["ar"],
+    "latitude": 15,
+    "subregion": "Western Asia",
+    "flagColors": ["red", "white", "black"],
+    "flagSymbols": [],
+    "events": [],
+    "groups": [],
+    "geoTags": ["middle_east"],
+    "wikipediaMonthlyViews": 149496,
+    "popularityIndex": 0.6403704425725114
   },
   {
     "code": "ZAF",
@@ -3585,7 +5331,16 @@
       "ve",
       "xh",
       "zu"
-    ]
+    ],
+    "latitude": -29,
+    "subregion": "Southern Africa",
+    "flagColors": ["red", "blue", "green", "yellow", "white", "black"],
+    "flagSymbols": ["triangle"],
+    "events": ["fifa_wc_host"],
+    "groups": ["g20"],
+    "geoTags": [],
+    "wikipediaMonthlyViews": 246125,
+    "popularityIndex": 0.7339559865538757
   },
   {
     "code": "ZMB",
@@ -3603,7 +5358,16 @@
     "borders": ["AGO", "BWA", "COD", "MWI", "MOZ", "NAM", "TZA", "ZWE"],
     "areaKm2": 752612,
     "population": 19693423,
-    "officialLanguages": ["en"]
+    "officialLanguages": ["en"],
+    "latitude": -15,
+    "subregion": "Eastern Africa",
+    "flagColors": ["red", "green", "black", "orange"],
+    "flagSymbols": ["animal"],
+    "events": [],
+    "groups": [],
+    "geoTags": [],
+    "wikipediaMonthlyViews": 65407,
+    "popularityIndex": 0.4852034603659987
   },
   {
     "code": "ZWE",
@@ -3637,6 +5401,15 @@
       "ve",
       "xh",
       "zib"
-    ]
+    ],
+    "latitude": -20,
+    "subregion": "Eastern Africa",
+    "flagColors": ["red", "green", "yellow", "white", "black"],
+    "flagSymbols": ["star", "triangle"],
+    "events": [],
+    "groups": [],
+    "geoTags": [],
+    "wikipediaMonthlyViews": 122255,
+    "popularityIndex": 0.6026109929212247
   }
 ]

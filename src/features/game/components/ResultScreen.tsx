@@ -1,5 +1,9 @@
 import { Button } from "@/components/ui/button";
-import { MAX_SCORE, SHARE_EMOJIS } from "@/features/game/logic/constants";
+import {
+  MAX_SCORE,
+  SHARE_EMOJIS,
+  STARTING_LIVES,
+} from "@/features/game/logic/constants";
 import { computeScore } from "@/features/game/logic/rarity";
 import {
   copyShareToClipboard,
@@ -8,12 +12,17 @@ import {
 import type { CellKey, GameState } from "@/features/game/types";
 import { useT } from "@/i18n/LocaleContext";
 import { cn } from "@/lib/utils";
+import { useMutation } from "convex/react";
 import { Copy } from "lucide-react";
 import { useState } from "react";
+import { api } from "../../../../convex/_generated/api";
 import { AchievementCard } from "./AchievementCard";
 
 const ROWS = [0, 1, 2] as const;
 const COLS = [0, 1, 2] as const;
+const FEEDBACK_STORAGE_PREFIX = "geodoku:rated:";
+
+type DifficultyRating = "too_easy" | "balanced" | "too_hard";
 
 type Props = {
   state: GameState;
@@ -23,8 +32,16 @@ type Props = {
 export function ResultScreen({ state, gridNumber }: Props) {
   const [copied, setCopied] = useState(false);
   const t = useT();
+  const [hasRated, setHasRated] = useState(() => {
+    if (!state.date) return false;
+    return (
+      localStorage.getItem(`${FEEDBACK_STORAGE_PREFIX}${state.date}`) === "1"
+    );
+  });
+  const [ratingPending, setRatingPending] = useState(false);
   const score = computeScore(state);
   const isWon = state.status === "won";
+  const submitGridFeedback = useMutation(api.grids.submitGridFeedback);
 
   async function handleShare() {
     const text = formatShareString(state, gridNumber);
@@ -32,6 +49,31 @@ export function ResultScreen({ state, gridNumber }: Props) {
     if (ok) {
       setCopied(true);
       setTimeout(() => setCopied(false), 2000);
+    }
+  }
+
+  async function handleRateDifficulty(rating: DifficultyRating) {
+    if (hasRated || ratingPending) return;
+
+    const filledCells = Object.values(state.cells).filter(
+      (cell) => cell.status === "filled",
+    ).length;
+    const failedGuesses = STARTING_LIVES - state.remainingLives;
+
+    setRatingPending(true);
+    try {
+      await submitGridFeedback({
+        date: state.date,
+        rating,
+        won: state.status === "won",
+        livesLeft: state.remainingLives,
+        filledCells,
+        guessesSubmitted: filledCells + failedGuesses,
+      });
+      localStorage.setItem(`${FEEDBACK_STORAGE_PREFIX}${state.date}`, "1");
+      setHasRated(true);
+    } finally {
+      setRatingPending(false);
     }
   }
 
@@ -97,6 +139,48 @@ export function ResultScreen({ state, gridNumber }: Props) {
 
         {/* Achievement */}
         <AchievementCard state={state} />
+
+        {/* Feedback */}
+        <div className="flex flex-col gap-2">
+          <p className="text-[10px] tracking-widest text-on-surface-variant uppercase text-center">
+            Comment as-tu trouvé la grille ?
+          </p>
+          {hasRated ? (
+            <p className="text-center text-xs text-on-surface-variant">
+              Merci pour ton retour.
+            </p>
+          ) : (
+            <div className="grid grid-cols-1 gap-2 sm:grid-cols-3">
+              <Button
+                type="button"
+                variant="secondary"
+                disabled={ratingPending}
+                className="bg-surface-highest text-on-surface hover:bg-surface-highest/80"
+                onClick={() => handleRateDifficulty("too_easy")}
+              >
+                Trop facile
+              </Button>
+              <Button
+                type="button"
+                variant="secondary"
+                disabled={ratingPending}
+                className="bg-surface-highest text-on-surface hover:bg-surface-highest/80"
+                onClick={() => handleRateDifficulty("balanced")}
+              >
+                Bien/modérée
+              </Button>
+              <Button
+                type="button"
+                variant="secondary"
+                disabled={ratingPending}
+                className="bg-surface-highest text-on-surface hover:bg-surface-highest/80"
+                onClick={() => handleRateDifficulty("too_hard")}
+              >
+                Trop difficile
+              </Button>
+            </div>
+          )}
+        </div>
 
         {/* Share button */}
         <Button

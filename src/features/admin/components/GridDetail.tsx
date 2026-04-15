@@ -6,11 +6,14 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import { useMutation } from "convex/react";
+import { useMutation, useQuery } from "convex/react";
 import { ConvexError } from "convex/values";
 import { useState } from "react";
 import { api } from "../../../../convex/_generated/api";
+import { CellMetricsMap } from "./CellMetricsMap";
 import { GridPreview } from "./GridPreview";
+
+const FINAL_SCORE_QUALITY_WEIGHT = 0.6;
 
 type ScheduledGrid = {
   date: string;
@@ -51,6 +54,10 @@ export function GridDetail({
   onUnscheduled,
 }: Props) {
   const unschedule = useMutation(api.grids.unscheduleGrid);
+  const detail = useQuery(
+    api.grids.getGridDetailByDate,
+    grid ? { date: grid.date } : "skip",
+  );
   const [confirmOpen, setConfirmOpen] = useState(false);
   const [loading, setLoading] = useState(false);
 
@@ -75,7 +82,7 @@ export function GridDetail({
 
   if (!selectedDate) {
     return (
-      <div className="bg-surface-lowest rounded-xl p-6 shadow-editorial flex h-full min-h-[300px] flex-col items-center justify-center gap-2">
+      <div className="flex h-full min-h-[320px] flex-col items-center justify-center gap-2 rounded-xl bg-surface-lowest p-6 shadow-editorial">
         <p className="text-sm text-on-surface-variant text-center">
           Cliquez sur un jour du calendrier pour voir la grille planifiée.
         </p>
@@ -85,7 +92,7 @@ export function GridDetail({
 
   if (!grid) {
     return (
-      <div className="bg-surface-lowest rounded-xl p-6 shadow-editorial flex h-full min-h-[300px] flex-col items-center justify-center gap-2">
+      <div className="flex h-full min-h-[320px] flex-col items-center justify-center gap-2 rounded-xl bg-surface-lowest p-6 shadow-editorial">
         <p className="text-sm text-on-surface-variant text-center">
           Aucune grille planifiée pour cette date.
         </p>
@@ -93,23 +100,35 @@ export function GridDetail({
     );
   }
 
+  const qualityScore = detail?.qualityScore ?? null;
+  const contextScore = detail?.contextScore ?? null;
+  const finalScore =
+    qualityScore != null && contextScore != null
+      ? Math.round(
+          FINAL_SCORE_QUALITY_WEIGHT * qualityScore +
+            (1 - FINAL_SCORE_QUALITY_WEIGHT) * contextScore,
+        )
+      : null;
+
   return (
     <>
-      <div className="bg-surface-lowest rounded-xl shadow-editorial overflow-hidden h-full">
-        <div className="px-4 pt-4 pb-3 flex items-start justify-between gap-2">
-          <div>
-            <p className="text-[10px] font-semibold text-on-surface-variant tracking-widest uppercase mb-1">
+      <div className="h-full overflow-hidden rounded-xl bg-surface-lowest shadow-editorial">
+        <div className="flex items-start justify-between gap-3 px-4 pb-3 pt-4">
+          <div className="space-y-1">
+            <p className="text-[10px] font-semibold tracking-widest text-on-surface-variant uppercase">
               Grille du
             </p>
-            <h2 className="font-serif text-lg font-medium text-on-surface capitalize">
+            <h2 className="font-serif text-xl font-medium text-on-surface capitalize">
               {formatDateFr(grid.date)}
             </h2>
-            <p className="text-sm text-on-surface-variant mt-0.5">
-              {difficultyLabel(grid.difficulty)}
-              <span className="ml-2 text-xs opacity-60">
+            <div className="flex flex-wrap items-center gap-2">
+              <span className="rounded-full bg-surface-highest px-2.5 py-1 text-xs font-semibold text-on-surface">
+                {difficultyLabel(grid.difficulty)}
+              </span>
+              <span className="text-xs text-on-surface-variant">
                 difficulté {grid.difficulty}/100
               </span>
-            </p>
+            </div>
           </div>
           {/* Déprogrammer uniquement pour les dates futures */}
           {grid.date > new Date().toISOString().slice(0, 10) && (
@@ -117,13 +136,60 @@ export function GridDetail({
               size="sm"
               variant="ghost"
               onClick={() => setConfirmOpen(true)}
-              className="text-red-700 hover:bg-red-500/10 hover:text-red-800 shrink-0 mt-1"
+              className="mt-1 shrink-0 text-on-surface-variant hover:bg-surface-highest hover:text-on-surface"
             >
               Déprogrammer
             </Button>
           )}
         </div>
-        <div className="px-4 pb-4">
+        {detail?.metadata && (
+          <div className="flex flex-wrap items-end gap-x-6 gap-y-2 px-4 pb-3">
+            {finalScore != null && (
+              <div>
+                <p className="font-serif text-3xl font-medium text-brand leading-none">
+                  {finalScore}
+                </p>
+                <p className="mt-1 text-[10px] tracking-widest text-on-surface-variant uppercase">
+                  Final score
+                </p>
+              </div>
+            )}
+            {qualityScore != null && (
+              <div>
+                <p className="font-serif text-xl font-medium text-on-surface leading-none">
+                  {qualityScore}
+                </p>
+                <p className="mt-1 text-[10px] tracking-widest text-on-surface-variant uppercase">
+                  Quality
+                </p>
+              </div>
+            )}
+            <div>
+              <p className="font-serif text-xl font-medium text-on-surface leading-none">
+                {contextScore ?? "—"}
+              </p>
+              <p className="mt-1 text-[10px] tracking-widest text-on-surface-variant uppercase">
+                Context
+              </p>
+            </div>
+            <p className="text-xs text-on-surface-variant">
+              <span className="font-semibold text-on-surface">
+                {detail.metadata.obviousCellCount}/9
+              </span>{" "}
+              évidentes
+              {detail.metadata.cellsWithNoObvious > 0 && (
+                <>
+                  {" · "}
+                  <span className="font-semibold text-rarity-ultra">
+                    {detail.metadata.cellsWithNoObvious} trou
+                    {detail.metadata.cellsWithNoObvious > 1 ? "s" : ""}
+                  </span>
+                </>
+              )}
+            </p>
+          </div>
+        )}
+        <div className="grid grid-cols-1 gap-4 px-4 pb-4 lg:grid-cols-[2fr_1fr]">
           <div className="mx-auto w-full max-w-[860px]">
             <GridPreview
               rows={grid.rows}
@@ -132,6 +198,9 @@ export function GridDetail({
               mode="compact"
             />
           </div>
+          {detail?.metadata && (
+            <CellMetricsMap cellMetrics={detail.metadata.cellMetrics} />
+          )}
         </div>
       </div>
 
