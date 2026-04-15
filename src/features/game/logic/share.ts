@@ -2,6 +2,11 @@ import type { CellKey, GameState } from "../types";
 import { SHARE_EMOJIS, STARTING_LIVES } from "./constants";
 import { computeScore } from "./rarity";
 
+/**
+ * Chaîne copiée « partage » : format volontairement international, sans texte
+ * localisable. Uniquement le nom de marque (Geodoku, sans accent), chiffres,
+ * URL et emojis — pas d’i18n ici.
+ */
 export function formatShareString(
   state: GameState,
   gridNumber: number,

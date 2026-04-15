@@ -1,5 +1,6 @@
 import { CONSTRAINTS } from "@/features/game/logic/constraints";
 import type { CellKey, CellPosition, GameState } from "@/features/game/types";
+import { useT } from "@/i18n/LocaleContext";
 import { cn } from "@/lib/utils";
 import { CellComponent } from "./Cell";
 
@@ -17,6 +18,7 @@ const headerClass =
   "flex items-center justify-center text-center text-[10px] font-medium text-on-surface-variant bg-surface-low rounded-xl p-2 leading-tight min-h-[52px]";
 
 export function GameGrid({ state, onCellClick }: Props) {
+  const t = useT();
   const isPlaying = state.status === "playing";
 
   return (
@@ -29,8 +31,8 @@ export function GameGrid({ state, onCellClick }: Props) {
 
       {/* Column headers */}
       {COLS.map((col) => {
-        const label =
-          CONSTRAINT_MAP.get(state.cols[col])?.label ?? state.cols[col];
+        const constraint = CONSTRAINT_MAP.get(state.cols[col]);
+        const label = constraint ? t(constraint.labelKey) : state.cols[col];
         return (
           <div key={`col-${col}`} className={cn(headerClass, "p-1.5")}>
             {label}
@@ -40,8 +42,10 @@ export function GameGrid({ state, onCellClick }: Props) {
 
       {/* Rows */}
       {ROWS.map((row) => {
-        const rowLabel =
-          CONSTRAINT_MAP.get(state.rows[row])?.label ?? state.rows[row];
+        const rowConstraint = CONSTRAINT_MAP.get(state.rows[row]);
+        const rowLabel = rowConstraint
+          ? t(rowConstraint.labelKey)
+          : state.rows[row];
         return [
           /* Row header */
           <div key={`row-${row}`} className={cn(headerClass, "p-1.5")}>

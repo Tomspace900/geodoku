@@ -14,16 +14,19 @@ import {
 import { searchCountries } from "@/features/countries/lib/search";
 import { CONSTRAINTS } from "@/features/game/logic/constraints";
 import type { CellPosition, GameState } from "@/features/game/types";
+import { useLocale, useT } from "@/i18n/LocaleContext";
+import type { TKey } from "@/i18n/types";
 import { useEffect, useRef, useState } from "react";
 
 const CONSTRAINT_MAP = new Map(CONSTRAINTS.map((c) => [c.id, c]));
 
-const ERROR_LABELS: Record<string, string> = {
-  wrong_row: "Ce pays ne correspond pas aux deux contraintes.",
-  wrong_col: "Ce pays ne correspond pas aux deux contraintes.",
-  wrong_constraints: "Ce pays ne correspond pas aux deux contraintes.",
-  already_used: "Ce pays a déjà été utilisé dans une autre cellule.",
-  invalid_country: "Pays invalide.",
+// Maps error reason to i18n key
+const ERROR_KEY_MAP: Record<string, TKey> = {
+  wrong_row: "error.wrong_row",
+  wrong_col: "error.wrong_col",
+  wrong_constraints: "error.wrong_constraints",
+  already_used: "error.already_used",
+  invalid_country: "error.invalid_country",
 };
 
 type SubmitResult =
@@ -46,6 +49,8 @@ export function GuessModal({ cell, state, onClose, onSubmit }: Props) {
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
   const [submitting, setSubmitting] = useState(false);
   const errorTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const { locale } = useLocale();
+  const t = useT();
 
   useEffect(() => {
     return () => {
@@ -60,7 +65,8 @@ export function GuessModal({ cell, state, onClose, onSubmit }: Props) {
 
   function showError(reason: string) {
     if (errorTimerRef.current) clearTimeout(errorTimerRef.current);
-    setErrorMsg(ERROR_LABELS[reason] ?? "Erreur inconnue.");
+    const key = ERROR_KEY_MAP[reason] ?? "error.unknown";
+    setErrorMsg(t(key));
     errorTimerRef.current = setTimeout(() => setErrorMsg(null), 1200);
   }
 
@@ -77,14 +83,18 @@ export function GuessModal({ cell, state, onClose, onSubmit }: Props) {
     }
   }
 
-  const rowLabel =
-    CONSTRAINT_MAP.get(state.rows[cell.row])?.label ?? state.rows[cell.row];
-  const colLabel =
-    CONSTRAINT_MAP.get(state.cols[cell.col])?.label ?? state.cols[cell.col];
+  const rowConstraint = CONSTRAINT_MAP.get(state.rows[cell.row]);
+  const colConstraint = CONSTRAINT_MAP.get(state.cols[cell.col]);
+  const rowLabel = rowConstraint
+    ? t(rowConstraint.labelKey)
+    : state.rows[cell.row];
+  const colLabel = colConstraint
+    ? t(colConstraint.labelKey)
+    : state.cols[cell.col];
 
   const results =
     query.length >= 3
-      ? searchCountries(query, 12).filter(
+      ? searchCountries(query, locale, 12).filter(
           (c) => !state.usedCountries.has(c.code),
         )
       : [];
@@ -102,7 +112,7 @@ export function GuessModal({ cell, state, onClose, onSubmit }: Props) {
             {rowLabel} × {colLabel}
           </DrawerTitle>
           <p className="text-[10px] tracking-widest text-on-surface-variant uppercase mt-1">
-            Trouvez le pays correspondant
+            {t("ui.findMatchingCountry")}
           </p>
         </DrawerHeader>
 
@@ -115,7 +125,7 @@ export function GuessModal({ cell, state, onClose, onSubmit }: Props) {
         <Command shouldFilter={false} className="border-none shadow-none">
           <div className="px-4 pb-2">
             <CommandInput
-              placeholder="Chercher un pays…"
+              placeholder={t("ui.searchPlaceholder")}
               value={query}
               onValueChange={setQuery}
               autoFocus
@@ -125,11 +135,11 @@ export function GuessModal({ cell, state, onClose, onSubmit }: Props) {
           <CommandList className="max-h-[50vh] overflow-y-auto px-2 pb-4">
             {query.length < 3 ? (
               <p className="text-center text-sm text-on-surface-variant py-6">
-                Saisissez au moins 3 caractères
+                {t("ui.typeAtLeast")}
               </p>
             ) : results.length === 0 ? (
               <CommandEmpty className="text-center text-sm text-on-surface-variant py-6">
-                Aucun pays trouvé.
+                {t("ui.noResults")}
               </CommandEmpty>
             ) : (
               results.map((country) => (
@@ -144,7 +154,7 @@ export function GuessModal({ cell, state, onClose, onSubmit }: Props) {
                     {country.flagEmoji}
                   </span>
                   <span className="text-sm font-medium">
-                    {country.nameCanonical}
+                    {country.names[locale]}
                   </span>
                 </CommandItem>
               ))

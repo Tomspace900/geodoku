@@ -3,10 +3,60 @@
     "AUS": { "waterAccess": "coastal" },
     "LKA": { "waterAccess": "island", "borders": [] }
   },
+  "aliasOverrides": {
+    "USA": {
+      "en": ["USA", "US", "America", "United States of America"],
+      "fr": ["États-Unis", "USA", "US", "Amérique", "États-Unis d'Amérique"]
+    },
+    "GBR": {
+      "en": ["UK", "Great Britain", "England"],
+      "fr": ["UK", "Grande-Bretagne", "Angleterre"]
+    },
+    "PRK": { "en": ["North Korea"], "fr": ["Corée du Nord"] },
+    "KOR": { "en": ["South Korea"], "fr": ["Corée du Sud"] },
+    "COD": {
+      "en": ["DRC", "Congo", "Congo-Kinshasa"],
+      "fr": ["RDC", "Congo", "Congo-Kinshasa"]
+    },
+    "COG": {
+      "en": ["Republic of the Congo", "Congo-Brazzaville"],
+      "fr": ["Congo-Brazzaville", "République du Congo"]
+    },
+    "CZE": {
+      "en": ["Czech Republic", "Czechia"],
+      "fr": ["République tchèque", "Tchéquie"]
+    },
+    "SWZ": { "en": ["Swaziland", "Eswatini"], "fr": ["Swaziland", "Eswatini"] },
+    "MKD": {
+      "en": ["North Macedonia", "Macedonia"],
+      "fr": ["Macédoine du Nord", "Macédoine"]
+    },
+    "PSE": {
+      "en": ["Palestine", "Palestinian Territories"],
+      "fr": ["Palestine", "Territoires palestiniens"]
+    },
+    "TWN": { "en": ["Taiwan", "Formosa"], "fr": ["Taïwan", "Formose"] },
+    "XKX": { "en": ["Kosovo"], "fr": ["Kosovo"] },
+    "VAT": {
+      "en": ["Vatican City", "Holy See"],
+      "fr": ["Vatican", "Saint-Siège"]
+    },
+    "CPV": { "en": ["Cape Verde", "Cabo Verde"], "fr": ["Cap-Vert"] },
+    "TLS": {
+      "en": ["East Timor", "Timor-Leste"],
+      "fr": ["Timor oriental", "Timor-Leste"]
+    },
+    "MYS": { "en": ["Malaysia"], "fr": ["Malaisie"] },
+    "IRN": { "en": ["Iran", "Persia"], "fr": ["Iran", "Perse"] }
+  },
   "additions": [
     {
       "code": "XKX",
-      "nameCanonical": "Kosovo",
+      "names": { "fr": "Kosovo", "en": "Kosovo" },
+      "aliases": {
+        "fr": ["XKX", "XK", "Kosovo"],
+        "en": ["XKX", "XK", "Kosovo"]
+      },
       "flagEmoji": "🇽🇰",
       "continent": "europe",
       "waterAccess": "landlocked",

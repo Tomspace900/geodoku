@@ -1,7 +1,14 @@
 [
   {
     "code": "AFG",
-    "nameCanonical": "Afghanistan",
+    "names": {
+      "fr": "Afghanistan",
+      "en": "Afghanistan"
+    },
+    "aliases": {
+      "fr": ["Afghanistan", "AF", "AFG"],
+      "en": ["Afghanistan", "AF", "AFG"]
+    },
     "flagEmoji": "🇦🇫",
     "continent": "asia",
     "waterAccess": "landlocked",
@@ -12,7 +19,14 @@
   },
   {
     "code": "AGO",
-    "nameCanonical": "Angola",
+    "names": {
+      "fr": "Angola",
+      "en": "Angola"
+    },
+    "aliases": {
+      "fr": ["Angola", "AO", "AGO"],
+      "en": ["Angola", "AO", "AGO"]
+    },
     "flagEmoji": "🇦🇴",
     "continent": "africa",
     "waterAccess": "coastal",
@@ -23,7 +37,14 @@
   },
   {
     "code": "ALB",
-    "nameCanonical": "Albania",
+    "names": {
+      "fr": "Albanie",
+      "en": "Albania"
+    },
+    "aliases": {
+      "fr": ["Albanie", "AL", "ALB"],
+      "en": ["Albania", "AL", "ALB"]
+    },
     "flagEmoji": "🇦🇱",
     "continent": "europe",
     "waterAccess": "coastal",
@@ -34,7 +55,14 @@
   },
   {
     "code": "AND",
-    "nameCanonical": "Andorra",
+    "names": {
+      "fr": "Andorre",
+      "en": "Andorra"
+    },
+    "aliases": {
+      "fr": ["Andorre", "AD", "AND"],
+      "en": ["Andorra", "AD", "AND"]
+    },
     "flagEmoji": "🇦🇩",
     "continent": "europe",
     "waterAccess": "landlocked",
@@ -45,7 +73,14 @@
   },
   {
     "code": "ARE",
-    "nameCanonical": "United Arab Emirates",
+    "names": {
+      "fr": "Émirats arabes unis",
+      "en": "United Arab Emirates"
+    },
+    "aliases": {
+      "fr": ["Émirats arabes unis", "AE", "ARE"],
+      "en": ["United Arab Emirates", "AE", "ARE"]
+    },
     "flagEmoji": "🇦🇪",
     "continent": "asia",
     "waterAccess": "coastal",
@@ -56,7 +91,14 @@
   },
   {
     "code": "ARG",
-    "nameCanonical": "Argentina",
+    "names": {
+      "fr": "Argentine",
+      "en": "Argentina"
+    },
+    "aliases": {
+      "fr": ["Argentine", "AR", "ARG"],
+      "en": ["Argentina", "AR", "ARG"]
+    },
     "flagEmoji": "🇦🇷",
     "continent": "south_america",
     "waterAccess": "coastal",
@@ -67,7 +109,14 @@
   },
   {
     "code": "ARM",
-    "nameCanonical": "Armenia",
+    "names": {
+      "fr": "Arménie",
+      "en": "Armenia"
+    },
+    "aliases": {
+      "fr": ["Arménie", "AM", "ARM"],
+      "en": ["Armenia", "AM", "ARM"]
+    },
     "flagEmoji": "🇦🇲",
     "continent": "asia",
     "waterAccess": "landlocked",
@@ -78,7 +127,14 @@
   },
   {
     "code": "ATG",
-    "nameCanonical": "Antigua and Barbuda",
+    "names": {
+      "fr": "Antigua-et-Barbuda",
+      "en": "Antigua and Barbuda"
+    },
+    "aliases": {
+      "fr": ["Antigua-et-Barbuda", "AG", "ATG"],
+      "en": ["Antigua and Barbuda", "AG", "ATG"]
+    },
     "flagEmoji": "🇦🇬",
     "continent": "north_america",
     "waterAccess": "island",
@@ -89,7 +145,14 @@
   },
   {
     "code": "AUS",
-    "nameCanonical": "Australia",
+    "names": {
+      "fr": "Australie",
+      "en": "Australia"
+    },
+    "aliases": {
+      "fr": ["Australie", "AU", "AUS"],
+      "en": ["Australia", "AU", "AUS"]
+    },
     "flagEmoji": "🇦🇺",
     "continent": "oceania",
     "waterAccess": "coastal",
@@ -100,7 +163,14 @@
   },
   {
     "code": "AUT",
-    "nameCanonical": "Austria",
+    "names": {
+      "fr": "Autriche",
+      "en": "Austria"
+    },
+    "aliases": {
+      "fr": ["Autriche", "AT", "AUT"],
+      "en": ["Austria", "AT", "AUT"]
+    },
     "flagEmoji": "🇦🇹",
     "continent": "europe",
     "waterAccess": "landlocked",
@@ -111,7 +181,14 @@
   },
   {
     "code": "AZE",
-    "nameCanonical": "Azerbaijan",
+    "names": {
+      "fr": "Azerbaïdjan",
+      "en": "Azerbaijan"
+    },
+    "aliases": {
+      "fr": ["Azerbaïdjan", "AZ", "AZE"],
+      "en": ["Azerbaijan", "AZ", "AZE"]
+    },
     "flagEmoji": "🇦🇿",
     "continent": "asia",
     "waterAccess": "landlocked",
@@ -122,7 +199,14 @@
   },
   {
     "code": "BDI",
-    "nameCanonical": "Burundi",
+    "names": {
+      "fr": "Burundi",
+      "en": "Burundi"
+    },
+    "aliases": {
+      "fr": ["Burundi", "BI", "BDI"],
+      "en": ["Burundi", "BI", "BDI"]
+    },
     "flagEmoji": "🇧🇮",
     "continent": "africa",
     "waterAccess": "landlocked",
@@ -133,7 +217,14 @@
   },
   {
     "code": "BEL",
-    "nameCanonical": "Belgium",
+    "names": {
+      "fr": "Belgique",
+      "en": "Belgium"
+    },
+    "aliases": {
+      "fr": ["Belgique", "BE", "BEL"],
+      "en": ["Belgium", "BE", "BEL"]
+    },
     "flagEmoji": "🇧🇪",
     "continent": "europe",
     "waterAccess": "coastal",
@@ -144,7 +235,14 @@
   },
   {
     "code": "BEN",
-    "nameCanonical": "Benin",
+    "names": {
+      "fr": "Bénin",
+      "en": "Benin"
+    },
+    "aliases": {
+      "fr": ["Bénin", "BJ", "BEN"],
+      "en": ["Benin", "BJ", "BEN"]
+    },
     "flagEmoji": "🇧🇯",
     "continent": "africa",
     "waterAccess": "coastal",
@@ -155,7 +253,14 @@
   },
   {
     "code": "BFA",
-    "nameCanonical": "Burkina Faso",
+    "names": {
+      "fr": "Burkina Faso",
+      "en": "Burkina Faso"
+    },
+    "aliases": {
+      "fr": ["Burkina Faso", "BF", "BFA"],
+      "en": ["Burkina Faso", "BF", "BFA"]
+    },
     "flagEmoji": "🇧🇫",
     "continent": "africa",
     "waterAccess": "landlocked",
@@ -166,7 +271,14 @@
   },
   {
     "code": "BGD",
-    "nameCanonical": "Bangladesh",
+    "names": {
+      "fr": "Bangladesh",
+      "en": "Bangladesh"
+    },
+    "aliases": {
+      "fr": ["Bangladesh", "BD", "BGD"],
+      "en": ["Bangladesh", "BD", "BGD"]
+    },
     "flagEmoji": "🇧🇩",
     "continent": "asia",
     "waterAccess": "coastal",
@@ -177,7 +289,14 @@
   },
   {
     "code": "BGR",
-    "nameCanonical": "Bulgaria",
+    "names": {
+      "fr": "Bulgarie",
+      "en": "Bulgaria"
+    },
+    "aliases": {
+      "fr": ["Bulgarie", "BG", "BGR"],
+      "en": ["Bulgaria", "BG", "BGR"]
+    },
     "flagEmoji": "🇧🇬",
     "continent": "europe",
     "waterAccess": "coastal",
@@ -188,7 +307,14 @@
   },
   {
     "code": "BHR",
-    "nameCanonical": "Bahrain",
+    "names": {
+      "fr": "Bahreïn",
+      "en": "Bahrain"
+    },
+    "aliases": {
+      "fr": ["Bahreïn", "BH", "BHR"],
+      "en": ["Bahrain", "BH", "BHR"]
+    },
     "flagEmoji": "🇧🇭",
     "continent": "asia",
     "waterAccess": "island",
@@ -199,7 +325,14 @@
   },
   {
     "code": "BHS",
-    "nameCanonical": "Bahamas",
+    "names": {
+      "fr": "Bahamas",
+      "en": "Bahamas"
+    },
+    "aliases": {
+      "fr": ["Bahamas", "BS", "BHS"],
+      "en": ["Bahamas", "BS", "BHS"]
+    },
     "flagEmoji": "🇧🇸",
     "continent": "north_america",
     "waterAccess": "island",
@@ -210,7 +343,14 @@
   },
   {
     "code": "BIH",
-    "nameCanonical": "Bosnia and Herzegovina",
+    "names": {
+      "fr": "Bosnie-Herzégovine",
+      "en": "Bosnia and Herzegovina"
+    },
+    "aliases": {
+      "fr": ["Bosnie-Herzégovine", "BA", "BIH"],
+      "en": ["Bosnia and Herzegovina", "BA", "BIH"]
+    },
     "flagEmoji": "🇧🇦",
     "continent": "europe",
     "waterAccess": "coastal",
@@ -221,7 +361,14 @@
   },
   {
     "code": "BLR",
-    "nameCanonical": "Belarus",
+    "names": {
+      "fr": "Biélorussie",
+      "en": "Belarus"
+    },
+    "aliases": {
+      "fr": ["Biélorussie", "BY", "BLR"],
+      "en": ["Belarus", "BY", "BLR"]
+    },
     "flagEmoji": "🇧🇾",
     "continent": "europe",
     "waterAccess": "landlocked",
@@ -232,7 +379,14 @@
   },
   {
     "code": "BLZ",
-    "nameCanonical": "Belize",
+    "names": {
+      "fr": "Belize",
+      "en": "Belize"
+    },
+    "aliases": {
+      "fr": ["Belize", "BZ", "BLZ"],
+      "en": ["Belize", "BZ", "BLZ"]
+    },
     "flagEmoji": "🇧🇿",
     "continent": "north_america",
     "waterAccess": "coastal",
@@ -243,7 +397,14 @@
   },
   {
     "code": "BOL",
-    "nameCanonical": "Bolivia",
+    "names": {
+      "fr": "Bolivie",
+      "en": "Bolivia"
+    },
+    "aliases": {
+      "fr": ["Bolivie", "BO", "BOL"],
+      "en": ["Bolivia", "BO", "BOL"]
+    },
     "flagEmoji": "🇧🇴",
     "continent": "south_america",
     "waterAccess": "landlocked",
@@ -254,7 +415,14 @@
   },
   {
     "code": "BRA",
-    "nameCanonical": "Brazil",
+    "names": {
+      "fr": "Brésil",
+      "en": "Brazil"
+    },
+    "aliases": {
+      "fr": ["Brésil", "BR", "BRA"],
+      "en": ["Brazil", "BR", "BRA"]
+    },
     "flagEmoji": "🇧🇷",
     "continent": "south_america",
     "waterAccess": "coastal",
@@ -276,7 +444,14 @@
   },
   {
     "code": "BRB",
-    "nameCanonical": "Barbados",
+    "names": {
+      "fr": "Barbade",
+      "en": "Barbados"
+    },
+    "aliases": {
+      "fr": ["Barbade", "BB", "BRB"],
+      "en": ["Barbados", "BB", "BRB"]
+    },
     "flagEmoji": "🇧🇧",
     "continent": "north_america",
     "waterAccess": "island",
@@ -287,7 +462,14 @@
   },
   {
     "code": "BRN",
-    "nameCanonical": "Brunei",
+    "names": {
+      "fr": "Brunei",
+      "en": "Brunei"
+    },
+    "aliases": {
+      "fr": ["Brunei", "BN", "BRN"],
+      "en": ["Brunei", "BN", "BRN"]
+    },
     "flagEmoji": "🇧🇳",
     "continent": "asia",
     "waterAccess": "coastal",
@@ -298,7 +480,14 @@
   },
   {
     "code": "BTN",
-    "nameCanonical": "Bhutan",
+    "names": {
+      "fr": "Bhoutan",
+      "en": "Bhutan"
+    },
+    "aliases": {
+      "fr": ["Bhoutan", "BT", "BTN"],
+      "en": ["Bhutan", "BT", "BTN"]
+    },
     "flagEmoji": "🇧🇹",
     "continent": "asia",
     "waterAccess": "landlocked",
@@ -309,7 +498,14 @@
   },
   {
     "code": "BWA",
-    "nameCanonical": "Botswana",
+    "names": {
+      "fr": "Botswana",
+      "en": "Botswana"
+    },
+    "aliases": {
+      "fr": ["Botswana", "BW", "BWA"],
+      "en": ["Botswana", "BW", "BWA"]
+    },
     "flagEmoji": "🇧🇼",
     "continent": "africa",
     "waterAccess": "landlocked",
@@ -320,7 +516,14 @@
   },
   {
     "code": "CAF",
-    "nameCanonical": "Central African Republic",
+    "names": {
+      "fr": "République centrafricaine",
+      "en": "Central African Republic"
+    },
+    "aliases": {
+      "fr": ["République centrafricaine", "CF", "CAF"],
+      "en": ["Central African Republic", "CF", "CAF"]
+    },
     "flagEmoji": "🇨🇫",
     "continent": "africa",
     "waterAccess": "landlocked",
@@ -331,7 +534,14 @@
   },
   {
     "code": "CAN",
-    "nameCanonical": "Canada",
+    "names": {
+      "fr": "Canada",
+      "en": "Canada"
+    },
+    "aliases": {
+      "fr": ["Canada", "CA", "CAN"],
+      "en": ["Canada", "CA", "CAN"]
+    },
     "flagEmoji": "🇨🇦",
     "continent": "north_america",
     "waterAccess": "coastal",
@@ -342,7 +552,14 @@
   },
   {
     "code": "CHE",
-    "nameCanonical": "Switzerland",
+    "names": {
+      "fr": "Suisse",
+      "en": "Switzerland"
+    },
+    "aliases": {
+      "fr": ["Suisse", "CH", "CHE"],
+      "en": ["Switzerland", "CH", "CHE"]
+    },
     "flagEmoji": "🇨🇭",
     "continent": "europe",
     "waterAccess": "landlocked",
@@ -353,7 +570,14 @@
   },
   {
     "code": "CHL",
-    "nameCanonical": "Chile",
+    "names": {
+      "fr": "Chili",
+      "en": "Chile"
+    },
+    "aliases": {
+      "fr": ["Chili", "CL", "CHL"],
+      "en": ["Chile", "CL", "CHL"]
+    },
     "flagEmoji": "🇨🇱",
     "continent": "south_america",
     "waterAccess": "coastal",
@@ -364,7 +588,14 @@
   },
   {
     "code": "CHN",
-    "nameCanonical": "China",
+    "names": {
+      "fr": "Chine",
+      "en": "China"
+    },
+    "aliases": {
+      "fr": ["Chine", "CN", "CHN"],
+      "en": ["China", "CN", "CHN"]
+    },
     "flagEmoji": "🇨🇳",
     "continent": "asia",
     "waterAccess": "coastal",
@@ -392,7 +623,14 @@
   },
   {
     "code": "CIV",
-    "nameCanonical": "Ivory Coast",
+    "names": {
+      "fr": "Côte d'Ivoire",
+      "en": "Ivory Coast"
+    },
+    "aliases": {
+      "fr": ["Côte d'Ivoire", "CI", "CIV"],
+      "en": ["Ivory Coast", "CI", "CIV"]
+    },
     "flagEmoji": "🇨🇮",
     "continent": "africa",
     "waterAccess": "coastal",
@@ -403,7 +641,14 @@
   },
   {
     "code": "CMR",
-    "nameCanonical": "Cameroon",
+    "names": {
+      "fr": "Cameroun",
+      "en": "Cameroon"
+    },
+    "aliases": {
+      "fr": ["Cameroun", "CM", "CMR"],
+      "en": ["Cameroon", "CM", "CMR"]
+    },
     "flagEmoji": "🇨🇲",
     "continent": "africa",
     "waterAccess": "coastal",
@@ -414,7 +659,21 @@
   },
   {
     "code": "COD",
-    "nameCanonical": "DR Congo",
+    "names": {
+      "fr": "Congo (Rép. dém.)",
+      "en": "DR Congo"
+    },
+    "aliases": {
+      "fr": [
+        "Congo (Rép. dém.)",
+        "CD",
+        "COD",
+        "RDC",
+        "Congo",
+        "Congo-Kinshasa"
+      ],
+      "en": ["DR Congo", "CD", "COD", "DRC", "Congo", "Congo-Kinshasa"]
+    },
     "flagEmoji": "🇨🇩",
     "continent": "africa",
     "waterAccess": "coastal",
@@ -425,7 +684,14 @@
   },
   {
     "code": "COG",
-    "nameCanonical": "Republic of the Congo",
+    "names": {
+      "fr": "Congo",
+      "en": "Republic of the Congo"
+    },
+    "aliases": {
+      "fr": ["Congo", "CG", "COG", "Congo-Brazzaville", "République du Congo"],
+      "en": ["Republic of the Congo", "CG", "COG", "Congo-Brazzaville"]
+    },
     "flagEmoji": "🇨🇬",
     "continent": "africa",
     "waterAccess": "coastal",
@@ -436,7 +702,14 @@
   },
   {
     "code": "COL",
-    "nameCanonical": "Colombia",
+    "names": {
+      "fr": "Colombie",
+      "en": "Colombia"
+    },
+    "aliases": {
+      "fr": ["Colombie", "CO", "COL"],
+      "en": ["Colombia", "CO", "COL"]
+    },
     "flagEmoji": "🇨🇴",
     "continent": "south_america",
     "waterAccess": "coastal",
@@ -447,7 +720,14 @@
   },
   {
     "code": "COM",
-    "nameCanonical": "Comoros",
+    "names": {
+      "fr": "Comores",
+      "en": "Comoros"
+    },
+    "aliases": {
+      "fr": ["Comores", "KM", "COM"],
+      "en": ["Comoros", "KM", "COM"]
+    },
     "flagEmoji": "🇰🇲",
     "continent": "africa",
     "waterAccess": "island",
@@ -458,7 +738,14 @@
   },
   {
     "code": "CPV",
-    "nameCanonical": "Cape Verde",
+    "names": {
+      "fr": "Îles du Cap-Vert",
+      "en": "Cape Verde"
+    },
+    "aliases": {
+      "fr": ["Îles du Cap-Vert", "CV", "CPV", "Cap-Vert"],
+      "en": ["Cape Verde", "CV", "CPV", "Cabo Verde"]
+    },
     "flagEmoji": "🇨🇻",
     "continent": "africa",
     "waterAccess": "island",
@@ -469,7 +756,14 @@
   },
   {
     "code": "CRI",
-    "nameCanonical": "Costa Rica",
+    "names": {
+      "fr": "Costa Rica",
+      "en": "Costa Rica"
+    },
+    "aliases": {
+      "fr": ["Costa Rica", "CR", "CRI"],
+      "en": ["Costa Rica", "CR", "CRI"]
+    },
     "flagEmoji": "🇨🇷",
     "continent": "north_america",
     "waterAccess": "coastal",
@@ -480,7 +774,14 @@
   },
   {
     "code": "CUB",
-    "nameCanonical": "Cuba",
+    "names": {
+      "fr": "Cuba",
+      "en": "Cuba"
+    },
+    "aliases": {
+      "fr": ["Cuba", "CU", "CUB"],
+      "en": ["Cuba", "CU", "CUB"]
+    },
     "flagEmoji": "🇨🇺",
     "continent": "north_america",
     "waterAccess": "island",
@@ -491,7 +792,14 @@
   },
   {
     "code": "CYP",
-    "nameCanonical": "Cyprus",
+    "names": {
+      "fr": "Chypre",
+      "en": "Cyprus"
+    },
+    "aliases": {
+      "fr": ["Chypre", "CY", "CYP"],
+      "en": ["Cyprus", "CY", "CYP"]
+    },
     "flagEmoji": "🇨🇾",
     "continent": "europe",
     "waterAccess": "island",
@@ -502,7 +810,14 @@
   },
   {
     "code": "CZE",
-    "nameCanonical": "Czechia",
+    "names": {
+      "fr": "Tchéquie",
+      "en": "Czechia"
+    },
+    "aliases": {
+      "fr": ["Tchéquie", "CZ", "CZE", "République tchèque"],
+      "en": ["Czechia", "CZ", "CZE", "Czech Republic"]
+    },
     "flagEmoji": "🇨🇿",
     "continent": "europe",
     "waterAccess": "landlocked",
@@ -513,7 +828,14 @@
   },
   {
     "code": "DEU",
-    "nameCanonical": "Germany",
+    "names": {
+      "fr": "Allemagne",
+      "en": "Germany"
+    },
+    "aliases": {
+      "fr": ["Allemagne", "DE", "DEU"],
+      "en": ["Germany", "DE", "DEU"]
+    },
     "flagEmoji": "🇩🇪",
     "continent": "europe",
     "waterAccess": "coastal",
@@ -524,7 +846,14 @@
   },
   {
     "code": "DJI",
-    "nameCanonical": "Djibouti",
+    "names": {
+      "fr": "Djibouti",
+      "en": "Djibouti"
+    },
+    "aliases": {
+      "fr": ["Djibouti", "DJ", "DJI"],
+      "en": ["Djibouti", "DJ", "DJI"]
+    },
     "flagEmoji": "🇩🇯",
     "continent": "africa",
     "waterAccess": "coastal",
@@ -535,7 +864,14 @@
   },
   {
     "code": "DMA",
-    "nameCanonical": "Dominica",
+    "names": {
+      "fr": "Dominique",
+      "en": "Dominica"
+    },
+    "aliases": {
+      "fr": ["Dominique", "DM", "DMA"],
+      "en": ["Dominica", "DM", "DMA"]
+    },
     "flagEmoji": "🇩🇲",
     "continent": "north_america",
     "waterAccess": "island",
@@ -546,7 +882,14 @@
   },
   {
     "code": "DNK",
-    "nameCanonical": "Denmark",
+    "names": {
+      "fr": "Danemark",
+      "en": "Denmark"
+    },
+    "aliases": {
+      "fr": ["Danemark", "DK", "DNK"],
+      "en": ["Denmark", "DK", "DNK"]
+    },
     "flagEmoji": "🇩🇰",
     "continent": "europe",
     "waterAccess": "coastal",
@@ -557,7 +900,14 @@
   },
   {
     "code": "DOM",
-    "nameCanonical": "Dominican Republic",
+    "names": {
+      "fr": "République dominicaine",
+      "en": "Dominican Republic"
+    },
+    "aliases": {
+      "fr": ["République dominicaine", "DO", "DOM"],
+      "en": ["Dominican Republic", "DO", "DOM"]
+    },
     "flagEmoji": "🇩🇴",
     "continent": "north_america",
     "waterAccess": "coastal",
@@ -568,7 +918,14 @@
   },
   {
     "code": "DZA",
-    "nameCanonical": "Algeria",
+    "names": {
+      "fr": "Algérie",
+      "en": "Algeria"
+    },
+    "aliases": {
+      "fr": ["Algérie", "DZ", "DZA"],
+      "en": ["Algeria", "DZ", "DZA"]
+    },
     "flagEmoji": "🇩🇿",
     "continent": "africa",
     "waterAccess": "coastal",
@@ -579,7 +936,14 @@
   },
   {
     "code": "ECU",
-    "nameCanonical": "Ecuador",
+    "names": {
+      "fr": "Équateur",
+      "en": "Ecuador"
+    },
+    "aliases": {
+      "fr": ["Équateur", "EC", "ECU"],
+      "en": ["Ecuador", "EC", "ECU"]
+    },
     "flagEmoji": "🇪🇨",
     "continent": "south_america",
     "waterAccess": "coastal",
@@ -590,7 +954,14 @@
   },
   {
     "code": "EGY",
-    "nameCanonical": "Egypt",
+    "names": {
+      "fr": "Égypte",
+      "en": "Egypt"
+    },
+    "aliases": {
+      "fr": ["Égypte", "EG", "EGY"],
+      "en": ["Egypt", "EG", "EGY"]
+    },
     "flagEmoji": "🇪🇬",
     "continent": "africa",
     "waterAccess": "coastal",
@@ -601,7 +972,14 @@
   },
   {
     "code": "ERI",
-    "nameCanonical": "Eritrea",
+    "names": {
+      "fr": "Érythrée",
+      "en": "Eritrea"
+    },
+    "aliases": {
+      "fr": ["Érythrée", "ER", "ERI"],
+      "en": ["Eritrea", "ER", "ERI"]
+    },
     "flagEmoji": "🇪🇷",
     "continent": "africa",
     "waterAccess": "coastal",
@@ -612,7 +990,14 @@
   },
   {
     "code": "ESP",
-    "nameCanonical": "Spain",
+    "names": {
+      "fr": "Espagne",
+      "en": "Spain"
+    },
+    "aliases": {
+      "fr": ["Espagne", "ES", "ESP"],
+      "en": ["Spain", "ES", "ESP"]
+    },
     "flagEmoji": "🇪🇸",
     "continent": "europe",
     "waterAccess": "coastal",
@@ -623,7 +1008,14 @@
   },
   {
     "code": "EST",
-    "nameCanonical": "Estonia",
+    "names": {
+      "fr": "Estonie",
+      "en": "Estonia"
+    },
+    "aliases": {
+      "fr": ["Estonie", "EE", "EST"],
+      "en": ["Estonia", "EE", "EST"]
+    },
     "flagEmoji": "🇪🇪",
     "continent": "europe",
     "waterAccess": "coastal",
@@ -634,7 +1026,14 @@
   },
   {
     "code": "ETH",
-    "nameCanonical": "Ethiopia",
+    "names": {
+      "fr": "Éthiopie",
+      "en": "Ethiopia"
+    },
+    "aliases": {
+      "fr": ["Éthiopie", "ET", "ETH"],
+      "en": ["Ethiopia", "ET", "ETH"]
+    },
     "flagEmoji": "🇪🇹",
     "continent": "africa",
     "waterAccess": "landlocked",
@@ -645,7 +1044,14 @@
   },
   {
     "code": "FIN",
-    "nameCanonical": "Finland",
+    "names": {
+      "fr": "Finlande",
+      "en": "Finland"
+    },
+    "aliases": {
+      "fr": ["Finlande", "FI", "FIN"],
+      "en": ["Finland", "FI", "FIN"]
+    },
     "flagEmoji": "🇫🇮",
     "continent": "europe",
     "waterAccess": "coastal",
@@ -656,7 +1062,14 @@
   },
   {
     "code": "FJI",
-    "nameCanonical": "Fiji",
+    "names": {
+      "fr": "Fidji",
+      "en": "Fiji"
+    },
+    "aliases": {
+      "fr": ["Fidji", "FJ", "FJI"],
+      "en": ["Fiji", "FJ", "FJI"]
+    },
     "flagEmoji": "🇫🇯",
     "continent": "oceania",
     "waterAccess": "island",
@@ -667,7 +1080,14 @@
   },
   {
     "code": "FRA",
-    "nameCanonical": "France",
+    "names": {
+      "fr": "France",
+      "en": "France"
+    },
+    "aliases": {
+      "fr": ["France", "FR", "FRA"],
+      "en": ["France", "FR", "FRA"]
+    },
     "flagEmoji": "🇫🇷",
     "continent": "europe",
     "waterAccess": "coastal",
@@ -678,7 +1098,14 @@
   },
   {
     "code": "FSM",
-    "nameCanonical": "Micronesia",
+    "names": {
+      "fr": "Micronésie",
+      "en": "Micronesia"
+    },
+    "aliases": {
+      "fr": ["Micronésie", "FM", "FSM"],
+      "en": ["Micronesia", "FM", "FSM"]
+    },
     "flagEmoji": "🇫🇲",
     "continent": "oceania",
     "waterAccess": "island",
@@ -689,7 +1116,14 @@
   },
   {
     "code": "GAB",
-    "nameCanonical": "Gabon",
+    "names": {
+      "fr": "Gabon",
+      "en": "Gabon"
+    },
+    "aliases": {
+      "fr": ["Gabon", "GA", "GAB"],
+      "en": ["Gabon", "GA", "GAB"]
+    },
     "flagEmoji": "🇬🇦",
     "continent": "africa",
     "waterAccess": "coastal",
@@ -700,7 +1134,14 @@
   },
   {
     "code": "GBR",
-    "nameCanonical": "United Kingdom",
+    "names": {
+      "fr": "Royaume-Uni",
+      "en": "United Kingdom"
+    },
+    "aliases": {
+      "fr": ["Royaume-Uni", "GB", "GBR", "UK", "Grande-Bretagne", "Angleterre"],
+      "en": ["United Kingdom", "GB", "GBR", "UK", "Great Britain", "England"]
+    },
     "flagEmoji": "🇬🇧",
     "continent": "europe",
     "waterAccess": "coastal",
@@ -711,7 +1152,14 @@
   },
   {
     "code": "GEO",
-    "nameCanonical": "Georgia",
+    "names": {
+      "fr": "Géorgie",
+      "en": "Georgia"
+    },
+    "aliases": {
+      "fr": ["Géorgie", "GE", "GEO"],
+      "en": ["Georgia", "GE", "GEO"]
+    },
     "flagEmoji": "🇬🇪",
     "continent": "asia",
     "waterAccess": "coastal",
@@ -722,7 +1170,14 @@
   },
   {
     "code": "GHA",
-    "nameCanonical": "Ghana",
+    "names": {
+      "fr": "Ghana",
+      "en": "Ghana"
+    },
+    "aliases": {
+      "fr": ["Ghana", "GH", "GHA"],
+      "en": ["Ghana", "GH", "GHA"]
+    },
     "flagEmoji": "🇬🇭",
     "continent": "africa",
     "waterAccess": "coastal",
@@ -733,7 +1188,14 @@
   },
   {
     "code": "GIN",
-    "nameCanonical": "Guinea",
+    "names": {
+      "fr": "Guinée",
+      "en": "Guinea"
+    },
+    "aliases": {
+      "fr": ["Guinée", "GN", "GIN"],
+      "en": ["Guinea", "GN", "GIN"]
+    },
     "flagEmoji": "🇬🇳",
     "continent": "africa",
     "waterAccess": "coastal",
@@ -744,7 +1206,14 @@
   },
   {
     "code": "GMB",
-    "nameCanonical": "Gambia",
+    "names": {
+      "fr": "Gambie",
+      "en": "Gambia"
+    },
+    "aliases": {
+      "fr": ["Gambie", "GM", "GMB"],
+      "en": ["Gambia", "GM", "GMB"]
+    },
     "flagEmoji": "🇬🇲",
     "continent": "africa",
     "waterAccess": "coastal",
@@ -755,7 +1224,14 @@
   },
   {
     "code": "GNB",
-    "nameCanonical": "Guinea-Bissau",
+    "names": {
+      "fr": "Guinée-Bissau",
+      "en": "Guinea-Bissau"
+    },
+    "aliases": {
+      "fr": ["Guinée-Bissau", "GW", "GNB"],
+      "en": ["Guinea-Bissau", "GW", "GNB"]
+    },
     "flagEmoji": "🇬🇼",
     "continent": "africa",
     "waterAccess": "coastal",
@@ -766,7 +1242,14 @@
   },
   {
     "code": "GNQ",
-    "nameCanonical": "Equatorial Guinea",
+    "names": {
+      "fr": "Guinée équatoriale",
+      "en": "Equatorial Guinea"
+    },
+    "aliases": {
+      "fr": ["Guinée équatoriale", "GQ", "GNQ"],
+      "en": ["Equatorial Guinea", "GQ", "GNQ"]
+    },
     "flagEmoji": "🇬🇶",
     "continent": "africa",
     "waterAccess": "coastal",
@@ -777,7 +1260,14 @@
   },
   {
     "code": "GRC",
-    "nameCanonical": "Greece",
+    "names": {
+      "fr": "Grèce",
+      "en": "Greece"
+    },
+    "aliases": {
+      "fr": ["Grèce", "GR", "GRC"],
+      "en": ["Greece", "GR", "GRC"]
+    },
     "flagEmoji": "🇬🇷",
     "continent": "europe",
     "waterAccess": "coastal",
@@ -788,7 +1278,14 @@
   },
   {
     "code": "GRD",
-    "nameCanonical": "Grenada",
+    "names": {
+      "fr": "Grenade",
+      "en": "Grenada"
+    },
+    "aliases": {
+      "fr": ["Grenade", "GD", "GRD"],
+      "en": ["Grenada", "GD", "GRD"]
+    },
     "flagEmoji": "🇬🇩",
     "continent": "north_america",
     "waterAccess": "island",
@@ -799,7 +1296,14 @@
   },
   {
     "code": "GTM",
-    "nameCanonical": "Guatemala",
+    "names": {
+      "fr": "Guatemala",
+      "en": "Guatemala"
+    },
+    "aliases": {
+      "fr": ["Guatemala", "GT", "GTM"],
+      "en": ["Guatemala", "GT", "GTM"]
+    },
     "flagEmoji": "🇬🇹",
     "continent": "north_america",
     "waterAccess": "coastal",
@@ -810,7 +1314,14 @@
   },
   {
     "code": "GUY",
-    "nameCanonical": "Guyana",
+    "names": {
+      "fr": "Guyana",
+      "en": "Guyana"
+    },
+    "aliases": {
+      "fr": ["Guyana", "GY", "GUY"],
+      "en": ["Guyana", "GY", "GUY"]
+    },
     "flagEmoji": "🇬🇾",
     "continent": "south_america",
     "waterAccess": "coastal",
@@ -821,7 +1332,14 @@
   },
   {
     "code": "HND",
-    "nameCanonical": "Honduras",
+    "names": {
+      "fr": "Honduras",
+      "en": "Honduras"
+    },
+    "aliases": {
+      "fr": ["Honduras", "HN", "HND"],
+      "en": ["Honduras", "HN", "HND"]
+    },
     "flagEmoji": "🇭🇳",
     "continent": "north_america",
     "waterAccess": "coastal",
@@ -832,7 +1350,14 @@
   },
   {
     "code": "HRV",
-    "nameCanonical": "Croatia",
+    "names": {
+      "fr": "Croatie",
+      "en": "Croatia"
+    },
+    "aliases": {
+      "fr": ["Croatie", "HR", "HRV"],
+      "en": ["Croatia", "HR", "HRV"]
+    },
     "flagEmoji": "🇭🇷",
     "continent": "europe",
     "waterAccess": "coastal",
@@ -843,7 +1368,14 @@
   },
   {
     "code": "HTI",
-    "nameCanonical": "Haiti",
+    "names": {
+      "fr": "Haïti",
+      "en": "Haiti"
+    },
+    "aliases": {
+      "fr": ["Haïti", "HT", "HTI"],
+      "en": ["Haiti", "HT", "HTI"]
+    },
     "flagEmoji": "🇭🇹",
     "continent": "north_america",
     "waterAccess": "coastal",
@@ -854,7 +1386,14 @@
   },
   {
     "code": "HUN",
-    "nameCanonical": "Hungary",
+    "names": {
+      "fr": "Hongrie",
+      "en": "Hungary"
+    },
+    "aliases": {
+      "fr": ["Hongrie", "HU", "HUN"],
+      "en": ["Hungary", "HU", "HUN"]
+    },
     "flagEmoji": "🇭🇺",
     "continent": "europe",
     "waterAccess": "landlocked",
@@ -865,7 +1404,14 @@
   },
   {
     "code": "IDN",
-    "nameCanonical": "Indonesia",
+    "names": {
+      "fr": "Indonésie",
+      "en": "Indonesia"
+    },
+    "aliases": {
+      "fr": ["Indonésie", "ID", "IDN"],
+      "en": ["Indonesia", "ID", "IDN"]
+    },
     "flagEmoji": "🇮🇩",
     "continent": "asia",
     "waterAccess": "coastal",
@@ -876,7 +1422,14 @@
   },
   {
     "code": "IND",
-    "nameCanonical": "India",
+    "names": {
+      "fr": "Inde",
+      "en": "India"
+    },
+    "aliases": {
+      "fr": ["Inde", "IN", "IND"],
+      "en": ["India", "IN", "IND"]
+    },
     "flagEmoji": "🇮🇳",
     "continent": "asia",
     "waterAccess": "coastal",
@@ -887,7 +1440,14 @@
   },
   {
     "code": "IRL",
-    "nameCanonical": "Ireland",
+    "names": {
+      "fr": "Irlande",
+      "en": "Ireland"
+    },
+    "aliases": {
+      "fr": ["Irlande", "IE", "IRL"],
+      "en": ["Ireland", "IE", "IRL"]
+    },
     "flagEmoji": "🇮🇪",
     "continent": "europe",
     "waterAccess": "coastal",
@@ -898,7 +1458,14 @@
   },
   {
     "code": "IRN",
-    "nameCanonical": "Iran",
+    "names": {
+      "fr": "Iran",
+      "en": "Iran"
+    },
+    "aliases": {
+      "fr": ["Iran", "IR", "IRN", "Perse"],
+      "en": ["Iran", "IR", "IRN", "Persia"]
+    },
     "flagEmoji": "🇮🇷",
     "continent": "asia",
     "waterAccess": "coastal",
@@ -909,7 +1476,14 @@
   },
   {
     "code": "IRQ",
-    "nameCanonical": "Iraq",
+    "names": {
+      "fr": "Irak",
+      "en": "Iraq"
+    },
+    "aliases": {
+      "fr": ["Irak", "IQ", "IRQ"],
+      "en": ["Iraq", "IQ", "IRQ"]
+    },
     "flagEmoji": "🇮🇶",
     "continent": "asia",
     "waterAccess": "coastal",
@@ -920,7 +1494,14 @@
   },
   {
     "code": "ISL",
-    "nameCanonical": "Iceland",
+    "names": {
+      "fr": "Islande",
+      "en": "Iceland"
+    },
+    "aliases": {
+      "fr": ["Islande", "IS", "ISL"],
+      "en": ["Iceland", "IS", "ISL"]
+    },
     "flagEmoji": "🇮🇸",
     "continent": "europe",
     "waterAccess": "island",
@@ -931,7 +1512,14 @@
   },
   {
     "code": "ISR",
-    "nameCanonical": "Israel",
+    "names": {
+      "fr": "Israël",
+      "en": "Israel"
+    },
+    "aliases": {
+      "fr": ["Israël", "IL", "ISR"],
+      "en": ["Israel", "IL", "ISR"]
+    },
     "flagEmoji": "🇮🇱",
     "continent": "asia",
     "waterAccess": "coastal",
@@ -942,7 +1530,14 @@
   },
   {
     "code": "ITA",
-    "nameCanonical": "Italy",
+    "names": {
+      "fr": "Italie",
+      "en": "Italy"
+    },
+    "aliases": {
+      "fr": ["Italie", "IT", "ITA"],
+      "en": ["Italy", "IT", "ITA"]
+    },
     "flagEmoji": "🇮🇹",
     "continent": "europe",
     "waterAccess": "coastal",
@@ -953,7 +1548,14 @@
   },
   {
     "code": "JAM",
-    "nameCanonical": "Jamaica",
+    "names": {
+      "fr": "Jamaïque",
+      "en": "Jamaica"
+    },
+    "aliases": {
+      "fr": ["Jamaïque", "JM", "JAM"],
+      "en": ["Jamaica", "JM", "JAM"]
+    },
     "flagEmoji": "🇯🇲",
     "continent": "north_america",
     "waterAccess": "island",
@@ -964,7 +1566,14 @@
   },
   {
     "code": "JOR",
-    "nameCanonical": "Jordan",
+    "names": {
+      "fr": "Jordanie",
+      "en": "Jordan"
+    },
+    "aliases": {
+      "fr": ["Jordanie", "JO", "JOR"],
+      "en": ["Jordan", "JO", "JOR"]
+    },
     "flagEmoji": "🇯🇴",
     "continent": "asia",
     "waterAccess": "coastal",
@@ -975,7 +1584,14 @@
   },
   {
     "code": "JPN",
-    "nameCanonical": "Japan",
+    "names": {
+      "fr": "Japon",
+      "en": "Japan"
+    },
+    "aliases": {
+      "fr": ["Japon", "JP", "JPN"],
+      "en": ["Japan", "JP", "JPN"]
+    },
     "flagEmoji": "🇯🇵",
     "continent": "asia",
     "waterAccess": "island",
@@ -986,7 +1602,14 @@
   },
   {
     "code": "KAZ",
-    "nameCanonical": "Kazakhstan",
+    "names": {
+      "fr": "Kazakhstan",
+      "en": "Kazakhstan"
+    },
+    "aliases": {
+      "fr": ["Kazakhstan", "KZ", "KAZ"],
+      "en": ["Kazakhstan", "KZ", "KAZ"]
+    },
     "flagEmoji": "🇰🇿",
     "continent": "asia",
     "waterAccess": "landlocked",
@@ -997,7 +1620,14 @@
   },
   {
     "code": "KEN",
-    "nameCanonical": "Kenya",
+    "names": {
+      "fr": "Kenya",
+      "en": "Kenya"
+    },
+    "aliases": {
+      "fr": ["Kenya", "KE", "KEN"],
+      "en": ["Kenya", "KE", "KEN"]
+    },
     "flagEmoji": "🇰🇪",
     "continent": "africa",
     "waterAccess": "coastal",
@@ -1008,7 +1638,14 @@
   },
   {
     "code": "KGZ",
-    "nameCanonical": "Kyrgyzstan",
+    "names": {
+      "fr": "Kirghizistan",
+      "en": "Kyrgyzstan"
+    },
+    "aliases": {
+      "fr": ["Kirghizistan", "KG", "KGZ"],
+      "en": ["Kyrgyzstan", "KG", "KGZ"]
+    },
     "flagEmoji": "🇰🇬",
     "continent": "asia",
     "waterAccess": "landlocked",
@@ -1019,7 +1656,14 @@
   },
   {
     "code": "KHM",
-    "nameCanonical": "Cambodia",
+    "names": {
+      "fr": "Cambodge",
+      "en": "Cambodia"
+    },
+    "aliases": {
+      "fr": ["Cambodge", "KH", "KHM"],
+      "en": ["Cambodia", "KH", "KHM"]
+    },
     "flagEmoji": "🇰🇭",
     "continent": "asia",
     "waterAccess": "coastal",
@@ -1030,7 +1674,14 @@
   },
   {
     "code": "KIR",
-    "nameCanonical": "Kiribati",
+    "names": {
+      "fr": "Kiribati",
+      "en": "Kiribati"
+    },
+    "aliases": {
+      "fr": ["Kiribati", "KI", "KIR"],
+      "en": ["Kiribati", "KI", "KIR"]
+    },
     "flagEmoji": "🇰🇮",
     "continent": "oceania",
     "waterAccess": "island",
@@ -1041,7 +1692,14 @@
   },
   {
     "code": "KNA",
-    "nameCanonical": "Saint Kitts and Nevis",
+    "names": {
+      "fr": "Saint-Christophe-et-Niévès",
+      "en": "Saint Kitts and Nevis"
+    },
+    "aliases": {
+      "fr": ["Saint-Christophe-et-Niévès", "KN", "KNA"],
+      "en": ["Saint Kitts and Nevis", "KN", "KNA"]
+    },
     "flagEmoji": "🇰🇳",
     "continent": "north_america",
     "waterAccess": "island",
@@ -1052,7 +1710,14 @@
   },
   {
     "code": "KOR",
-    "nameCanonical": "South Korea",
+    "names": {
+      "fr": "Corée du Sud",
+      "en": "South Korea"
+    },
+    "aliases": {
+      "fr": ["Corée du Sud", "KR", "KOR"],
+      "en": ["South Korea", "KR", "KOR"]
+    },
     "flagEmoji": "🇰🇷",
     "continent": "asia",
     "waterAccess": "coastal",
@@ -1063,7 +1728,14 @@
   },
   {
     "code": "KWT",
-    "nameCanonical": "Kuwait",
+    "names": {
+      "fr": "Koweït",
+      "en": "Kuwait"
+    },
+    "aliases": {
+      "fr": ["Koweït", "KW", "KWT"],
+      "en": ["Kuwait", "KW", "KWT"]
+    },
     "flagEmoji": "🇰🇼",
     "continent": "asia",
     "waterAccess": "coastal",
@@ -1074,7 +1746,14 @@
   },
   {
     "code": "LAO",
-    "nameCanonical": "Laos",
+    "names": {
+      "fr": "Laos",
+      "en": "Laos"
+    },
+    "aliases": {
+      "fr": ["Laos", "LA", "LAO"],
+      "en": ["Laos", "LA", "LAO"]
+    },
     "flagEmoji": "🇱🇦",
     "continent": "asia",
     "waterAccess": "landlocked",
@@ -1085,7 +1764,14 @@
   },
   {
     "code": "LBN",
-    "nameCanonical": "Lebanon",
+    "names": {
+      "fr": "Liban",
+      "en": "Lebanon"
+    },
+    "aliases": {
+      "fr": ["Liban", "LB", "LBN"],
+      "en": ["Lebanon", "LB", "LBN"]
+    },
     "flagEmoji": "🇱🇧",
     "continent": "asia",
     "waterAccess": "coastal",
@@ -1096,7 +1782,14 @@
   },
   {
     "code": "LBR",
-    "nameCanonical": "Liberia",
+    "names": {
+      "fr": "Liberia",
+      "en": "Liberia"
+    },
+    "aliases": {
+      "fr": ["Liberia", "LR", "LBR"],
+      "en": ["Liberia", "LR", "LBR"]
+    },
     "flagEmoji": "🇱🇷",
     "continent": "africa",
     "waterAccess": "coastal",
@@ -1107,7 +1800,14 @@
   },
   {
     "code": "LBY",
-    "nameCanonical": "Libya",
+    "names": {
+      "fr": "Libye",
+      "en": "Libya"
+    },
+    "aliases": {
+      "fr": ["Libye", "LY", "LBY"],
+      "en": ["Libya", "LY", "LBY"]
+    },
     "flagEmoji": "🇱🇾",
     "continent": "africa",
     "waterAccess": "coastal",
@@ -1118,7 +1818,14 @@
   },
   {
     "code": "LCA",
-    "nameCanonical": "Saint Lucia",
+    "names": {
+      "fr": "Sainte-Lucie",
+      "en": "Saint Lucia"
+    },
+    "aliases": {
+      "fr": ["Sainte-Lucie", "LC", "LCA"],
+      "en": ["Saint Lucia", "LC", "LCA"]
+    },
     "flagEmoji": "🇱🇨",
     "continent": "north_america",
     "waterAccess": "island",
@@ -1129,7 +1836,14 @@
   },
   {
     "code": "LIE",
-    "nameCanonical": "Liechtenstein",
+    "names": {
+      "fr": "Liechtenstein",
+      "en": "Liechtenstein"
+    },
+    "aliases": {
+      "fr": ["Liechtenstein", "LI", "LIE"],
+      "en": ["Liechtenstein", "LI", "LIE"]
+    },
     "flagEmoji": "🇱🇮",
     "continent": "europe",
     "waterAccess": "landlocked",
@@ -1140,7 +1854,14 @@
   },
   {
     "code": "LKA",
-    "nameCanonical": "Sri Lanka",
+    "names": {
+      "fr": "Sri Lanka",
+      "en": "Sri Lanka"
+    },
+    "aliases": {
+      "fr": ["Sri Lanka", "LK", "LKA"],
+      "en": ["Sri Lanka", "LK", "LKA"]
+    },
     "flagEmoji": "🇱🇰",
     "continent": "asia",
     "waterAccess": "island",
@@ -1151,7 +1872,14 @@
   },
   {
     "code": "LSO",
-    "nameCanonical": "Lesotho",
+    "names": {
+      "fr": "Lesotho",
+      "en": "Lesotho"
+    },
+    "aliases": {
+      "fr": ["Lesotho", "LS", "LSO"],
+      "en": ["Lesotho", "LS", "LSO"]
+    },
     "flagEmoji": "🇱🇸",
     "continent": "africa",
     "waterAccess": "landlocked",
@@ -1162,7 +1890,14 @@
   },
   {
     "code": "LTU",
-    "nameCanonical": "Lithuania",
+    "names": {
+      "fr": "Lituanie",
+      "en": "Lithuania"
+    },
+    "aliases": {
+      "fr": ["Lituanie", "LT", "LTU"],
+      "en": ["Lithuania", "LT", "LTU"]
+    },
     "flagEmoji": "🇱🇹",
     "continent": "europe",
     "waterAccess": "coastal",
@@ -1173,7 +1908,14 @@
   },
   {
     "code": "LUX",
-    "nameCanonical": "Luxembourg",
+    "names": {
+      "fr": "Luxembourg",
+      "en": "Luxembourg"
+    },
+    "aliases": {
+      "fr": ["Luxembourg", "LU", "LUX"],
+      "en": ["Luxembourg", "LU", "LUX"]
+    },
     "flagEmoji": "🇱🇺",
     "continent": "europe",
     "waterAccess": "landlocked",
@@ -1184,7 +1926,14 @@
   },
   {
     "code": "LVA",
-    "nameCanonical": "Latvia",
+    "names": {
+      "fr": "Lettonie",
+      "en": "Latvia"
+    },
+    "aliases": {
+      "fr": ["Lettonie", "LV", "LVA"],
+      "en": ["Latvia", "LV", "LVA"]
+    },
     "flagEmoji": "🇱🇻",
     "continent": "europe",
     "waterAccess": "coastal",
@@ -1195,7 +1944,14 @@
   },
   {
     "code": "MAR",
-    "nameCanonical": "Morocco",
+    "names": {
+      "fr": "Maroc",
+      "en": "Morocco"
+    },
+    "aliases": {
+      "fr": ["Maroc", "MA", "MAR"],
+      "en": ["Morocco", "MA", "MAR"]
+    },
     "flagEmoji": "🇲🇦",
     "continent": "africa",
     "waterAccess": "coastal",
@@ -1206,7 +1962,14 @@
   },
   {
     "code": "MCO",
-    "nameCanonical": "Monaco",
+    "names": {
+      "fr": "Monaco",
+      "en": "Monaco"
+    },
+    "aliases": {
+      "fr": ["Monaco", "MC", "MCO"],
+      "en": ["Monaco", "MC", "MCO"]
+    },
     "flagEmoji": "🇲🇨",
     "continent": "europe",
     "waterAccess": "coastal",
@@ -1217,7 +1980,14 @@
   },
   {
     "code": "MDA",
-    "nameCanonical": "Moldova",
+    "names": {
+      "fr": "Moldavie",
+      "en": "Moldova"
+    },
+    "aliases": {
+      "fr": ["Moldavie", "MD", "MDA"],
+      "en": ["Moldova", "MD", "MDA"]
+    },
     "flagEmoji": "🇲🇩",
     "continent": "europe",
     "waterAccess": "landlocked",
@@ -1228,7 +1998,14 @@
   },
   {
     "code": "MDG",
-    "nameCanonical": "Madagascar",
+    "names": {
+      "fr": "Madagascar",
+      "en": "Madagascar"
+    },
+    "aliases": {
+      "fr": ["Madagascar", "MG", "MDG"],
+      "en": ["Madagascar", "MG", "MDG"]
+    },
     "flagEmoji": "🇲🇬",
     "continent": "africa",
     "waterAccess": "island",
@@ -1239,7 +2016,14 @@
   },
   {
     "code": "MDV",
-    "nameCanonical": "Maldives",
+    "names": {
+      "fr": "Maldives",
+      "en": "Maldives"
+    },
+    "aliases": {
+      "fr": ["Maldives", "MV", "MDV"],
+      "en": ["Maldives", "MV", "MDV"]
+    },
     "flagEmoji": "🇲🇻",
     "continent": "asia",
     "waterAccess": "island",
@@ -1250,7 +2034,14 @@
   },
   {
     "code": "MEX",
-    "nameCanonical": "Mexico",
+    "names": {
+      "fr": "Mexique",
+      "en": "Mexico"
+    },
+    "aliases": {
+      "fr": ["Mexique", "MX", "MEX"],
+      "en": ["Mexico", "MX", "MEX"]
+    },
     "flagEmoji": "🇲🇽",
     "continent": "north_america",
     "waterAccess": "coastal",
@@ -1261,7 +2052,14 @@
   },
   {
     "code": "MHL",
-    "nameCanonical": "Marshall Islands",
+    "names": {
+      "fr": "Îles Marshall",
+      "en": "Marshall Islands"
+    },
+    "aliases": {
+      "fr": ["Îles Marshall", "MH", "MHL"],
+      "en": ["Marshall Islands", "MH", "MHL"]
+    },
     "flagEmoji": "🇲🇭",
     "continent": "oceania",
     "waterAccess": "island",
@@ -1272,7 +2070,14 @@
   },
   {
     "code": "MKD",
-    "nameCanonical": "North Macedonia",
+    "names": {
+      "fr": "Macédoine du Nord",
+      "en": "North Macedonia"
+    },
+    "aliases": {
+      "fr": ["Macédoine du Nord", "MK", "MKD", "Macédoine"],
+      "en": ["North Macedonia", "MK", "MKD", "Macedonia"]
+    },
     "flagEmoji": "🇲🇰",
     "continent": "europe",
     "waterAccess": "landlocked",
@@ -1283,7 +2088,14 @@
   },
   {
     "code": "MLI",
-    "nameCanonical": "Mali",
+    "names": {
+      "fr": "Mali",
+      "en": "Mali"
+    },
+    "aliases": {
+      "fr": ["Mali", "ML", "MLI"],
+      "en": ["Mali", "ML", "MLI"]
+    },
     "flagEmoji": "🇲🇱",
     "continent": "africa",
     "waterAccess": "landlocked",
@@ -1294,7 +2106,14 @@
   },
   {
     "code": "MLT",
-    "nameCanonical": "Malta",
+    "names": {
+      "fr": "Malte",
+      "en": "Malta"
+    },
+    "aliases": {
+      "fr": ["Malte", "MT", "MLT"],
+      "en": ["Malta", "MT", "MLT"]
+    },
     "flagEmoji": "🇲🇹",
     "continent": "europe",
     "waterAccess": "island",
@@ -1305,7 +2124,14 @@
   },
   {
     "code": "MMR",
-    "nameCanonical": "Myanmar",
+    "names": {
+      "fr": "Birmanie",
+      "en": "Myanmar"
+    },
+    "aliases": {
+      "fr": ["Birmanie", "MM", "MMR"],
+      "en": ["Myanmar", "MM", "MMR"]
+    },
     "flagEmoji": "🇲🇲",
     "continent": "asia",
     "waterAccess": "coastal",
@@ -1316,7 +2142,14 @@
   },
   {
     "code": "MNE",
-    "nameCanonical": "Montenegro",
+    "names": {
+      "fr": "Monténégro",
+      "en": "Montenegro"
+    },
+    "aliases": {
+      "fr": ["Monténégro", "ME", "MNE"],
+      "en": ["Montenegro", "ME", "MNE"]
+    },
     "flagEmoji": "🇲🇪",
     "continent": "europe",
     "waterAccess": "coastal",
@@ -1327,7 +2160,14 @@
   },
   {
     "code": "MNG",
-    "nameCanonical": "Mongolia",
+    "names": {
+      "fr": "Mongolie",
+      "en": "Mongolia"
+    },
+    "aliases": {
+      "fr": ["Mongolie", "MN", "MNG"],
+      "en": ["Mongolia", "MN", "MNG"]
+    },
     "flagEmoji": "🇲🇳",
     "continent": "asia",
     "waterAccess": "landlocked",
@@ -1338,7 +2178,14 @@
   },
   {
     "code": "MOZ",
-    "nameCanonical": "Mozambique",
+    "names": {
+      "fr": "Mozambique",
+      "en": "Mozambique"
+    },
+    "aliases": {
+      "fr": ["Mozambique", "MZ", "MOZ"],
+      "en": ["Mozambique", "MZ", "MOZ"]
+    },
     "flagEmoji": "🇲🇿",
     "continent": "africa",
     "waterAccess": "coastal",
@@ -1349,7 +2196,14 @@
   },
   {
     "code": "MRT",
-    "nameCanonical": "Mauritania",
+    "names": {
+      "fr": "Mauritanie",
+      "en": "Mauritania"
+    },
+    "aliases": {
+      "fr": ["Mauritanie", "MR", "MRT"],
+      "en": ["Mauritania", "MR", "MRT"]
+    },
     "flagEmoji": "🇲🇷",
     "continent": "africa",
     "waterAccess": "coastal",
@@ -1360,7 +2214,14 @@
   },
   {
     "code": "MUS",
-    "nameCanonical": "Mauritius",
+    "names": {
+      "fr": "Île Maurice",
+      "en": "Mauritius"
+    },
+    "aliases": {
+      "fr": ["Île Maurice", "MU", "MUS"],
+      "en": ["Mauritius", "MU", "MUS"]
+    },
     "flagEmoji": "🇲🇺",
     "continent": "africa",
     "waterAccess": "island",
@@ -1371,7 +2232,14 @@
   },
   {
     "code": "MWI",
-    "nameCanonical": "Malawi",
+    "names": {
+      "fr": "Malawi",
+      "en": "Malawi"
+    },
+    "aliases": {
+      "fr": ["Malawi", "MW", "MWI"],
+      "en": ["Malawi", "MW", "MWI"]
+    },
     "flagEmoji": "🇲🇼",
     "continent": "africa",
     "waterAccess": "landlocked",
@@ -1382,7 +2250,14 @@
   },
   {
     "code": "MYS",
-    "nameCanonical": "Malaysia",
+    "names": {
+      "fr": "Malaisie",
+      "en": "Malaysia"
+    },
+    "aliases": {
+      "fr": ["Malaisie", "MY", "MYS"],
+      "en": ["Malaysia", "MY", "MYS"]
+    },
     "flagEmoji": "🇲🇾",
     "continent": "asia",
     "waterAccess": "coastal",
@@ -1393,7 +2268,14 @@
   },
   {
     "code": "NAM",
-    "nameCanonical": "Namibia",
+    "names": {
+      "fr": "Namibie",
+      "en": "Namibia"
+    },
+    "aliases": {
+      "fr": ["Namibie", "NA", "NAM"],
+      "en": ["Namibia", "NA", "NAM"]
+    },
     "flagEmoji": "🇳🇦",
     "continent": "africa",
     "waterAccess": "coastal",
@@ -1414,7 +2296,14 @@
   },
   {
     "code": "NER",
-    "nameCanonical": "Niger",
+    "names": {
+      "fr": "Niger",
+      "en": "Niger"
+    },
+    "aliases": {
+      "fr": ["Niger", "NE", "NER"],
+      "en": ["Niger", "NE", "NER"]
+    },
     "flagEmoji": "🇳🇪",
     "continent": "africa",
     "waterAccess": "landlocked",
@@ -1425,7 +2314,14 @@
   },
   {
     "code": "NGA",
-    "nameCanonical": "Nigeria",
+    "names": {
+      "fr": "Nigéria",
+      "en": "Nigeria"
+    },
+    "aliases": {
+      "fr": ["Nigéria", "NG", "NGA"],
+      "en": ["Nigeria", "NG", "NGA"]
+    },
     "flagEmoji": "🇳🇬",
     "continent": "africa",
     "waterAccess": "coastal",
@@ -1436,7 +2332,14 @@
   },
   {
     "code": "NIC",
-    "nameCanonical": "Nicaragua",
+    "names": {
+      "fr": "Nicaragua",
+      "en": "Nicaragua"
+    },
+    "aliases": {
+      "fr": ["Nicaragua", "NI", "NIC"],
+      "en": ["Nicaragua", "NI", "NIC"]
+    },
     "flagEmoji": "🇳🇮",
     "continent": "north_america",
     "waterAccess": "coastal",
@@ -1447,7 +2350,14 @@
   },
   {
     "code": "NLD",
-    "nameCanonical": "Netherlands",
+    "names": {
+      "fr": "Pays-Bas",
+      "en": "Netherlands"
+    },
+    "aliases": {
+      "fr": ["Pays-Bas", "NL", "NLD"],
+      "en": ["Netherlands", "NL", "NLD"]
+    },
     "flagEmoji": "🇳🇱",
     "continent": "europe",
     "waterAccess": "coastal",
@@ -1458,7 +2368,14 @@
   },
   {
     "code": "NOR",
-    "nameCanonical": "Norway",
+    "names": {
+      "fr": "Norvège",
+      "en": "Norway"
+    },
+    "aliases": {
+      "fr": ["Norvège", "NO", "NOR"],
+      "en": ["Norway", "NO", "NOR"]
+    },
     "flagEmoji": "🇳🇴",
     "continent": "europe",
     "waterAccess": "coastal",
@@ -1469,7 +2386,14 @@
   },
   {
     "code": "NPL",
-    "nameCanonical": "Nepal",
+    "names": {
+      "fr": "Népal",
+      "en": "Nepal"
+    },
+    "aliases": {
+      "fr": ["Népal", "NP", "NPL"],
+      "en": ["Nepal", "NP", "NPL"]
+    },
     "flagEmoji": "🇳🇵",
     "continent": "asia",
     "waterAccess": "landlocked",
@@ -1480,7 +2404,14 @@
   },
   {
     "code": "NRU",
-    "nameCanonical": "Nauru",
+    "names": {
+      "fr": "Nauru",
+      "en": "Nauru"
+    },
+    "aliases": {
+      "fr": ["Nauru", "NR", "NRU"],
+      "en": ["Nauru", "NR", "NRU"]
+    },
     "flagEmoji": "🇳🇷",
     "continent": "oceania",
     "waterAccess": "island",
@@ -1491,7 +2422,14 @@
   },
   {
     "code": "NZL",
-    "nameCanonical": "New Zealand",
+    "names": {
+      "fr": "Nouvelle-Zélande",
+      "en": "New Zealand"
+    },
+    "aliases": {
+      "fr": ["Nouvelle-Zélande", "NZ", "NZL"],
+      "en": ["New Zealand", "NZ", "NZL"]
+    },
     "flagEmoji": "🇳🇿",
     "continent": "oceania",
     "waterAccess": "island",
@@ -1502,7 +2440,14 @@
   },
   {
     "code": "OMN",
-    "nameCanonical": "Oman",
+    "names": {
+      "fr": "Oman",
+      "en": "Oman"
+    },
+    "aliases": {
+      "fr": ["Oman", "OM", "OMN"],
+      "en": ["Oman", "OM", "OMN"]
+    },
     "flagEmoji": "🇴🇲",
     "continent": "asia",
     "waterAccess": "coastal",
@@ -1513,7 +2458,14 @@
   },
   {
     "code": "PAK",
-    "nameCanonical": "Pakistan",
+    "names": {
+      "fr": "Pakistan",
+      "en": "Pakistan"
+    },
+    "aliases": {
+      "fr": ["Pakistan", "PK", "PAK"],
+      "en": ["Pakistan", "PK", "PAK"]
+    },
     "flagEmoji": "🇵🇰",
     "continent": "asia",
     "waterAccess": "coastal",
@@ -1524,7 +2476,14 @@
   },
   {
     "code": "PAN",
-    "nameCanonical": "Panama",
+    "names": {
+      "fr": "Panama",
+      "en": "Panama"
+    },
+    "aliases": {
+      "fr": ["Panama", "PA", "PAN"],
+      "en": ["Panama", "PA", "PAN"]
+    },
     "flagEmoji": "🇵🇦",
     "continent": "north_america",
     "waterAccess": "coastal",
@@ -1535,7 +2494,14 @@
   },
   {
     "code": "PER",
-    "nameCanonical": "Peru",
+    "names": {
+      "fr": "Pérou",
+      "en": "Peru"
+    },
+    "aliases": {
+      "fr": ["Pérou", "PE", "PER"],
+      "en": ["Peru", "PE", "PER"]
+    },
     "flagEmoji": "🇵🇪",
     "continent": "south_america",
     "waterAccess": "coastal",
@@ -1546,7 +2512,14 @@
   },
   {
     "code": "PHL",
-    "nameCanonical": "Philippines",
+    "names": {
+      "fr": "Philippines",
+      "en": "Philippines"
+    },
+    "aliases": {
+      "fr": ["Philippines", "PH", "PHL"],
+      "en": ["Philippines", "PH", "PHL"]
+    },
     "flagEmoji": "🇵🇭",
     "continent": "asia",
     "waterAccess": "island",
@@ -1557,7 +2530,14 @@
   },
   {
     "code": "PLW",
-    "nameCanonical": "Palau",
+    "names": {
+      "fr": "Palaos (Palau)",
+      "en": "Palau"
+    },
+    "aliases": {
+      "fr": ["Palaos (Palau)", "PW", "PLW"],
+      "en": ["Palau", "PW", "PLW"]
+    },
     "flagEmoji": "🇵🇼",
     "continent": "oceania",
     "waterAccess": "island",
@@ -1568,7 +2548,14 @@
   },
   {
     "code": "PNG",
-    "nameCanonical": "Papua New Guinea",
+    "names": {
+      "fr": "Papouasie-Nouvelle-Guinée",
+      "en": "Papua New Guinea"
+    },
+    "aliases": {
+      "fr": ["Papouasie-Nouvelle-Guinée", "PG", "PNG"],
+      "en": ["Papua New Guinea", "PG", "PNG"]
+    },
     "flagEmoji": "🇵🇬",
     "continent": "oceania",
     "waterAccess": "coastal",
@@ -1579,7 +2566,14 @@
   },
   {
     "code": "POL",
-    "nameCanonical": "Poland",
+    "names": {
+      "fr": "Pologne",
+      "en": "Poland"
+    },
+    "aliases": {
+      "fr": ["Pologne", "PL", "POL"],
+      "en": ["Poland", "PL", "POL"]
+    },
     "flagEmoji": "🇵🇱",
     "continent": "europe",
     "waterAccess": "coastal",
@@ -1590,7 +2584,14 @@
   },
   {
     "code": "PRK",
-    "nameCanonical": "North Korea",
+    "names": {
+      "fr": "Corée du Nord",
+      "en": "North Korea"
+    },
+    "aliases": {
+      "fr": ["Corée du Nord", "KP", "PRK"],
+      "en": ["North Korea", "KP", "PRK"]
+    },
     "flagEmoji": "🇰🇵",
     "continent": "asia",
     "waterAccess": "coastal",
@@ -1601,7 +2602,14 @@
   },
   {
     "code": "PRT",
-    "nameCanonical": "Portugal",
+    "names": {
+      "fr": "Portugal",
+      "en": "Portugal"
+    },
+    "aliases": {
+      "fr": ["Portugal", "PT", "PRT"],
+      "en": ["Portugal", "PT", "PRT"]
+    },
     "flagEmoji": "🇵🇹",
     "continent": "europe",
     "waterAccess": "coastal",
@@ -1612,7 +2620,14 @@
   },
   {
     "code": "PRY",
-    "nameCanonical": "Paraguay",
+    "names": {
+      "fr": "Paraguay",
+      "en": "Paraguay"
+    },
+    "aliases": {
+      "fr": ["Paraguay", "PY", "PRY"],
+      "en": ["Paraguay", "PY", "PRY"]
+    },
     "flagEmoji": "🇵🇾",
     "continent": "south_america",
     "waterAccess": "landlocked",
@@ -1623,7 +2638,14 @@
   },
   {
     "code": "PSE",
-    "nameCanonical": "Palestine",
+    "names": {
+      "fr": "Palestine",
+      "en": "Palestine"
+    },
+    "aliases": {
+      "fr": ["Palestine", "PS", "PSE", "Territoires palestiniens"],
+      "en": ["Palestine", "PS", "PSE", "Palestinian Territories"]
+    },
     "flagEmoji": "🇵🇸",
     "continent": "asia",
     "waterAccess": "coastal",
@@ -1634,7 +2656,14 @@
   },
   {
     "code": "QAT",
-    "nameCanonical": "Qatar",
+    "names": {
+      "fr": "Qatar",
+      "en": "Qatar"
+    },
+    "aliases": {
+      "fr": ["Qatar", "QA", "QAT"],
+      "en": ["Qatar", "QA", "QAT"]
+    },
     "flagEmoji": "🇶🇦",
     "continent": "asia",
     "waterAccess": "coastal",
@@ -1645,7 +2674,14 @@
   },
   {
     "code": "ROU",
-    "nameCanonical": "Romania",
+    "names": {
+      "fr": "Roumanie",
+      "en": "Romania"
+    },
+    "aliases": {
+      "fr": ["Roumanie", "RO", "ROU"],
+      "en": ["Romania", "RO", "ROU"]
+    },
     "flagEmoji": "🇷🇴",
     "continent": "europe",
     "waterAccess": "coastal",
@@ -1656,7 +2692,14 @@
   },
   {
     "code": "RUS",
-    "nameCanonical": "Russia",
+    "names": {
+      "fr": "Russie",
+      "en": "Russia"
+    },
+    "aliases": {
+      "fr": ["Russie", "RU", "RUS"],
+      "en": ["Russia", "RU", "RUS"]
+    },
     "flagEmoji": "🇷🇺",
     "continent": "europe",
     "waterAccess": "coastal",
@@ -1682,7 +2725,14 @@
   },
   {
     "code": "RWA",
-    "nameCanonical": "Rwanda",
+    "names": {
+      "fr": "Rwanda",
+      "en": "Rwanda"
+    },
+    "aliases": {
+      "fr": ["Rwanda", "RW", "RWA"],
+      "en": ["Rwanda", "RW", "RWA"]
+    },
     "flagEmoji": "🇷🇼",
     "continent": "africa",
     "waterAccess": "landlocked",
@@ -1693,7 +2743,14 @@
   },
   {
     "code": "SAU",
-    "nameCanonical": "Saudi Arabia",
+    "names": {
+      "fr": "Arabie Saoudite",
+      "en": "Saudi Arabia"
+    },
+    "aliases": {
+      "fr": ["Arabie Saoudite", "SA", "SAU"],
+      "en": ["Saudi Arabia", "SA", "SAU"]
+    },
     "flagEmoji": "🇸🇦",
     "continent": "asia",
     "waterAccess": "coastal",
@@ -1704,7 +2761,14 @@
   },
   {
     "code": "SDN",
-    "nameCanonical": "Sudan",
+    "names": {
+      "fr": "Soudan",
+      "en": "Sudan"
+    },
+    "aliases": {
+      "fr": ["Soudan", "SD", "SDN"],
+      "en": ["Sudan", "SD", "SDN"]
+    },
     "flagEmoji": "🇸🇩",
     "continent": "africa",
     "waterAccess": "coastal",
@@ -1715,7 +2779,14 @@
   },
   {
     "code": "SEN",
-    "nameCanonical": "Senegal",
+    "names": {
+      "fr": "Sénégal",
+      "en": "Senegal"
+    },
+    "aliases": {
+      "fr": ["Sénégal", "SN", "SEN"],
+      "en": ["Senegal", "SN", "SEN"]
+    },
     "flagEmoji": "🇸🇳",
     "continent": "africa",
     "waterAccess": "coastal",
@@ -1726,7 +2797,14 @@
   },
   {
     "code": "SGP",
-    "nameCanonical": "Singapore",
+    "names": {
+      "fr": "Singapour",
+      "en": "Singapore"
+    },
+    "aliases": {
+      "fr": ["Singapour", "SG", "SGP"],
+      "en": ["Singapore", "SG", "SGP"]
+    },
     "flagEmoji": "🇸🇬",
     "continent": "asia",
     "waterAccess": "island",
@@ -1737,7 +2815,14 @@
   },
   {
     "code": "SLB",
-    "nameCanonical": "Solomon Islands",
+    "names": {
+      "fr": "Îles Salomon",
+      "en": "Solomon Islands"
+    },
+    "aliases": {
+      "fr": ["Îles Salomon", "SB", "SLB"],
+      "en": ["Solomon Islands", "SB", "SLB"]
+    },
     "flagEmoji": "🇸🇧",
     "continent": "oceania",
     "waterAccess": "island",
@@ -1748,7 +2833,14 @@
   },
   {
     "code": "SLE",
-    "nameCanonical": "Sierra Leone",
+    "names": {
+      "fr": "Sierra Leone",
+      "en": "Sierra Leone"
+    },
+    "aliases": {
+      "fr": ["Sierra Leone", "SL", "SLE"],
+      "en": ["Sierra Leone", "SL", "SLE"]
+    },
     "flagEmoji": "🇸🇱",
     "continent": "africa",
     "waterAccess": "coastal",
@@ -1759,7 +2851,14 @@
   },
   {
     "code": "SLV",
-    "nameCanonical": "El Salvador",
+    "names": {
+      "fr": "Salvador",
+      "en": "El Salvador"
+    },
+    "aliases": {
+      "fr": ["Salvador", "SV", "SLV"],
+      "en": ["El Salvador", "SV", "SLV"]
+    },
     "flagEmoji": "🇸🇻",
     "continent": "north_america",
     "waterAccess": "coastal",
@@ -1770,7 +2869,14 @@
   },
   {
     "code": "SMR",
-    "nameCanonical": "San Marino",
+    "names": {
+      "fr": "Saint-Marin",
+      "en": "San Marino"
+    },
+    "aliases": {
+      "fr": ["Saint-Marin", "SM", "SMR"],
+      "en": ["San Marino", "SM", "SMR"]
+    },
     "flagEmoji": "🇸🇲",
     "continent": "europe",
     "waterAccess": "landlocked",
@@ -1781,7 +2887,14 @@
   },
   {
     "code": "SOM",
-    "nameCanonical": "Somalia",
+    "names": {
+      "fr": "Somalie",
+      "en": "Somalia"
+    },
+    "aliases": {
+      "fr": ["Somalie", "SO", "SOM"],
+      "en": ["Somalia", "SO", "SOM"]
+    },
     "flagEmoji": "🇸🇴",
     "continent": "africa",
     "waterAccess": "coastal",
@@ -1792,7 +2905,14 @@
   },
   {
     "code": "SRB",
-    "nameCanonical": "Serbia",
+    "names": {
+      "fr": "Serbie",
+      "en": "Serbia"
+    },
+    "aliases": {
+      "fr": ["Serbie", "RS", "SRB"],
+      "en": ["Serbia", "RS", "SRB"]
+    },
     "flagEmoji": "🇷🇸",
     "continent": "europe",
     "waterAccess": "landlocked",
@@ -1803,7 +2923,14 @@
   },
   {
     "code": "SSD",
-    "nameCanonical": "South Sudan",
+    "names": {
+      "fr": "Soudan du Sud",
+      "en": "South Sudan"
+    },
+    "aliases": {
+      "fr": ["Soudan du Sud", "SS", "SSD"],
+      "en": ["South Sudan", "SS", "SSD"]
+    },
     "flagEmoji": "🇸🇸",
     "continent": "africa",
     "waterAccess": "landlocked",
@@ -1814,7 +2941,14 @@
   },
   {
     "code": "STP",
-    "nameCanonical": "São Tomé and Príncipe",
+    "names": {
+      "fr": "São Tomé et Príncipe",
+      "en": "São Tomé and Príncipe"
+    },
+    "aliases": {
+      "fr": ["São Tomé et Príncipe", "ST", "STP"],
+      "en": ["São Tomé and Príncipe", "ST", "STP"]
+    },
     "flagEmoji": "🇸🇹",
     "continent": "africa",
     "waterAccess": "island",
@@ -1825,7 +2959,14 @@
   },
   {
     "code": "SUR",
-    "nameCanonical": "Suriname",
+    "names": {
+      "fr": "Surinam",
+      "en": "Suriname"
+    },
+    "aliases": {
+      "fr": ["Surinam", "SR", "SUR"],
+      "en": ["Suriname", "SR", "SUR"]
+    },
     "flagEmoji": "🇸🇷",
     "continent": "south_america",
     "waterAccess": "coastal",
@@ -1836,7 +2977,14 @@
   },
   {
     "code": "SVK",
-    "nameCanonical": "Slovakia",
+    "names": {
+      "fr": "Slovaquie",
+      "en": "Slovakia"
+    },
+    "aliases": {
+      "fr": ["Slovaquie", "SK", "SVK"],
+      "en": ["Slovakia", "SK", "SVK"]
+    },
     "flagEmoji": "🇸🇰",
     "continent": "europe",
     "waterAccess": "landlocked",
@@ -1847,7 +2995,14 @@
   },
   {
     "code": "SVN",
-    "nameCanonical": "Slovenia",
+    "names": {
+      "fr": "Slovénie",
+      "en": "Slovenia"
+    },
+    "aliases": {
+      "fr": ["Slovénie", "SI", "SVN"],
+      "en": ["Slovenia", "SI", "SVN"]
+    },
     "flagEmoji": "🇸🇮",
     "continent": "europe",
     "waterAccess": "coastal",
@@ -1858,7 +3013,14 @@
   },
   {
     "code": "SWE",
-    "nameCanonical": "Sweden",
+    "names": {
+      "fr": "Suède",
+      "en": "Sweden"
+    },
+    "aliases": {
+      "fr": ["Suède", "SE", "SWE"],
+      "en": ["Sweden", "SE", "SWE"]
+    },
     "flagEmoji": "🇸🇪",
     "continent": "europe",
     "waterAccess": "coastal",
@@ -1869,7 +3031,14 @@
   },
   {
     "code": "SWZ",
-    "nameCanonical": "Eswatini",
+    "names": {
+      "fr": "Swaziland",
+      "en": "Eswatini"
+    },
+    "aliases": {
+      "fr": ["Swaziland", "SZ", "SWZ", "Eswatini"],
+      "en": ["Eswatini", "SZ", "SWZ", "Swaziland"]
+    },
     "flagEmoji": "🇸🇿",
     "continent": "africa",
     "waterAccess": "landlocked",
@@ -1880,7 +3049,14 @@
   },
   {
     "code": "SYC",
-    "nameCanonical": "Seychelles",
+    "names": {
+      "fr": "Seychelles",
+      "en": "Seychelles"
+    },
+    "aliases": {
+      "fr": ["Seychelles", "SC", "SYC"],
+      "en": ["Seychelles", "SC", "SYC"]
+    },
     "flagEmoji": "🇸🇨",
     "continent": "africa",
     "waterAccess": "island",
@@ -1891,7 +3067,14 @@
   },
   {
     "code": "SYR",
-    "nameCanonical": "Syria",
+    "names": {
+      "fr": "Syrie",
+      "en": "Syria"
+    },
+    "aliases": {
+      "fr": ["Syrie", "SY", "SYR"],
+      "en": ["Syria", "SY", "SYR"]
+    },
     "flagEmoji": "🇸🇾",
     "continent": "asia",
     "waterAccess": "coastal",
@@ -1902,7 +3085,14 @@
   },
   {
     "code": "TCD",
-    "nameCanonical": "Chad",
+    "names": {
+      "fr": "Tchad",
+      "en": "Chad"
+    },
+    "aliases": {
+      "fr": ["Tchad", "TD", "TCD"],
+      "en": ["Chad", "TD", "TCD"]
+    },
     "flagEmoji": "🇹🇩",
     "continent": "africa",
     "waterAccess": "landlocked",
@@ -1913,7 +3103,14 @@
   },
   {
     "code": "TGO",
-    "nameCanonical": "Togo",
+    "names": {
+      "fr": "Togo",
+      "en": "Togo"
+    },
+    "aliases": {
+      "fr": ["Togo", "TG", "TGO"],
+      "en": ["Togo", "TG", "TGO"]
+    },
     "flagEmoji": "🇹🇬",
     "continent": "africa",
     "waterAccess": "coastal",
@@ -1924,7 +3121,14 @@
   },
   {
     "code": "THA",
-    "nameCanonical": "Thailand",
+    "names": {
+      "fr": "Thaïlande",
+      "en": "Thailand"
+    },
+    "aliases": {
+      "fr": ["Thaïlande", "TH", "THA"],
+      "en": ["Thailand", "TH", "THA"]
+    },
     "flagEmoji": "🇹🇭",
     "continent": "asia",
     "waterAccess": "coastal",
@@ -1935,7 +3139,14 @@
   },
   {
     "code": "TJK",
-    "nameCanonical": "Tajikistan",
+    "names": {
+      "fr": "Tadjikistan",
+      "en": "Tajikistan"
+    },
+    "aliases": {
+      "fr": ["Tadjikistan", "TJ", "TJK"],
+      "en": ["Tajikistan", "TJ", "TJK"]
+    },
     "flagEmoji": "🇹🇯",
     "continent": "asia",
     "waterAccess": "landlocked",
@@ -1946,7 +3157,14 @@
   },
   {
     "code": "TKM",
-    "nameCanonical": "Turkmenistan",
+    "names": {
+      "fr": "Turkménistan",
+      "en": "Turkmenistan"
+    },
+    "aliases": {
+      "fr": ["Turkménistan", "TM", "TKM"],
+      "en": ["Turkmenistan", "TM", "TKM"]
+    },
     "flagEmoji": "🇹🇲",
     "continent": "asia",
     "waterAccess": "landlocked",
@@ -1957,7 +3175,14 @@
   },
   {
     "code": "TLS",
-    "nameCanonical": "Timor-Leste",
+    "names": {
+      "fr": "Timor oriental",
+      "en": "Timor-Leste"
+    },
+    "aliases": {
+      "fr": ["Timor oriental", "TL", "TLS", "Timor-Leste"],
+      "en": ["Timor-Leste", "TL", "TLS", "East Timor"]
+    },
     "flagEmoji": "🇹🇱",
     "continent": "asia",
     "waterAccess": "coastal",
@@ -1968,7 +3193,14 @@
   },
   {
     "code": "TON",
-    "nameCanonical": "Tonga",
+    "names": {
+      "fr": "Tonga",
+      "en": "Tonga"
+    },
+    "aliases": {
+      "fr": ["Tonga", "TO", "TON"],
+      "en": ["Tonga", "TO", "TON"]
+    },
     "flagEmoji": "🇹🇴",
     "continent": "oceania",
     "waterAccess": "island",
@@ -1979,7 +3211,14 @@
   },
   {
     "code": "TTO",
-    "nameCanonical": "Trinidad and Tobago",
+    "names": {
+      "fr": "Trinité-et-Tobago",
+      "en": "Trinidad and Tobago"
+    },
+    "aliases": {
+      "fr": ["Trinité-et-Tobago", "TT", "TTO"],
+      "en": ["Trinidad and Tobago", "TT", "TTO"]
+    },
     "flagEmoji": "🇹🇹",
     "continent": "north_america",
     "waterAccess": "island",
@@ -1990,7 +3229,14 @@
   },
   {
     "code": "TUN",
-    "nameCanonical": "Tunisia",
+    "names": {
+      "fr": "Tunisie",
+      "en": "Tunisia"
+    },
+    "aliases": {
+      "fr": ["Tunisie", "TN", "TUN"],
+      "en": ["Tunisia", "TN", "TUN"]
+    },
     "flagEmoji": "🇹🇳",
     "continent": "africa",
     "waterAccess": "coastal",
@@ -2001,7 +3247,14 @@
   },
   {
     "code": "TUR",
-    "nameCanonical": "Türkiye",
+    "names": {
+      "fr": "Turquie",
+      "en": "Türkiye"
+    },
+    "aliases": {
+      "fr": ["Turquie", "TR", "TUR"],
+      "en": ["Türkiye", "TR", "TUR"]
+    },
     "flagEmoji": "🇹🇷",
     "continent": "asia",
     "waterAccess": "coastal",
@@ -2012,7 +3265,14 @@
   },
   {
     "code": "TUV",
-    "nameCanonical": "Tuvalu",
+    "names": {
+      "fr": "Tuvalu",
+      "en": "Tuvalu"
+    },
+    "aliases": {
+      "fr": ["Tuvalu", "TV", "TUV"],
+      "en": ["Tuvalu", "TV", "TUV"]
+    },
     "flagEmoji": "🇹🇻",
     "continent": "oceania",
     "waterAccess": "island",
@@ -2023,7 +3283,14 @@
   },
   {
     "code": "TWN",
-    "nameCanonical": "Taiwan",
+    "names": {
+      "fr": "Taïwan",
+      "en": "Taiwan"
+    },
+    "aliases": {
+      "fr": ["Taïwan", "TW", "TWN", "Formose"],
+      "en": ["Taiwan", "TW", "TWN", "Formosa"]
+    },
     "flagEmoji": "🇹🇼",
     "continent": "asia",
     "waterAccess": "island",
@@ -2034,7 +3301,14 @@
   },
   {
     "code": "TZA",
-    "nameCanonical": "Tanzania",
+    "names": {
+      "fr": "Tanzanie",
+      "en": "Tanzania"
+    },
+    "aliases": {
+      "fr": ["Tanzanie", "TZ", "TZA"],
+      "en": ["Tanzania", "TZ", "TZA"]
+    },
     "flagEmoji": "🇹🇿",
     "continent": "africa",
     "waterAccess": "coastal",
@@ -2045,7 +3319,14 @@
   },
   {
     "code": "UGA",
-    "nameCanonical": "Uganda",
+    "names": {
+      "fr": "Ouganda",
+      "en": "Uganda"
+    },
+    "aliases": {
+      "fr": ["Ouganda", "UG", "UGA"],
+      "en": ["Uganda", "UG", "UGA"]
+    },
     "flagEmoji": "🇺🇬",
     "continent": "africa",
     "waterAccess": "landlocked",
@@ -2056,7 +3337,14 @@
   },
   {
     "code": "UKR",
-    "nameCanonical": "Ukraine",
+    "names": {
+      "fr": "Ukraine",
+      "en": "Ukraine"
+    },
+    "aliases": {
+      "fr": ["Ukraine", "UA", "UKR"],
+      "en": ["Ukraine", "UA", "UKR"]
+    },
     "flagEmoji": "🇺🇦",
     "continent": "europe",
     "waterAccess": "coastal",
@@ -2067,7 +3355,14 @@
   },
   {
     "code": "URY",
-    "nameCanonical": "Uruguay",
+    "names": {
+      "fr": "Uruguay",
+      "en": "Uruguay"
+    },
+    "aliases": {
+      "fr": ["Uruguay", "UY", "URY"],
+      "en": ["Uruguay", "UY", "URY"]
+    },
     "flagEmoji": "🇺🇾",
     "continent": "south_america",
     "waterAccess": "coastal",
@@ -2078,7 +3373,20 @@
   },
   {
     "code": "USA",
-    "nameCanonical": "United States",
+    "names": {
+      "fr": "États-Unis",
+      "en": "United States"
+    },
+    "aliases": {
+      "fr": ["États-Unis", "US", "USA", "Amérique", "États-Unis d'Amérique"],
+      "en": [
+        "United States",
+        "US",
+        "USA",
+        "America",
+        "United States of America"
+      ]
+    },
     "flagEmoji": "🇺🇸",
     "continent": "north_america",
     "waterAccess": "coastal",
@@ -2089,7 +3397,14 @@
   },
   {
     "code": "UZB",
-    "nameCanonical": "Uzbekistan",
+    "names": {
+      "fr": "Ouzbékistan",
+      "en": "Uzbekistan"
+    },
+    "aliases": {
+      "fr": ["Ouzbékistan", "UZ", "UZB"],
+      "en": ["Uzbekistan", "UZ", "UZB"]
+    },
     "flagEmoji": "🇺🇿",
     "continent": "asia",
     "waterAccess": "landlocked",
@@ -2100,7 +3415,14 @@
   },
   {
     "code": "VAT",
-    "nameCanonical": "Vatican City",
+    "names": {
+      "fr": "Cité du Vatican",
+      "en": "Vatican City"
+    },
+    "aliases": {
+      "fr": ["Cité du Vatican", "VA", "VAT", "Vatican", "Saint-Siège"],
+      "en": ["Vatican City", "VA", "VAT", "Holy See"]
+    },
     "flagEmoji": "🇻🇦",
     "continent": "europe",
     "waterAccess": "landlocked",
@@ -2111,7 +3433,14 @@
   },
   {
     "code": "VCT",
-    "nameCanonical": "Saint Vincent and the Grenadines",
+    "names": {
+      "fr": "Saint-Vincent-et-les-Grenadines",
+      "en": "Saint Vincent and the Grenadines"
+    },
+    "aliases": {
+      "fr": ["Saint-Vincent-et-les-Grenadines", "VC", "VCT"],
+      "en": ["Saint Vincent and the Grenadines", "VC", "VCT"]
+    },
     "flagEmoji": "🇻🇨",
     "continent": "north_america",
     "waterAccess": "island",
@@ -2122,7 +3451,14 @@
   },
   {
     "code": "VEN",
-    "nameCanonical": "Venezuela",
+    "names": {
+      "fr": "Venezuela",
+      "en": "Venezuela"
+    },
+    "aliases": {
+      "fr": ["Venezuela", "VE", "VEN"],
+      "en": ["Venezuela", "VE", "VEN"]
+    },
     "flagEmoji": "🇻🇪",
     "continent": "south_america",
     "waterAccess": "coastal",
@@ -2133,7 +3469,14 @@
   },
   {
     "code": "VNM",
-    "nameCanonical": "Vietnam",
+    "names": {
+      "fr": "Viêt Nam",
+      "en": "Vietnam"
+    },
+    "aliases": {
+      "fr": ["Viêt Nam", "VN", "VNM"],
+      "en": ["Vietnam", "VN", "VNM"]
+    },
     "flagEmoji": "🇻🇳",
     "continent": "asia",
     "waterAccess": "coastal",
@@ -2144,7 +3487,14 @@
   },
   {
     "code": "VUT",
-    "nameCanonical": "Vanuatu",
+    "names": {
+      "fr": "Vanuatu",
+      "en": "Vanuatu"
+    },
+    "aliases": {
+      "fr": ["Vanuatu", "VU", "VUT"],
+      "en": ["Vanuatu", "VU", "VUT"]
+    },
     "flagEmoji": "🇻🇺",
     "continent": "oceania",
     "waterAccess": "island",
@@ -2155,7 +3505,14 @@
   },
   {
     "code": "WSM",
-    "nameCanonical": "Samoa",
+    "names": {
+      "fr": "Samoa",
+      "en": "Samoa"
+    },
+    "aliases": {
+      "fr": ["Samoa", "WS", "WSM"],
+      "en": ["Samoa", "WS", "WSM"]
+    },
     "flagEmoji": "🇼🇸",
     "continent": "oceania",
     "waterAccess": "island",
@@ -2166,7 +3523,14 @@
   },
   {
     "code": "XKX",
-    "nameCanonical": "Kosovo",
+    "names": {
+      "fr": "Kosovo",
+      "en": "Kosovo"
+    },
+    "aliases": {
+      "fr": ["XKX", "XK", "Kosovo"],
+      "en": ["XKX", "XK", "Kosovo"]
+    },
     "flagEmoji": "🇽🇰",
     "continent": "europe",
     "waterAccess": "landlocked",
@@ -2177,7 +3541,14 @@
   },
   {
     "code": "YEM",
-    "nameCanonical": "Yemen",
+    "names": {
+      "fr": "Yémen",
+      "en": "Yemen"
+    },
+    "aliases": {
+      "fr": ["Yémen", "YE", "YEM"],
+      "en": ["Yemen", "YE", "YEM"]
+    },
     "flagEmoji": "🇾🇪",
     "continent": "asia",
     "waterAccess": "coastal",
@@ -2188,7 +3559,14 @@
   },
   {
     "code": "ZAF",
-    "nameCanonical": "South Africa",
+    "names": {
+      "fr": "Afrique du Sud",
+      "en": "South Africa"
+    },
+    "aliases": {
+      "fr": ["Afrique du Sud", "ZA", "ZAF"],
+      "en": ["South Africa", "ZA", "ZAF"]
+    },
     "flagEmoji": "🇿🇦",
     "continent": "africa",
     "waterAccess": "coastal",
@@ -2211,7 +3589,14 @@
   },
   {
     "code": "ZMB",
-    "nameCanonical": "Zambia",
+    "names": {
+      "fr": "Zambie",
+      "en": "Zambia"
+    },
+    "aliases": {
+      "fr": ["Zambie", "ZM", "ZMB"],
+      "en": ["Zambia", "ZM", "ZMB"]
+    },
     "flagEmoji": "🇿🇲",
     "continent": "africa",
     "waterAccess": "landlocked",
@@ -2222,7 +3607,14 @@
   },
   {
     "code": "ZWE",
-    "nameCanonical": "Zimbabwe",
+    "names": {
+      "fr": "Zimbabwe",
+      "en": "Zimbabwe"
+    },
+    "aliases": {
+      "fr": ["Zimbabwe", "ZW", "ZWE"],
+      "en": ["Zimbabwe", "ZW", "ZWE"]
+    },
     "flagEmoji": "🇿🇼",
     "continent": "africa",
     "waterAccess": "landlocked",

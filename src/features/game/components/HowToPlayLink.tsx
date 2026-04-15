@@ -5,11 +5,13 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
+import { useT } from "@/i18n/LocaleContext";
 import { HelpCircle } from "lucide-react";
 import { useState } from "react";
 
 export function HowToPlayLink() {
   const [open, setOpen] = useState(false);
+  const t = useT();
 
   return (
     <>
@@ -20,45 +22,44 @@ export function HowToPlayLink() {
         className="self-center gap-1.5 text-on-surface-variant text-xs tracking-wide"
       >
         <HelpCircle size={13} />
-        Comment jouer ?
+        {t("ui.howToPlay")}
       </Button>
 
       <Dialog open={open} onOpenChange={setOpen}>
         <DialogContent className="max-w-sm">
           <DialogHeader>
             <DialogTitle className="font-serif text-lg">
-              Comment jouer ?
+              {t("howToPlay.title")}
             </DialogTitle>
           </DialogHeader>
           <div className="space-y-3 text-sm text-on-surface-variant leading-relaxed">
             <p>
-              Chaque grille propose{" "}
-              <strong className="text-on-surface">6 contraintes</strong>{" "}
-              géographiques (3 lignes, 3 colonnes). Pour chaque case, trouvez un
-              pays qui valide{" "}
+              {t("howToPlay.p1pre")}{" "}
               <strong className="text-on-surface">
-                les deux contraintes croisées
+                {t("howToPlay.p1bold1")}
+              </strong>{" "}
+              {t("howToPlay.p1mid")}{" "}
+              <strong className="text-on-surface">
+                {t("howToPlay.p1bold2")}
               </strong>
               .
             </p>
+            <p>{t("howToPlay.p2")}</p>
             <p>
-              Chaque pays ne peut être utilisé qu'une seule fois dans la grille.
+              {t("howToPlay.p3pre")}{" "}
+              <strong className="text-on-surface">
+                {t("howToPlay.p3bold")}
+              </strong>
+              . {t("howToPlay.p3post")}
             </p>
-            <p>
-              Vous avez <strong className="text-on-surface">3 vies</strong>.
-              Chaque mauvaise réponse en consomme une.
-            </p>
-            <p>Les cellules sont colorées selon la rareté de votre réponse :</p>
+            <p>{t("howToPlay.p4")}</p>
             <ul className="space-y-1 pl-1">
-              <li>🟩 Commun — plus de 50 % des joueurs</li>
-              <li>🟨 Peu commun — plus de 25 %</li>
-              <li>🟧 Rare — plus de 10 %</li>
-              <li>🟥 Ultra-rare — 10 % ou moins</li>
+              <li>{t("howToPlay.li1")}</li>
+              <li>{t("howToPlay.li2")}</li>
+              <li>{t("howToPlay.li3")}</li>
+              <li>{t("howToPlay.li4")}</li>
             </ul>
-            <p className="italic text-xs">
-              Plus votre réponse est rare, meilleur est votre score. Bonne
-              chance !
-            </p>
+            <p className="italic text-xs">{t("howToPlay.tip")}</p>
           </div>
         </DialogContent>
       </Dialog>

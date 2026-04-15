@@ -1,6 +1,7 @@
 import { getCountryByCode } from "@/features/countries/lib/search";
 import { formatRarityPercent } from "@/features/game/logic/rarity";
 import type { Cell, CellPosition, RarityTier } from "@/features/game/types";
+import { useLocale } from "@/i18n/LocaleContext";
 import { cn } from "@/lib/utils";
 import { Plus } from "lucide-react";
 
@@ -37,14 +38,17 @@ type Props = {
 };
 
 export function CellComponent({ cell, position, isDisabled, onClick }: Props) {
+  const { locale, t } = useLocale();
+
   if (cell.status === "filled") {
     const country = getCountryByCode(cell.countryCode);
+    const countryName = country ? country.names[locale] : cell.countryCode;
     return (
       <div
         className="aspect-square w-full rounded-xl bg-surface-lowest flex flex-col items-center justify-center gap-0.5 p-1 shadow-editorial"
         aria-label={
           country
-            ? `${country.nameCanonical} — ${formatRarityPercent(cell.rarity)}`
+            ? `${countryName} — ${formatRarityPercent(cell.rarity)}`
             : cell.countryCode
         }
       >
@@ -52,7 +56,7 @@ export function CellComponent({ cell, position, isDisabled, onClick }: Props) {
           {country?.flagEmoji ?? "🏳️"}
         </span>
         <span className="text-[9px] font-medium text-on-surface text-center leading-tight line-clamp-2 px-0.5">
-          {country?.nameCanonical ?? cell.countryCode}
+          {countryName}
         </span>
         <RarityBadge tier={cell.rarityTier} rarity={cell.rarity} />
       </div>
@@ -64,7 +68,10 @@ export function CellComponent({ cell, position, isDisabled, onClick }: Props) {
       type="button"
       onClick={onClick}
       disabled={isDisabled}
-      aria-label={`Sélectionner case ligne ${position.row + 1} colonne ${position.col + 1}`}
+      aria-label={t("ui.cellAriaLabel", {
+        row: position.row + 1,
+        col: position.col + 1,
+      })}
       className={cn(
         "aspect-square w-full rounded-xl flex items-center justify-center transition-colors duration-150",
         isDisabled

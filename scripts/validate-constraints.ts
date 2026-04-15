@@ -9,6 +9,7 @@ import { readFileSync } from "node:fs";
 import { resolve } from "node:path";
 import type { Country } from "../src/features/countries/types.ts";
 import { CONSTRAINTS } from "../src/features/game/logic/constraints.ts";
+import { translate } from "../src/i18n/index.ts";
 
 const SWEET_SPOT_PIVOT: [number, number] = [5, 20];
 const SWEET_SPOT_DEFAULT: [number, number] = [8, 60];
@@ -37,7 +38,7 @@ const rows: Row[] = CONSTRAINTS.map((constraint) => {
   const flag = count < lo ? "⚠️  TROP PEU" : count > hi ? "⚠️  TROP LARGE" : "✓";
   return {
     id: constraint.id,
-    label: constraint.label,
+    label: translate("fr", constraint.labelKey),
     category: constraint.category,
     count,
     flag,

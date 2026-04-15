@@ -1,3 +1,4 @@
+import { useLocale } from "@/i18n/LocaleContext";
 import { Heart } from "lucide-react";
 import { STARTING_LIVES } from "../logic/constants";
 
@@ -7,8 +8,11 @@ type Props = {
 };
 
 export function Header({ remainingLives, date }: Props) {
+  const { locale } = useLocale();
+
+  const localeTag = locale === "fr" ? "fr-FR" : "en-GB";
   const dateLabel = date
-    ? new Intl.DateTimeFormat("fr-FR", {
+    ? new Intl.DateTimeFormat(localeTag, {
         weekday: "long",
         day: "numeric",
         month: "long",

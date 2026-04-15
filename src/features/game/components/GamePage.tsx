@@ -1,8 +1,10 @@
 import { useGameState } from "@/features/game/hooks/useGameState";
+import { useT } from "@/i18n/LocaleContext";
 import { GameGrid } from "./GameGrid";
 import { GuessModal } from "./GuessModal";
 import { Header } from "./Header";
 import { HowToPlayLink } from "./HowToPlayLink";
+import { LocaleSwitcher } from "./LocaleSwitcher";
 import { ResultScreen } from "./ResultScreen";
 
 const LAUNCH_DATE_MS = new Date("2026-04-01T00:00:00Z").getTime();
@@ -51,6 +53,7 @@ function LoadingSkeleton() {
 
 export function GamePage() {
   const { state, selectCell, submitGuess, isLoading, hasGrid } = useGameState();
+  const t = useT();
   const gridNumber = getGridNumber();
 
   return (
@@ -65,13 +68,16 @@ export function GamePage() {
         ) : (
           <div className="flex flex-col items-center justify-center py-20 text-center gap-3">
             <p className="font-serif text-xl italic text-on-surface-variant">
-              Aucune grille disponible aujourd'hui.
+              {t("ui.noGridToday")}
             </p>
-            <p className="text-sm text-on-surface-variant">Revenez demain !</p>
+            <p className="text-sm text-on-surface-variant">
+              {t("ui.comeBackTomorrow")}
+            </p>
           </div>
         )}
 
         <HowToPlayLink />
+        <LocaleSwitcher />
       </div>
 
       {state.selectedCell !== null && (

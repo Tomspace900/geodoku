@@ -1,7 +1,13 @@
 import { getCountryByCode } from "@/features/countries/lib/search";
 import { CONSTRAINTS } from "@/features/game/logic/constraints";
+import { translate } from "@/i18n/index";
 
 const CONSTRAINT_MAP = new Map(CONSTRAINTS.map((c) => [c.id, c]));
+
+function getConstraintLabel(id: string): string {
+  const constraint = CONSTRAINT_MAP.get(id);
+  return constraint ? translate("fr", constraint.labelKey) : id;
+}
 
 const headerClass =
   "flex items-center justify-center text-center text-[10px] font-medium text-on-surface-variant bg-surface-low rounded-xl p-2 leading-tight min-h-[52px]";
@@ -30,7 +36,7 @@ export function GridPreview({
       {/* Headers de colonnes */}
       {cols.map((colId) => (
         <div key={colId} className={`${headerClass} p-1.5`}>
-          {CONSTRAINT_MAP.get(colId)?.label ?? colId}
+          {getConstraintLabel(colId)}
         </div>
       ))}
 
@@ -38,7 +44,7 @@ export function GridPreview({
       {rows.map((rowId, r) => [
         /* Header de ligne */
         <div key={`row-${rowId}`} className={`${headerClass} p-1.5`}>
-          {CONSTRAINT_MAP.get(rowId)?.label ?? rowId}
+          {getConstraintLabel(rowId)}
         </div>,
 
         /* Cellules */

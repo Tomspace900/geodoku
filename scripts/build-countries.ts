@@ -1,6 +1,18 @@
 /**
  * Generates src/features/countries/data/countries.json
- * Sources: world-countries npm (v5) + REST Countries (population) + scripts/patches.json
+ *
+ * Sources:
+ * - world-countries npm (v5): name.common (EN), translations.fra.common (FR), cca2
+ * - REST Countries v3.1 API: population (field=cca3,population)
+ * - scripts/patches.json: overrides, additions, aliasOverrides
+ *
+ * Name localisation strategy:
+ * - EN: world-countries `name.common` (authoritative English name)
+ * - FR: world-countries `translations.fra.common` (ISO 639-3 "fra" = French)
+ *   Fallback: EN name when no FR translation is available.
+ *
+ * Alias generation: [localized name, cca2, cca3] deduplicated + aliasOverrides from patches.json.
+ *
  * Run: pnpm build:countries (requires network for population fetch)
  */
 import { readFileSync, writeFileSync } from "node:fs";
@@ -15,8 +27,10 @@ import type {
 // ─── World-countries shape (fields we consume) ────────────────────────────────
 
 interface WCEntry {
+  cca2: string;
   cca3: string;
   name: { common: string };
+  translations: Record<string, { common: string; official: string }>;
   flag: string;
   region: string;
   subregion: string;
@@ -27,8 +41,14 @@ interface WCEntry {
   unMember: boolean;
 }
 
+interface AliasOverride {
+  fr?: string[];
+  en?: string[];
+}
+
 interface Patches {
   overrides: Record<string, Partial<Omit<Country, "code">>>;
+  aliasOverrides: Record<string, AliasOverride>;
   additions: Country[];
 }
 
@@ -251,6 +271,28 @@ async function fetchPopulationByCca3(): Promise<Map<string, number>> {
   return populationMapFromRc(data);
 }
 
+/** Deduplicates an array while preserving order. */
+function dedupe(arr: string[]): string[] {
+  return [...new Set(arr)];
+}
+
+/**
+ * Builds localized aliases for a country.
+ * Baseline: [localized name, cca2, cca3] — deduplicated.
+ * Extras from aliasOverrides are appended (also deduplicated).
+ */
+function buildAliases(
+  nameFr: string,
+  nameEn: string,
+  cca2: string,
+  cca3: string,
+  overrides?: AliasOverride,
+): { fr: string[]; en: string[] } {
+  const fr = dedupe([nameFr, cca2, cca3, ...(overrides?.fr ?? [])]);
+  const en = dedupe([nameEn, cca2, cca3, ...(overrides?.en ?? [])]);
+  return { fr, en };
+}
+
 // ─── Main ─────────────────────────────────────────────────────────────────────
 
 async function main(): Promise<void> {
@@ -270,9 +312,17 @@ async function main(): Promise<void> {
   // 3. Transform to Country, merge population from REST Countries, then overrides
   const fromWC: Country[] = filtered.map((c) => {
     const pop = populationByCca3.get(c.cca3);
+
+    const nameEn = c.name.common;
+    const nameFr = c.translations.fra?.common ?? nameEn;
+
+    const aliasOverride = patches.aliasOverrides?.[c.cca3];
+    const aliases = buildAliases(nameFr, nameEn, c.cca2, c.cca3, aliasOverride);
+
     const country: Country = {
       code: c.cca3,
-      nameCanonical: c.name.common,
+      names: { fr: nameFr, en: nameEn },
+      aliases,
       flagEmoji: c.flag,
       continent: deriveContinent(c.region, c.subregion),
       waterAccess: deriveWaterAccess(c.landlocked, c.borders.length),
@@ -312,6 +362,9 @@ async function main(): Promise<void> {
     if (!c.flagEmoji) {
       throw new Error(`${c.code}: missing flagEmoji`);
     }
+    if (!c.names?.fr || !c.names?.en) {
+      throw new Error(`${c.code}: missing names.fr or names.en`);
+    }
     if (c.areaKm2 <= 0) {
       throw new Error(`${c.code}: areaKm2 must be > 0 (got ${c.areaKm2})`);
     }
@@ -339,7 +392,7 @@ async function main(): Promise<void> {
   console.log(`✓ ${result.length} countries → ${outPath}`);
 
   // Sample: a few varied + ambiguous countries
-  const SAMPLE_CODES = ["FRA", "BRA", "AUS", "CYP", "XKX", "TWN"];
+  const SAMPLE_CODES = ["FRA", "BRA", "AUS", "CYP", "XKX", "TWN", "USA", "GBR"];
   console.log("\nSample:");
   for (const code of SAMPLE_CODES) {
     const c = result.find((x) => x.code === code);

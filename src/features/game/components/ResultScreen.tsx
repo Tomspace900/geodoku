@@ -6,6 +6,7 @@ import {
   formatShareString,
 } from "@/features/game/logic/share";
 import type { CellKey, GameState } from "@/features/game/types";
+import { useT } from "@/i18n/LocaleContext";
 import { cn } from "@/lib/utils";
 import { Copy } from "lucide-react";
 import { useState } from "react";
@@ -21,6 +22,7 @@ type Props = {
 
 export function ResultScreen({ state, gridNumber }: Props) {
   const [copied, setCopied] = useState(false);
+  const t = useT();
   const score = computeScore(state);
   const isWon = state.status === "won";
 
@@ -46,11 +48,11 @@ export function ResultScreen({ state, gridNumber }: Props) {
         {/* Title */}
         <div className="flex flex-col items-center gap-2 text-center">
           <h2 className="font-serif text-3xl italic text-on-surface">
-            {isWon ? "Magnifique !" : "Dommage..."}
+            {isWon ? t("ui.magnificent") : t("ui.tooBad")}
           </h2>
           <div className="w-12 h-1 bg-brand rounded-full" />
           <p className="text-[10px] tracking-widest text-on-surface-variant uppercase mt-1">
-            Résultat final
+            {t("ui.finalResult")}
           </p>
         </div>
 
@@ -60,14 +62,14 @@ export function ResultScreen({ state, gridNumber }: Props) {
             {score.percent}%
           </span>
           <span className="text-xs text-on-surface-variant">
-            Score de rareté — {score.raw} / {MAX_SCORE} pts
+            {t("ui.rarityScore", { raw: score.raw, max: MAX_SCORE })}
           </span>
         </div>
 
         {/* Emoji grid */}
         <div className="flex flex-col items-center gap-1">
           <p className="text-[10px] tracking-widest text-on-surface-variant uppercase mb-1">
-            Votre grille
+            {t("ui.yourGrid")}
           </p>
           {ROWS.map((row) => (
             <div key={row} className="flex gap-1">
@@ -103,12 +105,12 @@ export function ResultScreen({ state, gridNumber }: Props) {
           size="lg"
         >
           <Copy size={16} />
-          {copied ? "Copié ! ✓" : "Partager mes résultats"}
+          {copied ? t("ui.shareCopied") : t("ui.share")}
         </Button>
 
         {/* Footer */}
         <p className="text-center text-xs text-on-surface-variant italic">
-          Reviens demain pour une nouvelle grille !
+          {t("ui.comeBackTomorrowGrid")}
         </p>
       </div>
     </div>
