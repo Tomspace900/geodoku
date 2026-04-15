@@ -22,9 +22,6 @@ dist-ssr/
 *.sln
 *.sw?
 
-# Convex generated files
-convex/_generated/
-
 # Agents and Claude files
 .agents/
 .cursor/

@@ -318,7 +318,13 @@ pnpm validate:constraints         # rapport de calibrage des contraintes
 pnpm dlx convex@latest env set ADMIN_TOKEN "xxx"
 ```
 
-## 8. Anti-patterns à bannir
+## 8. CI, Vercel et `convex/_generated`
+
+- Le dossier **`convex/_generated/` est versionné** (recommandation Convex) : sans lui, `pnpm build` / `tsc` échouent sur Vercel ou toute CI qui clone le repo sans avoir lancé `convex dev` avant.
+- Après un changement de **schéma** ou d’**API Convex** (`convex dev` régénère les fichiers), **commiter** les fichiers mis à jour dans `convex/_generated/`.
+- **Alternative** quand le backend prod est prêt : build Vercel du type `pnpm dlx convex@latest deploy --cmd 'pnpm run build'` avec `CONVEX_DEPLOY_KEY` (voir [hosting Vercel](https://docs.convex.dev/production/hosting/vercel)) — déploie Convex et injecte l’URL pour le build ; ici on reste sur **build statique** + `_generated` commité tant que tu sépares volontairement prod et front.
+
+## 9. Anti-patterns à bannir
 
 - 🚫 **Over-engineering.** Pas de state manager, pas d'abstraction générique « au cas où », pas de couche d'indirection sans besoin concret. Ce projet est un mini-jeu, pas une plateforme.
 - 🚫 **Logique dans les composants.** Si un composant calcule quelque chose au-delà du formatting d'affichage, extraire en fonction pure dans `logic/`.
