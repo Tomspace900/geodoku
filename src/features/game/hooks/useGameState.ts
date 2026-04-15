@@ -2,7 +2,15 @@ import { getCountryByCode } from "@/features/countries/lib/search";
 import { useMutation, useQuery } from "convex/react";
 import { useCallback, useEffect, useReducer } from "react";
 import { api } from "../../../../convex/_generated/api";
+import {
+  type PersistedGame,
+  clearPersistedGame,
+  isPersistedForToday,
+  loadPersistedGame,
+  savePersistedGame,
+} from "../logic/persistence";
 import { createInitialState, gameReducer } from "../logic/reducer";
+import { sanitizePersistedForGrid } from "../logic/sanitizePersisted";
 import { validateGuess } from "../logic/validation";
 import type { CellPosition, GameState } from "../types";
 
@@ -17,7 +25,29 @@ export function useGameState() {
   );
 
   useEffect(() => {
-    if (todayGrid && todayGrid.date !== state.date) {
+    if (!todayGrid || todayGrid.date === state.date) return;
+
+    const persisted = loadPersistedGame();
+    let rehydratePayload: PersistedGame | null = null;
+
+    if (persisted && isPersistedForToday(persisted, todayGrid.date)) {
+      rehydratePayload = sanitizePersistedForGrid(
+        persisted,
+        todayGrid.validAnswers,
+      );
+      if (!rehydratePayload) clearPersistedGame();
+    } else if (persisted) {
+      clearPersistedGame();
+    }
+
+    if (rehydratePayload) {
+      dispatch({
+        type: "rehydrate",
+        persisted: rehydratePayload,
+        rows: todayGrid.rows,
+        cols: todayGrid.cols,
+      });
+    } else {
       dispatch({
         type: "init",
         date: todayGrid.date,
@@ -26,6 +56,11 @@ export function useGameState() {
       });
     }
   }, [todayGrid, state.date]);
+
+  useEffect(() => {
+    if (!state.date) return;
+    savePersistedGame(state);
+  }, [state]);
 
   const selectCell = useCallback((cell: CellPosition | null) => {
     dispatch({ type: "selectCell", cell });

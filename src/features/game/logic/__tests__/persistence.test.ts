@@ -1,0 +1,132 @@
+import { beforeEach, describe, expect, it, vi } from "vitest";
+import {
+  clearPersistedGame,
+  isPersistedForToday,
+  loadPersistedGame,
+  savePersistedGame,
+} from "../persistence";
+import { createInitialState, gameReducer } from "../reducer";
+
+beforeEach(() => {
+  localStorage.clear();
+});
+
+describe("savePersistedGame / loadPersistedGame", () => {
+  it("round-trip preserves all persisted fields", () => {
+    const state = createInitialState(
+      "2026-04-15",
+      ["r0", "r1", "r2"],
+      ["c0", "c1", "c2"],
+    );
+    savePersistedGame(state);
+    const loaded = loadPersistedGame();
+    expect(loaded).not.toBeNull();
+    expect(loaded?.date).toBe("2026-04-15");
+    expect(loaded?.remainingLives).toBe(3);
+    expect(loaded?.status).toBe("playing");
+    expect(loaded?.finishedAt).toBeNull();
+    expect(loaded?.cells["0,0"].status).toBe("empty");
+  });
+
+  it("serialises usedCountries Set as array and deserialises it", () => {
+    let state = createInitialState(
+      "2026-04-15",
+      ["r0", "r1", "r2"],
+      ["c0", "c1", "c2"],
+    );
+    state = gameReducer(state, {
+      type: "guessSuccess",
+      cell: { row: 0, col: 0 },
+      countryCode: "FRA",
+      rarity: 0.4,
+    });
+    savePersistedGame(state);
+
+    const raw = JSON.parse(localStorage.getItem("geodoku.currentGame")!);
+    expect(Array.isArray(raw.usedCountries)).toBe(true);
+    expect(raw.usedCountries).toContain("FRA");
+
+    const loaded = loadPersistedGame();
+    expect(Array.isArray(loaded?.usedCountries)).toBe(true);
+    expect(loaded?.usedCountries).toContain("FRA");
+  });
+});
+
+describe("loadPersistedGame", () => {
+  it("returns null when storage is empty", () => {
+    expect(loadPersistedGame()).toBeNull();
+  });
+
+  it("returns null when JSON is corrupted", () => {
+    localStorage.setItem("geodoku.currentGame", "{invalid json}");
+    expect(loadPersistedGame()).toBeNull();
+  });
+
+  it("returns null when version does not match", () => {
+    const state = createInitialState(
+      "2026-04-15",
+      ["r0", "r1", "r2"],
+      ["c0", "c1", "c2"],
+    );
+    savePersistedGame(state);
+    const raw = JSON.parse(localStorage.getItem("geodoku.currentGame")!);
+    raw.version = 99;
+    localStorage.setItem("geodoku.currentGame", JSON.stringify(raw));
+    expect(loadPersistedGame()).toBeNull();
+  });
+});
+
+describe("clearPersistedGame", () => {
+  it("removes the entry from storage", () => {
+    const state = createInitialState(
+      "2026-04-15",
+      ["r0", "r1", "r2"],
+      ["c0", "c1", "c2"],
+    );
+    savePersistedGame(state);
+    expect(loadPersistedGame()).not.toBeNull();
+    clearPersistedGame();
+    expect(loadPersistedGame()).toBeNull();
+  });
+});
+
+describe("isPersistedForToday", () => {
+  it("returns true when dates match", () => {
+    const state = createInitialState(
+      "2026-04-15",
+      ["r0", "r1", "r2"],
+      ["c0", "c1", "c2"],
+    );
+    savePersistedGame(state);
+    const persisted = loadPersistedGame()!;
+    expect(isPersistedForToday(persisted, "2026-04-15")).toBe(true);
+  });
+
+  it("returns false when dates differ", () => {
+    const state = createInitialState(
+      "2026-04-14",
+      ["r0", "r1", "r2"],
+      ["c0", "c1", "c2"],
+    );
+    savePersistedGame(state);
+    const persisted = loadPersistedGame()!;
+    expect(isPersistedForToday(persisted, "2026-04-15")).toBe(false);
+  });
+});
+
+describe("savePersistedGame — resilience", () => {
+  it("does not throw when localStorage throws", () => {
+    const spy = vi
+      .spyOn(Storage.prototype, "setItem")
+      .mockImplementation(() => {
+        throw new Error("QuotaExceededError");
+      });
+    const state = createInitialState(
+      "2026-04-15",
+      ["r0", "r1", "r2"],
+      ["c0", "c1", "c2"],
+    );
+    expect(() => savePersistedGame(state)).not.toThrow();
+    spy.mockRestore();
+  });
+});

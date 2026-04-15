@@ -1,5 +1,6 @@
 import type { Cell, CellKey, CellPosition, GameState } from "../types";
 import { STARTING_LIVES } from "./constants";
+import type { PersistedGame } from "./persistence";
 import { rarityToTier } from "./rarity";
 
 export type GameAction =
@@ -11,7 +12,13 @@ export type GameAction =
       countryCode: string;
       rarity: number;
     }
-  | { type: "guessFailure" };
+  | { type: "guessFailure" }
+  | {
+      type: "rehydrate";
+      persisted: PersistedGame;
+      rows: string[];
+      cols: string[];
+    };
 
 export function createInitialState(
   date: string,
@@ -84,5 +91,19 @@ export function gameReducer(state: GameState, action: GameAction): GameState {
         finishedAt: lost ? Date.now() : state.finishedAt,
       };
     }
+
+    case "rehydrate":
+      return {
+        date: action.persisted.date,
+        rows: action.rows,
+        cols: action.cols,
+        cells: action.persisted.cells,
+        remainingLives: action.persisted.remainingLives,
+        selectedCell: null,
+        usedCountries: new Set(action.persisted.usedCountries),
+        status: action.persisted.status,
+        startedAt: action.persisted.startedAt,
+        finishedAt: action.persisted.finishedAt,
+      };
   }
 }

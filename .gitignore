@@ -27,4 +27,5 @@ convex/_generated/
 
 # Agents and Claude files
 .agents/
+.cursor/
 .claude/

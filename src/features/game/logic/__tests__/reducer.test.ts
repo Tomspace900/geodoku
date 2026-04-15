@@ -1,5 +1,6 @@
 import { describe, expect, it } from "vitest";
 import type { CellKey, GameState } from "../../types";
+import type { PersistedGame } from "../persistence";
 import { createInitialState, gameReducer } from "../reducer";
 
 function freshState(): GameState {
@@ -201,5 +202,67 @@ describe("gameReducer — guessFailure", () => {
     state = gameReducer(state, { type: "guessFailure" });
     expect(state.status).toBe("lost");
     expect(state.finishedAt).not.toBeNull();
+  });
+});
+
+describe("gameReducer — rehydrate", () => {
+  function makePersistedGame(): PersistedGame {
+    return {
+      version: 1,
+      date: "2026-04-15",
+      cells: {
+        "0,0": {
+          status: "filled",
+          countryCode: "FRA",
+          rarity: 0.4,
+          rarityTier: "uncommon",
+        },
+        "0,1": { status: "empty" },
+        "0,2": { status: "empty" },
+        "1,0": { status: "empty" },
+        "1,1": { status: "empty" },
+        "1,2": { status: "empty" },
+        "2,0": { status: "empty" },
+        "2,1": { status: "empty" },
+        "2,2": { status: "empty" },
+      },
+      remainingLives: 2,
+      usedCountries: ["FRA"],
+      status: "playing",
+      startedAt: 1713139200000,
+      finishedAt: null,
+    };
+  }
+
+  it("restores all fields from persisted data, using rows/cols from action", () => {
+    const persisted = makePersistedGame();
+    const state = gameReducer(freshState(), {
+      type: "rehydrate",
+      persisted,
+      rows: ["rowA", "rowB", "rowC"],
+      cols: ["colA", "colB", "colC"],
+    });
+    expect(state.date).toBe("2026-04-15");
+    expect(state.rows).toEqual(["rowA", "rowB", "rowC"]);
+    expect(state.cols).toEqual(["colA", "colB", "colC"]);
+    expect(state.remainingLives).toBe(2);
+    expect(state.status).toBe("playing");
+    expect(state.cells["0,0"].status).toBe("filled");
+    expect(state.selectedCell).toBeNull();
+    expect(state.startedAt).toBe(1713139200000);
+    expect(state.finishedAt).toBeNull();
+  });
+
+  it("deserialises usedCountries as a Set", () => {
+    const persisted = makePersistedGame();
+    const state = gameReducer(freshState(), {
+      type: "rehydrate",
+      persisted,
+      rows: ["rowA", "rowB", "rowC"],
+      cols: ["colA", "colB", "colC"],
+    });
+    expect(state.usedCountries).toBeInstanceOf(Set);
+    expect(state.usedCountries.has("FRA")).toBe(true);
+    expect(state.usedCountries.size).toBe(1);
   });
 });
