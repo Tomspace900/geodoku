@@ -36,10 +36,8 @@ geodoku/
 │   ├── guesses.ts               # mutation submitGuess
 │   ├── gridData.ts              # queries/mutations internes (accès DB)
 │   └── lib/
-│       ├── gridGenerator.ts     # algo pur : backtracking + scoring
-│       ├── countriesData.ts     # re-export de countries.json
-│       ├── constraintsData.ts   # copie des contraintes (predicates)
-│       └── types.ts             # copie du type Country
+│       ├── gridGenerator.ts     # algo pur : backtracking + scoring (importe pays + contraintes depuis src/)
+│       └── gridGenerator.test.ts
 ├── scripts/
 │   ├── build-countries.ts       # one-shot : génère countries.json
 │   └── validate-constraints.ts  # rapport de calibrage
@@ -78,7 +76,7 @@ geodoku/
 - Toute logique métier pure vit dans `features/<feature>/logic/`. Zéro import React, zéro import Convex. Testée en isolation.
 - Les hooks React (`features/<feature>/hooks/`) sont la seule couche qui connecte logique pure + Convex + état React.
 - Les composants ne calculent rien de significatif. Ils consomment l'état du reducer et dispatchent des actions.
-- Toute duplication de fichier dans `convex/lib/` par rapport à `src/features/` doit porter un commentaire en tête : `// Copie de src/... — ne pas éditer ici, regénérer si la source change.`
+- Si un fichier est **dupliqué** dans `convex/lib/` par rapport à `src/features/` (copie statique, pas un import), il doit porter un commentaire en tête : `// Copie de src/... — ne pas éditer ici, regénérer si la source change.` — `gridGenerator.ts` n’est pas une copie : il importe directement `countries.json`, `constraints`, types depuis `src/`.
 
 ## 4. Conventions de code
 
@@ -144,8 +142,8 @@ Inspiration : publications digitales haut de gamme type NYT Games. Spacieux, sop
 
 **Accent éditorial.**
 
-| Token   | Hex       | Usage                                                              |
-| ------- | --------- | ------------------------------------------------------------------ |
+| Token   | Hex       | Usage                                                                                                             |
+| ------- | --------- | ----------------------------------------------------------------------------------------------------------------- |
 | `brand` | `#842cd3` | Accent de marque unique : titres, chiffres hero, mots mis en valeur, underline bar, icônes décoratives de trophée |
 
 `brand` est **la seule couleur chaude** du système. Elle signifie « moment fort » : un score, un achievement, un mot qui porte la phrase. Règle d'application : texte à 100%, background à 10% opacity (`bg-brand/10`). Pas de gradient, pas de deuxième teinte violette, pas d'utilisation décorative gratuite — si tout est accentué, rien ne l'est.
@@ -282,20 +280,22 @@ Ces classes ne sont pas toutes définies dans Tailwind, elles servent de vocabul
 
 - Token bearer via variable d'environnement Convex `ADMIN_TOKEN`.
 - Toutes les mutations admin prennent `adminToken: string` et throwent `ConvexError("Unauthorized")` si mismatch.
-- Côté client : localStorage via hook `useAdminToken`.
+- Côté client : `sessionStorage` via hook `useAdminToken` (effacé à la fermeture de l’onglet).
 
 **Règles Convex à respecter.**
 
 - Pas de `.filter()` sur les queries — utiliser les index.
 - Nommage des index : `by_<field>_and_<field>` (snake_case avec `and`).
-- Toute duplication de fichier (countries, constraints) de `src/` vers `convex/lib/` est un mal nécessaire dû au sandboxing Convex — porter un commentaire explicite en tête.
+- Lorsqu’on duplique un fichier de `src/` vers `convex/lib/` (mal nécessaire du sandboxing), porter un commentaire explicite en tête. Ici, pays + contraintes vivent dans `src/` et sont importés par `gridGenerator.ts` plutôt que recopiés.
 
 <!-- convex-ai-start -->
+
 This project uses [Convex](https://convex.dev) as its backend.
 
 When working on Convex code, **always read `convex/_generated/ai/guidelines.md` first** for important guidelines on how to correctly use Convex APIs and patterns. The file contains rules that override what you may have learned about Convex from training data.
 
 Convex agent skills for common tasks can be installed by running `npx convex ai-files install`.
+
 <!-- convex-ai-end -->
 
 ## 7. Commandes utiles
