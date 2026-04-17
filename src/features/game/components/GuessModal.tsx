@@ -16,6 +16,7 @@ import { CONSTRAINTS } from "@/features/game/logic/constraints";
 import type { CellPosition, GameState } from "@/features/game/types";
 import { useLocale, useT } from "@/i18n/LocaleContext";
 import type { TKey } from "@/i18n/types";
+import { cn } from "@/lib/utils";
 import { useEffect, useRef, useState } from "react";
 
 const CONSTRAINT_MAP = new Map(CONSTRAINTS.map((c) => [c.id, c]));
@@ -79,7 +80,7 @@ export function GuessModal({
   }
 
   async function handleSelect(countryCode: string) {
-    if (submitting) return;
+    if (submitting || state.usedCountries.has(countryCode)) return;
     setSubmitting(true);
     const result = await onSubmit(cell, countryCode);
     setSubmitting(false);
@@ -107,12 +108,7 @@ export function GuessModal({
     (code) => !state.usedCountries.has(code),
   ).length;
 
-  const results =
-    query.length >= 3
-      ? searchCountries(query, locale, 12).filter(
-          (c) => !state.usedCountries.has(c.code),
-        )
-      : [];
+  const results = query.length >= 3 ? searchCountries(query, locale, 12) : [];
 
   return (
     <Drawer
@@ -167,22 +163,40 @@ export function GuessModal({
                 {t("ui.noResults")}
               </CommandEmpty>
             ) : (
-              results.map((country) => (
-                <CommandItem
-                  key={country.code}
-                  value={country.code}
-                  onSelect={handleSelect}
-                  disabled={submitting}
-                  className="flex items-center gap-3 px-3 py-3 rounded-lg cursor-pointer text-on-surface"
-                >
-                  <span className="text-xl leading-none">
-                    {country.flagEmoji}
-                  </span>
-                  <span className="text-sm font-medium">
-                    {country.names[locale]}
-                  </span>
-                </CommandItem>
-              ))
+              results.map((country) => {
+                const alreadyUsed = state.usedCountries.has(country.code);
+                return (
+                  <CommandItem
+                    key={country.code}
+                    value={country.code}
+                    onSelect={() => {
+                      void handleSelect(country.code);
+                    }}
+                    disabled={submitting || alreadyUsed}
+                    className={cn(
+                      "flex items-center gap-3 px-3 py-3 rounded-lg cursor-pointer text-on-surface",
+                      alreadyUsed && "text-on-surface-variant",
+                    )}
+                  >
+                    <span
+                      className={cn(
+                        "text-xl leading-none",
+                        alreadyUsed && "opacity-70",
+                      )}
+                    >
+                      {country.flagEmoji}
+                    </span>
+                    <span className="min-w-0 flex-1 text-sm font-medium truncate">
+                      {country.names[locale]}
+                    </span>
+                    {alreadyUsed && (
+                      <span className="shrink-0 text-[10px] tracking-widest text-on-surface-variant uppercase">
+                        {t("ui.searchResultUsed")}
+                      </span>
+                    )}
+                  </CommandItem>
+                );
+              })
             )}
           </CommandList>
         </Command>
