@@ -3,6 +3,8 @@
  * Called from actions (grids.ts) via ctx.runQuery / ctx.runMutation.
  */
 import { ConvexError, v } from "convex/values";
+import type { Id } from "./_generated/dataModel";
+import type { MutationCtx } from "./_generated/server";
 import { internalMutation, internalQuery } from "./_generated/server";
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
@@ -102,7 +104,50 @@ export const getBestPending = internalQuery({
   },
 });
 
+/** True if at least one published grid exists (idempotence guard for seed). */
+export const hasAnyGrid = internalQuery({
+  args: {},
+  handler: async (ctx) => {
+    const first = await ctx.db.query("grids").first();
+    return first !== null;
+  },
+});
+
 // ─── Internal mutations ───────────────────────────────────────────────────────
+
+/**
+ * Inserts a `grids` row from a candidate and marks the candidate as used.
+ * No-op if a grid already exists for that date (idempotent).
+ */
+async function promoteGridFromCandidate(
+  ctx: MutationCtx,
+  candidateId: Id<"gridCandidates">,
+  date: string,
+): Promise<boolean> {
+  const existing = await ctx.db
+    .query("grids")
+    .withIndex("by_date", (q) => q.eq("date", date))
+    .unique();
+  if (existing) return false;
+
+  const candidate = await ctx.db.get(candidateId);
+  if (!candidate) throw new ConvexError(`Candidate ${candidateId} not found`);
+
+  await ctx.db.insert("grids", {
+    date,
+    rows: candidate.rows,
+    cols: candidate.cols,
+    validAnswers: candidate.validAnswers,
+    difficulty: candidate.difficulty,
+    candidateId,
+  });
+
+  await ctx.db.patch(candidateId, {
+    status: "used",
+    usedAt: Date.now(),
+  });
+  return true;
+}
 
 /** Inserts a batch of generated candidates with status="pending". */
 export const insertCandidates = internalMutation({
@@ -167,29 +212,52 @@ export const promoteCandidate = internalMutation({
     date: v.string(),
   },
   handler: async (ctx, args) => {
-    const existing = await ctx.db
-      .query("grids")
-      .withIndex("by_date", (q) => q.eq("date", args.date))
-      .unique();
-    if (existing) return;
+    await promoteGridFromCandidate(ctx, args.candidateId, args.date);
+  },
+});
 
-    const candidate = await ctx.db.get(args.candidateId);
-    if (!candidate)
-      throw new ConvexError(`Candidate ${args.candidateId} not found`);
+/**
+ * Promotes the best pending candidate (by score) to a given date.
+ * Used by historical seed; throws if no pending candidate exists.
+ */
+export const promoteBestPendingForDate = internalMutation({
+  args: { date: v.string() },
+  handler: async (ctx, args) => {
+    const candidates = await ctx.db
+      .query("gridCandidates")
+      .withIndex("by_status_and_score", (q) => q.eq("status", "pending"))
+      .order("desc")
+      .take(1);
+    const best = candidates[0];
+    if (!best) {
+      throw new ConvexError("No pending candidate to promote");
+    }
+    const promoted = await promoteGridFromCandidate(ctx, best._id, args.date);
+    if (!promoted) {
+      throw new ConvexError(
+        `A grid already exists for ${args.date}; cannot promote pending candidate.`,
+      );
+    }
+    return {
+      candidateId: best._id,
+      score: best.score,
+      contextScore: best.contextScore ?? null,
+    };
+  },
+});
 
-    await ctx.db.insert("grids", {
-      date: args.date,
-      rows: candidate.rows,
-      cols: candidate.cols,
-      validAnswers: candidate.validAnswers,
-      difficulty: candidate.difficulty,
-      candidateId: args.candidateId,
-    });
-
-    await ctx.db.patch(args.candidateId, {
-      status: "used",
-      usedAt: Date.now(),
-    });
+/** Deletes all pending candidates (internal — used by seed action). */
+export const purgeAllPendingCandidatesInternal = internalMutation({
+  args: {},
+  handler: async (ctx) => {
+    const pending = await ctx.db
+      .query("gridCandidates")
+      .withIndex("by_status", (q) => q.eq("status", "pending"))
+      .collect();
+    for (const doc of pending) {
+      await ctx.db.delete(doc._id);
+    }
+    return { deleted: pending.length };
   },
 });
 

@@ -14,6 +14,7 @@ import type * as grids from "../grids.js";
 import type * as guesses from "../guesses.js";
 import type * as lib_gridContext from "../lib/gridContext.js";
 import type * as lib_gridGenerator from "../lib/gridGenerator.js";
+import type * as seed from "../seed.js";
 
 import type {
   ApiFromModules,
@@ -28,6 +29,7 @@ declare const fullApi: ApiFromModules<{
   guesses: typeof guesses;
   "lib/gridContext": typeof lib_gridContext;
   "lib/gridGenerator": typeof lib_gridGenerator;
+  seed: typeof seed;
 }>;
 
 /**

@@ -64,8 +64,8 @@ export function AdminPage() {
     null,
   );
 
-  const purgeUnlinkedCandidates = useMutation(
-    api.grids.purgeUnlinkedCandidates,
+  const purgeAllPendingCandidates = useMutation(
+    api.grids.purgeAllPendingCandidates,
   );
   const triggerGeneration = useAction(api.grids.triggerGeneration);
 
@@ -103,19 +103,19 @@ export function AdminPage() {
       ? ((scheduledGrids ?? []).find((g) => g.date === selectedDate) ?? null)
       : null;
 
-  async function handlePurgeUnlinkedCandidates() {
+  async function handlePurgePendingCandidates() {
     if (!token) return;
     const confirmed = window.confirm(
-      "Supprimer toutes les candidates non liées à une grille planifiée/passée ?",
+      "Supprimer toutes les candidates en attente (pending) ? Les approuvées et rejetées ne sont pas touchées.",
     );
     if (!confirmed) return;
 
     setIsPurgingCandidates(true);
     setPurgeMessage(null);
     try {
-      const result = await purgeUnlinkedCandidates({ adminToken: token });
+      const result = await purgeAllPendingCandidates({ adminToken: token });
       setPurgeMessage(
-        `${result.deleted} candidates supprimées (${result.keptLinked} conservées car liées).`,
+        `${result.deleted} candidat${result.deleted === 1 ? "" : "s"} pending supprimé${result.deleted === 1 ? "" : "s"}.`,
       );
     } catch (err) {
       if (
@@ -282,13 +282,13 @@ export function AdminPage() {
                 type="button"
                 size="sm"
                 variant="secondary"
-                onClick={handlePurgeUnlinkedCandidates}
+                onClick={handlePurgePendingCandidates}
                 disabled={isPurgingCandidates}
                 className="bg-surface-highest text-on-surface hover:bg-surface-highest/80"
               >
                 {isPurgingCandidates
                   ? "Purge en cours…"
-                  : "Purger les candidates non liées"}
+                  : "Purger la file pending"}
               </Button>
               <Button
                 type="button"

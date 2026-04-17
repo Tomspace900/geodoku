@@ -9,6 +9,8 @@
     "build:countries": "tsx scripts/build-countries.ts",
     "analyze:grids": "tsx scripts/analyze-grid-candidates.ts",
     "validate:constraints": "tsx scripts/validate-constraints.ts",
+    "seed:grids": "npx convex run seed:seedHistoricalGrids",
+    "seed:grids:force": "npx convex run seed:seedHistoricalGrids -- '{\"force\":true}'",
     "preview": "vite preview",
     "test": "vitest run --passWithNoTests",
     "lint": "biome check .",

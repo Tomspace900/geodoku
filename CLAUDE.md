@@ -314,6 +314,10 @@ pnpm test                         # Vitest
 pnpm build:countries              # régénère countries.json
 pnpm validate:constraints         # rapport de calibrage des contraintes
 
+# Seed historique (DB vide ou `--force` après wipe) — internal action `seed:seedHistoricalGrids`
+pnpm seed:grids                        # idempotent si `grids` non vide
+pnpm seed:grids:force                 # forcer (dev uniquement)
+
 # Admin Convex
 pnpm dlx convex@latest env set ADMIN_TOKEN "xxx"
 ```

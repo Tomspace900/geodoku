@@ -473,40 +473,23 @@ export const submitGridFeedback = mutation({
 });
 
 /**
- * Deletes candidate rows that are not referenced by any scheduled/past grid.
- * Useful after generator formula updates to rebuild the queue from scratch.
+ * Deletes all pending candidates (queue brute). N'affecte pas les approved / rejected / used.
  */
-export const purgeUnlinkedCandidates = mutation({
+export const purgeAllPendingCandidates = mutation({
   args: {
     adminToken: v.string(),
   },
   handler: async (ctx, args) => {
     checkAdminToken(args.adminToken);
 
-    const linkedIds = new Set<string>();
-    const grids = await ctx.db.query("grids").take(500);
-    for (const grid of grids) {
-      linkedIds.add(grid.candidateId);
+    const pending = await ctx.db
+      .query("gridCandidates")
+      .withIndex("by_status", (q) => q.eq("status", "pending"))
+      .collect();
+    for (const doc of pending) {
+      await ctx.db.delete(doc._id);
     }
-
-    const candidates = await ctx.db.query("gridCandidates").take(500);
-    let deleted = 0;
-    let keptLinked = 0;
-
-    for (const candidate of candidates) {
-      if (linkedIds.has(candidate._id)) {
-        keptLinked += 1;
-        continue;
-      }
-      await ctx.db.delete(candidate._id);
-      deleted += 1;
-    }
-
-    return {
-      scannedCandidates: candidates.length,
-      deleted,
-      keptLinked,
-    };
+    return { deleted: pending.length };
   },
 });
 
