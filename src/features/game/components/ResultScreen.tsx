@@ -13,8 +13,8 @@ import type { CellKey, GameState } from "@/features/game/types";
 import { useT } from "@/i18n/LocaleContext";
 import { cn } from "@/lib/utils";
 import { useMutation } from "convex/react";
-import { Copy } from "lucide-react";
-import { useState } from "react";
+import { Copy, X } from "lucide-react";
+import { useEffect, useState } from "react";
 import { api } from "../../../../convex/_generated/api";
 import { AchievementCard } from "./AchievementCard";
 
@@ -27,9 +27,16 @@ type DifficultyRating = "too_easy" | "balanced" | "too_hard";
 type Props = {
   state: GameState;
   gridNumber: number;
+  onDismiss: () => void;
+  onViewAnswers: () => void;
 };
 
-export function ResultScreen({ state, gridNumber }: Props) {
+export function ResultScreen({
+  state,
+  gridNumber,
+  onDismiss,
+  onViewAnswers,
+}: Props) {
   const [copied, setCopied] = useState(false);
   const t = useT();
   const [hasRated, setHasRated] = useState(() => {
@@ -51,6 +58,14 @@ export function ResultScreen({ state, gridNumber }: Props) {
       setTimeout(() => setCopied(false), 2000);
     }
   }
+
+  useEffect(() => {
+    function onEscape(e: KeyboardEvent) {
+      if (e.key === "Escape") onDismiss();
+    }
+    window.addEventListener("keydown", onEscape);
+    return () => window.removeEventListener("keydown", onEscape);
+  }, [onDismiss]);
 
   async function handleRateDifficulty(rating: DifficultyRating) {
     if (hasRated || ratingPending) return;
@@ -78,18 +93,43 @@ export function ResultScreen({ state, gridNumber }: Props) {
   }
 
   return (
-    <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center bg-black/40 backdrop-blur-sm">
+    <dialog
+      open
+      aria-labelledby="result-screen-title"
+      className={cn(
+        "fixed inset-0 z-50 m-0 flex h-full max-h-none w-full max-w-none flex-col items-center justify-end bg-transparent p-0 outline-none border-0",
+        "sm:justify-center",
+      )}
+    >
+      {/* biome-ignore lint/a11y/useKeyWithClickEvents: fermeture au clic sur le voile (Escape géré par useEffect) */}
+      <div
+        className="absolute inset-0 bg-black/40 backdrop-blur-sm"
+        onClick={onDismiss}
+        aria-hidden
+      />
       <div
         className={cn(
-          "bg-surface-lowest w-full max-w-[500px] shadow-editorial",
+          "relative z-10 bg-surface-lowest w-full max-w-[500px] shadow-editorial",
           "rounded-t-2xl sm:rounded-2xl",
           "p-6 flex flex-col gap-5",
           "animate-in slide-in-from-bottom-4 sm:zoom-in-95 duration-300",
         )}
       >
+        <button
+          type="button"
+          onClick={onDismiss}
+          className="absolute right-4 top-4 rounded-md p-1.5 text-on-surface-variant hover:bg-surface-low hover:text-on-surface"
+          aria-label={t("ui.closeResult")}
+        >
+          <X size={20} strokeWidth={1.75} />
+        </button>
+
         {/* Title */}
-        <div className="flex flex-col items-center gap-2 text-center">
-          <h2 className="font-serif text-3xl italic text-on-surface">
+        <div className="flex flex-col items-center gap-2 text-center pr-8">
+          <h2
+            id="result-screen-title"
+            className="font-serif text-3xl italic text-on-surface"
+          >
             {isWon ? t("ui.magnificent") : t("ui.tooBad")}
           </h2>
           <div className="w-12 h-1 bg-brand rounded-full" />
@@ -143,11 +183,11 @@ export function ResultScreen({ state, gridNumber }: Props) {
         {/* Feedback */}
         <div className="flex flex-col gap-2">
           <p className="text-[10px] tracking-widest text-on-surface-variant uppercase text-center">
-            Comment as-tu trouvé la grille ?
+            {t("ui.feedbackQuestion")}
           </p>
           {hasRated ? (
             <p className="text-center text-xs text-on-surface-variant">
-              Merci pour ton retour.
+              {t("ui.feedbackThanks")}
             </p>
           ) : (
             <div className="grid grid-cols-1 gap-2 sm:grid-cols-3">
@@ -158,7 +198,7 @@ export function ResultScreen({ state, gridNumber }: Props) {
                 className="bg-surface-highest text-on-surface hover:bg-surface-highest/80"
                 onClick={() => handleRateDifficulty("too_easy")}
               >
-                Trop facile
+                {t("ui.feedbackTooEasy")}
               </Button>
               <Button
                 type="button"
@@ -167,7 +207,7 @@ export function ResultScreen({ state, gridNumber }: Props) {
                 className="bg-surface-highest text-on-surface hover:bg-surface-highest/80"
                 onClick={() => handleRateDifficulty("balanced")}
               >
-                Bien/modérée
+                {t("ui.feedbackBalanced")}
               </Button>
               <Button
                 type="button"
@@ -176,7 +216,7 @@ export function ResultScreen({ state, gridNumber }: Props) {
                 className="bg-surface-highest text-on-surface hover:bg-surface-highest/80"
                 onClick={() => handleRateDifficulty("too_hard")}
               >
-                Trop difficile
+                {t("ui.feedbackTooHard")}
               </Button>
             </div>
           )}
@@ -192,11 +232,19 @@ export function ResultScreen({ state, gridNumber }: Props) {
           {copied ? t("ui.shareCopied") : t("ui.share")}
         </Button>
 
+        <button
+          type="button"
+          onClick={onViewAnswers}
+          className="text-center text-xs text-on-surface-variant underline underline-offset-2 decoration-outline-variant/40 hover:text-on-surface"
+        >
+          {t("ui.viewAnswers")}
+        </button>
+
         {/* Footer */}
         <p className="text-center text-xs text-on-surface-variant italic">
           {t("ui.comeBackTomorrowGrid")}
         </p>
       </div>
-    </div>
+    </dialog>
   );
 }

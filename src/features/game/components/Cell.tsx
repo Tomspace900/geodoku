@@ -1,34 +1,9 @@
 import { getCountryByCode } from "@/features/countries/lib/search";
-import { formatRarityPercent } from "@/features/game/logic/rarity";
-import type { Cell, CellPosition, RarityTier } from "@/features/game/types";
+import type { Cell, CellPosition } from "@/features/game/types";
 import { useLocale } from "@/i18n/LocaleContext";
 import { cn } from "@/lib/utils";
 import { Plus } from "lucide-react";
-
-const RARITY_STYLES: Record<RarityTier, string> = {
-  common: "bg-rarity-common/10 text-rarity-common",
-  uncommon: "bg-rarity-uncommon text-rarity-common",
-  rare: "bg-rarity-rare/10 text-rarity-rare",
-  ultra: "bg-rarity-ultra/10 text-rarity-ultra",
-};
-
-type RarityBadgeProps = {
-  tier: RarityTier;
-  rarity: number;
-};
-
-function RarityBadge({ tier, rarity }: RarityBadgeProps) {
-  return (
-    <span
-      className={cn(
-        "text-[8px] font-semibold rounded-full px-1.5 py-0.5 leading-none mt-0.5",
-        RARITY_STYLES[tier],
-      )}
-    >
-      {formatRarityPercent(rarity)}
-    </span>
-  );
-}
+import { RarityBadge } from "./RarityBadge";
 
 type Props = {
   cell: Cell;
@@ -46,11 +21,7 @@ export function CellComponent({ cell, position, isDisabled, onClick }: Props) {
     return (
       <div
         className="aspect-square w-full rounded-xl bg-surface-lowest flex flex-col items-center justify-center gap-0.5 p-1 shadow-editorial"
-        aria-label={
-          country
-            ? `${countryName} — ${formatRarityPercent(cell.rarity)}`
-            : cell.countryCode
-        }
+        aria-label={countryName ?? cell.countryCode}
       >
         <span className="text-2xl leading-none">
           {country?.flagEmoji ?? "🏳️"}
@@ -58,7 +29,7 @@ export function CellComponent({ cell, position, isDisabled, onClick }: Props) {
         <span className="text-[9px] font-medium text-on-surface text-center leading-tight line-clamp-2 px-0.5">
           {countryName}
         </span>
-        <RarityBadge tier={cell.rarityTier} rarity={cell.rarity} />
+        <RarityBadge tier={cell.rarityTier} className="mt-0.5" />
       </div>
     );
   }

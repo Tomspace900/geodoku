@@ -112,5 +112,6 @@ export function useGameState() {
     submitGuess,
     isLoading: todayGrid === undefined,
     hasGrid: !!todayGrid,
+    validAnswers: todayGrid?.validAnswers ?? {},
   };
 }

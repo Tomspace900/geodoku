@@ -1,5 +1,60 @@
 import { ConvexError, v } from "convex/values";
-import { mutation } from "./_generated/server";
+import { mutation, query } from "./_generated/server";
+
+const CELL_KEYS = [
+  "0,0",
+  "0,1",
+  "0,2",
+  "1,0",
+  "1,1",
+  "1,2",
+  "2,0",
+  "2,1",
+  "2,2",
+] as const;
+
+/**
+ * Pour chaque case : nombre total de tentatives et part (0..1) par pays parmi
+ * les joueurs du jour — pour afficher la « rareté » d’une réponse de référence.
+ */
+export const getGuessDistributionForDate = query({
+  args: { date: v.string() },
+  handler: async (ctx, args) => {
+    const out: Record<
+      string,
+      { totalGuesses: number; rarityByCountry: Record<string, number> }
+    > = {};
+
+    for (const cellKey of CELL_KEYS) {
+      const stats = await ctx.db
+        .query("dailyStats")
+        .withIndex("by_date_and_cell", (q) =>
+          q.eq("date", args.date).eq("cellKey", cellKey),
+        )
+        .unique();
+
+      const totalGuesses = stats?.totalGuesses ?? 0;
+
+      const rows = await ctx.db
+        .query("guesses")
+        .withIndex("by_date_and_cell", (q) =>
+          q.eq("date", args.date).eq("cellKey", cellKey),
+        )
+        .collect();
+
+      const rarityByCountry: Record<string, number> = {};
+      if (totalGuesses > 0) {
+        for (const row of rows) {
+          rarityByCountry[row.countryCode] = row.count / totalGuesses;
+        }
+      }
+
+      out[cellKey] = { totalGuesses, rarityByCountry };
+    }
+
+    return out;
+  },
+});
 
 export const submitGuess = mutation({
   args: {

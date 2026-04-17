@@ -8,7 +8,7 @@ Geodoku est un mini-jeu web quotidien inspiré de Wordle et du Sudoku, sur le th
 
 **Le twist.** Plus le pays trouvé est rare (parmi les choix des autres joueurs de la journée), meilleur est le score. Un joueur qui remplit une case « Asie × Enclavé » avec « Bhoutan » obtient un meilleur bonus qu'un joueur qui met « Mongolie ». Le score final est en pourcentage, calculé comme `completion × 20pts + bonus_rareté` sur un max de 405, puis normalisé.
 
-**L'enjeu communautaire.** À la fin, le joueur partage sa grille sous forme d'emojis colorés (🟩🟨🟧🟥⬛) avec son score, à la manière de Wordle.
+**L'enjeu communautaire.** À la fin, le joueur partage sa grille sous forme d'emojis colorés (🟪🟦🟨🟥⬜) avec son score, à la manière de Wordle.
 
 **Ce que Geodoku n'est PAS.** Pas de compte, pas de login, pas de leaderboard, pas de streak inter-jours, pas de stats globales, pas d'ads, pas de mobile app. Un site web minimaliste, une partie par jour, un partage. Point.
 
@@ -148,16 +148,18 @@ Inspiration : publications digitales haut de gamme type NYT Games. Spacieux, sop
 
 `brand` est **la seule couleur chaude** du système. Elle signifie « moment fort » : un score, un achievement, un mot qui porte la phrase. Règle d'application : texte à 100%, background à 10% opacity (`bg-brand/10`). Pas de gradient, pas de deuxième teinte violette, pas d'utilisation décorative gratuite — si tout est accentué, rien ne l'est.
 
-Le hex est identique à `rarity.rare` mais les deux tokens sont **sémantiquement distincts** : `rarity.rare` qualifie la rareté fonctionnelle d'une cellule (peut évoluer indépendamment si le tiering de rareté change), `brand` est l'identité éditoriale. Ne pas utiliser `rarity.rare` pour du branding ou inversement.
+Les tokens `brand` et `rarity.*` sont **sémantiquement distincts** : `brand` est l'identité éditoriale (accent de marque), `rarity.*` qualifient la rareté fonctionnelle d'une cellule. Ne pas utiliser `rarity.*` pour du branding ou inversement.
 
 **Rarity tiers (couleurs fonctionnelles).**
 
-| Tier              | Hex       | Emoji partage |
-| ----------------- | --------- | ------------- |
-| `rarity.common`   | `#56606e` | 🟩            |
-| `rarity.uncommon` | `#e5e2e1` | 🟨            |
-| `rarity.rare`     | `#842cd3` | 🟧            |
-| `rarity.ultra`    | `#9f403d` | 🟥            |
+Les couleurs UI sont **volontairement alignées** sur les émojis de partage Wordle pour que le joueur retrouve instinctivement les mêmes codes visuels en jeu et en partage.
+
+| Tier              | Hex       | Couleur  | Emoji partage |
+| ----------------- | --------- | -------- | ------------- |
+| `rarity.common`   | `#7c3aed` | violet   | 🟪            |
+| `rarity.uncommon` | `#2563eb` | bleu     | 🟦            |
+| `rarity.rare`     | `#d97706` | ambre    | 🟨            |
+| `rarity.ultra`    | `#dc2626` | rouge    | 🟥            |
 
 **Règle d'application rareté** : background = couleur à 10% opacity, texte = couleur à 100%. Pill arrondi complet.
 

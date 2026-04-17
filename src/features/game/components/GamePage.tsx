@@ -1,11 +1,15 @@
 import { useGameState } from "@/features/game/hooks/useGameState";
 import { useT } from "@/i18n/LocaleContext";
+import { useQuery } from "convex/react";
+import { useEffect, useRef, useState } from "react";
+import { api } from "../../../../convex/_generated/api";
 import { GameGrid } from "./GameGrid";
 import { GuessModal } from "./GuessModal";
 import { Header } from "./Header";
 import { HowToPlayLink } from "./HowToPlayLink";
 import { LocaleSwitcher } from "./LocaleSwitcher";
 import { ResultScreen } from "./ResultScreen";
+import { SolutionGrid } from "./SolutionGrid";
 
 const LAUNCH_DATE_MS = new Date("2026-04-01T00:00:00Z").getTime();
 
@@ -52,9 +56,34 @@ function LoadingSkeleton() {
 }
 
 export function GamePage() {
-  const { state, selectCell, submitGuess, isLoading, hasGrid } = useGameState();
+  const { state, selectCell, submitGuess, isLoading, hasGrid, validAnswers } =
+    useGameState();
   const t = useT();
   const gridNumber = getGridNumber();
+
+  const guessDistribution = useQuery(
+    api.guesses.getGuessDistributionForDate,
+    state.date && state.status !== "playing" ? { date: state.date } : "skip",
+  );
+
+  const [resultModalDismissed, setResultModalDismissed] = useState(false);
+  const prevStatusRef = useRef(state.status);
+
+  // biome-ignore lint/correctness/useExhaustiveDependencies: réinitialiser modale / vue lorsque la date de grille change (jour suivant)
+  useEffect(() => {
+    setResultModalDismissed(false);
+  }, [state.date]);
+
+  useEffect(() => {
+    if (state.status === "playing") {
+      setResultModalDismissed(false);
+    } else if (prevStatusRef.current === "playing") {
+      setResultModalDismissed(false);
+    }
+    prevStatusRef.current = state.status;
+  }, [state.status]);
+
+  const showResultModal = state.status !== "playing" && !resultModalDismissed;
 
   return (
     <div className="min-h-screen bg-surface flex flex-col items-center px-4 py-6">
@@ -64,7 +93,19 @@ export function GamePage() {
         {isLoading ? (
           <LoadingSkeleton />
         ) : hasGrid ? (
-          <GameGrid state={state} onCellClick={(cell) => selectCell(cell)} />
+          state.status !== "playing" ? (
+            <div className="flex flex-col gap-3">
+              <SolutionGrid
+                rows={state.rows}
+                cols={state.cols}
+                validAnswers={validAnswers}
+                distribution={guessDistribution ?? undefined}
+                cells={state.cells}
+              />
+            </div>
+          ) : (
+            <GameGrid state={state} onCellClick={(cell) => selectCell(cell)} />
+          )
         ) : (
           <div className="flex flex-col items-center justify-center py-20 text-center gap-3">
             <p className="font-serif text-xl italic text-on-surface-variant">
@@ -84,13 +125,19 @@ export function GamePage() {
         <GuessModal
           cell={state.selectedCell}
           state={state}
+          validAnswers={validAnswers}
           onClose={() => selectCell(null)}
           onSubmit={submitGuess}
         />
       )}
 
-      {state.status !== "playing" && (
-        <ResultScreen state={state} gridNumber={gridNumber} />
+      {showResultModal && (
+        <ResultScreen
+          state={state}
+          gridNumber={gridNumber}
+          onDismiss={() => setResultModalDismissed(true)}
+          onViewAnswers={() => setResultModalDismissed(true)}
+        />
       )}
     </div>
   );

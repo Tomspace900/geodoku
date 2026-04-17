@@ -65,10 +65,10 @@ const config: Config = {
           DEFAULT: "#842cd3",
         },
         rarity: {
-          common: "#56606e",
-          uncommon: "#e5e2e1",
-          rare: "#842cd3",
-          ultra: "#9f403d",
+          common: "#7c3aed",
+          uncommon: "#2563eb",
+          rare: "#d97706",
+          ultra: "#dc2626",
         },
       },
       boxShadow: {

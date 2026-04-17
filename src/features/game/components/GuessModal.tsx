@@ -36,6 +36,8 @@ type SubmitResult =
 type Props = {
   cell: CellPosition;
   state: GameState;
+  /** ISO3 listes par case (`"row,col"`), aligné sur la grille du jour */
+  validAnswers: Record<string, string[]>;
   onClose: () => void;
   onSubmit: (
     cell: CellPosition,
@@ -43,7 +45,13 @@ type Props = {
   ) => Promise<SubmitResult | undefined>;
 };
 
-export function GuessModal({ cell, state, onClose, onSubmit }: Props) {
+export function GuessModal({
+  cell,
+  state,
+  validAnswers,
+  onClose,
+  onSubmit,
+}: Props) {
   const [open, setOpen] = useState(true);
   const [query, setQuery] = useState("");
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
@@ -92,6 +100,13 @@ export function GuessModal({ cell, state, onClose, onSubmit }: Props) {
     ? t(colConstraint.labelKey)
     : state.cols[cell.col];
 
+  const cellKey = `${cell.row},${cell.col}`;
+  const codesForCell = validAnswers[cellKey] ?? [];
+  const totalPossible = codesForCell.length;
+  const remainingPossible = codesForCell.filter(
+    (code) => !state.usedCountries.has(code),
+  ).length;
+
   const results =
     query.length >= 3
       ? searchCountries(query, locale, 12).filter(
@@ -114,6 +129,16 @@ export function GuessModal({ cell, state, onClose, onSubmit }: Props) {
           <p className="text-[10px] tracking-widest text-on-surface-variant uppercase mt-1">
             {t("ui.findMatchingCountry")}
           </p>
+          {totalPossible > 0 && (
+            <p className="text-xs text-on-surface-variant mt-2">
+              {remainingPossible === totalPossible
+                ? t("ui.possibleAnswersCount", { count: totalPossible })
+                : t("ui.possibleAnswersPartial", {
+                    remaining: remainingPossible,
+                    total: totalPossible,
+                  })}
+            </p>
+          )}
         </DrawerHeader>
 
         {errorMsg && (
