@@ -29,6 +29,25 @@ function todayUTC(): string {
   return `${y}-${m}-${day}`;
 }
 
+/** Déploiement Convex dev uniquement : `pnpm dlx convex env set ALLOW_UNSCHEDULE_CURRENT_DAY true` */
+function allowUnscheduleCurrentDayInDev(): boolean {
+  return process.env.ALLOW_UNSCHEDULE_CURRENT_DAY === "true";
+}
+
+function assertUnscheduleDateAllowed(date: string): void {
+  const today = todayUTC();
+  if (date < today) {
+    throw new ConvexError(
+      "Impossible de déprogrammer une grille dont la date est déjà passée.",
+    );
+  }
+  if (date === today && !allowUnscheduleCurrentDayInDev()) {
+    throw new ConvexError(
+      "Impossible de déprogrammer la grille du jour (autorisé uniquement sur un déploiement Convex configuré pour le dev).",
+    );
+  }
+}
+
 function daysAgoUTC(n: number): string {
   const d = new Date();
   d.setUTCDate(d.getUTCDate() - n);
@@ -376,6 +395,7 @@ export const unscheduleGrid = mutation({
   },
   handler: async (ctx, args) => {
     checkAdminToken(args.adminToken);
+    assertUnscheduleDateAllowed(args.date);
 
     const grid = await ctx.db
       .query("grids")
