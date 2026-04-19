@@ -1,5 +1,7 @@
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { ErrorScreen } from "@/features/errors/components/ErrorScreen";
+import { useBackendDownTimeout } from "@/features/errors/hooks/useBackendDownTimeout";
 import { cn } from "@/lib/utils";
 import { useAction, useMutation, useQuery } from "convex/react";
 import { ConvexError } from "convex/values";
@@ -83,6 +85,10 @@ export function AdminPage() {
           sortBy: activeTab === "pending" ? "score" : "date",
         }
       : "skip",
+  );
+
+  const isBackendDown = useBackendDownTimeout(
+    Boolean(token) && scheduledGrids === undefined,
   );
 
   // Dériver les données de planification depuis scheduledGrids
@@ -200,6 +206,19 @@ export function AdminPage() {
               Connexion
             </Button>
           </div>
+        </div>
+      </div>
+    );
+  }
+
+  // ── Backend injoignable (timeout > 8s après login) ────────────────────────
+
+  if (isBackendDown) {
+    return (
+      <div className="flex min-h-screen flex-col items-center bg-surface px-4 py-8">
+        <div className="flex w-full max-w-[500px] flex-col gap-6">
+          <AdminHeader onLogout={clearToken} />
+          <ErrorScreen variant="backend-down" />
         </div>
       </div>
     );

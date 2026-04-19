@@ -1,5 +1,6 @@
+import { ErrorScreen } from "@/features/errors/components/ErrorScreen";
+import { useBackendDownTimeout } from "@/features/errors/hooks/useBackendDownTimeout";
 import { useGameState } from "@/features/game/hooks/useGameState";
-import { useT } from "@/i18n/LocaleContext";
 import { useQuery } from "convex/react";
 import { useEffect, useRef, useState } from "react";
 import { api } from "../../../../convex/_generated/api";
@@ -58,7 +59,7 @@ function LoadingSkeleton() {
 export function GamePage() {
   const { state, selectCell, submitGuess, isLoading, hasGrid, validAnswers } =
     useGameState();
-  const t = useT();
+  const isBackendDown = useBackendDownTimeout(isLoading);
   const gridNumber = getGridNumber();
 
   const guessDistribution = useQuery(
@@ -90,7 +91,9 @@ export function GamePage() {
       <div className="w-full max-w-[500px] flex flex-col gap-5">
         <Header remainingLives={state.remainingLives} date={state.date} />
 
-        {isLoading ? (
+        {isBackendDown ? (
+          <ErrorScreen variant="backend-down" />
+        ) : isLoading ? (
           <LoadingSkeleton />
         ) : hasGrid ? (
           state.status !== "playing" ? (
@@ -107,14 +110,7 @@ export function GamePage() {
             <GameGrid state={state} onCellClick={(cell) => selectCell(cell)} />
           )
         ) : (
-          <div className="flex flex-col items-center justify-center py-20 text-center gap-3">
-            <p className="font-serif text-xl italic text-on-surface-variant">
-              {t("ui.noGridToday")}
-            </p>
-            <p className="text-sm text-on-surface-variant">
-              {t("ui.comeBackTomorrow")}
-            </p>
-          </div>
+          <ErrorScreen variant="no-grid-today" />
         )}
 
         <HowToPlayLink />

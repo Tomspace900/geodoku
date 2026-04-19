@@ -2,8 +2,6 @@ export const fr = {
   ui: {
     appName: "Geodoku",
     howToPlay: "Comment jouer\u00A0?",
-    noGridToday: "Aucune grille disponible aujourd'hui.",
-    comeBackTomorrow: "Revenez demain\u00A0!",
     searchPlaceholder: "Chercher un pays…",
     typeAtLeast: "Saisissez au moins\u00A03 caractères",
     noResults: "Aucun pays trouvé.",
@@ -54,6 +52,27 @@ export const fr = {
     already_used: "Ce pays a déjà été utilisé dans une autre cellule.",
     invalid_country: "Pays invalide.",
     unknown: "Erreur inconnue.",
+  },
+  errorScreen: {
+    backendDownTitle: "Oups, petit imprévu",
+    backendDownEyebrow: "Connexion perdue",
+    backendDownBodyPre: "Impossible de joindre nos",
+    backendDownBodyAccent: "serveurs",
+    backendDownBodyPost: "pour le moment. Réessayez dans quelques instants.",
+    backendDownCta: "Réessayer",
+    noGridTodayTitle: "Pas de grille aujourd'hui",
+    noGridTodayEyebrow: "Jour blanc",
+    noGridTodayBodyPre:
+      "La grille du jour n'est pas encore publiée. Revenez dans",
+    noGridTodayBodyAccent: "quelques heures",
+    noGridTodayBodyPost: ".",
+    crashedTitle: "Quelque chose a cassé",
+    crashedEyebrow: "Erreur inattendue",
+    crashedBodyPre:
+      "Désolé, l'application a rencontré un imprévu. Rechargez la page pour repartir du bon",
+    crashedBodyAccent: "pied",
+    crashedBodyPost: ".",
+    crashedCta: "Recharger l'application",
   },
   achievement: {
     eliteCollector: "Collectionneur\u00A0Élite",
