@@ -122,9 +122,6 @@ export function GuessModal({
           <DrawerTitle className="font-serif text-lg font-medium text-on-surface leading-snug">
             {rowLabel} × {colLabel}
           </DrawerTitle>
-          <p className="text-[10px] tracking-widest text-on-surface-variant uppercase mt-1">
-            {t("ui.findMatchingCountry")}
-          </p>
           {totalPossible > 0 && (
             <p className="text-xs text-on-surface-variant mt-2">
               {remainingPossible === totalPossible
@@ -138,7 +135,7 @@ export function GuessModal({
         </DrawerHeader>
 
         {errorMsg && (
-          <div className="mx-4 mb-2 px-3 py-2 bg-red-50 text-red-700 text-sm rounded-lg border border-red-100">
+          <div className="mx-4 mb-2 px-3 py-2 bg-rarity-ultra/10 text-rarity-ultra text-sm rounded-lg">
             {errorMsg}
           </div>
         )}
@@ -150,7 +147,7 @@ export function GuessModal({
               value={query}
               onValueChange={setQuery}
               autoFocus
-              className="border-0 border-b border-outline-variant/40 rounded-none px-0 focus-visible:ring-0 text-on-surface placeholder:text-on-surface-variant"
+              className="rounded-none px-0 focus-visible:ring-0 text-on-surface placeholder:text-on-surface-variant"
             />
           </div>
           <CommandList className="max-h-[50vh] overflow-y-auto px-2 pb-4">

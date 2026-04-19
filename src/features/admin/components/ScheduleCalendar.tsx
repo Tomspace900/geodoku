@@ -17,7 +17,7 @@ type Props = {
 function difficultyDotClass(difficulty: number): string {
   if (difficulty <= 33) return "bg-green-500";
   if (difficulty <= 66) return "bg-orange-400";
-  return "bg-red-500";
+  return "bg-rarity-ultra";
 }
 
 function strToLocalDate(str: string): Date {
@@ -97,7 +97,7 @@ export function ScheduleCalendar({
           [
             { label: "Facile", cls: "bg-green-500" },
             { label: "Moyen", cls: "bg-orange-400" },
-            { label: "Difficile", cls: "bg-red-500" },
+            { label: "Difficile", cls: "bg-rarity-ultra" },
           ] as const
         ).map(({ label, cls }) => (
           <span
