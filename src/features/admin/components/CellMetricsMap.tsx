@@ -4,10 +4,8 @@ type CellMetric = {
   cellKey: string;
   solutionCount: number;
   popularCount: number;
-  maxPopularity: number;
   avgPopularity: number;
-  entropy: number;
-  hasObviousAnswer: boolean;
+  cellRisk: number;
 };
 
 type Props = {
@@ -35,7 +33,8 @@ export function CellMetricsMap({ cellMetrics }: Props) {
               />
             );
           }
-          const noObvious = !metric.hasObviousAnswer;
+          const hasObvious = metric.popularCount >= 1;
+          const noObvious = !hasObvious;
           return (
             <div
               key={metric.cellKey}
@@ -55,7 +54,7 @@ export function CellMetricsMap({ cellMetrics }: Props) {
               <span className="mt-1 text-[9px] tracking-wide text-on-surface-variant uppercase">
                 {metric.popularCount} évid.
               </span>
-              {metric.hasObviousAnswer && (
+              {hasObvious && (
                 <span className="mt-0.5 rounded-full bg-brand/10 px-1.5 text-[9px] font-semibold text-brand">
                   ★
                 </span>

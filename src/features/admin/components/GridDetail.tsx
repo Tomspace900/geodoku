@@ -110,6 +110,10 @@ export function GridDetail({
         )
       : null;
 
+  const todayIso = new Date().toISOString().slice(0, 10);
+  const showUnscheduleButton =
+    grid.date > todayIso || (import.meta.env.DEV && grid.date === todayIso);
+
   return (
     <>
       <div className="h-full overflow-hidden rounded-xl bg-surface-lowest shadow-editorial">
@@ -130,8 +134,8 @@ export function GridDetail({
               </span>
             </div>
           </div>
-          {/* Déprogrammer uniquement pour les dates futures */}
-          {grid.date > new Date().toISOString().slice(0, 10) && (
+          {/* Futur : toujours. Aujourd’hui : uniquement en dev local (aligné avec ALLOW_UNSCHEDULE_CURRENT_DAY côté Convex). */}
+          {showUnscheduleButton && (
             <Button
               size="sm"
               variant="ghost"
@@ -177,12 +181,12 @@ export function GridDetail({
                 {detail.metadata.obviousCellCount}/9
               </span>{" "}
               évidentes
-              {detail.metadata.cellsWithNoObvious > 0 && (
+              {9 - detail.metadata.obviousCellCount > 0 && (
                 <>
                   {" · "}
                   <span className="font-semibold text-rarity-ultra">
-                    {detail.metadata.cellsWithNoObvious} trou
-                    {detail.metadata.cellsWithNoObvious > 1 ? "s" : ""}
+                    {9 - detail.metadata.obviousCellCount} trou
+                    {9 - detail.metadata.obviousCellCount > 1 ? "s" : ""}
                   </span>
                 </>
               )}

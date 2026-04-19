@@ -29,10 +29,8 @@ type CellMetric = {
   cellKey: string;
   solutionCount: number;
   popularCount: number;
-  maxPopularity: number;
   avgPopularity: number;
-  entropy: number;
-  hasObviousAnswer: boolean;
+  cellRisk: number;
 };
 
 type Candidate = {
@@ -50,10 +48,9 @@ type Candidate = {
     categoryCount: number;
     avgNotoriety: number;
     obviousCellCount: number;
-    cellsWithNoObvious: number;
-    difficultyVariance: number;
     criteriaOverlapScore: number;
-    difficultyMixNorm: number;
+    maxCellRisk: number;
+    avgCellRisk: number;
     cellMetrics: CellMetric[];
   };
   status: string;
@@ -199,12 +196,12 @@ export function CandidateCard({
                   {candidate.metadata.obviousCellCount}/9
                 </span>{" "}
                 évidentes
-                {candidate.metadata.cellsWithNoObvious > 0 && (
+                {9 - candidate.metadata.obviousCellCount > 0 && (
                   <>
                     {" · "}
                     <span className="font-semibold text-rarity-ultra">
-                      {candidate.metadata.cellsWithNoObvious} trou
-                      {candidate.metadata.cellsWithNoObvious > 1 ? "s" : ""}
+                      {9 - candidate.metadata.obviousCellCount} trou
+                      {9 - candidate.metadata.obviousCellCount > 1 ? "s" : ""}
                     </span>
                   </>
                 )}

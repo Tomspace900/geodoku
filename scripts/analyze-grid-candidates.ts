@@ -1,12 +1,16 @@
 import {
   CONTEXT_HISTORY_WINDOW,
   type GridContextInput,
+  type GridContextMetrics,
   computeGridContext,
 } from "../convex/lib/gridContext.ts";
 import {
+  BATCH_GENERATE_N,
+  BATCH_STORE_N,
   type GridCandidate,
   buildConstraintMatches,
   finalizeAndScore,
+  generateBatch,
   tryBuildGrid,
 } from "../convex/lib/gridGenerator.ts";
 /**
@@ -16,14 +20,14 @@ import {
  * - acceptance rate (valid grids / attempts)
  * - distributions for qualityScore / difficulty / metadata components
  * - correlations between quality components (detect redundancy)
- * - phase 2 simulation: builds a synthetic "daily" history (2×CONTEXT_HISTORY_WINDOW
- *   chained picks against a sliding 15-grid window, then scores every candidate
- *   against the final 15 grids — see buildChainedHistoryWindow).
+ * - seed-aligned 15-day simulation: same pipeline as `convex/seed.ts` +
+ *   `generateDailyCandidates` (batch 30 → phase 2 pool 15 → store 5 → promote
+ *   best pending by intrinsic quality score → purge pending), repeated for
+ *   dates T−14 … T with `getRecentPublishedGrids`-style history (newest first).
  *
  * Run:
  *   pnpm analyze:grids
  *   pnpm analyze:grids --samples=5000 --maxAttempts=100000
- *   pnpm analyze:grids --chainSamples=200
  */
 import { CONSTRAINTS } from "../src/features/game/logic/constraints.ts";
 
@@ -36,10 +40,10 @@ type NumericField =
   | "categoryCount"
   | "avgNotoriety"
   | "obviousCellCount"
-  | "cellsWithNoObvious"
-  | "difficultyVariance"
   | "criteriaOverlapScore"
-  | "difficultyMixNorm";
+  | "constraintHardnessMean"
+  | "maxCellRisk"
+  | "avgCellRisk";
 
 type Summary = {
   min: number;
@@ -55,14 +59,39 @@ type Summary = {
 
 const DEFAULT_SAMPLES = 2000;
 const DEFAULT_MAX_ATTEMPTS_MULTIPLIER = 20;
-/** Candidates triés par finalScore à chaque pas de la chaîne (qualité + contexte). */
-const DEFAULT_CHAIN_SAMPLES_PER_STEP = 100;
 
 /** Aligné sur convex/grids.ts — finalScore en phase 2 cron. */
 const PHASE2_QUALITY_WEIGHT = 0.6;
 const PHASE2_CONTEXT_WEIGHT = 0.4;
 
-const CHAIN_STEPS = 2 * CONTEXT_HISTORY_WINDOW;
+/** Aligné sur convex/grids.ts — `Math.floor(BATCH_GENERATE_N / 2)`. */
+const PHASE_2_POOL_SIZE = Math.floor(BATCH_GENERATE_N / 2);
+
+/** Même fenêtre que `convex/seed.ts` (15 jours). */
+const SEED_DAY_COUNT = 15;
+
+function todayUTC(): string {
+  const d = new Date();
+  const y = d.getUTCFullYear();
+  const m = String(d.getUTCMonth() + 1).padStart(2, "0");
+  const day = String(d.getUTCDate()).padStart(2, "0");
+  return `${y}-${m}-${day}`;
+}
+
+/** Inclusive range from (today − 14) to today — identique à `convex/seed.ts`. */
+function datesFromMinus14ToToday(today: string): string[] {
+  const anchor = new Date(`${today}T12:00:00.000Z`);
+  const out: string[] = [];
+  for (let i = 0; i < SEED_DAY_COUNT; i++) {
+    const d = new Date(anchor);
+    d.setUTCDate(anchor.getUTCDate() - (SEED_DAY_COUNT - 1 - i));
+    const y = d.getUTCFullYear();
+    const m = String(d.getUTCMonth() + 1).padStart(2, "0");
+    const day = String(d.getUTCDate()).padStart(2, "0");
+    out.push(`${y}-${m}-${day}`);
+  }
+  return out;
+}
 
 function parsePositiveInt(value: string | undefined): number | null {
   if (!value) return null;
@@ -74,7 +103,6 @@ function parsePositiveInt(value: string | undefined): number | null {
 function parseCliArgs(argv: string[]): {
   samples: number;
   maxAttempts: number;
-  chainSamplesPerStep: number;
 } {
   const parsed = Object.fromEntries(
     argv
@@ -92,10 +120,7 @@ function parseCliArgs(argv: string[]): {
   const maxAttempts =
     requestedMaxAttempts ?? samples * DEFAULT_MAX_ATTEMPTS_MULTIPLIER;
 
-  const requestedChain = parsePositiveInt(parsed.chainSamples);
-  const chainSamplesPerStep = requestedChain ?? DEFAULT_CHAIN_SAMPLES_PER_STEP;
-
-  return { samples, maxAttempts, chainSamplesPerStep };
+  return { samples, maxAttempts };
 }
 
 function pickQuantile(sorted: number[], q: number): number {
@@ -221,14 +246,14 @@ function extractField(candidate: GridCandidate, field: NumericField): number {
       return candidate.metadata.avgNotoriety;
     case "obviousCellCount":
       return candidate.metadata.obviousCellCount;
-    case "cellsWithNoObvious":
-      return candidate.metadata.cellsWithNoObvious;
-    case "difficultyVariance":
-      return candidate.metadata.difficultyVariance;
     case "criteriaOverlapScore":
       return candidate.metadata.criteriaOverlapScore;
-    case "difficultyMixNorm":
-      return candidate.metadata.difficultyMixNorm;
+    case "constraintHardnessMean":
+      return candidate.metadata.constraintHardnessMean;
+    case "maxCellRisk":
+      return candidate.metadata.maxCellRisk;
+    case "avgCellRisk":
+      return candidate.metadata.avgCellRisk;
   }
 }
 
@@ -240,94 +265,90 @@ function toContextInput(candidate: GridCandidate): GridContextInput {
   };
 }
 
-function gridKey(g: GridContextInput): string {
-  return `${g.rows.join(",")}|${g.cols.join(",")}`;
-}
+type SeedStepResult = {
+  date: string;
+  candidate: GridCandidate;
+  contextScore: number;
+  finalScore: number;
+  contextMetrics: GridContextMetrics;
+};
 
 /**
- * Padding aléatoire pour compléter la fenêtre de 15 grilles ; évite autant que
- * possible de dupliquer les clés déjà présentes dans `publishedKeys`.
+ * Reproduit `generateDailyCandidates` + `promoteBestPendingForDate` + purge pending
+ * (voir convex/seed.ts et convex/grids.ts). Historique phase 2 : comme
+ * `getRecentPublishedGrids` (ordre date décroissante = plus récent en premier).
  */
-function pickRandomPadding(
-  pool: GridCandidate[],
-  count: number,
-  publishedKeys: ReadonlySet<string>,
-): GridContextInput[] {
-  const usedInPad = new Set<string>(publishedKeys);
-  const out: GridContextInput[] = [];
-  for (let i = 0; i < count; i++) {
-    let picked: GridContextInput | null = null;
-    for (let tries = 0; tries < pool.length * 8; tries++) {
-      const cand = pool[Math.floor(Math.random() * pool.length)];
-      const g = toContextInput(cand);
-      const k = gridKey(g);
-      if (!usedInPad.has(k)) {
-        picked = g;
-        usedInPad.add(k);
-        break;
-      }
-    }
-    if (!picked) {
-      const cand = pool[Math.floor(Math.random() * pool.length)];
-      picked = toContextInput(cand);
-    }
-    out.push(picked);
-  }
-  return out;
-}
+function simulateSeedFifteenDays(): {
+  steps: SeedStepResult[];
+  error: string | null;
+} {
+  const dates = datesFromMinus14ToToday(todayUTC());
+  const candidateFingerprints: { rows: string[]; cols: string[] }[] = [];
+  const publishedFingerprints: { rows: string[]; cols: string[] }[] = [];
+  const publishedInputs: GridContextInput[] = [];
+  const steps: SeedStepResult[] = [];
 
-/**
- * Simule 2×CONTEXT_HISTORY_WINDOW « jours » : à chaque pas, fenêtre = préfixe
- * publié + padding aléatoire jusqu'à 15 grilles, puis les 15 dernières seules
- * une fois le préfixe assez long. Le gagnard du pas maximise
- * PHASE2_QUALITY_WEIGHT×quality + PHASE2_CONTEXT_WEIGHT×contextScore.
- * Retourne uniquement les CONTEXT_HISTORY_WINDOW dernières grilles (historique
- * figé pour l'audit).
- */
-function buildChainedHistoryWindow(
-  pool: GridCandidate[],
-  steps: number,
-  samplesPerStep: number,
-): GridContextInput[] {
-  const published: GridContextInput[] = [];
+  for (const date of dates) {
+    const allExisting = [...candidateFingerprints, ...publishedFingerprints];
+    const batch = generateBatch(BATCH_GENERATE_N, allExisting);
 
-  for (let step = 0; step < steps; step++) {
-    const publishedKeys = new Set(published.map(gridKey));
-    let window: GridContextInput[];
-    if (published.length < CONTEXT_HISTORY_WINDOW) {
-      const padCount = CONTEXT_HISTORY_WINDOW - published.length;
-      const padding = pickRandomPadding(pool, padCount, publishedKeys);
-      window = [...published, ...padding];
-    } else {
-      window = published.slice(-CONTEXT_HISTORY_WINDOW);
+    if (batch.length === 0) {
+      return {
+        steps,
+        error: `[simulateSeedFifteenDays] No batch at ${date} (space saturated?)`,
+      };
     }
 
-    let bestCandidate: GridCandidate | null = null;
-    let bestFinal = Number.NEGATIVE_INFINITY;
-    for (let s = 0; s < samplesPerStep; s++) {
-      const cand = pool[Math.floor(Math.random() * pool.length)];
-      const ctx = computeGridContext(toContextInput(cand), window);
+    const history: GridContextInput[] = [...publishedInputs]
+      .slice(-CONTEXT_HISTORY_WINDOW)
+      .reverse();
+
+    const pool = batch.slice(0, PHASE_2_POOL_SIZE);
+    const scored = pool.map((candidate) => {
+      const contextMetrics = computeGridContext(
+        toContextInput(candidate),
+        history,
+      );
       const finalScore =
-        PHASE2_QUALITY_WEIGHT * cand.score +
-        PHASE2_CONTEXT_WEIGHT * ctx.contextScore;
-      if (finalScore > bestFinal) {
-        bestFinal = finalScore;
-        bestCandidate = cand;
-      }
-    }
-    if (!bestCandidate) {
-      throw new Error("buildChainedHistoryWindow: empty pool");
-    }
-    published.push(toContextInput(bestCandidate));
+        PHASE2_QUALITY_WEIGHT * candidate.score +
+        PHASE2_CONTEXT_WEIGHT * contextMetrics.contextScore;
+      return {
+        candidate,
+        contextScore: contextMetrics.contextScore,
+        finalScore,
+        contextMetrics,
+      };
+    });
+
+    scored.sort((a, b) => b.finalScore - a.finalScore);
+    const selected = scored.slice(0, BATCH_STORE_N);
+
+    const promoted = [...selected].sort(
+      (a, b) => b.candidate.score - a.candidate.score,
+    )[0];
+
+    const fp = {
+      rows: promoted.candidate.rows,
+      cols: promoted.candidate.cols,
+    };
+    candidateFingerprints.push(fp);
+    publishedFingerprints.push(fp);
+    publishedInputs.push(toContextInput(promoted.candidate));
+
+    steps.push({
+      date,
+      candidate: promoted.candidate,
+      contextScore: promoted.contextScore,
+      finalScore: promoted.finalScore,
+      contextMetrics: promoted.contextMetrics,
+    });
   }
 
-  return published.slice(-CONTEXT_HISTORY_WINDOW);
+  return { steps, error: null };
 }
 
 function main(): void {
-  const { samples, maxAttempts, chainSamplesPerStep } = parseCliArgs(
-    process.argv.slice(2),
-  );
+  const { samples, maxAttempts } = parseCliArgs(process.argv.slice(2));
   const matches = buildConstraintMatches();
   const allIds = CONSTRAINTS.map((c) => c.id);
 
@@ -364,10 +385,10 @@ function main(): void {
     "categoryCount",
     "avgNotoriety",
     "obviousCellCount",
-    "cellsWithNoObvious",
-    "difficultyVariance",
     "criteriaOverlapScore",
-    "difficultyMixNorm",
+    "constraintHardnessMean",
+    "maxCellRisk",
+    "avgCellRisk",
   ];
 
   console.log("\n--- Distributions ---");
@@ -384,7 +405,8 @@ function main(): void {
   const categories = accepted.map((c) => c.metadata.categoryCount);
   const obviousCount = accepted.map((c) => c.metadata.obviousCellCount);
   const overlap = accepted.map((c) => c.metadata.criteriaOverlapScore);
-  const diffVariance = accepted.map((c) => c.metadata.difficultyVariance);
+  const maxRisk = accepted.map((c) => c.metadata.maxCellRisk);
+  const avgRisk = accepted.map((c) => c.metadata.avgCellRisk);
 
   console.log("\n--- Correlations (Pearson r) ---");
   console.log(
@@ -400,9 +422,6 @@ function main(): void {
     `quality   vs overlap:           ${formatNum(pearson(score, overlap), 3)}`,
   );
   console.log(
-    `quality   vs difficultyVar:     ${formatNum(pearson(score, diffVariance), 3)}`,
-  );
-  console.log(
     `difficulty vs obviousCount:     ${formatNum(pearson(difficulty, obviousCount), 3)}`,
   );
   console.log(
@@ -410,6 +429,18 @@ function main(): void {
   );
   console.log(
     `difficulty vs minCellSize:      ${formatNum(pearson(difficulty, minCell), 3)}`,
+  );
+  const constraintHardness = accepted.map(
+    (c) => c.metadata.constraintHardnessMean,
+  );
+  console.log(
+    `difficulty vs cstrHardness:     ${formatNum(pearson(difficulty, constraintHardness), 3)}`,
+  );
+  console.log(
+    `difficulty vs maxCellRisk:      ${formatNum(pearson(difficulty, maxRisk), 3)}`,
+  );
+  console.log(
+    `difficulty vs avgCellRisk:      ${formatNum(pearson(difficulty, avgRisk), 3)}`,
   );
   console.log(
     `quality    vs difficulty:       ${formatNum(pearson(score, difficulty), 3)}`,
@@ -420,63 +451,58 @@ function main(): void {
   printHistogram("ObviousCellCount histogram (10 bins)", obviousCount, 10);
   printHistogram("CriteriaOverlap histogram (10 bins)", overlap, 10);
 
-  // ─── Phase 2 simulation ─────────────────────────────────────────────────────
-  // Chaîne de 2×CONTEXT_HISTORY_WINDOW « publications » ; chaque jour = meilleur
-  // tirage parmi chainSamplesPerStep candidats du pool sous la fenêtre courante.
-  // On score tout l'échantillon contre les CONTEXT_HISTORY_WINDOW dernières seules.
-  if (accepted.length > CONTEXT_HISTORY_WINDOW + 1) {
-    const chainedHistory = buildChainedHistoryWindow(
-      accepted,
-      CHAIN_STEPS,
-      chainSamplesPerStep,
+  // ─── Seed-aligned 15-day simulation (convex/seed.ts + generateDailyCandidates) ─
+  const { steps: seedSteps, error: seedError } = simulateSeedFifteenDays();
+  console.log(
+    `\n--- Seed-aligned simulation (${SEED_DAY_COUNT} jours T−14…T, batch=${BATCH_GENERATE_N}, pool=${PHASE_2_POOL_SIZE}, store=${BATCH_STORE_N}) ---`,
+  );
+  if (seedError) {
+    console.error(seedError);
+  }
+  if (seedSteps.length > 0) {
+    const seedQuality = seedSteps.map((s) => s.candidate.score);
+    const seedContext = seedSteps.map((s) => s.contextScore);
+    const seedFinal = seedSteps.map((s) => s.finalScore);
+    const pairReuseRates = seedSteps.map(
+      (s) => s.contextMetrics.criteriaPairReuseRate,
     );
-    console.log(
-      `\n--- Phase 2 simulation (chained history: ${CHAIN_STEPS} steps → last ${CONTEXT_HISTORY_WINDOW} grids, ${chainSamplesPerStep} samples/step) ---`,
+    const structureSims = seedSteps.map(
+      (s) => s.contextMetrics.structureSimilarity,
+    );
+    const countryReuseRates = seedSteps.map(
+      (s) => s.contextMetrics.countryReuseRate,
+    );
+    const criteriaReuseRates = seedSteps.map(
+      (s) => s.contextMetrics.criteriaReuseRate,
     );
 
-    const contextScores: number[] = [];
-    const pairReuseRates: number[] = [];
-    const structureSims: number[] = [];
-    const countryReuseRates: number[] = [];
-    const criteriaReuseRates: number[] = [];
-
-    for (const candidate of accepted) {
-      const metrics = computeGridContext(
-        toContextInput(candidate),
-        chainedHistory,
-      );
-      contextScores.push(metrics.contextScore);
-      pairReuseRates.push(metrics.criteriaPairReuseRate);
-      structureSims.push(metrics.structureSimilarity);
-      countryReuseRates.push(metrics.countryReuseRate);
-      criteriaReuseRates.push(metrics.criteriaReuseRate);
-    }
-
-    printSummary("contextScore", summarize(contextScores));
+    printSummary("quality (promoted)", summarize(seedQuality));
+    printSummary("contextScore", summarize(seedContext));
+    printSummary("finalScore (at pick)", summarize(seedFinal));
     printSummary("pairReuseRate", summarize(pairReuseRates));
     printSummary("structureSim", summarize(structureSims));
     printSummary("countryReuseRate", summarize(countryReuseRates));
     printSummary("criteriaReuseRate", summarize(criteriaReuseRates));
 
-    const finalScores = score.map((q, i) =>
-      Math.round(
-        PHASE2_QUALITY_WEIGHT * q + PHASE2_CONTEXT_WEIGHT * contextScores[i],
-      ),
-    );
-    printSummary("finalScore", summarize(finalScores));
-
     console.log(
-      `\nquality   vs context:           ${formatNum(pearson(score, contextScores), 3)}`,
+      `\nquality   vs context:           ${formatNum(pearson(seedQuality, seedContext), 3)}`,
     );
     console.log(
-      `quality   vs finalScore:        ${formatNum(pearson(score, finalScores), 3)}`,
+      `quality   vs finalScore:        ${formatNum(pearson(seedQuality, seedFinal), 3)}`,
     );
     console.log(
-      `context   vs finalScore:        ${formatNum(pearson(contextScores, finalScores), 3)}`,
+      `context   vs finalScore:        ${formatNum(pearson(seedContext, seedFinal), 3)}`,
     );
 
-    printHistogram("Context histogram (10 bins)", contextScores, 10);
-    printHistogram("Final score histogram (10 bins)", finalScores, 10);
+    printHistogram("Context histogram (10 bins)", seedContext, 10);
+    printHistogram("Final score histogram (10 bins)", seedFinal, 10);
+
+    console.log("\n--- Par jour (grille promue) ---");
+    for (const step of seedSteps) {
+      console.log(
+        `  ${step.date}  q=${formatNum(step.candidate.score)}  ctx=${formatNum(step.contextScore)}  final=${formatNum(step.finalScore)}  diff=${formatNum(step.candidate.difficulty)}`,
+      );
+    }
   }
 }
 

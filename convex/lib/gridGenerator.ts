@@ -8,6 +8,7 @@ import { CONSTRAINTS } from "../../src/features/game/logic/constraints";
 
 const COUNTRIES: Country[] = countriesJson as Country[];
 const COUNTRY_BY_CODE = new Map(COUNTRIES.map((c) => [c.code, c] as const));
+const TOTAL_COUNTRIES = COUNTRIES.length;
 
 // ─── Constants ────────────────────────────────────────────────────────────────
 
@@ -16,12 +17,35 @@ export const MIN_CELL_SIZE = 2;
 export const MAX_CELL_SIZE_HARD = 15;
 export const MAX_CELL_SIZE_SOFT = 8;
 export const MAX_CELLS_WITHOUT_OBVIOUS = 2;
-export const MIN_CATEGORIES = 3;
+export const MIN_CATEGORIES = 4;
 
 // Notoriété / popularité
 export const OBVIOUS_POPULARITY_THRESHOLD = 0.78;
-const NOTORIETY_MIN_REF = 0.6;
-const NOTORIETY_MAX_REF = 0.85;
+const NOTORIETY_MIN_REF = 0.45;
+const NOTORIETY_MAX_REF = 0.9;
+
+// Difficulty scoring — size hardness ramp: linéaire de 2 solutions (1.0) à 12+ (0.0)
+const SIZE_HARDNESS_FLOOR = 2;
+const SIZE_HARDNESS_CEIL = 12;
+
+// Difficulty scoring — constraint hardness cardinalité-based : matchCount moyen
+// sur 52 contraintes s'étale dans [0.73, 0.92]. On rescale sur cette plage pour
+// qu'un signal discriminant émerge, sans se fier à une calibration runtime.
+const CONSTRAINT_HARDNESS_MIN_REF = 0.7;
+const CONSTRAINT_HARDNESS_MAX_REF = 0.95;
+
+// Blocking risk combination: max dominates (worst cell dictates risk),
+// avg penalizes grids with multiple moderately risky cells.
+const BLOCKING_MAX_WEIGHT = 0.7;
+const BLOCKING_AVG_WEIGHT = 0.3;
+
+// Difficulty rescaling — P5/P95 du rawDifficulty observés sur 5000 grilles
+// acceptées (pnpm analyze:grids). Calibration figée : stretcher [P5, P95] sur
+// [0, 100] pour que difficulty couvre toute l'échelle au lieu de [15, 55].
+// Re-calibrer uniquement si la pool de contraintes ou de pays change
+// significativement : relancer analyze, relever les nouveaux p5/p95 du raw, MAJ.
+const DIFFICULTY_RAW_P5 = 0.36;
+const DIFFICULTY_RAW_P95 = 0.59;
 
 // Batch
 export const BATCH_GENERATE_N = 30;
@@ -31,9 +55,12 @@ const MAX_ATTEMPTS_PER_CANDIDATE = 200;
 // Duplicate detection
 const MAX_SIMILAR_CONSTRAINTS = 5;
 
-// Normalisation seuils — tunés empiriquement, à valider via scripts/analyze-grid-candidates.ts
-const ENTROPY_NORM_CAP = 0.4;
-const DIFFICULTY_VARIANCE_NORM_CAP = 0.015;
+// Quality — cloche autour de 8 obvious cells (sweet spot : accessible sans être
+// trivial). Pic à 8, décroît des deux côtés. Demi-largeur 2 → score 0 à 6 ou 10.
+// Resserrée de 3 à 2 pour réduire la corrélation quality/difficulty (grilles 9/9
+// obvious ne doivent pas rester en haut du score qualité).
+const OBVIOUS_IDEAL = 8;
+const OBVIOUS_BELL_HALF_WIDTH = 2;
 
 // Population log range (fallback si popularityIndex absent)
 const MIN_POP_LOG = Math.log10(10_000);
@@ -45,25 +72,22 @@ export type CellMetrics = {
   cellKey: string;
   solutionCount: number;
   popularCount: number;
-  maxPopularity: number;
   avgPopularity: number;
-  entropy: number;
-  hasObviousAnswer: boolean;
+  cellRisk: number;
 };
 
 export type GridMetadata = {
   minCellSize: number;
   maxCellSize: number;
   avgCellSize: number;
-  cellSizeVariance: number;
   solutionPoolSize: number;
   categoryCount: number;
   avgNotoriety: number;
   obviousCellCount: number;
-  cellsWithNoObvious: number;
-  difficultyVariance: number;
   criteriaOverlapScore: number;
-  difficultyMixNorm: number;
+  constraintHardnessMean: number;
+  maxCellRisk: number;
+  avgCellRisk: number;
   cellMetrics: CellMetrics[];
 };
 
@@ -90,14 +114,6 @@ function mean(values: number[]): number {
   if (values.length === 0) return 0;
   let sum = 0;
   for (const v of values) sum += v;
-  return sum / values.length;
-}
-
-function variance(values: number[]): number {
-  if (values.length === 0) return 0;
-  const m = mean(values);
-  let sum = 0;
-  for (const v of values) sum += (v - m) * (v - m);
   return sum / values.length;
 }
 
@@ -174,8 +190,7 @@ export function intersect(
 // ─── Cell-level analysis (Phase 1) ────────────────────────────────────────────
 
 /**
- * Analyzes a single cell: solution count, popular countries, entropy.
- * Entropy is a simple max - avg proxy: high when one dominant country exists.
+ * Analyzes a single cell: solution count, popular countries, avg popularity.
  */
 export function analyzeCell(
   rowIdx: number,
@@ -186,30 +201,26 @@ export function analyzeCell(
 ): { metrics: CellMetrics; codes: string[] } {
   const codes = intersect(rowId, colId, matches);
   let popularCount = 0;
-  let maxPopularity = 0;
   let sumPopularity = 0;
 
   for (const code of codes) {
     const country = COUNTRY_BY_CODE.get(code);
     const pop = country ? getNotorietyIndex(country) : 0.5;
     sumPopularity += pop;
-    if (pop > maxPopularity) maxPopularity = pop;
     if (pop >= OBVIOUS_POPULARITY_THRESHOLD) popularCount += 1;
   }
 
   const solutionCount = codes.length;
   const avgPopularity = solutionCount === 0 ? 0 : sumPopularity / solutionCount;
-  const entropy = maxPopularity - avgPopularity;
 
   return {
     metrics: {
       cellKey: `${rowIdx},${colIdx}`,
       solutionCount,
       popularCount,
-      maxPopularity,
       avgPopularity,
-      entropy,
-      hasObviousAnswer: popularCount >= 1,
+      // Filled in by computeGridMetrics via computeCellRisks — needs a grid-wide view.
+      cellRisk: 0,
     },
     codes,
   };
@@ -251,15 +262,32 @@ export function computeCriteriaOverlap(
   return mean(overlaps);
 }
 
-function computeDifficultyMixNorm(rows: string[], cols: string[]): number {
-  const tiers = new Set<string>();
-  for (const id of [...rows, ...cols]) {
-    const c = CONSTRAINTS.find((x) => x.id === id);
-    if (c) tiers.add(c.difficulty);
+/**
+ * Blocking risk per cell.
+ *
+ * For each cell, cellSafety = Σ 1/occ(k) over solutions k, where occ(k) is the
+ * number of cells in the grid where k is a valid answer. When a cell's solutions
+ * are all also valid in many other cells, cellSafety → 0 (player risks being
+ * locked out after consuming those countries elsewhere). cellRisk = exp(-safety):
+ * smooth decay, saturates to 1 only at safety→0, differentiates safety ∈ [0.5, 2]
+ * where the signal matters most.
+ */
+export function computeCellRisks(cellSolutions: string[][]): number[] {
+  const occ = new Map<string, number>();
+  for (const codes of cellSolutions) {
+    for (const code of codes) {
+      occ.set(code, (occ.get(code) ?? 0) + 1);
+    }
   }
-  if (tiers.size >= 3) return 1;
-  if (tiers.size === 2) return 0.65;
-  return 0.25;
+  return cellSolutions.map((codes) => {
+    if (codes.length === 0) return 1;
+    let safety = 0;
+    for (const code of codes) {
+      const o = occ.get(code) ?? 1;
+      safety += 1 / o;
+    }
+    return Math.exp(-safety);
+  });
 }
 
 /**
@@ -276,7 +304,6 @@ export function computeGridMetrics(
   const minCellSize = Math.min(...sizes);
   const maxCellSize = Math.max(...sizes);
   const avgCellSize = mean(sizes);
-  const cellSizeVariance = variance(sizes);
 
   const union = new Set<string>();
   for (const codes of Object.values(validAnswers)) {
@@ -295,48 +322,57 @@ export function computeGridMetrics(
 
   const avgNotoriety = mean(cellMetrics.map((c) => c.avgPopularity));
 
-  const obviousCellCount = cellMetrics.filter((c) => c.hasObviousAnswer).length;
-  const cellsWithNoObvious = cellMetrics.length - obviousCellCount;
-
-  // "Difficulté ressentie" par cellule = 1 - entropy
-  // Une cellule sans pic clair (plusieurs réponses équivalentes) = difficile à trancher.
-  const perCellHardness = cellMetrics.map((c) => 1 - c.entropy);
-  const difficultyVariance = variance(perCellHardness);
+  const obviousCellCount = cellMetrics.filter(
+    (c) => c.popularCount >= 1,
+  ).length;
 
   const criteriaOverlapScore = computeCriteriaOverlap(rows, cols, matches);
-  const difficultyMixNorm = computeDifficultyMixNorm(rows, cols);
+  // Cardinality-based hardness: a constraint is hard when few countries match it.
+  // Objective (replaces the subjective easy/medium/hard tag) and auto-calibrated
+  // against the dataset size.
+  const constraintHardnessMean = mean(
+    [...rows, ...cols].map((id) => {
+      const set = matches[id];
+      if (!set || TOTAL_COUNTRIES === 0) return 0.5;
+      return 1 - set.size / TOTAL_COUNTRIES;
+    }),
+  );
+
+  // Blocking risk: cells that risk being locked out if the player uses their
+  // answers elsewhere. Attach per-cell and aggregate on the grid.
+  const cellSolutions = cellMetrics.map((c) => validAnswers[c.cellKey] ?? []);
+  const risks = computeCellRisks(cellSolutions);
+  const enrichedCellMetrics = cellMetrics.map((c, i) => ({
+    ...c,
+    cellRisk: risks[i],
+  }));
+  const maxCellRisk = risks.length === 0 ? 0 : Math.max(...risks);
+  const avgCellRisk = mean(risks);
 
   return {
     minCellSize,
     maxCellSize,
     avgCellSize,
-    cellSizeVariance,
     solutionPoolSize,
     categoryCount,
     avgNotoriety,
     obviousCellCount,
-    cellsWithNoObvious,
-    difficultyVariance,
     criteriaOverlapScore,
-    difficultyMixNorm,
-    cellMetrics,
+    constraintHardnessMean,
+    maxCellRisk,
+    avgCellRisk,
+    cellMetrics: enrichedCellMetrics,
   };
 }
 
 /**
  * Computes qualityScore 0-100 from a GridMetadata.
- * Quality = présence de réponses évidentes + confort des tailles de cellule
- * + équilibre + diversité + indépendance des contraintes.
+ * Quality = confort des tailles de cellule (0.35) + indépendance des
+ * contraintes (0.35) + couverture de cases évidentes en cloche autour de
+ * OBVIOUS_IDEAL (0.30).
  */
 export function computeQualityScore(metadata: GridMetadata): number {
   const { cellMetrics } = metadata;
-
-  const avgEntropyNorm = clamp01(
-    mean(cellMetrics.map((c) => c.entropy)) / ENTROPY_NORM_CAP,
-  );
-
-  const balanceNorm =
-    1 - clamp01(metadata.difficultyVariance / DIFFICULTY_VARIANCE_NORM_CAP);
 
   const sizeComfortNorm = mean(
     cellMetrics.map((c) => {
@@ -350,23 +386,20 @@ export function computeQualityScore(metadata: GridMetadata): number {
     }),
   );
 
-  const categoryDiversityNorm = clamp01(
-    (metadata.categoryCount - MIN_CATEGORIES) / 3,
-  );
-
   const independenceNorm = 1 - clamp01(metadata.criteriaOverlapScore);
 
-  const difficultyMixNorm = metadata.difficultyMixNorm;
+  // Cloche autour de OBVIOUS_IDEAL : récompense 7-9 obvious cells (sweet spot),
+  // pénalise 5-6 (trop dur) ET 9/9 (trop facile — réduit la valeur du twist rareté).
+  const obviousCoverageNorm = clamp01(
+    1 -
+      Math.abs(metadata.obviousCellCount - OBVIOUS_IDEAL) /
+        OBVIOUS_BELL_HALF_WIDTH,
+  );
 
-  // obviousRatio retiré : le hard reject MAX_CELLS_WITHOUT_OBVIOUS agit
-  // comme floor, et sa présence dans quality anti-corrèle quality/difficulty.
   const rawQuality =
-    0.27 * sizeComfortNorm +
-    0.18 * independenceNorm +
-    0.18 * categoryDiversityNorm +
-    0.14 * balanceNorm +
-    0.13 * avgEntropyNorm +
-    0.1 * difficultyMixNorm;
+    0.35 * sizeComfortNorm +
+    0.35 * independenceNorm +
+    0.3 * obviousCoverageNorm;
 
   return Math.round(clamp01(rawQuality) * 100);
 }
@@ -379,29 +412,45 @@ export function computeQualityScore(metadata: GridMetadata): number {
  */
 export function deriveDifficulty(metadata: GridMetadata): number {
   const { cellMetrics } = metadata;
-  const cellCount = cellMetrics.length || 1;
 
   const avgSolutionCount = mean(cellMetrics.map((c) => c.solutionCount));
   const avgPopularityOnGrid = mean(cellMetrics.map((c) => c.avgPopularity));
-  const hardCellRatio =
-    cellMetrics.filter((c) => !c.hasObviousAnswer).length / cellCount;
 
+  // Plus de solutions par cellule = plus facile. Ramp linéaire 2→12.
   const sizeHardnessNorm =
     1 -
     clamp01(
-      Math.log(Math.max(Math.min(avgSolutionCount, 10), 1)) / Math.log(10),
+      (avgSolutionCount - SIZE_HARDNESS_FLOOR) /
+        (SIZE_HARDNESS_CEIL - SIZE_HARDNESS_FLOOR),
     );
+
+  // Cardinalité des contraintes, rescalée sur la plage observée empiriquement.
+  const chSpan = CONSTRAINT_HARDNESS_MAX_REF - CONSTRAINT_HARDNESS_MIN_REF;
+  const constraintHardnessNorm =
+    chSpan > 0
+      ? clamp01(
+          (metadata.constraintHardnessMean - CONSTRAINT_HARDNESS_MIN_REF) /
+            chSpan,
+        )
+      : 0.5;
+
+  const blockingRiskNorm = clamp01(
+    BLOCKING_MAX_WEIGHT * metadata.maxCellRisk +
+      BLOCKING_AVG_WEIGHT * metadata.avgCellRisk,
+  );
+
   const obscurityNorm = 1 - normalizeNotoriety(avgPopularityOnGrid);
-  const missingObviousNorm = hardCellRatio;
-  const varianceNorm = clamp01(metadata.difficultyVariance * 2);
 
   const rawDifficulty =
-    0.35 * obscurityNorm +
-    0.3 * missingObviousNorm +
-    0.2 * sizeHardnessNorm +
-    0.15 * varianceNorm;
+    0.35 * sizeHardnessNorm +
+    0.25 * constraintHardnessNorm +
+    0.25 * blockingRiskNorm +
+    0.15 * obscurityNorm;
 
-  return Math.round(clamp01(rawDifficulty) * 100);
+  const span = DIFFICULTY_RAW_P95 - DIFFICULTY_RAW_P5;
+  const rescaled =
+    span > 0 ? (rawDifficulty - DIFFICULTY_RAW_P5) / span : rawDifficulty;
+  return Math.round(clamp01(rescaled) * 100);
 }
 
 // ─── Backtracking search ──────────────────────────────────────────────────────
@@ -488,7 +537,7 @@ export function finalizeAndScore(
   }
 
   const cellsWithNoObvious = cellMetrics.filter(
-    (c) => !c.hasObviousAnswer,
+    (c) => c.popularCount < 1,
   ).length;
   if (cellsWithNoObvious > MAX_CELLS_WITHOUT_OBVIOUS) return null;
 

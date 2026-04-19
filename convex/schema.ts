@@ -14,27 +14,24 @@ export default defineSchema({
       minCellSize: v.number(),
       maxCellSize: v.number(),
       avgCellSize: v.number(),
-      cellSizeVariance: v.number(),
       solutionPoolSize: v.number(),
       // Catégories & notoriété
       categoryCount: v.number(),
       avgNotoriety: v.number(),
       // Dérivés des cellMetrics
       obviousCellCount: v.number(),
-      cellsWithNoObvious: v.number(),
-      difficultyVariance: v.number(),
       criteriaOverlapScore: v.number(),
-      difficultyMixNorm: v.number(),
+      constraintHardnessMean: v.number(),
+      maxCellRisk: v.number(),
+      avgCellRisk: v.number(),
       // Granularité cellule : 9 entrées
       cellMetrics: v.array(
         v.object({
           cellKey: v.string(),
           solutionCount: v.number(),
           popularCount: v.number(),
-          maxPopularity: v.number(),
           avgPopularity: v.number(),
-          entropy: v.number(),
-          hasObviousAnswer: v.boolean(),
+          cellRisk: v.number(),
         }),
       ),
     }),
