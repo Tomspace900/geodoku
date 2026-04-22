@@ -21,7 +21,7 @@ describe("translate", () => {
   it("returns a different string for FR vs EN", () => {
     const fr = translate("fr", "ui.howToPlay");
     const en = translate("en", "ui.howToPlay");
-    expect(fr).toBe("Comment jouer ?");
+    expect(fr).toBe("Comment jouer\u00A0?");
     expect(en).toBe("How to play?");
     expect(fr).not.toBe(en);
   });
@@ -47,12 +47,12 @@ describe("translate", () => {
 
   it("interpolates variables in the translated string", () => {
     const result = translate("fr", "ui.rarityScore", { raw: 180, max: 405 });
-    expect(result).toBe("Score de rareté — 180 / 405 pts");
+    expect(result).toBe("Score de rareté\u00A0— 180\u00A0/ 405\u00A0pts");
   });
 
   it("interpolates variables in the English string", () => {
     const result = translate("en", "ui.rarityScore", { raw: 180, max: 405 });
-    expect(result).toBe("Rarity score — 180 / 405 pts");
+    expect(result).toBe("Rarity score — 180\u00A0/ 405\u00A0pts");
   });
 
   it("leaves missing interpolation variables as {placeholder}", () => {
@@ -72,7 +72,7 @@ describe("translate", () => {
     const result = translate("en", "achievement.globeTrotterDesc", {
       count: 4,
     });
-    expect(result).toBe("You visited 4 different continents.");
+    expect(result).toBe("You visited 4\u00A0different continents.");
   });
 
   it("handles constraint keys correctly", () => {

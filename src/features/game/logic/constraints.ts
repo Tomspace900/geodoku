@@ -27,16 +27,11 @@ export type ConstraintId =
   | "area_lt_1k"
   | "borders_brazil"
   | "borders_china"
-  | "borders_drc"
-  | "borders_france"
-  | "borders_germany"
   | "borders_india"
   | "borders_min_5"
   | "borders_min_7"
-  | "borders_niger"
   | "borders_russia"
   | "borders_solo"
-  | "borders_tanzania"
   | "borders_turkey"
   | "continent_africa"
   | "continent_asia"
@@ -114,16 +109,11 @@ const LANG_RU = "ru";
 
 // ─── ISO 3166-1 alpha-3 pivot country codes ───────────────────────────────────
 
-const CODE_FRA = "FRA";
-const CODE_DEU = "DEU";
 const CODE_RUS = "RUS";
 const CODE_CHN = "CHN";
 const CODE_BRA = "BRA";
-const CODE_COD = "COD";
 const CODE_TUR = "TUR";
-const CODE_TZA = "TZA";
 const CODE_IND = "IND";
-const CODE_NER = "NER";
 
 // ─── Name helpers (FR + EN cohérents pour la grille unique) ───────────────────
 
@@ -196,14 +186,14 @@ export const CONSTRAINTS: Constraint[] = [
     id: "water_island",
     labelKey: "constraint.water_island",
     category: "water_access",
-    difficulty: "medium",
+    difficulty: "easy",
     predicate: (c) => c.waterAccess === "island",
   },
   {
     id: "water_landlocked",
     labelKey: "constraint.water_landlocked",
     category: "water_access",
-    difficulty: "medium",
+    difficulty: "easy",
     predicate: (c) => c.waterAccess === "landlocked",
   },
 
@@ -212,14 +202,14 @@ export const CONSTRAINTS: Constraint[] = [
     id: "borders_solo",
     labelKey: "constraint.borders_solo",
     category: "borders_count",
-    difficulty: "hard",
+    difficulty: "medium",
     predicate: (c) => c.borders.length === BORDERS_SOLO,
   },
   {
     id: "borders_min_5",
     labelKey: "constraint.borders_min_5",
     category: "borders_count",
-    difficulty: "easy",
+    difficulty: "medium",
     predicate: (c) => c.borders.length >= BORDERS_MIN_5,
   },
   {
@@ -232,74 +222,39 @@ export const CONSTRAINTS: Constraint[] = [
 
   // ── Frontières — pivot ─────────────────────────────────────────────────────
   {
-    id: "borders_france",
-    labelKey: "constraint.borders_france",
-    category: "borders_pivot",
-    difficulty: "hard",
-    predicate: (c) => c.borders.includes(CODE_FRA),
-  },
-  {
-    id: "borders_germany",
-    labelKey: "constraint.borders_germany",
-    category: "borders_pivot",
-    difficulty: "hard",
-    predicate: (c) => c.borders.includes(CODE_DEU),
-  },
-  {
     id: "borders_russia",
     labelKey: "constraint.borders_russia",
     category: "borders_pivot",
-    difficulty: "hard",
+    difficulty: "medium",
     predicate: (c) => c.borders.includes(CODE_RUS),
   },
   {
     id: "borders_china",
     labelKey: "constraint.borders_china",
     category: "borders_pivot",
-    difficulty: "hard",
+    difficulty: "medium",
     predicate: (c) => c.borders.includes(CODE_CHN),
   },
   {
     id: "borders_brazil",
     labelKey: "constraint.borders_brazil",
     category: "borders_pivot",
-    difficulty: "hard",
+    difficulty: "medium",
     predicate: (c) => c.borders.includes(CODE_BRA),
-  },
-  {
-    id: "borders_drc",
-    labelKey: "constraint.borders_drc",
-    category: "borders_pivot",
-    difficulty: "hard",
-    predicate: (c) => c.borders.includes(CODE_COD),
   },
   {
     id: "borders_turkey",
     labelKey: "constraint.borders_turkey",
     category: "borders_pivot",
-    difficulty: "hard",
+    difficulty: "medium",
     predicate: (c) => c.borders.includes(CODE_TUR),
-  },
-  {
-    id: "borders_tanzania",
-    labelKey: "constraint.borders_tanzania",
-    category: "borders_pivot",
-    difficulty: "hard",
-    predicate: (c) => c.borders.includes(CODE_TZA),
   },
   {
     id: "borders_india",
     labelKey: "constraint.borders_india",
     category: "borders_pivot",
-    difficulty: "hard",
+    difficulty: "medium",
     predicate: (c) => c.borders.includes(CODE_IND),
-  },
-  {
-    id: "borders_niger",
-    labelKey: "constraint.borders_niger",
-    category: "borders_pivot",
-    difficulty: "hard",
-    predicate: (c) => c.borders.includes(CODE_NER),
   },
 
   // ── Superficie ─────────────────────────────────────────────────────────────
@@ -307,14 +262,14 @@ export const CONSTRAINTS: Constraint[] = [
     id: "area_gt_2M",
     labelKey: "constraint.area_gt_2M",
     category: "area",
-    difficulty: "hard",
+    difficulty: "medium",
     predicate: (c) => c.areaKm2 > AREA_GT_2M,
   },
   {
     id: "area_gt_500k",
     labelKey: "constraint.area_gt_500k",
     category: "area",
-    difficulty: "easy",
+    difficulty: "medium",
     predicate: (c) => c.areaKm2 > AREA_GT_500K,
   },
   {
