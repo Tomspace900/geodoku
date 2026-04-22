@@ -61,8 +61,19 @@ const DEFAULT_SAMPLES = 2000;
 const DEFAULT_MAX_ATTEMPTS_MULTIPLIER = 20;
 
 /** Aligné sur convex/grids.ts — finalScore en phase 2 cron. */
-const PHASE2_QUALITY_WEIGHT = 0.6;
-const PHASE2_CONTEXT_WEIGHT = 0.4;
+const PHASE2_QUALITY_WEIGHT = 0.45;
+const PHASE2_CONTEXT_WEIGHT = 0.3;
+const PHASE2_TARGET_WEIGHT = 0.25;
+const PHASE2_DIFFICULTY_TARGET = 40;
+
+function computeTargetProximity(difficulty: number): number {
+  const distance = Math.abs(difficulty - PHASE2_DIFFICULTY_TARGET);
+  const maxDistance = Math.max(
+    PHASE2_DIFFICULTY_TARGET,
+    100 - PHASE2_DIFFICULTY_TARGET,
+  );
+  return maxDistance === 0 ? 1 : Math.max(0, 1 - distance / maxDistance);
+}
 
 /** Aligné sur convex/grids.ts — `Math.floor(BATCH_GENERATE_N / 2)`. */
 const PHASE_2_POOL_SIZE = Math.floor(BATCH_GENERATE_N / 2);
@@ -309,9 +320,11 @@ function simulateSeedFifteenDays(): {
         toContextInput(candidate),
         history,
       );
+      const targetProximity = computeTargetProximity(candidate.difficulty);
       const finalScore =
         PHASE2_QUALITY_WEIGHT * candidate.score +
-        PHASE2_CONTEXT_WEIGHT * contextMetrics.contextScore;
+        PHASE2_CONTEXT_WEIGHT * contextMetrics.contextScore +
+        PHASE2_TARGET_WEIGHT * targetProximity * 100;
       return {
         candidate,
         contextScore: contextMetrics.contextScore,
@@ -469,11 +482,8 @@ function main(): void {
     const structureSims = seedSteps.map(
       (s) => s.contextMetrics.structureSimilarity,
     );
-    const countryReuseRates = seedSteps.map(
-      (s) => s.contextMetrics.countryReuseRate,
-    );
-    const criteriaReuseRates = seedSteps.map(
-      (s) => s.contextMetrics.criteriaReuseRate,
+    const newConstraintFractions = seedSteps.map(
+      (s) => s.contextMetrics.newConstraintFraction,
     );
 
     printSummary("quality (promoted)", summarize(seedQuality));
@@ -481,8 +491,7 @@ function main(): void {
     printSummary("finalScore (at pick)", summarize(seedFinal));
     printSummary("pairReuseRate", summarize(pairReuseRates));
     printSummary("structureSim", summarize(structureSims));
-    printSummary("countryReuseRate", summarize(countryReuseRates));
-    printSummary("criteriaReuseRate", summarize(criteriaReuseRates));
+    printSummary("newConstraintFrac", summarize(newConstraintFractions));
 
     console.log(
       `\nquality   vs context:           ${formatNum(pearson(seedQuality, seedContext), 3)}`,

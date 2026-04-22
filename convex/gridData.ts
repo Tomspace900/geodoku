@@ -164,7 +164,6 @@ export const insertCandidates = internalMutation({
           minCellSize: v.number(),
           maxCellSize: v.number(),
           avgCellSize: v.number(),
-          solutionPoolSize: v.number(),
           categoryCount: v.number(),
           avgNotoriety: v.number(),
           obviousCellCount: v.number(),
@@ -172,13 +171,14 @@ export const insertCandidates = internalMutation({
           constraintHardnessMean: v.number(),
           maxCellRisk: v.number(),
           avgCellRisk: v.number(),
+          easyConstraintCount: v.number(),
+          hardConstraintCount: v.number(),
           cellMetrics: v.array(
             v.object({
               cellKey: v.string(),
               solutionCount: v.number(),
               popularCount: v.number(),
               avgPopularity: v.number(),
-              cellRisk: v.number(),
             }),
           ),
         }),

@@ -14,7 +14,6 @@ export default defineSchema({
       minCellSize: v.number(),
       maxCellSize: v.number(),
       avgCellSize: v.number(),
-      solutionPoolSize: v.number(),
       // Catégories & notoriété
       categoryCount: v.number(),
       avgNotoriety: v.number(),
@@ -24,6 +23,9 @@ export default defineSchema({
       constraintHardnessMean: v.number(),
       maxCellRisk: v.number(),
       avgCellRisk: v.number(),
+      // Mix difficulté éditoriale (tags constraints, sur 6)
+      easyConstraintCount: v.number(),
+      hardConstraintCount: v.number(),
       // Granularité cellule : 9 entrées
       cellMetrics: v.array(
         v.object({
@@ -31,7 +33,6 @@ export default defineSchema({
           solutionCount: v.number(),
           popularCount: v.number(),
           avgPopularity: v.number(),
-          cellRisk: v.number(),
         }),
       ),
     }),

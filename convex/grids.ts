@@ -16,8 +16,29 @@ import {
 // au scoring contextuel (= 15 candidates sur 30 générées).
 const PHASE_2_POOL_SIZE = Math.floor(BATCH_GENERATE_N / 2);
 
-// Pondération finalScore = alpha * quality + (1 - alpha) * context.
-const FINAL_SCORE_QUALITY_WEIGHT = 0.6;
+// finalScore = FINAL_SCORE_QUALITY_WEIGHT · quality
+//            + FINAL_SCORE_CONTEXT_WEIGHT · context
+//            + FINAL_SCORE_TARGET_WEIGHT  · targetProximity
+// Le terme targetProximity pousse la promotion vers une difficulty cible plutôt
+// que vers le haut de l'échelle. Voir `computeTargetProximity` ci-dessous.
+// Target bumpé de 0.15 à 0.25 post-audit : la médiane difficulty promue tombait
+// à ~71 (cible 40) car quality était saturée (sd=2 sur promus) et le terme
+// target trop léger. Quality descend à 0.45 (saturée de toute façon), context
+// à 0.30.
+export const FINAL_SCORE_QUALITY_WEIGHT = 0.45;
+export const FINAL_SCORE_CONTEXT_WEIGHT = 0.3;
+export const FINAL_SCORE_TARGET_WEIGHT = 0.25;
+export const FINAL_SCORE_DIFFICULTY_TARGET = 40;
+
+function computeTargetProximity(difficulty: number): number {
+  const distance = Math.abs(difficulty - FINAL_SCORE_DIFFICULTY_TARGET);
+  // distance max = max(target, 100-target). On normalise sur cette plage.
+  const maxDistance = Math.max(
+    FINAL_SCORE_DIFFICULTY_TARGET,
+    100 - FINAL_SCORE_DIFFICULTY_TARGET,
+  );
+  return maxDistance === 0 ? 1 : Math.max(0, 1 - distance / maxDistance);
+}
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
 
@@ -82,8 +103,24 @@ export const generateDailyCandidates = internalAction({
     const publishedGrids: { rows: string[]; cols: string[] }[] =
       await ctx.runQuery(internal.gridData.getAllGridsForCheck);
 
+    // Phase 2 — contextual scoring against recent published history.
+    const history: GridContextInput[] = await ctx.runQuery(
+      internal.gridData.getRecentPublishedGrids,
+      { limit: CONTEXT_HISTORY_WINDOW },
+    );
+
+    // Compteur d'usage des contraintes dans la fenêtre d'historique, utilisé
+    // par le generator pour biaiser le tirage vers les contraintes sous-servies.
+    const constraintUsage: Record<string, number> = {};
+    for (const h of history) {
+      for (const id of h.rows)
+        constraintUsage[id] = (constraintUsage[id] ?? 0) + 1;
+      for (const id of h.cols)
+        constraintUsage[id] = (constraintUsage[id] ?? 0) + 1;
+    }
+
     const allExisting = [...existing, ...publishedGrids];
-    const batch = generateBatch(BATCH_GENERATE_N, allExisting);
+    const batch = generateBatch(BATCH_GENERATE_N, allExisting, constraintUsage);
 
     if (batch.length === 0) {
       console.log(
@@ -91,12 +128,6 @@ export const generateDailyCandidates = internalAction({
       );
       return;
     }
-
-    // Phase 2 — contextual scoring against recent published history.
-    const history: GridContextInput[] = await ctx.runQuery(
-      internal.gridData.getRecentPublishedGrids,
-      { limit: CONTEXT_HISTORY_WINDOW },
-    );
 
     const pool = batch.slice(0, PHASE_2_POOL_SIZE);
     const scored = pool.map((candidate) => {
@@ -108,9 +139,11 @@ export const generateDailyCandidates = internalAction({
         },
         history,
       );
+      const targetProximity = computeTargetProximity(candidate.difficulty);
       const finalScore =
         FINAL_SCORE_QUALITY_WEIGHT * candidate.score +
-        (1 - FINAL_SCORE_QUALITY_WEIGHT) * ctxMetrics.contextScore;
+        FINAL_SCORE_CONTEXT_WEIGHT * ctxMetrics.contextScore +
+        FINAL_SCORE_TARGET_WEIGHT * targetProximity * 100;
       return { candidate, contextScore: ctxMetrics.contextScore, finalScore };
     });
 

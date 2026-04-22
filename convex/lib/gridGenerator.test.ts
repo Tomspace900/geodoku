@@ -69,7 +69,7 @@ describe("computeCellRisks", () => {
     expect(risks[0]).toBe(1);
   });
 
-  it("stays in (0, 1] for every cell of real generated grids (fuzz)", () => {
+  it("maxCellRisk and avgCellRisk stay in (0, 1] on real generated grids (fuzz)", () => {
     const matches = buildConstraintMatches();
     const allIds = CONSTRAINTS.map((c) => c.id);
     let found = 0;
@@ -78,10 +78,10 @@ describe("computeCellRisks", () => {
       if (!grid) continue;
       const candidate = finalizeAndScore(grid.rows, grid.cols, matches);
       if (!candidate) continue;
-      for (const cell of candidate.metadata.cellMetrics) {
-        expect(cell.cellRisk).toBeGreaterThan(0);
-        expect(cell.cellRisk).toBeLessThanOrEqual(1);
-      }
+      expect(candidate.metadata.maxCellRisk).toBeGreaterThan(0);
+      expect(candidate.metadata.maxCellRisk).toBeLessThanOrEqual(1);
+      expect(candidate.metadata.avgCellRisk).toBeGreaterThan(0);
+      expect(candidate.metadata.avgCellRisk).toBeLessThanOrEqual(1);
       found++;
     }
     expect(found).toBeGreaterThan(0);
@@ -188,6 +188,47 @@ describe("generateBatch", () => {
       expect(shared).toBeLessThan(5);
     }
   });
+});
+
+// ─── Weighted shuffle (constraintUsage) ───────────────────────────────────────
+
+describe("generateBatch — weighted shuffle", () => {
+  it("biases away from highly-used constraints (without excluding them)", () => {
+    // Pénalise fortement les 6 continents — ils devraient être beaucoup moins
+    // choisis qu'une baseline uniforme, mais pas totalement absents.
+    const penalised = [
+      "continent_africa",
+      "continent_asia",
+      "continent_europe",
+      "continent_north_america",
+      "continent_south_america",
+      "continent_oceania",
+    ];
+    const usage: Record<string, number> = {};
+    for (const id of penalised) usage[id] = 20; // poids ≈ 1/21
+
+    const BATCH = 30;
+    const biasedBatch = generateBatch(BATCH, [], usage);
+    const uniformBatch = generateBatch(BATCH, []);
+
+    function countContinent(batch: typeof biasedBatch): number {
+      let c = 0;
+      for (const g of batch) {
+        for (const id of [...g.rows, ...g.cols]) {
+          if (penalised.includes(id)) c++;
+        }
+      }
+      return c;
+    }
+
+    const biasedCount = countContinent(biasedBatch);
+    const uniformCount = countContinent(uniformBatch);
+
+    // La version biaisée doit avoir strictement moins de continents que
+    // l'uniforme — signal clair que la pondération agit.
+    expect(biasedCount).toBeLessThan(uniformCount);
+    expect(biasedBatch.length).toBeGreaterThan(0);
+  }, 60_000);
 });
 
 // ─── Stress test ──────────────────────────────────────────────────────────────

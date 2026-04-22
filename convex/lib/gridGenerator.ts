@@ -19,10 +19,9 @@ export const MAX_CELL_SIZE_SOFT = 8;
 export const MAX_CELLS_WITHOUT_OBVIOUS = 2;
 export const MIN_CATEGORIES = 4;
 
-// Notoriété / popularité
+// Notoriété / popularité — seuil "pays évident" (utilisé par le filtre
+// MAX_CELLS_WITHOUT_OBVIOUS et par la cloche obvious en scoring qualité).
 export const OBVIOUS_POPULARITY_THRESHOLD = 0.78;
-const NOTORIETY_MIN_REF = 0.45;
-const NOTORIETY_MAX_REF = 0.9;
 
 // Difficulty scoring — size hardness ramp: linéaire de 2 solutions (1.0) à 12+ (0.0)
 const SIZE_HARDNESS_FLOOR = 2;
@@ -42,8 +41,8 @@ const BLOCKING_AVG_WEIGHT = 0.3;
 // Difficulty rescaling — P5/P95 du rawDifficulty observés sur 5000 grilles
 // acceptées (pnpm analyze:grids). Calibration figée : stretcher [P5, P95] sur
 // [0, 100] pour que difficulty couvre toute l'échelle au lieu de [15, 55].
-// Re-calibrer uniquement si la pool de contraintes ou de pays change
-// significativement : relancer analyze, relever les nouveaux p5/p95 du raw, MAJ.
+// Re-calibrer après tout changement du mix difficulty (poids, composantes) :
+// relancer `pnpm analyze:grids`, relever p5/p95 du rawDifficulty, MAJ.
 const DIFFICULTY_RAW_P5 = 0.36;
 const DIFFICULTY_RAW_P95 = 0.59;
 
@@ -62,9 +61,82 @@ const MAX_SIMILAR_CONSTRAINTS = 5;
 const OBVIOUS_IDEAL = 8;
 const OBVIOUS_BELL_HALF_WIDTH = 2;
 
+// Mix diversity — cible : 1-2 contraintes "hard" sur les 6 (≈ 0.25 du slot),
+// avec présence d'au moins une "easy" pour les cases accessibles. Le signal
+// récompense les grilles qui mélangent les tags éditoriaux plutôt que d'empiler
+// uniquement des medium/hard. Plage tolérée autour de la cible.
+const MIX_HARD_TARGET_RATIO = 0.25;
+const MIX_EASY_MIN_RATIO = 0.17; // ≥ 1/6 → au moins une easy garantit le plancher
+
+// Quality / difficulty weights — somme = 1 par scorer.
+// `independence` dropped (audit : sd×w = 0.019, signal mort, corr quality 0.43
+// mais variance insuffisante pour discriminer). Poids redistribués sur
+// sizeComfort (+0.10) et mixDiversity (+0.20). `obvious` volontairement stable
+// — composante jugée peu fiable, ne doit pas gagner de poids.
+const QUALITY_WEIGHT_SIZE_COMFORT = 0.4;
+const QUALITY_WEIGHT_OBVIOUS = 0.2;
+const QUALITY_WEIGHT_MIX_DIVERSITY = 0.4;
+
+const DIFFICULTY_WEIGHT_SIZE_HARDNESS = 0.4;
+const DIFFICULTY_WEIGHT_CONSTRAINT_HARDNESS = 0.3;
+const DIFFICULTY_WEIGHT_BLOCKING = 0.3;
+
 // Population log range (fallback si popularityIndex absent)
 const MIN_POP_LOG = Math.log10(10_000);
 const MAX_POP_LOG = Math.log10(1_500_000_000);
+
+// ─── Tuning constants snapshot (pour l'UI admin Advanced) ─────────────────────
+
+/**
+ * Curated snapshot of the constants that influence batch generation, scoring
+ * and difficulty rescaling. Editing those values in this file updates the
+ * algorithm AND the read-only display in the admin dashboard.
+ *
+ * We intentionally omit calibration internals that are rarely touched
+ * (population log range, max attempts, duplicate similarity threshold).
+ */
+export const TUNING_CONSTANTS = {
+  filters: {
+    MIN_CELL_SIZE,
+    MAX_CELL_SIZE_HARD,
+    MAX_CELLS_WITHOUT_OBVIOUS,
+    MIN_CATEGORIES,
+    OBVIOUS_POPULARITY_THRESHOLD,
+  },
+  qualityWeights: {
+    sizeComfort: QUALITY_WEIGHT_SIZE_COMFORT,
+    obvious: QUALITY_WEIGHT_OBVIOUS,
+    mixDiversity: QUALITY_WEIGHT_MIX_DIVERSITY,
+  },
+  qualityShape: {
+    MAX_CELL_SIZE_SOFT,
+    OBVIOUS_IDEAL,
+    OBVIOUS_BELL_HALF_WIDTH,
+    MIX_HARD_TARGET_RATIO,
+    MIX_EASY_MIN_RATIO,
+  },
+  difficultyWeights: {
+    sizeHardness: DIFFICULTY_WEIGHT_SIZE_HARDNESS,
+    constraintHardness: DIFFICULTY_WEIGHT_CONSTRAINT_HARDNESS,
+    blockingRisk: DIFFICULTY_WEIGHT_BLOCKING,
+  },
+  difficultyShape: {
+    SIZE_HARDNESS_FLOOR,
+    SIZE_HARDNESS_CEIL,
+    CONSTRAINT_HARDNESS_MIN_REF,
+    CONSTRAINT_HARDNESS_MAX_REF,
+    BLOCKING_MAX_WEIGHT,
+    BLOCKING_AVG_WEIGHT,
+  },
+  rescaling: {
+    DIFFICULTY_RAW_P5,
+    DIFFICULTY_RAW_P95,
+  },
+  batch: {
+    BATCH_GENERATE_N,
+    BATCH_STORE_N,
+  },
+} as const;
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -73,14 +145,12 @@ export type CellMetrics = {
   solutionCount: number;
   popularCount: number;
   avgPopularity: number;
-  cellRisk: number;
 };
 
 export type GridMetadata = {
   minCellSize: number;
   maxCellSize: number;
   avgCellSize: number;
-  solutionPoolSize: number;
   categoryCount: number;
   avgNotoriety: number;
   obviousCellCount: number;
@@ -88,6 +158,10 @@ export type GridMetadata = {
   constraintHardnessMean: number;
   maxCellRisk: number;
   avgCellRisk: number;
+  /** Nombre de contraintes (sur 6) taguées "easy" dans le dataset. */
+  easyConstraintCount: number;
+  /** Nombre de contraintes (sur 6) taguées "hard" dans le dataset. */
+  hardConstraintCount: number;
   cellMetrics: CellMetrics[];
 };
 
@@ -135,19 +209,18 @@ function getNotorietyIndex(c: Country): number {
   return fromPop;
 }
 
-function normalizeNotoriety(avgNotoriety: number): number {
-  const span = NOTORIETY_MAX_REF - NOTORIETY_MIN_REF;
-  if (span <= 0) return 0.5;
-  return clamp01((avgNotoriety - NOTORIETY_MIN_REF) / span);
-}
+// Constraint → category / difficulty lookups (built once at module load).
+const CATEGORY_BY_ID: Record<string, string> = (() => {
+  const map: Record<string, string> = {};
+  for (const c of CONSTRAINTS) map[c.id] = c.category;
+  return map;
+})();
 
-function shuffle<T>(arr: T[]): T[] {
-  for (let i = arr.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1));
-    [arr[i], arr[j]] = [arr[j], arr[i]];
-  }
-  return arr;
-}
+const DIFFICULTY_BY_ID: Record<string, "easy" | "medium" | "hard"> = (() => {
+  const map: Record<string, "easy" | "medium" | "hard"> = {};
+  for (const c of CONSTRAINTS) map[c.id] = c.difficulty;
+  return map;
+})();
 
 // ─── Core: constraint matching ────────────────────────────────────────────────
 
@@ -219,8 +292,6 @@ export function analyzeCell(
       solutionCount,
       popularCount,
       avgPopularity,
-      // Filled in by computeGridMetrics via computeCellRisks — needs a grid-wide view.
-      cellRisk: 0,
     },
     codes,
   };
@@ -305,20 +376,18 @@ export function computeGridMetrics(
   const maxCellSize = Math.max(...sizes);
   const avgCellSize = mean(sizes);
 
-  const union = new Set<string>();
-  for (const codes of Object.values(validAnswers)) {
-    for (const code of codes) union.add(code);
-  }
-  const solutionPoolSize = union.size;
-
-  const categoryById: Record<string, string> = {};
-  for (const constraint of CONSTRAINTS) {
-    categoryById[constraint.id] = constraint.category;
-  }
   const categories = new Set<string>();
-  for (const id of rows) categories.add(categoryById[id]);
-  for (const id of cols) categories.add(categoryById[id]);
+  for (const id of rows) categories.add(CATEGORY_BY_ID[id] ?? "unknown");
+  for (const id of cols) categories.add(CATEGORY_BY_ID[id] ?? "unknown");
   const categoryCount = categories.size;
+
+  let easyConstraintCount = 0;
+  let hardConstraintCount = 0;
+  for (const id of [...rows, ...cols]) {
+    const tag = DIFFICULTY_BY_ID[id];
+    if (tag === "easy") easyConstraintCount += 1;
+    else if (tag === "hard") hardConstraintCount += 1;
+  }
 
   const avgNotoriety = mean(cellMetrics.map((c) => c.avgPopularity));
 
@@ -339,13 +408,9 @@ export function computeGridMetrics(
   );
 
   // Blocking risk: cells that risk being locked out if the player uses their
-  // answers elsewhere. Attach per-cell and aggregate on the grid.
+  // answers elsewhere. Aggregated on the grid (per-cell value isn't displayed).
   const cellSolutions = cellMetrics.map((c) => validAnswers[c.cellKey] ?? []);
   const risks = computeCellRisks(cellSolutions);
-  const enrichedCellMetrics = cellMetrics.map((c, i) => ({
-    ...c,
-    cellRisk: risks[i],
-  }));
   const maxCellRisk = risks.length === 0 ? 0 : Math.max(...risks);
   const avgCellRisk = mean(risks);
 
@@ -353,7 +418,6 @@ export function computeGridMetrics(
     minCellSize,
     maxCellSize,
     avgCellSize,
-    solutionPoolSize,
     categoryCount,
     avgNotoriety,
     obviousCellCount,
@@ -361,17 +425,56 @@ export function computeGridMetrics(
     constraintHardnessMean,
     maxCellRisk,
     avgCellRisk,
-    cellMetrics: enrichedCellMetrics,
+    easyConstraintCount,
+    hardConstraintCount,
+    cellMetrics,
   };
 }
 
+// ─── Score breakdowns (Phase 2.5 — for admin Advanced inspection) ─────────────
+
 /**
- * Computes qualityScore 0-100 from a GridMetadata.
- * Quality = confort des tailles de cellule (0.35) + indépendance des
- * contraintes (0.35) + couverture de cases évidentes en cloche autour de
- * OBVIOUS_IDEAL (0.30).
+ * Stable identifiers exposed alongside the breakdowns. Labels and descriptions
+ * live in the admin UI to keep this module locale-agnostic.
  */
-export function computeQualityScore(metadata: GridMetadata): number {
+export type QualityComponentKey = "sizeComfort" | "obvious" | "mixDiversity";
+export type DifficultyComponentKey =
+  | "sizeHardness"
+  | "constraintHardness"
+  | "blockingRisk";
+
+export type ScoreComponent<K extends string> = {
+  key: K;
+  /** Normalized component value, 0..1 */
+  norm: number;
+  /** Weight applied to `norm` (sums to 1 across the breakdown). */
+  weight: number;
+};
+
+export type QualityBreakdown = {
+  components: ScoreComponent<QualityComponentKey>[];
+  /** Σ norm·weight, 0..1 */
+  rawQuality: number;
+  /** Final qualityScore, 0..100 (matches `computeQualityScore`). */
+  total: number;
+};
+
+export type DifficultyBreakdown = {
+  components: ScoreComponent<DifficultyComponentKey>[];
+  /** Σ norm·weight, 0..1 (before P5/P95 rescaling). */
+  rawDifficulty: number;
+  /** Final difficulty, 0..100 (matches `deriveDifficulty`). */
+  total: number;
+};
+
+/**
+ * Returns the per-component contributions of `computeQualityScore`. Provided
+ * for the admin Advanced panel — production code should keep using the scalar
+ * `computeQualityScore` wrapper below.
+ */
+export function computeQualityBreakdown(
+  metadata: GridMetadata,
+): QualityBreakdown {
   const { cellMetrics } = metadata;
 
   const sizeComfortNorm = mean(
@@ -386,35 +489,67 @@ export function computeQualityScore(metadata: GridMetadata): number {
     }),
   );
 
-  const independenceNorm = 1 - clamp01(metadata.criteriaOverlapScore);
-
   // Cloche autour de OBVIOUS_IDEAL : récompense 7-9 obvious cells (sweet spot),
   // pénalise 5-6 (trop dur) ET 9/9 (trop facile — réduit la valeur du twist rareté).
-  const obviousCoverageNorm = clamp01(
+  const obviousNorm = clamp01(
     1 -
       Math.abs(metadata.obviousCellCount - OBVIOUS_IDEAL) /
         OBVIOUS_BELL_HALF_WIDTH,
   );
 
-  const rawQuality =
-    0.35 * sizeComfortNorm +
-    0.35 * independenceNorm +
-    0.3 * obviousCoverageNorm;
+  // Mix diversity : récompense les grilles qui mélangent tags easy/hard plutôt
+  // que d'aligner 6 medium. Le signal plafonne à 1.0 dès qu'il y a au moins
+  // 1 easy et 1-2 hard, et décroît si la grille est trop dense en hard ou
+  // dépourvue d'easy (cas qui donnent des grilles sans point d'entrée facile).
+  const hardRatio = metadata.hardConstraintCount / 6;
+  const easyRatio = metadata.easyConstraintCount / 6;
+  const hardDistance = Math.abs(hardRatio - MIX_HARD_TARGET_RATIO);
+  const hardScore = clamp01(1 - hardDistance / MIX_HARD_TARGET_RATIO);
+  const easyScore = clamp01(easyRatio / MIX_EASY_MIN_RATIO);
+  const mixDiversityNorm = 0.6 * easyScore + 0.4 * hardScore;
 
-  return Math.round(clamp01(rawQuality) * 100);
+  const components: ScoreComponent<QualityComponentKey>[] = [
+    {
+      key: "sizeComfort",
+      norm: sizeComfortNorm,
+      weight: QUALITY_WEIGHT_SIZE_COMFORT,
+    },
+    { key: "obvious", norm: obviousNorm, weight: QUALITY_WEIGHT_OBVIOUS },
+    {
+      key: "mixDiversity",
+      norm: mixDiversityNorm,
+      weight: QUALITY_WEIGHT_MIX_DIVERSITY,
+    },
+  ];
+
+  const rawQuality = components.reduce((s, c) => s + c.norm * c.weight, 0);
+  return {
+    components,
+    rawQuality,
+    total: Math.round(clamp01(rawQuality) * 100),
+  };
+}
+
+/**
+ * Computes qualityScore 0-100 from a GridMetadata. Thin wrapper around
+ * `computeQualityBreakdown` — kept as the canonical scorer for Convex callers.
+ */
+export function computeQualityScore(metadata: GridMetadata): number {
+  return computeQualityBreakdown(metadata).total;
 }
 
 // ─── Derived difficulty (Phase 3) ─────────────────────────────────────────────
 
 /**
- * Derives a player-facing difficulty score (0-100) entirely from cell metrics.
- * Higher = harder to solve without guessing.
+ * Returns the per-component contributions of `deriveDifficulty`, plus the raw
+ * (pre-rescale) value. Used by the admin Advanced panel.
  */
-export function deriveDifficulty(metadata: GridMetadata): number {
+export function computeDifficultyBreakdown(
+  metadata: GridMetadata,
+): DifficultyBreakdown {
   const { cellMetrics } = metadata;
 
   const avgSolutionCount = mean(cellMetrics.map((c) => c.solutionCount));
-  const avgPopularityOnGrid = mean(cellMetrics.map((c) => c.avgPopularity));
 
   // Plus de solutions par cellule = plus facile. Ramp linéaire 2→12.
   const sizeHardnessNorm =
@@ -439,21 +574,89 @@ export function deriveDifficulty(metadata: GridMetadata): number {
       BLOCKING_AVG_WEIGHT * metadata.avgCellRisk,
   );
 
-  const obscurityNorm = 1 - normalizeNotoriety(avgPopularityOnGrid);
+  const components: ScoreComponent<DifficultyComponentKey>[] = [
+    {
+      key: "sizeHardness",
+      norm: sizeHardnessNorm,
+      weight: DIFFICULTY_WEIGHT_SIZE_HARDNESS,
+    },
+    {
+      key: "constraintHardness",
+      norm: constraintHardnessNorm,
+      weight: DIFFICULTY_WEIGHT_CONSTRAINT_HARDNESS,
+    },
+    {
+      key: "blockingRisk",
+      norm: blockingRiskNorm,
+      weight: DIFFICULTY_WEIGHT_BLOCKING,
+    },
+  ];
 
-  const rawDifficulty =
-    0.35 * sizeHardnessNorm +
-    0.25 * constraintHardnessNorm +
-    0.25 * blockingRiskNorm +
-    0.15 * obscurityNorm;
-
+  const rawDifficulty = components.reduce((s, c) => s + c.norm * c.weight, 0);
   const span = DIFFICULTY_RAW_P95 - DIFFICULTY_RAW_P5;
   const rescaled =
     span > 0 ? (rawDifficulty - DIFFICULTY_RAW_P5) / span : rawDifficulty;
-  return Math.round(clamp01(rescaled) * 100);
+  return {
+    components,
+    rawDifficulty,
+    total: Math.round(clamp01(rescaled) * 100),
+  };
+}
+
+/**
+ * Derives a player-facing difficulty score (0-100) entirely from cell metrics.
+ * Higher = harder to solve without guessing. Thin wrapper around
+ * `computeDifficultyBreakdown`.
+ */
+export function deriveDifficulty(metadata: GridMetadata): number {
+  return computeDifficultyBreakdown(metadata).total;
 }
 
 // ─── Backtracking search ──────────────────────────────────────────────────────
+
+/**
+ * Poids Efraimidis-Spirakis : pour chaque id, on tire un rand() puis on classe
+ * par rand()^(1/weight) décroissant. Probabilité d'être tiré en tête
+ * proportionnelle au poids, sans exclure les petits poids — ce qui importe
+ * ici pour ne pas casser la satisfiabilité du backtracking.
+ */
+function weightedShuffle(
+  ids: string[],
+  weightOf: (id: string) => number,
+): string[] {
+  const keyed = ids.map((id) => {
+    const w = Math.max(weightOf(id), 1e-6);
+    const u = Math.random();
+    // key = u^(1/w) ; ln(u)/w est monotone décroissant → trier desc sur la clé
+    // revient à trier desc sur -ln(u)/w = |ln(u)|/w asc. On trie asc sur ln(u)/w.
+    const key = Math.log(Math.max(u, 1e-12)) / w;
+    return { id, key };
+  });
+  keyed.sort((a, b) => b.key - a.key);
+  return keyed.map((k) => k.id);
+}
+
+// Audit post-seed : k=1 insuffisant (7/50 contraintes jamais tirées en 5000
+// candidats, 16 contraintes reviennent ≥3× sur 15 jours). k=3 pousse plus fort
+// les orphelines — une contrainte jamais utilisée est ×4 plus probable qu'une
+// utilisée 1 fois (vs ×2 avant), ×10 vs 3 fois (vs ×4 avant). Reste un soft
+// (weight > 0), la satisfiabilité du backtracking est préservée.
+const WEIGHTED_SHUFFLE_K = 3;
+
+/**
+ * Construit un weightOf(id) à partir du compteur d'usage historique.
+ * Poids = 1 / (1 + k · usage) — biais soft, n'exclut jamais les contraintes
+ * surutilisées mais booste agressivement les orphelines.
+ */
+function buildWeightFn(
+  constraintUsage: Record<string, number> | undefined,
+): (id: string) => number {
+  if (!constraintUsage) return () => 1;
+  return (id: string) => {
+    const usage = constraintUsage[id] ?? 0;
+    return 1 / (1 + WEIGHTED_SHUFFLE_K * usage);
+  };
+}
 
 /**
  * Recursive backtracking: fills slots 0-2 (rows) then 3-5 (cols).
@@ -465,11 +668,12 @@ function fillSlot(
   matches: Record<string, Set<string>>,
   rows: string[],
   cols: string[],
+  weightOf: (id: string) => number,
 ): { rows: string[]; cols: string[] } | null {
   if (slotIndex === 6) return { rows, cols };
 
   const isRow = slotIndex < 3;
-  const candidates = shuffle([...remaining]);
+  const candidates = weightedShuffle([...remaining], weightOf);
 
   for (const id of candidates) {
     const valid = isRow
@@ -491,6 +695,7 @@ function fillSlot(
       matches,
       isRow ? [...rows, id] : rows,
       isRow ? cols : [...cols, id],
+      weightOf,
     );
     if (result) return result;
   }
@@ -501,8 +706,17 @@ function fillSlot(
 export function tryBuildGrid(
   remainingIds: string[],
   matches: Record<string, Set<string>>,
+  constraintUsage?: Record<string, number>,
 ): { rows: string[]; cols: string[] } | null {
-  return fillSlot(0, shuffle([...remainingIds]), matches, [], []);
+  const weightOf = buildWeightFn(constraintUsage);
+  return fillSlot(
+    0,
+    weightedShuffle([...remainingIds], weightOf),
+    matches,
+    [],
+    [],
+    weightOf,
+  );
 }
 
 // ─── Finalization ─────────────────────────────────────────────────────────────
@@ -578,6 +792,7 @@ export function finalizeAndScore(
 export function generateBatch(
   n: number,
   existing: { rows: string[]; cols: string[] }[],
+  constraintUsage?: Record<string, number>,
 ): GridCandidate[] {
   const matches = buildConstraintMatches();
   const allIds = CONSTRAINTS.map((c) => c.id);
@@ -595,7 +810,7 @@ export function generateBatch(
   while (result.length < n && attempts < maxAttempts) {
     attempts++;
 
-    const gridResult = tryBuildGrid(allIds, matches);
+    const gridResult = tryBuildGrid(allIds, matches, constraintUsage);
     if (!gridResult) {
       failedFilter++;
       continue;
