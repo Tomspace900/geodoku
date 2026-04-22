@@ -5,7 +5,6 @@ type CellMetric = {
   solutionCount: number;
   popularCount: number;
   avgPopularity: number;
-  cellRisk: number;
 };
 
 type Props = {

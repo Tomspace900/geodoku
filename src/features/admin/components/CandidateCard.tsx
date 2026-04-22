@@ -20,6 +20,7 @@ import { useState } from "react";
 import { api } from "../../../../convex/_generated/api";
 import type { Id } from "../../../../convex/_generated/dataModel";
 import { dateToStr } from "../logic/scheduling";
+import { AdvancedMetricsPanel } from "./AdvancedMetricsPanel";
 import { CellMetricsMap } from "./CellMetricsMap";
 import { GridPreview } from "./GridPreview";
 
@@ -30,7 +31,6 @@ type CellMetric = {
   solutionCount: number;
   popularCount: number;
   avgPopularity: number;
-  cellRisk: number;
 };
 
 type Candidate = {
@@ -49,21 +49,39 @@ type Candidate = {
     avgNotoriety: number;
     obviousCellCount: number;
     criteriaOverlapScore: number;
+    constraintHardnessMean: number;
     maxCellRisk: number;
     avgCellRisk: number;
+    easyConstraintCount: number;
+    hardConstraintCount: number;
     cellMetrics: CellMetric[];
   };
   status: string;
   generatedAt: number;
 };
 
-const FINAL_SCORE_QUALITY_WEIGHT = 0.6;
+const FINAL_SCORE_QUALITY_WEIGHT = 0.45;
+const FINAL_SCORE_CONTEXT_WEIGHT = 0.3;
+const FINAL_SCORE_TARGET_WEIGHT = 0.25;
+const FINAL_SCORE_DIFFICULTY_TARGET = 40;
 
-function computeFinalScore(quality: number, context?: number): number | null {
+function computeFinalScore(
+  quality: number,
+  difficulty: number,
+  context?: number,
+): number | null {
   if (context == null) return null;
+  const distance = Math.abs(difficulty - FINAL_SCORE_DIFFICULTY_TARGET);
+  const maxDistance = Math.max(
+    FINAL_SCORE_DIFFICULTY_TARGET,
+    100 - FINAL_SCORE_DIFFICULTY_TARGET,
+  );
+  const targetProximity =
+    maxDistance === 0 ? 1 : Math.max(0, 1 - distance / maxDistance);
   return Math.round(
     FINAL_SCORE_QUALITY_WEIGHT * quality +
-      (1 - FINAL_SCORE_QUALITY_WEIGHT) * context,
+      FINAL_SCORE_CONTEXT_WEIGHT * context +
+      FINAL_SCORE_TARGET_WEIGHT * targetProximity * 100,
   );
 }
 
@@ -75,6 +93,8 @@ type Props = {
   nextAvailableDate: string;
   /** Dates déjà planifiées, pour désactiver les jours dans le picker. */
   scheduledDates: ReadonlySet<string>;
+  /** Si true, affiche le breakdown quality/difficulty détaillé. */
+  advanced: boolean;
 };
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
@@ -92,6 +112,7 @@ export function CandidateCard({
   onUnauthorized,
   nextAvailableDate,
   scheduledDates,
+  advanced,
 }: Props) {
   const approve = useMutation(api.grids.approveCandidate);
   const reject = useMutation(api.grids.rejectCandidate);
@@ -103,7 +124,11 @@ export function CandidateCard({
   const [loading, setLoading] = useState(false);
 
   const todayStr = dateToStr(new Date());
-  const finalScore = computeFinalScore(candidate.score, candidate.contextScore);
+  const finalScore = computeFinalScore(
+    candidate.score,
+    candidate.difficulty,
+    candidate.contextScore,
+  );
 
   async function handleApprove(scheduledDate?: string) {
     setLoading(true);
@@ -250,6 +275,11 @@ export function CandidateCard({
           </div>
           <CellMetricsMap cellMetrics={candidate.metadata.cellMetrics} />
         </div>
+        {advanced && (
+          <div className="px-4 pb-4">
+            <AdvancedMetricsPanel metadata={candidate.metadata} />
+          </div>
+        )}
         {/* Actions */}
         {candidate.status === "pending" && (
           <div className="flex flex-wrap items-center gap-2 border-t border-outline-variant/15 px-4 py-3">

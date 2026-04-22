@@ -9,7 +9,9 @@ import { api } from "../../../convex/_generated/api";
 import { CandidateCard } from "./components/CandidateCard";
 import { GridDetail } from "./components/GridDetail";
 import { ScheduleCalendar } from "./components/ScheduleCalendar";
+import { TuningConstantsPanel } from "./components/TuningConstantsPanel";
 import { useAdminToken } from "./hooks/useAdminToken";
+import { useAdvancedMode } from "./hooks/useAdvancedMode";
 import { dateToStr, getNextAvailableDate } from "./logic/scheduling";
 
 type Tab = "pending" | "approved" | "rejected";
@@ -22,7 +24,15 @@ const TAB_LABELS: Record<Tab, string> = {
 
 // ─── Header ───────────────────────────────────────────────────────────────────
 
-function AdminHeader({ onLogout }: { onLogout: () => void }) {
+function AdminHeader({
+  onLogout,
+  advanced,
+  onToggleAdvanced,
+}: {
+  onLogout: () => void;
+  advanced: boolean;
+  onToggleAdvanced: (value: boolean) => void;
+}) {
   return (
     <header className="rounded-2xl bg-surface-low p-5 md:p-6">
       <div className="flex items-start justify-between gap-4">
@@ -35,13 +45,28 @@ function AdminHeader({ onLogout }: { onLogout: () => void }) {
             Dashboard administration
           </p>
         </div>
-        <button
-          type="button"
-          onClick={onLogout}
-          className="text-[10px] font-semibold text-on-surface-variant tracking-widest uppercase transition-colors hover:text-on-surface"
-        >
-          Déconnexion
-        </button>
+        <div className="flex flex-col items-end gap-2">
+          <button
+            type="button"
+            onClick={() => onToggleAdvanced(!advanced)}
+            className={cn(
+              "text-[10px] font-semibold tracking-widest uppercase transition-colors",
+              advanced
+                ? "text-brand hover:text-brand/80"
+                : "text-on-surface-variant hover:text-on-surface",
+            )}
+            aria-pressed={advanced}
+          >
+            {advanced ? "● Advanced" : "○ Advanced"}
+          </button>
+          <button
+            type="button"
+            onClick={onLogout}
+            className="text-[10px] font-semibold text-on-surface-variant tracking-widest uppercase transition-colors hover:text-on-surface"
+          >
+            Déconnexion
+          </button>
+        </div>
       </div>
     </header>
   );
@@ -51,6 +76,7 @@ function AdminHeader({ onLogout }: { onLogout: () => void }) {
 
 export function AdminPage() {
   const [token, setToken, clearToken] = useAdminToken();
+  const [advanced, setAdvanced] = useAdvancedMode();
   const [tokenInput, setTokenInput] = useState("");
   const [activeTab, setActiveTab] = useState<Tab>("pending");
   const [candidateLimit, setCandidateLimit] = useState(12);
@@ -210,7 +236,13 @@ export function AdminPage() {
   return (
     <div className="min-h-screen bg-surface">
       <div className="mx-auto flex max-w-6xl flex-col gap-6 px-4 py-8">
-        <AdminHeader onLogout={clearToken} />
+        <AdminHeader
+          onLogout={clearToken}
+          advanced={advanced}
+          onToggleAdvanced={setAdvanced}
+        />
+
+        {advanced && <TuningConstantsPanel />}
 
         <section className="rounded-2xl bg-surface-low p-4 md:p-5">
           <div className="mb-3 flex flex-wrap items-center justify-between gap-3">
@@ -244,6 +276,7 @@ export function AdminPage() {
                 adminToken={token}
                 onUnauthorized={clearToken}
                 onUnscheduled={() => setSelectedDate(null)}
+                advanced={advanced}
               />
             </div>
           </div>
@@ -336,6 +369,7 @@ export function AdminPage() {
                     onUnauthorized={clearToken}
                     nextAvailableDate={nextAvailableDate}
                     scheduledDates={scheduledDates}
+                    advanced={advanced}
                   />
                 ))}
               </div>

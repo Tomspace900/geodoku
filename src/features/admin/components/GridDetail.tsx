@@ -10,10 +10,23 @@ import { useMutation, useQuery } from "convex/react";
 import { ConvexError } from "convex/values";
 import { useState } from "react";
 import { api } from "../../../../convex/_generated/api";
+import { AdvancedMetricsPanel } from "./AdvancedMetricsPanel";
 import { CellMetricsMap } from "./CellMetricsMap";
 import { GridPreview } from "./GridPreview";
 
-const FINAL_SCORE_QUALITY_WEIGHT = 0.6;
+const FINAL_SCORE_QUALITY_WEIGHT = 0.45;
+const FINAL_SCORE_CONTEXT_WEIGHT = 0.3;
+const FINAL_SCORE_TARGET_WEIGHT = 0.25;
+const FINAL_SCORE_DIFFICULTY_TARGET = 40;
+
+function computeTargetProximity(difficulty: number): number {
+  const distance = Math.abs(difficulty - FINAL_SCORE_DIFFICULTY_TARGET);
+  const maxDistance = Math.max(
+    FINAL_SCORE_DIFFICULTY_TARGET,
+    100 - FINAL_SCORE_DIFFICULTY_TARGET,
+  );
+  return maxDistance === 0 ? 1 : Math.max(0, 1 - distance / maxDistance);
+}
 
 type ScheduledGrid = {
   date: string;
@@ -29,6 +42,8 @@ type Props = {
   adminToken: string;
   onUnauthorized: () => void;
   onUnscheduled: () => void;
+  /** Si true, affiche le breakdown quality/difficulty détaillé. */
+  advanced: boolean;
 };
 
 function difficultyLabel(difficulty: number): string {
@@ -52,6 +67,7 @@ export function GridDetail({
   adminToken,
   onUnauthorized,
   onUnscheduled,
+  advanced,
 }: Props) {
   const unschedule = useMutation(api.grids.unscheduleGrid);
   const detail = useQuery(
@@ -106,7 +122,10 @@ export function GridDetail({
     qualityScore != null && contextScore != null
       ? Math.round(
           FINAL_SCORE_QUALITY_WEIGHT * qualityScore +
-            (1 - FINAL_SCORE_QUALITY_WEIGHT) * contextScore,
+            FINAL_SCORE_CONTEXT_WEIGHT * contextScore +
+            FINAL_SCORE_TARGET_WEIGHT *
+              computeTargetProximity(grid.difficulty) *
+              100,
         )
       : null;
 
@@ -206,6 +225,11 @@ export function GridDetail({
             <CellMetricsMap cellMetrics={detail.metadata.cellMetrics} />
           )}
         </div>
+        {advanced && detail?.metadata && (
+          <div className="px-4 pb-4">
+            <AdvancedMetricsPanel metadata={detail.metadata} />
+          </div>
+        )}
       </div>
 
       <Dialog open={confirmOpen} onOpenChange={setConfirmOpen}>
