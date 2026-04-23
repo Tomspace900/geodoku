@@ -3,6 +3,10 @@ import { internal } from "./_generated/api";
 
 const crons = cronJobs();
 
+// TODO: Les crons Convex sont en UTC. 23:00 UTC = ~01:00 en France l’été (ou minuit hiver),
+// donc trop tard pour un “jour calendaire” côté EU — prévoir un offset ou un horaire
+// ancré sur un fuseau (ex. 22:00 Europe/Paris) quand on voudra l’aligner sur les joueurs.
+
 // Every day at 23:00 UTC — generate new grid candidates
 crons.cron(
   "generate daily candidates",
