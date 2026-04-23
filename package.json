@@ -6,11 +6,12 @@
   "scripts": {
     "dev": "vite",
     "build": "tsc --noEmit && vite build",
-    "build:countries": "tsx scripts/build-countries.ts",
-    "analyze:grids": "tsx scripts/analyze-grid-candidates.ts",
-    "validate:constraints": "tsx scripts/validate-constraints.ts",
+    "build:countries": "tsx scripts/prod/build-countries.ts",
+    "analyze:grids": "tsx scripts/dev/analyze-grid-candidates.ts",
+    "validate:constraints": "tsx scripts/prod/validate-constraints.ts",
+    "audit:scoring": "tsx scripts/dev/audit-scoring-levers.ts",
     "seed:grids": "npx convex run seed:seedHistoricalGrids",
-    "seed:grids:force": "npx convex run seed:seedHistoricalGrids -- '{\"force\":true}'",
+    "wipe:db": "npx convex run wipe:wipeAllData",
     "preview": "vite preview",
     "test": "vitest run --passWithNoTests",
     "lint": "biome check .",
@@ -34,7 +35,10 @@
     "vaul": "^1.1.2"
   },
   "pnpm": {
-    "onlyBuiltDependencies": ["@biomejs/biome", "esbuild"]
+    "onlyBuiltDependencies": [
+      "@biomejs/biome",
+      "esbuild"
+    ]
   },
   "devDependencies": {
     "@biomejs/biome": "^1.9.4",

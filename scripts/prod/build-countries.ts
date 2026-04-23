@@ -4,7 +4,7 @@
  * Sources:
  * - world-countries npm (v5): name.common (EN), translations.fra.common (FR), cca2
  * - REST Countries v3.1 API: population + flags.alt (field=cca3,population,flags)
- * - scripts/patches.json: overrides, additions, aliasOverrides, geo/events/political lists, flagOverrides
+ * - scripts/prod/patches.json: overrides, additions, aliasOverrides, geo/events/political lists, flagOverrides
  *
  * Name localisation strategy:
  * - EN: world-countries `name.common` (authoritative English name)
@@ -24,7 +24,7 @@ import type {
   FlagColor,
   FlagSymbol,
   WaterAccess,
-} from "../src/features/countries/types.ts";
+} from "../../src/features/countries/types.ts";
 
 // ─── World-countries shape (fields we consume) ────────────────────────────────
 
@@ -518,7 +518,7 @@ async function main(): Promise<void> {
 
   // 1. Load patches
   const patches = JSON.parse(
-    readFileSync(resolve(root, "scripts/patches.json"), "utf-8"),
+    readFileSync(resolve(root, "scripts/prod/patches.json"), "utf-8"),
   ) as Patches;
   const wikiTitles = patches.wikiTitles ?? {};
 

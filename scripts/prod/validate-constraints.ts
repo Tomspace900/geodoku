@@ -9,14 +9,14 @@
  */
 import { readFileSync } from "node:fs";
 import { resolve } from "node:path";
-import type { Country } from "../src/features/countries/types.ts";
+import type { Country } from "../../src/features/countries/types.ts";
 import {
   CONSTRAINTS,
   type Constraint,
   type ConstraintCategory,
   type ConstraintDifficulty,
-} from "../src/features/game/logic/constraints.ts";
-import { translate } from "../src/i18n/index.ts";
+} from "../../src/features/game/logic/constraints.ts";
+import { translate } from "../../src/i18n/index.ts";
 
 const SWEET_SPOT_PIVOT: [number, number] = [5, 20];
 const SWEET_SPOT_DEFAULT: [number, number] = [8, 60];

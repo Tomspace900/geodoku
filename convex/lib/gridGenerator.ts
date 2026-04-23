@@ -192,7 +192,7 @@ function mean(values: number[]): number {
 }
 
 // Notoriété perçue : `popularityIndex` (0..1) est dérivé des pageviews mensuels
-// en.wikipedia sur tout le jeu de pays — voir `scripts/build-countries.ts` /
+// en.wikipedia sur tout le jeu de pays — voir `scripts/prod/build-countries.ts` /
 // `pnpm build:countries`. Quand l’index wiki est présent, on combine avec le
 // signal population par `max` pour éviter les sous-estimations (ex. titre WP
 // partiellement erroné) tout en gardant les micro-États très vus sur le wiki.

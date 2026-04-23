@@ -39,8 +39,10 @@ geodoku/
 │       ├── gridGenerator.ts     # algo pur : backtracking + scoring (importe pays + contraintes depuis src/)
 │       └── gridGenerator.test.ts
 ├── scripts/
-│   ├── build-countries.ts       # one-shot : génère countries.json
-│   └── validate-constraints.ts  # rapport de calibrage
+│   ├── prod/                    # build & validation (versionné)
+│   │   ├── build-countries.ts   # one-shot : génère countries.json
+│   │   └── validate-constraints.ts
+│   └── dev/                     # audits locaux (dossier gitignoré, pas au dépôt)
 ├── src/
 │   ├── main.tsx
 │   ├── App.tsx                  # toggle / (GamePage) ou /admin (AdminPage)
@@ -284,6 +286,12 @@ Ces classes ne sont pas toutes définies dans Tailwind, elles servent de vocabul
 - Toutes les mutations admin prennent `adminToken: string` et throwent `ConvexError("Unauthorized")` si mismatch.
 - Côté client : `sessionStorage` via hook `useAdminToken` (effacé à la fermeture de l’onglet).
 
+**Mode Advanced (admin).**
+
+- Toggle dans le header `AdminPage` (`useAdvancedMode`, persisté en `sessionStorage`, off par défaut).
+- Activé : affiche `TuningConstantsPanel` (config active de `gridGenerator.ts`) sous le header, et `AdvancedMetricsPanel` (breakdown quality/difficulty avec inputs métadonnées) dans chaque `CandidateCard` et le `GridDetail`.
+- Le breakdown utilise `computeQualityBreakdown` / `computeDifficultyBreakdown` exportés par `convex/lib/gridGenerator.ts` — purs TS, recalculés côté client à partir de `metadata`.
+
 **Règles Convex à respecter.**
 
 - Pas de `.filter()` sur les queries — utiliser les index.
@@ -319,6 +327,12 @@ pnpm validate:constraints         # rapport de calibrage des contraintes
 # Seed historique (DB vide ou `--force` après wipe) — internal action `seed:seedHistoricalGrids`
 pnpm seed:grids                        # idempotent si `grids` non vide
 pnpm seed:grids:force                 # forcer (dev uniquement)
+
+# Tuning loop (dev local) :
+#   1. ajuster les constantes dans convex/lib/gridGenerator.ts
+#   2. wipe + reseed pour régénérer 15 grilles avec les nouveaux paramètres
+#   3. inspecter dans /admin avec le toggle Advanced ON
+pnpm wipe:db                          # internal action wipe:wipeAllData (paginé)
 
 # Admin Convex
 pnpm dlx convex@latest env set ADMIN_TOKEN "xxx"
