@@ -97,13 +97,14 @@ export function ResultScreen({
       open
       aria-labelledby="result-screen-title"
       className={cn(
-        "fixed inset-0 z-50 m-0 flex h-full max-h-none w-full max-w-none flex-col items-center justify-end bg-transparent p-0 outline-none border-0",
+        "fixed inset-0 z-50 m-0 flex h-full max-h-none w-full max-w-none flex-col items-center justify-end bg-transparent p-0 border-0 outline-none",
+        "focus:outline-none focus-visible:outline-none",
         "sm:justify-center",
       )}
     >
       {/* biome-ignore lint/a11y/useKeyWithClickEvents: fermeture au clic sur le voile (Escape géré par useEffect) */}
       <div
-        className="absolute inset-0 bg-black/40 backdrop-blur-sm"
+        className="absolute inset-0 bg-on-surface/40 backdrop-blur-sm"
         onClick={onDismiss}
         aria-hidden
       />

@@ -1,7 +1,7 @@
 import type { Config } from "tailwindcss";
 
 const config: Config = {
-  darkMode: ["class"],
+  darkMode: "media",
   content: ["./index.html", "./src/**/*.{ts,tsx}"],
   theme: {
     container: {
@@ -51,28 +51,28 @@ const config: Config = {
           foreground: "hsl(var(--card-foreground))",
         },
         surface: {
-          DEFAULT: "#f9f9f9",
-          low: "#f2f4f4",
-          lowest: "#ffffff",
-          highest: "#dde4e5",
+          DEFAULT: "var(--color-surface)",
+          low: "var(--color-surface-low)",
+          lowest: "var(--color-surface-lowest)",
+          highest: "var(--color-surface-highest)",
         },
         "on-surface": {
-          DEFAULT: "#2d3435",
-          variant: "#56606e",
+          DEFAULT: "var(--color-on-surface)",
+          variant: "var(--color-on-surface-variant)",
         },
-        "outline-variant": "#adb3b4",
+        "outline-variant": "var(--color-outline-variant)",
         brand: {
-          DEFAULT: "#842cd3",
+          DEFAULT: "var(--color-brand)",
         },
         rarity: {
-          common: "#7c3aed",
-          uncommon: "#2563eb",
-          rare: "#d97706",
-          ultra: "#dc2626",
+          common: "var(--color-rarity-common)",
+          uncommon: "var(--color-rarity-uncommon)",
+          rare: "var(--color-rarity-rare)",
+          ultra: "var(--color-rarity-ultra)",
         },
       },
       boxShadow: {
-        editorial: "0 20px 40px rgba(45, 52, 53, 0.06)",
+        editorial: "var(--shadow-editorial)",
       },
       borderRadius: {
         lg: "var(--radius)",

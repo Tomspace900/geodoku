@@ -28,9 +28,15 @@ export function Header({ remainingLives, date }: Props) {
           Geodoku
         </h1>
         {dateLabel && (
-          <p className="text-[10px] text-on-surface-variant tracking-widest mt-1">
-            {dateLabel}
-          </p>
+          <>
+            <div
+              className="mt-2 h-1 w-12 shrink-0 rounded-full bg-brand"
+              aria-hidden
+            />
+            <p className="mt-1 text-[10px] tracking-widest text-on-surface-variant uppercase">
+              {dateLabel}
+            </p>
+          </>
         )}
       </div>
 
@@ -41,7 +47,7 @@ export function Header({ remainingLives, date }: Props) {
             size={18}
             className={
               i < remainingLives
-                ? "text-red-500 fill-red-500"
+                ? "text-rarity-ultra fill-rarity-ultra"
                 : "text-on-surface-variant"
             }
           />
