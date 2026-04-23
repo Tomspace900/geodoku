@@ -25,10 +25,13 @@ const PHASE_2_POOL_SIZE = Math.floor(BATCH_GENERATE_N / 2);
 // à ~71 (cible 40) car quality était saturée (sd=2 sur promus) et le terme
 // target trop léger. Quality descend à 0.45 (saturée de toute façon), context
 // à 0.30.
+// TARGET ajusté 2026-04-23 : recalibration P5/P95 avec MIN_CELL_SIZE=3 décale
+// la distribution générée (médiane ~50). 43 ≈ p40 de la nouvelle distribution,
+// équivalent conceptuel du 40 d'avant.
 export const FINAL_SCORE_QUALITY_WEIGHT = 0.45;
 export const FINAL_SCORE_CONTEXT_WEIGHT = 0.3;
 export const FINAL_SCORE_TARGET_WEIGHT = 0.25;
-export const FINAL_SCORE_DIFFICULTY_TARGET = 40;
+export const FINAL_SCORE_DIFFICULTY_TARGET = 43;
 
 function computeTargetProximity(difficulty: number): number {
   const distance = Math.abs(difficulty - FINAL_SCORE_DIFFICULTY_TARGET);

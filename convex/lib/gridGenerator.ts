@@ -4,7 +4,10 @@
  */
 import countriesJson from "../../src/features/countries/data/countries.json";
 import type { Country } from "../../src/features/countries/types";
-import { CONSTRAINTS } from "../../src/features/game/logic/constraints";
+import {
+  type ConstraintId,
+  CONSTRAINTS,
+} from "../../src/features/game/logic/constraints";
 
 const COUNTRIES: Country[] = countriesJson as Country[];
 const COUNTRY_BY_CODE = new Map(COUNTRIES.map((c) => [c.code, c] as const));
@@ -13,7 +16,7 @@ const TOTAL_COUNTRIES = COUNTRIES.length;
 // ─── Constants ────────────────────────────────────────────────────────────────
 
 // Hard constraints
-export const MIN_CELL_SIZE = 2;
+export const MIN_CELL_SIZE = 3;
 export const MAX_CELL_SIZE_HARD = 15;
 export const MAX_CELL_SIZE_SOFT = 8;
 export const MAX_CELLS_WITHOUT_OBVIOUS = 2;
@@ -38,13 +41,15 @@ const CONSTRAINT_HARDNESS_MAX_REF = 0.95;
 const BLOCKING_MAX_WEIGHT = 0.7;
 const BLOCKING_AVG_WEIGHT = 0.3;
 
-// Difficulty rescaling — P5/P95 du rawDifficulty observés sur 5000 grilles
-// acceptées (pnpm analyze:grids). Calibration figée : stretcher [P5, P95] sur
-// [0, 100] pour que difficulty couvre toute l'échelle au lieu de [15, 55].
-// Re-calibrer après tout changement du mix difficulty (poids, composantes) :
-// relancer `pnpm analyze:grids`, relever p5/p95 du rawDifficulty, MAJ.
-const DIFFICULTY_RAW_P5 = 0.36;
-const DIFFICULTY_RAW_P95 = 0.59;
+// Difficulty rescaling — P5/P95 du rawDifficulty observés sur grilles acceptées
+// (pnpm analyze:grids). Calibration figée : stretcher [P5, P95] sur [0, 100]
+// pour que difficulty couvre toute l'échelle au lieu d'être tassée dans un coin.
+// Re-calibrer après tout changement du mix difficulty (poids, composantes,
+// ou nouveaux filtres durs) : relancer `pnpm analyze:grids`, relever p5/p95
+// du rawDifficulty, MAJ. Recalibré 2026-04-23 avec MIN_CELL_SIZE=3 + shuffle
+// quadratique k=2 (500 échantillons) : P5=0.291→0.28, P95=0.543→0.54.
+const DIFFICULTY_RAW_P5 = 0.28;
+const DIFFICULTY_RAW_P95 = 0.54;
 
 // Batch
 export const BATCH_GENERATE_N = 30;
@@ -166,8 +171,8 @@ export type GridMetadata = {
 };
 
 export type GridCandidate = {
-  rows: string[]; // 3 constraint IDs
-  cols: string[]; // 3 constraint IDs
+  rows: ConstraintId[]; // 3 constraint IDs
+  cols: ConstraintId[]; // 3 constraint IDs
   validAnswers: Record<string, string[]>; // "r,c" → ISO3[]
   score: number; // qualityScore 0-100
   difficulty: number; // 0-100, derived from cellMetrics
@@ -621,9 +626,9 @@ export function deriveDifficulty(metadata: GridMetadata): number {
  * ici pour ne pas casser la satisfiabilité du backtracking.
  */
 function weightedShuffle(
-  ids: string[],
-  weightOf: (id: string) => number,
-): string[] {
+  ids: ConstraintId[],
+  weightOf: (id: ConstraintId) => number,
+): ConstraintId[] {
   const keyed = ids.map((id) => {
     const w = Math.max(weightOf(id), 1e-6);
     const u = Math.random();
@@ -636,17 +641,20 @@ function weightedShuffle(
   return keyed.map((k) => k.id);
 }
 
-// Audit post-seed : k=1 insuffisant (7/50 contraintes jamais tirées en 5000
-// candidats, 16 contraintes reviennent ≥3× sur 15 jours). k=3 pousse plus fort
-// les orphelines — une contrainte jamais utilisée est ×4 plus probable qu'une
-// utilisée 1 fois (vs ×2 avant), ×10 vs 3 fois (vs ×4 avant). Reste un soft
-// (weight > 0), la satisfiabilité du backtracking est préservée.
-const WEIGHTED_SHUFFLE_K = 3;
+// Pénalité quadratique sur l'usage historique : weight = 1 / (1 + K · usage²).
+// Le carré accélère la pénalité sans jamais atteindre 0 (backtracking préservé).
+// Pénalité quadratique : k=1.5 → max=7 sur 15j, k=2 → max≈5-6 (stable),
+// k=3 → variance trop haute (simulation stochastique dominée par le biais de
+// survie du backtracking). k=2 est le point d'équilibre : assez agressif pour
+// pousser les orphelines, pas assez pour perturber les chemins satisfiables.
+// Les contraintes à >40% couverture (flag_has_green, language_multilingual)
+// restent structurellement dominantes — c'est une limite du soft-weighting.
+const WEIGHTED_SHUFFLE_K = 2;
 
 /**
  * Construit un weightOf(id) à partir du compteur d'usage historique.
- * Poids = 1 / (1 + k · usage) — biais soft, n'exclut jamais les contraintes
- * surutilisées mais booste agressivement les orphelines.
+ * Poids = 1 / (1 + K · usage²) — pénalité quadratique : soft sur les premières
+ * réutilisations, agressive au-delà de 2, sans jamais exclure (weight > 0).
  */
 function buildWeightFn(
   constraintUsage: Record<string, number> | undefined,
@@ -654,7 +662,7 @@ function buildWeightFn(
   if (!constraintUsage) return () => 1;
   return (id: string) => {
     const usage = constraintUsage[id] ?? 0;
-    return 1 / (1 + WEIGHTED_SHUFFLE_K * usage);
+    return 1 / (1 + WEIGHTED_SHUFFLE_K * usage * usage);
   };
 }
 
@@ -664,12 +672,12 @@ function buildWeightFn(
  */
 function fillSlot(
   slotIndex: number,
-  remaining: string[],
-  matches: Record<string, Set<string>>,
-  rows: string[],
-  cols: string[],
-  weightOf: (id: string) => number,
-): { rows: string[]; cols: string[] } | null {
+  remaining: ConstraintId[],
+  matches: Record<ConstraintId, Set<string>>,
+  rows: ConstraintId[],
+  cols: ConstraintId[],
+  weightOf: (id: ConstraintId) => number,
+): { rows: ConstraintId[]; cols: ConstraintId[] } | null {
   if (slotIndex === 6) return { rows, cols };
 
   const isRow = slotIndex < 3;
@@ -704,10 +712,10 @@ function fillSlot(
 }
 
 export function tryBuildGrid(
-  remainingIds: string[],
-  matches: Record<string, Set<string>>,
+  remainingIds: ConstraintId[],
+  matches: Record<ConstraintId, Set<string>>,
   constraintUsage?: Record<string, number>,
-): { rows: string[]; cols: string[] } | null {
+): { rows: ConstraintId[]; cols: ConstraintId[] } | null {
   const weightOf = buildWeightFn(constraintUsage);
   return fillSlot(
     0,
@@ -727,8 +735,8 @@ export function tryBuildGrid(
  * Returns null if any hard constraint fails.
  */
 export function finalizeAndScore(
-  rows: string[],
-  cols: string[],
+  rows: ConstraintId[],
+  cols: ConstraintId[],
   matches: Record<string, Set<string>>,
 ): GridCandidate | null {
   const validAnswers: Record<string, string[]> = {};
