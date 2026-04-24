@@ -8,7 +8,9 @@
     "build": "tsc --noEmit && vite build",
     "build:countries": "tsx scripts/prod/build-countries.ts",
     "analyze:grids": "tsx scripts/dev/analyze-grid-candidates.ts",
+    "analyze:distribution": "tsx scripts/dev/analyze-grid-distribution.ts",
     "validate:constraints": "tsx scripts/prod/validate-constraints.ts",
+    "audit:flag-colors": "tsx scripts/prod/audit-flag-color-gaps.ts",
     "audit:scoring": "tsx scripts/dev/audit-scoring-levers.ts",
     "seed:grids": "npx convex run seed:seedHistoricalGrids",
     "wipe:db": "npx convex run wipe:wipeAllData",
@@ -35,10 +37,7 @@
     "vaul": "^1.1.2"
   },
   "pnpm": {
-    "onlyBuiltDependencies": [
-      "@biomejs/biome",
-      "esbuild"
-    ]
+    "onlyBuiltDependencies": ["@biomejs/biome", "esbuild"]
   },
   "devDependencies": {
     "@biomejs/biome": "^1.9.4",

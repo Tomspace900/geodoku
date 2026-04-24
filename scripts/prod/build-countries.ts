@@ -18,13 +18,22 @@
 import { readFileSync, writeFileSync } from "node:fs";
 import { resolve } from "node:path";
 import rawWorldCountries from "world-countries";
-import type {
-  Continent,
-  Country,
-  FlagColor,
-  FlagSymbol,
-  WaterAccess,
-} from "../../src/features/countries/types.ts";
+import type { Country } from "../../src/features/countries/types.ts";
+import {
+  type Patches,
+  type RcEnrichRow,
+  type RcEnrichment,
+  assignPopularity,
+  buildAliases,
+  deriveContinent,
+  deriveWaterAccess,
+  gameplayArraysForCode,
+  mapLanguages,
+  mergeFlagFields,
+  parseFlagFromAlt,
+  rcEnrichmentMapFromRows,
+  toWikipediaTitle,
+} from "./buildCountriesLib.ts";
 
 // ─── World-countries shape (fields we consume) ────────────────────────────────
 
@@ -44,34 +53,6 @@ interface WCEntry {
   latlng?: [number, number];
 }
 
-interface AliasOverride {
-  fr?: string[];
-  en?: string[];
-}
-
-interface Patches {
-  overrides: Record<string, Partial<Omit<Country, "code">>>;
-  aliasOverrides: Record<string, AliasOverride>;
-  additions: Country[];
-  wikiTitles?: Record<string, string>;
-  middleEastCodes?: string[];
-  eventFifaWcHost?: string[];
-  eventSummerOlympicsHost?: string[];
-  euMemberCodes?: string[];
-  g20MemberCodes?: string[];
-  flagOverrides?: Record<
-    string,
-    { flagColors?: FlagColor[]; flagSymbols?: FlagSymbol[] }
-  >;
-}
-
-/** REST Countries v3.1 row (fields=cca3,population,flags) */
-interface RcEnrichRow {
-  cca3?: string | string[];
-  population: number;
-  flags?: { alt?: string };
-}
-
 const REST_COUNTRIES_URL =
   "https://restcountries.com/v3.1/all?fields=cca3,population,flags";
 const WIKIPEDIA_PAGEVIEWS_API =
@@ -88,236 +69,7 @@ const EXPLICIT_CODES = new Set<string>(["PSE", "TWN"]);
 
 const EXPECTED_COUNT = 197;
 
-/**
- * ISO 639-3 → ISO 639-1 conversion table.
- * null = the language has no ISO 639-1 code; the 639-3 code is kept as fallback.
- */
-const ISO639_3_TO_1: Readonly<Record<string, string | null>> = {
-  afr: "af",
-  aka: "ak",
-  amh: "am",
-  ara: "ar",
-  aym: "ay",
-  aze: "az",
-  bel: "be",
-  ben: "bn",
-  bis: "bi",
-  bos: "bs",
-  bul: "bg",
-  cat: "ca",
-  ces: "cs",
-  cha: "ch",
-  cnr: null,
-  dan: "da",
-  deu: "de",
-  div: "dv",
-  dzo: "dz",
-  ell: "el",
-  eng: "en",
-  est: "et",
-  fij: "fj",
-  fin: "fi",
-  fra: "fr",
-  gil: null,
-  gle: "ga",
-  glv: "gv",
-  grn: "gn",
-  gsw: null,
-  hau: "ha",
-  hbs: "sr",
-  heb: "he",
-  her: "hz",
-  hin: "hi",
-  hmo: null,
-  hrv: "hr",
-  hun: "hu",
-  hye: "hy",
-  ind: "id",
-  isl: "is",
-  ita: "it",
-  jpn: "ja",
-  kal: "kl",
-  kat: "ka",
-  kaz: "kk",
-  khm: "km",
-  kik: "ki",
-  kin: "rw",
-  kir: "ky",
-  kon: "kg",
-  kor: "ko",
-  lao: "lo",
-  lat: "la",
-  lav: "lv",
-  lin: "ln",
-  lit: "lt",
-  lub: "lu",
-  lug: "lg",
-  ltz: "lb",
-  mfe: null,
-  mkd: "mk",
-  mlg: "mg",
-  mlt: "mt",
-  mon: "mn",
-  mri: "mi",
-  msa: "ms",
-  mya: "my",
-  nau: "na",
-  nbl: "nr",
-  nde: "nd",
-  ndo: "ng",
-  nep: "ne",
-  nld: "nl",
-  nno: "nn",
-  nob: "nb",
-  nor: "no",
-  nya: "ny",
-  orm: "om",
-  pan: "pa",
-  pol: "pl",
-  por: "pt",
-  pov: null,
-  pus: "ps",
-  que: "qu",
-  roh: "rm",
-  ron: "ro",
-  run: "rn",
-  rus: "ru",
-  sag: "sg",
-  sin: "si",
-  slk: "sk",
-  slv: "sl",
-  smi: "se",
-  smo: "sm",
-  sna: "sn",
-  som: "so",
-  sot: "st",
-  spa: "es",
-  sqi: "sq",
-  srp: "sr",
-  ssw: "ss",
-  swa: "sw",
-  swe: "sv",
-  tam: "ta",
-  tet: null,
-  tgk: "tg",
-  tha: "th",
-  tir: "ti",
-  tkl: null,
-  ton: "to",
-  tpi: null,
-  tsn: "tn",
-  tso: "ts",
-  tuk: "tk",
-  tur: "tr",
-  tvl: null,
-  uig: "ug",
-  ukr: "uk",
-  urd: "ur",
-  uzb: "uz",
-  ven: "ve",
-  vie: "vi",
-  xho: "xh",
-  zho: "zh",
-  zul: "zu",
-};
-
-// ─── Helpers ──────────────────────────────────────────────────────────────────
-
-function deriveContinent(region: string, subregion: string): Continent {
-  switch (region) {
-    case "Africa":
-      return "africa";
-    case "Asia":
-      return "asia";
-    case "Europe":
-      return "europe";
-    case "Oceania":
-      return "oceania";
-    case "Americas":
-      return subregion === "South America" ? "south_america" : "north_america";
-    default:
-      throw new Error(
-        `Unknown region: "${region}" (subregion: "${subregion}")`,
-      );
-  }
-}
-
-function deriveWaterAccess(
-  landlocked: boolean,
-  borderCount: number,
-): WaterAccess {
-  if (landlocked) return "landlocked";
-  if (borderCount === 0) return "island";
-  return "coastal";
-}
-
-function mapLanguages(raw: Record<string, string>): string[] {
-  return Object.keys(raw).map((code) => {
-    const iso1 = ISO639_3_TO_1[code];
-    // null  → no 639-1 equivalent, keep 639-3
-    // undefined → unknown code, keep as-is
-    return iso1 ?? code;
-  });
-}
-
-type RcEnrichment = { population: number; flagAlt?: string };
-
-function rcEnrichmentMapFromRows(
-  rows: RcEnrichRow[],
-): Map<string, RcEnrichment> {
-  const map = new Map<string, RcEnrichment>();
-  for (const row of rows) {
-    const raw = row.cca3;
-    if (raw == null) continue;
-    const codes = Array.isArray(raw) ? raw : [raw];
-    for (const code of codes) {
-      if (typeof code === "string" && /^[A-Z]{3}$/.test(code)) {
-        map.set(code, {
-          population: row.population,
-          flagAlt: row.flags?.alt,
-        });
-      }
-    }
-  }
-  return map;
-}
-
-/**
- * Heuristic parser for REST Countries `flags.alt` (English prose).
- * Curated overrides live in patches.json → `flagOverrides`.
- */
-function parseFlagFromAlt(alt: string | undefined): {
-  flagColors: FlagColor[];
-  flagSymbols: FlagSymbol[];
-} {
-  if (!alt || alt.trim() === "") {
-    return { flagColors: [], flagSymbols: [] };
-  }
-  const t = alt.toLowerCase();
-  const colorSet = new Set<FlagColor>();
-  if (/\b(red|crimson|scarlet)\b/.test(t)) colorSet.add("red");
-  if (/\b(blue|navy)\b/.test(t)) colorSet.add("blue");
-  if (/\bgreen\b/.test(t)) colorSet.add("green");
-  if (/\b(yellow|gold|golden)\b/.test(t)) colorSet.add("yellow");
-  if (/\bwhite\b/.test(t)) colorSet.add("white");
-  if (/\bblack\b/.test(t)) colorSet.add("black");
-  if (/\borange\b/.test(t)) colorSet.add("orange");
-
-  const symbolSet = new Set<FlagSymbol>();
-  if (/\bstars?\b/.test(t)) symbolSet.add("star");
-  if (/\bcrescent\b/.test(t)) symbolSet.add("crescent");
-  if (/\bcross\b/.test(t)) symbolSet.add("cross");
-  if (/\bsun\b/.test(t)) symbolSet.add("sun");
-  if (/\b(circle|disc|disk)\b/.test(t)) symbolSet.add("circle");
-  if (/\btriangle\b/.test(t)) symbolSet.add("triangle");
-  if (/\b(dragon|eagle|lion|leopard|bear|animal)\b/.test(t))
-    symbolSet.add("animal");
-
-  return {
-    flagColors: [...colorSet],
-    flagSymbols: [...symbolSet],
-  };
-}
+// ─── Network ──────────────────────────────────────────────────────────────────
 
 async function fetchRcEnrichment(): Promise<Map<string, RcEnrichment>> {
   const res = await fetch(REST_COUNTRIES_URL);
@@ -329,32 +81,6 @@ async function fetchRcEnrichment(): Promise<Map<string, RcEnrichment>> {
     throw new Error("REST Countries: expected non-empty array");
   }
   return rcEnrichmentMapFromRows(data);
-}
-
-/** Deduplicates an array while preserving order. */
-function dedupe(arr: string[]): string[] {
-  return [...new Set(arr)];
-}
-
-/**
- * Builds localized aliases for a country.
- * Baseline: [localized name, cca2, cca3] — deduplicated.
- * Extras from aliasOverrides are appended (also deduplicated).
- */
-function buildAliases(
-  nameFr: string,
-  nameEn: string,
-  cca2: string,
-  cca3: string,
-  overrides?: AliasOverride,
-): { fr: string[]; en: string[] } {
-  const fr = dedupe([nameFr, cca2, cca3, ...(overrides?.fr ?? [])]);
-  const en = dedupe([nameEn, cca2, cca3, ...(overrides?.en ?? [])]);
-  return { fr, en };
-}
-
-function toWikipediaTitle(name: string): string {
-  return name.replaceAll(" ", "_");
 }
 
 function getWikipediaRange(): { start: string; end: string } {
@@ -444,32 +170,6 @@ async function fetchPageviewsByCountryCode(
   return result;
 }
 
-function assignPopularity(
-  countries: Country[],
-  pageviewsByCode: Map<string, number>,
-) {
-  const viewValues = countries
-    .map((country) => pageviewsByCode.get(country.code))
-    .filter((value): value is number => value !== undefined && value > 0);
-
-  if (viewValues.length === 0) return;
-
-  const minLog = Math.log10(Math.min(...viewValues));
-  const maxLog = Math.log10(Math.max(...viewValues));
-  const span = Math.max(1e-6, maxLog - minLog);
-
-  for (const country of countries) {
-    const views = pageviewsByCode.get(country.code);
-    if (!views || views <= 0) continue;
-    const logViews = Math.log10(views);
-    country.wikipediaMonthlyViews = views;
-    country.popularityIndex = Math.min(
-      1,
-      Math.max(0, (logViews - minLog) / span),
-    );
-  }
-}
-
 // ─── Main ─────────────────────────────────────────────────────────────────────
 
 function latitudeFromWc(c: WCEntry): number {
@@ -478,37 +178,6 @@ function latitudeFromWc(c: WCEntry): number {
     throw new Error(`${c.cca3}: missing or invalid latlng`);
   }
   return lat;
-}
-
-function mergeFlagFields(
-  code: string,
-  parsed: { flagColors: FlagColor[]; flagSymbols: FlagSymbol[] },
-  patches: Patches,
-): Pick<Country, "flagColors" | "flagSymbols"> {
-  const o = patches.flagOverrides?.[code];
-  if (o?.flagColors != null || o?.flagSymbols != null) {
-    return {
-      flagColors: o.flagColors ?? parsed.flagColors,
-      flagSymbols: o.flagSymbols ?? parsed.flagSymbols,
-    };
-  }
-  return parsed;
-}
-
-function gameplayArraysForCode(
-  code: string,
-  patches: Patches,
-): Pick<Country, "events" | "groups" | "geoTags"> {
-  const events: Country["events"] = [];
-  if (patches.eventFifaWcHost?.includes(code)) events.push("fifa_wc_host");
-  if (patches.eventSummerOlympicsHost?.includes(code))
-    events.push("summer_olympics_host");
-  const groups: Country["groups"] = [];
-  if (patches.euMemberCodes?.includes(code)) groups.push("eu");
-  if (patches.g20MemberCodes?.includes(code)) groups.push("g20");
-  const geoTags: string[] = [];
-  if (patches.middleEastCodes?.includes(code)) geoTags.push("middle_east");
-  return { events, groups, geoTags };
 }
 
 async function main(): Promise<void> {
@@ -669,14 +338,6 @@ async function main(): Promise<void> {
   console.log(
     `✓ Wikipedia popularity enriched for ${pageviewsByCode.size} countries`,
   );
-
-  // Sample: a few varied + ambiguous countries
-  const SAMPLE_CODES = ["FRA", "BRA", "AUS", "CYP", "XKX", "TWN", "USA", "GBR"];
-  console.log("\nSample:");
-  for (const code of SAMPLE_CODES) {
-    const c = result.find((x) => x.code === code);
-    if (c) console.log(JSON.stringify(c));
-  }
 }
 
 void main().catch((err: unknown) => {

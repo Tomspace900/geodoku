@@ -18,7 +18,7 @@
     "officialLanguages": ["prs", "ps", "tk"],
     "latitude": 33,
     "subregion": "Southern Asia",
-    "flagColors": ["white", "black"],
+    "flagColors": ["black", "red", "green", "white"],
     "flagSymbols": [],
     "events": [],
     "groups": [],
@@ -66,7 +66,7 @@
     "flagEmoji": "🇦🇱",
     "continent": "europe",
     "waterAccess": "coastal",
-    "borders": ["MNE", "GRC", "MKD", "UNK"],
+    "borders": ["MNE", "GRC", "MKD", "XKX"],
     "areaKm2": 28748,
     "population": 2363314,
     "officialLanguages": ["sq"],
@@ -114,8 +114,8 @@
       "en": "United Arab Emirates"
     },
     "aliases": {
-      "fr": ["Émirats arabes unis", "AE", "ARE"],
-      "en": ["United Arab Emirates", "AE", "ARE"]
+      "fr": ["Émirats arabes unis", "AE", "ARE", "EAU"],
+      "en": ["United Arab Emirates", "AE", "ARE", "UAE"]
     },
     "flagEmoji": "🇦🇪",
     "continent": "asia",
@@ -504,7 +504,7 @@
     "officialLanguages": ["en"],
     "latitude": 24.25,
     "subregion": "Caribbean",
-    "flagColors": ["yellow", "black"],
+    "flagColors": ["blue", "yellow", "black"],
     "flagSymbols": ["triangle"],
     "events": [],
     "groups": [],
@@ -585,7 +585,7 @@
     "officialLanguages": ["bjz", "en", "es"],
     "latitude": 17.25,
     "subregion": "Central America",
-    "flagColors": ["red", "blue"],
+    "flagColors": ["red", "blue", "white"],
     "flagSymbols": [],
     "events": [],
     "groups": [],
@@ -637,7 +637,7 @@
       "ARG",
       "BOL",
       "COL",
-      "GUF",
+      "FRA",
       "GUY",
       "PRY",
       "PER",
@@ -677,7 +677,7 @@
     "officialLanguages": ["en"],
     "latitude": 13.16666666,
     "subregion": "Caribbean",
-    "flagColors": ["yellow", "black"],
+    "flagColors": ["blue", "yellow", "black"],
     "flagSymbols": [],
     "events": [],
     "groups": [],
@@ -813,7 +813,7 @@
     "latitude": 60,
     "subregion": "North America",
     "flagColors": ["red", "white"],
-    "flagSymbols": [],
+    "flagSymbols": ["other"],
     "events": ["summer_olympics_host"],
     "groups": ["g20"],
     "geoTags": [],
@@ -984,10 +984,17 @@
         "CD",
         "COD",
         "RDC",
-        "Congo",
-        "Congo-Kinshasa"
+        "Congo-Kinshasa",
+        "République démocratique du Congo"
       ],
-      "en": ["DR Congo", "CD", "COD", "DRC", "Congo", "Congo-Kinshasa"]
+      "en": [
+        "DR Congo",
+        "CD",
+        "COD",
+        "DRC",
+        "Congo-Kinshasa",
+        "Democratic Republic of the Congo"
+      ]
     },
     "flagEmoji": "🇨🇩",
     "continent": "africa",
@@ -1014,7 +1021,7 @@
     },
     "aliases": {
       "fr": ["Congo", "CG", "COG", "Congo-Brazzaville", "République du Congo"],
-      "en": ["Republic of the Congo", "CG", "COG", "Congo-Brazzaville"]
+      "en": ["Republic of the Congo", "CG", "COG", "Congo-Brazzaville", "Congo"]
     },
     "flagEmoji": "🇨🇬",
     "continent": "africa",
@@ -1187,7 +1194,7 @@
     "officialLanguages": ["el", "tr"],
     "latitude": 35,
     "subregion": "Southern Europe",
-    "flagColors": ["green", "white"],
+    "flagColors": ["green", "white", "orange"],
     "flagSymbols": [],
     "events": [],
     "groups": ["eu"],
@@ -1613,7 +1620,18 @@
     "flagEmoji": "🇫🇷",
     "continent": "europe",
     "waterAccess": "coastal",
-    "borders": ["AND", "BEL", "DEU", "ITA", "LUX", "MCO", "ESP", "CHE"],
+    "borders": [
+      "AND",
+      "BEL",
+      "BRA",
+      "DEU",
+      "ITA",
+      "LUX",
+      "MCO",
+      "ESP",
+      "SUR",
+      "CHE"
+    ],
     "areaKm2": 551695,
     "population": 66351959,
     "officialLanguages": ["fr"],
@@ -1997,7 +2015,7 @@
     "officialLanguages": ["es"],
     "latitude": 15,
     "subregion": "Central America",
-    "flagColors": ["white"],
+    "flagColors": ["blue", "white"],
     "flagSymbols": ["star"],
     "events": [],
     "groups": [],
@@ -2132,7 +2150,7 @@
     "officialLanguages": ["en", "hi", "ta"],
     "latitude": 20,
     "subregion": "Southern Asia",
-    "flagColors": ["blue", "green", "white"],
+    "flagColors": ["blue", "green", "yellow", "white"],
     "flagSymbols": [],
     "events": [],
     "groups": ["g20"],
@@ -2402,7 +2420,7 @@
     "officialLanguages": ["kk", "ru"],
     "latitude": 48,
     "subregion": "Central Asia",
-    "flagColors": ["yellow"],
+    "flagColors": ["blue", "yellow"],
     "flagSymbols": ["sun", "animal"],
     "events": [],
     "groups": [],
@@ -2553,7 +2571,7 @@
     },
     "aliases": {
       "fr": ["Corée du Sud", "KR", "KOR"],
-      "en": ["South Korea", "KR", "KOR"]
+      "en": ["South Korea", "KR", "KOR", "ROK"]
     },
     "flagEmoji": "🇰🇷",
     "continent": "asia",
@@ -2646,7 +2664,7 @@
     "latitude": 33.83333333,
     "subregion": "Western Asia",
     "flagColors": ["red", "green", "white"],
-    "flagSymbols": [],
+    "flagSymbols": ["other"],
     "events": [],
     "groups": [],
     "geoTags": ["middle_east"],
@@ -2780,7 +2798,7 @@
     "officialLanguages": ["si", "ta"],
     "latitude": 7,
     "subregion": "Southern Asia",
-    "flagColors": ["yellow", "orange"],
+    "flagColors": ["yellow", "orange", "red", "green"],
     "flagSymbols": ["animal"],
     "events": [],
     "groups": [],
@@ -3051,7 +3069,7 @@
     "latitude": 23,
     "subregion": "North America",
     "flagColors": ["red", "green", "white"],
-    "flagSymbols": [],
+    "flagSymbols": ["animal"],
     "events": ["fifa_wc_host", "summer_olympics_host"],
     "groups": ["g20"],
     "geoTags": [],
@@ -3098,7 +3116,7 @@
     "flagEmoji": "🇲🇰",
     "continent": "europe",
     "waterAccess": "landlocked",
-    "borders": ["ALB", "BGR", "GRC", "UNK", "SRB"],
+    "borders": ["ALB", "BGR", "GRC", "XKX", "SRB"],
     "areaKm2": 25713,
     "population": 1822612,
     "officialLanguages": ["mk"],
@@ -3206,7 +3224,7 @@
     "flagEmoji": "🇲🇪",
     "continent": "europe",
     "waterAccess": "coastal",
-    "borders": ["ALB", "BIH", "HRV", "UNK", "SRB"],
+    "borders": ["ALB", "BIH", "HRV", "XKX", "SRB"],
     "areaKm2": 13812,
     "population": 623327,
     "officialLanguages": ["cnr"],
@@ -3266,7 +3284,7 @@
     "officialLanguages": ["pt"],
     "latitude": -18.25,
     "subregion": "Eastern Africa",
-    "flagColors": ["red", "yellow", "white", "black"],
+    "flagColors": ["red", "blue", "yellow", "white", "black"],
     "flagSymbols": ["star", "triangle"],
     "events": [],
     "groups": [],
@@ -3507,8 +3525,8 @@
       "en": "Netherlands"
     },
     "aliases": {
-      "fr": ["Pays-Bas", "NL", "NLD"],
-      "en": ["Netherlands", "NL", "NLD"]
+      "fr": ["Pays-Bas", "NL", "NLD", "Hollande"],
+      "en": ["Netherlands", "NL", "NLD", "Holland"]
     },
     "flagEmoji": "🇳🇱",
     "continent": "europe",
@@ -3858,8 +3876,8 @@
       "en": "North Korea"
     },
     "aliases": {
-      "fr": ["Corée du Nord", "KP", "PRK"],
-      "en": ["North Korea", "KP", "PRK"]
+      "fr": ["Corée du Nord", "KP", "PRK", "RPDC"],
+      "en": ["North Korea", "KP", "PRK", "DPRK"]
     },
     "flagEmoji": "🇰🇵",
     "continent": "asia",
@@ -3978,7 +3996,7 @@
     "officialLanguages": ["ar"],
     "latitude": 25.5,
     "subregion": "Western Asia",
-    "flagColors": ["white"],
+    "flagColors": ["red", "white"],
     "flagSymbols": [],
     "events": ["fifa_wc_host"],
     "groups": [],
@@ -4338,7 +4356,7 @@
     "flagEmoji": "🇷🇸",
     "continent": "europe",
     "waterAccess": "landlocked",
-    "borders": ["BIH", "BGR", "HRV", "HUN", "UNK", "MKD", "MNE", "ROU"],
+    "borders": ["BIH", "BGR", "HRV", "HUN", "XKX", "MKD", "MNE", "ROU"],
     "areaKm2": 88361,
     "population": 6567783,
     "officialLanguages": ["sr"],
@@ -4419,7 +4437,7 @@
     "flagEmoji": "🇸🇷",
     "continent": "south_america",
     "waterAccess": "coastal",
-    "borders": ["BRA", "GUF", "GUY"],
+    "borders": ["BRA", "FRA", "GUY"],
     "areaKm2": 163820,
     "population": 616500,
     "officialLanguages": ["nl"],
@@ -5079,7 +5097,7 @@
     "officialLanguages": ["ru", "uz"],
     "latitude": 41,
     "subregion": "Central Asia",
-    "flagColors": ["red", "green", "white"],
+    "flagColors": ["red", "blue", "green", "white"],
     "flagSymbols": ["star", "crescent"],
     "events": [],
     "groups": [],
@@ -5095,7 +5113,7 @@
     },
     "aliases": {
       "fr": ["Cité du Vatican", "VA", "VAT", "Vatican", "Saint-Siège"],
-      "en": ["Vatican City", "VA", "VAT", "Holy See"]
+      "en": ["Vatican City", "VA", "VAT", "Holy See", "Vatican"]
     },
     "flagEmoji": "🇻🇦",
     "continent": "europe",

@@ -5,8 +5,8 @@
 import countriesJson from "../../src/features/countries/data/countries.json";
 import type { Country } from "../../src/features/countries/types";
 import {
-  type ConstraintId,
   CONSTRAINTS,
+  type ConstraintId,
 } from "../../src/features/game/logic/constraints";
 
 const COUNTRIES: Country[] = countriesJson as Country[];

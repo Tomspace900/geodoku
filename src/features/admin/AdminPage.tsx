@@ -243,7 +243,11 @@ export function AdminPage() {
     return (
       <div className="flex min-h-screen flex-col items-center bg-surface px-4 py-8">
         <div className="flex w-full max-w-[500px] flex-col gap-6">
-          <AdminHeader onLogout={clearToken} advanced={false} onToggleAdvanced={() => {}} />
+          <AdminHeader
+            onLogout={clearToken}
+            advanced={false}
+            onToggleAdvanced={() => {}}
+          />
           <ErrorScreen variant="backend-down" />
         </div>
       </div>
