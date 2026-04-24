@@ -12,7 +12,9 @@ import {
   mapLanguages,
   mergeFlagFields,
   parseFlagFromAlt,
+  physicalFeaturesForCode,
   rcEnrichmentMapFromRows,
+  regimeForCode,
   toWikipediaTitle,
 } from "./buildCountriesLib.ts";
 
@@ -35,6 +37,8 @@ function minimalCountry(code: string): Country {
     events: [],
     groups: [],
     geoTags: [],
+    regime: "republic",
+    physicalFeatures: [],
   };
 }
 
@@ -170,18 +174,70 @@ describe("gameplayArraysForCode", () => {
     eventSummerOlympicsHost: ["FRA", "GRC"],
     euMemberCodes: ["FRA"],
     g20MemberCodes: ["FRA", "USA"],
+    natoMemberCodes: ["FRA", "USA"],
+    commonwealthMemberCodes: ["GBR", "IND"],
     middleEastCodes: ["SYR"],
   };
 
   it("stacks all matching tags for one code", () => {
     const g = gameplayArraysForCode("FRA", patches);
     expect(g.events).toEqual(["fifa_wc_host", "summer_olympics_host"]);
-    expect(g.groups).toEqual(["eu", "g20"]);
+    expect(g.groups).toEqual(["eu", "g20", "nato"]);
+  });
+
+  it("emits commonwealth group when listed", () => {
+    const g = gameplayArraysForCode("IND", patches);
+    expect(g.groups).toEqual(["commonwealth"]);
   });
 
   it("adds middle_east geo tag when listed", () => {
     const g = gameplayArraysForCode("SYR", patches);
     expect(g.geoTags).toEqual(["middle_east"]);
+  });
+});
+
+describe("regimeForCode", () => {
+  const patches: Patches = {
+    overrides: {},
+    aliasOverrides: {},
+    additions: [],
+    monarchyCodes: ["GBR", "JPN"],
+  };
+
+  it("returns monarchy when code is listed", () => {
+    expect(regimeForCode("GBR", patches)).toBe("monarchy");
+    expect(regimeForCode("JPN", patches)).toBe("monarchy");
+  });
+
+  it("defaults to republic otherwise", () => {
+    expect(regimeForCode("FRA", patches)).toBe("republic");
+    expect(regimeForCode("USA", patches)).toBe("republic");
+  });
+});
+
+describe("physicalFeaturesForCode", () => {
+  const patches: Patches = {
+    overrides: {},
+    aliasOverrides: {},
+    additions: [],
+    equatorCrosserCodes: ["ECU", "BRA"],
+    mediterraneanCoastCodes: ["FRA", "ITA"],
+    caribbeanCoastCodes: ["COL", "VEN"],
+    peakOver5000mCodes: ["FRA", "NPL"],
+  };
+
+  it("stacks all matching physical features", () => {
+    expect(physicalFeaturesForCode("FRA", patches)).toEqual([
+      "mediterranean_coast",
+      "peak_over_5000m",
+    ]);
+    expect(physicalFeaturesForCode("BRA", patches)).toEqual([
+      "equator_crosser",
+    ]);
+  });
+
+  it("returns empty when no features listed", () => {
+    expect(physicalFeaturesForCode("JPN", patches)).toEqual([]);
   });
 });
 

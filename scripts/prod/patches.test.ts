@@ -61,6 +61,28 @@ describe("patches.json ↔ countries.json", () => {
     );
     assertAllCountryCodes("euMemberCodes", patches.euMemberCodes ?? []);
     assertAllCountryCodes("g20MemberCodes", patches.g20MemberCodes ?? []);
+    assertAllCountryCodes("natoMemberCodes", patches.natoMemberCodes ?? []);
+    assertAllCountryCodes(
+      "commonwealthMemberCodes",
+      patches.commonwealthMemberCodes ?? [],
+    );
+    assertAllCountryCodes("monarchyCodes", patches.monarchyCodes ?? []);
+    assertAllCountryCodes(
+      "equatorCrosserCodes",
+      patches.equatorCrosserCodes ?? [],
+    );
+    assertAllCountryCodes(
+      "mediterraneanCoastCodes",
+      patches.mediterraneanCoastCodes ?? [],
+    );
+    assertAllCountryCodes(
+      "caribbeanCoastCodes",
+      patches.caribbeanCoastCodes ?? [],
+    );
+    assertAllCountryCodes(
+      "peakOver5000mCodes",
+      patches.peakOver5000mCodes ?? [],
+    );
   });
 
   it("has unique codes in each political/geo list", () => {
@@ -69,6 +91,13 @@ describe("patches.json ↔ countries.json", () => {
     noDupes(patches.eventSummerOlympicsHost ?? [], (x) => x);
     noDupes(patches.euMemberCodes ?? [], (x) => x);
     noDupes(patches.g20MemberCodes ?? [], (x) => x);
+    noDupes(patches.natoMemberCodes ?? [], (x) => x);
+    noDupes(patches.commonwealthMemberCodes ?? [], (x) => x);
+    noDupes(patches.monarchyCodes ?? [], (x) => x);
+    noDupes(patches.equatorCrosserCodes ?? [], (x) => x);
+    noDupes(patches.mediterraneanCoastCodes ?? [], (x) => x);
+    noDupes(patches.caribbeanCoastCodes ?? [], (x) => x);
+    noDupes(patches.peakOver5000mCodes ?? [], (x) => x);
   });
 
   it("has wikiTitles, aliasOverrides, overrides, flagOverrides keys that exist in dataset", () => {

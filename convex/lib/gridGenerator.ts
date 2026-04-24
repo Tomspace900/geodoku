@@ -647,7 +647,7 @@ function weightedShuffle(
 // k=3 → variance trop haute (simulation stochastique dominée par le biais de
 // survie du backtracking). k=2 est le point d'équilibre : assez agressif pour
 // pousser les orphelines, pas assez pour perturber les chemins satisfiables.
-// Les contraintes à >40% couverture (flag_has_green, language_multilingual)
+// Les contraintes à >40% couverture (ex. language_multilingual)
 // restent structurellement dominantes — c'est une limite du soft-weighting.
 const WEIGHTED_SHUFFLE_K = 2;
 

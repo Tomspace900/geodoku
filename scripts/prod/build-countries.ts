@@ -31,7 +31,9 @@ import {
   mapLanguages,
   mergeFlagFields,
   parseFlagFromAlt,
+  physicalFeaturesForCode,
   rcEnrichmentMapFromRows,
+  regimeForCode,
   toWikipediaTitle,
 } from "./buildCountriesLib.ts";
 
@@ -231,6 +233,8 @@ async function main(): Promise<void> {
       events: gameplay.events,
       groups: gameplay.groups,
       geoTags: gameplay.geoTags,
+      regime: regimeForCode(c.cca3, patches),
+      physicalFeatures: physicalFeaturesForCode(c.cca3, patches),
     };
 
     const override = patches.overrides[c.cca3];
@@ -256,6 +260,8 @@ async function main(): Promise<void> {
     merged.events = g.events;
     merged.groups = g.groups;
     merged.geoTags = g.geoTags;
+    merged.regime = regimeForCode(merged.code, patches);
+    merged.physicalFeatures = physicalFeaturesForCode(merged.code, patches);
     return merged;
   });
 
@@ -325,6 +331,14 @@ async function main(): Promise<void> {
     }
     if (!Array.isArray(c.geoTags)) {
       throw new Error(`${c.code}: geoTags must be an array`);
+    }
+    if (c.regime !== "monarchy" && c.regime !== "republic") {
+      throw new Error(
+        `${c.code}: regime must be "monarchy" or "republic" (got "${String(c.regime)}")`,
+      );
+    }
+    if (!Array.isArray(c.physicalFeatures)) {
+      throw new Error(`${c.code}: physicalFeatures must be an array`);
     }
   }
 

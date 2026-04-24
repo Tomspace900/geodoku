@@ -5,6 +5,8 @@ import type {
   Country,
   FlagColor,
   FlagSymbol,
+  PhysicalFeature,
+  Regime,
   WaterAccess,
 } from "../../src/features/countries/types.ts";
 
@@ -25,6 +27,13 @@ export interface Patches {
   eventSummerOlympicsHost?: string[];
   euMemberCodes?: string[];
   g20MemberCodes?: string[];
+  natoMemberCodes?: string[];
+  commonwealthMemberCodes?: string[];
+  monarchyCodes?: string[];
+  equatorCrosserCodes?: string[];
+  mediterraneanCoastCodes?: string[];
+  caribbeanCoastCodes?: string[];
+  peakOver5000mCodes?: string[];
   flagOverrides?: Record<
     string,
     { flagColors?: FlagColor[]; flagSymbols?: FlagSymbol[] }
@@ -355,9 +364,32 @@ export function gameplayArraysForCode(
   const groups: Country["groups"] = [];
   if (patches.euMemberCodes?.includes(code)) groups.push("eu");
   if (patches.g20MemberCodes?.includes(code)) groups.push("g20");
+  if (patches.natoMemberCodes?.includes(code)) groups.push("nato");
+  if (patches.commonwealthMemberCodes?.includes(code))
+    groups.push("commonwealth");
   const geoTags: string[] = [];
   if (patches.middleEastCodes?.includes(code)) geoTags.push("middle_east");
   return { events, groups, geoTags };
+}
+
+export function regimeForCode(code: string, patches: Patches): Regime {
+  return patches.monarchyCodes?.includes(code) ? "monarchy" : "republic";
+}
+
+export function physicalFeaturesForCode(
+  code: string,
+  patches: Patches,
+): PhysicalFeature[] {
+  const features: PhysicalFeature[] = [];
+  if (patches.equatorCrosserCodes?.includes(code))
+    features.push("equator_crosser");
+  if (patches.mediterraneanCoastCodes?.includes(code))
+    features.push("mediterranean_coast");
+  if (patches.caribbeanCoastCodes?.includes(code))
+    features.push("caribbean_coast");
+  if (patches.peakOver5000mCodes?.includes(code))
+    features.push("peak_over_5000m");
+  return features;
 }
 
 export function assignPopularity(

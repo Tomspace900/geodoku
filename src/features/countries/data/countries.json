@@ -23,6 +23,8 @@
     "events": [],
     "groups": [],
     "geoTags": [],
+    "regime": "republic",
+    "physicalFeatures": ["peak_over_5000m"],
     "wikipediaMonthlyViews": 241478,
     "popularityIndex": 0.7303780539016587
   },
@@ -50,6 +52,8 @@
     "events": [],
     "groups": [],
     "geoTags": [],
+    "regime": "republic",
+    "physicalFeatures": [],
     "wikipediaMonthlyViews": 88450,
     "popularityIndex": 0.5418552526238193
   },
@@ -75,8 +79,10 @@
     "flagColors": ["red", "black"],
     "flagSymbols": ["animal"],
     "events": [],
-    "groups": [],
+    "groups": ["nato"],
     "geoTags": [],
+    "regime": "republic",
+    "physicalFeatures": ["mediterranean_coast"],
     "wikipediaMonthlyViews": 183279,
     "popularityIndex": 0.6786140541622382
   },
@@ -104,6 +110,8 @@
     "events": [],
     "groups": [],
     "geoTags": [],
+    "regime": "monarchy",
+    "physicalFeatures": [],
     "wikipediaMonthlyViews": 131095,
     "popularityIndex": 0.6157154914711783
   },
@@ -131,6 +139,8 @@
     "events": [],
     "groups": [],
     "geoTags": ["middle_east"],
+    "regime": "monarchy",
+    "physicalFeatures": [],
     "wikipediaMonthlyViews": 301594,
     "popularityIndex": 0.7721061683221628
   },
@@ -158,6 +168,8 @@
     "events": ["fifa_wc_host"],
     "groups": ["g20"],
     "geoTags": [],
+    "regime": "republic",
+    "physicalFeatures": ["peak_over_5000m"],
     "wikipediaMonthlyViews": 191864,
     "popularityIndex": 0.6872068005262288
   },
@@ -185,6 +197,8 @@
     "events": [],
     "groups": [],
     "geoTags": [],
+    "regime": "republic",
+    "physicalFeatures": [],
     "wikipediaMonthlyViews": 196724,
     "popularityIndex": 0.6919023047874837
   },
@@ -210,8 +224,10 @@
     "flagColors": ["red", "blue", "yellow", "white", "black"],
     "flagSymbols": ["sun", "triangle"],
     "events": [],
-    "groups": [],
+    "groups": ["commonwealth"],
     "geoTags": [],
+    "regime": "monarchy",
+    "physicalFeatures": ["caribbean_coast"],
     "wikipediaMonthlyViews": 45339,
     "popularityIndex": 0.4164156790542353
   },
@@ -237,8 +253,10 @@
     "flagColors": ["blue", "white"],
     "flagSymbols": ["star", "cross"],
     "events": ["summer_olympics_host"],
-    "groups": ["g20"],
+    "groups": ["g20", "commonwealth"],
     "geoTags": [],
+    "regime": "monarchy",
+    "physicalFeatures": [],
     "wikipediaMonthlyViews": 349949,
     "popularityIndex": 0.8000194110839615
   },
@@ -266,6 +284,8 @@
     "events": [],
     "groups": ["eu"],
     "geoTags": [],
+    "regime": "republic",
+    "physicalFeatures": [],
     "wikipediaMonthlyViews": 161354,
     "popularityIndex": 0.6546983932333861
   },
@@ -293,6 +313,8 @@
     "events": [],
     "groups": [],
     "geoTags": [],
+    "regime": "republic",
+    "physicalFeatures": [],
     "wikipediaMonthlyViews": 195673,
     "popularityIndex": 0.6908967846208706
   },
@@ -320,6 +342,8 @@
     "events": [],
     "groups": [],
     "geoTags": [],
+    "regime": "republic",
+    "physicalFeatures": [],
     "wikipediaMonthlyViews": 64728,
     "popularityIndex": 0.4832446503861516
   },
@@ -345,8 +369,10 @@
     "flagColors": ["red", "yellow", "black"],
     "flagSymbols": [],
     "events": ["summer_olympics_host"],
-    "groups": ["eu"],
+    "groups": ["eu", "nato"],
     "geoTags": [],
+    "regime": "monarchy",
+    "physicalFeatures": [],
     "wikipediaMonthlyViews": 161843,
     "popularityIndex": 0.6552664013984073
   },
@@ -374,6 +400,8 @@
     "events": [],
     "groups": [],
     "geoTags": [],
+    "regime": "republic",
+    "physicalFeatures": [],
     "wikipediaMonthlyViews": 88358,
     "popularityIndex": 0.5416599092591036
   },
@@ -401,6 +429,8 @@
     "events": [],
     "groups": [],
     "geoTags": [],
+    "regime": "republic",
+    "physicalFeatures": [],
     "wikipediaMonthlyViews": 199538,
     "popularityIndex": 0.6945683141824311
   },
@@ -426,8 +456,10 @@
     "flagColors": ["red", "green"],
     "flagSymbols": ["circle"],
     "events": [],
-    "groups": [],
+    "groups": ["commonwealth"],
     "geoTags": [],
+    "regime": "republic",
+    "physicalFeatures": [],
     "wikipediaMonthlyViews": 240996,
     "popularityIndex": 0.7300030066588147
   },
@@ -453,8 +485,10 @@
     "flagColors": ["red", "green", "white"],
     "flagSymbols": [],
     "events": [],
-    "groups": ["eu"],
+    "groups": ["eu", "nato"],
     "geoTags": [],
+    "regime": "republic",
+    "physicalFeatures": [],
     "wikipediaMonthlyViews": 139093,
     "popularityIndex": 0.6268316556243408
   },
@@ -482,6 +516,8 @@
     "events": [],
     "groups": [],
     "geoTags": ["middle_east"],
+    "regime": "monarchy",
+    "physicalFeatures": [],
     "wikipediaMonthlyViews": 163317,
     "popularityIndex": 0.6569682309178844
   },
@@ -507,8 +543,10 @@
     "flagColors": ["blue", "yellow", "black"],
     "flagSymbols": ["triangle"],
     "events": [],
-    "groups": [],
+    "groups": ["commonwealth"],
     "geoTags": [],
+    "regime": "monarchy",
+    "physicalFeatures": ["caribbean_coast"],
     "wikipediaMonthlyViews": 9886,
     "popularityIndex": 0.13052743531099423
   },
@@ -536,6 +574,8 @@
     "events": [],
     "groups": [],
     "geoTags": [],
+    "regime": "republic",
+    "physicalFeatures": ["mediterranean_coast"],
     "wikipediaMonthlyViews": 145543,
     "popularityIndex": 0.6353402329332496
   },
@@ -563,6 +603,8 @@
     "events": [],
     "groups": [],
     "geoTags": [],
+    "regime": "republic",
+    "physicalFeatures": [],
     "wikipediaMonthlyViews": 182895,
     "popularityIndex": 0.6782203621635224
   },
@@ -588,8 +630,10 @@
     "flagColors": ["red", "blue", "white"],
     "flagSymbols": [],
     "events": [],
-    "groups": [],
+    "groups": ["commonwealth"],
     "geoTags": [],
+    "regime": "monarchy",
+    "physicalFeatures": ["caribbean_coast"],
     "wikipediaMonthlyViews": 107758,
     "popularityIndex": 0.5789182948667229
   },
@@ -617,6 +661,8 @@
     "events": [],
     "groups": [],
     "geoTags": [],
+    "regime": "republic",
+    "physicalFeatures": ["peak_over_5000m"],
     "wikipediaMonthlyViews": 94141,
     "popularityIndex": 0.5535600154465335
   },
@@ -655,6 +701,8 @@
     "events": ["fifa_wc_host", "summer_olympics_host"],
     "groups": ["g20"],
     "geoTags": [],
+    "regime": "republic",
+    "physicalFeatures": ["equator_crosser"],
     "wikipediaMonthlyViews": 231851,
     "popularityIndex": 0.7227414465194013
   },
@@ -680,8 +728,10 @@
     "flagColors": ["blue", "yellow", "black"],
     "flagSymbols": [],
     "events": [],
-    "groups": [],
+    "groups": ["commonwealth"],
     "geoTags": [],
+    "regime": "republic",
+    "physicalFeatures": ["caribbean_coast"],
     "wikipediaMonthlyViews": 102832,
     "popularityIndex": 0.5701351792411876
   },
@@ -707,8 +757,10 @@
     "flagColors": ["red", "yellow", "white", "black"],
     "flagSymbols": [],
     "events": [],
-    "groups": [],
+    "groups": ["commonwealth"],
     "geoTags": [],
+    "regime": "monarchy",
+    "physicalFeatures": [],
     "wikipediaMonthlyViews": 115590,
     "popularityIndex": 0.5920881629492619
   },
@@ -736,6 +788,8 @@
     "events": [],
     "groups": [],
     "geoTags": [],
+    "regime": "monarchy",
+    "physicalFeatures": ["peak_over_5000m"],
     "wikipediaMonthlyViews": 121899,
     "popularityIndex": 0.6020636000074233
   },
@@ -761,8 +815,10 @@
     "flagColors": ["blue", "white", "black"],
     "flagSymbols": [],
     "events": [],
-    "groups": [],
+    "groups": ["commonwealth"],
     "geoTags": [],
+    "regime": "republic",
+    "physicalFeatures": [],
     "wikipediaMonthlyViews": 81539,
     "popularityIndex": 0.5265840854034274
   },
@@ -790,6 +846,8 @@
     "events": [],
     "groups": [],
     "geoTags": [],
+    "regime": "republic",
+    "physicalFeatures": [],
     "wikipediaMonthlyViews": 65522,
     "popularityIndex": 0.48553320277785406
   },
@@ -815,8 +873,10 @@
     "flagColors": ["red", "white"],
     "flagSymbols": ["other"],
     "events": ["summer_olympics_host"],
-    "groups": ["g20"],
+    "groups": ["g20", "nato", "commonwealth"],
     "geoTags": [],
+    "regime": "monarchy",
+    "physicalFeatures": ["peak_over_5000m"],
     "wikipediaMonthlyViews": 373967,
     "popularityIndex": 0.812479490292033
   },
@@ -844,6 +904,8 @@
     "events": ["fifa_wc_host"],
     "groups": [],
     "geoTags": [],
+    "regime": "republic",
+    "physicalFeatures": [],
     "wikipediaMonthlyViews": 233824,
     "popularityIndex": 0.7243320409949854
   },
@@ -871,6 +933,8 @@
     "events": ["fifa_wc_host"],
     "groups": [],
     "geoTags": [],
+    "regime": "republic",
+    "physicalFeatures": ["peak_over_5000m"],
     "wikipediaMonthlyViews": 123924,
     "popularityIndex": 0.6051562092248702
   },
@@ -915,6 +979,8 @@
     "events": ["summer_olympics_host"],
     "groups": ["g20"],
     "geoTags": [],
+    "regime": "republic",
+    "physicalFeatures": ["peak_over_5000m"],
     "wikipediaMonthlyViews": 418545,
     "popularityIndex": 0.8336185711388376
   },
@@ -942,6 +1008,8 @@
     "events": [],
     "groups": [],
     "geoTags": [],
+    "regime": "republic",
+    "physicalFeatures": [],
     "wikipediaMonthlyViews": 90681,
     "popularityIndex": 0.5465311393938138
   },
@@ -967,8 +1035,10 @@
     "flagColors": ["red", "green", "yellow"],
     "flagSymbols": ["star"],
     "events": [],
-    "groups": [],
+    "groups": ["commonwealth"],
     "geoTags": [],
+    "regime": "republic",
+    "physicalFeatures": [],
     "wikipediaMonthlyViews": 85100,
     "popularityIndex": 0.5346077756229569
   },
@@ -1010,6 +1080,8 @@
     "events": [],
     "groups": [],
     "geoTags": [],
+    "regime": "republic",
+    "physicalFeatures": ["equator_crosser", "peak_over_5000m"],
     "wikipediaMonthlyViews": 165378,
     "popularityIndex": 0.6593222137692101
   },
@@ -1037,6 +1109,8 @@
     "events": [],
     "groups": [],
     "geoTags": [],
+    "regime": "republic",
+    "physicalFeatures": ["equator_crosser"],
     "wikipediaMonthlyViews": 54967,
     "popularityIndex": 0.45256174239889424
   },
@@ -1064,6 +1138,12 @@
     "events": [],
     "groups": [],
     "geoTags": [],
+    "regime": "republic",
+    "physicalFeatures": [
+      "equator_crosser",
+      "caribbean_coast",
+      "peak_over_5000m"
+    ],
     "wikipediaMonthlyViews": 163116,
     "popularityIndex": 0.6567370698111777
   },
@@ -1091,6 +1171,8 @@
     "events": [],
     "groups": [],
     "geoTags": [],
+    "regime": "republic",
+    "physicalFeatures": [],
     "wikipediaMonthlyViews": 55303,
     "popularityIndex": 0.45370566319642525
   },
@@ -1118,6 +1200,8 @@
     "events": [],
     "groups": [],
     "geoTags": [],
+    "regime": "republic",
+    "physicalFeatures": [],
     "wikipediaMonthlyViews": 146811,
     "popularityIndex": 0.6369685000248513
   },
@@ -1145,6 +1229,8 @@
     "events": [],
     "groups": [],
     "geoTags": [],
+    "regime": "republic",
+    "physicalFeatures": ["caribbean_coast"],
     "wikipediaMonthlyViews": 86944,
     "popularityIndex": 0.5386317084827483
   },
@@ -1172,6 +1258,8 @@
     "events": [],
     "groups": [],
     "geoTags": [],
+    "regime": "republic",
+    "physicalFeatures": ["caribbean_coast"],
     "wikipediaMonthlyViews": 163526,
     "popularityIndex": 0.6572082909535163
   },
@@ -1197,8 +1285,10 @@
     "flagColors": ["green", "white", "orange"],
     "flagSymbols": [],
     "events": [],
-    "groups": ["eu"],
+    "groups": ["eu", "commonwealth"],
     "geoTags": ["middle_east"],
+    "regime": "republic",
+    "physicalFeatures": ["mediterranean_coast"],
     "wikipediaMonthlyViews": 249597,
     "popularityIndex": 0.7365854148604097
   },
@@ -1224,8 +1314,10 @@
     "flagColors": ["red", "blue", "white"],
     "flagSymbols": ["triangle"],
     "events": [],
-    "groups": ["eu"],
+    "groups": ["eu", "nato"],
     "geoTags": [],
+    "regime": "republic",
+    "physicalFeatures": [],
     "wikipediaMonthlyViews": 234560,
     "popularityIndex": 0.7249219551669228
   },
@@ -1251,8 +1343,10 @@
     "flagColors": ["red", "yellow", "black"],
     "flagSymbols": [],
     "events": ["fifa_wc_host", "summer_olympics_host"],
-    "groups": ["eu", "g20"],
+    "groups": ["eu", "g20", "nato"],
     "geoTags": [],
+    "regime": "republic",
+    "physicalFeatures": [],
     "wikipediaMonthlyViews": 312376,
     "popularityIndex": 0.7786995700247178
   },
@@ -1280,6 +1374,8 @@
     "events": [],
     "groups": [],
     "geoTags": [],
+    "regime": "republic",
+    "physicalFeatures": [],
     "wikipediaMonthlyViews": 68008,
     "popularityIndex": 0.49252333143440385
   },
@@ -1305,8 +1401,10 @@
     "flagColors": ["red", "green", "yellow", "white", "black"],
     "flagSymbols": ["star", "cross", "circle"],
     "events": [],
-    "groups": [],
+    "groups": ["commonwealth"],
     "geoTags": [],
+    "regime": "republic",
+    "physicalFeatures": ["caribbean_coast"],
     "wikipediaMonthlyViews": 61090,
     "popularityIndex": 0.47238655373779864
   },
@@ -1332,8 +1430,10 @@
     "flagColors": ["red", "white"],
     "flagSymbols": ["cross"],
     "events": [],
-    "groups": ["eu"],
+    "groups": ["eu", "nato"],
     "geoTags": [],
+    "regime": "monarchy",
+    "physicalFeatures": [],
     "wikipediaMonthlyViews": 179618,
     "popularityIndex": 0.6748266313232916
   },
@@ -1361,6 +1461,8 @@
     "events": [],
     "groups": [],
     "geoTags": [],
+    "regime": "republic",
+    "physicalFeatures": ["caribbean_coast"],
     "wikipediaMonthlyViews": 131168,
     "popularityIndex": 0.6158199872039076
   },
@@ -1388,6 +1490,8 @@
     "events": [],
     "groups": [],
     "geoTags": [],
+    "regime": "republic",
+    "physicalFeatures": ["mediterranean_coast"],
     "wikipediaMonthlyViews": 145756,
     "popularityIndex": 0.6356147399159181
   },
@@ -1415,6 +1519,8 @@
     "events": [],
     "groups": [],
     "geoTags": [],
+    "regime": "republic",
+    "physicalFeatures": ["equator_crosser", "peak_over_5000m"],
     "wikipediaMonthlyViews": 82329,
     "popularityIndex": 0.528393962197897
   },
@@ -1442,6 +1548,8 @@
     "events": [],
     "groups": [],
     "geoTags": ["middle_east"],
+    "regime": "republic",
+    "physicalFeatures": ["mediterranean_coast"],
     "wikipediaMonthlyViews": 179523,
     "popularityIndex": 0.6747273262727282
   },
@@ -1469,6 +1577,8 @@
     "events": [],
     "groups": [],
     "geoTags": [],
+    "regime": "republic",
+    "physicalFeatures": [],
     "wikipediaMonthlyViews": 128710,
     "popularityIndex": 0.6122690906307113
   },
@@ -1494,8 +1604,10 @@
     "flagColors": ["red", "yellow"],
     "flagSymbols": [],
     "events": ["fifa_wc_host", "summer_olympics_host"],
-    "groups": ["eu"],
+    "groups": ["eu", "nato"],
     "geoTags": [],
+    "regime": "monarchy",
+    "physicalFeatures": ["mediterranean_coast"],
     "wikipediaMonthlyViews": 245316,
     "popularityIndex": 0.7333379840467967
   },
@@ -1521,8 +1633,10 @@
     "flagColors": ["blue", "white", "black"],
     "flagSymbols": [],
     "events": [],
-    "groups": ["eu"],
+    "groups": ["eu", "nato"],
     "geoTags": [],
+    "regime": "republic",
+    "physicalFeatures": [],
     "wikipediaMonthlyViews": 128145,
     "popularityIndex": 0.6114432926185998
   },
@@ -1550,6 +1664,8 @@
     "events": [],
     "groups": [],
     "geoTags": [],
+    "regime": "republic",
+    "physicalFeatures": [],
     "wikipediaMonthlyViews": 160609,
     "popularityIndex": 0.653829705294936
   },
@@ -1575,8 +1691,10 @@
     "flagColors": ["blue", "white"],
     "flagSymbols": ["cross"],
     "events": ["summer_olympics_host"],
-    "groups": ["eu"],
+    "groups": ["eu", "nato"],
     "geoTags": [],
+    "regime": "republic",
+    "physicalFeatures": [],
     "wikipediaMonthlyViews": 166004,
     "popularityIndex": 0.6600313973042349
   },
@@ -1602,8 +1720,10 @@
     "flagColors": ["blue"],
     "flagSymbols": [],
     "events": [],
-    "groups": [],
+    "groups": ["commonwealth"],
     "geoTags": [],
+    "regime": "republic",
+    "physicalFeatures": [],
     "wikipediaMonthlyViews": 107505,
     "popularityIndex": 0.5784770658740934
   },
@@ -1640,8 +1760,10 @@
     "flagColors": ["red", "blue", "white"],
     "flagSymbols": [],
     "events": ["fifa_wc_host", "summer_olympics_host"],
-    "groups": ["eu", "g20"],
+    "groups": ["eu", "g20", "nato"],
     "geoTags": [],
+    "regime": "republic",
+    "physicalFeatures": ["mediterranean_coast"],
     "wikipediaMonthlyViews": 278366,
     "popularityIndex": 0.7570623229128198
   },
@@ -1669,6 +1791,8 @@
     "events": [],
     "groups": [],
     "geoTags": [],
+    "regime": "republic",
+    "physicalFeatures": [],
     "wikipediaMonthlyViews": 39978,
     "popularityIndex": 0.39279482973527413
   },
@@ -1694,8 +1818,10 @@
     "flagColors": ["blue", "green", "yellow"],
     "flagSymbols": [],
     "events": [],
-    "groups": [],
+    "groups": ["commonwealth"],
     "geoTags": [],
+    "regime": "republic",
+    "physicalFeatures": ["equator_crosser"],
     "wikipediaMonthlyViews": 60827,
     "popularityIndex": 0.4715767032209277
   },
@@ -1721,8 +1847,10 @@
     "flagColors": ["red", "blue", "white"],
     "flagSymbols": ["cross"],
     "events": ["fifa_wc_host", "summer_olympics_host"],
-    "groups": ["g20"],
+    "groups": ["g20", "nato", "commonwealth"],
     "geoTags": [],
+    "regime": "monarchy",
+    "physicalFeatures": [],
     "wikipediaMonthlyViews": 519766,
     "popularityIndex": 0.8742750474045103
   },
@@ -1750,6 +1878,8 @@
     "events": [],
     "groups": [],
     "geoTags": [],
+    "regime": "republic",
+    "physicalFeatures": ["peak_over_5000m"],
     "wikipediaMonthlyViews": 7020,
     "popularityIndex": 0.06626441098356466
   },
@@ -1775,8 +1905,10 @@
     "flagColors": ["red", "green", "yellow", "black"],
     "flagSymbols": ["star"],
     "events": [],
-    "groups": [],
+    "groups": ["commonwealth"],
     "geoTags": [],
+    "regime": "republic",
+    "physicalFeatures": [],
     "wikipediaMonthlyViews": 124134,
     "popularityIndex": 0.6054740275024751
   },
@@ -1804,6 +1936,8 @@
     "events": [],
     "groups": [],
     "geoTags": [],
+    "regime": "republic",
+    "physicalFeatures": [],
     "wikipediaMonthlyViews": 62970,
     "popularityIndex": 0.47807602658255605
   },
@@ -1829,8 +1963,10 @@
     "flagColors": ["red", "blue", "green", "white"],
     "flagSymbols": [],
     "events": [],
-    "groups": [],
+    "groups": ["commonwealth"],
     "geoTags": [],
+    "regime": "republic",
+    "physicalFeatures": [],
     "wikipediaMonthlyViews": 4932,
     "popularityIndex": 0
   },
@@ -1858,6 +1994,8 @@
     "events": [],
     "groups": [],
     "geoTags": [],
+    "regime": "republic",
+    "physicalFeatures": [],
     "wikipediaMonthlyViews": 58301,
     "popularityIndex": 0.4636151591131488
   },
@@ -1885,6 +2023,8 @@
     "events": [],
     "groups": [],
     "geoTags": [],
+    "regime": "republic",
+    "physicalFeatures": [],
     "wikipediaMonthlyViews": 74059,
     "popularityIndex": 0.5085229445400837
   },
@@ -1910,8 +2050,10 @@
     "flagColors": ["blue", "white"],
     "flagSymbols": ["cross"],
     "events": ["summer_olympics_host"],
-    "groups": ["eu"],
+    "groups": ["eu", "nato"],
     "geoTags": [],
+    "regime": "republic",
+    "physicalFeatures": ["mediterranean_coast"],
     "wikipediaMonthlyViews": 157622,
     "popularityIndex": 0.6503058488915848
   },
@@ -1937,8 +2079,10 @@
     "flagColors": ["red", "green", "yellow"],
     "flagSymbols": ["star", "circle", "triangle"],
     "events": [],
-    "groups": [],
+    "groups": ["commonwealth"],
     "geoTags": [],
+    "regime": "monarchy",
+    "physicalFeatures": ["caribbean_coast"],
     "wikipediaMonthlyViews": 73923,
     "popularityIndex": 0.5081779256711596
   },
@@ -1966,6 +2110,8 @@
     "events": [],
     "groups": [],
     "geoTags": [],
+    "regime": "republic",
+    "physicalFeatures": ["caribbean_coast"],
     "wikipediaMonthlyViews": 87363,
     "popularityIndex": 0.5395341368532545
   },
@@ -1991,8 +2137,10 @@
     "flagColors": ["red", "green", "yellow", "white", "black"],
     "flagSymbols": ["triangle"],
     "events": [],
-    "groups": [],
+    "groups": ["commonwealth"],
     "geoTags": [],
+    "regime": "republic",
+    "physicalFeatures": [],
     "wikipediaMonthlyViews": 163975,
     "popularityIndex": 0.657722982092854
   },
@@ -2020,6 +2168,8 @@
     "events": [],
     "groups": [],
     "geoTags": [],
+    "regime": "republic",
+    "physicalFeatures": ["caribbean_coast"],
     "wikipediaMonthlyViews": 71904,
     "popularityIndex": 0.5029798949892849
   },
@@ -2045,8 +2195,10 @@
     "flagColors": ["red", "blue", "white"],
     "flagSymbols": [],
     "events": [],
-    "groups": ["eu"],
+    "groups": ["eu", "nato"],
     "geoTags": [],
+    "regime": "republic",
+    "physicalFeatures": ["mediterranean_coast"],
     "wikipediaMonthlyViews": 185204,
     "popularityIndex": 0.6805752905274344
   },
@@ -2074,6 +2226,8 @@
     "events": [],
     "groups": [],
     "geoTags": [],
+    "regime": "republic",
+    "physicalFeatures": ["caribbean_coast"],
     "wikipediaMonthlyViews": 115996,
     "popularityIndex": 0.5927463159806658
   },
@@ -2099,8 +2253,10 @@
     "flagColors": ["red", "green", "white"],
     "flagSymbols": [],
     "events": [],
-    "groups": ["eu"],
+    "groups": ["eu", "nato"],
     "geoTags": [],
+    "regime": "republic",
+    "physicalFeatures": [],
     "wikipediaMonthlyViews": 142257,
     "popularityIndex": 0.6310536784160281
   },
@@ -2128,6 +2284,8 @@
     "events": [],
     "groups": ["g20"],
     "geoTags": [],
+    "regime": "republic",
+    "physicalFeatures": ["equator_crosser"],
     "wikipediaMonthlyViews": 299043,
     "popularityIndex": 0.7705117080704035
   },
@@ -2153,8 +2311,10 @@
     "flagColors": ["blue", "green", "yellow", "white"],
     "flagSymbols": [],
     "events": [],
-    "groups": ["g20"],
+    "groups": ["g20", "commonwealth"],
     "geoTags": [],
+    "regime": "republic",
+    "physicalFeatures": ["peak_over_5000m"],
     "wikipediaMonthlyViews": 585315,
     "popularityIndex": 0.8965693958659969
   },
@@ -2182,6 +2342,8 @@
     "events": [],
     "groups": ["eu"],
     "geoTags": [],
+    "regime": "republic",
+    "physicalFeatures": [],
     "wikipediaMonthlyViews": 158826,
     "popularityIndex": 0.6517342130248551
   },
@@ -2209,6 +2371,8 @@
     "events": [],
     "groups": [],
     "geoTags": ["middle_east"],
+    "regime": "republic",
+    "physicalFeatures": ["peak_over_5000m"],
     "wikipediaMonthlyViews": 614397,
     "popularityIndex": 0.905671568417657
   },
@@ -2236,6 +2400,8 @@
     "events": [],
     "groups": [],
     "geoTags": ["middle_east"],
+    "regime": "republic",
+    "physicalFeatures": [],
     "wikipediaMonthlyViews": 162036,
     "popularityIndex": 0.6554901123678205
   },
@@ -2261,8 +2427,10 @@
     "flagColors": ["red", "blue", "white"],
     "flagSymbols": ["cross"],
     "events": [],
-    "groups": [],
+    "groups": ["nato"],
     "geoTags": [],
+    "regime": "republic",
+    "physicalFeatures": [],
     "wikipediaMonthlyViews": 176687,
     "popularityIndex": 0.671738353185823
   },
@@ -2290,6 +2458,8 @@
     "events": [],
     "groups": [],
     "geoTags": ["middle_east"],
+    "regime": "republic",
+    "physicalFeatures": ["mediterranean_coast"],
     "wikipediaMonthlyViews": 490350,
     "popularityIndex": 0.863339314624649
   },
@@ -2315,8 +2485,10 @@
     "flagColors": ["red", "green", "white"],
     "flagSymbols": [],
     "events": ["fifa_wc_host", "summer_olympics_host"],
-    "groups": ["eu", "g20"],
+    "groups": ["eu", "g20", "nato"],
     "geoTags": [],
+    "regime": "republic",
+    "physicalFeatures": ["mediterranean_coast"],
     "wikipediaMonthlyViews": 224113,
     "popularityIndex": 0.7163697867523332
   },
@@ -2342,8 +2514,10 @@
     "flagColors": ["green", "yellow", "black"],
     "flagSymbols": ["cross"],
     "events": [],
-    "groups": [],
+    "groups": ["commonwealth"],
     "geoTags": [],
+    "regime": "monarchy",
+    "physicalFeatures": ["caribbean_coast"],
     "wikipediaMonthlyViews": 134144,
     "popularityIndex": 0.6200311977756553
   },
@@ -2371,6 +2545,8 @@
     "events": [],
     "groups": [],
     "geoTags": ["middle_east"],
+    "regime": "monarchy",
+    "physicalFeatures": [],
     "wikipediaMonthlyViews": 142288,
     "popularityIndex": 0.6310945784290195
   },
@@ -2398,6 +2574,8 @@
     "events": ["fifa_wc_host", "summer_olympics_host"],
     "groups": ["g20"],
     "geoTags": [],
+    "regime": "monarchy",
+    "physicalFeatures": [],
     "wikipediaMonthlyViews": 375606,
     "popularityIndex": 0.8133003679208226
   },
@@ -2425,6 +2603,8 @@
     "events": [],
     "groups": [],
     "geoTags": [],
+    "regime": "republic",
+    "physicalFeatures": ["peak_over_5000m"],
     "wikipediaMonthlyViews": 217710,
     "popularityIndex": 0.710928792118298
   },
@@ -2450,8 +2630,10 @@
     "flagColors": ["red", "green", "white", "black"],
     "flagSymbols": [],
     "events": [],
-    "groups": [],
+    "groups": ["commonwealth"],
     "geoTags": [],
+    "regime": "republic",
+    "physicalFeatures": ["equator_crosser", "peak_over_5000m"],
     "wikipediaMonthlyViews": 106639,
     "popularityIndex": 0.5769588726179734
   },
@@ -2479,6 +2661,8 @@
     "events": [],
     "groups": [],
     "geoTags": [],
+    "regime": "republic",
+    "physicalFeatures": ["peak_over_5000m"],
     "wikipediaMonthlyViews": 137305,
     "popularityIndex": 0.62440308137718
   },
@@ -2506,6 +2690,8 @@
     "events": [],
     "groups": [],
     "geoTags": [],
+    "regime": "monarchy",
+    "physicalFeatures": [],
     "wikipediaMonthlyViews": 166197,
     "popularityIndex": 0.6602495040668219
   },
@@ -2531,8 +2717,10 @@
     "flagColors": ["red", "blue", "yellow", "white"],
     "flagSymbols": ["sun"],
     "events": [],
-    "groups": [],
+    "groups": ["commonwealth"],
     "geoTags": [],
+    "regime": "republic",
+    "physicalFeatures": ["equator_crosser"],
     "wikipediaMonthlyViews": 95352,
     "popularityIndex": 0.5559592327957256
   },
@@ -2558,8 +2746,10 @@
     "flagColors": ["red", "green", "yellow", "white", "black"],
     "flagSymbols": ["star", "triangle"],
     "events": [],
-    "groups": [],
+    "groups": ["commonwealth"],
     "geoTags": [],
+    "regime": "monarchy",
+    "physicalFeatures": ["caribbean_coast"],
     "wikipediaMonthlyViews": 57148,
     "popularityIndex": 0.45986572021507327
   },
@@ -2587,6 +2777,8 @@
     "events": ["fifa_wc_host", "summer_olympics_host"],
     "groups": ["g20"],
     "geoTags": [],
+    "regime": "republic",
+    "physicalFeatures": [],
     "wikipediaMonthlyViews": 198479,
     "popularityIndex": 0.6935694462471778
   },
@@ -2614,6 +2806,8 @@
     "events": [],
     "groups": [],
     "geoTags": ["middle_east"],
+    "regime": "monarchy",
+    "physicalFeatures": [],
     "wikipediaMonthlyViews": 121427,
     "popularityIndex": 0.6013353730769193
   },
@@ -2641,6 +2835,8 @@
     "events": [],
     "groups": [],
     "geoTags": [],
+    "regime": "republic",
+    "physicalFeatures": [],
     "wikipediaMonthlyViews": 107691,
     "popularityIndex": 0.5788015485888852
   },
@@ -2668,6 +2864,8 @@
     "events": [],
     "groups": [],
     "geoTags": ["middle_east"],
+    "regime": "republic",
+    "physicalFeatures": ["mediterranean_coast"],
     "wikipediaMonthlyViews": 152108,
     "popularityIndex": 0.6436217620263494
   },
@@ -2695,6 +2893,8 @@
     "events": [],
     "groups": [],
     "geoTags": [],
+    "regime": "republic",
+    "physicalFeatures": [],
     "wikipediaMonthlyViews": 132497,
     "popularityIndex": 0.6177122823895347
   },
@@ -2722,6 +2922,8 @@
     "events": [],
     "groups": [],
     "geoTags": [],
+    "regime": "republic",
+    "physicalFeatures": ["mediterranean_coast"],
     "wikipediaMonthlyViews": 121685,
     "popularityIndex": 0.6017337793627864
   },
@@ -2747,8 +2949,10 @@
     "flagColors": ["blue", "yellow", "white", "black"],
     "flagSymbols": ["triangle"],
     "events": [],
-    "groups": [],
+    "groups": ["commonwealth"],
     "geoTags": [],
+    "regime": "monarchy",
+    "physicalFeatures": ["caribbean_coast"],
     "wikipediaMonthlyViews": 72315,
     "popularityIndex": 0.5040497704508421
   },
@@ -2776,6 +2980,8 @@
     "events": [],
     "groups": [],
     "geoTags": [],
+    "regime": "monarchy",
+    "physicalFeatures": [],
     "wikipediaMonthlyViews": 141321,
     "popularityIndex": 0.6298145463386526
   },
@@ -2801,10 +3007,10 @@
     "flagColors": ["yellow", "orange", "red", "green"],
     "flagSymbols": ["animal"],
     "events": [],
-    "groups": [],
+    "groups": ["commonwealth"],
     "geoTags": [],
-    "wikipediaMonthlyViews": 211118,
-    "popularityIndex": 0.7051573946453455
+    "regime": "republic",
+    "physicalFeatures": []
   },
   {
     "code": "LSO",
@@ -2828,10 +3034,10 @@
     "flagColors": ["blue", "green", "white", "black"],
     "flagSymbols": [],
     "events": [],
-    "groups": [],
+    "groups": ["commonwealth"],
     "geoTags": [],
-    "wikipediaMonthlyViews": 79764,
-    "popularityIndex": 0.522452790927026
+    "regime": "monarchy",
+    "physicalFeatures": []
   },
   {
     "code": "LTU",
@@ -2855,8 +3061,10 @@
     "flagColors": ["red", "green", "yellow"],
     "flagSymbols": [],
     "events": [],
-    "groups": ["eu"],
+    "groups": ["eu", "nato"],
     "geoTags": [],
+    "regime": "republic",
+    "physicalFeatures": [],
     "wikipediaMonthlyViews": 151695,
     "popularityIndex": 0.6431114086760735
   },
@@ -2882,8 +3090,10 @@
     "flagColors": ["red", "blue", "white"],
     "flagSymbols": [],
     "events": [],
-    "groups": ["eu"],
+    "groups": ["eu", "nato"],
     "geoTags": [],
+    "regime": "monarchy",
+    "physicalFeatures": [],
     "wikipediaMonthlyViews": 144701,
     "popularityIndex": 0.6342511454464329
   },
@@ -2909,8 +3119,10 @@
     "flagColors": ["red", "white"],
     "flagSymbols": [],
     "events": [],
-    "groups": ["eu"],
+    "groups": ["eu", "nato"],
     "geoTags": [],
+    "regime": "republic",
+    "physicalFeatures": [],
     "wikipediaMonthlyViews": 129793,
     "popularityIndex": 0.6138419073568209
   },
@@ -2938,6 +3150,8 @@
     "events": [],
     "groups": [],
     "geoTags": [],
+    "regime": "monarchy",
+    "physicalFeatures": ["mediterranean_coast"],
     "wikipediaMonthlyViews": 190204,
     "popularityIndex": 0.6855756919739472
   },
@@ -2965,6 +3179,8 @@
     "events": [],
     "groups": [],
     "geoTags": [],
+    "regime": "monarchy",
+    "physicalFeatures": ["mediterranean_coast"],
     "wikipediaMonthlyViews": 218001,
     "popularityIndex": 0.7111795226596043
   },
@@ -2992,6 +3208,8 @@
     "events": [],
     "groups": [],
     "geoTags": [],
+    "regime": "republic",
+    "physicalFeatures": [],
     "wikipediaMonthlyViews": 113566,
     "popularityIndex": 0.5887722487991752
   },
@@ -3019,6 +3237,8 @@
     "events": [],
     "groups": [],
     "geoTags": [],
+    "regime": "republic",
+    "physicalFeatures": [],
     "wikipediaMonthlyViews": 151225,
     "popularityIndex": 0.6425289260616858
   },
@@ -3044,8 +3264,10 @@
     "flagColors": ["red", "green", "white"],
     "flagSymbols": ["crescent"],
     "events": [],
-    "groups": [],
+    "groups": ["commonwealth"],
     "geoTags": [],
+    "regime": "republic",
+    "physicalFeatures": ["equator_crosser"],
     "wikipediaMonthlyViews": 182984,
     "popularityIndex": 0.6783116820243225
   },
@@ -3073,6 +3295,8 @@
     "events": ["fifa_wc_host", "summer_olympics_host"],
     "groups": ["g20"],
     "geoTags": [],
+    "regime": "republic",
+    "physicalFeatures": ["caribbean_coast", "peak_over_5000m"],
     "wikipediaMonthlyViews": 255010,
     "popularityIndex": 0.7406127161808165
   },
@@ -3100,8 +3324,8 @@
     "events": [],
     "groups": [],
     "geoTags": [],
-    "wikipediaMonthlyViews": 56329,
-    "popularityIndex": 0.45715617560331034
+    "regime": "republic",
+    "physicalFeatures": []
   },
   {
     "code": "MKD",
@@ -3125,8 +3349,10 @@
     "flagColors": ["red", "yellow"],
     "flagSymbols": ["sun"],
     "events": [],
-    "groups": [],
+    "groups": ["nato"],
     "geoTags": [],
+    "regime": "republic",
+    "physicalFeatures": [],
     "wikipediaMonthlyViews": 123218,
     "popularityIndex": 0.6040837716187657
   },
@@ -3154,6 +3380,8 @@
     "events": [],
     "groups": [],
     "geoTags": [],
+    "regime": "republic",
+    "physicalFeatures": [],
     "wikipediaMonthlyViews": 85742,
     "popularityIndex": 0.5360185421102207
   },
@@ -3179,8 +3407,10 @@
     "flagColors": ["red", "white"],
     "flagSymbols": ["cross"],
     "events": [],
-    "groups": ["eu"],
+    "groups": ["eu", "commonwealth"],
     "geoTags": [],
+    "regime": "republic",
+    "physicalFeatures": ["mediterranean_coast"],
     "wikipediaMonthlyViews": 192547,
     "popularityIndex": 0.6878738193083849
   },
@@ -3208,6 +3438,8 @@
     "events": [],
     "groups": [],
     "geoTags": [],
+    "regime": "republic",
+    "physicalFeatures": [],
     "wikipediaMonthlyViews": 202888,
     "popularityIndex": 0.6976935408125973
   },
@@ -3233,8 +3465,10 @@
     "flagColors": ["red", "yellow"],
     "flagSymbols": [],
     "events": [],
-    "groups": [],
+    "groups": ["nato"],
     "geoTags": [],
+    "regime": "republic",
+    "physicalFeatures": ["mediterranean_coast"],
     "wikipediaMonthlyViews": 139706,
     "popularityIndex": 0.6276570902287504
   },
@@ -3262,6 +3496,8 @@
     "events": [],
     "groups": [],
     "geoTags": [],
+    "regime": "republic",
+    "physicalFeatures": [],
     "wikipediaMonthlyViews": 143003,
     "popularityIndex": 0.6320354526919435
   },
@@ -3287,8 +3523,10 @@
     "flagColors": ["red", "blue", "yellow", "white", "black"],
     "flagSymbols": ["star", "triangle"],
     "events": [],
-    "groups": [],
+    "groups": ["commonwealth"],
     "geoTags": [],
+    "regime": "republic",
+    "physicalFeatures": [],
     "wikipediaMonthlyViews": 71064,
     "popularityIndex": 0.5007741355279497
   },
@@ -3316,8 +3554,8 @@
     "events": [],
     "groups": [],
     "geoTags": [],
-    "wikipediaMonthlyViews": 102896,
-    "popularityIndex": 0.5702519675293984
+    "regime": "republic",
+    "physicalFeatures": []
   },
   {
     "code": "MUS",
@@ -3341,8 +3579,10 @@
     "flagColors": ["red", "blue", "green", "yellow"],
     "flagSymbols": [],
     "events": [],
-    "groups": [],
+    "groups": ["commonwealth"],
     "geoTags": [],
+    "regime": "republic",
+    "physicalFeatures": [],
     "wikipediaMonthlyViews": 235812,
     "popularityIndex": 0.7259212107929185
   },
@@ -3368,8 +3608,10 @@
     "flagColors": ["red", "green", "black"],
     "flagSymbols": ["sun"],
     "events": [],
-    "groups": [],
+    "groups": ["commonwealth"],
     "geoTags": [],
+    "regime": "republic",
+    "physicalFeatures": [],
     "wikipediaMonthlyViews": 54519,
     "popularityIndex": 0.4510255891012742
   },
@@ -3395,8 +3637,10 @@
     "flagColors": ["red", "blue", "yellow", "white"],
     "flagSymbols": ["star", "crescent"],
     "events": [],
-    "groups": [],
+    "groups": ["commonwealth"],
     "geoTags": [],
+    "regime": "monarchy",
+    "physicalFeatures": [],
     "wikipediaMonthlyViews": 214388,
     "popularityIndex": 0.7080425109370356
   },
@@ -3432,8 +3676,10 @@
     "flagColors": ["red", "blue", "green", "yellow", "white"],
     "flagSymbols": ["sun", "triangle"],
     "events": [],
-    "groups": [],
+    "groups": ["commonwealth"],
     "geoTags": [],
+    "regime": "republic",
+    "physicalFeatures": [],
     "wikipediaMonthlyViews": 125196,
     "popularityIndex": 0.6070730895478557
   },
@@ -3461,6 +3707,8 @@
     "events": [],
     "groups": [],
     "geoTags": [],
+    "regime": "republic",
+    "physicalFeatures": [],
     "wikipediaMonthlyViews": 77881,
     "popularityIndex": 0.5179683998119926
   },
@@ -3486,8 +3734,10 @@
     "flagColors": ["green", "white"],
     "flagSymbols": [],
     "events": [],
-    "groups": [],
+    "groups": ["commonwealth"],
     "geoTags": [],
+    "regime": "republic",
+    "physicalFeatures": [],
     "wikipediaMonthlyViews": 204904,
     "popularityIndex": 0.6995494985105618
   },
@@ -3515,6 +3765,8 @@
     "events": [],
     "groups": [],
     "geoTags": [],
+    "regime": "republic",
+    "physicalFeatures": ["caribbean_coast"],
     "wikipediaMonthlyViews": 85917,
     "popularityIndex": 0.5364012649055304
   },
@@ -3540,8 +3792,10 @@
     "flagColors": ["red", "blue", "white"],
     "flagSymbols": [],
     "events": ["summer_olympics_host"],
-    "groups": ["eu"],
+    "groups": ["eu", "nato"],
     "geoTags": [],
+    "regime": "monarchy",
+    "physicalFeatures": [],
     "wikipediaMonthlyViews": 252487,
     "popularityIndex": 0.7387463362399206
   },
@@ -3567,8 +3821,10 @@
     "flagColors": ["red", "blue", "white"],
     "flagSymbols": ["cross"],
     "events": [],
-    "groups": [],
+    "groups": ["nato"],
     "geoTags": [],
+    "regime": "monarchy",
+    "physicalFeatures": [],
     "wikipediaMonthlyViews": 175311,
     "popularityIndex": 0.6702708023326587
   },
@@ -3596,6 +3852,8 @@
     "events": [],
     "groups": [],
     "geoTags": [],
+    "regime": "republic",
+    "physicalFeatures": ["peak_over_5000m"],
     "wikipediaMonthlyViews": 234208,
     "popularityIndex": 0.724640053595489
   },
@@ -3621,8 +3879,10 @@
     "flagColors": ["blue", "yellow", "white"],
     "flagSymbols": ["star"],
     "events": [],
-    "groups": [],
+    "groups": ["commonwealth"],
     "geoTags": [],
+    "regime": "republic",
+    "physicalFeatures": [],
     "wikipediaMonthlyViews": 74309,
     "popularityIndex": 0.5091555207958133
   },
@@ -3648,8 +3908,10 @@
     "flagColors": ["red", "blue", "white"],
     "flagSymbols": ["star", "cross"],
     "events": [],
-    "groups": [],
+    "groups": ["commonwealth"],
     "geoTags": [],
+    "regime": "monarchy",
+    "physicalFeatures": [],
     "wikipediaMonthlyViews": 244361,
     "popularityIndex": 0.732605822484013
   },
@@ -3677,6 +3939,8 @@
     "events": [],
     "groups": [],
     "geoTags": ["middle_east"],
+    "regime": "monarchy",
+    "physicalFeatures": [],
     "wikipediaMonthlyViews": 150005,
     "popularityIndex": 0.64100846013374
   },
@@ -3702,8 +3966,10 @@
     "flagColors": ["green", "white"],
     "flagSymbols": ["star", "crescent"],
     "events": [],
-    "groups": [],
+    "groups": ["commonwealth"],
     "geoTags": [],
+    "regime": "republic",
+    "physicalFeatures": ["peak_over_5000m"],
     "wikipediaMonthlyViews": 352461,
     "popularityIndex": 0.8013620013981236
   },
@@ -3731,6 +3997,8 @@
     "events": [],
     "groups": [],
     "geoTags": [],
+    "regime": "republic",
+    "physicalFeatures": ["caribbean_coast"],
     "wikipediaMonthlyViews": 77526,
     "popularityIndex": 0.5171108265325762
   },
@@ -3758,6 +4026,8 @@
     "events": [],
     "groups": [],
     "geoTags": [],
+    "regime": "republic",
+    "physicalFeatures": ["peak_over_5000m"],
     "wikipediaMonthlyViews": 102845,
     "popularityIndex": 0.5701589077437959
   },
@@ -3785,6 +4055,8 @@
     "events": [],
     "groups": [],
     "geoTags": [],
+    "regime": "republic",
+    "physicalFeatures": [],
     "wikipediaMonthlyViews": 300617,
     "popularityIndex": 0.7714971098766847
   },
@@ -3812,6 +4084,8 @@
     "events": [],
     "groups": [],
     "geoTags": [],
+    "regime": "republic",
+    "physicalFeatures": [],
     "wikipediaMonthlyViews": 77378,
     "popularityIndex": 0.5167521425988029
   },
@@ -3837,8 +4111,10 @@
     "flagColors": ["red", "yellow", "white", "black"],
     "flagSymbols": ["star", "cross", "triangle"],
     "events": [],
-    "groups": [],
+    "groups": ["commonwealth"],
     "geoTags": [],
+    "regime": "monarchy",
+    "physicalFeatures": [],
     "wikipediaMonthlyViews": 114977,
     "popularityIndex": 0.5910900560490702
   },
@@ -3864,10 +4140,10 @@
     "flagColors": ["red", "white"],
     "flagSymbols": [],
     "events": [],
-    "groups": ["eu"],
+    "groups": ["eu", "nato"],
     "geoTags": [],
-    "wikipediaMonthlyViews": 229608,
-    "popularityIndex": 0.7209166590825911
+    "regime": "republic",
+    "physicalFeatures": []
   },
   {
     "code": "PRK",
@@ -3893,8 +4169,8 @@
     "events": [],
     "groups": [],
     "geoTags": [],
-    "wikipediaMonthlyViews": 222305,
-    "popularityIndex": 0.714849337910031
+    "regime": "republic",
+    "physicalFeatures": []
   },
   {
     "code": "PRT",
@@ -3918,8 +4194,10 @@
     "flagColors": ["red", "green"],
     "flagSymbols": [],
     "events": [],
-    "groups": ["eu"],
+    "groups": ["eu", "nato"],
     "geoTags": [],
+    "regime": "republic",
+    "physicalFeatures": [],
     "wikipediaMonthlyViews": 163789,
     "popularityIndex": 0.6575099404763267
   },
@@ -3947,6 +4225,8 @@
     "events": [],
     "groups": [],
     "geoTags": [],
+    "regime": "republic",
+    "physicalFeatures": [],
     "wikipediaMonthlyViews": 67414,
     "popularityIndex": 0.49087663814453997
   },
@@ -3974,6 +4254,8 @@
     "events": [],
     "groups": [],
     "geoTags": ["middle_east"],
+    "regime": "republic",
+    "physicalFeatures": ["mediterranean_coast"],
     "wikipediaMonthlyViews": 329549,
     "popularityIndex": 0.7887452243023635
   },
@@ -4001,6 +4283,8 @@
     "events": ["fifa_wc_host"],
     "groups": [],
     "geoTags": ["middle_east"],
+    "regime": "monarchy",
+    "physicalFeatures": [],
     "wikipediaMonthlyViews": 193675,
     "popularityIndex": 0.6889702622473266
   },
@@ -4026,8 +4310,10 @@
     "flagColors": ["red", "blue", "yellow"],
     "flagSymbols": [],
     "events": [],
-    "groups": ["eu"],
+    "groups": ["eu", "nato"],
     "geoTags": [],
+    "regime": "republic",
+    "physicalFeatures": [],
     "wikipediaMonthlyViews": 171473,
     "popularityIndex": 0.6661157513155206
   },
@@ -4070,6 +4356,8 @@
     "events": ["fifa_wc_host", "summer_olympics_host"],
     "groups": ["g20"],
     "geoTags": [],
+    "regime": "republic",
+    "physicalFeatures": ["peak_over_5000m"],
     "wikipediaMonthlyViews": 375891,
     "popularityIndex": 0.8134427418067163
   },
@@ -4095,8 +4383,10 @@
     "flagColors": ["blue", "green", "yellow"],
     "flagSymbols": ["sun"],
     "events": [],
-    "groups": [],
+    "groups": ["commonwealth"],
     "geoTags": [],
+    "regime": "republic",
+    "physicalFeatures": [],
     "wikipediaMonthlyViews": 102146,
     "popularityIndex": 0.5688787697895296
   },
@@ -4124,6 +4414,8 @@
     "events": [],
     "groups": ["g20"],
     "geoTags": ["middle_east"],
+    "regime": "monarchy",
+    "physicalFeatures": [],
     "wikipediaMonthlyViews": 261481,
     "popularityIndex": 0.7453164644979343
   },
@@ -4151,6 +4443,8 @@
     "events": [],
     "groups": [],
     "geoTags": [],
+    "regime": "republic",
+    "physicalFeatures": [],
     "wikipediaMonthlyViews": 147290,
     "popularityIndex": 0.6375799375732704
   },
@@ -4178,6 +4472,8 @@
     "events": [],
     "groups": [],
     "geoTags": [],
+    "regime": "republic",
+    "physicalFeatures": [],
     "wikipediaMonthlyViews": 98535,
     "popularityIndex": 0.562122907028421
   },
@@ -4203,8 +4499,10 @@
     "flagColors": ["red", "white"],
     "flagSymbols": ["star", "crescent"],
     "events": [],
-    "groups": [],
+    "groups": ["commonwealth"],
     "geoTags": [],
+    "regime": "republic",
+    "physicalFeatures": [],
     "wikipediaMonthlyViews": 360627,
     "popularityIndex": 0.8056613032910038
   },
@@ -4230,8 +4528,10 @@
     "flagColors": ["blue", "green", "yellow", "white"],
     "flagSymbols": ["star", "triangle"],
     "events": [],
-    "groups": [],
+    "groups": ["commonwealth"],
     "geoTags": [],
+    "regime": "monarchy",
+    "physicalFeatures": [],
     "wikipediaMonthlyViews": 46674,
     "popularityIndex": 0.42186290338042876
   },
@@ -4257,8 +4557,10 @@
     "flagColors": ["blue", "green", "white"],
     "flagSymbols": [],
     "events": [],
-    "groups": [],
+    "groups": ["commonwealth"],
     "geoTags": [],
+    "regime": "republic",
+    "physicalFeatures": [],
     "wikipediaMonthlyViews": 78383,
     "popularityIndex": 0.5191744322338513
   },
@@ -4286,6 +4588,8 @@
     "events": [],
     "groups": [],
     "geoTags": [],
+    "regime": "republic",
+    "physicalFeatures": [],
     "wikipediaMonthlyViews": 130211,
     "popularityIndex": 0.6144454519109764
   },
@@ -4313,6 +4617,8 @@
     "events": [],
     "groups": [],
     "geoTags": [],
+    "regime": "republic",
+    "physicalFeatures": [],
     "wikipediaMonthlyViews": 104347,
     "popularityIndex": 0.5728804636938069
   },
@@ -4340,6 +4646,8 @@
     "events": [],
     "groups": [],
     "geoTags": [],
+    "regime": "republic",
+    "physicalFeatures": [],
     "wikipediaMonthlyViews": 159213,
     "popularityIndex": 0.6521910313415402
   },
@@ -4367,6 +4675,8 @@
     "events": [],
     "groups": [],
     "geoTags": [],
+    "regime": "republic",
+    "physicalFeatures": [],
     "wikipediaMonthlyViews": 177544,
     "popularityIndex": 0.6726466082188066
   },
@@ -4394,6 +4704,8 @@
     "events": [],
     "groups": [],
     "geoTags": [],
+    "regime": "republic",
+    "physicalFeatures": [],
     "wikipediaMonthlyViews": 110250,
     "popularityIndex": 0.583209776248449
   },
@@ -4421,8 +4733,8 @@
     "events": [],
     "groups": [],
     "geoTags": [],
-    "wikipediaMonthlyViews": 46355,
-    "popularityIndex": 0.4205755827131616
+    "regime": "republic",
+    "physicalFeatures": ["equator_crosser"]
   },
   {
     "code": "SUR",
@@ -4448,6 +4760,8 @@
     "events": [],
     "groups": [],
     "geoTags": [],
+    "regime": "republic",
+    "physicalFeatures": [],
     "wikipediaMonthlyViews": 124343,
     "popularityIndex": 0.6057897989824729
   },
@@ -4473,10 +4787,10 @@
     "flagColors": ["red", "blue", "white"],
     "flagSymbols": [],
     "events": [],
-    "groups": ["eu"],
+    "groups": ["eu", "nato"],
     "geoTags": [],
-    "wikipediaMonthlyViews": 126378,
-    "popularityIndex": 0.6088369638224167
+    "regime": "republic",
+    "physicalFeatures": []
   },
   {
     "code": "SVN",
@@ -4500,8 +4814,10 @@
     "flagColors": ["red", "blue", "white"],
     "flagSymbols": [],
     "events": [],
-    "groups": ["eu"],
+    "groups": ["eu", "nato"],
     "geoTags": [],
+    "regime": "republic",
+    "physicalFeatures": ["mediterranean_coast"],
     "wikipediaMonthlyViews": 126125,
     "popularityIndex": 0.6084608088274595
   },
@@ -4527,8 +4843,10 @@
     "flagColors": ["blue", "yellow"],
     "flagSymbols": ["cross"],
     "events": ["fifa_wc_host", "summer_olympics_host"],
-    "groups": ["eu"],
+    "groups": ["eu", "nato"],
     "geoTags": [],
+    "regime": "monarchy",
+    "physicalFeatures": [],
     "wikipediaMonthlyViews": 177793,
     "popularityIndex": 0.67290967844354
   },
@@ -4554,8 +4872,10 @@
     "flagColors": ["red", "blue", "yellow", "white", "black"],
     "flagSymbols": [],
     "events": [],
-    "groups": [],
+    "groups": ["commonwealth"],
     "geoTags": [],
+    "regime": "monarchy",
+    "physicalFeatures": [],
     "wikipediaMonthlyViews": 149768,
     "popularityIndex": 0.640711656897962
   },
@@ -4581,8 +4901,10 @@
     "flagColors": ["red", "blue", "green", "yellow", "white"],
     "flagSymbols": [],
     "events": [],
-    "groups": [],
+    "groups": ["commonwealth"],
     "geoTags": [],
+    "regime": "republic",
+    "physicalFeatures": [],
     "wikipediaMonthlyViews": 120259,
     "popularityIndex": 0.5995210800189721
   },
@@ -4610,8 +4932,8 @@
     "events": [],
     "groups": [],
     "geoTags": ["middle_east"],
-    "wikipediaMonthlyViews": 232370,
-    "popularityIndex": 0.7231611624611993
+    "regime": "republic",
+    "physicalFeatures": ["mediterranean_coast"]
   },
   {
     "code": "TCD",
@@ -4637,6 +4959,8 @@
     "events": [],
     "groups": [],
     "geoTags": [],
+    "regime": "republic",
+    "physicalFeatures": [],
     "wikipediaMonthlyViews": 71731,
     "popularityIndex": 0.5025277281143229
   },
@@ -4662,8 +4986,10 @@
     "flagColors": ["red", "green", "yellow", "white"],
     "flagSymbols": ["star"],
     "events": [],
-    "groups": [],
+    "groups": ["commonwealth"],
     "geoTags": [],
+    "regime": "republic",
+    "physicalFeatures": [],
     "wikipediaMonthlyViews": 51789,
     "popularityIndex": 0.44138275037586977
   },
@@ -4691,6 +5017,8 @@
     "events": [],
     "groups": [],
     "geoTags": [],
+    "regime": "monarchy",
+    "physicalFeatures": [],
     "wikipediaMonthlyViews": 267736,
     "popularityIndex": 0.7497538428564319
   },
@@ -4718,6 +5046,8 @@
     "events": [],
     "groups": [],
     "geoTags": [],
+    "regime": "republic",
+    "physicalFeatures": ["peak_over_5000m"],
     "wikipediaMonthlyViews": 95402,
     "popularityIndex": 0.5560576359613056
   },
@@ -4745,6 +5075,8 @@
     "events": [],
     "groups": [],
     "geoTags": [],
+    "regime": "republic",
+    "physicalFeatures": [],
     "wikipediaMonthlyViews": 116761,
     "popularityIndex": 0.5939801960722966
   },
@@ -4772,6 +5104,8 @@
     "events": [],
     "groups": [],
     "geoTags": [],
+    "regime": "republic",
+    "physicalFeatures": [],
     "wikipediaMonthlyViews": 102216,
     "popularityIndex": 0.569007360803768
   },
@@ -4797,8 +5131,10 @@
     "flagColors": ["red", "white"],
     "flagSymbols": ["cross"],
     "events": [],
-    "groups": [],
+    "groups": ["commonwealth"],
     "geoTags": [],
+    "regime": "monarchy",
+    "physicalFeatures": [],
     "wikipediaMonthlyViews": 65085,
     "popularityIndex": 0.4842770880355541
   },
@@ -4824,8 +5160,10 @@
     "flagColors": ["red", "white", "black"],
     "flagSymbols": [],
     "events": [],
-    "groups": [],
+    "groups": ["commonwealth"],
     "geoTags": [],
+    "regime": "republic",
+    "physicalFeatures": ["caribbean_coast"],
     "wikipediaMonthlyViews": 111033,
     "popularityIndex": 0.5845381743093815
   },
@@ -4853,6 +5191,8 @@
     "events": [],
     "groups": [],
     "geoTags": [],
+    "regime": "republic",
+    "physicalFeatures": ["mediterranean_coast"],
     "wikipediaMonthlyViews": 107079,
     "popularityIndex": 0.5777317754484957
   },
@@ -4878,8 +5218,10 @@
     "flagColors": ["red", "white"],
     "flagSymbols": ["star", "crescent"],
     "events": [],
-    "groups": ["g20"],
+    "groups": ["g20", "nato"],
     "geoTags": ["middle_east"],
+    "regime": "republic",
+    "physicalFeatures": ["mediterranean_coast", "peak_over_5000m"],
     "wikipediaMonthlyViews": 311237,
     "popularityIndex": 0.7780138895922512
   },
@@ -4905,8 +5247,10 @@
     "flagColors": ["blue", "yellow"],
     "flagSymbols": ["star"],
     "events": [],
-    "groups": [],
+    "groups": ["commonwealth"],
     "geoTags": [],
+    "regime": "monarchy",
+    "physicalFeatures": [],
     "wikipediaMonthlyViews": 71753,
     "popularityIndex": 0.5025852895898344
   },
@@ -4934,6 +5278,8 @@
     "events": [],
     "groups": [],
     "geoTags": [],
+    "regime": "republic",
+    "physicalFeatures": [],
     "wikipediaMonthlyViews": 308644,
     "popularityIndex": 0.7764434926754245
   },
@@ -4959,10 +5305,10 @@
     "flagColors": ["blue", "green", "yellow", "black"],
     "flagSymbols": ["triangle"],
     "events": [],
-    "groups": [],
+    "groups": ["commonwealth"],
     "geoTags": [],
-    "wikipediaMonthlyViews": 131275,
-    "popularityIndex": 0.6159730471363213
+    "regime": "republic",
+    "physicalFeatures": ["peak_over_5000m"]
   },
   {
     "code": "UGA",
@@ -4986,8 +5332,10 @@
     "flagColors": ["red", "yellow", "white", "black"],
     "flagSymbols": ["circle"],
     "events": [],
-    "groups": [],
+    "groups": ["commonwealth"],
     "geoTags": [],
+    "regime": "republic",
+    "physicalFeatures": ["equator_crosser", "peak_over_5000m"],
     "wikipediaMonthlyViews": 116402,
     "popularityIndex": 0.59340216941676
   },
@@ -5015,6 +5363,8 @@
     "events": [],
     "groups": [],
     "geoTags": [],
+    "regime": "republic",
+    "physicalFeatures": [],
     "wikipediaMonthlyViews": 231151,
     "popularityIndex": 0.7221738650435843
   },
@@ -5042,6 +5392,8 @@
     "events": ["fifa_wc_host"],
     "groups": [],
     "geoTags": [],
+    "regime": "republic",
+    "physicalFeatures": [],
     "wikipediaMonthlyViews": 92027,
     "popularityIndex": 0.5492968584503098
   },
@@ -5073,8 +5425,10 @@
     "flagColors": ["red", "blue", "white"],
     "flagSymbols": ["star"],
     "events": ["fifa_wc_host", "summer_olympics_host"],
-    "groups": ["g20"],
+    "groups": ["g20", "nato"],
     "geoTags": [],
+    "regime": "republic",
+    "physicalFeatures": ["peak_over_5000m"],
     "wikipediaMonthlyViews": 1015533,
     "popularityIndex": 1
   },
@@ -5102,6 +5456,8 @@
     "events": [],
     "groups": [],
     "geoTags": [],
+    "regime": "republic",
+    "physicalFeatures": [],
     "wikipediaMonthlyViews": 146849,
     "popularityIndex": 0.6370170793540506
   },
@@ -5129,6 +5485,8 @@
     "events": [],
     "groups": [],
     "geoTags": [],
+    "regime": "monarchy",
+    "physicalFeatures": [],
     "wikipediaMonthlyViews": 189574,
     "popularityIndex": 0.6849529274658303
   },
@@ -5154,8 +5512,10 @@
     "flagColors": ["blue", "green", "yellow"],
     "flagSymbols": [],
     "events": [],
-    "groups": [],
+    "groups": ["commonwealth"],
     "geoTags": [],
+    "regime": "monarchy",
+    "physicalFeatures": ["caribbean_coast"],
     "wikipediaMonthlyViews": 45704,
     "popularityIndex": 0.41792076513849286
   },
@@ -5183,6 +5543,8 @@
     "events": [],
     "groups": [],
     "geoTags": [],
+    "regime": "republic",
+    "physicalFeatures": ["caribbean_coast"],
     "wikipediaMonthlyViews": 458285,
     "popularityIndex": 0.8506449698885116
   },
@@ -5210,6 +5572,8 @@
     "events": [],
     "groups": [],
     "geoTags": [],
+    "regime": "republic",
+    "physicalFeatures": [],
     "wikipediaMonthlyViews": 231299,
     "popularityIndex": 0.7222940111373627
   },
@@ -5235,8 +5599,10 @@
     "flagColors": ["red", "green", "yellow", "black"],
     "flagSymbols": ["triangle"],
     "events": [],
-    "groups": [],
+    "groups": ["commonwealth"],
     "geoTags": [],
+    "regime": "republic",
+    "physicalFeatures": [],
     "wikipediaMonthlyViews": 70171,
     "popularityIndex": 0.4984004257371845
   },
@@ -5262,8 +5628,10 @@
     "flagColors": ["red", "blue", "white"],
     "flagSymbols": ["star", "cross"],
     "events": [],
-    "groups": [],
+    "groups": ["commonwealth"],
     "geoTags": [],
+    "regime": "republic",
+    "physicalFeatures": [],
     "wikipediaMonthlyViews": 80384,
     "popularityIndex": 0.5239061905690614
   },
@@ -5291,6 +5659,8 @@
     "events": [],
     "groups": [],
     "geoTags": [],
+    "regime": "republic",
+    "physicalFeatures": [],
     "wikipediaMonthlyViews": 169136,
     "popularityIndex": 0.6635398921324701
   },
@@ -5318,6 +5688,8 @@
     "events": [],
     "groups": [],
     "geoTags": ["middle_east"],
+    "regime": "republic",
+    "physicalFeatures": [],
     "wikipediaMonthlyViews": 149496,
     "popularityIndex": 0.6403704425725114
   },
@@ -5355,8 +5727,10 @@
     "flagColors": ["red", "blue", "green", "yellow", "white", "black"],
     "flagSymbols": ["triangle"],
     "events": ["fifa_wc_host"],
-    "groups": ["g20"],
+    "groups": ["g20", "commonwealth"],
     "geoTags": [],
+    "regime": "republic",
+    "physicalFeatures": [],
     "wikipediaMonthlyViews": 246125,
     "popularityIndex": 0.7339559865538757
   },
@@ -5382,8 +5756,10 @@
     "flagColors": ["red", "green", "black", "orange"],
     "flagSymbols": ["animal"],
     "events": [],
-    "groups": [],
+    "groups": ["commonwealth"],
     "geoTags": [],
+    "regime": "republic",
+    "physicalFeatures": [],
     "wikipediaMonthlyViews": 65407,
     "popularityIndex": 0.4852034603659987
   },
@@ -5427,6 +5803,8 @@
     "events": [],
     "groups": [],
     "geoTags": [],
+    "regime": "republic",
+    "physicalFeatures": [],
     "wikipediaMonthlyViews": 122255,
     "popularityIndex": 0.6026109929212247
   }
