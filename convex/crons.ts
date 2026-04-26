@@ -3,23 +3,19 @@ import { internal } from "./_generated/api";
 
 const crons = cronJobs();
 
-// TODO: Les crons Convex sont en UTC. 23:00 UTC = ~01:00 en France l’été (ou minuit hiver),
-// donc trop tard pour un “jour calendaire” côté EU — prévoir un offset ou un horaire
-// ancré sur un fuseau (ex. 22:00 Europe/Paris) quand on voudra l’aligner sur les joueurs.
-
-// Every day at 23:00 UTC — generate new grid candidates
-crons.cron(
-  "generate daily candidates",
-  "0 23 * * *",
-  internal.grids.generateDailyCandidates,
+// Every day at 23:30 UTC — assign tomorrow's grid from the pool
+crons.daily(
+  "ensure tomorrow grid",
+  { hourUTC: 23, minuteUTC: 30 },
+  internal.grids.ensureTomorrowGrid,
   {},
 );
 
-// Every day at 23:30 UTC — promote the oldest approved candidate to today's grid
-crons.cron(
-  "ensure today grid",
-  "30 23 * * *",
-  internal.grids.ensureTodayGrid,
+// Every Sunday at 04:00 UTC — refill the pool if it falls below threshold
+crons.weekly(
+  "auto refill pool",
+  { dayOfWeek: "sunday", hourUTC: 4, minuteUTC: 0 },
+  internal.grids.autoRefillPool,
   {},
 );
 

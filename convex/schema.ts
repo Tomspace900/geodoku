@@ -3,52 +3,34 @@ import { v } from "convex/values";
 
 export default defineSchema({
   gridCandidates: defineTable({
-    rows: v.array(v.string()), // 3 constraint IDs
-    cols: v.array(v.string()), // 3 constraint IDs
-    validAnswers: v.record(v.string(), v.array(v.string())), // "0,0" → ISO3[]
-    score: v.number(), // qualityScore 0-100 (intrinsèque)
-    difficulty: v.number(), // 0-100, dérivé des cellMetrics
-    contextScore: v.optional(v.number()), // 0-100, renseigné en phase 2
+    rows: v.array(v.string()),
+    cols: v.array(v.string()),
+    validAnswers: v.record(v.string(), v.array(v.string())),
     metadata: v.object({
-      // Agrégats cellule
-      minCellSize: v.number(),
-      maxCellSize: v.number(),
+      seedConstraint: v.string(),
+      constraintIds: v.array(v.string()),
+      categories: v.array(v.string()),
       avgCellSize: v.number(),
-      // Catégories & notoriété
-      categoryCount: v.number(),
-      avgNotoriety: v.number(),
-      // Dérivés des cellMetrics
-      obviousCellCount: v.number(),
-      criteriaOverlapScore: v.number(),
-      constraintHardnessMean: v.number(),
-      maxCellRisk: v.number(),
-      avgCellRisk: v.number(),
-      // Mix difficulté éditoriale (tags constraints, sur 6)
-      easyConstraintCount: v.number(),
-      hardConstraintCount: v.number(),
-      // Granularité cellule : 9 entrées
-      cellMetrics: v.array(
-        v.object({
-          cellKey: v.string(),
-          solutionCount: v.number(),
-          popularCount: v.number(),
-          avgPopularity: v.number(),
-        }),
-      ),
+      minCellSize: v.number(),
+      countryPool: v.array(v.string()),
+      difficultyEstimate: v.number(),
+      difficultyTags: v.object({
+        easy: v.number(),
+        medium: v.number(),
+        hard: v.number(),
+      }),
+      cellDifficulties: v.array(v.number()),
     }),
     status: v.union(
-      v.literal("pending"),
-      v.literal("approved"),
+      v.literal("available"),
+      v.literal("used"),
       v.literal("rejected"),
-      v.literal("used"), // promoted to grids table
     ),
-    generatedAt: v.number(),
-    reviewedAt: v.union(v.number(), v.null()),
-    rejectionReason: v.union(v.string(), v.null()),
     usedAt: v.optional(v.number()),
+    usedForDate: v.optional(v.string()),
   })
     .index("by_status", ["status"])
-    .index("by_status_and_score", ["status", "score"]),
+    .index("by_status_and_seed", ["status", "metadata.seedConstraint"]),
 
   grids: defineTable({
     date: v.string(), // "YYYY-MM-DD"
@@ -61,8 +43,8 @@ export default defineSchema({
 
   guesses: defineTable({
     date: v.string(),
-    cellKey: v.string(), // "0,0" to "2,2"
-    countryCode: v.string(), // ISO3
+    cellKey: v.string(),
+    countryCode: v.string(),
     count: v.number(),
   })
     .index("by_date_and_cell_and_country", ["date", "cellKey", "countryCode"])
@@ -75,7 +57,7 @@ export default defineSchema({
   }).index("by_date_and_cell", ["date", "cellKey"]),
 
   gridFeedback: defineTable({
-    date: v.string(), // "YYYY-MM-DD"
+    date: v.string(),
     tooEasyCount: v.number(),
     balancedCount: v.number(),
     tooHardCount: v.number(),

@@ -1,7 +1,7 @@
 /**
- * Historical seed: backfills 15 + 7 days of grids (T-14 … T, then T+1 … T+7) using the same
- * pipeline as prod. 22 date iterations in total. Invoked manually: `pnpm seed:grids` →
- * `npx convex run seed:seedHistoricalGrids`
+ * Historical seed: backfills past + future grids using the new pool architecture.
+ * Generates a pool first, then assigns grids sequentially for each date.
+ * Invoked manually: `pnpm seed:grids` → `npx convex run seed:seedHistoricalGrids`
  */
 import { v } from "convex/values";
 import { internal } from "./_generated/api";
@@ -25,8 +25,8 @@ function formatYMD(d: Date): string {
   return `${y}-${m}-${day}`;
 }
 
-/** Inclusive range from (today − 14) to today, length 15. */
-function datesFromMinus14ToToday(today: string): string[] {
+/** Inclusive range from (today − SEED_PAST_DAY_COUNT + 1) to today. */
+function datesFromPastToToday(today: string): string[] {
   const anchor = new Date(`${today}T12:00:00.000Z`);
   const out: string[] = [];
   for (let i = 0; i < SEED_PAST_DAY_COUNT; i++) {
@@ -37,8 +37,8 @@ function datesFromMinus14ToToday(today: string): string[] {
   return out;
 }
 
-/** Inclusive range from tomorrow to (today + 7), length 7 (T+1 … T+7). */
-function datesFromTomorrowToPlus7(today: string): string[] {
+/** Inclusive range from tomorrow to (today + SEED_FUTURE_DAY_COUNT). */
+function datesFromTomorrowToFuture(today: string): string[] {
   const anchor = new Date(`${today}T12:00:00.000Z`);
   const out: string[] = [];
   for (let i = 1; i <= SEED_FUTURE_DAY_COUNT; i++) {
@@ -61,35 +61,30 @@ export const seedHistoricalGrids = internalAction({
 
     const today = todayUTC();
     const dates = [
-      ...datesFromMinus14ToToday(today),
-      ...datesFromTomorrowToPlus7(today),
+      ...datesFromPastToToday(today),
+      ...datesFromTomorrowToFuture(today),
     ];
-    const steps: {
-      date: string;
-      candidateId: string;
-      score: number;
-      contextScore: number | null;
-    }[] = [];
+
+    // Generate a pool first
+    const report = await ctx.runAction(internal.grids.generatePoolInternal, {});
+    console.log(
+      `[seedHistoricalGrids] Pool generated: ${report.totalGenerated} grids in ${report.durationMs}ms`,
+    );
+
+    const steps: { date: string; candidateId: string }[] = [];
 
     for (const date of dates) {
-      await ctx.runAction(internal.grids.generateDailyCandidates, {});
-      const promoted = await ctx.runMutation(
-        internal.gridData.promoteBestPendingForDate,
-        { date },
-      );
-      await ctx.runMutation(
-        internal.gridData.purgeAllPendingCandidatesInternal,
-        {},
-      );
-      steps.push({
+      const result = await ctx.runAction(internal.grids.ensureGridForDate, {
         date,
-        candidateId: promoted.candidateId,
-        score: promoted.score,
-        contextScore: promoted.contextScore,
       });
-      console.log(
-        `[seedHistoricalGrids] ${date} → candidate ${promoted.candidateId} score=${promoted.score} context=${promoted.contextScore}`,
-      );
+      if (result) {
+        steps.push(result);
+        console.log(
+          `[seedHistoricalGrids] ${date} → candidate ${result.candidateId}`,
+        );
+      } else {
+        console.warn(`[seedHistoricalGrids] No grid assigned for ${date}`);
+      }
     }
 
     return {

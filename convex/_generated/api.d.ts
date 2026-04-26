@@ -12,8 +12,9 @@ import type * as crons from "../crons.js";
 import type * as gridData from "../gridData.js";
 import type * as grids from "../grids.js";
 import type * as guesses from "../guesses.js";
-import type * as lib_gridContext from "../lib/gridContext.js";
+import type * as lib_gridConstants from "../lib/gridConstants.js";
 import type * as lib_gridGenerator from "../lib/gridGenerator.js";
+import type * as lib_gridScheduler from "../lib/gridScheduler.js";
 import type * as seed from "../seed.js";
 import type * as wipe from "../wipe.js";
 
@@ -28,8 +29,9 @@ declare const fullApi: ApiFromModules<{
   gridData: typeof gridData;
   grids: typeof grids;
   guesses: typeof guesses;
-  "lib/gridContext": typeof lib_gridContext;
+  "lib/gridConstants": typeof lib_gridConstants;
   "lib/gridGenerator": typeof lib_gridGenerator;
+  "lib/gridScheduler": typeof lib_gridScheduler;
   seed: typeof seed;
   wipe: typeof wipe;
 }>;
