@@ -34,7 +34,6 @@ export type ConstraintId =
   | "borders_min_7"
   | "borders_russia"
   | "borders_solo"
-  | "borders_turkey"
   | "continent_africa"
   | "continent_asia"
   | "continent_europe"
@@ -128,7 +127,6 @@ const LANG_RU = "ru";
 const CODE_RUS = "RUS";
 const CODE_CHN = "CHN";
 const CODE_BRA = "BRA";
-const CODE_TUR = "TUR";
 const CODE_IND = "IND";
 
 // ─── Constraints ──────────────────────────────────────────────────────────────
@@ -238,13 +236,6 @@ export const CONSTRAINTS: Constraint[] = [
     category: "borders_pivot",
     difficulty: "medium",
     predicate: (c) => c.borders.includes(CODE_BRA),
-  },
-  {
-    id: "borders_turkey",
-    labelKey: "constraint.borders_turkey",
-    category: "borders_pivot",
-    difficulty: "medium",
-    predicate: (c) => c.borders.includes(CODE_TUR),
   },
   {
     id: "borders_india",

@@ -107,7 +107,6 @@ export const fr = {
     borders_russia: "Frontalier de la Russie",
     borders_china: "Frontalier de la Chine",
     borders_brazil: "Frontalier du Brésil",
-    borders_turkey: "Frontalier de la Turquie",
     borders_india: "Frontalier de l'Inde",
     area_gt_2M: "Pays gigantesque (> 2\u00A0M\u00A0km²)",
     area_gt_500k: "Grand pays (> 500\u00A0000\u00A0km²)",

@@ -105,7 +105,6 @@ export const en = {
     borders_russia: "Borders Russia",
     borders_china: "Borders China",
     borders_brazil: "Borders Brazil",
-    borders_turkey: "Borders Turkey",
     borders_india: "Borders India",
     area_gt_2M: "Gigantic country (> 2M\u00A0km²)",
     area_gt_500k: "Large country (> 500,000\u00A0km²)",
