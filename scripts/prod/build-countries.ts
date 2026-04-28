@@ -71,6 +71,12 @@ const EXPLICIT_CODES = new Set<string>(["PSE", "TWN"]);
 
 const EXPECTED_COUNT = 197;
 
+/** If more than this many countries fail the pageviews API, abort (incomplete JSON leak). */
+const MAX_MISSING_PAGEVIEWS = 2;
+
+/** Throttle between Wikimedia pageview requests (avoids burst 429 rate limits). */
+const PAGEVIEW_REQUEST_GAP_MS = 250;
+
 // ─── Network ──────────────────────────────────────────────────────────────────
 
 async function fetchRcEnrichment(): Promise<Map<string, RcEnrichment>> {
@@ -104,13 +110,24 @@ function getWikipediaRange(): { start: string; end: string } {
   return { start: toApiMonth(startDate), end: toApiMonth(endDate) };
 }
 
+type CountryPageviewFailure = {
+  code: string;
+  title: string;
+  reason: string;
+};
+
 async function fetchCountryPageviews(
   title: string,
   range: { start: string; end: string },
-): Promise<number | null> {
+): Promise<
+  | { kind: "ok"; views: number }
+  | { kind: "not_found" }
+  | { kind: "exhausted"; detail: string }
+> {
   const article = encodeURIComponent(title);
   const url = `${WIKIPEDIA_PAGEVIEWS_API}/${article}/monthly/${range.start}/${range.end}`;
-  const maxRetries = 4;
+  const maxRetries = 8;
+  let lastNonOkDetail = "";
 
   for (let attempt = 0; attempt <= maxRetries; attempt++) {
     const response = await fetch(url, {
@@ -119,57 +136,139 @@ async function fetchCountryPageviews(
       },
     });
 
-    if (response.status === 404) return null;
+    if (response.status === 404) {
+      return { kind: "not_found" };
+    }
+
+    const backoffMs = 250 * 2 ** attempt;
+
     if (response.status === 429) {
       if (attempt === maxRetries) {
-        return null;
+        return { kind: "exhausted", detail: "HTTP 429 after retries" };
       }
-      const waitMs = 250 * 2 ** attempt;
-      await new Promise((resolve) => setTimeout(resolve, waitMs));
-      continue;
-    }
-    if (!response.ok) {
-      if (attempt === maxRetries) return null;
-      const waitMs = 250 * 2 ** attempt;
+      const retryAfter = response.headers.get("retry-after");
+      const fromHeaderSec = retryAfter
+        ? Number.parseFloat(retryAfter)
+        : Number.NaN;
+      const fromHeaderMs =
+        Number.isFinite(fromHeaderSec) && fromHeaderSec > 0
+          ? fromHeaderSec * 1000
+          : 0;
+      const waitMs = Math.min(
+        120_000,
+        Math.max(fromHeaderMs, 1000 * 2 ** attempt),
+      );
       await new Promise((resolve) => setTimeout(resolve, waitMs));
       continue;
     }
 
-    const payload = (await response.json()) as {
+    const waitMs = backoffMs;
+
+    if (!response.ok) {
+      lastNonOkDetail = `HTTP ${response.status} ${response.statusText}`;
+      if (attempt === maxRetries) {
+        return {
+          kind: "exhausted",
+          detail: `${lastNonOkDetail} after retries`,
+        };
+      }
+      await new Promise((resolve) => setTimeout(resolve, waitMs));
+      continue;
+    }
+
+    let text: string;
+    try {
+      text = await response.text();
+    } catch (e) {
+      lastNonOkDetail = `read body: ${e instanceof Error ? e.message : String(e)}`;
+      if (attempt === maxRetries) {
+        return { kind: "exhausted", detail: lastNonOkDetail };
+      }
+      await new Promise((resolve) => setTimeout(resolve, waitMs));
+      continue;
+    }
+
+    let parsed: unknown;
+    try {
+      parsed = JSON.parse(text);
+    } catch {
+      if (attempt === maxRetries) {
+        return {
+          kind: "exhausted",
+          detail: "JSON parse failure after retries",
+        };
+      }
+      await new Promise((resolve) => setTimeout(resolve, waitMs));
+      continue;
+    }
+
+    const payload = parsed as {
       items?: Array<{ views: number }>;
     };
-    if (!payload.items || payload.items.length === 0) return null;
+
+    if (!payload.items || payload.items.length === 0) {
+      if (attempt === maxRetries) {
+        return {
+          kind: "exhausted",
+          detail: "empty items payload after retries",
+        };
+      }
+      await new Promise((resolve) => setTimeout(resolve, waitMs));
+      continue;
+    }
+
     const total = payload.items.reduce((sum, item) => sum + item.views, 0);
-    return Math.round(total / payload.items.length);
+    return {
+      kind: "ok",
+      views: Math.round(total / payload.items.length),
+    };
   }
-  return null;
+
+  return { kind: "exhausted", detail: "unexpected loop exit" };
 }
 
 async function fetchPageviewsByCountryCode(
   countries: Country[],
   wikiTitles: Record<string, string>,
-): Promise<Map<string, number>> {
+): Promise<{
+  pageviews: Map<string, number>;
+  failures: CountryPageviewFailure[];
+}> {
   const range = getWikipediaRange();
-  const result = new Map<string, number>();
-  const concurrency = 3;
-  const queue = [...countries];
+  const pageviews = new Map<string, number>();
+  const failures: CountryPageviewFailure[] = [];
 
-  const workers = Array.from({ length: concurrency }, async () => {
-    while (queue.length > 0) {
-      const country = queue.shift();
-      if (!country) continue;
-      const customTitle = wikiTitles[country.code];
-      const canonical = country.names?.en ?? country.names?.fr ?? country.code;
-      const title = customTitle ?? toWikipediaTitle(canonical);
-      const views = await fetchCountryPageviews(title, range);
-      if (views != null) {
-        result.set(country.code, views);
-      }
+  for (let i = 0; i < countries.length; i++) {
+    const country = countries[i];
+    const customTitle = wikiTitles[country.code];
+    const canonical = country.names?.en ?? country.names?.fr ?? country.code;
+    const title = customTitle ?? toWikipediaTitle(canonical);
+    const outcome = await fetchCountryPageviews(title, range);
+
+    if (outcome.kind === "ok") {
+      pageviews.set(country.code, outcome.views);
+    } else if (outcome.kind === "not_found") {
+      failures.push({
+        code: country.code,
+        title,
+        reason: "404 (article not found or no metrics)",
+      });
+    } else {
+      failures.push({
+        code: country.code,
+        title,
+        reason: outcome.detail,
+      });
     }
-  });
 
-  await Promise.all(workers);
-  return result;
+    if (i + 1 < countries.length) {
+      await new Promise((resolve) =>
+        setTimeout(resolve, PAGEVIEW_REQUEST_GAP_MS),
+      );
+    }
+  }
+
+  return { pageviews, failures };
 }
 
 // ─── Main ─────────────────────────────────────────────────────────────────────
@@ -268,7 +367,22 @@ async function main(): Promise<void> {
   const result: Country[] = [...fromWC, ...additions];
 
   // 5. Enrich with Wikipedia pageviews-based popularity index
-  const pageviewsByCode = await fetchPageviewsByCountryCode(result, wikiTitles);
+  const { pageviews: pageviewsByCode, failures: pageviewFailures } =
+    await fetchPageviewsByCountryCode(result, wikiTitles);
+
+  if (pageviewFailures.length > 0) {
+    console.warn("Wikipedia pageviews missing or failed:");
+    for (const f of pageviewFailures) {
+      console.warn(`  ${f.code} (${f.title}): ${f.reason}`);
+    }
+  }
+
+  if (pageviewFailures.length > MAX_MISSING_PAGEVIEWS) {
+    throw new Error(
+      `Too many countries without Wikipedia pageviews: ${pageviewFailures.length} (max ${MAX_MISSING_PAGEVIEWS}). Fix network or wikiTitles, then retry.`,
+    );
+  }
+
   assignPopularity(result, pageviewsByCode);
 
   // 6. Validate
@@ -350,7 +464,7 @@ async function main(): Promise<void> {
   writeFileSync(outPath, `${JSON.stringify(result, null, 2)}\n`, "utf-8");
   console.log(`✓ ${result.length} countries → ${outPath}`);
   console.log(
-    `✓ Wikipedia popularity enriched for ${pageviewsByCode.size} countries`,
+    `✓ Wikipedia popularity: ${pageviewsByCode.size} fetched, ${pageviewFailures.length} median fallback`,
   );
 }
 

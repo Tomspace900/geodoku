@@ -248,7 +248,7 @@ describe("dedupe", () => {
 });
 
 describe("assignPopularity", () => {
-  it("normalizes to 0..1 from pageview spread", () => {
+  it("maps pageviews to percentile rank 0..1 (two countries)", () => {
     const a = minimalCountry("AAA");
     const b = minimalCountry("BBB");
     const map = new Map<string, number>([
@@ -260,9 +260,64 @@ describe("assignPopularity", () => {
     expect(b.popularityIndex).toBe(1);
   });
 
-  it("is a no-op when no valid pageviews", () => {
+  it("maps three distinct pageviews to 0, 0.5, 1", () => {
+    const a = minimalCountry("AAA");
+    const b = minimalCountry("BBB");
+    const c = minimalCountry("CCC");
+    const map = new Map<string, number>([
+      ["AAA", 10],
+      ["BBB", 100],
+      ["CCC", 10_000],
+    ]);
+    assignPopularity([a, b, c], map);
+    expect(a.popularityIndex).toBe(0);
+    expect(b.popularityIndex).toBe(0.5);
+    expect(c.popularityIndex).toBe(1);
+  });
+
+  it("single country with views gets median rank 0.5", () => {
+    const only = minimalCountry("ONLY");
+    assignPopularity([only], new Map([["ONLY", 99999]]));
+    expect(only.popularityIndex).toBe(0.5);
+  });
+
+  it("uses median fallback for countries missing from pageview map", () => {
+    const a = minimalCountry("AAA");
+    const b = minimalCountry("BBB");
+    const c = minimalCountry("CCC");
+    assignPopularity(
+      [a, b, c],
+      new Map([
+        ["AAA", 10],
+        ["BBB", 100],
+      ]),
+    );
+    expect(a.popularityIndex).toBe(0);
+    expect(b.popularityIndex).toBe(1);
+    expect(c.popularityIndex).toBe(0.5);
+  });
+
+  it("uses average rank when pageview counts tie", () => {
+    const a = minimalCountry("AAA");
+    const b = minimalCountry("BBB");
+    const c = minimalCountry("CCC");
+    assignPopularity(
+      [a, b, c],
+      new Map([
+        ["AAA", 100],
+        ["BBB", 100],
+        ["CCC", 200],
+      ]),
+    );
+    expect(a.popularityIndex).toBe(0.25);
+    expect(b.popularityIndex).toBe(0.25);
+    expect(c.popularityIndex).toBe(1);
+  });
+
+  it("is a no-op when no country has valid pageviews", () => {
     const a = minimalCountry("AAA");
     assignPopularity([a], new Map());
+    expect(a.wikipediaMonthlyViews).toBeUndefined();
     expect(a.popularityIndex).toBeUndefined();
   });
 });

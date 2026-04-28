@@ -392,28 +392,54 @@ export function physicalFeaturesForCode(
   return features;
 }
 
+/** Fallback when Wikipedia pageviews are missing (`assignPopularity` only). Matches median in percentile ranking. */
+const POPULARITY_MEDIAN_FALLBACK = 0.5;
+
+/**
+ * Computes `popularityIndex` as **percentile rank** (0–1 uniform over fetched pageviews).
+ * Tie ranks use the average index. Countries without pageviews in the map receive the median fallback.
+ */
 export function assignPopularity(
   countries: Country[],
   pageviewsByCode: Map<string, number>,
 ): void {
-  const viewValues = countries
-    .map((country) => pageviewsByCode.get(country.code))
-    .filter((value): value is number => value !== undefined && value > 0);
-
-  if (viewValues.length === 0) return;
-
-  const minLog = Math.log10(Math.min(...viewValues));
-  const maxLog = Math.log10(Math.max(...viewValues));
-  const span = Math.max(1e-6, maxLog - minLog);
-
   for (const country of countries) {
-    const views = pageviewsByCode.get(country.code);
-    if (!views || views <= 0) continue;
-    const logViews = Math.log10(views);
-    country.wikipediaMonthlyViews = views;
-    country.popularityIndex = Math.min(
-      1,
-      Math.max(0, (logViews - minLog) / span),
-    );
+    const v = pageviewsByCode.get(country.code);
+    if (typeof v === "number" && v > 0) {
+      country.wikipediaMonthlyViews = v;
+    }
+  }
+
+  const withViews = countries.filter(
+    (c) =>
+      typeof c.wikipediaMonthlyViews === "number" &&
+      c.wikipediaMonthlyViews > 0,
+  );
+  const n = withViews.length;
+  if (n === 0) return;
+
+  withViews.sort((a, b) => a.wikipediaMonthlyViews! - b.wikipediaMonthlyViews!);
+
+  if (n === 1) {
+    withViews[0].popularityIndex = POPULARITY_MEDIAN_FALLBACK;
+  } else {
+    let i = 0;
+    while (i < n) {
+      const v = withViews[i].wikipediaMonthlyViews!;
+      let j = i + 1;
+      while (j < n && withViews[j].wikipediaMonthlyViews === v) j++;
+      const avgIndex = (i + (j - 1)) / 2;
+      const popularityIndex = avgIndex / (n - 1);
+      for (let k = i; k < j; k++) {
+        withViews[k].popularityIndex = popularityIndex;
+      }
+      i = j;
+    }
+  }
+
+  for (const c of countries) {
+    if (c.popularityIndex === undefined) {
+      c.popularityIndex = POPULARITY_MEDIAN_FALLBACK;
+    }
   }
 }
