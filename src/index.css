@@ -25,18 +25,19 @@
     --ring: 204 12% 32%;
     --radius: 0.5rem;
 
-    --color-surface: #f9f9f9;
-    --color-surface-low: #f2f4f4;
-    --color-surface-lowest: #ffffff;
-    --color-surface-highest: #dde4e5;
-    --color-on-surface: #2d3435;
-    --color-on-surface-variant: #56606e;
-    --color-outline-variant: #adb3b4;
-    --color-brand: #842cd3;
-    --color-rarity-common: #7c3aed;
-    --color-rarity-uncommon: #2563eb;
-    --color-rarity-rare: #d97706;
-    --color-rarity-ultra: #dc2626;
+    /* Valeurs HSL sans wrapper hsl() : permettent aux utilitaires Tailwind type bg-…/15 de fonctionner. */
+    --color-surface: 0 0% 97.6%;
+    --color-surface-low: 180 8.3% 95.3%;
+    --color-surface-lowest: 0 0% 100%;
+    --color-surface-highest: 187.5 13.3% 88.2%;
+    --color-on-surface: 187.5 8.2% 19.2%;
+    --color-on-surface-variant: 215 12.2% 38.4%;
+    --color-outline-variant: 188.6 4.5% 69.2%;
+    --color-brand: 271.6 65.5% 50%;
+    --color-rarity-common: 262.1 83.3% 57.8%;
+    --color-rarity-uncommon: 221.2 83.2% 53.3%;
+    --color-rarity-rare: 32.1 94.6% 43.7%;
+    --color-rarity-ultra: 0 72.2% 50.6%;
     --shadow-editorial: 0 20px 40px rgba(45, 52, 53, 0.06);
   }
 
@@ -62,18 +63,18 @@
       --input: 217.2 32.6% 17.5%;
       --ring: 212.7 26.8% 83.9%;
 
-      --color-surface: #14181a;
-      --color-surface-low: #1d2224;
-      --color-surface-lowest: #262b2e;
-      --color-surface-highest: #3b4447;
-      --color-on-surface: #e7ebec;
-      --color-on-surface-variant: #a8b2b9;
-      --color-outline-variant: #5c6467;
-      --color-brand: #a965e0;
-      --color-rarity-common: #a78bfa;
-      --color-rarity-uncommon: #60a5fa;
-      --color-rarity-rare: #fbbf24;
-      --color-rarity-ultra: #f87171;
+      --color-surface: 200 13% 9%;
+      --color-surface-low: 197.1 10.8% 12.7%;
+      --color-surface-lowest: 202.5 9.5% 16.5%;
+      --color-surface-highest: 195 9.2% 25.5%;
+      --color-on-surface: 192 11.6% 91.6%;
+      --color-on-surface-variant: 204.7 10.8% 69.2%;
+      --color-outline-variant: 196.4 5.6% 38.2%;
+      --color-brand: 273.2 66.5% 63.7%;
+      --color-rarity-common: 255.1 91.7% 76.3%;
+      --color-rarity-uncommon: 213.1 93.9% 67.8%;
+      --color-rarity-rare: 43.3 96.4% 56.3%;
+      --color-rarity-ultra: 0 90.6% 70.8%;
       --shadow-editorial: 0 20px 40px rgba(0, 0, 0, 0.4);
     }
   }
