@@ -24,6 +24,15 @@ const FEEDBACK_STORAGE_PREFIX = "geodoku:rated:";
 
 type DifficultyRating = "too_easy" | "balanced" | "too_hard";
 
+const DIFFICULTY_RATINGS: ReadonlyArray<{
+  rating: DifficultyRating;
+  labelKey: "ui.feedbackTooEasy" | "ui.feedbackBalanced" | "ui.feedbackTooHard";
+}> = [
+  { rating: "too_easy", labelKey: "ui.feedbackTooEasy" },
+  { rating: "balanced", labelKey: "ui.feedbackBalanced" },
+  { rating: "too_hard", labelKey: "ui.feedbackTooHard" },
+];
+
 type Props = {
   state: GameState;
   gridNumber: number;
@@ -125,7 +134,6 @@ export function ResultScreen({
           <X size={20} strokeWidth={1.75} />
         </button>
 
-        {/* Title */}
         <div className="flex flex-col items-center gap-2 text-center pr-8">
           <h2
             id="result-screen-title"
@@ -139,7 +147,6 @@ export function ResultScreen({
           </p>
         </div>
 
-        {/* Score */}
         <div className="flex flex-col items-center gap-1">
           <span className="font-serif text-5xl font-medium text-brand">
             {score.percent}%
@@ -149,7 +156,6 @@ export function ResultScreen({
           </span>
         </div>
 
-        {/* Emoji grid */}
         <div className="flex flex-col items-center gap-1">
           <p className="text-[10px] tracking-widest text-on-surface-variant uppercase mb-1">
             {t("ui.yourGrid")}
@@ -178,10 +184,8 @@ export function ResultScreen({
           </p>
         </div>
 
-        {/* Achievement */}
         <AchievementCard state={state} />
 
-        {/* Feedback */}
         <div className="flex flex-col gap-2">
           <p className="text-[10px] tracking-widest text-on-surface-variant uppercase text-center">
             {t("ui.feedbackQuestion")}
@@ -192,38 +196,22 @@ export function ResultScreen({
             </p>
           ) : (
             <div className="grid grid-cols-1 gap-2 sm:grid-cols-3">
-              <Button
-                type="button"
-                variant="secondary"
-                disabled={ratingPending}
-                className="bg-surface-highest text-on-surface hover:bg-surface-highest/80"
-                onClick={() => handleRateDifficulty("too_easy")}
-              >
-                {t("ui.feedbackTooEasy")}
-              </Button>
-              <Button
-                type="button"
-                variant="secondary"
-                disabled={ratingPending}
-                className="bg-surface-highest text-on-surface hover:bg-surface-highest/80"
-                onClick={() => handleRateDifficulty("balanced")}
-              >
-                {t("ui.feedbackBalanced")}
-              </Button>
-              <Button
-                type="button"
-                variant="secondary"
-                disabled={ratingPending}
-                className="bg-surface-highest text-on-surface hover:bg-surface-highest/80"
-                onClick={() => handleRateDifficulty("too_hard")}
-              >
-                {t("ui.feedbackTooHard")}
-              </Button>
+              {DIFFICULTY_RATINGS.map(({ rating, labelKey }) => (
+                <Button
+                  key={rating}
+                  type="button"
+                  variant="secondary"
+                  disabled={ratingPending}
+                  className="bg-surface-highest text-on-surface hover:bg-surface-highest/80"
+                  onClick={() => handleRateDifficulty(rating)}
+                >
+                  {t(labelKey)}
+                </Button>
+              ))}
             </div>
           )}
         </div>
 
-        {/* Share button */}
         <Button
           onClick={handleShare}
           className="w-full bg-on-surface text-surface-lowest hover:bg-on-surface/90 gap-2"
@@ -241,7 +229,6 @@ export function ResultScreen({
           {t("ui.viewAnswers")}
         </button>
 
-        {/* Footer */}
         <p className="text-center text-xs text-on-surface-variant italic">
           {t("ui.comeBackTomorrowGrid")}
         </p>

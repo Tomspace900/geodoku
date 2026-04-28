@@ -26,10 +26,8 @@ export function GameGrid({ state, onCellClick }: Props) {
       className="grid gap-1.5"
       style={{ gridTemplateColumns: "minmax(0,1fr) repeat(3, minmax(0,1fr))" }}
     >
-      {/* Corner spacer */}
       <div />
 
-      {/* Column headers */}
       {COLS.map((col) => {
         const constraint = CONSTRAINT_MAP.get(state.cols[col]);
         const label = constraint ? t(constraint.labelKey) : state.cols[col];
@@ -40,19 +38,16 @@ export function GameGrid({ state, onCellClick }: Props) {
         );
       })}
 
-      {/* Rows */}
       {ROWS.map((row) => {
         const rowConstraint = CONSTRAINT_MAP.get(state.rows[row]);
         const rowLabel = rowConstraint
           ? t(rowConstraint.labelKey)
           : state.rows[row];
         return [
-          /* Row header */
           <div key={`row-${row}`} className={cn(headerClass, "p-1.5")}>
             {rowLabel}
           </div>,
 
-          /* Cells */
           ...COLS.map((col) => {
             const key = `${row},${col}` as CellKey;
             const cell = state.cells[key];

@@ -37,8 +37,6 @@ export function ScheduleCalendar({
     onSelectDate(str);
   }
 
-  // Bouton de jour custom : affiche un point coloré sous le chiffre
-  // si la date a une grille planifiée
   function ScheduleDayButton({
     children,
     day,
@@ -86,7 +84,6 @@ export function ScheduleCalendar({
             "bg-surface-highest text-on-surface rounded-md data-[selected=true]:rounded-none",
         }}
       />
-      {/* Légende */}
       <div className="flex gap-3 mt-3 pt-3 border-t border-outline-variant/15">
         {(
           [

@@ -219,23 +219,6 @@ export function computeCellDifficulty(
   );
 }
 
-/**
- * Average cell difficulty across all 9 cells of a 3×3 grid.
- */
-export function computeGridDifficulty(
-  rows: string[],
-  cols: string[],
-  matches: Record<string, Set<string>>,
-): number {
-  let total = 0;
-  for (const rowId of rows) {
-    for (const colId of cols) {
-      total += computeCellDifficulty(rowId, colId, matches);
-    }
-  }
-  return Math.round(total / (rows.length * cols.length));
-}
-
 // ─── Finalization ─────────────────────────────────────────────────────────────
 
 /**

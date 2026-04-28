@@ -10,7 +10,6 @@ import {
 import {
   buildConstraintMatches,
   computeCellDifficulty,
-  computeGridDifficulty,
   finalizeGrid,
   generateDiversePool,
   intersect,
@@ -237,27 +236,6 @@ describe("topKPopularity", () => {
       .sort((x, y) => y - x);
     const manual = (sorted[0] + sorted[1] + sorted[2]) / 3;
     expect(topKPopularity(codes, 3)).toBeCloseTo(manual, 5);
-  });
-});
-
-// ─── computeGridDifficulty ────────────────────────────────────────────────────
-
-describe("computeGridDifficulty", () => {
-  it("returns an integer in [0, 100] for a real grid", () => {
-    const matches = buildConstraintMatches();
-
-    let result: { rows: string[]; cols: string[] } | null = null;
-    for (let i = 0; i < 100 && !result; i++) {
-      const seed = CONSTRAINTS[i % CONSTRAINTS.length];
-      result = tryBuildGridWithSeed(seed.id, "row", matches);
-    }
-    expect(result).not.toBeNull();
-    if (result) {
-      const diff = computeGridDifficulty(result.rows, result.cols, matches);
-      expect(Number.isInteger(diff)).toBe(true);
-      expect(diff).toBeGreaterThanOrEqual(0);
-      expect(diff).toBeLessThanOrEqual(100);
-    }
   });
 });
 

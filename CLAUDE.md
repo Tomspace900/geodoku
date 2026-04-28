@@ -30,55 +30,77 @@ Geodoku est un mini-jeu web quotidien inspiré de Wordle et du Sudoku, sur le th
 ```
 geodoku/
 ├── convex/
-│   ├── schema.ts                # tables : gridCandidates, grids, guesses, dailyStats
-│   ├── crons.ts                 # génération nocturne + promotion quotidienne
-│   ├── grids.ts                 # actions/queries/mutations publiques et admin
+│   ├── schema.ts                # tables : gridCandidates, grids, guesses, dailyStats, gridFeedback
+│   ├── crons.ts                 # ensureTomorrowGrid (daily) + autoRefillPool (weekly)
+│   ├── grids.ts                 # actions/queries/mutations publiques et admin (pool-based)
 │   ├── guesses.ts               # mutation submitGuess
 │   ├── gridData.ts              # queries/mutations internes (accès DB)
+│   ├── seed.ts                  # seedHistoricalGrids : pool puis J-30..J (échoue si grids non vide)
+│   ├── wipe.ts                  # wipeAllData (paginé, dev only)
 │   └── lib/
-│       ├── gridGenerator.ts     # algo pur : backtracking + scoring (importe pays + contraintes depuis src/)
-│       └── gridGenerator.test.ts
+│       ├── gridConstants.ts     # tunables (hard filters, pool, scheduler weights)
+│       ├── gridGenerator.ts     # pur : backtracking + finalize + generateDiversePool (importe pays/contraintes depuis src/)
+│       ├── gridScheduler.ts     # pur : selectNextGrid (greedy : freshness + overuse + novelty + difficulty)
+│       └── *.test.ts
 ├── scripts/
+│   ├── simulate-scheduling.ts   # sim 30 jours sans Convex (pool + scheduler), versionné
 │   ├── prod/                    # build & validation (versionné)
-│   │   ├── build-countries.ts   # one-shot : génère countries.json
-│   │   └── validate-constraints.ts
-│   └── dev/                     # audits locaux (dossier gitignoré, pas au dépôt)
+│   │   ├── build-countries.ts   # one-shot : génère countries.json (Wikimedia + popularité)
+│   │   ├── buildCountriesLib.ts # parseFlagFromAlt, aliases, gameplay tags, assignPopularity… (+ tests)
+│   │   ├── patches.json         # overrides : aliases, flags, wikiTitles, NATO, Commonwealth, monarchies, peaks…
+│   │   ├── patches.test.ts
+│   │   └── validate-constraints.ts  # rapport de calibrage des contraintes
+│   └── dev/                     # audits locaux (gitignored ; exclu de tsconfig)
 ├── src/
 │   ├── main.tsx
 │   ├── App.tsx                  # toggle / (GamePage) ou /admin (AdminPage)
 │   ├── app/
 │   │   └── providers.tsx        # ConvexProvider
+│   ├── i18n/                    # translate() FR/EN, LocaleContext, locales/{fr,en}.ts
 │   ├── features/
 │   │   ├── game/
-│   │   │   ├── components/      # Header, GameGrid, Cell, GuessModal, ResultScreen, AchievementCard, HowToPlayLink, GamePage
+│   │   │   ├── components/      # Header, GameGrid, Cell, GuessModal, ResultScreen, SolutionGrid, RarityBadge, AchievementCard, HowToPlayLink, LocaleSwitcher, GamePage
 │   │   │   ├── hooks/useGameState.ts
-│   │   │   ├── logic/           # reducer, validation, rarity, share, constants, constraints
+│   │   │   ├── logic/           # reducer, validation, rarity, share, constants, constraints (51 contraintes / 15 catégories)
 │   │   │   │   └── __tests__/
 │   │   │   └── types.ts
 │   │   ├── countries/
 │   │   │   ├── data/countries.json
-│   │   │   ├── lib/search.ts    # match-sorter wrapper
-│   │   │   │   └── __tests__/
-│   │   │   └── types.ts         # type Country
+│   │   │   ├── lib/search.ts    # match-sorter wrapper (+ __tests__)
+│   │   │   └── types.ts         # type Country (regime, physicalFeatures, flagColors/Symbols, popularityIndex…)
+│   │   ├── errors/              # ErrorBoundary, fallback UI
 │   │   └── admin/
 │   │       ├── AdminPage.tsx
-│   │       ├── components/
+│   │       ├── components/      # PoolOverviewPanel, ScheduleCalendar, GridDetail, GridPreview, UpcomingGridsPanel, DiversityMetricsPanel
+│   │       ├── logic/           # display.ts (constraintLabel, difficulty pills/dots), scheduling.ts (dateToStr)
 │   │       └── hooks/useAdminToken.ts
-│   ├── components/ui/           # shadcn dump
+│   ├── components/ui/           # shadcn dump (button, input, accordion, dialog, popover…)
 │   └── lib/utils.ts             # cn()
 ├── biome.json
 ├── tailwind.config.ts
-├── tsconfig.json
+├── tsconfig.json                # `include: ["src", "scripts"]`, `exclude: ["scripts/dev"]`
 ├── vite.config.ts
 └── package.json
 ```
+
+### Pays, contraintes et difficulté (`countries.json`, `gridConstants.ts`, `gridGenerator.ts`)
+
+- **51 contraintes / 15 catégories** ([`src/features/game/logic/constraints.ts`](src/features/game/logic/constraints.ts)) : `continent`, `water_access`, `borders_count`, `borders_pivot`, `area`, `population`, `language`, `flag`, `latitude`, `subregion`, `event`, `political` (EU, G20, NATO, Commonwealth), `regime` (monarchie), `physical` (équateur, Méditerranée, Caraïbes, pic > 5000 m), `density`. Le type `Country` porte les axes nécessaires : `regime`, `physicalFeatures`, `groups`, `flagColors`, `flagSymbols`, `events`, `popularityIndex`. Toutes les contraintes restent dans la sweet-spot (3..15 pays valides côté `MIN_CELL_SIZE` / `MAX_CELL_SIZE`).
+
+- **Build `pnpm build:countries`.** Enrichit chaque pays avec des **pageviews mensuelles** (API REST Wikimedia `en.wikipedia`). Requêtes **séquentielles** avec intervalle entre pays et **retry / backoff** sur HTTP 429 ; échec du script si trop de pays sans métriques (évite de committer un JSON incomplet). Les titres d’article ambigus se surchargent via **`wikiTitles`** dans [`scripts/prod/patches.json`](scripts/prod/patches.json) (ex. `Georgia_(country)`, `The_Gambia`). Les listes additionnelles (NATO, Commonwealth, monarchies, mers/équateur, pics > 5000 m) vivent aussi dans `patches.json` et sont consommées par [`buildCountriesLib.ts`](scripts/prod/buildCountriesLib.ts) (couvert par `buildCountriesLib.test.ts` + `patches.test.ts`).
+
+- **`popularityIndex`.** [0, 1], **percentile rank** des vues sur l’ensemble du jeu (ex-aequo → rang moyen). Calcul dans `assignPopularity`. Pays sans pageviews obtenues au build : **fallback médiane 0,5**.
+
+- **`computeCellDifficulty`** ([`convex/lib/gridGenerator.ts`](convex/lib/gridGenerator.ts)). Score 0–100 par case : cardinalité du pool × pondérations « easy / medium / hard » des deux contraintes × **facteur popularité** dérivé de la moyenne des **3 pays les plus connus** du pool (`topKPopularity`), puis courbe `1 − exp(−raw × k)`. Constantes **`POPULARITY_WEIGHT`**, **`POPULARITY_TOP_K`**, **`DIFFICULTY_CURVE_K`** en tête de fichier. Un changement de ces constantes ou une regénération massive de `countries.json` rend les **`cellDifficulties` / `difficultyEstimate`** déjà stockées en Convex désuètes pour la comparaison ; en dev, `wipe` + `seed` si besoin d’historique cohérent.
+
+- **`gridConstants.ts`** centralise *tous* les tunables backend : hard filters (`MIN_CELL_SIZE`, `MAX_SAME_CATEGORY`…), pool (`TARGET_GRIDS_PER_SEED`, `MAX_OVERLAP_BETWEEN_GRIDS`), poids du scheduler (`HISTORY_WINDOW`, `TARGET_DIFFICULTY`, `FRESH_CONSTRAINT_BONUS`, `OVERUSE_CONSTRAINT_MALUS`, `FRESH_COUNTRY_BONUS`, `DIFFICULTY_PROXIMITY_WEIGHT`), seuil `POOL_LOW_THRESHOLD`. Pour calibrer : ajuster ici, lancer `pnpm simulate:scheduling` (sim 30 jours, sans Convex) puis, si OK, `wipe:db` + `seed:grids` en dev pour repartir d’un historique cohérent.
 
 **Règles de placement.**
 
 - Toute logique métier pure vit dans `features/<feature>/logic/`. Zéro import React, zéro import Convex. Testée en isolation.
 - Les hooks React (`features/<feature>/hooks/`) sont la seule couche qui connecte logique pure + Convex + état React.
 - Les composants ne calculent rien de significatif. Ils consomment l'état du reducer et dispatchent des actions.
-- Si un fichier est **dupliqué** dans `convex/lib/` par rapport à `src/features/` (copie statique, pas un import), il doit porter un commentaire en tête : `// Copie de src/... — ne pas éditer ici, regénérer si la source change.` — `gridGenerator.ts` n’est pas une copie : il importe directement `countries.json`, `constraints`, types depuis `src/`.
+- Pas de copie statique entre `src/` et `convex/lib/` : `gridGenerator.ts`, `gridScheduler.ts` et `gridConstants.ts` importent directement `countries.json`, `constraints`, types depuis `src/`. Si une copie devenait inévitable (sandboxing), porter un commentaire `// Copie de src/... — ne pas éditer ici, regénérer si la source change.` en tête du fichier dupliqué.
 
 ## 4. Conventions de code
 
@@ -141,6 +163,8 @@ Inspiration : publications digitales haut de gamme type NYT Games. Spacieux, sop
 | `on-surface`         | `#2d3435` | Texte principal (charcoal, jamais `#000`)               |
 | `on-surface-variant` | `#56606e` | Texte secondaire, labels                                |
 | `outline-variant`    | `#adb3b4` | Séparateurs, à utiliser à **15% opacity max**           |
+
+**Format de stockage.** Les tokens vivent dans [`src/index.css`](src/index.css) en **canaux HSL bruts** (`<h s% l%>` sans wrapper `hsl()`) et sont consommés via `hsl(var(--…) / <alpha-value>)` dans Tailwind. C'est ce qui fait fonctionner les utilitaires d'opacité (`bg-brand/10`, `text-on-surface-variant/60`, `bg-outline-variant/15`…). **Ne jamais** réintroduire des valeurs `hsl(…)` ou `#hex` dans les `--color-*` : ça casserait silencieusement toutes les opacités.
 
 **Accent éditorial.**
 
@@ -268,35 +292,61 @@ Ces classes ne sont pas toutes définies dans Tailwind, elles servent de vocabul
 
 ## 6. Backend Convex — ce qu'il faut savoir
 
+**Architecture en pool.** On ne génère plus une grille par jour à l’aveugle : on entretient un **pool** de grilles candidates pré-générées (status `available`), et un **scheduler greedy** choisit chaque jour celle qui maximise la diversité par rapport aux 15 dernières grilles publiées. Pipeline :
+
+1. `generateDiversePool` ([`convex/lib/gridGenerator.ts`](convex/lib/gridGenerator.ts)) parcourt chaque contrainte comme **seed**, tente jusqu'à `MAX_ATTEMPTS_PER_SEED` backtrackings, garde les grilles qui passent les hard filters et n'overlap pas trop avec les grilles déjà en pool (`MAX_OVERLAP_BETWEEN_GRIDS`).
+2. Chaque grille est **finalisée** avec ses métadonnées (`cellDifficulties`, `difficultyEstimate`, `difficultyTags`, `countryPool`, `categories`, `seedConstraint`).
+3. `selectNextGrid` ([`convex/lib/gridScheduler.ts`](convex/lib/gridScheduler.ts)) score chaque grille disponible : `fresh_constraints × bonus − overuse × malus + new_countries × bonus + difficulty_proximity × weight` (cible `TARGET_DIFFICULTY`), prend la meilleure, l'insère dans `grids` et la marque `used`.
+
 **Schéma actuel.**
 
-- `gridCandidates` : grilles générées, status `pending | approved | rejected | used`
-- `grids` : grilles assignées à une date, clé = `date` (YYYY-MM-DD)
-- `guesses` : compteur par `(date, cellKey, countryCode)`
-- `dailyStats` : dénormalisation `(date, cellKey) → totalGuesses` pour rareté O(1)
+- `gridCandidates` : pool de grilles ; status `available | used | rejected`. Champs : `rows`, `cols`, `validAnswers`, `metadata` (`seedConstraint`, `constraintIds`, `categories`, `avgCellSize`, `minCellSize`, `countryPool`, `difficultyEstimate`, `difficultyTags`, `cellDifficulties`), `usedAt`, `usedForDate`.
+- `grids` : grille assignée à une date (clé = `date` YYYY-MM-DD) ; pointe vers son `candidateId`.
+- `guesses` : compteur par `(date, cellKey, countryCode)`.
+- `dailyStats` : dénormalisation `(date, cellKey) → totalGuesses` pour rareté O(1).
+- `gridFeedback` : agrégat par date (`tooEasyCount`, `balancedCount`, `tooHardCount`, `wins`, `losses`, `totalLivesLeft`, `totalFilledCells`, `totalGuessesSubmitted`) écrit par `submitGridFeedback` en fin de partie.
 
-**Crons.**
+**Crons** ([`convex/crons.ts`](convex/crons.ts)).
 
-- 23:00 UTC : `generateDailyCandidates` — génère 5 candidats avec l'algo de backtracking
-- 23:30 UTC : `ensureTodayGrid` — assigne une grille approuvée à la date du lendemain. Fallback : auto-approve le meilleur candidate pending si la queue est vide.
+- **Daily 23:30 UTC** — `ensureTomorrowGrid` → `ensureGridForDate(tomorrow)` : pioche dans le pool via le scheduler ; si pool vide, **fallback d'urgence** (génération inline avec un seed aléatoire, sans contrôle d'overlap) plutôt que de servir une page sans grille.
+- **Weekly Sunday 04:00 UTC** — `autoRefillPool` : si `available < POOL_LOW_THRESHOLD`, lance `generatePoolInternal` pour reremplir le stock.
+
+Avertissement console (`POOL LOW`) émis dès que le pool restant passe sous le seuil après une assignation — visible aussi dans `PoolOverviewPanel`.
+
+**Endpoints clés** ([`convex/grids.ts`](convex/grids.ts)).
+
+- `getTodayGrid` (query, public) — grille du jour ou `null`.
+- `getScheduledGrids` (query, admin UI) — grilles depuis J-30, ordre asc.
+- `getGridDetailByDate` (query, admin UI) — grille + métadonnées de son candidate.
+- `getPoolStats` (query, admin) — taille du pool par status, couverture par contrainte/pays.
+- `getExposureStats` (query, admin) — exposition passée (15 grilles) vs. à venir (14 jours), pour les barres comparées du dashboard.
+- `getUpcomingScheduledPreview` (query, admin) — 1..14 jours, marque chaque jour `scheduled` (déjà inscrit) / `predicted` (simulé en lecture seule depuis le pool) / `missing`.
+- `getGridFeedbackStats` (query, admin) — stats de feedback observé (winRate, difficulté ressentie, etc.).
+- `submitGridFeedback` (mutation, public) — feedback de fin de partie.
+- `generatePool` (action, admin avec `adminToken`) — déclenche manuellement un refill du pool.
 
 **Auth admin.**
 
 - Token bearer via variable d'environnement Convex `ADMIN_TOKEN`.
-- Toutes les mutations admin prennent `adminToken: string` et throwent `ConvexError("Unauthorized")` si mismatch.
+- Toute mutation/action admin prend `adminToken: string` et throw `ConvexError("Unauthorized")` si mismatch.
 - Côté client : `sessionStorage` via hook `useAdminToken` (effacé à la fermeture de l’onglet).
 
-**Mode Advanced (admin).**
+**Admin (UI).**
 
-- Toggle dans le header `AdminPage` (`useAdvancedMode`, persisté en `sessionStorage`, off par défaut).
-- Activé : affiche `TuningConstantsPanel` (config active de `gridGenerator.ts`) sous le header, et `AdvancedMetricsPanel` (breakdown quality/difficulty avec inputs métadonnées) dans chaque `CandidateCard` et le `GridDetail`.
-- Le breakdown utilise `computeQualityBreakdown` / `computeDifficultyBreakdown` exportés par `convex/lib/gridGenerator.ts` — purs TS, recalculés côté client à partir de `metadata`.
+[`src/features/admin/AdminPage.tsx`](src/features/admin/AdminPage.tsx) compose :
+
+- `PoolOverviewPanel` — taille du pool, runway, bouton « Générer un pool » (gated par token), barres comparées d'exposition passée vs à venir (constraints + countries), badge ambre si une contrainte apparaît dans ≥ 33 % des 15 dernières grilles.
+- `ScheduleCalendar` + `GridDetail` — calendrier avec point de difficulté par jour, sélection → preview détaillée avec `cellDifficulties` colorées.
+- `UpcomingGridsPanel` — accordéon (shadcn) sur les 7 prochains jours, distinguant `scheduled` (vert) et `predicted` (violet, lecture seule).
+- `DiversityMetricsPanel` — corrélation difficulté estimée ↔ feedback observé.
+
+Pas de panneau de tuning des constantes : on ajuste dans `gridConstants.ts`, on simule (`simulate-scheduling`), puis `wipe:db` + `seed:grids` en dev si on veut un historique cohérent.
 
 **Règles Convex à respecter.**
 
 - Pas de `.filter()` sur les queries — utiliser les index.
 - Nommage des index : `by_<field>_and_<field>` (snake_case avec `and`).
-- Lorsqu’on duplique un fichier de `src/` vers `convex/lib/` (mal nécessaire du sandboxing), porter un commentaire explicite en tête. Ici, pays + contraintes vivent dans `src/` et sont importés par `gridGenerator.ts` plutôt que recopiés.
+- `gridGenerator`, `gridScheduler`, `gridConstants` sont **purs** (pas de `convex/server` ni de `_generated`) : on peut les charger depuis Vitest, depuis `scripts/simulate-scheduling.ts`, et depuis les actions Convex sans duplication.
 
 <!-- convex-ai-start -->
 
@@ -321,18 +371,22 @@ pnpm lint                         # Biome
 pnpm test                         # Vitest
 
 # Génération de données
-pnpm build:countries              # régénère countries.json
+pnpm build:countries              # régénère countries.json (fetch Wikimedia EN + popularityIndex percentile)
 pnpm validate:constraints         # rapport de calibrage des contraintes
 
-# Seed historique (DB vide ou `--force` après wipe) — internal action `seed:seedHistoricalGrids`
-pnpm seed:grids                        # idempotent si `grids` non vide
-pnpm seed:grids:force                 # forcer (dev uniquement)
+# Simulation hors-ligne (sans Convex) — pool + 30 jours de scheduling, pass/fail checks
+pnpm simulate:scheduling
+
+# Seed historique (échoue si `grids` non vide — wipe en dev avant reseed) — `seed:seedHistoricalGrids`
+pnpm seed:grids
 
 # Tuning loop (dev local) :
-#   1. ajuster les constantes dans convex/lib/gridGenerator.ts
-#   2. wipe + reseed pour régénérer 15 grilles avec les nouveaux paramètres
-#   3. inspecter dans /admin avec le toggle Advanced ON
-pnpm wipe:db                          # internal action wipe:wipeAllData (paginé)
+#   1. ajuster les tunables dans convex/lib/gridConstants.ts (hard filters, scheduler weights, popularity)
+#      ou les courbes dans convex/lib/gridGenerator.ts (POPULARITY_WEIGHT, DIFFICULTY_CURVE_K…)
+#   2. simuler hors-ligne avec `pnpm simulate:scheduling` pour valider la santé du pool
+#   3. wipe + reseed pour régénérer un historique cohérent côté Convex
+#   4. inspecter dans /admin (PoolOverviewPanel + UpcomingGridsPanel)
+pnpm wipe:db                      # internal action wipe:wipeAllData (paginé)
 
 # Admin Convex
 pnpm dlx convex@latest env set ADMIN_TOKEN "xxx"

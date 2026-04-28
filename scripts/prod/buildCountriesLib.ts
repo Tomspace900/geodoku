@@ -10,8 +10,6 @@ import type {
   WaterAccess,
 } from "../../src/features/countries/types.ts";
 
-export type ContinentName = Country["continent"];
-
 export interface AliasOverride {
   fr?: string[];
   en?: string[];
@@ -253,8 +251,6 @@ export function rcEnrichmentMapFromRows(
  * - Wording that omits a colour, uses unusual vocabulary, or describes only an emblem
  *   can miss colours; some cases are fixed in `patches.json` (`overrides` / `flagOverrides`)
  *   for politics, heraldry, or intentional game balance.
- * - `scripts/prod/audit-flag-color-gaps.ts` (see `pnpm audit:flag-colors`) compares this
- *   output to the built `countries.json` to spot drift; that does not prove 100% API coverage.
  */
 export function parseFlagFromAlt(alt: string | undefined): {
   flagColors: FlagColor[];
@@ -339,11 +335,11 @@ export function toWikipediaTitle(name: string): string {
 }
 
 export function mergeFlagFields(
-  _code: string,
+  code: string,
   parsed: { flagColors: FlagColor[]; flagSymbols: FlagSymbol[] },
   patches: Patches,
 ): Pick<Country, "flagColors" | "flagSymbols"> {
-  const o = patches.flagOverrides?.[_code];
+  const o = patches.flagOverrides?.[code];
   if (o?.flagColors != null || o?.flagSymbols != null) {
     return {
       flagColors: o.flagColors ?? parsed.flagColors,

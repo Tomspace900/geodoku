@@ -1,3 +1,4 @@
+import { Button } from "@/components/ui/button";
 import { constraintLabel } from "@/features/admin/logic/display";
 import { getCountryByCode } from "@/features/countries/lib/search";
 import { useAction, useQuery } from "convex/react";
@@ -75,7 +76,6 @@ function ExposureList({
       <p className="mb-2 text-[10px] font-semibold text-on-surface-variant tracking-widest uppercase">
         {title}
       </p>
-      {/* Column headers */}
       <div className="mb-1.5 flex items-center gap-2">
         <span className="w-28 shrink-0" />
         <span className="flex-1 text-center text-[9px] uppercase tracking-widest text-on-surface-variant/60">
@@ -238,17 +238,15 @@ export function PoolOverviewPanel({
 
       <div className="mb-6">
         <div className="flex items-center gap-3">
-          <button
+          <Button
             type="button"
             onClick={handleGenerate}
             disabled={status === "loading"}
-            className="inline-flex items-center gap-2 rounded-md bg-on-surface px-4 py-2 text-sm font-medium text-surface-lowest transition-opacity hover:opacity-90 disabled:opacity-60"
+            className="bg-on-surface text-surface-lowest hover:bg-on-surface/90"
           >
-            {status === "loading" && (
-              <Loader2 className="h-3.5 w-3.5 animate-spin" />
-            )}
+            {status === "loading" && <Loader2 className="animate-spin" />}
             {status === "loading" ? "Génération…" : "Générer une batch"}
-          </button>
+          </Button>
           {typeof status === "object" && (
             <span className="text-xs text-on-surface-variant">
               {status.report.totalGenerated} grille
