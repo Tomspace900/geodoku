@@ -25,6 +25,9 @@ export const fr = {
     viewAnswers: "Voir les réponses",
     closeResult: "Fermer",
     searchResultUsed: "Déjà utilisé",
+    solutionRarityEyebrow: "Rareté",
+    solutionRarityHint:
+      "Les pourcentages indiquent la part des joueurs du jour ayant soumis ce pays pour la case ; ils s’affichent lorsqu’au moins {minGuessForPct}\u00A0soumissions ont été enregistrées pour cette case.",
   },
   howToPlay: {
     title: "Comment jouer\u00A0?",

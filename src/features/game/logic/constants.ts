@@ -18,6 +18,12 @@ export const RARITY_TIERS = {
   // ultra: <= 10%
 } as const;
 
+/**
+ * Nombre minimal de soumissions agrégées pour une case avant d’afficher
+ * le pourcentage de joueurs par pays (grille solution).
+ */
+export const MIN_CELL_TOTAL_GUESSES_FOR_SHARE_PERCENT = 10;
+
 // Scoring
 export const COMPLETION_POINTS_PER_CELL = 20;
 export const RARITY_POINTS = {

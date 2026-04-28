@@ -1,6 +1,7 @@
 import { ErrorScreen } from "@/features/errors/components/ErrorScreen";
 import { useBackendDownTimeout } from "@/features/errors/hooks/useBackendDownTimeout";
 import { useGameState } from "@/features/game/hooks/useGameState";
+import { cn } from "@/lib/utils";
 import { useQuery } from "convex/react";
 import { useEffect, useRef, useState } from "react";
 import { api } from "../../../../convex/_generated/api";
@@ -86,9 +87,13 @@ export function GamePage() {
 
   const showResultModal = state.status !== "playing" && !resultModalDismissed;
 
+  const contentMaxWidth =
+    state.status !== "playing" ? "max-w-2xl" : "max-w-[500px]";
+  const isSolutionView = hasGrid && state.status !== "playing";
+
   return (
     <div className="min-h-screen bg-surface flex flex-col items-center px-4 py-6">
-      <div className="w-full max-w-[500px] flex flex-col gap-5">
+      <div className={cn("w-full flex flex-col gap-5", contentMaxWidth)}>
         <Header remainingLives={state.remainingLives} date={state.date} />
 
         {isBackendDown ? (
@@ -113,7 +118,7 @@ export function GamePage() {
           <ErrorScreen variant="no-grid-today" />
         )}
 
-        <HowToPlayLink />
+        {!isSolutionView && <HowToPlayLink />}
         <LocaleSwitcher />
       </div>
 

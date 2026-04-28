@@ -25,6 +25,9 @@ export const en = {
     viewAnswers: "View answers",
     closeResult: "Close",
     searchResultUsed: "Already used",
+    solutionRarityEyebrow: "Rarity",
+    solutionRarityHint:
+      "Percentages show the share of today's players who picked that country for the cell ; they appear once at least\u00A0{minGuessForPct}\u00A0submissions exist for this cell.",
   },
   howToPlay: {
     title: "How to play?",
