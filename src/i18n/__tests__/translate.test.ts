@@ -46,19 +46,18 @@ describe("translate", () => {
   });
 
   it("interpolates variables in the translated string", () => {
-    const result = translate("fr", "ui.rarityScore", { raw: 180, max: 405 });
-    expect(result).toBe("Score de rareté\u00A0— 180\u00A0/ 405\u00A0pts");
+    const result = translate("fr", "ui.originalityScore", { score: 87 });
+    expect(result).toBe("Originalité 87");
   });
 
   it("interpolates variables in the English string", () => {
-    const result = translate("en", "ui.rarityScore", { raw: 180, max: 405 });
-    expect(result).toBe("Rarity score — 180\u00A0/ 405\u00A0pts");
+    const result = translate("en", "ui.originalityScore", { score: 87 });
+    expect(result).toBe("Originality 87");
   });
 
   it("leaves missing interpolation variables as {placeholder}", () => {
-    const result = translate("fr", "ui.rarityScore");
-    expect(result).toContain("{raw}");
-    expect(result).toContain("{max}");
+    const result = translate("fr", "ui.originalityScore");
+    expect(result).toContain("{score}");
   });
 
   it("handles achievement interpolation", () => {

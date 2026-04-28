@@ -217,9 +217,7 @@ export function SolutionGrid({
           {t("ui.solutionRarityEyebrow")}
         </p>
         <p className="text-xs text-on-surface-variant leading-relaxed">
-          {t("ui.solutionRarityHint", {
-            minGuessForPct: MIN_CELL_TOTAL_GUESSES_FOR_SHARE_PERCENT,
-          })}
+          {t("ui.solutionRarityHint")}
         </p>
         <ul className="space-y-1.5 text-xs text-on-surface-variant leading-snug">
           {RARITY_LEGEND_LI_KEYS.map((key) => (

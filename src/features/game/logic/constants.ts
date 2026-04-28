@@ -24,17 +24,16 @@ export const RARITY_TIERS = {
  */
 export const MIN_CELL_TOTAL_GUESSES_FOR_SHARE_PERCENT = 10;
 
-// Scoring
-export const COMPLETION_POINTS_PER_CELL = 20;
-export const RARITY_POINTS = {
+// Scoring — V2 : deux scores indépendants
+// - Grille : 9 cellules + 3 vies = 12 points → percent = (filled + lives) / 12.
+// - Originalité : moyenne des tier values sur 9 cellules (vide = 0).
+export const MAX_GRID_POINTS = 9 + STARTING_LIVES; // 12
+export const ORIGINALITY_TIER_VALUES: Record<RarityTier, number> = {
   common: 0,
-  uncommon: 5,
-  rare: 12,
-  ultra: 25,
-} as const;
-
-export const MAX_SCORE =
-  9 * COMPLETION_POINTS_PER_CELL + 9 * RARITY_POINTS.ultra; // 405
+  uncommon: 33,
+  rare: 66,
+  ultra: 100,
+};
 
 export const SHARE_EMOJIS = {
   failed: "⬜", // Blanc : pas de pays trouvé

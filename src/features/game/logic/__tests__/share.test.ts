@@ -30,10 +30,11 @@ function fillCell(
 }
 
 describe("formatShareString", () => {
-  it("shows percent but no hearts for a partial (playing) state", () => {
+  it("shows percent + grade but no hearts/skull for a partial (playing) state", () => {
+    // 3 vies, 0 cellules → (0 + 3) / 12 = 25 %, originalité = 0 → grade D.
     const state = makeState();
     const result = formatShareString(state, 1);
-    expect(result).toContain("Geodoku #1 — 0%");
+    expect(result).toContain("Geodoku #1\n25% · D");
     expect(result).not.toContain("❤️");
     expect(result).not.toContain("💀");
   });
@@ -60,13 +61,15 @@ describe("formatShareString", () => {
     state = fillCell(state, "1,0", "ultra");
 
     const result = formatShareString(state, 1);
+    // Header occupe deux lignes (titre + cœurs, score · grade), puis ligne vide,
+    // puis les 3 rows d'emojis. Donc rows à lines[3..5].
     // Row 0: common uncommon rare → 🟪🟦🟨
     // Row 1: ultra empty empty  → 🟥⬜⬜
     // Row 2: empty empty empty  → ⬜⬜⬜
     const lines = result.split("\n");
-    expect(lines[2]).toBe("🟪🟦🟨");
-    expect(lines[3]).toBe("🟥⬜⬜");
-    expect(lines[4]).toBe("⬜⬜⬜");
+    expect(lines[3]).toBe("🟪🟦🟨");
+    expect(lines[4]).toBe("🟥⬜⬜");
+    expect(lines[5]).toBe("⬜⬜⬜");
   });
 
   it("includes site URL at the end", () => {

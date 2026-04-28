@@ -1,6 +1,7 @@
 import { ErrorScreen } from "@/features/errors/components/ErrorScreen";
 import { useBackendDownTimeout } from "@/features/errors/hooks/useBackendDownTimeout";
 import { useGameState } from "@/features/game/hooks/useGameState";
+import { useT } from "@/i18n/LocaleContext";
 import { cn } from "@/lib/utils";
 import { useQuery } from "convex/react";
 import { useEffect, useRef, useState } from "react";
@@ -58,6 +59,7 @@ function LoadingSkeleton() {
 }
 
 export function GamePage() {
+  const t = useT();
   const { state, selectCell, submitGuess, isLoading, hasGrid, validAnswers } =
     useGameState();
   const isBackendDown = useBackendDownTimeout(isLoading);
@@ -87,6 +89,10 @@ export function GamePage() {
 
   const showResultModal = state.status !== "playing" && !resultModalDismissed;
 
+  function dismissResultModal() {
+    setResultModalDismissed(true);
+  }
+
   const contentMaxWidth =
     state.status !== "playing" ? "max-w-2xl" : "max-w-[500px]";
   const isSolutionView = hasGrid && state.status !== "playing";
@@ -102,7 +108,7 @@ export function GamePage() {
           <LoadingSkeleton />
         ) : hasGrid ? (
           state.status !== "playing" ? (
-            <div className="flex flex-col gap-3">
+            <div className="flex flex-col gap-5">
               <SolutionGrid
                 rows={state.rows}
                 cols={state.cols}
@@ -110,6 +116,15 @@ export function GamePage() {
                 distribution={guessDistribution ?? undefined}
                 cells={state.cells}
               />
+              {resultModalDismissed && (
+                <button
+                  type="button"
+                  onClick={() => setResultModalDismissed(false)}
+                  className="w-full text-center text-xs text-on-surface-variant underline underline-offset-2 decoration-outline-variant/40 hover:text-on-surface"
+                >
+                  {t("ui.viewMyResult")}
+                </button>
+              )}
             </div>
           ) : (
             <GameGrid state={state} onCellClick={(cell) => selectCell(cell)} />
@@ -136,8 +151,8 @@ export function GamePage() {
         <ResultScreen
           state={state}
           gridNumber={gridNumber}
-          onDismiss={() => setResultModalDismissed(true)}
-          onViewAnswers={() => setResultModalDismissed(true)}
+          onDismiss={dismissResultModal}
+          onViewAnswers={dismissResultModal}
         />
       )}
     </div>
