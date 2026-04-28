@@ -16,32 +16,31 @@ import {
 } from "./lib/gridGenerator";
 import { selectNextGrid } from "./lib/gridScheduler";
 
+// Nombre max de jours simulés/affichés par getUpcomingScheduledPreview
+const UPCOMING_PREVIEW_MAX_DAYS = 14;
+const UPCOMING_PREVIEW_DEFAULT_DAYS = 7;
+
 // ─── Helpers ──────────────────────────────────────────────────────────────────
 
-function todayUTC(): string {
+function offsetUTC(deltaDays: number): string {
   const d = new Date();
+  d.setUTCDate(d.getUTCDate() + deltaDays);
   const y = d.getUTCFullYear();
   const m = String(d.getUTCMonth() + 1).padStart(2, "0");
   const day = String(d.getUTCDate()).padStart(2, "0");
   return `${y}-${m}-${day}`;
+}
+
+function todayUTC(): string {
+  return offsetUTC(0);
 }
 
 function tomorrowUTC(): string {
-  const d = new Date();
-  d.setUTCDate(d.getUTCDate() + 1);
-  const y = d.getUTCFullYear();
-  const m = String(d.getUTCMonth() + 1).padStart(2, "0");
-  const day = String(d.getUTCDate()).padStart(2, "0");
-  return `${y}-${m}-${day}`;
+  return offsetUTC(1);
 }
 
 function daysAgoUTC(n: number): string {
-  const d = new Date();
-  d.setUTCDate(d.getUTCDate() - n);
-  const y = d.getUTCFullYear();
-  const m = String(d.getUTCMonth() + 1).padStart(2, "0");
-  const day = String(d.getUTCDate()).padStart(2, "0");
-  return `${y}-${m}-${day}`;
+  return offsetUTC(-n);
 }
 
 function checkAdminToken(provided: string): void {
@@ -293,7 +292,13 @@ export const getScheduledGrids = query({
   },
 });
 
-/** Pool stats for the admin dashboard. */
+/**
+ * Pool stats for the admin dashboard.
+ *
+ * `constraintCoverage` and `countryCoverage` count how many available grids
+ * contain each constraint / country (any cell, not just seed). On compte les
+ * contraintes absentes (count = 0) pour pouvoir alerter sur les zones froides.
+ */
 export const getPoolStats = query({
   args: {},
   handler: async (ctx) => {
@@ -310,10 +315,18 @@ export const getPoolStats = query({
       .withIndex("by_status", (q) => q.eq("status", "rejected"))
       .collect();
 
-    const seedCounts: Record<string, number> = {};
+    const constraintCounts: Record<string, number> = {};
+    for (const c of CONSTRAINTS) constraintCounts[c.id] = 0;
+
+    const countryCounts: Record<string, number> = {};
+
     for (const g of available) {
-      const seed = g.metadata.seedConstraint;
-      seedCounts[seed] = (seedCounts[seed] ?? 0) + 1;
+      for (const id of g.metadata.constraintIds) {
+        constraintCounts[id] = (constraintCounts[id] ?? 0) + 1;
+      }
+      for (const code of g.metadata.countryPool) {
+        countryCounts[code] = (countryCounts[code] ?? 0) + 1;
+      }
     }
 
     return {
@@ -322,25 +335,177 @@ export const getPoolStats = query({
       rejected: rejected.length,
       total: available.length + used.length + rejected.length,
       daysOfRunway: available.length,
-      constraintCoverage: Object.entries(seedCounts).map(([id, count]) => ({
-        id,
+      constraintCoverage: Object.entries(constraintCounts).map(
+        ([id, count]) => ({ id, gridsInPool: count }),
+      ),
+      countryCoverage: Object.entries(countryCounts).map(([code, count]) => ({
+        code,
         gridsInPool: count,
       })),
     };
   },
 });
 
-/** Paginated list of available pool grids for the admin browse view. */
-export const getPoolGrids = query({
-  args: {
-    limit: v.optional(v.number()),
+/** Exposition passée vs. prochaine des contraintes et pays, pour l'admin dashboard. */
+export const getExposureStats = query({
+  args: {},
+  handler: async (ctx) => {
+    const tomorrow = tomorrowUTC();
+
+    const pastGrids = await ctx.db
+      .query("grids")
+      .withIndex("by_date", (q) => q.lt("date", tomorrow))
+      .order("desc")
+      .take(HISTORY_WINDOW);
+
+    const upcomingGrids = await ctx.db
+      .query("grids")
+      .withIndex("by_date", (q) => q.gte("date", tomorrow))
+      .order("asc")
+      .take(UPCOMING_PREVIEW_MAX_DAYS);
+
+    function aggregate(
+      grids: Array<{
+        rows: string[];
+        cols: string[];
+        validAnswers: Record<string, string[]>;
+      }>,
+    ) {
+      const constraintCounts: Record<string, number> = {};
+      const countryCounts: Record<string, number> = {};
+      for (const g of grids) {
+        for (const id of [...g.rows, ...g.cols]) {
+          constraintCounts[id] = (constraintCounts[id] ?? 0) + 1;
+        }
+        // Count each country once per grid (even if valid in multiple cells)
+        const unique = new Set(Object.values(g.validAnswers).flat());
+        for (const code of unique) {
+          countryCounts[code] = (countryCounts[code] ?? 0) + 1;
+        }
+      }
+      return { constraintCounts, countryCounts };
+    }
+
+    return {
+      pastGridCount: pastGrids.length,
+      upcomingGridCount: upcomingGrids.length,
+      past: aggregate(pastGrids),
+      upcoming: aggregate(upcomingGrids),
+    };
   },
+});
+
+/**
+ * Aperçu lecture seule des `days` prochains jours :
+ * - `kind: "scheduled"` si la grille est déjà inscrite dans `grids` (assignée par le cron) ;
+ * - `kind: "predicted"` si on simule le scheduler à partir du pool actuel (lecture seule, rien n'est écrit) ;
+ * - `kind: "missing"` si le pool est vide pour ce jour-là.
+ */
+export const getUpcomingScheduledPreview = query({
+  args: { days: v.optional(v.number()) },
   handler: async (ctx, args) => {
-    const limit = Math.min(args.limit ?? 20, 100);
-    return await ctx.db
+    const days = Math.min(
+      Math.max(args.days ?? UPCOMING_PREVIEW_DEFAULT_DAYS, 1),
+      UPCOMING_PREVIEW_MAX_DAYS,
+    );
+    const tomorrow = tomorrowUTC();
+
+    const futureScheduled = await ctx.db
+      .query("grids")
+      .withIndex("by_date", (q) => q.gte("date", tomorrow))
+      .order("asc")
+      .take(days + 7);
+    const scheduledByDate = new Map(futureScheduled.map((g) => [g.date, g]));
+
+    const available = await ctx.db
       .query("gridCandidates")
       .withIndex("by_status", (q) => q.eq("status", "available"))
-      .take(limit);
+      .collect();
+    const poolForScheduler = available.map((g) => ({
+      _id: g._id as string,
+      rows: g.rows,
+      cols: g.cols,
+      validAnswers: g.validAnswers,
+      metadata: g.metadata,
+    }));
+
+    const recentPublished = await ctx.db
+      .query("grids")
+      .withIndex("by_date", (q) => q.lt("date", tomorrow))
+      .order("desc")
+      .take(HISTORY_WINDOW);
+    let recentForScheduler = recentPublished.map((g) => ({
+      constraintIds: [...g.rows, ...g.cols],
+      countryPool: Object.values(g.validAnswers).flat(),
+    }));
+
+    type UpcomingDay =
+      | {
+          date: string;
+          kind: "scheduled" | "predicted";
+          rows: string[];
+          cols: string[];
+          validAnswers: Record<string, string[]>;
+          difficulty: number;
+          cellDifficulties: number[] | null;
+        }
+      | { date: string; kind: "missing" };
+
+    const upcoming: UpcomingDay[] = [];
+    const usedIds = new Set<string>();
+
+    for (let i = 0; i < days; i++) {
+      const date = offsetUTC(i + 1);
+      const existing = scheduledByDate.get(date);
+
+      if (existing) {
+        const candidate = await ctx.db.get(existing.candidateId);
+        upcoming.push({
+          date,
+          kind: "scheduled",
+          rows: existing.rows,
+          cols: existing.cols,
+          validAnswers: existing.validAnswers,
+          difficulty: existing.difficulty,
+          cellDifficulties: candidate?.metadata.cellDifficulties ?? null,
+        });
+        recentForScheduler = [
+          {
+            constraintIds: [...existing.rows, ...existing.cols],
+            countryPool: Object.values(existing.validAnswers).flat(),
+          },
+          ...recentForScheduler,
+        ];
+        continue;
+      }
+
+      const remaining = poolForScheduler.filter((g) => !usedIds.has(g._id));
+      const picked = selectNextGrid(remaining, recentForScheduler);
+      if (!picked) {
+        upcoming.push({ date, kind: "missing" });
+        continue;
+      }
+
+      upcoming.push({
+        date,
+        kind: "predicted",
+        rows: picked.grid.rows,
+        cols: picked.grid.cols,
+        validAnswers: picked.grid.validAnswers,
+        difficulty: picked.grid.metadata.difficultyEstimate,
+        cellDifficulties: picked.grid.metadata.cellDifficulties,
+      });
+      usedIds.add(picked.grid._id);
+      recentForScheduler = [
+        {
+          constraintIds: picked.grid.metadata.constraintIds,
+          countryPool: picked.grid.metadata.countryPool,
+        },
+        ...recentForScheduler,
+      ];
+    }
+
+    return upcoming;
   },
 });
 
@@ -385,26 +550,7 @@ export const getGridFeedbackStats = query({
   },
 });
 
-// ─── Public mutations (admin) ─────────────────────────────────────────────────
-
-/** Rejects a pool grid (admin blacklist). */
-export const rejectPoolGrid = mutation({
-  args: {
-    candidateId: v.id("gridCandidates"),
-    adminToken: v.string(),
-  },
-  handler: async (ctx, args) => {
-    checkAdminToken(args.adminToken);
-    const candidate = await ctx.db.get(args.candidateId);
-    if (!candidate) throw new ConvexError("Candidate not found");
-    if (candidate.status !== "available") {
-      throw new ConvexError(
-        `Cannot reject: candidate status is "${candidate.status}"`,
-      );
-    }
-    await ctx.db.patch(args.candidateId, { status: "rejected" });
-  },
-});
+// ─── Public mutations ─────────────────────────────────────────────────────────
 
 /** Saves end-of-game feedback and aggregates lightweight session metrics. */
 export const submitGridFeedback = mutation({
