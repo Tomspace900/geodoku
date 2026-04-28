@@ -1,7 +1,7 @@
 /**
  * Dev-only helpers for clearing tuning iteration data.
  *
- * Usage : `pnpm wipe:db` (then re-seed with `pnpm seed:grids:force`).
+ * Usage : `pnpm wipe:db` then `pnpm seed:grids` (seed refuses non-empty `grids`).
  *
  * The action is internal and paginates deletes to avoid Convex transaction
  * limits on tables with thousands of documents (e.g. `guesses`).

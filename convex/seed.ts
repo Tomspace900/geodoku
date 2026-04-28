@@ -1,14 +1,14 @@
 /**
- * Historical seed: backfills past + future grids using the new pool architecture.
- * Generates a pool first, then assigns grids sequentially for each date.
+ * Historical seed: backfills today and the previous 30 calendar days (pool + scheduler).
+ * Fails if `grids` is non-empty — use wipe in dev first, or seed only once on empty prod.
  * Invoked manually: `pnpm seed:grids` → `npx convex run seed:seedHistoricalGrids`
  */
-import { v } from "convex/values";
+import { ConvexError } from "convex/values";
 import { internal } from "./_generated/api";
 import { internalAction } from "./_generated/server";
 
-const SEED_PAST_DAY_COUNT = 15;
-const SEED_FUTURE_DAY_COUNT = 7;
+/** Inclusive span: today plus 30 days back (31 dates). */
+const SEED_PAST_DAY_COUNT = 31;
 
 function todayUTC(): string {
   const d = new Date();
@@ -25,7 +25,7 @@ function formatYMD(d: Date): string {
   return `${y}-${m}-${day}`;
 }
 
-/** Inclusive range from (today − SEED_PAST_DAY_COUNT + 1) to today. */
+/** Inclusive range from (today − 30) to today. */
 function datesFromPastToToday(today: string): string[] {
   const anchor = new Date(`${today}T12:00:00.000Z`);
   const out: string[] = [];
@@ -37,33 +37,17 @@ function datesFromPastToToday(today: string): string[] {
   return out;
 }
 
-/** Inclusive range from tomorrow to (today + SEED_FUTURE_DAY_COUNT). */
-function datesFromTomorrowToFuture(today: string): string[] {
-  const anchor = new Date(`${today}T12:00:00.000Z`);
-  const out: string[] = [];
-  for (let i = 1; i <= SEED_FUTURE_DAY_COUNT; i++) {
-    const d = new Date(anchor);
-    d.setUTCDate(anchor.getUTCDate() + i);
-    out.push(formatYMD(d));
-  }
-  return out;
-}
-
 export const seedHistoricalGrids = internalAction({
-  args: { force: v.optional(v.boolean()) },
-  handler: async (ctx, args) => {
-    if (!args.force && (await ctx.runQuery(internal.gridData.hasAnyGrid))) {
-      return {
-        skipped: true as const,
-        reason: "grids table not empty",
-      };
+  args: {},
+  handler: async (ctx) => {
+    if (await ctx.runQuery(internal.gridData.hasAnyGrid)) {
+      throw new ConvexError(
+        "grids table is not empty — run wipe:wipeAllData in dev first, or skip seed if prod is already live",
+      );
     }
 
     const today = todayUTC();
-    const dates = [
-      ...datesFromPastToToday(today),
-      ...datesFromTomorrowToFuture(today),
-    ];
+    const dates = datesFromPastToToday(today);
 
     // Generate a pool first
     const report = await ctx.runAction(internal.grids.generatePoolInternal, {});
@@ -88,7 +72,6 @@ export const seedHistoricalGrids = internalAction({
     }
 
     return {
-      skipped: false as const,
       seeded: dates.length,
       dates,
       steps,
