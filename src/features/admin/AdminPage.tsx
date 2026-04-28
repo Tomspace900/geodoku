@@ -1,11 +1,13 @@
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useQuery } from "convex/react";
-import { AlertTriangle, CheckCircle } from "lucide-react";
 import { useState } from "react";
 import { api } from "../../../convex/_generated/api";
+import { DiversityMetricsPanel } from "./components/DiversityMetricsPanel";
 import { GridDetail } from "./components/GridDetail";
+import { PoolOverviewPanel } from "./components/PoolOverviewPanel";
 import { ScheduleCalendar } from "./components/ScheduleCalendar";
+import { UpcomingGridsPanel } from "./components/UpcomingGridsPanel";
 import { useAdminToken } from "./hooks/useAdminToken";
 import { dateToStr } from "./logic/scheduling";
 
@@ -50,6 +52,11 @@ export function AdminPage() {
     token ? {} : "skip",
   );
 
+  const feedbackStats = useQuery(
+    api.grids.getGridFeedbackStats,
+    token ? { limit: 60 } : "skip",
+  );
+
   const scheduledDates = new Set<string>(
     (scheduledGrids ?? []).map((g) => g.date),
   );
@@ -57,7 +64,6 @@ export function AdminPage() {
   const tomorrow = new Date();
   tomorrow.setDate(tomorrow.getDate() + 1);
   const tomorrowStr = dateToStr(tomorrow);
-  const hasTomorrowGrid = scheduledDates.has(tomorrowStr);
 
   const selectedGrid =
     selectedDate != null
@@ -117,23 +123,22 @@ export function AdminPage() {
       <div className="mx-auto flex max-w-6xl flex-col gap-6 px-4 py-8">
         <AdminHeader onLogout={clearToken} />
 
+        <PoolOverviewPanel
+          token={token}
+          clearToken={clearToken}
+          hasTomorrowGrid={
+            scheduledGrids === undefined
+              ? undefined
+              : scheduledDates.has(tomorrowStr)
+          }
+        />
+
         <section className="rounded-2xl bg-surface-low p-4 md:p-5">
           <div className="mb-3 flex flex-wrap items-center justify-between gap-3">
             <p className="text-[10px] font-semibold text-on-surface-variant tracking-widest uppercase">
               Planification
             </p>
           </div>
-          {!hasTomorrowGrid && scheduledGrids !== undefined ? (
-            <div className="mb-3 rounded-lg bg-rarity-ultra/10 px-3 py-2 text-sm text-rarity-ultra flex items-center gap-2">
-              <AlertTriangle className="w-4 h-4" />
-              Aucune grille planifiée pour demain ({tomorrowStr}).
-            </div>
-          ) : (
-            <div className="mb-3 rounded-lg bg-brand/10 px-3 py-2 text-sm text-brand flex items-center gap-2">
-              <CheckCircle className="w-4 h-4" />
-              Il y a bien une grille planifiée pour demain ({tomorrowStr}).
-            </div>
-          )}
           <div className="grid grid-cols-1 items-stretch gap-4 md:grid-cols-5">
             <div className="col-span-1 h-full md:col-span-2">
               <ScheduleCalendar
@@ -148,15 +153,12 @@ export function AdminPage() {
           </div>
         </section>
 
-        <section className="rounded-2xl bg-surface-low p-4 md:p-5">
-          <p className="text-[10px] font-semibold text-on-surface-variant tracking-widest uppercase mb-3">
-            Pool de grilles
-          </p>
-          <p className="text-sm text-on-surface-variant">
-            Interface de gestion du pool en cours de refactoring — disponible
-            après validation des métriques de simulation.
-          </p>
-        </section>
+        <UpcomingGridsPanel />
+
+        <DiversityMetricsPanel
+          feedbackStats={feedbackStats}
+          scheduledGrids={scheduledGrids ?? []}
+        />
       </div>
     </div>
   );

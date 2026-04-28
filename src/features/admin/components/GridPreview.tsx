@@ -1,16 +1,9 @@
-import { getCountryByCode } from "@/features/countries/lib/search";
 import {
-  CONSTRAINTS,
-  type ConstraintId,
-} from "@/features/game/logic/constraints";
-import { translate } from "@/i18n/index";
-
-const CONSTRAINT_MAP = new Map(CONSTRAINTS.map((c) => [c.id, c]));
-
-function getConstraintLabel(id: string): string {
-  const constraint = CONSTRAINT_MAP.get(id as ConstraintId);
-  return constraint ? translate("fr", constraint.labelKey) : id;
-}
+  constraintLabel,
+  difficultyPillClass,
+} from "@/features/admin/logic/display";
+import { getCountryByCode } from "@/features/countries/lib/search";
+import { cn } from "@/lib/utils";
 
 const headerClass =
   "flex items-center justify-center text-center text-[10px] font-medium text-on-surface-variant bg-surface-low rounded-xl p-2 leading-tight min-h-[52px]";
@@ -19,73 +12,79 @@ type GridPreviewData = {
   rows: string[];
   cols: string[];
   validAnswers: Record<string, string[]>;
-  mode?: "compact" | "detailed";
+  // 9 valeurs row-major (0–100) ; affiche un badge coloré en coin de chaque cellule.
+  cellDifficulties?: number[] | null;
 };
 
 export function GridPreview({
   rows,
   cols,
   validAnswers,
-  mode = "compact",
+  cellDifficulties,
 }: GridPreviewData) {
   return (
     <div
       className="grid gap-1.5"
       style={{ gridTemplateColumns: "minmax(0,1fr) repeat(3, minmax(0,1fr))" }}
     >
-      {/* Coin vide */}
       <div />
 
-      {/* Headers de colonnes */}
       {cols.map((colId) => (
         <div key={colId} className={`${headerClass} p-1.5`}>
-          {getConstraintLabel(colId)}
+          {constraintLabel(colId)}
         </div>
       ))}
 
-      {/* Lignes */}
       {rows.map((rowId, r) => [
-        /* Header de ligne */
         <div key={`row-${rowId}`} className={`${headerClass} p-1.5`}>
-          {getConstraintLabel(rowId)}
+          {constraintLabel(rowId)}
         </div>,
 
-        /* Cellules */
         ...cols.map((_, c) => {
           const key = `${r},${c}`;
           const codes = validAnswers[key] ?? [];
+          const difficulty = cellDifficulties?.[r * 3 + c];
+          const hasDifficulty = typeof difficulty === "number";
           return (
             <div
               key={key}
-              className="aspect-square w-full rounded-xl bg-surface-lowest p-1.5 shadow-editorial overflow-y-auto"
+              className="relative isolate aspect-square w-full min-h-0 rounded-xl bg-surface-lowest shadow-editorial"
             >
-              <div className="flex flex-wrap content-start gap-1">
+              <div className="flex h-full min-h-0 flex-wrap content-start overflow-y-auto p-1.5 gap-1">
                 {codes.map((code) => {
                   const country = getCountryByCode(code);
                   return (
                     <span
                       key={`${key}-${code}`}
-                      className={
-                        mode === "detailed"
-                          ? "inline-flex max-w-full items-center gap-1 rounded-md bg-surface-low px-2 py-1 text-[10px] font-semibold text-on-surface leading-none"
-                          : "inline-flex items-center gap-1 rounded-md bg-surface-low px-1.5 py-0.5 text-[9px] font-medium text-on-surface leading-none"
-                      }
+                      className="inline-flex items-center gap-1 rounded-md bg-surface-low px-1.5 py-0.5 text-[11px] font-medium text-on-surface leading-none"
                     >
-                      <span aria-hidden="true">
+                      <span
+                        aria-hidden="true"
+                        className="shrink-0 text-[11px] leading-none"
+                      >
                         {country?.flagEmoji ?? "🏳️"}
                       </span>
-                      <span className={mode === "detailed" ? "truncate" : ""}>
-                        {code}
-                      </span>
+                      <span className="min-w-0 truncate">{code}</span>
                     </span>
                   );
                 })}
                 {codes.length === 0 && (
-                  <span className="text-[10px] text-on-surface-variant">
+                  <span className="text-[11px] text-on-surface-variant">
                     Aucun pays
                   </span>
                 )}
               </div>
+              {hasDifficulty && (
+                <span
+                  className={cn(
+                    "pointer-events-none absolute bottom-1.5 right-1.5 z-10 rounded-full font-semibold tabular-nums shadow-sm",
+                    difficultyPillClass(difficulty),
+                    "px-1.5 py-0.5 text-[11px]",
+                  )}
+                >
+                  {difficulty}
+                </span>
+              )}
             </div>
           );
         }),

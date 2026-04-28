@@ -1,3 +1,8 @@
+import {
+  difficultyStars,
+  difficultyTierSurfaceClass,
+  formatGridDateHeadingFr,
+} from "@/features/admin/logic/display";
 import { useQuery } from "convex/react";
 import { api } from "../../../../convex/_generated/api";
 import { GridPreview } from "./GridPreview";
@@ -14,21 +19,6 @@ type Props = {
   grid: ScheduledGrid | null;
   selectedDate: string | null;
 };
-
-function formatDateFr(dateStr: string): string {
-  const [y, m, d] = dateStr.split("-").map(Number);
-  return new Intl.DateTimeFormat("fr-FR", {
-    weekday: "long",
-    day: "numeric",
-    month: "long",
-    year: "numeric",
-  }).format(new Date(y as number, (m as number) - 1, d as number));
-}
-
-function difficultyLabel(difficulty: number): string {
-  const stars = Math.round((difficulty / 100) * 5);
-  return "★".repeat(stars) + "☆".repeat(5 - stars);
-}
 
 export function GridDetail({ grid, selectedDate }: Props) {
   const detail = useQuery(
@@ -56,19 +46,18 @@ export function GridDetail({ grid, selectedDate }: Props) {
     );
   }
 
+  const metadata = detail?.metadata ?? null;
+
   return (
     <div className="h-full overflow-hidden rounded-xl bg-surface-lowest shadow-editorial">
       <div className="flex items-start justify-between gap-3 px-4 pb-3 pt-4">
         <div className="space-y-1">
-          <p className="text-[10px] font-semibold tracking-widest text-on-surface-variant uppercase">
-            Grille du
-          </p>
           <h2 className="font-serif text-xl font-medium text-on-surface capitalize">
-            {formatDateFr(grid.date)}
+            {formatGridDateHeadingFr(grid.date)}
           </h2>
           <div className="flex flex-wrap items-center gap-2">
             <span className="rounded-full bg-surface-highest px-2.5 py-1 text-xs font-semibold text-on-surface">
-              {difficultyLabel(grid.difficulty)}
+              {difficultyStars(grid.difficulty)}
             </span>
             <span className="text-xs text-on-surface-variant">
               difficulté {grid.difficulty}/100
@@ -76,18 +65,33 @@ export function GridDetail({ grid, selectedDate }: Props) {
           </div>
         </div>
       </div>
-      {detail && (
-        <div className="px-4 pb-3 text-xs text-on-surface-variant space-y-1">
-          <p>
-            Contraintes : {detail.rows.join(", ")} / {detail.cols.join(", ")}
-          </p>
-          {detail.metadata && (
-            <p>
-              Difficulté estimée : {detail.metadata.difficultyEstimate}/100 ·{" "}
-              {detail.metadata.constraintIds.length} contraintes ·{" "}
-              {detail.metadata.categories.length} catégories
-            </p>
-          )}
+      {metadata && (
+        <div className="px-4 pb-3 space-y-2">
+          <div className="flex flex-wrap gap-1">
+            <span
+              className={`rounded-full px-2 py-0.5 text-[10px] font-medium ${difficultyTierSurfaceClass("easy")}`}
+            >
+              {metadata.difficultyTags.easy} faciles
+            </span>
+            <span
+              className={`rounded-full px-2 py-0.5 text-[10px] font-medium ${difficultyTierSurfaceClass("medium")}`}
+            >
+              {metadata.difficultyTags.medium} moyennes
+            </span>
+            <span
+              className={`rounded-full px-2 py-0.5 text-[10px] font-medium ${difficultyTierSurfaceClass("hard")}`}
+            >
+              {metadata.difficultyTags.hard} difficiles
+            </span>
+            {metadata.categories.map((cat) => (
+              <span
+                key={cat}
+                className="rounded-full bg-surface-low px-2 py-0.5 text-[10px] text-on-surface-variant"
+              >
+                {cat}
+              </span>
+            ))}
+          </div>
         </div>
       )}
       <div className="px-4 pb-4">
@@ -96,7 +100,7 @@ export function GridDetail({ grid, selectedDate }: Props) {
             rows={grid.rows}
             cols={grid.cols}
             validAnswers={grid.validAnswers}
-            mode="compact"
+            cellDifficulties={metadata?.cellDifficulties ?? null}
           />
         </div>
       </div>
