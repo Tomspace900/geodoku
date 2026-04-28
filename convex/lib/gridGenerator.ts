@@ -20,9 +20,17 @@ import {
 
 const COUNTRIES: Country[] = countriesJson as Country[];
 
-// Difficulty curve: maps `(rowDiff × colDiff) / solutionCount` through
-// 1 - exp(-raw × DIFFICULTY_CURVE_K) to flatten the long tail of very-rare cells.
+// Difficulty curve: `raw` includes cardinality, constraint weights, and the
+// popularity multiplier; then maps through 1 − exp(−raw × DIFFICULTY_CURVE_K).
 const DIFFICULTY_CURVE_K = 0.8;
+
+// Popularity dampener: shifts raw difficulty toward easier cells when the
+// solution pool is well-known (top-K average popularity closer to 1).
+// 0 = ignore popularity; 1 = ±50% raw scale at extremes (pop factor 1.5 vs 0.5 vs base).
+const POPULARITY_WEIGHT = 0.6;
+
+/** Average this many highest-known candidates in each cell pool. */
+const POPULARITY_TOP_K = 3;
 
 // Constraint → category/difficulty lookups, built once at module load.
 const CATEGORY_BY_ID: Record<string, string> = (() => {
@@ -34,6 +42,15 @@ const CATEGORY_BY_ID: Record<string, string> = (() => {
 const DIFFICULTY_BY_ID: Record<string, "easy" | "medium" | "hard"> = (() => {
   const map: Record<string, "easy" | "medium" | "hard"> = {};
   for (const c of CONSTRAINTS) map[c.id] = c.difficulty;
+  return map;
+})();
+
+/** ISO3 → percentile popularity [0..1] from bundled countries dataset. */
+const POPULARITY_BY_CODE: Record<string, number> = (() => {
+  const map: Record<string, number> = {};
+  for (const country of COUNTRIES) {
+    map[country.code] = country.popularityIndex ?? 0.5;
+  }
   return map;
 })();
 
@@ -161,7 +178,22 @@ export function tryBuildGridWithSeed(
 // ─── Difficulty scoring ───────────────────────────────────────────────────────
 
 /**
- * Difficulty of a single cell, based on solution count and constraint difficulty tags.
+ * Mean popularity of the K best-known countries in `codes` (ISO3).
+ * Empty pool → median fallback so callers never propagate NaNs.
+ */
+export function topKPopularity(codes: string[], k = POPULARITY_TOP_K): number {
+  if (codes.length === 0) return 0.5;
+
+  const pops = codes
+    .map((code) => POPULARITY_BY_CODE[code] ?? 0.5)
+    .sort((a, b) => b - a);
+  const slice = pops.slice(0, Math.min(k, pops.length));
+  return slice.reduce((sum, p) => sum + p, 0) / slice.length;
+}
+
+/**
+ * Difficulty of a single cell: constraint weights, solution cardinality, and a
+ * popularity-aware dampener on the raw score (easier well-known pools).
  * Returns an integer in [0, 100].
  */
 export function computeCellDifficulty(
@@ -176,7 +208,11 @@ export function computeCellDifficulty(
   const rowDiff = diffWeight[DIFFICULTY_BY_ID[rowId] ?? "medium"];
   const colDiff = diffWeight[DIFFICULTY_BY_ID[colId] ?? "medium"];
 
-  const raw = (1 / solutions.length) * rowDiff * colDiff;
+  const baseRaw = (1 / solutions.length) * rowDiff * colDiff;
+  const pop = topKPopularity(solutions);
+  const popFactor = Math.max(0, 1 + POPULARITY_WEIGHT * (0.5 - pop));
+  const raw = baseRaw * popFactor;
+
   return Math.min(
     100,
     Math.max(0, Math.round(100 * (1 - Math.exp(-raw * DIFFICULTY_CURVE_K)))),

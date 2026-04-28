@@ -1,4 +1,6 @@
 import { describe, expect, it } from "vitest";
+import countriesJson from "../../src/features/countries/data/countries.json";
+import type { Country } from "../../src/features/countries/types.ts";
 import { CONSTRAINTS } from "../../src/features/game/logic/constraints";
 import {
   MAX_SAME_CATEGORY,
@@ -12,8 +14,15 @@ import {
   finalizeGrid,
   generateDiversePool,
   intersect,
+  topKPopularity,
   tryBuildGridWithSeed,
 } from "./gridGenerator";
+
+const COUNTRIES = countriesJson as Country[];
+
+function popularityOf(code: string): number {
+  return COUNTRIES.find((c) => c.code === code)?.popularityIndex ?? 0.5;
+}
 
 // ─── intersect ────────────────────────────────────────────────────────────────
 
@@ -178,6 +187,56 @@ describe("computeCellDifficulty", () => {
         expect(d).toBeLessThanOrEqual(100);
       }
     }
+  });
+
+  it("with same pool size and constraint weight product, higher top-K popularity lowers difficulty", () => {
+    const matches = buildConstraintMatches();
+    const rowA = "continent_africa";
+    const colA = "area_gt_2M";
+    const rowB = "continent_africa";
+    const colB = "borders_solo";
+    const nA = intersect(rowA, colA, matches).length;
+    const nB = intersect(rowB, colB, matches).length;
+    expect(nA).toBe(nB);
+    expect(nA).toBeGreaterThan(0);
+
+    const popA = topKPopularity(intersect(rowA, colA, matches));
+    const popB = topKPopularity(intersect(rowB, colB, matches));
+    expect(popA).toBeGreaterThan(popB + 0.1);
+
+    const dA = computeCellDifficulty(rowA, colA, matches);
+    const dB = computeCellDifficulty(rowB, colB, matches);
+    expect(dA).toBeLessThan(dB);
+  });
+});
+
+// ─── topKPopularity ───────────────────────────────────────────────────────────
+
+describe("topKPopularity", () => {
+  it("returns 0.5 for an empty code list", () => {
+    expect(topKPopularity([])).toBe(0.5);
+  });
+
+  it("returns the lone country popularity when the pool has one code", () => {
+    expect(topKPopularity(["USA"])).toBe(popularityOf("USA"));
+  });
+
+  it("averages the full pool when size is below K=3", () => {
+    const a = "SMR";
+    const b = "MCO";
+    expect(topKPopularity([a, b], 3)).toBeCloseTo(
+      (popularityOf(a) + popularityOf(b)) / 2,
+      6,
+    );
+  });
+
+  it("averages only the top-3 by popularity when the pool is larger", () => {
+    const codes = ["USA", "FSM", "AND", "TUV", "MHL"];
+    const sorted = codes
+      .map((code) => popularityOf(code))
+      .sort((x, y) => y - x);
+    const manual = (sorted[0] + sorted[1] + sorted[2]) / 3;
+    expect(topKPopularity(codes, 3)).toBeCloseTo(manual, 5);
   });
 });
 
