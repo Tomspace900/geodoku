@@ -4,12 +4,12 @@ import { computeGridScore, computeOriginalityScore } from "./rarity";
 
 /**
  * Chaîne copiée « partage » : format volontairement international, sans texte
- * localisable. Uniquement le nom de marque (Geodoku, sans accent), chiffres,
- * lettres ASCII (grade S/A/B/C/D), URL et emojis — pas d’i18n ici.
+ * localisable. Marque (Geodoku), numéro d’issue si post-lancement (`gridNumber`),
+ * grade ASCII (S/A/B/C/D), URL et emojis — pas d’i18n ici.
  */
 export function formatShareString(
   state: GameState,
-  gridNumber: number,
+  gridNumber: number | null,
   siteUrl = "geodoku.app",
 ): string {
   const { percent } = computeGridScore(state);
@@ -18,7 +18,7 @@ export function formatShareString(
     "❤️".repeat(state.remainingLives) +
     "🤍".repeat(STARTING_LIVES - state.remainingLives);
 
-  let titleLine = `Geodoku #${gridNumber}`;
+  let titleLine = gridNumber !== null ? `Geodoku #${gridNumber}` : "Geodoku";
   if (state.status === "won") titleLine += ` ${hearts}`;
   else if (state.status === "lost") titleLine += " 💀";
   const scoreLine = `${percent}% · ${grade}`;
