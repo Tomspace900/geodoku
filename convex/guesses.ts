@@ -1,5 +1,6 @@
 import { ConvexError, v } from "convex/values";
 import { mutation, query } from "./_generated/server";
+import { rateLimiter } from "./rateLimit";
 
 const CELL_KEYS = [
   "0,0",
@@ -61,8 +62,14 @@ export const submitGuess = mutation({
     date: v.string(),
     cellKey: v.string(),
     countryCode: v.string(),
+    clientId: v.string(),
   },
   handler: async (ctx, args) => {
+    await rateLimiter.limit(ctx, "guess", {
+      key: args.clientId,
+      throws: true,
+    });
+
     // 1. Load grid by date
     const grid = await ctx.db
       .query("grids")

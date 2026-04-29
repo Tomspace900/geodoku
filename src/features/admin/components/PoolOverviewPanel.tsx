@@ -161,8 +161,14 @@ export function PoolOverviewPanel({
   clearToken,
   hasTomorrowGrid,
 }: Props) {
-  const stats = useQuery(api.grids.getPoolStats, token ? {} : "skip");
-  const exposure = useQuery(api.grids.getExposureStats, token ? {} : "skip");
+  const stats = useQuery(
+    api.grids.getPoolStats,
+    token ? { adminToken: token } : "skip",
+  );
+  const exposure = useQuery(
+    api.grids.getExposureStats,
+    token ? { adminToken: token } : "skip",
+  );
   const generatePool = useAction(api.grids.generatePool);
 
   const [status, setStatus] = useState<

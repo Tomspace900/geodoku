@@ -1,4 +1,5 @@
 import { Button } from "@/components/ui/button";
+import { getOrCreateClientId } from "@/features/game/logic/clientId";
 import { SHARE_EMOJIS, STARTING_LIVES } from "@/features/game/logic/constants";
 import {
   computeGridScore,
@@ -96,6 +97,7 @@ export function ResultScreen({
         livesLeft: state.remainingLives,
         filledCells,
         guessesSubmitted: filledCells + failedGuesses,
+        clientId: getOrCreateClientId(),
       });
       localStorage.setItem(`${FEEDBACK_STORAGE_PREFIX}${state.date}`, "1");
       setFeedbackThanksVisible(true);

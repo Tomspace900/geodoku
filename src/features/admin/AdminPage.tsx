@@ -3,6 +3,7 @@ import { Input } from "@/components/ui/input";
 import { useQuery } from "convex/react";
 import { useState } from "react";
 import { api } from "../../../convex/_generated/api";
+import { AdminAuthBoundary } from "./components/AdminAuthBoundary";
 import { DiversityMetricsPanel } from "./components/DiversityMetricsPanel";
 import { GridDetail } from "./components/GridDetail";
 import { PoolOverviewPanel } from "./components/PoolOverviewPanel";
@@ -49,12 +50,12 @@ export function AdminPage() {
 
   const scheduledGrids = useQuery(
     api.grids.getScheduledGrids,
-    token ? {} : "skip",
+    token ? { adminToken: token } : "skip",
   );
 
   const feedbackStats = useQuery(
     api.grids.getGridFeedbackStats,
-    token ? { limit: 60 } : "skip",
+    token ? { adminToken: token, limit: 60 } : "skip",
   );
 
   const scheduledDates = new Set<string>(
@@ -119,47 +120,53 @@ export function AdminPage() {
   // ── Page principale ─────────────────────────────────────────────────────────
 
   return (
-    <div className="min-h-screen bg-surface">
-      <div className="mx-auto flex max-w-6xl flex-col gap-6 px-4 py-8">
-        <AdminHeader onLogout={clearToken} />
+    <AdminAuthBoundary onUnauthorized={clearToken}>
+      <div className="min-h-screen bg-surface">
+        <div className="mx-auto flex max-w-6xl flex-col gap-6 px-4 py-8">
+          <AdminHeader onLogout={clearToken} />
 
-        <PoolOverviewPanel
-          token={token}
-          clearToken={clearToken}
-          hasTomorrowGrid={
-            scheduledGrids === undefined
-              ? undefined
-              : scheduledDates.has(tomorrowStr)
-          }
-        />
+          <PoolOverviewPanel
+            token={token}
+            clearToken={clearToken}
+            hasTomorrowGrid={
+              scheduledGrids === undefined
+                ? undefined
+                : scheduledDates.has(tomorrowStr)
+            }
+          />
 
-        <section className="rounded-2xl bg-surface-low p-4 md:p-5">
-          <div className="mb-3 flex flex-wrap items-center justify-between gap-3">
-            <p className="text-[10px] font-semibold text-on-surface-variant tracking-widest uppercase">
-              Planification
-            </p>
-          </div>
-          <div className="grid grid-cols-1 items-stretch gap-4 md:grid-cols-5">
-            <div className="col-span-1 h-full md:col-span-2">
-              <ScheduleCalendar
-                scheduledGrids={scheduledGrids ?? []}
-                selectedDate={selectedDate}
-                onSelectDate={setSelectedDate}
-              />
+          <section className="rounded-2xl bg-surface-low p-4 md:p-5">
+            <div className="mb-3 flex flex-wrap items-center justify-between gap-3">
+              <p className="text-[10px] font-semibold text-on-surface-variant tracking-widest uppercase">
+                Planification
+              </p>
             </div>
-            <div className="col-span-1 h-full md:col-span-3">
-              <GridDetail grid={selectedGrid} selectedDate={selectedDate} />
+            <div className="grid grid-cols-1 items-stretch gap-4 md:grid-cols-5">
+              <div className="col-span-1 h-full md:col-span-2">
+                <ScheduleCalendar
+                  scheduledGrids={scheduledGrids ?? []}
+                  selectedDate={selectedDate}
+                  onSelectDate={setSelectedDate}
+                />
+              </div>
+              <div className="col-span-1 h-full md:col-span-3">
+                <GridDetail
+                  grid={selectedGrid}
+                  selectedDate={selectedDate}
+                  token={token}
+                />
+              </div>
             </div>
-          </div>
-        </section>
+          </section>
 
-        <UpcomingGridsPanel />
+          <UpcomingGridsPanel token={token} />
 
-        <DiversityMetricsPanel
-          feedbackStats={feedbackStats}
-          scheduledGrids={scheduledGrids ?? []}
-        />
+          <DiversityMetricsPanel
+            feedbackStats={feedbackStats}
+            scheduledGrids={scheduledGrids ?? []}
+          />
+        </div>
       </div>
-    </div>
+    </AdminAuthBoundary>
   );
 }

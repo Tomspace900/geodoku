@@ -17,8 +17,11 @@ import { GridPreview } from "./GridPreview";
 
 const UPCOMING_DAYS = 7;
 
-export function UpcomingGridsPanel() {
+type Props = { token: string };
+
+export function UpcomingGridsPanel({ token }: Props) {
   const upcoming = useQuery(api.grids.getUpcomingScheduledPreview, {
+    adminToken: token,
     days: UPCOMING_DAYS,
   });
 

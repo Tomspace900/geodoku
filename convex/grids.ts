@@ -3,6 +3,7 @@ import { CONSTRAINTS } from "../src/features/game/logic/constraints";
 import { internal } from "./_generated/api";
 import type { Id } from "./_generated/dataModel";
 import { action, internalAction, mutation, query } from "./_generated/server";
+import { checkAdminToken } from "./auth";
 import {
   type GenerationReport,
   HISTORY_WINDOW,
@@ -15,10 +16,21 @@ import {
   tryBuildGridWithSeed,
 } from "./lib/gridGenerator";
 import { selectNextGrid } from "./lib/gridScheduler";
+import { rateLimiter } from "./rateLimit";
 
 // Nombre max de jours simulés/affichés par getUpcomingScheduledPreview
 const UPCOMING_PREVIEW_MAX_DAYS = 14;
 const UPCOMING_PREVIEW_DEFAULT_DAYS = 7;
+
+/**
+ * Borne haute défensive sur les soumissions par grille (9 succès + N échecs).
+ * Trois vies max, donc 9 + 3 = 12 en théorie ; on autorise une marge x4 pour
+ * absorber les variations futures sans bloquer les vrais joueurs.
+ */
+const MAX_GUESSES_PER_GAME = 50;
+
+/** Doit rester aligné avec STARTING_LIVES dans src/features/game/logic/constants.ts. */
+const MAX_LIVES = 3;
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
 
@@ -41,13 +53,6 @@ function tomorrowUTC(): string {
 
 function daysAgoUTC(n: number): string {
   return offsetUTC(-n);
-}
-
-function checkAdminToken(provided: string): void {
-  const expected = process.env.ADMIN_TOKEN;
-  if (!expected || provided !== expected) {
-    throw new ConvexError("Unauthorized");
-  }
 }
 
 // ─── Internal actions (crons + seed) ─────────────────────────────────────────
@@ -255,8 +260,9 @@ export const getTodayGrid = query({
  * Used by the admin planning panel.
  */
 export const getGridDetailByDate = query({
-  args: { date: v.string() },
+  args: { date: v.string(), adminToken: v.string() },
   handler: async (ctx, args) => {
+    checkAdminToken(args.adminToken);
     const grid = await ctx.db
       .query("grids")
       .withIndex("by_date", (q) => q.eq("date", args.date))
@@ -281,8 +287,9 @@ export const getGridDetailByDate = query({
  * Used by the admin calendar.
  */
 export const getScheduledGrids = query({
-  args: {},
-  handler: async (ctx) => {
+  args: { adminToken: v.string() },
+  handler: async (ctx, args) => {
+    checkAdminToken(args.adminToken);
     const cutoff = daysAgoUTC(30);
     return await ctx.db
       .query("grids")
@@ -300,8 +307,9 @@ export const getScheduledGrids = query({
  * contraintes absentes (count = 0) pour pouvoir alerter sur les zones froides.
  */
 export const getPoolStats = query({
-  args: {},
-  handler: async (ctx) => {
+  args: { adminToken: v.string() },
+  handler: async (ctx, args) => {
+    checkAdminToken(args.adminToken);
     const available = await ctx.db
       .query("gridCandidates")
       .withIndex("by_status", (q) => q.eq("status", "available"))
@@ -348,8 +356,9 @@ export const getPoolStats = query({
 
 /** Exposition passée vs. prochaine des contraintes et pays, pour l'admin dashboard. */
 export const getExposureStats = query({
-  args: {},
-  handler: async (ctx) => {
+  args: { adminToken: v.string() },
+  handler: async (ctx, args) => {
+    checkAdminToken(args.adminToken);
     const tomorrow = tomorrowUTC();
 
     const pastGrids = await ctx.db
@@ -402,8 +411,9 @@ export const getExposureStats = query({
  * - `kind: "missing"` si le pool est vide pour ce jour-là.
  */
 export const getUpcomingScheduledPreview = query({
-  args: { days: v.optional(v.number()) },
+  args: { adminToken: v.string(), days: v.optional(v.number()) },
   handler: async (ctx, args) => {
+    checkAdminToken(args.adminToken);
     const days = Math.min(
       Math.max(args.days ?? UPCOMING_PREVIEW_DEFAULT_DAYS, 1),
       UPCOMING_PREVIEW_MAX_DAYS,
@@ -512,9 +522,11 @@ export const getUpcomingScheduledPreview = query({
 /** Returns recent observed feedback metrics for scheduled grids. */
 export const getGridFeedbackStats = query({
   args: {
+    adminToken: v.string(),
     limit: v.optional(v.number()),
   },
   handler: async (ctx, args) => {
+    checkAdminToken(args.adminToken);
     const limit = Math.min(args.limit ?? 60, 180);
     const feedbackRows = await ctx.db
       .query("gridFeedback")
@@ -565,8 +577,47 @@ export const submitGridFeedback = mutation({
     livesLeft: v.number(),
     filledCells: v.number(),
     guessesSubmitted: v.number(),
+    clientId: v.string(),
   },
   handler: async (ctx, args) => {
+    await rateLimiter.limit(ctx, "feedback", {
+      key: args.clientId,
+      throws: true,
+    });
+
+    if (
+      !Number.isInteger(args.livesLeft) ||
+      args.livesLeft < 0 ||
+      args.livesLeft > MAX_LIVES
+    ) {
+      throw new ConvexError("Invalid livesLeft");
+    }
+    if (
+      !Number.isInteger(args.filledCells) ||
+      args.filledCells < 0 ||
+      args.filledCells > 9
+    ) {
+      throw new ConvexError("Invalid filledCells");
+    }
+    if (
+      !Number.isInteger(args.guessesSubmitted) ||
+      args.guessesSubmitted < 0 ||
+      args.guessesSubmitted > MAX_GUESSES_PER_GAME
+    ) {
+      throw new ConvexError("Invalid guessesSubmitted");
+    }
+    if (args.won && args.filledCells !== 9) {
+      throw new ConvexError("Invalid: won requires 9 filled cells");
+    }
+    if (args.won && args.livesLeft <= 0) {
+      throw new ConvexError("Invalid: won requires lives left");
+    }
+    if (!args.won && args.livesLeft > 0 && args.filledCells === 9) {
+      throw new ConvexError(
+        "Invalid: 9 filled with lives left should be a win",
+      );
+    }
+
     const existing = await ctx.db
       .query("gridFeedback")
       .withIndex("by_date", (q) => q.eq("date", args.date))

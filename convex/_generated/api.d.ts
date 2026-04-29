@@ -8,6 +8,7 @@
  * @module
  */
 
+import type * as auth from "../auth.js";
 import type * as crons from "../crons.js";
 import type * as gridData from "../gridData.js";
 import type * as grids from "../grids.js";
@@ -15,6 +16,7 @@ import type * as guesses from "../guesses.js";
 import type * as lib_gridConstants from "../lib/gridConstants.js";
 import type * as lib_gridGenerator from "../lib/gridGenerator.js";
 import type * as lib_gridScheduler from "../lib/gridScheduler.js";
+import type * as rateLimit from "../rateLimit.js";
 import type * as seed from "../seed.js";
 import type * as wipe from "../wipe.js";
 
@@ -25,6 +27,7 @@ import type {
 } from "convex/server";
 
 declare const fullApi: ApiFromModules<{
+  auth: typeof auth;
   crons: typeof crons;
   gridData: typeof gridData;
   grids: typeof grids;
@@ -32,6 +35,7 @@ declare const fullApi: ApiFromModules<{
   "lib/gridConstants": typeof lib_gridConstants;
   "lib/gridGenerator": typeof lib_gridGenerator;
   "lib/gridScheduler": typeof lib_gridScheduler;
+  rateLimit: typeof rateLimit;
   seed: typeof seed;
   wipe: typeof wipe;
 }>;
@@ -62,4 +66,6 @@ export declare const internal: FilterApi<
   FunctionReference<any, "internal">
 >;
 
-export declare const components: {};
+export declare const components: {
+  rateLimiter: import("@convex-dev/rate-limiter/_generated/component.js").ComponentApi<"rateLimiter">;
+};

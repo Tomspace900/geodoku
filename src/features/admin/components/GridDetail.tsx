@@ -18,12 +18,13 @@ type ScheduledGrid = {
 type Props = {
   grid: ScheduledGrid | null;
   selectedDate: string | null;
+  token: string;
 };
 
-export function GridDetail({ grid, selectedDate }: Props) {
+export function GridDetail({ grid, selectedDate, token }: Props) {
   const detail = useQuery(
     api.grids.getGridDetailByDate,
-    grid ? { date: grid.date } : "skip",
+    grid ? { date: grid.date, adminToken: token } : "skip",
   );
 
   if (!selectedDate) {
