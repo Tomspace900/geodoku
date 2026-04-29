@@ -80,11 +80,6 @@ export const generatePoolInternal = internalAction({
       });
     }
 
-    console.log(
-      `[generatePoolInternal] Generated ${report.totalGenerated} grids ` +
-        `(${Math.round(report.constraintCoverage * 100)}% constraint coverage, ` +
-        `${report.countryCoverage} countries, ${report.durationMs}ms)`,
-    );
     return report;
   },
 });
@@ -104,7 +99,6 @@ export const ensureGridForDate = internalAction({
       date: args.date,
     });
     if (exists) {
-      console.log(`[ensureGridForDate] Grid for ${args.date} already exists`);
       return null;
     }
 
@@ -195,25 +189,24 @@ export const ensureGridForDate = internalAction({
       candidateId: selected.grid._id as Id<"gridCandidates">,
     });
 
-    const remaining = available.length - 1;
-    if (remaining < POOL_LOW_THRESHOLD) {
-      console.warn(
-        `[ensureGridForDate] POOL LOW: ${remaining} grids remaining after assignment for ${args.date}`,
-      );
-    }
-
     return { date: args.date, candidateId: selected.grid._id };
   },
 });
 
 /**
- * Ensures tomorrow's grid exists. Called by daily cron at 23:30 UTC.
+ * Ensures today's and tomorrow's grids exist. Called by daily cron at 12:00 UTC.
+ * Today est rattrapé en plus de tomorrow : si le cron de la veille a échoué, on
+ * évite que `getTodayGrid` renvoie null. `ensureGridForDate` est idempotent.
  */
 export const ensureTomorrowGrid = internalAction({
   args: {},
   handler: async (ctx) => {
-    const tomorrow = tomorrowUTC();
-    await ctx.runAction(internal.grids.ensureGridForDate, { date: tomorrow });
+    await ctx.runAction(internal.grids.ensureGridForDate, {
+      date: todayUTC(),
+    });
+    await ctx.runAction(internal.grids.ensureGridForDate, {
+      date: tomorrowUTC(),
+    });
   },
 });
 
@@ -228,16 +221,9 @@ export const autoRefillPool = internalAction({
       internal.gridData.getAvailablePoolGrids,
     );
     if (available.length >= POOL_LOW_THRESHOLD) {
-      console.log(
-        `[autoRefillPool] Pool healthy (${available.length} available), no refill needed`,
-      );
       return;
     }
-    const report = await ctx.runAction(internal.grids.generatePoolInternal, {});
-    console.log(
-      `[autoRefillPool] POOL REFILL: generated ${report.totalGenerated} new grids, ` +
-        `pool now at ${available.length + report.totalGenerated}`,
-    );
+    await ctx.runAction(internal.grids.generatePoolInternal, {});
   },
 });
 
@@ -671,5 +657,23 @@ export const generatePool = action({
   handler: async (ctx, args): Promise<GenerationReport> => {
     checkAdminToken(args.adminToken);
     return await ctx.runAction(internal.grids.generatePoolInternal, {});
+  },
+});
+
+/**
+ * Plans a grid for a specific date (admin override of the daily cron).
+ * Idempotent : early-return si la date est déjà dans `grids`.
+ * Protected by adminToken.
+ */
+export const scheduleGridForDate = action({
+  args: { adminToken: v.string(), date: v.string() },
+  handler: async (
+    ctx,
+    args,
+  ): Promise<{ date: string; candidateId: string } | null> => {
+    checkAdminToken(args.adminToken);
+    return await ctx.runAction(internal.grids.ensureGridForDate, {
+      date: args.date,
+    });
   },
 });

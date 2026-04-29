@@ -4,20 +4,66 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
+import { Button } from "@/components/ui/button";
 import {
   constraintLabel,
   difficultyStars,
   formatGridDateHeadingFr,
 } from "@/features/admin/logic/display";
-import { cn } from "@/lib/utils";
-import { useQuery } from "convex/react";
-import { Calendar, Sparkles } from "lucide-react";
+import { useAction, useQuery } from "convex/react";
+import { Calendar, Loader2, Sparkles } from "lucide-react";
+import { useState } from "react";
 import { api } from "../../../../convex/_generated/api";
 import { GridPreview } from "./GridPreview";
 
 const UPCOMING_DAYS = 7;
 
 type Props = { token: string };
+
+type ScheduleStatus = "idle" | "loading" | "error";
+
+function ScheduleButton({
+  date,
+  token,
+  label,
+}: {
+  date: string;
+  token: string;
+  label: string;
+}) {
+  const scheduleGrid = useAction(api.grids.scheduleGridForDate);
+  const [status, setStatus] = useState<ScheduleStatus>("idle");
+
+  async function handleClick() {
+    setStatus("loading");
+    try {
+      await scheduleGrid({ adminToken: token, date });
+      setStatus("idle");
+    } catch {
+      setStatus("error");
+    }
+  }
+
+  return (
+    <div className="flex flex-col items-end gap-1">
+      <Button
+        type="button"
+        onClick={handleClick}
+        disabled={status === "loading"}
+        size="sm"
+        className="bg-on-surface text-surface-lowest hover:bg-on-surface/90 gap-2"
+      >
+        {status === "loading" && <Loader2 className="h-3 w-3 animate-spin" />}
+        {status === "loading" ? "Planification…" : label}
+      </Button>
+      {status === "error" && (
+        <p className="text-[10px] text-rarity-ultra">
+          Erreur lors de la planification.
+        </p>
+      )}
+    </div>
+  );
+}
 
 export function UpcomingGridsPanel({ token }: Props) {
   const upcoming = useQuery(api.grids.getUpcomingScheduledPreview, {
@@ -53,17 +99,11 @@ export function UpcomingGridsPanel({ token }: Props) {
             if (day.kind === "missing") {
               return (
                 <AccordionItem
-                  className="rounded-xl bg-rarity-ultra/10 px-4"
+                  className="rounded-xl bg-rarity-ultra/10 px-4 py-4"
                   key={day.date}
                   value={day.date}
                 >
-                  <AccordionTrigger
-                    className={cn(
-                      "cursor-default items-start gap-3 py-4 hover:no-underline",
-                      "[&_[data-slot=accordion-chevron]]:hidden",
-                    )}
-                    disabled
-                  >
+                  <div className="flex items-start justify-between gap-3">
                     <div className="min-w-0 space-y-1 text-left">
                       <h3 className="font-serif text-xl font-medium capitalize text-on-surface">
                         {formatGridDateHeadingFr(day.date)}
@@ -72,8 +112,12 @@ export function UpcomingGridsPanel({ token }: Props) {
                         Pool vide — fallback d'urgence à la génération
                       </p>
                     </div>
-                  </AccordionTrigger>
-                  <AccordionContent aria-hidden className="hidden p-0" />
+                    <ScheduleButton
+                      date={day.date}
+                      token={token}
+                      label="Planifier"
+                    />
+                  </div>
                 </AccordionItem>
               );
             }
@@ -127,7 +171,7 @@ export function UpcomingGridsPanel({ token }: Props) {
                     </div>
                   </div>
                 </AccordionTrigger>
-                <AccordionContent className="px-4">
+                <AccordionContent className="px-4 pb-4">
                   <div className="mx-auto max-w-[700px] overflow-x-auto pb-3">
                     <GridPreview
                       cellDifficulties={day.cellDifficulties}
@@ -136,6 +180,15 @@ export function UpcomingGridsPanel({ token }: Props) {
                       validAnswers={day.validAnswers}
                     />
                   </div>
+                  {!isScheduled && (
+                    <div className="flex justify-end pt-1">
+                      <ScheduleButton
+                        date={day.date}
+                        token={token}
+                        label="Valider cette grille"
+                      />
+                    </div>
+                  )}
                 </AccordionContent>
               </AccordionItem>
             );
