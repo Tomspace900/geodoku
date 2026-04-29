@@ -161,7 +161,7 @@ export function SolutionGrid({
                   <span
                     key={iso}
                     className={cn(
-                      "inline-flex max-w-full min-w-0 items-baseline gap-x-1 gap-y-0 rounded-md border border-transparent px-1.5 py-0.5 text-[11px] font-medium leading-snug",
+                      "inline-flex max-w-full min-w-0 items-baseline gap-x-0.5 gap-y-0 rounded-md border border-transparent px-1 py-[3px] text-[8px] font-medium leading-snug sm:gap-x-1 sm:px-1.5 sm:py-0.5 sm:text-[11px]",
                       tier
                         ? RARITY_STYLES[tier]
                         : "bg-surface-low text-on-surface",
@@ -170,14 +170,14 @@ export function SolutionGrid({
                   >
                     <span
                       aria-hidden
-                      className="shrink-0 text-[11px] leading-none"
+                      className="shrink-0 text-[8px] leading-none sm:text-[11px]"
                     >
                       {country?.flagEmoji ?? "🏳️"}
                     </span>
-                    <span className="flex min-w-0 flex-wrap items-baseline gap-x-1">
+                    <span className="flex min-w-0 flex-wrap items-baseline gap-x-0.5 sm:gap-x-1">
                       <span className="min-w-0 break-words">{countryName}</span>
                       {sharePct !== null && (
-                        <span className="shrink-0 text-[9px] font-normal tabular-nums text-current/85">
+                        <span className="shrink-0 text-[7px] font-normal tabular-nums text-current/85 sm:text-[9px]">
                           ({sharePct})
                         </span>
                       )}
@@ -202,7 +202,7 @@ export function SolutionGrid({
                   key={key}
                   className="relative isolate aspect-square w-full min-h-0 rounded-xl bg-surface-lowest shadow-editorial"
                 >
-                  <div className="flex h-full min-h-0 flex-wrap content-start gap-1 overflow-y-auto p-1.5">
+                  <div className="flex h-full min-h-0 flex-wrap content-start gap-0.5 overflow-y-auto p-1 sm:gap-1 sm:p-1.5">
                     {ordered.map(({ iso, tier }) => countryChip(iso, tier))}
                   </div>
                 </div>
