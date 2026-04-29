@@ -23,7 +23,7 @@ export function LocaleSwitcher({ className }: { className?: string }) {
           size="sm"
           onClick={() => setLocale(l)}
           className={cn(
-            "h-auto px-1.5 py-0 text-[10px] font-semibold tracking-widest uppercase sm:px-2 sm:py-0.5",
+            "h-auto px-1 py-0 text-[9px] font-semibold uppercase tracking-wider sm:px-1.5 sm:text-[10px] sm:tracking-widest md:px-2 md:py-0.5",
             locale === l
               ? "text-on-surface"
               : "text-on-surface-variant hover:text-on-surface",
