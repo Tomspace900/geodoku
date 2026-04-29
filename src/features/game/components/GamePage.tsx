@@ -1,3 +1,4 @@
+import AppFooter from "@/app/AppFooter";
 import { ErrorScreen } from "@/features/errors/components/ErrorScreen";
 import { useBackendDownTimeout } from "@/features/errors/hooks/useBackendDownTimeout";
 import { useGameState } from "@/features/game/hooks/useGameState";
@@ -10,7 +11,6 @@ import { GameGrid } from "./GameGrid";
 import { GuessModal } from "./GuessModal";
 import { Header } from "./Header";
 import { HowToPlayLink } from "./HowToPlayLink";
-import { LocaleSwitcher } from "./LocaleSwitcher";
 import { ResultScreen } from "./ResultScreen";
 import { SolutionGrid } from "./SolutionGrid";
 
@@ -99,7 +99,7 @@ export function GamePage() {
 
   return (
     <div className="min-h-screen bg-surface flex flex-col items-center px-4 py-6">
-      <div className={cn("w-full flex flex-col gap-5", contentMaxWidth)}>
+      <div className={cn("w-full flex flex-col gap-5 flex-1", contentMaxWidth)}>
         <Header remainingLives={state.remainingLives} date={state.date} />
 
         {isBackendDown ? (
@@ -134,8 +134,9 @@ export function GamePage() {
         )}
 
         {!isSolutionView && <HowToPlayLink />}
-        <LocaleSwitcher />
       </div>
+
+      <AppFooter className="mt-auto w-full shrink-0" />
 
       {state.selectedCell !== null && (
         <GuessModal

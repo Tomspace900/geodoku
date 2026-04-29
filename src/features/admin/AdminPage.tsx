@@ -1,3 +1,4 @@
+import AppFooter from "@/app/AppFooter";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useQuery } from "convex/react";
@@ -75,8 +76,8 @@ export function AdminPage() {
 
   if (!token) {
     return (
-      <div className="min-h-screen bg-surface px-4 py-8">
-        <div className="mx-auto flex w-full max-w-[460px] flex-col gap-6">
+      <div className="flex min-h-screen flex-col bg-surface px-4 py-8">
+        <div className="mx-auto flex w-full max-w-[460px] flex-1 flex-col gap-6">
           <header className="rounded-2xl bg-surface-low p-6">
             <h1 className="font-serif text-3xl font-medium italic text-on-surface leading-none">
               Geodoku
@@ -113,6 +114,7 @@ export function AdminPage() {
             </Button>
           </div>
         </div>
+        <AppFooter className="mt-auto shrink-0" />
       </div>
     );
   }
@@ -121,8 +123,8 @@ export function AdminPage() {
 
   return (
     <AdminAuthBoundary onUnauthorized={clearToken}>
-      <div className="min-h-screen bg-surface">
-        <div className="mx-auto flex max-w-6xl flex-col gap-6 px-4 py-8">
+      <div className="flex min-h-screen flex-col bg-surface">
+        <div className="mx-auto flex w-full max-w-6xl flex-1 flex-col gap-6 px-4 py-8">
           <AdminHeader onLogout={clearToken} />
 
           <PoolOverviewPanel
@@ -166,6 +168,7 @@ export function AdminPage() {
             scheduledGrids={scheduledGrids ?? []}
           />
         </div>
+        <AppFooter className="mt-auto shrink-0 px-4 pb-6" />
       </div>
     </AdminAuthBoundary>
   );
