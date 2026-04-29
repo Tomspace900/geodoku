@@ -1,26 +1,16 @@
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { ErrorScreen } from "@/features/errors/components/ErrorScreen";
-import { useBackendDownTimeout } from "@/features/errors/hooks/useBackendDownTimeout";
-import { cn } from "@/lib/utils";
-import { useAction, useMutation, useQuery } from "convex/react";
-import { ConvexError } from "convex/values";
-import { AlertTriangle, CheckCircle } from "lucide-react";
+import { useQuery } from "convex/react";
 import { useState } from "react";
 import { api } from "../../../convex/_generated/api";
-import { CandidateCard } from "./components/CandidateCard";
+import { AdminAuthBoundary } from "./components/AdminAuthBoundary";
+import { DiversityMetricsPanel } from "./components/DiversityMetricsPanel";
 import { GridDetail } from "./components/GridDetail";
+import { PoolOverviewPanel } from "./components/PoolOverviewPanel";
 import { ScheduleCalendar } from "./components/ScheduleCalendar";
+import { UpcomingGridsPanel } from "./components/UpcomingGridsPanel";
 import { useAdminToken } from "./hooks/useAdminToken";
-import { dateToStr, getNextAvailableDate } from "./logic/scheduling";
-
-type Tab = "pending" | "approved" | "rejected";
-
-const TAB_LABELS: Record<Tab, string> = {
-  pending: "En attente",
-  approved: "Approuvés",
-  rejected: "Rejetés",
-};
+import { dateToStr } from "./logic/scheduling";
 
 // ─── Header ───────────────────────────────────────────────────────────────────
 
@@ -54,118 +44,34 @@ function AdminHeader({ onLogout }: { onLogout: () => void }) {
 export function AdminPage() {
   const [token, setToken, clearToken] = useAdminToken();
   const [tokenInput, setTokenInput] = useState("");
-  const [activeTab, setActiveTab] = useState<Tab>("pending");
-  const [candidateLimit, setCandidateLimit] = useState(12);
   const [selectedDate, setSelectedDate] = useState<string | null>(
     dateToStr(new Date()),
   );
-  const [isPurgingCandidates, setIsPurgingCandidates] = useState(false);
-  const [isGeneratingCandidates, setIsGeneratingCandidates] = useState(false);
-  const [purgeMessage, setPurgeMessage] = useState<string | null>(null);
-  const [generationMessage, setGenerationMessage] = useState<string | null>(
-    null,
-  );
-
-  const purgeAllPendingCandidates = useMutation(
-    api.grids.purgeAllPendingCandidates,
-  );
-  const triggerGeneration = useAction(api.grids.triggerGeneration);
 
   const scheduledGrids = useQuery(
     api.grids.getScheduledGrids,
-    token ? {} : "skip",
+    token ? { adminToken: token } : "skip",
   );
 
-  const candidates = useQuery(
-    api.grids.getCandidates,
-    token
-      ? {
-          status: activeTab,
-          limit: candidateLimit,
-          sortBy: activeTab === "pending" ? "score" : "date",
-        }
-      : "skip",
+  const feedbackStats = useQuery(
+    api.grids.getGridFeedbackStats,
+    token ? { adminToken: token, limit: 60 } : "skip",
   );
 
-  const isBackendDown = useBackendDownTimeout(
-    Boolean(token) && scheduledGrids === undefined,
-  );
-
-  // Dériver les données de planification depuis scheduledGrids
   const scheduledDates = new Set<string>(
     (scheduledGrids ?? []).map((g) => g.date),
   );
-  const nextAvailableDate = getNextAvailableDate(scheduledDates);
 
-  // Alerte si aucune grille n'est planifiée pour demain
   const tomorrow = new Date();
   tomorrow.setDate(tomorrow.getDate() + 1);
   const tomorrowStr = dateToStr(tomorrow);
-  const hasTomorrowGrid = scheduledDates.has(tomorrowStr);
 
-  // Grille correspondant à la date sélectionnée dans le calendrier
   const selectedGrid =
     selectedDate != null
       ? ((scheduledGrids ?? []).find((g) => g.date === selectedDate) ?? null)
       : null;
 
-  async function handlePurgePendingCandidates() {
-    if (!token) return;
-    const confirmed = window.confirm(
-      "Supprimer toutes les candidates en attente (pending) ? Les approuvées et rejetées ne sont pas touchées.",
-    );
-    if (!confirmed) return;
-
-    setIsPurgingCandidates(true);
-    setPurgeMessage(null);
-    try {
-      const result = await purgeAllPendingCandidates({ adminToken: token });
-      setPurgeMessage(
-        `${result.deleted} candidat${result.deleted === 1 ? "" : "s"} pending supprimé${result.deleted === 1 ? "" : "s"}.`,
-      );
-    } catch (err) {
-      if (
-        err instanceof ConvexError &&
-        String(err.message).includes("Unauthorized")
-      ) {
-        clearToken();
-        return;
-      }
-      setPurgeMessage("Impossible de purger les candidates pour le moment.");
-    } finally {
-      setIsPurgingCandidates(false);
-    }
-  }
-
-  async function handleTriggerGeneration() {
-    if (!token) return;
-    setIsGeneratingCandidates(true);
-    setGenerationMessage(null);
-    try {
-      await triggerGeneration({ adminToken: token });
-      setGenerationMessage("Génération lancée avec succès.");
-    } catch (err) {
-      if (
-        err instanceof ConvexError &&
-        String(err.message).includes("Unauthorized")
-      ) {
-        clearToken();
-        return;
-      }
-      setGenerationMessage(
-        "Impossible de lancer la génération pour le moment.",
-      );
-    } finally {
-      setIsGeneratingCandidates(false);
-    }
-  }
-
-  function handleTabChange(tab: Tab) {
-    setActiveTab(tab);
-    setCandidateLimit(12);
-  }
-
-  // ── Écran de connexion ────────────────────────────────────────────────────
+  // ── Écran de connexion ──────────────────────────────────────────────────────
 
   if (!token) {
     return (
@@ -211,170 +117,56 @@ export function AdminPage() {
     );
   }
 
-  // ── Backend injoignable (timeout > 8s après login) ────────────────────────
-
-  if (isBackendDown) {
-    return (
-      <div className="flex min-h-screen flex-col items-center bg-surface px-4 py-8">
-        <div className="flex w-full max-w-[500px] flex-col gap-6">
-          <AdminHeader onLogout={clearToken} />
-          <ErrorScreen variant="backend-down" />
-        </div>
-      </div>
-    );
-  }
-
-  // ── Page principale ───────────────────────────────────────────────────────
+  // ── Page principale ─────────────────────────────────────────────────────────
 
   return (
-    <div className="min-h-screen bg-surface">
-      <div className="mx-auto flex max-w-6xl flex-col gap-6 px-4 py-8">
-        <AdminHeader onLogout={clearToken} />
+    <AdminAuthBoundary onUnauthorized={clearToken}>
+      <div className="min-h-screen bg-surface">
+        <div className="mx-auto flex max-w-6xl flex-col gap-6 px-4 py-8">
+          <AdminHeader onLogout={clearToken} />
 
-        <section className="rounded-2xl bg-surface-low p-4 md:p-5">
-          <div className="mb-3 flex flex-wrap items-center justify-between gap-3">
-            <p className="text-[10px] font-semibold text-on-surface-variant tracking-widest uppercase">
-              Planification
-            </p>
-          </div>
-          {!hasTomorrowGrid && scheduledGrids !== undefined ? (
-            <div className="mb-3 rounded-lg bg-rarity-ultra/10 px-3 py-2 text-sm text-rarity-ultra flex items-center gap-2">
-              <AlertTriangle className="w-4 h-4" />
-              Aucune grille planifiée pour demain ({tomorrowStr}).
-            </div>
-          ) : (
-            <div className="mb-3 rounded-lg bg-brand/10 px-3 py-2 text-sm text-brand flex items-center gap-2">
-              <CheckCircle className="w-4 h-4" />
-              Il y a bien une grille planifiée pour demain ({tomorrowStr}).
-            </div>
-          )}
-          <div className="grid grid-cols-1 items-stretch gap-4 md:grid-cols-5">
-            <div className="col-span-1 h-full md:col-span-2">
-              <ScheduleCalendar
-                scheduledGrids={scheduledGrids ?? []}
-                selectedDate={selectedDate}
-                onSelectDate={setSelectedDate}
-              />
-            </div>
-            <div className="col-span-1 h-full md:col-span-3">
-              <GridDetail
-                grid={selectedGrid}
-                selectedDate={selectedDate}
-                adminToken={token}
-                onUnauthorized={clearToken}
-                onUnscheduled={() => setSelectedDate(null)}
-              />
-            </div>
-          </div>
-        </section>
+          <PoolOverviewPanel
+            token={token}
+            clearToken={clearToken}
+            hasTomorrowGrid={
+              scheduledGrids === undefined
+                ? undefined
+                : scheduledDates.has(tomorrowStr)
+            }
+          />
 
-        <section className="rounded-2xl bg-surface-low p-4 md:p-5">
-          <div className="mb-4 flex flex-wrap items-center justify-between gap-3">
-            <p className="text-[10px] font-semibold text-on-surface-variant tracking-widest uppercase">
-              Revue des candidates
-            </p>
-            <div className="inline-flex rounded-lg bg-surface-highest p-1">
-              {(["pending", "approved", "rejected"] as Tab[]).map((tab) => (
-                <button
-                  key={tab}
-                  type="button"
-                  onClick={() => handleTabChange(tab)}
-                  className={cn(
-                    "rounded-md px-3 py-1.5 text-xs font-semibold tracking-wide transition-colors",
-                    activeTab === tab
-                      ? "bg-on-surface text-surface-lowest"
-                      : "text-on-surface-variant hover:text-on-surface",
-                  )}
-                >
-                  {TAB_LABELS[tab]}
-                </button>
-              ))}
+          <section className="rounded-2xl bg-surface-low p-4 md:p-5">
+            <div className="mb-3 flex flex-wrap items-center justify-between gap-3">
+              <p className="text-[10px] font-semibold text-on-surface-variant tracking-widest uppercase">
+                Planification
+              </p>
             </div>
-          </div>
-
-          <div className="mb-4 rounded-xl bg-surface-lowest p-3">
-            <p className="mb-2 text-[10px] font-semibold text-on-surface-variant tracking-widest uppercase">
-              Actions maintenance
-            </p>
-            <div className="flex flex-wrap items-center gap-2">
-              <Button
-                type="button"
-                size="sm"
-                variant="secondary"
-                onClick={handlePurgePendingCandidates}
-                disabled={isPurgingCandidates}
-                className="bg-surface-highest text-on-surface hover:bg-surface-highest/80"
-              >
-                {isPurgingCandidates
-                  ? "Purge en cours…"
-                  : "Purger la file pending"}
-              </Button>
-              <Button
-                type="button"
-                size="sm"
-                variant="secondary"
-                onClick={handleTriggerGeneration}
-                disabled={isGeneratingCandidates}
-                className="bg-surface-highest text-on-surface hover:bg-surface-highest/80"
-              >
-                {isGeneratingCandidates
-                  ? "Génération en cours…"
-                  : "Générer des candidates"}
-              </Button>
-            </div>
-            {(purgeMessage || generationMessage) && (
-              <div className="mt-2 space-y-1">
-                {purgeMessage && (
-                  <p className="text-xs text-on-surface-variant">
-                    {purgeMessage}
-                  </p>
-                )}
-                {generationMessage && (
-                  <p className="text-xs text-on-surface-variant">
-                    {generationMessage}
-                  </p>
-                )}
+            <div className="grid grid-cols-1 items-stretch gap-4 md:grid-cols-5">
+              <div className="col-span-1 h-full md:col-span-2">
+                <ScheduleCalendar
+                  scheduledGrids={scheduledGrids ?? []}
+                  selectedDate={selectedDate}
+                  onSelectDate={setSelectedDate}
+                />
               </div>
-            )}
-          </div>
-
-          {candidates === undefined ? (
-            <p className="text-sm text-on-surface-variant">Chargement…</p>
-          ) : candidates.length === 0 ? (
-            <div className="rounded-xl bg-surface-lowest p-5 text-sm text-on-surface-variant">
-              Aucune grille dans l'onglet «{TAB_LABELS[activeTab]}».
-            </div>
-          ) : (
-            <>
-              <div className="space-y-4">
-                {candidates.map((candidate) => (
-                  <CandidateCard
-                    key={candidate._id}
-                    candidate={candidate}
-                    adminToken={token}
-                    onUnauthorized={clearToken}
-                    nextAvailableDate={nextAvailableDate}
-                    scheduledDates={scheduledDates}
-                  />
-                ))}
+              <div className="col-span-1 h-full md:col-span-3">
+                <GridDetail
+                  grid={selectedGrid}
+                  selectedDate={selectedDate}
+                  token={token}
+                />
               </div>
-              {candidateLimit < 50 && candidates.length >= candidateLimit && (
-                <div className="mt-4 flex justify-center">
-                  <Button
-                    type="button"
-                    variant="secondary"
-                    size="sm"
-                    onClick={() => setCandidateLimit(50)}
-                    className="bg-surface-highest text-on-surface hover:bg-surface-highest/80"
-                  >
-                    Afficher plus de candidates
-                  </Button>
-                </div>
-              )}
-            </>
-          )}
-        </section>
+            </div>
+          </section>
+
+          <UpcomingGridsPanel token={token} />
+
+          <DiversityMetricsPanel
+            feedbackStats={feedbackStats}
+            scheduledGrids={scheduledGrids ?? []}
+          />
+        </div>
       </div>
-    </div>
+    </AdminAuthBoundary>
   );
 }

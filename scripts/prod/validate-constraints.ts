@@ -9,40 +9,34 @@
  */
 import { readFileSync } from "node:fs";
 import { resolve } from "node:path";
-import type { Country } from "../src/features/countries/types.ts";
+import type { Country } from "../../src/features/countries/types.ts";
 import {
   CONSTRAINTS,
   type Constraint,
   type ConstraintCategory,
   type ConstraintDifficulty,
-} from "../src/features/game/logic/constraints.ts";
-import { translate } from "../src/i18n/index.ts";
+} from "../../src/features/game/logic/constraints.ts";
+import { translate } from "../../src/i18n/index.ts";
 
-const SWEET_SPOT_PIVOT: [number, number] = [5, 20];
 const SWEET_SPOT_DEFAULT: [number, number] = [8, 60];
-const SWEET_SPOT_FLAG: [number, number] = [8, 100];
-const SWEET_SPOT_NAME: [number, number] = [8, 40];
-const SWEET_SPOT_SUBREGION: [number, number] = [8, 20];
-const SWEET_SPOT_EVENT: [number, number] = [8, 20];
-const SWEET_SPOT_POLITICAL: [number, number] = [8, 35];
+
+/** Plage cible [min, max] par catégorie. Fallback : SWEET_SPOT_DEFAULT. */
+const SWEET_SPOT_BY_CATEGORY: Partial<
+  Record<ConstraintCategory, [number, number]>
+> = {
+  borders_pivot: [5, 20],
+  flag: [8, 65],
+  subregion: [8, 20],
+  event: [8, 20],
+  political: [8, 60],
+  physical: [8, 30],
+  density: [8, 40],
+  regime: [8, 60],
+  latitude: [5, 60],
+};
 
 function sweetSpotForCategory(category: ConstraintCategory): [number, number] {
-  switch (category) {
-    case "borders_pivot":
-      return SWEET_SPOT_PIVOT;
-    case "flag":
-      return SWEET_SPOT_FLAG;
-    case "name":
-      return SWEET_SPOT_NAME;
-    case "subregion":
-      return SWEET_SPOT_SUBREGION;
-    case "event":
-      return SWEET_SPOT_EVENT;
-    case "political":
-      return SWEET_SPOT_POLITICAL;
-    default:
-      return SWEET_SPOT_DEFAULT;
-  }
+  return SWEET_SPOT_BY_CATEGORY[category] ?? SWEET_SPOT_DEFAULT;
 }
 
 /** Plages spécifiques (effets larges volontaires pour la génération). */

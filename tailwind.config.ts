@@ -51,24 +51,24 @@ const config: Config = {
           foreground: "hsl(var(--card-foreground))",
         },
         surface: {
-          DEFAULT: "var(--color-surface)",
-          low: "var(--color-surface-low)",
-          lowest: "var(--color-surface-lowest)",
-          highest: "var(--color-surface-highest)",
+          DEFAULT: "hsl(var(--color-surface) / <alpha-value>)",
+          low: "hsl(var(--color-surface-low) / <alpha-value>)",
+          lowest: "hsl(var(--color-surface-lowest) / <alpha-value>)",
+          highest: "hsl(var(--color-surface-highest) / <alpha-value>)",
         },
         "on-surface": {
-          DEFAULT: "var(--color-on-surface)",
-          variant: "var(--color-on-surface-variant)",
+          DEFAULT: "hsl(var(--color-on-surface) / <alpha-value>)",
+          variant: "hsl(var(--color-on-surface-variant) / <alpha-value>)",
         },
-        "outline-variant": "var(--color-outline-variant)",
+        "outline-variant": "hsl(var(--color-outline-variant) / <alpha-value>)",
         brand: {
-          DEFAULT: "var(--color-brand)",
+          DEFAULT: "hsl(var(--color-brand) / <alpha-value>)",
         },
         rarity: {
-          common: "var(--color-rarity-common)",
-          uncommon: "var(--color-rarity-uncommon)",
-          rare: "var(--color-rarity-rare)",
-          ultra: "var(--color-rarity-ultra)",
+          common: "hsl(var(--color-rarity-common) / <alpha-value>)",
+          uncommon: "hsl(var(--color-rarity-uncommon) / <alpha-value>)",
+          rare: "hsl(var(--color-rarity-rare) / <alpha-value>)",
+          ultra: "hsl(var(--color-rarity-ultra) / <alpha-value>)",
         },
       },
       boxShadow: {
@@ -78,6 +78,20 @@ const config: Config = {
         lg: "var(--radius)",
         md: "calc(var(--radius) - 2px)",
         sm: "calc(var(--radius) - 4px)",
+      },
+      keyframes: {
+        "accordion-down": {
+          from: { height: "0" },
+          to: { height: "var(--radix-accordion-content-height)" },
+        },
+        "accordion-up": {
+          from: { height: "var(--radix-accordion-content-height)" },
+          to: { height: "0" },
+        },
+      },
+      animation: {
+        "accordion-down": "accordion-down 0.2s ease-out",
+        "accordion-up": "accordion-up 0.2s ease-out",
       },
     },
   },

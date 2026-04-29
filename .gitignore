@@ -26,3 +26,9 @@ dist-ssr/
 .agents/
 .cursor/
 .claude/
+
+# Docs
+docs/
+
+# Dev-only scripts (local audits, not versioned)
+scripts/dev/

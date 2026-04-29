@@ -12,11 +12,13 @@ export type ConstraintCategory =
   | "population"
   | "language"
   | "flag"
-  | "name"
-  | "hemisphere"
+  | "latitude"
   | "subregion"
   | "event"
-  | "political";
+  | "political"
+  | "regime"
+  | "physical"
+  | "density";
 
 export type ConstraintDifficulty = "easy" | "medium" | "hard";
 
@@ -27,32 +29,24 @@ export type ConstraintId =
   | "area_lt_1k"
   | "borders_brazil"
   | "borders_china"
-  | "borders_drc"
-  | "borders_france"
-  | "borders_germany"
   | "borders_india"
   | "borders_min_5"
   | "borders_min_7"
-  | "borders_niger"
   | "borders_russia"
   | "borders_solo"
-  | "borders_tanzania"
-  | "borders_turkey"
   | "continent_africa"
   | "continent_asia"
   | "continent_europe"
   | "continent_north_america"
   | "continent_oceania"
   | "continent_south_america"
+  | "density_high"
+  | "density_low"
   | "event_fifa_wc_host"
   | "event_summer_olympics_host"
-  | "flag_has_black"
-  | "flag_has_blue"
   | "flag_has_crescent"
   | "flag_has_cross"
-  | "flag_has_green"
   | "flag_has_star"
-  | "hemisphere_south"
   | "language_arabic"
   | "language_english"
   | "language_french"
@@ -60,15 +54,21 @@ export type ConstraintId =
   | "language_portuguese"
   | "language_russian"
   | "language_spanish"
-  | "name_max_5_letters"
-  | "name_starts_with_b"
-  | "name_starts_with_m"
+  | "latitude_polar"
+  | "latitude_south_hemisphere"
+  | "physical_caribbean_coast"
+  | "physical_crosses_equator"
+  | "physical_mediterranean_coast"
+  | "physical_peak_over_5000m"
+  | "political_commonwealth"
   | "political_eu"
   | "political_g20"
+  | "political_nato"
   | "population_gt_100M"
   | "population_gt_30M"
   | "population_lt_1M"
   | "population_lt_2_5M"
+  | "regime_monarchy"
   | "subregion_caribbean"
   | "subregion_middle_east"
   | "subregion_southeast_asia"
@@ -103,6 +103,16 @@ const BORDERS_SOLO = 1;
 const BORDERS_MIN_5 = 5;
 const BORDERS_MIN_7 = 7;
 
+// ─── Latitude thresholds (degrés décimaux) ────────────────────────────────────
+
+/** |lat| > POLAR_ABS_LAT → pays du grand nord/sud (Scandinavie, Canada, Russie). */
+const POLAR_ABS_LAT = 55;
+
+// ─── Density thresholds (hab./km²) ────────────────────────────────────────────
+
+const DENSITY_HIGH = 300;
+const DENSITY_LOW = 10;
+
 // ─── ISO 639-1 language codes ─────────────────────────────────────────────────
 
 const LANG_FR = "fr";
@@ -114,35 +124,10 @@ const LANG_RU = "ru";
 
 // ─── ISO 3166-1 alpha-3 pivot country codes ───────────────────────────────────
 
-const CODE_FRA = "FRA";
-const CODE_DEU = "DEU";
 const CODE_RUS = "RUS";
 const CODE_CHN = "CHN";
 const CODE_BRA = "BRA";
-const CODE_COD = "COD";
-const CODE_TUR = "TUR";
-const CODE_TZA = "TZA";
 const CODE_IND = "IND";
-const CODE_NER = "NER";
-
-// ─── Name helpers (FR + EN cohérents pour la grille unique) ───────────────────
-
-function firstCharUpper(s: string): string {
-  const ch = s.trim().at(0);
-  return ch ? ch.toUpperCase() : "";
-}
-
-function nameStartsSameLetter(country: Country, letter: string): boolean {
-  const le = letter.toUpperCase();
-  return (
-    firstCharUpper(country.names.en) === le &&
-    firstCharUpper(country.names.fr) === le
-  );
-}
-
-function nameMax5LettersBothLocales(country: Country): boolean {
-  return country.names.en.length <= 5 && country.names.fr.length <= 5;
-}
 
 // ─── Constraints ──────────────────────────────────────────────────────────────
 
@@ -196,14 +181,14 @@ export const CONSTRAINTS: Constraint[] = [
     id: "water_island",
     labelKey: "constraint.water_island",
     category: "water_access",
-    difficulty: "medium",
+    difficulty: "easy",
     predicate: (c) => c.waterAccess === "island",
   },
   {
     id: "water_landlocked",
     labelKey: "constraint.water_landlocked",
     category: "water_access",
-    difficulty: "medium",
+    difficulty: "easy",
     predicate: (c) => c.waterAccess === "landlocked",
   },
 
@@ -212,14 +197,14 @@ export const CONSTRAINTS: Constraint[] = [
     id: "borders_solo",
     labelKey: "constraint.borders_solo",
     category: "borders_count",
-    difficulty: "hard",
+    difficulty: "medium",
     predicate: (c) => c.borders.length === BORDERS_SOLO,
   },
   {
     id: "borders_min_5",
     labelKey: "constraint.borders_min_5",
     category: "borders_count",
-    difficulty: "easy",
+    difficulty: "medium",
     predicate: (c) => c.borders.length >= BORDERS_MIN_5,
   },
   {
@@ -232,74 +217,32 @@ export const CONSTRAINTS: Constraint[] = [
 
   // ── Frontières — pivot ─────────────────────────────────────────────────────
   {
-    id: "borders_france",
-    labelKey: "constraint.borders_france",
-    category: "borders_pivot",
-    difficulty: "hard",
-    predicate: (c) => c.borders.includes(CODE_FRA),
-  },
-  {
-    id: "borders_germany",
-    labelKey: "constraint.borders_germany",
-    category: "borders_pivot",
-    difficulty: "hard",
-    predicate: (c) => c.borders.includes(CODE_DEU),
-  },
-  {
     id: "borders_russia",
     labelKey: "constraint.borders_russia",
     category: "borders_pivot",
-    difficulty: "hard",
+    difficulty: "medium",
     predicate: (c) => c.borders.includes(CODE_RUS),
   },
   {
     id: "borders_china",
     labelKey: "constraint.borders_china",
     category: "borders_pivot",
-    difficulty: "hard",
+    difficulty: "medium",
     predicate: (c) => c.borders.includes(CODE_CHN),
   },
   {
     id: "borders_brazil",
     labelKey: "constraint.borders_brazil",
     category: "borders_pivot",
-    difficulty: "hard",
+    difficulty: "medium",
     predicate: (c) => c.borders.includes(CODE_BRA),
-  },
-  {
-    id: "borders_drc",
-    labelKey: "constraint.borders_drc",
-    category: "borders_pivot",
-    difficulty: "hard",
-    predicate: (c) => c.borders.includes(CODE_COD),
-  },
-  {
-    id: "borders_turkey",
-    labelKey: "constraint.borders_turkey",
-    category: "borders_pivot",
-    difficulty: "hard",
-    predicate: (c) => c.borders.includes(CODE_TUR),
-  },
-  {
-    id: "borders_tanzania",
-    labelKey: "constraint.borders_tanzania",
-    category: "borders_pivot",
-    difficulty: "hard",
-    predicate: (c) => c.borders.includes(CODE_TZA),
   },
   {
     id: "borders_india",
     labelKey: "constraint.borders_india",
     category: "borders_pivot",
-    difficulty: "hard",
+    difficulty: "medium",
     predicate: (c) => c.borders.includes(CODE_IND),
-  },
-  {
-    id: "borders_niger",
-    labelKey: "constraint.borders_niger",
-    category: "borders_pivot",
-    difficulty: "hard",
-    predicate: (c) => c.borders.includes(CODE_NER),
   },
 
   // ── Superficie ─────────────────────────────────────────────────────────────
@@ -307,14 +250,14 @@ export const CONSTRAINTS: Constraint[] = [
     id: "area_gt_2M",
     labelKey: "constraint.area_gt_2M",
     category: "area",
-    difficulty: "hard",
+    difficulty: "medium",
     predicate: (c) => c.areaKm2 > AREA_GT_2M,
   },
   {
     id: "area_gt_500k",
     labelKey: "constraint.area_gt_500k",
     category: "area",
-    difficulty: "easy",
+    difficulty: "medium",
     predicate: (c) => c.areaKm2 > AREA_GT_500K,
   },
   {
@@ -408,27 +351,6 @@ export const CONSTRAINTS: Constraint[] = [
 
   // ── Drapeau ────────────────────────────────────────────────────────────────
   {
-    id: "flag_has_blue",
-    labelKey: "constraint.flag_has_blue",
-    category: "flag",
-    difficulty: "easy",
-    predicate: (c) => c.flagColors.includes("blue"),
-  },
-  {
-    id: "flag_has_green",
-    labelKey: "constraint.flag_has_green",
-    category: "flag",
-    difficulty: "easy",
-    predicate: (c) => c.flagColors.includes("green"),
-  },
-  {
-    id: "flag_has_black",
-    labelKey: "constraint.flag_has_black",
-    category: "flag",
-    difficulty: "medium",
-    predicate: (c) => c.flagColors.includes("black"),
-  },
-  {
     id: "flag_has_star",
     labelKey: "constraint.flag_has_star",
     category: "flag",
@@ -450,36 +372,20 @@ export const CONSTRAINTS: Constraint[] = [
     predicate: (c) => c.flagSymbols.includes("cross"),
   },
 
-  // ── Nom (FR + EN alignés) ──────────────────────────────────────────────────
+  // ── Latitude ───────────────────────────────────────────────────────────────
   {
-    id: "name_starts_with_b",
-    labelKey: "constraint.name_starts_with_b",
-    category: "name",
-    difficulty: "medium",
-    predicate: (c) => nameStartsSameLetter(c, "B"),
-  },
-  {
-    id: "name_starts_with_m",
-    labelKey: "constraint.name_starts_with_m",
-    category: "name",
-    difficulty: "medium",
-    predicate: (c) => nameStartsSameLetter(c, "M"),
-  },
-  {
-    id: "name_max_5_letters",
-    labelKey: "constraint.name_max_5_letters",
-    category: "name",
-    difficulty: "easy",
-    predicate: (c) => nameMax5LettersBothLocales(c),
-  },
-
-  // ── Hémisphère ─────────────────────────────────────────────────────────────
-  {
-    id: "hemisphere_south",
-    labelKey: "constraint.hemisphere_south",
-    category: "hemisphere",
+    id: "latitude_south_hemisphere",
+    labelKey: "constraint.latitude_south_hemisphere",
+    category: "latitude",
     difficulty: "hard",
     predicate: (c) => c.latitude < 0,
+  },
+  {
+    id: "latitude_polar",
+    labelKey: "constraint.latitude_polar",
+    category: "latitude",
+    difficulty: "hard",
+    predicate: (c) => Math.abs(c.latitude) > POLAR_ABS_LAT,
   },
 
   // ── Sous-région ────────────────────────────────────────────────────────────
@@ -535,5 +441,74 @@ export const CONSTRAINTS: Constraint[] = [
     category: "political",
     difficulty: "hard",
     predicate: (c) => c.groups.includes("g20"),
+  },
+  {
+    id: "political_nato",
+    labelKey: "constraint.political_nato",
+    category: "political",
+    difficulty: "medium",
+    predicate: (c) => c.groups.includes("nato"),
+  },
+  {
+    id: "political_commonwealth",
+    labelKey: "constraint.political_commonwealth",
+    category: "political",
+    difficulty: "medium",
+    predicate: (c) => c.groups.includes("commonwealth"),
+  },
+
+  // ── Régime ─────────────────────────────────────────────────────────────────
+  {
+    id: "regime_monarchy",
+    labelKey: "constraint.regime_monarchy",
+    category: "regime",
+    difficulty: "medium",
+    predicate: (c) => c.regime === "monarchy",
+  },
+
+  // ── Géographie physique ────────────────────────────────────────────────────
+  {
+    id: "physical_crosses_equator",
+    labelKey: "constraint.physical_crosses_equator",
+    category: "physical",
+    difficulty: "hard",
+    predicate: (c) => c.physicalFeatures.includes("equator_crosser"),
+  },
+  {
+    id: "physical_mediterranean_coast",
+    labelKey: "constraint.physical_mediterranean_coast",
+    category: "physical",
+    difficulty: "medium",
+    predicate: (c) => c.physicalFeatures.includes("mediterranean_coast"),
+  },
+  {
+    id: "physical_caribbean_coast",
+    labelKey: "constraint.physical_caribbean_coast",
+    category: "physical",
+    difficulty: "medium",
+    predicate: (c) => c.physicalFeatures.includes("caribbean_coast"),
+  },
+  {
+    id: "physical_peak_over_5000m",
+    labelKey: "constraint.physical_peak_over_5000m",
+    category: "physical",
+    difficulty: "medium",
+    predicate: (c) => c.physicalFeatures.includes("peak_over_5000m"),
+  },
+
+  // ── Densité de population ──────────────────────────────────────────────────
+  {
+    id: "density_high",
+    labelKey: "constraint.density_high",
+    category: "density",
+    difficulty: "medium",
+    predicate: (c) => c.population / c.areaKm2 > DENSITY_HIGH,
+  },
+  {
+    id: "density_low",
+    labelKey: "constraint.density_low",
+    category: "density",
+    difficulty: "medium",
+    predicate: (c) => c.population / c.areaKm2 < DENSITY_LOW,
   },
 ];

@@ -239,19 +239,19 @@ describe("gameReducer — rehydrate", () => {
     const state = gameReducer(freshState(), {
       type: "rehydrate",
       persisted,
-      rows: ["borders_france", "borders_germany", "borders_russia"],
-      cols: ["population_gt_30M", "area_gt_500k", "flag_has_blue"],
+      rows: ["borders_china", "borders_brazil", "borders_russia"],
+      cols: ["population_gt_30M", "area_gt_500k", "flag_has_star"],
     });
     expect(state.date).toBe("2026-04-15");
     expect(state.rows).toEqual([
-      "borders_france",
-      "borders_germany",
+      "borders_china",
+      "borders_brazil",
       "borders_russia",
     ]);
     expect(state.cols).toEqual([
       "population_gt_30M",
       "area_gt_500k",
-      "flag_has_blue",
+      "flag_has_star",
     ]);
     expect(state.remainingLives).toBe(2);
     expect(state.status).toBe("playing");
@@ -266,8 +266,8 @@ describe("gameReducer — rehydrate", () => {
     const state = gameReducer(freshState(), {
       type: "rehydrate",
       persisted,
-      rows: ["borders_france", "borders_germany", "borders_russia"],
-      cols: ["population_gt_30M", "area_gt_500k", "flag_has_blue"],
+      rows: ["borders_china", "borders_brazil", "borders_russia"],
+      cols: ["population_gt_30M", "area_gt_500k", "flag_has_star"],
     });
     expect(state.usedCountries).toBeInstanceOf(Set);
     expect(state.usedCountries.has("FRA")).toBe(true);

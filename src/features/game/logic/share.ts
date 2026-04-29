@@ -1,25 +1,28 @@
 import type { CellKey, GameState } from "../types";
 import { SHARE_EMOJIS, STARTING_LIVES } from "./constants";
-import { computeScore } from "./rarity";
+import { computeGridScore, computeOriginalityScore } from "./rarity";
 
 /**
  * Chaîne copiée « partage » : format volontairement international, sans texte
  * localisable. Uniquement le nom de marque (Geodoku, sans accent), chiffres,
- * URL et emojis — pas d’i18n ici.
+ * lettres ASCII (grade S/A/B/C/D), URL et emojis — pas d’i18n ici.
  */
 export function formatShareString(
   state: GameState,
   gridNumber: number,
   siteUrl = "geodoku.app",
 ): string {
-  const { percent } = computeScore(state);
+  const { percent } = computeGridScore(state);
+  const { grade } = computeOriginalityScore(state);
   const hearts =
     "❤️".repeat(state.remainingLives) +
     "🤍".repeat(STARTING_LIVES - state.remainingLives);
 
-  let header = `Geodoku #${gridNumber} — ${percent}%`;
-  if (state.status === "won") header += ` ${hearts}`;
-  else if (state.status === "lost") header += " 💀";
+  let titleLine = `Geodoku #${gridNumber}`;
+  if (state.status === "won") titleLine += ` ${hearts}`;
+  else if (state.status === "lost") titleLine += " 💀";
+  const scoreLine = `${percent}% · ${grade}`;
+  const header = `${titleLine}\n${scoreLine}`;
 
   const rows: string[] = [];
   for (let i = 0; i < 3; i++) {

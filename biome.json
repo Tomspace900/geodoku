@@ -18,6 +18,12 @@
     }
   },
   "files": {
-    "ignore": ["node_modules", "dist", "convex/_generated", "src/components/ui"]
+    "ignore": [
+      "node_modules",
+      "dist",
+      "convex/_generated",
+      "src/components/ui",
+      ".pnpm-store"
+    ]
   }
 }

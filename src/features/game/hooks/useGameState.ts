@@ -2,6 +2,7 @@ import { getCountryByCode } from "@/features/countries/lib/search";
 import { useMutation, useQuery } from "convex/react";
 import { useCallback, useEffect, useReducer } from "react";
 import { api } from "../../../../convex/_generated/api";
+import { getOrCreateClientId } from "../logic/clientId";
 import type { ConstraintId } from "../logic/constraints";
 import {
   type PersistedGame,
@@ -90,6 +91,7 @@ export function useGameState() {
           date: state.date,
           cellKey: `${cell.row},${cell.col}`,
           countryCode,
+          clientId: getOrCreateClientId(),
         });
         dispatch({
           type: "guessSuccess",

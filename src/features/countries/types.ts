@@ -34,7 +34,17 @@ export type FlagSymbol =
 
 export type CountryEvent = "fifa_wc_host" | "summer_olympics_host";
 
-export type PoliticalGroup = "eu" | "g20";
+export type PoliticalGroup = "eu" | "g20" | "nato" | "commonwealth";
+
+/** Political regime type. Only two values to keep the axis simple and extensible. */
+export type Regime = "monarchy" | "republic";
+
+/** Notable physical-geography features used as gameplay constraints. */
+export type PhysicalFeature =
+  | "equator_crosser"
+  | "mediterranean_coast"
+  | "caribbean_coast"
+  | "peak_over_5000m";
 
 export type Country = {
   code: string; // ISO 3166-1 alpha-3
@@ -59,8 +69,12 @@ export type Country = {
   flagSymbols: FlagSymbol[];
   /** Événements sportifs majeurs (hôte). */
   events: CountryEvent[];
-  /** Regroupements politiques / économiques. */
+  /** Regroupements politiques / économiques (EU, G20, NATO, Commonwealth…). */
   groups: PoliticalGroup[];
   /** Tags géo additionnels (ex. moyen-orient perçu ≠ Western Asia). */
   geoTags: string[];
+  /** Régime politique officiel (monarchie incluant royaumes constitutionnels et absolus). */
+  regime: Regime;
+  /** Traits géographiques physiques notables (façade maritime, pics, équateur…). */
+  physicalFeatures: PhysicalFeature[];
 };

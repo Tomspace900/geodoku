@@ -1,10 +1,10 @@
 import { Button } from "@/components/ui/button";
+import { getOrCreateClientId } from "@/features/game/logic/clientId";
+import { SHARE_EMOJIS, STARTING_LIVES } from "@/features/game/logic/constants";
 import {
-  MAX_SCORE,
-  SHARE_EMOJIS,
-  STARTING_LIVES,
-} from "@/features/game/logic/constants";
-import { computeScore } from "@/features/game/logic/rarity";
+  computeGridScore,
+  computeOriginalityScore,
+} from "@/features/game/logic/rarity";
 import {
   copyShareToClipboard,
   formatShareString,
@@ -24,6 +24,15 @@ const FEEDBACK_STORAGE_PREFIX = "geodoku:rated:";
 
 type DifficultyRating = "too_easy" | "balanced" | "too_hard";
 
+const DIFFICULTY_RATINGS: ReadonlyArray<{
+  rating: DifficultyRating;
+  labelKey: "ui.feedbackTooEasy" | "ui.feedbackBalanced" | "ui.feedbackTooHard";
+}> = [
+  { rating: "too_easy", labelKey: "ui.feedbackTooEasy" },
+  { rating: "balanced", labelKey: "ui.feedbackBalanced" },
+  { rating: "too_hard", labelKey: "ui.feedbackTooHard" },
+];
+
 type Props = {
   state: GameState;
   gridNumber: number;
@@ -39,14 +48,16 @@ export function ResultScreen({
 }: Props) {
   const [copied, setCopied] = useState(false);
   const t = useT();
-  const [hasRated, setHasRated] = useState(() => {
+  const [hadFeedbackBeforeOpen] = useState(() => {
     if (!state.date) return false;
     return (
       localStorage.getItem(`${FEEDBACK_STORAGE_PREFIX}${state.date}`) === "1"
     );
   });
+  const [feedbackThanksVisible, setFeedbackThanksVisible] = useState(false);
   const [ratingPending, setRatingPending] = useState(false);
-  const score = computeScore(state);
+  const gridScore = computeGridScore(state);
+  const originality = computeOriginalityScore(state);
   const isWon = state.status === "won";
   const submitGridFeedback = useMutation(api.grids.submitGridFeedback);
 
@@ -68,7 +79,9 @@ export function ResultScreen({
   }, [onDismiss]);
 
   async function handleRateDifficulty(rating: DifficultyRating) {
-    if (hasRated || ratingPending) return;
+    if (hadFeedbackBeforeOpen || feedbackThanksVisible || ratingPending) {
+      return;
+    }
 
     const filledCells = Object.values(state.cells).filter(
       (cell) => cell.status === "filled",
@@ -84,9 +97,10 @@ export function ResultScreen({
         livesLeft: state.remainingLives,
         filledCells,
         guessesSubmitted: filledCells + failedGuesses,
+        clientId: getOrCreateClientId(),
       });
       localStorage.setItem(`${FEEDBACK_STORAGE_PREFIX}${state.date}`, "1");
-      setHasRated(true);
+      setFeedbackThanksVisible(true);
     } finally {
       setRatingPending(false);
     }
@@ -119,14 +133,13 @@ export function ResultScreen({
         <button
           type="button"
           onClick={onDismiss}
-          className="absolute right-4 top-4 rounded-md p-1.5 text-on-surface-variant hover:bg-surface-low hover:text-on-surface"
+          className="absolute right-4 top-4 z-20 rounded-md p-1.5 text-on-surface-variant hover:bg-surface-low hover:text-on-surface"
           aria-label={t("ui.closeResult")}
         >
           <X size={20} strokeWidth={1.75} />
         </button>
 
-        {/* Title */}
-        <div className="flex flex-col items-center gap-2 text-center pr-8">
+        <div className="flex flex-col items-center gap-2 text-center">
           <h2
             id="result-screen-title"
             className="font-serif text-3xl italic text-on-surface"
@@ -139,21 +152,31 @@ export function ResultScreen({
           </p>
         </div>
 
-        {/* Score */}
         <div className="flex flex-col items-center gap-1">
-          <span className="font-serif text-5xl font-medium text-brand">
-            {score.percent}%
-          </span>
-          <span className="text-xs text-on-surface-variant">
-            {t("ui.rarityScore", { raw: score.raw, max: MAX_SCORE })}
-          </span>
+          <div className="flex flex-wrap items-center justify-center gap-x-3 gap-y-2 text-center leading-none">
+            <span className="font-serif text-5xl font-medium tracking-tight text-brand">
+              {gridScore.percent}%
+            </span>
+            <span
+              className="shrink-0 select-none self-center pb-0.5 text-lg leading-none tracking-[0.12em] text-on-surface-variant/40"
+              aria-hidden
+            >
+              {"\u2014"}
+            </span>
+            <span className="font-serif text-5xl font-medium italic tracking-tight text-on-surface">
+              {originality.grade}
+            </span>
+          </div>
+          <div className="flex flex-wrap justify-center gap-x-2 gap-y-0.5 text-center text-[10px] tracking-widest uppercase text-on-surface-variant">
+            <span>{t("ui.gridScore")}</span>
+            <span className="text-on-surface-variant/60" aria-hidden>
+              ·
+            </span>
+            <span>{t("ui.originalityScore")}</span>
+          </div>
         </div>
 
-        {/* Emoji grid */}
         <div className="flex flex-col items-center gap-1">
-          <p className="text-[10px] tracking-widest text-on-surface-variant uppercase mb-1">
-            {t("ui.yourGrid")}
-          </p>
           {ROWS.map((row) => (
             <div key={row} className="flex gap-1">
               {COLS.map((col) => {
@@ -178,52 +201,35 @@ export function ResultScreen({
           </p>
         </div>
 
-        {/* Achievement */}
         <AchievementCard state={state} />
 
-        {/* Feedback */}
-        <div className="flex flex-col gap-2">
-          <p className="text-[10px] tracking-widest text-on-surface-variant uppercase text-center">
-            {t("ui.feedbackQuestion")}
-          </p>
-          {hasRated ? (
+        {!hadFeedbackBeforeOpen &&
+          (feedbackThanksVisible ? (
             <p className="text-center text-xs text-on-surface-variant">
               {t("ui.feedbackThanks")}
             </p>
           ) : (
-            <div className="grid grid-cols-1 gap-2 sm:grid-cols-3">
-              <Button
-                type="button"
-                variant="secondary"
-                disabled={ratingPending}
-                className="bg-surface-highest text-on-surface hover:bg-surface-highest/80"
-                onClick={() => handleRateDifficulty("too_easy")}
-              >
-                {t("ui.feedbackTooEasy")}
-              </Button>
-              <Button
-                type="button"
-                variant="secondary"
-                disabled={ratingPending}
-                className="bg-surface-highest text-on-surface hover:bg-surface-highest/80"
-                onClick={() => handleRateDifficulty("balanced")}
-              >
-                {t("ui.feedbackBalanced")}
-              </Button>
-              <Button
-                type="button"
-                variant="secondary"
-                disabled={ratingPending}
-                className="bg-surface-highest text-on-surface hover:bg-surface-highest/80"
-                onClick={() => handleRateDifficulty("too_hard")}
-              >
-                {t("ui.feedbackTooHard")}
-              </Button>
+            <div className="flex flex-col gap-2">
+              <p className="text-[10px] tracking-widest text-on-surface-variant uppercase text-center">
+                {t("ui.feedbackQuestion")}
+              </p>
+              <div className="grid grid-cols-1 gap-2 sm:grid-cols-3">
+                {DIFFICULTY_RATINGS.map(({ rating, labelKey }) => (
+                  <Button
+                    key={rating}
+                    type="button"
+                    variant="secondary"
+                    disabled={ratingPending}
+                    className="bg-surface-highest text-on-surface hover:bg-surface-highest/80"
+                    onClick={() => handleRateDifficulty(rating)}
+                  >
+                    {t(labelKey)}
+                  </Button>
+                ))}
+              </div>
             </div>
-          )}
-        </div>
+          ))}
 
-        {/* Share button */}
         <Button
           onClick={handleShare}
           className="w-full bg-on-surface text-surface-lowest hover:bg-on-surface/90 gap-2"
@@ -236,12 +242,11 @@ export function ResultScreen({
         <button
           type="button"
           onClick={onViewAnswers}
-          className="text-center text-xs text-on-surface-variant underline underline-offset-2 decoration-outline-variant/40 hover:text-on-surface"
+          className="w-full text-center text-xs text-on-surface-variant underline underline-offset-2 decoration-outline-variant/40 hover:text-on-surface"
         >
           {t("ui.viewAnswers")}
         </button>
 
-        {/* Footer */}
         <p className="text-center text-xs text-on-surface-variant italic">
           {t("ui.comeBackTomorrowGrid")}
         </p>

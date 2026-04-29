@@ -1,164 +1,229 @@
 import { ConvexError, v } from "convex/values";
+import { CONSTRAINTS } from "../src/features/game/logic/constraints";
 import { internal } from "./_generated/api";
+import type { Id } from "./_generated/dataModel";
 import { action, internalAction, mutation, query } from "./_generated/server";
+import { checkAdminToken } from "./auth";
 import {
-  CONTEXT_HISTORY_WINDOW,
-  type GridContextInput,
-  computeGridContext,
-} from "./lib/gridContext";
+  type GenerationReport,
+  HISTORY_WINDOW,
+  POOL_LOW_THRESHOLD,
+} from "./lib/gridConstants";
 import {
-  BATCH_GENERATE_N,
-  BATCH_STORE_N,
-  generateBatch,
+  buildConstraintMatches,
+  finalizeGrid,
+  generateDiversePool,
+  tryBuildGridWithSeed,
 } from "./lib/gridGenerator";
+import { selectNextGrid } from "./lib/gridScheduler";
+import { rateLimiter } from "./rateLimit";
 
-// Phase 2 pool: on garde la moitié haute du batch pour laisser du jeu
-// au scoring contextuel (= 15 candidates sur 30 générées).
-const PHASE_2_POOL_SIZE = Math.floor(BATCH_GENERATE_N / 2);
+// Nombre max de jours simulés/affichés par getUpcomingScheduledPreview
+const UPCOMING_PREVIEW_MAX_DAYS = 14;
+const UPCOMING_PREVIEW_DEFAULT_DAYS = 7;
 
-// Pondération finalScore = alpha * quality + (1 - alpha) * context.
-const FINAL_SCORE_QUALITY_WEIGHT = 0.6;
+/**
+ * Borne haute défensive sur les soumissions par grille (9 succès + N échecs).
+ * Trois vies max, donc 9 + 3 = 12 en théorie ; on autorise une marge x4 pour
+ * absorber les variations futures sans bloquer les vrais joueurs.
+ */
+const MAX_GUESSES_PER_GAME = 50;
+
+/** Doit rester aligné avec STARTING_LIVES dans src/features/game/logic/constants.ts. */
+const MAX_LIVES = 3;
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
 
-function todayUTC(): string {
+function offsetUTC(deltaDays: number): string {
   const d = new Date();
+  d.setUTCDate(d.getUTCDate() + deltaDays);
   const y = d.getUTCFullYear();
   const m = String(d.getUTCMonth() + 1).padStart(2, "0");
   const day = String(d.getUTCDate()).padStart(2, "0");
   return `${y}-${m}-${day}`;
+}
+
+function todayUTC(): string {
+  return offsetUTC(0);
+}
+
+function tomorrowUTC(): string {
+  return offsetUTC(1);
 }
 
 function daysAgoUTC(n: number): string {
-  const d = new Date();
-  d.setUTCDate(d.getUTCDate() - n);
-  const y = d.getUTCFullYear();
-  const m = String(d.getUTCMonth() + 1).padStart(2, "0");
-  const day = String(d.getUTCDate()).padStart(2, "0");
-  return `${y}-${m}-${day}`;
+  return offsetUTC(-n);
 }
 
-function checkAdminToken(provided: string): void {
-  const expected = process.env.ADMIN_TOKEN;
-  if (!expected || provided !== expected) {
-    throw new ConvexError("Unauthorized");
-  }
-}
-
-// ─── Internal actions (called by crons) ───────────────────────────────────────
+// ─── Internal actions (crons + seed) ─────────────────────────────────────────
 
 /**
- * Two-phase candidate generation:
- *   1. Generate BATCH_GENERATE_N intrinsically-scored candidates (pure backtracking).
- *   2. Score the top PHASE_2_POOL_SIZE against the recent published history,
- *      then pick BATCH_STORE_N with the best finalScore = 0.6 × quality + 0.4 × context.
- * Cron: every day at 23:00 UTC.
+ * Generates a full diverse pool and inserts all grids into gridCandidates.
+ * Called by the admin action (with token check) and by the weekly cron.
  */
-export const generateDailyCandidates = internalAction({
+export const generatePoolInternal = internalAction({
   args: {},
-  handler: async (ctx) => {
-    const existing: { rows: string[]; cols: string[] }[] = await ctx.runQuery(
-      internal.gridData.getAllCandidatesForCheck,
+  handler: async (ctx): Promise<GenerationReport> => {
+    const existing = await ctx.runQuery(
+      internal.gridData.getAvailablePoolGrids,
     );
-    const publishedGrids: { rows: string[]; cols: string[] }[] =
-      await ctx.runQuery(internal.gridData.getAllGridsForCheck);
+    const { grids, report } = generateDiversePool(
+      existing.map((g) => ({ constraintIds: g.metadata.constraintIds })),
+    );
 
-    const allExisting = [...existing, ...publishedGrids];
-    const batch = generateBatch(BATCH_GENERATE_N, allExisting);
-
-    if (batch.length === 0) {
-      console.log(
-        "[generateDailyCandidates] No new candidates generated (space saturated?)",
-      );
-      return;
+    for (const grid of grids) {
+      await ctx.runMutation(internal.gridData.insertPoolGrid, {
+        rows: grid.rows,
+        cols: grid.cols,
+        validAnswers: grid.validAnswers,
+        metadata: grid.metadata,
+      });
     }
 
-    // Phase 2 — contextual scoring against recent published history.
-    const history: GridContextInput[] = await ctx.runQuery(
-      internal.gridData.getRecentPublishedGrids,
-      { limit: CONTEXT_HISTORY_WINDOW },
-    );
-
-    const pool = batch.slice(0, PHASE_2_POOL_SIZE);
-    const scored = pool.map((candidate) => {
-      const ctxMetrics = computeGridContext(
-        {
-          rows: candidate.rows,
-          cols: candidate.cols,
-          validAnswers: candidate.validAnswers,
-        },
-        history,
-      );
-      const finalScore =
-        FINAL_SCORE_QUALITY_WEIGHT * candidate.score +
-        (1 - FINAL_SCORE_QUALITY_WEIGHT) * ctxMetrics.contextScore;
-      return { candidate, contextScore: ctxMetrics.contextScore, finalScore };
-    });
-
-    scored.sort((a, b) => b.finalScore - a.finalScore);
-    const selected = scored.slice(0, BATCH_STORE_N);
-
-    await ctx.runMutation(internal.gridData.insertCandidates, {
-      candidates: selected.map(({ candidate, contextScore }) => ({
-        rows: candidate.rows,
-        cols: candidate.cols,
-        validAnswers: candidate.validAnswers,
-        score: candidate.score,
-        difficulty: candidate.difficulty,
-        contextScore,
-        metadata: candidate.metadata,
-      })),
-    });
-
-    console.log(
-      `[generateDailyCandidates] Generated ${batch.length}, pool ${pool.length}, stored ${selected.length}`,
-    );
+    return report;
   },
 });
 
 /**
- * Ensures today's grid exists, promoting the oldest approved candidate.
- * Falls back to auto-approving the best pending candidate if the queue is empty.
- * Cron: every day at 23:30 UTC.
+ * Assigns a grid from the pool to a specific date.
+ * Uses the scheduler to pick the best available grid.
+ * Falls back to emergency generation if the pool is empty.
  */
-export const ensureTodayGrid = internalAction({
+export const ensureGridForDate = internalAction({
+  args: { date: v.string() },
+  handler: async (
+    ctx,
+    args,
+  ): Promise<{ date: string; candidateId: string } | null> => {
+    const exists = await ctx.runQuery(internal.gridData.hasGridForDate, {
+      date: args.date,
+    });
+    if (exists) {
+      return null;
+    }
+
+    const available = await ctx.runQuery(
+      internal.gridData.getAvailablePoolGrids,
+    );
+    const recentGrids = await ctx.runQuery(
+      internal.gridData.getRecentPublishedGrids,
+      { limit: HISTORY_WINDOW },
+    );
+
+    const poolForScheduler = available.map((g) => ({
+      _id: g._id as string,
+      rows: g.rows,
+      cols: g.cols,
+      validAnswers: g.validAnswers,
+      metadata: g.metadata,
+    }));
+
+    const recentForScheduler = recentGrids.map((g) => ({
+      constraintIds: [...g.rows, ...g.cols],
+      countryPool: Object.values(g.validAnswers).flat(),
+    }));
+
+    const selected = selectNextGrid(poolForScheduler, recentForScheduler);
+
+    if (!selected) {
+      // FALLBACK: emergency generation with a random seed — no overlap check
+      console.error(
+        `[ensureGridForDate] POOL EMPTY: no grid for ${args.date}, using emergency fallback`,
+      );
+      const matches = buildConstraintMatches();
+      const randomSeed =
+        CONSTRAINTS[Math.floor(Math.random() * CONSTRAINTS.length)];
+      const gridResult = tryBuildGridWithSeed(randomSeed.id, "row", matches);
+      if (!gridResult) {
+        console.error(
+          `[ensureGridForDate] Emergency grid generation failed for ${args.date}`,
+        );
+        return null;
+      }
+      const finalized = finalizeGrid(
+        gridResult.rows,
+        gridResult.cols,
+        randomSeed.id,
+        matches,
+      );
+      if (!finalized) {
+        console.error(
+          `[ensureGridForDate] Emergency grid finalization failed for ${args.date}`,
+        );
+        return null;
+      }
+      const candidateId = await ctx.runMutation(
+        internal.gridData.insertPoolGrid,
+        {
+          rows: finalized.rows,
+          cols: finalized.cols,
+          validAnswers: finalized.validAnswers,
+          metadata: finalized.metadata,
+        },
+      );
+      await ctx.runMutation(internal.gridData.markCandidateUsed, {
+        candidateId,
+        date: args.date,
+      });
+      await ctx.runMutation(internal.gridData.insertGrid, {
+        date: args.date,
+        rows: finalized.rows,
+        cols: finalized.cols,
+        validAnswers: finalized.validAnswers,
+        difficulty: finalized.metadata.difficultyEstimate,
+        candidateId,
+      });
+      return { date: args.date, candidateId };
+    }
+
+    await ctx.runMutation(internal.gridData.markCandidateUsed, {
+      candidateId: selected.grid._id as Id<"gridCandidates">,
+      date: args.date,
+    });
+    await ctx.runMutation(internal.gridData.insertGrid, {
+      date: args.date,
+      rows: selected.grid.rows,
+      cols: selected.grid.cols,
+      validAnswers: selected.grid.validAnswers,
+      difficulty: selected.grid.metadata.difficultyEstimate,
+      candidateId: selected.grid._id as Id<"gridCandidates">,
+    });
+
+    return { date: args.date, candidateId: selected.grid._id };
+  },
+});
+
+/**
+ * Ensures today's and tomorrow's grids exist. Called by daily cron at 12:00 UTC.
+ * Today est rattrapé en plus de tomorrow : si le cron de la veille a échoué, on
+ * évite que `getTodayGrid` renvoie null. `ensureGridForDate` est idempotent.
+ */
+export const ensureTomorrowGrid = internalAction({
   args: {},
   handler: async (ctx) => {
-    const today = todayUTC();
-
-    const existing = await ctx.runQuery(internal.gridData.getTodayGridInternal);
-    if (existing) {
-      console.log(`[ensureTodayGrid] Grid for ${today} already exists`);
-      return;
-    }
-
-    const approved = await ctx.runQuery(internal.gridData.getOldestApproved);
-    if (approved) {
-      await ctx.runMutation(internal.gridData.promoteCandidate, {
-        candidateId: approved._id,
-        date: today,
-      });
-      console.log(
-        `[ensureTodayGrid] Promoted candidate ${approved._id} for ${today}`,
-      );
-      return;
-    }
-
-    // FALLBACK: auto-approve the best pending candidate
-    const best = await ctx.runQuery(internal.gridData.getBestPending);
-    if (!best) {
-      console.warn(
-        `[ensureTodayGrid] QUEUE EMPTY: no approved or pending candidates for ${today}`,
-      );
-      return;
-    }
-    console.warn(
-      `[ensureTodayGrid] QUEUE EMPTY: auto-approved candidate ${best._id} for ${today}`,
-    );
-    await ctx.runMutation(internal.gridData.autoApproveThenPromote, {
-      candidateId: best._id,
-      date: today,
+    await ctx.runAction(internal.grids.ensureGridForDate, {
+      date: todayUTC(),
     });
+    await ctx.runAction(internal.grids.ensureGridForDate, {
+      date: tomorrowUTC(),
+    });
+  },
+});
+
+/**
+ * Refills the pool if it falls below POOL_LOW_THRESHOLD.
+ * Called by weekly cron (Sunday 04:00 UTC).
+ */
+export const autoRefillPool = internalAction({
+  args: {},
+  handler: async (ctx) => {
+    const available = await ctx.runQuery(
+      internal.gridData.getAvailablePoolGrids,
+    );
+    if (available.length >= POOL_LOW_THRESHOLD) {
+      return;
+    }
+    await ctx.runAction(internal.grids.generatePoolInternal, {});
   },
 });
 
@@ -177,13 +242,13 @@ export const getTodayGrid = query({
 });
 
 /**
- * Returns a scheduled grid + its linked candidate's cellMetrics and scores.
- * Used by the admin GridDetail panel to surface per-cell signals for a
- * grid that's already been promoted to the `grids` table.
+ * Returns a scheduled grid and its linked candidate's metadata.
+ * Used by the admin planning panel.
  */
 export const getGridDetailByDate = query({
-  args: { date: v.string() },
+  args: { date: v.string(), adminToken: v.string() },
   handler: async (ctx, args) => {
+    checkAdminToken(args.adminToken);
     const grid = await ctx.db
       .query("grids")
       .withIndex("by_date", (q) => q.eq("date", args.date))
@@ -191,39 +256,26 @@ export const getGridDetailByDate = query({
     if (!grid) return null;
 
     const candidate = await ctx.db.get(grid.candidateId);
-    if (!candidate) {
-      return {
-        date: grid.date,
-        rows: grid.rows,
-        cols: grid.cols,
-        validAnswers: grid.validAnswers,
-        difficulty: grid.difficulty,
-        qualityScore: null,
-        contextScore: null,
-        metadata: null,
-      };
-    }
-
     return {
       date: grid.date,
       rows: grid.rows,
       cols: grid.cols,
       validAnswers: grid.validAnswers,
       difficulty: grid.difficulty,
-      qualityScore: candidate.score,
-      contextScore: candidate.contextScore ?? null,
-      metadata: candidate.metadata,
+      candidateId: grid.candidateId,
+      metadata: candidate?.metadata ?? null,
     };
   },
 });
 
 /**
  * Returns all grids scheduled from the past 30 days onwards.
- * Used by the admin calendar to visualise scheduled grids and their difficulties.
+ * Used by the admin calendar.
  */
 export const getScheduledGrids = query({
-  args: {},
-  handler: async (ctx) => {
+  args: { adminToken: v.string() },
+  handler: async (ctx, args) => {
+    checkAdminToken(args.adminToken);
     const cutoff = daysAgoUTC(30);
     return await ctx.db
       .query("grids")
@@ -233,44 +285,234 @@ export const getScheduledGrids = query({
   },
 });
 
-/** Returns a paginated list of candidates filtered by status. */
-export const getCandidates = query({
-  args: {
-    status: v.union(
-      v.literal("pending"),
-      v.literal("approved"),
-      v.literal("rejected"),
-      v.literal("used"),
-    ),
-    limit: v.optional(v.number()),
-    sortBy: v.optional(v.union(v.literal("score"), v.literal("date"))),
-  },
+/**
+ * Pool stats for the admin dashboard.
+ *
+ * `constraintCoverage` and `countryCoverage` count how many available grids
+ * contain each constraint / country (any cell, not just seed). On compte les
+ * contraintes absentes (count = 0) pour pouvoir alerter sur les zones froides.
+ */
+export const getPoolStats = query({
+  args: { adminToken: v.string() },
   handler: async (ctx, args) => {
-    const limit = Math.min(args.limit ?? 20, 50);
-    const sortBy = args.sortBy ?? "score";
+    checkAdminToken(args.adminToken);
+    const available = await ctx.db
+      .query("gridCandidates")
+      .withIndex("by_status", (q) => q.eq("status", "available"))
+      .collect();
+    const used = await ctx.db
+      .query("gridCandidates")
+      .withIndex("by_status", (q) => q.eq("status", "used"))
+      .collect();
+    const rejected = await ctx.db
+      .query("gridCandidates")
+      .withIndex("by_status", (q) => q.eq("status", "rejected"))
+      .collect();
 
-    if (sortBy === "score") {
-      return await ctx.db
-        .query("gridCandidates")
-        .withIndex("by_status_and_score", (q) => q.eq("status", args.status))
-        .order("desc")
-        .take(limit);
+    const constraintCounts: Record<string, number> = {};
+    for (const c of CONSTRAINTS) constraintCounts[c.id] = 0;
+
+    const countryCounts: Record<string, number> = {};
+
+    for (const g of available) {
+      for (const id of g.metadata.constraintIds) {
+        constraintCounts[id] = (constraintCounts[id] ?? 0) + 1;
+      }
+      for (const code of g.metadata.countryPool) {
+        countryCounts[code] = (countryCounts[code] ?? 0) + 1;
+      }
     }
 
-    return await ctx.db
-      .query("gridCandidates")
-      .withIndex("by_status", (q) => q.eq("status", args.status))
+    return {
+      available: available.length,
+      used: used.length,
+      rejected: rejected.length,
+      total: available.length + used.length + rejected.length,
+      daysOfRunway: available.length,
+      constraintCoverage: Object.entries(constraintCounts).map(
+        ([id, count]) => ({ id, gridsInPool: count }),
+      ),
+      countryCoverage: Object.entries(countryCounts).map(([code, count]) => ({
+        code,
+        gridsInPool: count,
+      })),
+    };
+  },
+});
+
+/** Exposition passée vs. prochaine des contraintes et pays, pour l'admin dashboard. */
+export const getExposureStats = query({
+  args: { adminToken: v.string() },
+  handler: async (ctx, args) => {
+    checkAdminToken(args.adminToken);
+    const tomorrow = tomorrowUTC();
+
+    const pastGrids = await ctx.db
+      .query("grids")
+      .withIndex("by_date", (q) => q.lt("date", tomorrow))
       .order("desc")
-      .take(limit);
+      .take(HISTORY_WINDOW);
+
+    const upcomingGrids = await ctx.db
+      .query("grids")
+      .withIndex("by_date", (q) => q.gte("date", tomorrow))
+      .order("asc")
+      .take(UPCOMING_PREVIEW_MAX_DAYS);
+
+    function aggregate(
+      grids: Array<{
+        rows: string[];
+        cols: string[];
+        validAnswers: Record<string, string[]>;
+      }>,
+    ) {
+      const constraintCounts: Record<string, number> = {};
+      const countryCounts: Record<string, number> = {};
+      for (const g of grids) {
+        for (const id of [...g.rows, ...g.cols]) {
+          constraintCounts[id] = (constraintCounts[id] ?? 0) + 1;
+        }
+        // Count each country once per grid (even if valid in multiple cells)
+        const unique = new Set(Object.values(g.validAnswers).flat());
+        for (const code of unique) {
+          countryCounts[code] = (countryCounts[code] ?? 0) + 1;
+        }
+      }
+      return { constraintCounts, countryCounts };
+    }
+
+    return {
+      pastGridCount: pastGrids.length,
+      upcomingGridCount: upcomingGrids.length,
+      past: aggregate(pastGrids),
+      upcoming: aggregate(upcomingGrids),
+    };
+  },
+});
+
+/**
+ * Aperçu lecture seule des `days` prochains jours :
+ * - `kind: "scheduled"` si la grille est déjà inscrite dans `grids` (assignée par le cron) ;
+ * - `kind: "predicted"` si on simule le scheduler à partir du pool actuel (lecture seule, rien n'est écrit) ;
+ * - `kind: "missing"` si le pool est vide pour ce jour-là.
+ */
+export const getUpcomingScheduledPreview = query({
+  args: { adminToken: v.string(), days: v.optional(v.number()) },
+  handler: async (ctx, args) => {
+    checkAdminToken(args.adminToken);
+    const days = Math.min(
+      Math.max(args.days ?? UPCOMING_PREVIEW_DEFAULT_DAYS, 1),
+      UPCOMING_PREVIEW_MAX_DAYS,
+    );
+    const tomorrow = tomorrowUTC();
+
+    const futureScheduled = await ctx.db
+      .query("grids")
+      .withIndex("by_date", (q) => q.gte("date", tomorrow))
+      .order("asc")
+      .take(days + 7);
+    const scheduledByDate = new Map(futureScheduled.map((g) => [g.date, g]));
+
+    const available = await ctx.db
+      .query("gridCandidates")
+      .withIndex("by_status", (q) => q.eq("status", "available"))
+      .collect();
+    const poolForScheduler = available.map((g) => ({
+      _id: g._id as string,
+      rows: g.rows,
+      cols: g.cols,
+      validAnswers: g.validAnswers,
+      metadata: g.metadata,
+    }));
+
+    const recentPublished = await ctx.db
+      .query("grids")
+      .withIndex("by_date", (q) => q.lt("date", tomorrow))
+      .order("desc")
+      .take(HISTORY_WINDOW);
+    let recentForScheduler = recentPublished.map((g) => ({
+      constraintIds: [...g.rows, ...g.cols],
+      countryPool: Object.values(g.validAnswers).flat(),
+    }));
+
+    type UpcomingDay =
+      | {
+          date: string;
+          kind: "scheduled" | "predicted";
+          rows: string[];
+          cols: string[];
+          validAnswers: Record<string, string[]>;
+          difficulty: number;
+          cellDifficulties: number[] | null;
+        }
+      | { date: string; kind: "missing" };
+
+    const upcoming: UpcomingDay[] = [];
+    const usedIds = new Set<string>();
+
+    for (let i = 0; i < days; i++) {
+      const date = offsetUTC(i + 1);
+      const existing = scheduledByDate.get(date);
+
+      if (existing) {
+        const candidate = await ctx.db.get(existing.candidateId);
+        upcoming.push({
+          date,
+          kind: "scheduled",
+          rows: existing.rows,
+          cols: existing.cols,
+          validAnswers: existing.validAnswers,
+          difficulty: existing.difficulty,
+          cellDifficulties: candidate?.metadata.cellDifficulties ?? null,
+        });
+        recentForScheduler = [
+          {
+            constraintIds: [...existing.rows, ...existing.cols],
+            countryPool: Object.values(existing.validAnswers).flat(),
+          },
+          ...recentForScheduler,
+        ];
+        continue;
+      }
+
+      const remaining = poolForScheduler.filter((g) => !usedIds.has(g._id));
+      const picked = selectNextGrid(remaining, recentForScheduler);
+      if (!picked) {
+        upcoming.push({ date, kind: "missing" });
+        continue;
+      }
+
+      upcoming.push({
+        date,
+        kind: "predicted",
+        rows: picked.grid.rows,
+        cols: picked.grid.cols,
+        validAnswers: picked.grid.validAnswers,
+        difficulty: picked.grid.metadata.difficultyEstimate,
+        cellDifficulties: picked.grid.metadata.cellDifficulties,
+      });
+      usedIds.add(picked.grid._id);
+      recentForScheduler = [
+        {
+          constraintIds: picked.grid.metadata.constraintIds,
+          countryPool: picked.grid.metadata.countryPool,
+        },
+        ...recentForScheduler,
+      ];
+    }
+
+    return upcoming;
   },
 });
 
 /** Returns recent observed feedback metrics for scheduled grids. */
 export const getGridFeedbackStats = query({
   args: {
+    adminToken: v.string(),
     limit: v.optional(v.number()),
   },
   handler: async (ctx, args) => {
+    checkAdminToken(args.adminToken);
     const limit = Math.min(args.limit ?? 60, 180);
     const feedbackRows = await ctx.db
       .query("gridFeedback")
@@ -286,7 +528,6 @@ export const getGridFeedbackStats = query({
           : Math.round(
               (row.balancedCount * 50 + row.tooHardCount * 100) / total,
             );
-
       return {
         date: row.date,
         ratingCount: row.totalRatings,
@@ -307,113 +548,7 @@ export const getGridFeedbackStats = query({
   },
 });
 
-// ─── Public mutations (admin) ─────────────────────────────────────────────────
-
-/**
- * Approves a pending candidate. If scheduledDate is provided, immediately
- * creates the grids row for that date.
- */
-export const approveCandidate = mutation({
-  args: {
-    candidateId: v.id("gridCandidates"),
-    scheduledDate: v.optional(v.string()), // "YYYY-MM-DD"
-    adminToken: v.string(),
-  },
-  handler: async (ctx, args) => {
-    checkAdminToken(args.adminToken);
-
-    const candidate = await ctx.db.get(args.candidateId);
-    if (!candidate) throw new ConvexError("Candidate not found");
-    if (candidate.status !== "pending")
-      throw new ConvexError(`Candidate is already "${candidate.status}"`);
-
-    const now = Date.now();
-
-    if (args.scheduledDate) {
-      // Check no grid exists for that date
-      const existingGrid = await ctx.db
-        .query("grids")
-        .withIndex("by_date", (q) => q.eq("date", args.scheduledDate!))
-        .unique();
-      if (existingGrid)
-        throw new ConvexError(
-          `A grid already exists for ${args.scheduledDate}`,
-        );
-
-      // Create the grid row and mark the candidate as used
-      await ctx.db.insert("grids", {
-        date: args.scheduledDate,
-        rows: candidate.rows,
-        cols: candidate.cols,
-        validAnswers: candidate.validAnswers,
-        difficulty: candidate.difficulty,
-        candidateId: args.candidateId,
-      });
-
-      await ctx.db.patch(args.candidateId, {
-        status: "used",
-        reviewedAt: now,
-        usedAt: now,
-      });
-    } else {
-      // Joins the FIFO queue — will be picked by ensureTodayGrid
-      await ctx.db.patch(args.candidateId, {
-        status: "approved",
-        reviewedAt: now,
-      });
-    }
-  },
-});
-
-/**
- * Déprogramme une grille d'une date donnée : supprime la ligne dans grids
- * et remet le candidat en statut "approved" pour qu'il puisse être replanifié.
- */
-export const unscheduleGrid = mutation({
-  args: {
-    date: v.string(), // "YYYY-MM-DD"
-    adminToken: v.string(),
-  },
-  handler: async (ctx, args) => {
-    checkAdminToken(args.adminToken);
-
-    const grid = await ctx.db
-      .query("grids")
-      .withIndex("by_date", (q) => q.eq("date", args.date))
-      .unique();
-
-    if (!grid) throw new ConvexError(`Aucune grille trouvée pour ${args.date}`);
-
-    // Remettre le candidat dans la queue approuvée
-    await ctx.db.patch(grid.candidateId, { status: "approved" });
-
-    // Supprimer la grille planifiée
-    await ctx.db.delete(grid._id);
-  },
-});
-
-/** Rejects a pending candidate with a required reason. */
-export const rejectCandidate = mutation({
-  args: {
-    candidateId: v.id("gridCandidates"),
-    reason: v.string(),
-    adminToken: v.string(),
-  },
-  handler: async (ctx, args) => {
-    checkAdminToken(args.adminToken);
-
-    const candidate = await ctx.db.get(args.candidateId);
-    if (!candidate) throw new ConvexError("Candidate not found");
-    if (candidate.status !== "pending")
-      throw new ConvexError(`Candidate is already "${candidate.status}"`);
-
-    await ctx.db.patch(args.candidateId, {
-      status: "rejected",
-      reviewedAt: Date.now(),
-      rejectionReason: args.reason,
-    });
-  },
-});
+// ─── Public mutations ─────────────────────────────────────────────────────────
 
 /** Saves end-of-game feedback and aggregates lightweight session metrics. */
 export const submitGridFeedback = mutation({
@@ -428,27 +563,66 @@ export const submitGridFeedback = mutation({
     livesLeft: v.number(),
     filledCells: v.number(),
     guessesSubmitted: v.number(),
+    clientId: v.string(),
   },
   handler: async (ctx, args) => {
+    await rateLimiter.limit(ctx, "feedback", {
+      key: args.clientId,
+      throws: true,
+    });
+
+    if (
+      !Number.isInteger(args.livesLeft) ||
+      args.livesLeft < 0 ||
+      args.livesLeft > MAX_LIVES
+    ) {
+      throw new ConvexError("Invalid livesLeft");
+    }
+    if (
+      !Number.isInteger(args.filledCells) ||
+      args.filledCells < 0 ||
+      args.filledCells > 9
+    ) {
+      throw new ConvexError("Invalid filledCells");
+    }
+    if (
+      !Number.isInteger(args.guessesSubmitted) ||
+      args.guessesSubmitted < 0 ||
+      args.guessesSubmitted > MAX_GUESSES_PER_GAME
+    ) {
+      throw new ConvexError("Invalid guessesSubmitted");
+    }
+    if (args.won && args.filledCells !== 9) {
+      throw new ConvexError("Invalid: won requires 9 filled cells");
+    }
+    if (args.won && args.livesLeft <= 0) {
+      throw new ConvexError("Invalid: won requires lives left");
+    }
+    if (!args.won && args.livesLeft > 0 && args.filledCells === 9) {
+      throw new ConvexError(
+        "Invalid: 9 filled with lives left should be a win",
+      );
+    }
+
     const existing = await ctx.db
       .query("gridFeedback")
       .withIndex("by_date", (q) => q.eq("date", args.date))
       .unique();
 
-    const tooEasyIncrement = args.rating === "too_easy" ? 1 : 0;
-    const balancedIncrement = args.rating === "balanced" ? 1 : 0;
-    const tooHardIncrement = args.rating === "too_hard" ? 1 : 0;
-    const winsIncrement = args.won ? 1 : 0;
-    const lossesIncrement = args.won ? 0 : 1;
+    const tooEasyInc = args.rating === "too_easy" ? 1 : 0;
+    const balancedInc = args.rating === "balanced" ? 1 : 0;
+    const tooHardInc = args.rating === "too_hard" ? 1 : 0;
+    const winsInc = args.won ? 1 : 0;
+    const lossesInc = args.won ? 0 : 1;
 
     if (existing) {
       await ctx.db.patch(existing._id, {
-        tooEasyCount: existing.tooEasyCount + tooEasyIncrement,
-        balancedCount: existing.balancedCount + balancedIncrement,
-        tooHardCount: existing.tooHardCount + tooHardIncrement,
+        tooEasyCount: existing.tooEasyCount + tooEasyInc,
+        balancedCount: existing.balancedCount + balancedInc,
+        tooHardCount: existing.tooHardCount + tooHardInc,
         totalRatings: existing.totalRatings + 1,
-        wins: existing.wins + winsIncrement,
-        losses: existing.losses + lossesIncrement,
+        wins: existing.wins + winsInc,
+        losses: existing.losses + lossesInc,
         totalLivesLeft: existing.totalLivesLeft + args.livesLeft,
         totalFilledCells: existing.totalFilledCells + args.filledCells,
         totalGuessesSubmitted:
@@ -459,12 +633,12 @@ export const submitGridFeedback = mutation({
 
     await ctx.db.insert("gridFeedback", {
       date: args.date,
-      tooEasyCount: tooEasyIncrement,
-      balancedCount: balancedIncrement,
-      tooHardCount: tooHardIncrement,
+      tooEasyCount: tooEasyInc,
+      balancedCount: balancedInc,
+      tooHardCount: tooHardInc,
       totalRatings: 1,
-      wins: winsIncrement,
-      losses: lossesIncrement,
+      wins: winsInc,
+      losses: lossesInc,
       totalLivesLeft: args.livesLeft,
       totalFilledCells: args.filledCells,
       totalGuessesSubmitted: args.guessesSubmitted,
@@ -472,37 +646,34 @@ export const submitGridFeedback = mutation({
   },
 });
 
-/**
- * Deletes all pending candidates (queue brute). N'affecte pas les approved / rejected / used.
- */
-export const purgeAllPendingCandidates = mutation({
-  args: {
-    adminToken: v.string(),
-  },
-  handler: async (ctx, args) => {
-    checkAdminToken(args.adminToken);
+// ─── Public action (admin) ────────────────────────────────────────────────────
 
-    const pending = await ctx.db
-      .query("gridCandidates")
-      .withIndex("by_status", (q) => q.eq("status", "pending"))
-      .collect();
-    for (const doc of pending) {
-      await ctx.db.delete(doc._id);
-    }
-    return { deleted: pending.length };
+/**
+ * Generates a full pool and stores results in gridCandidates.
+ * Protected by adminToken.
+ */
+export const generatePool = action({
+  args: { adminToken: v.string() },
+  handler: async (ctx, args): Promise<GenerationReport> => {
+    checkAdminToken(args.adminToken);
+    return await ctx.runAction(internal.grids.generatePoolInternal, {});
   },
 });
 
-// ─── Public action (manual trigger) ──────────────────────────────────────────
-
 /**
- * Manually triggers candidate generation (e.g. from Convex dashboard).
- * Accepts an admin token for safety.
+ * Plans a grid for a specific date (admin override of the daily cron).
+ * Idempotent : early-return si la date est déjà dans `grids`.
+ * Protected by adminToken.
  */
-export const triggerGeneration = action({
-  args: { adminToken: v.string() },
-  handler: async (ctx, args) => {
+export const scheduleGridForDate = action({
+  args: { adminToken: v.string(), date: v.string() },
+  handler: async (
+    ctx,
+    args,
+  ): Promise<{ date: string; candidateId: string } | null> => {
     checkAdminToken(args.adminToken);
-    await ctx.runAction(internal.grids.generateDailyCandidates);
+    return await ctx.runAction(internal.grids.ensureGridForDate, {
+      date: args.date,
+    });
   },
 });

@@ -5,139 +5,60 @@
 import countriesJson from "../../src/features/countries/data/countries.json";
 import type { Country } from "../../src/features/countries/types";
 import { CONSTRAINTS } from "../../src/features/game/logic/constraints";
+import {
+  type FinalizedPoolGrid,
+  type GenerationReport,
+  MAX_ATTEMPTS_PER_SEED,
+  MAX_CELL_SIZE,
+  MAX_OVERLAP_BETWEEN_GRIDS,
+  MAX_SAME_CATEGORY,
+  MIN_CATEGORIES,
+  MIN_CELL_SIZE,
+  type PoolGridMetadata,
+  TARGET_GRIDS_PER_SEED,
+} from "./gridConstants";
 
 const COUNTRIES: Country[] = countriesJson as Country[];
-const COUNTRY_BY_CODE = new Map(COUNTRIES.map((c) => [c.code, c] as const));
 
-// ─── Constants ────────────────────────────────────────────────────────────────
+// Difficulty curve: `raw` includes cardinality, constraint weights, and the
+// popularity multiplier; then maps through 1 − exp(−raw × DIFFICULTY_CURVE_K).
+const DIFFICULTY_CURVE_K = 0.8;
 
-// Hard constraints
-export const MIN_CELL_SIZE = 2;
-export const MAX_CELL_SIZE_HARD = 15;
-export const MAX_CELL_SIZE_SOFT = 8;
-export const MAX_CELLS_WITHOUT_OBVIOUS = 2;
-export const MIN_CATEGORIES = 3;
+// Popularity dampener: shifts raw difficulty toward easier cells when the
+// solution pool is well-known (top-K average popularity closer to 1).
+// 0 = ignore popularity; 1 = ±50% raw scale at extremes (pop factor 1.5 vs 0.5 vs base).
+const POPULARITY_WEIGHT = 0.6;
 
-// Notoriété / popularité
-export const OBVIOUS_POPULARITY_THRESHOLD = 0.78;
-const NOTORIETY_MIN_REF = 0.6;
-const NOTORIETY_MAX_REF = 0.85;
+/** Average this many highest-known candidates in each cell pool. */
+const POPULARITY_TOP_K = 3;
 
-// Batch
-export const BATCH_GENERATE_N = 30;
-export const BATCH_STORE_N = 5;
-const MAX_ATTEMPTS_PER_CANDIDATE = 200;
+// Constraint → category/difficulty lookups, built once at module load.
+const CATEGORY_BY_ID: Record<string, string> = (() => {
+  const map: Record<string, string> = {};
+  for (const c of CONSTRAINTS) map[c.id] = c.category;
+  return map;
+})();
 
-// Duplicate detection
-const MAX_SIMILAR_CONSTRAINTS = 5;
+const DIFFICULTY_BY_ID: Record<string, "easy" | "medium" | "hard"> = (() => {
+  const map: Record<string, "easy" | "medium" | "hard"> = {};
+  for (const c of CONSTRAINTS) map[c.id] = c.difficulty;
+  return map;
+})();
 
-// Normalisation seuils — tunés empiriquement, à valider via scripts/analyze-grid-candidates.ts
-const ENTROPY_NORM_CAP = 0.4;
-const DIFFICULTY_VARIANCE_NORM_CAP = 0.015;
-
-// Population log range (fallback si popularityIndex absent)
-const MIN_POP_LOG = Math.log10(10_000);
-const MAX_POP_LOG = Math.log10(1_500_000_000);
-
-// ─── Types ────────────────────────────────────────────────────────────────────
-
-export type CellMetrics = {
-  cellKey: string;
-  solutionCount: number;
-  popularCount: number;
-  maxPopularity: number;
-  avgPopularity: number;
-  entropy: number;
-  hasObviousAnswer: boolean;
-};
-
-export type GridMetadata = {
-  minCellSize: number;
-  maxCellSize: number;
-  avgCellSize: number;
-  cellSizeVariance: number;
-  solutionPoolSize: number;
-  categoryCount: number;
-  avgNotoriety: number;
-  obviousCellCount: number;
-  cellsWithNoObvious: number;
-  difficultyVariance: number;
-  criteriaOverlapScore: number;
-  difficultyMixNorm: number;
-  cellMetrics: CellMetrics[];
-};
-
-export type GridCandidate = {
-  rows: string[]; // 3 constraint IDs
-  cols: string[]; // 3 constraint IDs
-  validAnswers: Record<string, string[]>; // "r,c" → ISO3[]
-  score: number; // qualityScore 0-100
-  difficulty: number; // 0-100, derived from cellMetrics
-  metadata: GridMetadata;
-  status: "pending";
-  generatedAt: number;
-  reviewedAt: null;
-  rejectionReason: null;
-};
-
-// ─── Helpers ──────────────────────────────────────────────────────────────────
-
-function clamp01(x: number): number {
-  return Math.min(1, Math.max(0, x));
-}
-
-function mean(values: number[]): number {
-  if (values.length === 0) return 0;
-  let sum = 0;
-  for (const v of values) sum += v;
-  return sum / values.length;
-}
-
-function variance(values: number[]): number {
-  if (values.length === 0) return 0;
-  const m = mean(values);
-  let sum = 0;
-  for (const v of values) sum += (v - m) * (v - m);
-  return sum / values.length;
-}
-
-// Notoriété perçue : `popularityIndex` (0..1) est dérivé des pageviews mensuels
-// en.wikipedia sur tout le jeu de pays — voir `scripts/build-countries.ts` /
-// `pnpm build:countries`. Quand l’index wiki est présent, on combine avec le
-// signal population par `max` pour éviter les sous-estimations (ex. titre WP
-// partiellement erroné) tout en gardant les micro-États très vus sur le wiki.
-function notorietyFromPopulation(c: Country): number {
-  const l = Math.log10(Math.max(c.population, 1));
-  return clamp01((l - MIN_POP_LOG) / (MAX_POP_LOG - MIN_POP_LOG));
-}
-
-function getNotorietyIndex(c: Country): number {
-  const fromPop = notorietyFromPopulation(c);
-  if (typeof c.popularityIndex === "number") {
-    return clamp01(Math.max(fromPop, clamp01(c.popularityIndex)));
+/** ISO3 → percentile popularity [0..1] from bundled countries dataset. */
+const POPULARITY_BY_CODE: Record<string, number> = (() => {
+  const map: Record<string, number> = {};
+  for (const country of COUNTRIES) {
+    map[country.code] = country.popularityIndex ?? 0.5;
   }
-  return fromPop;
-}
-
-function normalizeNotoriety(avgNotoriety: number): number {
-  const span = NOTORIETY_MAX_REF - NOTORIETY_MIN_REF;
-  if (span <= 0) return 0.5;
-  return clamp01((avgNotoriety - NOTORIETY_MIN_REF) / span);
-}
-
-function shuffle<T>(arr: T[]): T[] {
-  for (let i = arr.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1));
-    [arr[i], arr[j]] = [arr[j], arr[i]];
-  }
-  return arr;
-}
+  return map;
+})();
 
 // ─── Core: constraint matching ────────────────────────────────────────────────
 
 /**
  * For each constraint, compute the set of ISO3 codes that satisfy it.
- * Called once per batch generation.
+ * Called once per generation run.
  */
 export function buildConstraintMatches(): Record<string, Set<string>> {
   const result: Record<string, Set<string>> = {};
@@ -171,277 +92,61 @@ export function intersect(
   return result.sort();
 }
 
-// ─── Cell-level analysis (Phase 1) ────────────────────────────────────────────
+// ─── Backtracking (seed-first) ────────────────────────────────────────────────
 
-/**
- * Analyzes a single cell: solution count, popular countries, entropy.
- * Entropy is a simple max - avg proxy: high when one dominant country exists.
- */
-export function analyzeCell(
-  rowIdx: number,
-  colIdx: number,
-  rowId: string,
-  colId: string,
-  matches: Record<string, Set<string>>,
-): { metrics: CellMetrics; codes: string[] } {
-  const codes = intersect(rowId, colId, matches);
-  let popularCount = 0;
-  let maxPopularity = 0;
-  let sumPopularity = 0;
-
-  for (const code of codes) {
-    const country = COUNTRY_BY_CODE.get(code);
-    const pop = country ? getNotorietyIndex(country) : 0.5;
-    sumPopularity += pop;
-    if (pop > maxPopularity) maxPopularity = pop;
-    if (pop >= OBVIOUS_POPULARITY_THRESHOLD) popularCount += 1;
+function shuffle<T>(arr: T[]): T[] {
+  const result = [...arr];
+  for (let i = result.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [result[i], result[j]] = [result[j], result[i]];
   }
-
-  const solutionCount = codes.length;
-  const avgPopularity = solutionCount === 0 ? 0 : sumPopularity / solutionCount;
-  const entropy = maxPopularity - avgPopularity;
-
-  return {
-    metrics: {
-      cellKey: `${rowIdx},${colIdx}`,
-      solutionCount,
-      popularCount,
-      maxPopularity,
-      avgPopularity,
-      entropy,
-      hasObviousAnswer: popularCount >= 1,
-    },
-    codes,
-  };
+  return result;
 }
 
-// ─── Grid-level metrics (Phase 2) ─────────────────────────────────────────────
-
 /**
- * Measures constraint redundancy within a grid.
- * For each pair of the 6 constraints, overlap = |A ∩ B| / min(|A|, |B|).
- * Returns mean over all 15 pairs, in [0, 1]. Higher = more redundant.
+ * Recursive backtracking: fills rows to 3, then cols to 3.
+ * Checks MAX_SAME_CATEGORY and cell-size hard filters at each step.
+ * The seed is already in rows or cols when this is called.
  */
-export function computeCriteriaOverlap(
+function fillSlots(
   rows: string[],
   cols: string[],
-  matches: Record<string, Set<string>>,
-): number {
-  const ids = [...rows, ...cols];
-  const overlaps: number[] = [];
-
-  for (let i = 0; i < ids.length; i++) {
-    for (let j = i + 1; j < ids.length; j++) {
-      const a = matches[ids[i]];
-      const b = matches[ids[j]];
-      if (!a || !b) continue;
-      const minSize = Math.min(a.size, b.size);
-      if (minSize === 0) {
-        overlaps.push(0);
-        continue;
-      }
-      let shared = 0;
-      for (const code of a) {
-        if (b.has(code)) shared += 1;
-      }
-      overlaps.push(shared / minSize);
-    }
-  }
-
-  return mean(overlaps);
-}
-
-function computeDifficultyMixNorm(rows: string[], cols: string[]): number {
-  const tiers = new Set<string>();
-  for (const id of [...rows, ...cols]) {
-    const c = CONSTRAINTS.find((x) => x.id === id);
-    if (c) tiers.add(c.difficulty);
-  }
-  if (tiers.size >= 3) return 1;
-  if (tiers.size === 2) return 0.65;
-  return 0.25;
-}
-
-/**
- * Aggregates cell-level metrics into a full GridMetadata.
- */
-export function computeGridMetrics(
-  cellMetrics: CellMetrics[],
-  rows: string[],
-  cols: string[],
-  matches: Record<string, Set<string>>,
-  validAnswers: Record<string, string[]>,
-): GridMetadata {
-  const sizes = cellMetrics.map((c) => c.solutionCount);
-  const minCellSize = Math.min(...sizes);
-  const maxCellSize = Math.max(...sizes);
-  const avgCellSize = mean(sizes);
-  const cellSizeVariance = variance(sizes);
-
-  const union = new Set<string>();
-  for (const codes of Object.values(validAnswers)) {
-    for (const code of codes) union.add(code);
-  }
-  const solutionPoolSize = union.size;
-
-  const categoryById: Record<string, string> = {};
-  for (const constraint of CONSTRAINTS) {
-    categoryById[constraint.id] = constraint.category;
-  }
-  const categories = new Set<string>();
-  for (const id of rows) categories.add(categoryById[id]);
-  for (const id of cols) categories.add(categoryById[id]);
-  const categoryCount = categories.size;
-
-  const avgNotoriety = mean(cellMetrics.map((c) => c.avgPopularity));
-
-  const obviousCellCount = cellMetrics.filter((c) => c.hasObviousAnswer).length;
-  const cellsWithNoObvious = cellMetrics.length - obviousCellCount;
-
-  // "Difficulté ressentie" par cellule = 1 - entropy
-  // Une cellule sans pic clair (plusieurs réponses équivalentes) = difficile à trancher.
-  const perCellHardness = cellMetrics.map((c) => 1 - c.entropy);
-  const difficultyVariance = variance(perCellHardness);
-
-  const criteriaOverlapScore = computeCriteriaOverlap(rows, cols, matches);
-  const difficultyMixNorm = computeDifficultyMixNorm(rows, cols);
-
-  return {
-    minCellSize,
-    maxCellSize,
-    avgCellSize,
-    cellSizeVariance,
-    solutionPoolSize,
-    categoryCount,
-    avgNotoriety,
-    obviousCellCount,
-    cellsWithNoObvious,
-    difficultyVariance,
-    criteriaOverlapScore,
-    difficultyMixNorm,
-    cellMetrics,
-  };
-}
-
-/**
- * Computes qualityScore 0-100 from a GridMetadata.
- * Quality = présence de réponses évidentes + confort des tailles de cellule
- * + équilibre + diversité + indépendance des contraintes.
- */
-export function computeQualityScore(metadata: GridMetadata): number {
-  const { cellMetrics } = metadata;
-
-  const avgEntropyNorm = clamp01(
-    mean(cellMetrics.map((c) => c.entropy)) / ENTROPY_NORM_CAP,
-  );
-
-  const balanceNorm =
-    1 - clamp01(metadata.difficultyVariance / DIFFICULTY_VARIANCE_NORM_CAP);
-
-  const sizeComfortNorm = mean(
-    cellMetrics.map((c) => {
-      if (c.solutionCount <= MAX_CELL_SIZE_SOFT) return 1;
-      if (c.solutionCount >= MAX_CELL_SIZE_HARD) return 0;
-      return (
-        1 -
-        (c.solutionCount - MAX_CELL_SIZE_SOFT) /
-          (MAX_CELL_SIZE_HARD - MAX_CELL_SIZE_SOFT)
-      );
-    }),
-  );
-
-  const categoryDiversityNorm = clamp01(
-    (metadata.categoryCount - MIN_CATEGORIES) / 3,
-  );
-
-  const independenceNorm = 1 - clamp01(metadata.criteriaOverlapScore);
-
-  const difficultyMixNorm = metadata.difficultyMixNorm;
-
-  // obviousRatio retiré : le hard reject MAX_CELLS_WITHOUT_OBVIOUS agit
-  // comme floor, et sa présence dans quality anti-corrèle quality/difficulty.
-  const rawQuality =
-    0.27 * sizeComfortNorm +
-    0.18 * independenceNorm +
-    0.18 * categoryDiversityNorm +
-    0.14 * balanceNorm +
-    0.13 * avgEntropyNorm +
-    0.1 * difficultyMixNorm;
-
-  return Math.round(clamp01(rawQuality) * 100);
-}
-
-// ─── Derived difficulty (Phase 3) ─────────────────────────────────────────────
-
-/**
- * Derives a player-facing difficulty score (0-100) entirely from cell metrics.
- * Higher = harder to solve without guessing.
- */
-export function deriveDifficulty(metadata: GridMetadata): number {
-  const { cellMetrics } = metadata;
-  const cellCount = cellMetrics.length || 1;
-
-  const avgSolutionCount = mean(cellMetrics.map((c) => c.solutionCount));
-  const avgPopularityOnGrid = mean(cellMetrics.map((c) => c.avgPopularity));
-  const hardCellRatio =
-    cellMetrics.filter((c) => !c.hasObviousAnswer).length / cellCount;
-
-  const sizeHardnessNorm =
-    1 -
-    clamp01(
-      Math.log(Math.max(Math.min(avgSolutionCount, 10), 1)) / Math.log(10),
-    );
-  const obscurityNorm = 1 - normalizeNotoriety(avgPopularityOnGrid);
-  const missingObviousNorm = hardCellRatio;
-  const varianceNorm = clamp01(metadata.difficultyVariance * 2);
-
-  const rawDifficulty =
-    0.35 * obscurityNorm +
-    0.3 * missingObviousNorm +
-    0.2 * sizeHardnessNorm +
-    0.15 * varianceNorm;
-
-  return Math.round(clamp01(rawDifficulty) * 100);
-}
-
-// ─── Backtracking search ──────────────────────────────────────────────────────
-
-/**
- * Recursive backtracking: fills slots 0-2 (rows) then 3-5 (cols).
- * Prunes branches where any cell would fall outside [MIN_CELL_SIZE, MAX_CELL_SIZE_HARD].
- */
-function fillSlot(
-  slotIndex: number,
   remaining: string[],
   matches: Record<string, Set<string>>,
-  rows: string[],
-  cols: string[],
 ): { rows: string[]; cols: string[] } | null {
-  if (slotIndex === 6) return { rows, cols };
+  if (rows.length === 3 && cols.length === 3) return { rows, cols };
 
-  const isRow = slotIndex < 3;
+  const fillingRows = rows.length < 3;
   const candidates = shuffle([...remaining]);
 
   for (const id of candidates) {
-    const valid = isRow
+    // Category saturation: reject if this category is already at MAX_SAME_CATEGORY
+    const allPlaced = [...rows, ...cols];
+    const cat = CATEGORY_BY_ID[id] ?? "unknown";
+    const catCount = allPlaced.filter(
+      (pid) => (CATEGORY_BY_ID[pid] ?? "unknown") === cat,
+    ).length;
+    if (catCount >= MAX_SAME_CATEGORY) continue;
+
+    // Cell-size check against already-placed orthogonal constraints
+    const valid = fillingRows
       ? cols.every((colId) => {
           const size = intersect(id, colId, matches).length;
-          return size >= MIN_CELL_SIZE && size <= MAX_CELL_SIZE_HARD;
+          return size >= MIN_CELL_SIZE && size <= MAX_CELL_SIZE;
         })
       : rows.every((rowId) => {
           const size = intersect(rowId, id, matches).length;
-          return size >= MIN_CELL_SIZE && size <= MAX_CELL_SIZE_HARD;
+          return size >= MIN_CELL_SIZE && size <= MAX_CELL_SIZE;
         });
 
     if (!valid) continue;
 
     const newRemaining = remaining.filter((r) => r !== id);
-    const result = fillSlot(
-      slotIndex + 1,
+    const result = fillSlots(
+      fillingRows ? [...rows, id] : rows,
+      fillingRows ? cols : [...cols, id],
       newRemaining,
       matches,
-      isRow ? [...rows, id] : rows,
-      isRow ? cols : [...cols, id],
     );
     if (result) return result;
   }
@@ -449,150 +154,237 @@ function fillSlot(
   return null;
 }
 
-export function tryBuildGrid(
-  remainingIds: string[],
+/**
+ * Attempts to build a grid with seedId fixed at rows[0] ("row") or cols[0] ("col").
+ * Fills the remaining 5 slots via backtracking with random shuffle.
+ */
+export function tryBuildGridWithSeed(
+  seedId: string,
+  seedPosition: "row" | "col",
   matches: Record<string, Set<string>>,
 ): { rows: string[]; cols: string[] } | null {
-  return fillSlot(0, shuffle([...remainingIds]), matches, [], []);
+  const remaining = CONSTRAINTS.map((c) => c.id as string).filter(
+    (id) => id !== seedId,
+  );
+
+  // "row": start with rows=[seed], fill rows[1..2] then cols[0..2]
+  // "col": start with cols=[seed], fill rows[0..2] then cols[1..2]
+  if (seedPosition === "row") {
+    return fillSlots([seedId], [], remaining, matches);
+  }
+  return fillSlots([], [seedId], remaining, matches);
+}
+
+// ─── Difficulty scoring ───────────────────────────────────────────────────────
+
+/**
+ * Mean popularity of the K best-known countries in `codes` (ISO3).
+ * Empty pool → median fallback so callers never propagate NaNs.
+ */
+export function topKPopularity(codes: string[], k = POPULARITY_TOP_K): number {
+  if (codes.length === 0) return 0.5;
+
+  const pops = codes
+    .map((code) => POPULARITY_BY_CODE[code] ?? 0.5)
+    .sort((a, b) => b - a);
+  const slice = pops.slice(0, Math.min(k, pops.length));
+  return slice.reduce((sum, p) => sum + p, 0) / slice.length;
+}
+
+/**
+ * Difficulty of a single cell: constraint weights, solution cardinality, and a
+ * popularity-aware dampener on the raw score (easier well-known pools).
+ * Returns an integer in [0, 100].
+ */
+export function computeCellDifficulty(
+  rowId: string,
+  colId: string,
+  matches: Record<string, Set<string>>,
+): number {
+  const solutions = intersect(rowId, colId, matches);
+  if (solutions.length === 0) return 100;
+
+  const diffWeight = { easy: 1, medium: 2, hard: 3 } as const;
+  const rowDiff = diffWeight[DIFFICULTY_BY_ID[rowId] ?? "medium"];
+  const colDiff = diffWeight[DIFFICULTY_BY_ID[colId] ?? "medium"];
+
+  const baseRaw = (1 / solutions.length) * rowDiff * colDiff;
+  const pop = topKPopularity(solutions);
+  const popFactor = Math.max(0, 1 + POPULARITY_WEIGHT * (0.5 - pop));
+  const raw = baseRaw * popFactor;
+
+  return Math.min(
+    100,
+    Math.max(0, Math.round(100 * (1 - Math.exp(-raw * DIFFICULTY_CURVE_K)))),
+  );
 }
 
 // ─── Finalization ─────────────────────────────────────────────────────────────
 
 /**
- * Finalizes a grid: builds validAnswers + cellMetrics, applies hard filters,
- * computes qualityScore and derived difficulty.
- * Returns null if any hard constraint fails.
+ * Validates a grid and computes its PoolGridMetadata.
+ * Hard filters applied:
+ *   - All 9 cells: MIN_CELL_SIZE ≤ size ≤ MAX_CELL_SIZE
+ *   - ≥ MIN_CATEGORIES distinct constraint categories
+ *   - ≤ MAX_SAME_CATEGORY per category
+ * Returns null if any filter fails.
  */
-export function finalizeAndScore(
+export function finalizeGrid(
   rows: string[],
   cols: string[],
+  seedId: string,
   matches: Record<string, Set<string>>,
-): GridCandidate | null {
+): FinalizedPoolGrid | null {
   const validAnswers: Record<string, string[]> = {};
-  const cellMetrics: CellMetrics[] = [];
+  const cellDifficulties: number[] = [];
+  let minCellSize = Number.POSITIVE_INFINITY;
+  let totalCellSize = 0;
+  const countryPoolSet = new Set<string>();
 
   for (let r = 0; r < 3; r++) {
-    const rowId = rows[r];
     for (let c = 0; c < 3; c++) {
-      const colId = cols[c];
-      const { metrics, codes } = analyzeCell(r, c, rowId, colId, matches);
-      if (
-        metrics.solutionCount < MIN_CELL_SIZE ||
-        metrics.solutionCount > MAX_CELL_SIZE_HARD
-      ) {
-        return null;
-      }
-      validAnswers[metrics.cellKey] = codes;
-      cellMetrics.push(metrics);
+      const solutions = intersect(rows[r], cols[c], matches);
+      const size = solutions.length;
+      if (size < MIN_CELL_SIZE || size > MAX_CELL_SIZE) return null;
+
+      validAnswers[`${r},${c}`] = solutions;
+      cellDifficulties.push(computeCellDifficulty(rows[r], cols[c], matches));
+      minCellSize = Math.min(minCellSize, size);
+      totalCellSize += size;
+      for (const code of solutions) countryPoolSet.add(code);
     }
   }
 
-  const cellsWithNoObvious = cellMetrics.filter(
-    (c) => !c.hasObviousAnswer,
-  ).length;
-  if (cellsWithNoObvious > MAX_CELLS_WITHOUT_OBVIOUS) return null;
+  const allIds = [...rows, ...cols];
 
-  const metadata = computeGridMetrics(
-    cellMetrics,
-    rows,
-    cols,
-    matches,
-    validAnswers,
+  // Category checks (final enforcement — backtracking only enforces MAX_SAME_CATEGORY)
+  const catCounts: Record<string, number> = {};
+  for (const id of allIds) {
+    const cat = CATEGORY_BY_ID[id] ?? "unknown";
+    catCounts[cat] = (catCounts[cat] ?? 0) + 1;
+    if (catCounts[cat] > MAX_SAME_CATEGORY) return null;
+  }
+  const categories = Object.keys(catCounts);
+  if (categories.length < MIN_CATEGORIES) return null;
+
+  const avgCellSize = Math.round((totalCellSize / 9) * 10) / 10;
+  const difficultyEstimate = Math.round(
+    cellDifficulties.reduce((s, d) => s + d, 0) / cellDifficulties.length,
   );
 
-  if (metadata.categoryCount < MIN_CATEGORIES) return null;
+  const difficultyTags = { easy: 0, medium: 0, hard: 0 };
+  for (const d of cellDifficulties) {
+    if (d <= 33) difficultyTags.easy++;
+    else if (d <= 66) difficultyTags.medium++;
+    else difficultyTags.hard++;
+  }
 
-  const score = computeQualityScore(metadata);
-  const difficulty = deriveDifficulty(metadata);
-
-  return {
-    rows,
-    cols,
-    validAnswers,
-    score,
-    difficulty,
-    metadata,
-    status: "pending",
-    generatedAt: Date.now(),
-    reviewedAt: null,
-    rejectionReason: null,
+  const metadata: PoolGridMetadata = {
+    seedConstraint: seedId,
+    constraintIds: allIds,
+    categories,
+    avgCellSize,
+    minCellSize: minCellSize === Number.POSITIVE_INFINITY ? 0 : minCellSize,
+    countryPool: [...countryPoolSet],
+    difficultyEstimate,
+    difficultyTags,
+    cellDifficulties,
   };
+
+  return { rows, cols, validAnswers, metadata };
 }
 
-// ─── Batch generation ─────────────────────────────────────────────────────────
+// ─── Pool generation ──────────────────────────────────────────────────────────
 
 /**
- * Generates up to `n` grid candidates, intrinsically scored and returned
- * sorted by qualityScore descending. Skips near-duplicates (≥ MAX_SIMILAR_CONSTRAINTS
- * shared constraint IDs with any existing or already-generated grid).
+ * Generates a diverse pool of grids, one seed per constraint.
+ * Constraint at even index → seed in row[0]; odd index → seed in col[0].
+ * Grids sharing ≥ MAX_OVERLAP_BETWEEN_GRIDS constraints with any existing pool grid are skipped.
  */
-export function generateBatch(
-  n: number,
-  existing: { rows: string[]; cols: string[] }[],
-): GridCandidate[] {
+export function generateDiversePool(
+  existingPool: Array<{ constraintIds: string[] }> = [],
+): { grids: FinalizedPoolGrid[]; report: GenerationReport } {
+  const startMs = Date.now();
   const matches = buildConstraintMatches();
-  const allIds = CONSTRAINTS.map((c) => c.id);
 
-  const existingSets = existing.map(
-    (e) => new Set<string>([...e.rows, ...e.cols]),
+  const pool: FinalizedPoolGrid[] = [];
+  const allPoolSets: Set<string>[] = existingPool.map(
+    (g) => new Set(g.constraintIds),
   );
 
-  const result: GridCandidate[] = [];
-  const maxAttempts = n * MAX_ATTEMPTS_PER_CANDIDATE;
-  let attempts = 0;
-  let failedFilter = 0;
-  let failedDuplicate = 0;
+  const seedResults: GenerationReport["seedResults"] = [];
 
-  while (result.length < n && attempts < maxAttempts) {
-    attempts++;
+  CONSTRAINTS.forEach((constraint, index) => {
+    const seedId = constraint.id;
+    const seedPosition: "row" | "col" = index % 2 === 0 ? "row" : "col";
+    let attempted = 0;
+    let succeeded = 0;
 
-    const gridResult = tryBuildGrid(allIds, matches);
-    if (!gridResult) {
-      failedFilter++;
-      continue;
+    while (
+      succeeded < TARGET_GRIDS_PER_SEED &&
+      attempted < MAX_ATTEMPTS_PER_SEED
+    ) {
+      attempted++;
+
+      const gridResult = tryBuildGridWithSeed(seedId, seedPosition, matches);
+      if (!gridResult) continue;
+
+      const finalized = finalizeGrid(
+        gridResult.rows,
+        gridResult.cols,
+        seedId,
+        matches,
+      );
+      if (!finalized) continue;
+
+      // Reject if too similar to any existing pool grid
+      const candidateSet = new Set(finalized.metadata.constraintIds);
+      const tooSimilar = allPoolSets.some((existingSet) => {
+        let shared = 0;
+        for (const id of candidateSet) {
+          if (existingSet.has(id)) shared++;
+        }
+        return shared >= MAX_OVERLAP_BETWEEN_GRIDS;
+      });
+      if (tooSimilar) continue;
+
+      pool.push(finalized);
+      allPoolSets.push(candidateSet);
+      succeeded++;
     }
 
-    const candidate = finalizeAndScore(
-      gridResult.rows,
-      gridResult.cols,
-      matches,
-    );
-    if (!candidate) {
-      failedFilter++;
-      continue;
+    if (succeeded < 5) {
+      console.warn(
+        `CONSTRAINT ${seedId} FAILED: only ${succeeded}/${TARGET_GRIDS_PER_SEED} grids. This constraint may be structurally orphaned. Consider removing or reworking it.`,
+      );
+    } else {
+      console.log(
+        `[generateDiversePool] Seed ${seedId}: ${succeeded}/${TARGET_GRIDS_PER_SEED} in ${attempted} attempts`,
+      );
     }
 
-    const candidateSet = new Set<string>([
-      ...candidate.rows,
-      ...candidate.cols,
-    ]);
-    const resultSets = result.map(
-      (r) => new Set<string>([...r.rows, ...r.cols]),
-    );
-
-    const isDuplicate = [...existingSets, ...resultSets].some((existingSet) => {
-      let shared = 0;
-      for (const id of candidateSet) {
-        if (existingSet.has(id)) shared++;
-      }
-      return shared >= MAX_SIMILAR_CONSTRAINTS;
+    seedResults.push({
+      constraintId: seedId,
+      attempted,
+      succeeded,
+      failed: succeeded < 5,
     });
+  });
 
-    if (isDuplicate) {
-      failedDuplicate++;
-      continue;
-    }
-
-    result.push(candidate);
+  const countrySet = new Set<string>();
+  for (const grid of pool) {
+    for (const code of grid.metadata.countryPool) countrySet.add(code);
   }
 
-  if (result.length < n) {
-    console.log(
-      `[generateBatch] Only ${result.length}/${n} candidates after ${attempts} attempts` +
-        ` (${failedFilter} failed filters, ${failedDuplicate} duplicates)`,
-    );
-  }
-
-  result.sort((a, b) => b.score - a.score);
-  return result;
+  return {
+    grids: pool,
+    report: {
+      totalGenerated: pool.length,
+      seedResults,
+      constraintCoverage:
+        seedResults.filter((r) => r.succeeded > 0).length / CONSTRAINTS.length,
+      countryCoverage: countrySet.size,
+      durationMs: Date.now() - startMs,
+    },
+  };
 }

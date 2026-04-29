@@ -3,19 +3,20 @@ import { internal } from "./_generated/api";
 
 const crons = cronJobs();
 
-// Every day at 23:00 UTC — generate new grid candidates
-crons.cron(
-  "generate daily candidates",
-  "0 23 * * *",
-  internal.grids.generateDailyCandidates,
+// Every day at 12:00 UTC — ensure today's and tomorrow's grids exist (scheduler pool).
+// 12h de marge avant le rollover UTC à 00:00 pour absorber un échec/retry.
+crons.daily(
+  "ensure tomorrow grid",
+  { hourUTC: 12, minuteUTC: 0 },
+  internal.grids.ensureTomorrowGrid,
   {},
 );
 
-// Every day at 23:30 UTC — promote the oldest approved candidate to today's grid
-crons.cron(
-  "ensure today grid",
-  "30 23 * * *",
-  internal.grids.ensureTodayGrid,
+// Every Sunday at 04:00 UTC — refill the pool if it falls below threshold
+crons.weekly(
+  "auto refill pool",
+  { dayOfWeek: "sunday", hourUTC: 4, minuteUTC: 0 },
+  internal.grids.autoRefillPool,
   {},
 );
 

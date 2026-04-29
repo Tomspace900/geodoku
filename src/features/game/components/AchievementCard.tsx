@@ -1,11 +1,15 @@
 import { getCountryByCode } from "@/features/countries/lib/search";
-import { computeScore } from "@/features/game/logic/rarity";
+import {
+  computeGridScore,
+  computeOriginalityScore,
+} from "@/features/game/logic/rarity";
 import type { FilledCell, GameState } from "@/features/game/types";
 import { useLocale, useT } from "@/i18n/LocaleContext";
 import { Award } from "lucide-react";
 import { STARTING_LIVES } from "../logic/constants";
 
 type AchievementId =
+  | "elite_originality"
   | "elite_collector"
   | "flawless"
   | "globe_trotter"
@@ -17,6 +21,7 @@ type AchievementRaw = {
   countryName?: string;
   count?: number;
   percent?: number;
+  score?: number;
 };
 
 function getUnlockedAchievement(
@@ -27,7 +32,21 @@ function getUnlockedAchievement(
     (c): c is FilledCell => c.status === "filled",
   );
 
-  // "Collectionneur Élite" — au moins une cellule ultra-rare
+  // « Cartographe Émérite » — originalité grade S (≥ 80). On le teste avant
+  // « Collectionneur Élite » : sinon il serait toujours masqué (le seuil S
+  // implique plusieurs ultras → hasUltra serait toujours vrai en premier).
+  if (state.status === "won") {
+    const originality = computeOriginalityScore(state);
+    if (originality.score >= 80) {
+      return {
+        id: "elite_originality",
+        emoji: "🌟",
+        score: originality.score,
+      };
+    }
+  }
+
+  // « Collectionneur Élite » — au moins une cellule ultra-rare
   const hasUltra = filled.some((c) => c.rarityTier === "ultra");
   if (hasUltra) {
     const ultraCell = filled.find((c) => c.rarityTier === "ultra");
@@ -41,12 +60,12 @@ function getUnlockedAchievement(
     };
   }
 
-  // "Sans Faute" — victoire sans erreur
+  // « Sans Faute » — victoire sans erreur
   if (state.status === "won" && state.remainingLives === STARTING_LIVES) {
     return { id: "flawless", emoji: "💎" };
   }
 
-  // "Globe-Trotter" — victoire avec 3+ continents différents
+  // « Globe-Trotter » — victoire avec 3+ continents différents
   if (state.status === "won") {
     const continents = new Set(
       filled
@@ -58,11 +77,11 @@ function getUnlockedAchievement(
     }
   }
 
-  // Score exceptionnel (>= 80%)
+  // Score de grille exceptionnel (≥ 80 %)
   if (state.status === "won") {
-    const score = computeScore(state);
-    if (score.percent >= 80) {
-      return { id: "elite_score", emoji: "⭐", percent: score.percent };
+    const gridScore = computeGridScore(state);
+    if (gridScore.percent >= 80) {
+      return { id: "elite_score", emoji: "⭐", percent: gridScore.percent };
     }
   }
 
@@ -83,6 +102,12 @@ export function AchievementCard({ state }: Props) {
   let description: string;
 
   switch (raw.id) {
+    case "elite_originality":
+      title = t("achievement.eliteOriginality");
+      description = t("achievement.eliteOriginalityDesc", {
+        score: raw.score ?? 0,
+      });
+      break;
     case "elite_collector":
       title = t("achievement.eliteCollector");
       description = raw.countryName

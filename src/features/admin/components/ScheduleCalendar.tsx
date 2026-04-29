@@ -1,6 +1,7 @@
 import { Calendar, CalendarDayButton } from "@/components/ui/calendar";
 import { cn } from "@/lib/utils";
 import type { DayButton } from "react-day-picker";
+import { difficultySolidDotClass } from "../logic/display";
 import { dateToStr } from "../logic/scheduling";
 
 type ScheduledGrid = {
@@ -13,12 +14,6 @@ type Props = {
   selectedDate: string | null;
   onSelectDate: (date: string | null) => void;
 };
-
-function difficultyDotClass(difficulty: number): string {
-  if (difficulty <= 33) return "bg-green-500";
-  if (difficulty <= 66) return "bg-orange-400";
-  return "bg-rarity-ultra";
-}
 
 function strToLocalDate(str: string): Date {
   const [y, m, d] = str.split("-").map(Number);
@@ -42,8 +37,6 @@ export function ScheduleCalendar({
     onSelectDate(str);
   }
 
-  // Bouton de jour custom : affiche un point coloré sous le chiffre
-  // si la date a une grille planifiée
   function ScheduleDayButton({
     children,
     day,
@@ -67,7 +60,7 @@ export function ScheduleCalendar({
             aria-hidden="true"
             className={cn(
               "mx-auto block h-1 w-1 rounded-full !opacity-100",
-              difficultyDotClass(grid.difficulty),
+              difficultySolidDotClass(grid.difficulty),
             )}
           />
         )}
@@ -91,13 +84,12 @@ export function ScheduleCalendar({
             "bg-surface-highest text-on-surface rounded-md data-[selected=true]:rounded-none",
         }}
       />
-      {/* Légende */}
       <div className="flex gap-3 mt-3 pt-3 border-t border-outline-variant/15">
         {(
           [
-            { label: "Facile", cls: "bg-green-500" },
-            { label: "Moyen", cls: "bg-orange-400" },
-            { label: "Difficile", cls: "bg-rarity-ultra" },
+            { label: "Facile", cls: difficultySolidDotClass(0) },
+            { label: "Moyen", cls: difficultySolidDotClass(50) },
+            { label: "Difficile", cls: difficultySolidDotClass(100) },
           ] as const
         ).map(({ label, cls }) => (
           <span
