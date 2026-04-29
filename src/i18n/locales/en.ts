@@ -30,6 +30,13 @@ export const en = {
     solutionRarityHint:
       "Percentages show the share of today's players who picked that country for the cell.",
   },
+  footer: {
+    betaMark: "BETA",
+    loveCreditPre: "Made with love ❤️, inspired by ",
+    loveCreditPost: ".",
+    contact: "Contact",
+    copyright: "©\u00A0{year}\u00A0Geodoku",
+  },
   howToPlay: {
     title: "How to play?",
     p1pre: "Each grid features",

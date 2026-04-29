@@ -35,7 +35,7 @@ const DIFFICULTY_RATINGS: ReadonlyArray<{
 
 type Props = {
   state: GameState;
-  gridNumber: number;
+  gridNumber: number | null;
   onDismiss: () => void;
   onViewAnswers: () => void;
 };
@@ -197,7 +197,7 @@ export function ResultScreen({
             </div>
           ))}
           <p className="text-xs text-on-surface-variant mt-1">
-            #GEODOKU #{gridNumber}
+            {`#GEODOKU${gridNumber !== null ? ` #${gridNumber}` : ""}`}
           </p>
         </div>
 

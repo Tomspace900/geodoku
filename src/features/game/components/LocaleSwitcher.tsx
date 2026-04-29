@@ -5,11 +5,16 @@ import { cn } from "@/lib/utils";
 
 const LOCALES: Locale[] = ["fr", "en"];
 
-export function LocaleSwitcher() {
+export function LocaleSwitcher({ className }: { className?: string }) {
   const { locale, setLocale } = useLocale();
 
   return (
-    <div className="flex items-center justify-center gap-3 mt-12">
+    <div
+      className={cn(
+        "flex items-center justify-center gap-1 sm:gap-2",
+        className,
+      )}
+    >
       {LOCALES.map((l) => (
         <Button
           key={l}
@@ -18,7 +23,7 @@ export function LocaleSwitcher() {
           size="sm"
           onClick={() => setLocale(l)}
           className={cn(
-            "h-auto px-2 py-1 text-[10px] font-semibold tracking-widest uppercase",
+            "h-auto px-1.5 py-0 text-[10px] font-semibold tracking-widest uppercase sm:px-2 sm:py-0.5",
             locale === l
               ? "text-on-surface"
               : "text-on-surface-variant hover:text-on-surface",

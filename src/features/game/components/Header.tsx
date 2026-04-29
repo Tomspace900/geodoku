@@ -5,9 +5,10 @@ import { STARTING_LIVES } from "../logic/constants";
 type Props = {
   remainingLives: number;
   date: string; // "YYYY-MM-DD"
+  gridNumber: number | null;
 };
 
-export function Header({ remainingLives, date }: Props) {
+export function Header({ remainingLives, date, gridNumber }: Props) {
   const { locale } = useLocale();
 
   const localeTag = locale === "fr" ? "fr-FR" : "en-GB";
@@ -35,6 +36,9 @@ export function Header({ remainingLives, date }: Props) {
             />
             <p className="mt-1 text-[10px] tracking-widest text-on-surface-variant uppercase">
               {dateLabel}
+              {gridNumber !== null && (
+                <span className="text-on-surface-variant/70 normal-case tracking-normal">{` · #${gridNumber}`}</span>
+              )}
             </p>
           </>
         )}

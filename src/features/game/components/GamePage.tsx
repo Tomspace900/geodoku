@@ -1,6 +1,11 @@
+import AppFooter from "@/app/AppFooter";
 import { ErrorScreen } from "@/features/errors/components/ErrorScreen";
 import { useBackendDownTimeout } from "@/features/errors/hooks/useBackendDownTimeout";
 import { useGameState } from "@/features/game/hooks/useGameState";
+import {
+  getGridNumberForDate,
+  getGridNumberForTodayUtc,
+} from "@/features/game/logic/gridIssue";
 import { useT } from "@/i18n/LocaleContext";
 import { cn } from "@/lib/utils";
 import { useQuery } from "convex/react";
@@ -10,18 +15,8 @@ import { GameGrid } from "./GameGrid";
 import { GuessModal } from "./GuessModal";
 import { Header } from "./Header";
 import { HowToPlayLink } from "./HowToPlayLink";
-import { LocaleSwitcher } from "./LocaleSwitcher";
 import { ResultScreen } from "./ResultScreen";
 import { SolutionGrid } from "./SolutionGrid";
-
-const LAUNCH_DATE_MS = new Date("2026-04-01T00:00:00Z").getTime();
-
-function getGridNumber(): number {
-  return Math.max(
-    1,
-    Math.floor((Date.now() - LAUNCH_DATE_MS) / 86_400_000) + 1,
-  );
-}
 
 function LoadingSkeleton() {
   return (
@@ -63,7 +58,9 @@ export function GamePage() {
   const { state, selectCell, submitGuess, isLoading, hasGrid, validAnswers } =
     useGameState();
   const isBackendDown = useBackendDownTimeout(isLoading);
-  const gridNumber = getGridNumber();
+  const gridNumber = state.date
+    ? getGridNumberForDate(state.date)
+    : getGridNumberForTodayUtc();
 
   const guessDistribution = useQuery(
     api.guesses.getGuessDistributionForDate,
@@ -99,8 +96,12 @@ export function GamePage() {
 
   return (
     <div className="min-h-screen bg-surface flex flex-col items-center px-4 py-6">
-      <div className={cn("w-full flex flex-col gap-5", contentMaxWidth)}>
-        <Header remainingLives={state.remainingLives} date={state.date} />
+      <div className={cn("w-full flex flex-col gap-5 flex-1", contentMaxWidth)}>
+        <Header
+          remainingLives={state.remainingLives}
+          date={state.date}
+          gridNumber={gridNumber}
+        />
 
         {isBackendDown ? (
           <ErrorScreen variant="backend-down" />
@@ -134,8 +135,9 @@ export function GamePage() {
         )}
 
         {!isSolutionView && <HowToPlayLink />}
-        <LocaleSwitcher />
       </div>
+
+      <AppFooter className="mt-auto w-full shrink-0" />
 
       {state.selectedCell !== null && (
         <GuessModal

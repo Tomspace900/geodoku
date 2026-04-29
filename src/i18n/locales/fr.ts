@@ -30,6 +30,13 @@ export const fr = {
     solutionRarityHint:
       "Les pourcentages indiquent la part des joueurs du jour ayant soumis ce pays pour la case.",
   },
+  footer: {
+    betaMark: "BETA",
+    loveCreditPre: "Fait avec amour ❤️, inspiré par ",
+    loveCreditPost: ".",
+    contact: "Contact",
+    copyright: "©\u00A0{year}\u00A0Geodoku",
+  },
   howToPlay: {
     title: "Comment jouer\u00A0?",
     p1pre: "Chaque grille propose",

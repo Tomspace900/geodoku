@@ -108,7 +108,8 @@ export function GuessModal({
     (code) => !state.usedCountries.has(code),
   ).length;
 
-  const results = query.length >= 3 ? searchCountries(query, locale, 12) : [];
+  const hasMinSearchLength = query.length >= 3;
+  const results = hasMinSearchLength ? searchCountries(query, locale, 12) : [];
 
   return (
     <Drawer
@@ -117,8 +118,8 @@ export function GuessModal({
         if (!v) handleClose();
       }}
     >
-      <DrawerContent className="max-h-[90vh] w-full sm:mx-auto sm:max-w-xl">
-        <DrawerHeader className="text-left pb-2 px-4 pt-4">
+      <DrawerContent className="mt-10 max-h-[94vh] w-full overflow-x-hidden sm:mx-auto sm:mt-24 sm:max-w-xl">
+        <DrawerHeader className="text-left px-4 pb-2 pt-3 sm:pt-4">
           <DrawerTitle className="font-serif text-lg font-medium text-on-surface leading-snug">
             {rowLabel} × {colLabel}
           </DrawerTitle>
@@ -150,13 +151,19 @@ export function GuessModal({
               className="rounded-none px-0 focus-visible:ring-0 text-on-surface placeholder:text-on-surface-variant"
             />
           </div>
-          <CommandList className="max-h-[50vh] overflow-y-auto px-2 pb-4">
-            {query.length < 3 ? (
-              <p className="text-center text-sm text-on-surface-variant py-6">
+          <CommandList
+            className={cn(
+              "overflow-y-auto px-2 pb-4 overscroll-contain",
+              hasMinSearchLength &&
+                "max-h-[calc(100dvh-11rem)] sm:max-h-[min(58vh,calc(100dvh-15rem))]",
+            )}
+          >
+            {!hasMinSearchLength ? (
+              <p className="py-2 text-center text-sm text-on-surface-variant sm:py-6">
                 {t("ui.typeAtLeast")}
               </p>
             ) : results.length === 0 ? (
-              <CommandEmpty className="text-center text-sm text-on-surface-variant py-6">
+              <CommandEmpty className="py-3 text-center text-sm text-on-surface-variant sm:py-6">
                 {t("ui.noResults")}
               </CommandEmpty>
             ) : (
