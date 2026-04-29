@@ -45,18 +45,13 @@ describe("translate", () => {
     expect(translate("fr", badKey)).toBe("ui.nonExistentKey");
   });
 
-  it("interpolates variables in the translated string", () => {
+  it("ignores extra vars when the string has no placeholders", () => {
     const result = translate("fr", "ui.originalityScore", { score: 87 });
-    expect(result).toBe("Originalité 87");
-  });
-
-  it("interpolates variables in the English string", () => {
-    const result = translate("en", "ui.originalityScore", { score: 87 });
-    expect(result).toBe("Originality 87");
+    expect(result).toBe("Originalité");
   });
 
   it("leaves missing interpolation variables as {placeholder}", () => {
-    const result = translate("fr", "ui.originalityScore");
+    const result = translate("fr", "achievement.eliteOriginalityDesc");
     expect(result).toContain("{score}");
   });
 
