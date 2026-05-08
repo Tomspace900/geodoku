@@ -1,4 +1,5 @@
 import { Button } from "@/components/ui/button";
+import { Checkbox } from "@/components/ui/checkbox";
 import {
   Dialog,
   DialogContent,
@@ -9,9 +10,36 @@ import { useT } from "@/i18n/LocaleContext";
 import { HelpCircle } from "lucide-react";
 import { useState } from "react";
 
+const STORAGE_KEY = "geodoku.showHowToPlay";
+
+function readShow(): boolean {
+  if (typeof window === "undefined") return true;
+  try {
+    return window.localStorage.getItem(STORAGE_KEY) !== "false";
+  } catch {
+    return true;
+  }
+}
+
+function writeShow(value: boolean) {
+  if (typeof window === "undefined") return;
+  try {
+    window.localStorage.setItem(STORAGE_KEY, String(value));
+  } catch {
+    // localStorage indisponible (mode privé Safari, quota…), on ignore.
+  }
+}
+
 export function HowToPlayLink() {
-  const [open, setOpen] = useState(false);
+  const [show, setShow] = useState<boolean>(() => readShow());
+  const [open, setOpen] = useState<boolean>(show);
   const t = useT();
+
+  function handleDontShowChange(checked: boolean) {
+    const nextShow = !checked;
+    setShow(nextShow);
+    writeShow(nextShow);
+  }
 
   return (
     <>
@@ -70,6 +98,17 @@ export function HowToPlayLink() {
             </ul>
             <p className="italic text-xs">{t("howToPlay.tip")}</p>
           </div>
+          <label
+            htmlFor="howtoplay-dont-show"
+            className="flex items-center gap-2 pt-2 text-xs text-on-surface-variant cursor-pointer select-none"
+          >
+            <Checkbox
+              id="howtoplay-dont-show"
+              checked={!show}
+              onCheckedChange={(v) => handleDontShowChange(v === true)}
+            />
+            <span>{t("howToPlay.dontShowAgain")}</span>
+          </label>
         </DialogContent>
       </Dialog>
     </>

@@ -55,6 +55,7 @@ export const en = {
     li3: "🟨 Rare — more than 10%",
     li4: "🟥 Ultra-rare — 10%\u00A0or less",
     tip: "The rarer your answer, the better your score. Good luck!",
+    dontShowAgain: "Don't show again",
   },
   error: {
     wrong_row: "This country doesn't match both constraints.",
