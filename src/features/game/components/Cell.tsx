@@ -37,7 +37,10 @@ export function CellComponent({ cell, position, isDisabled, onClick }: Props) {
   return (
     <button
       type="button"
-      onClick={onClick}
+      onClick={(e) => {
+        e.currentTarget.blur();
+        onClick();
+      }}
       disabled={isDisabled}
       aria-label={t("ui.cellAriaLabel", {
         row: position.row + 1,
