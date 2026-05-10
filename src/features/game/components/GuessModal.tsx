@@ -69,14 +69,7 @@ export function GuessModal({
 
   function handleClose() {
     setOpen(false);
-  }
-
-  // Synchronise le React unmount avec la fin réelle de l'animation vaul,
-  // au lieu d'un setTimeout désaligné. Le focus de l'input à l'ouverture
-  // passe par autoFocus (synchrone au mount) : iOS Safari n'ouvre le clavier
-  // que si le focus arrive dans la même boucle que l'événement utilisateur.
-  function handleAnimationEnd(isOpen: boolean) {
-    if (!isOpen) onClose();
+    setTimeout(onClose, 300);
   }
 
   function showError(reason: string) {
@@ -124,7 +117,6 @@ export function GuessModal({
       onOpenChange={(v) => {
         if (!v) handleClose();
       }}
-      onAnimationEnd={handleAnimationEnd}
     >
       <DrawerContent className="mt-10 max-h-[94dvh] w-full overflow-x-hidden sm:mx-auto sm:mt-24 sm:max-w-xl">
         <DrawerHeader className="text-left px-4 pb-2 pt-3 sm:pt-4">
