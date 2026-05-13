@@ -1,0 +1,35 @@
+name: Deploy Convex (dev)
+
+on:
+  push:
+    branches-ignore: [main]
+    paths:
+      - "convex/**"
+      - ".github/workflows/convex-deploy-dev.yml"
+  workflow_dispatch:
+
+concurrency:
+  group: convex-deploy-dev-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 9
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: pnpm
+
+      - run: pnpm install --frozen-lockfile
+
+      - name: Deploy Convex functions and schema
+        run: pnpm exec convex deploy
+        env:
+          CONVEX_DEPLOY_KEY: ${{ secrets.CONVEX_DEPLOY_KEY_DEV }}
