@@ -3,6 +3,7 @@ import { useMutation, useQuery } from "convex/react";
 import { useCallback, useEffect, useReducer } from "react";
 import { api } from "../../../../convex/_generated/api";
 import { getOrCreateClientId } from "../logic/clientId";
+import { STARTING_LIVES } from "../logic/constants";
 import type { ConstraintId } from "../logic/constraints";
 import {
   type PersistedGame,
@@ -16,9 +17,12 @@ import { sanitizePersistedForGrid } from "../logic/sanitizePersisted";
 import { validateGuess } from "../logic/validation";
 import type { CellPosition, GameState } from "../types";
 
+const GAME_ENDED_STORAGE_PREFIX = "geodoku:ended:";
+
 export function useGameState() {
   const todayGrid = useQuery(api.grids.getTodayGrid);
   const submit = useMutation(api.guesses.submitGuess);
+  const recordGameEnd = useMutation(api.grids.recordGameEnd);
 
   const [state, dispatch] = useReducer(
     gameReducer,
@@ -63,6 +67,42 @@ export function useGameState() {
     if (!state.date) return;
     savePersistedGame(state);
   }, [state]);
+
+  // Notifie Convex de la fin de partie une seule fois (gagnée ou perdue) :
+  // c'est ce qui alimente les compteurs de joueurs dans l'admin, hors rating.
+  useEffect(() => {
+    if (!state.date) return;
+    if (state.status !== "won" && state.status !== "lost") return;
+
+    const storageKey = `${GAME_ENDED_STORAGE_PREFIX}${state.date}`;
+    if (localStorage.getItem(storageKey) === "1") return;
+
+    const filledCells = Object.values(state.cells).filter(
+      (cell) => cell.status === "filled",
+    ).length;
+    const failedGuesses = STARTING_LIVES - state.remainingLives;
+
+    localStorage.setItem(storageKey, "1");
+
+    recordGameEnd({
+      date: state.date,
+      won: state.status === "won",
+      livesLeft: state.remainingLives,
+      filledCells,
+      guessesSubmitted: filledCells + failedGuesses,
+      clientId: getOrCreateClientId(),
+    }).catch(() => {
+      // On retire le flag pour permettre une nouvelle tentative au prochain
+      // changement d'état si le serveur a rejeté l'enregistrement.
+      localStorage.removeItem(storageKey);
+    });
+  }, [
+    state.date,
+    state.status,
+    state.cells,
+    state.remainingLives,
+    recordGameEnd,
+  ]);
 
   const selectCell = useCallback((cell: CellPosition | null) => {
     dispatch({ type: "selectCell", cell });

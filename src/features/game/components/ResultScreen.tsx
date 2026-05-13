@@ -1,6 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { getOrCreateClientId } from "@/features/game/logic/clientId";
-import { SHARE_EMOJIS, STARTING_LIVES } from "@/features/game/logic/constants";
+import { SHARE_EMOJIS } from "@/features/game/logic/constants";
 import {
   computeGridScore,
   computeOriginalityScore,
@@ -83,20 +83,11 @@ export function ResultScreen({
       return;
     }
 
-    const filledCells = Object.values(state.cells).filter(
-      (cell) => cell.status === "filled",
-    ).length;
-    const failedGuesses = STARTING_LIVES - state.remainingLives;
-
     setRatingPending(true);
     try {
       await submitGridFeedback({
         date: state.date,
         rating,
-        won: state.status === "won",
-        livesLeft: state.remainingLives,
-        filledCells,
-        guessesSubmitted: filledCells + failedGuesses,
         clientId: getOrCreateClientId(),
       });
       localStorage.setItem(`${FEEDBACK_STORAGE_PREFIX}${state.date}`, "1");

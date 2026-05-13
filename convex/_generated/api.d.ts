@@ -9,6 +9,7 @@
  */
 
 import type * as auth from "../auth.js";
+import type * as cellKeys from "../cellKeys.js";
 import type * as crons from "../crons.js";
 import type * as gridData from "../gridData.js";
 import type * as grids from "../grids.js";
@@ -28,6 +29,7 @@ import type {
 
 declare const fullApi: ApiFromModules<{
   auth: typeof auth;
+  cellKeys: typeof cellKeys;
   crons: typeof crons;
   gridData: typeof gridData;
   grids: typeof grids;
