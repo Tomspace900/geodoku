@@ -76,7 +76,7 @@ export function AdminPage() {
 
   if (!token) {
     return (
-      <div className="flex min-h-screen flex-col bg-surface px-4 py-8">
+      <div className="flex min-h-svh flex-col bg-surface px-4 py-8">
         <div className="mx-auto flex w-full max-w-[460px] flex-1 flex-col gap-6">
           <header className="rounded-2xl bg-surface-low p-6">
             <h1 className="font-serif text-3xl font-medium italic text-on-surface leading-none">
@@ -123,7 +123,7 @@ export function AdminPage() {
 
   return (
     <AdminAuthBoundary onUnauthorized={clearToken}>
-      <div className="flex min-h-screen flex-col bg-surface">
+      <div className="flex min-h-svh flex-col bg-surface">
         <div className="mx-auto flex w-full max-w-6xl flex-1 flex-col gap-6 px-4 py-8">
           <AdminHeader onLogout={clearToken} />
 
