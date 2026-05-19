@@ -9,8 +9,9 @@
     "strict": true,
     "resolveJsonModule": true,
     "moduleResolution": "Bundler",
-    "jsx": "react-jsx",
     "skipLibCheck": true,
+    "typeRoots": ["../node_modules/@types"],
+    "types": ["node"],
     "allowSyntheticDefaultImports": true,
 
     /* These compiler options are required by Convex */
