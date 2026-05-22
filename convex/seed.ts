@@ -1,29 +1,16 @@
 /**
  * Historical seed: backfills today and the previous 30 calendar days (pool + scheduler).
- * Fails if `grids` is non-empty — use wipe in dev first, or seed only once on empty prod.
- * Invoked manually: `pnpm seed:grids` → `npx convex run seed:seedHistoricalGrids`
+ * - seedHistoricalGrids : throws si grids non vide (usage manuel, dev/prod initial)
+ * - autoSeedIfEmpty    : no-op si déjà peuplé, seed sinon (appelé au deploy preview via --run)
+ * Invoked manually: `pnpm seed:grids` → `npx convex run --internal seed:seedHistoricalGrids`
  */
 import { ConvexError } from "convex/values";
 import { internal } from "./_generated/api";
 import { internalAction } from "./_generated/server";
+import { formatYMD, todayUTC } from "./lib/dates";
 
 /** Inclusive span: today plus 30 days back (31 dates). */
 const SEED_PAST_DAY_COUNT = 31;
-
-function todayUTC(): string {
-  const d = new Date();
-  const y = d.getUTCFullYear();
-  const m = String(d.getUTCMonth() + 1).padStart(2, "0");
-  const day = String(d.getUTCDate()).padStart(2, "0");
-  return `${y}-${m}-${day}`;
-}
-
-function formatYMD(d: Date): string {
-  const y = d.getUTCFullYear();
-  const m = String(d.getUTCMonth() + 1).padStart(2, "0");
-  const day = String(d.getUTCDate()).padStart(2, "0");
-  return `${y}-${m}-${day}`;
-}
 
 /** Inclusive range from (today − 30) to today. */
 function datesFromPastToToday(today: string): string[] {
@@ -37,9 +24,17 @@ function datesFromPastToToday(today: string): string[] {
   return out;
 }
 
+type SeedHistoricalResult = {
+  seeded: number;
+  dates: string[];
+  steps: { date: string; candidateId: string }[];
+};
+
+type AutoSeedResult = { skipped: true } | SeedHistoricalResult;
+
 export const seedHistoricalGrids = internalAction({
   args: {},
-  handler: async (ctx) => {
+  handler: async (ctx): Promise<SeedHistoricalResult> => {
     if (await ctx.runQuery(internal.gridData.hasAnyGrid)) {
       throw new ConvexError(
         "grids table is not empty — run wipe:wipeAllData in dev first, or skip seed if prod is already live",
@@ -71,10 +66,29 @@ export const seedHistoricalGrids = internalAction({
       }
     }
 
+    await ctx.runAction(internal.grids.ensureTomorrowGrid, {});
+
     return {
       seeded: dates.length,
       dates,
       steps,
     };
+  },
+});
+
+/**
+ * Idempotent seed pour les déploiements preview automatiques.
+ * No-op si grids non vide (develop, prod) ; seed complet si vide (nouvelle branche WIP).
+ * Appelé par la build command Vercel : `convex deploy --run seed:autoSeedIfEmpty`
+ */
+export const autoSeedIfEmpty = internalAction({
+  args: {},
+  handler: async (ctx): Promise<AutoSeedResult> => {
+    if (await ctx.runQuery(internal.gridData.hasAnyGrid)) {
+      console.log("[autoSeedIfEmpty] grids déjà peuplées — seed ignoré");
+      return { skipped: true };
+    }
+    console.log("[autoSeedIfEmpty] grids vides — démarrage du seed historique");
+    return ctx.runAction(internal.seed.seedHistoricalGrids, {});
   },
 });

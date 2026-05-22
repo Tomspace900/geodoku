@@ -15,7 +15,7 @@
     "build:countries": "tsx scripts/prod/build-countries.ts",
     "validate:constraints": "tsx scripts/prod/validate-constraints.ts",
     "simulate:scheduling": "tsx scripts/simulate-scheduling.ts",
-    "seed:grids": "npx convex run seed:seedHistoricalGrids",
+    "seed:grids": "npx convex run --internal seed:seedHistoricalGrids",
     "wipe:db": "npx convex run wipe:wipeAllData",
     "preview": "vite preview",
     "test": "vitest run --passWithNoTests",

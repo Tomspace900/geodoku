@@ -4,6 +4,7 @@ import { internal } from "./_generated/api";
 import type { Id } from "./_generated/dataModel";
 import { action, internalAction, mutation, query } from "./_generated/server";
 import { checkAdminToken } from "./auth";
+import { daysAgoUTC, offsetUTC, todayUTC, tomorrowUTC } from "./lib/dates";
 import {
   type GenerationReport,
   HISTORY_WINDOW,
@@ -32,34 +33,13 @@ const MAX_GUESSES_PER_GAME = 50;
 /** Doit rester aligné avec STARTING_LIVES dans src/features/game/logic/constants.ts. */
 const MAX_LIVES = 3;
 
-// ─── Helpers ──────────────────────────────────────────────────────────────────
-
-function offsetUTC(deltaDays: number): string {
-  const d = new Date();
-  d.setUTCDate(d.getUTCDate() + deltaDays);
-  const y = d.getUTCFullYear();
-  const m = String(d.getUTCMonth() + 1).padStart(2, "0");
-  const day = String(d.getUTCDate()).padStart(2, "0");
-  return `${y}-${m}-${day}`;
-}
-
-function todayUTC(): string {
-  return offsetUTC(0);
-}
-
-function tomorrowUTC(): string {
-  return offsetUTC(1);
-}
-
-function daysAgoUTC(n: number): string {
-  return offsetUTC(-n);
-}
+const DELETE_BATCH_SIZE = 512;
 
 // ─── Internal actions (crons + seed) ─────────────────────────────────────────
 
 /**
  * Generates a full diverse pool and inserts all grids into gridCandidates.
- * Called by the admin action (with token check) and by the weekly cron.
+ * Called by refreshPoolInternal, seed, and autoRefillPool cron.
  */
 export const generatePoolInternal = internalAction({
   args: {},
@@ -81,6 +61,32 @@ export const generatePoolInternal = internalAction({
     }
 
     return report;
+  },
+});
+
+/**
+ * Vide le stock available puis regénère un pool complet.
+ * Les candidates used et les grilles planifiées ne sont pas touchées.
+ */
+export const refreshPoolInternal = internalAction({
+  args: {},
+  handler: async (
+    ctx,
+  ): Promise<GenerationReport & { deletedAvailable: number }> => {
+    let deletedAvailable = 0;
+    for (;;) {
+      const deleted = await ctx.runMutation(
+        internal.gridData.deleteAvailableCandidatesBatch,
+        { limit: DELETE_BATCH_SIZE },
+      );
+      deletedAvailable += deleted;
+      if (deleted < DELETE_BATCH_SIZE) break;
+    }
+    console.log(
+      `[refreshPoolInternal] ${deletedAvailable} available candidates deleted`,
+    );
+    const report = await ctx.runAction(internal.grids.generatePoolInternal, {});
+    return { ...report, deletedAvailable };
   },
 });
 
@@ -242,46 +248,34 @@ export const getTodayGrid = query({
 });
 
 /**
- * Returns a scheduled grid and its linked candidate's metadata.
- * Used by the admin planning panel.
- */
-export const getGridDetailByDate = query({
-  args: { date: v.string(), adminToken: v.string() },
-  handler: async (ctx, args) => {
-    checkAdminToken(args.adminToken);
-    const grid = await ctx.db
-      .query("grids")
-      .withIndex("by_date", (q) => q.eq("date", args.date))
-      .unique();
-    if (!grid) return null;
-
-    const candidate = await ctx.db.get(grid.candidateId);
-    return {
-      date: grid.date,
-      rows: grid.rows,
-      cols: grid.cols,
-      validAnswers: grid.validAnswers,
-      difficulty: grid.difficulty,
-      candidateId: grid.candidateId,
-      metadata: candidate?.metadata ?? null,
-    };
-  },
-});
-
-/**
- * Returns all grids scheduled from the past 30 days onwards.
- * Used by the admin calendar.
+ * Returns all grids scheduled from the past 30 days onwards, with candidate metadata.
+ * Used by the admin calendar and grid detail panel.
  */
 export const getScheduledGrids = query({
   args: { adminToken: v.string() },
   handler: async (ctx, args) => {
     checkAdminToken(args.adminToken);
     const cutoff = daysAgoUTC(30);
-    return await ctx.db
+    const grids = await ctx.db
       .query("grids")
       .withIndex("by_date", (q) => q.gte("date", cutoff))
       .order("asc")
       .take(500);
+
+    return await Promise.all(
+      grids.map(async (grid) => {
+        const candidate = await ctx.db.get(grid.candidateId);
+        return {
+          date: grid.date,
+          rows: grid.rows,
+          cols: grid.cols,
+          validAnswers: grid.validAnswers,
+          difficulty: grid.difficulty,
+          candidateId: grid.candidateId,
+          metadata: candidate?.metadata ?? null,
+        };
+      }),
+    );
   },
 });
 
@@ -304,10 +298,6 @@ export const getPoolStats = query({
       .query("gridCandidates")
       .withIndex("by_status", (q) => q.eq("status", "used"))
       .collect();
-    const rejected = await ctx.db
-      .query("gridCandidates")
-      .withIndex("by_status", (q) => q.eq("status", "rejected"))
-      .collect();
 
     const constraintCounts: Record<string, number> = {};
     for (const c of CONSTRAINTS) constraintCounts[c.id] = 0;
@@ -326,9 +316,7 @@ export const getPoolStats = query({
     return {
       available: available.length,
       used: used.length,
-      rejected: rejected.length,
-      total: available.length + used.length + rejected.length,
-      daysOfRunway: available.length,
+      total: available.length + used.length,
       constraintCoverage: Object.entries(constraintCounts).map(
         ([id, count]) => ({ id, gridsInPool: count }),
       ),
@@ -646,17 +634,32 @@ export const submitGridFeedback = mutation({
   },
 });
 
-// ─── Public action (admin) ────────────────────────────────────────────────────
+// ─── Public actions (admin) ───────────────────────────────────────────────────
 
 /**
- * Generates a full pool and stores results in gridCandidates.
+ * Regénère le pool : supprime le stock available puis génère un batch complet.
  * Protected by adminToken.
  */
-export const generatePool = action({
+export const refreshPool = action({
   args: { adminToken: v.string() },
-  handler: async (ctx, args): Promise<GenerationReport> => {
+  handler: async (
+    ctx,
+    args,
+  ): Promise<GenerationReport & { deletedAvailable: number }> => {
     checkAdminToken(args.adminToken);
-    return await ctx.runAction(internal.grids.generatePoolInternal, {});
+    return await ctx.runAction(internal.grids.refreshPoolInternal, {});
+  },
+});
+
+/**
+ * Planifie today + tomorrow (équivalent manuel du cron daily).
+ * Protected by adminToken.
+ */
+export const runEnsureTomorrow = action({
+  args: { adminToken: v.string() },
+  handler: async (ctx, args) => {
+    checkAdminToken(args.adminToken);
+    await ctx.runAction(internal.grids.ensureTomorrowGrid, {});
   },
 });
 
