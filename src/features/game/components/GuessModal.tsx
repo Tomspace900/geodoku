@@ -118,7 +118,7 @@ export function GuessModal({
         if (!v) handleClose();
       }}
     >
-      <DrawerContent className="mt-10 max-h-[94vh] w-full overflow-x-hidden sm:mx-auto sm:mt-24 sm:max-w-xl">
+      <DrawerContent className="mt-10 max-h-[94svh] w-full overflow-x-hidden pb-[env(safe-area-inset-bottom)] sm:mx-auto sm:mt-24 sm:max-w-xl">
         <DrawerHeader className="text-left px-4 pb-2 pt-3 sm:pt-4">
           <DrawerTitle className="font-serif text-lg font-medium text-on-surface leading-snug">
             {rowLabel} × {colLabel}
@@ -144,10 +144,17 @@ export function GuessModal({
         <Command shouldFilter={false} className="border-none shadow-none">
           <div className="px-4 pb-2">
             <CommandInput
+              autoFocus
               placeholder={t("ui.searchPlaceholder")}
               value={query}
               onValueChange={setQuery}
-              autoFocus
+              name="country-search"
+              autoComplete="off"
+              autoCorrect="off"
+              autoCapitalize="off"
+              spellCheck={false}
+              inputMode="search"
+              enterKeyHint="search"
               className="rounded-none px-0 focus-visible:ring-0 text-on-surface placeholder:text-on-surface-variant"
             />
           </div>

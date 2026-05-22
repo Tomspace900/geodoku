@@ -18,7 +18,7 @@ export class ErrorBoundary extends Component<Props, State> {
   render() {
     if (this.state.hasError) {
       return (
-        <div className="flex min-h-screen flex-col items-center bg-surface px-4 py-6">
+        <div className="flex min-h-svh flex-col items-center bg-surface px-4 py-6">
           <div className="flex w-full max-w-[500px] flex-col">
             <ErrorScreen variant="crashed" />
           </div>
