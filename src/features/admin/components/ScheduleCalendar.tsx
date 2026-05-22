@@ -78,7 +78,7 @@ export function ScheduleCalendar({
         selected={selected}
         onSelect={handleSelect}
         components={{ DayButton: ScheduleDayButton }}
-        className="w-full"
+        className="w-full bg-transparent p-0"
         classNames={{
           today:
             "bg-surface-highest text-on-surface rounded-md data-[selected=true]:rounded-none",

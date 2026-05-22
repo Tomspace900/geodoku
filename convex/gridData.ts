@@ -5,14 +5,6 @@
 import { v } from "convex/values";
 import { internalMutation, internalQuery } from "./_generated/server";
 
-function todayUTC(): string {
-  const d = new Date();
-  const y = d.getUTCFullYear();
-  const m = String(d.getUTCMonth() + 1).padStart(2, "0");
-  const day = String(d.getUTCDate()).padStart(2, "0");
-  return `${y}-${m}-${day}`;
-}
-
 // ─── Internal queries ─────────────────────────────────────────────────────────
 
 /** Returns the N most-recently published grids (ordered by date desc). */
@@ -29,18 +21,6 @@ export const getRecentPublishedGrids = internalQuery({
       cols: g.cols,
       validAnswers: g.validAnswers,
     }));
-  },
-});
-
-/** Returns today's grid doc, or null. */
-export const getTodayGridInternal = internalQuery({
-  args: {},
-  handler: async (ctx) => {
-    const today = todayUTC();
-    return await ctx.db
-      .query("grids")
-      .withIndex("by_date", (q) => q.eq("date", today))
-      .unique();
   },
 });
 
@@ -136,5 +116,20 @@ export const insertGrid = internalMutation({
   },
   handler: async (ctx, args) => {
     await ctx.db.insert("grids", args);
+  },
+});
+
+/** Supprime un batch de candidates available (pagination pour refreshPool). */
+export const deleteAvailableCandidatesBatch = internalMutation({
+  args: { limit: v.number() },
+  handler: async (ctx, { limit }) => {
+    const docs = await ctx.db
+      .query("gridCandidates")
+      .withIndex("by_status", (q) => q.eq("status", "available"))
+      .take(limit);
+    for (const doc of docs) {
+      await ctx.db.delete(doc._id);
+    }
+    return docs.length;
   },
 });

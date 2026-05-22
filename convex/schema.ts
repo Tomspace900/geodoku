@@ -21,11 +21,7 @@ export default defineSchema({
       }),
       cellDifficulties: v.array(v.number()),
     }),
-    status: v.union(
-      v.literal("available"),
-      v.literal("used"),
-      v.literal("rejected"),
-    ),
+    status: v.union(v.literal("available"), v.literal("used")),
     usedAt: v.optional(v.number()),
     usedForDate: v.optional(v.string()),
   })

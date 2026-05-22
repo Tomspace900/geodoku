@@ -3,30 +3,24 @@ import {
   difficultyTierSurfaceClass,
   formatGridDateHeadingFr,
 } from "@/features/admin/logic/display";
-import { useQuery } from "convex/react";
-import { api } from "../../../../convex/_generated/api";
+import type { PoolGridMetadata } from "../../../../convex/lib/gridConstants";
 import { GridPreview } from "./GridPreview";
 
-type ScheduledGrid = {
+type ScheduledGridDetail = {
   date: string;
   difficulty: number;
   rows: string[];
   cols: string[];
   validAnswers: Record<string, string[]>;
+  metadata: PoolGridMetadata | null;
 };
 
 type Props = {
-  grid: ScheduledGrid | null;
+  grid: ScheduledGridDetail | null;
   selectedDate: string | null;
-  token: string;
 };
 
-export function GridDetail({ grid, selectedDate, token }: Props) {
-  const detail = useQuery(
-    api.grids.getGridDetailByDate,
-    grid ? { date: grid.date, adminToken: token } : "skip",
-  );
-
+export function GridDetail({ grid, selectedDate }: Props) {
   if (!selectedDate) {
     return (
       <div className="flex h-full min-h-[320px] flex-col items-center justify-center gap-2 rounded-xl bg-surface-lowest p-6 shadow-editorial">
@@ -47,7 +41,7 @@ export function GridDetail({ grid, selectedDate, token }: Props) {
     );
   }
 
-  const metadata = detail?.metadata ?? null;
+  const metadata = grid.metadata;
 
   return (
     <div className="h-full overflow-hidden rounded-xl bg-surface-lowest shadow-editorial">
@@ -66,6 +60,13 @@ export function GridDetail({ grid, selectedDate, token }: Props) {
           </div>
         </div>
       </div>
+      {metadata === null && (
+        <div className="px-4 pb-3">
+          <p className="text-xs text-on-surface-variant animate-pulse">
+            Métadonnées candidate indisponibles…
+          </p>
+        </div>
+      )}
       {metadata && (
         <div className="px-4 pb-3 space-y-2">
           <div className="flex flex-wrap gap-1">
