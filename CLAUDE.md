@@ -35,9 +35,10 @@ geodoku/
 │   ├── grids.ts                 # actions/queries/mutations publiques et admin (pool-based)
 │   ├── guesses.ts               # mutation submitGuess
 │   ├── gridData.ts              # queries/mutations internes (accès DB)
-│   ├── seed.ts                  # seedHistoricalGrids : pool puis J-30..J (échoue si grids non vide)
+│   ├── seed.ts                  # autoSeedIfEmpty (deploy) + seedHistoricalGrids (J-30..today + demain)
 │   ├── wipe.ts                  # wipeAllData (paginé, dev only)
 │   └── lib/
+│       ├── dates.ts             # todayUTC, tomorrowUTC, offsetUTC (helpers UTC partagés)
 │       ├── gridConstants.ts     # tunables (hard filters, pool, scheduler weights)
 │       ├── gridGenerator.ts     # pur : backtracking + finalize + generateDiversePool (importe pays/contraintes depuis src/)
 │       ├── gridScheduler.ts     # pur : selectNextGrid (greedy : freshness + overuse + novelty + difficulty)
@@ -300,7 +301,7 @@ Ces classes ne sont pas toutes définies dans Tailwind, elles servent de vocabul
 
 **Schéma actuel.**
 
-- `gridCandidates` : pool de grilles ; status `available | used | rejected`. Champs : `rows`, `cols`, `validAnswers`, `metadata` (`seedConstraint`, `constraintIds`, `categories`, `avgCellSize`, `minCellSize`, `countryPool`, `difficultyEstimate`, `difficultyTags`, `cellDifficulties`), `usedAt`, `usedForDate`.
+- `gridCandidates` : pool de grilles ; status `available | used`. Champs : `rows`, `cols`, `validAnswers`, `metadata` (`seedConstraint`, `constraintIds`, `categories`, `avgCellSize`, `minCellSize`, `countryPool`, `difficultyEstimate`, `difficultyTags`, `cellDifficulties`), `usedAt`, `usedForDate`.
 - `grids` : grille assignée à une date (clé = `date` YYYY-MM-DD) ; pointe vers son `candidateId`.
 - `guesses` : compteur par `(date, cellKey, countryCode)`.
 - `dailyStats` : dénormalisation `(date, cellKey) → totalGuesses` pour rareté O(1).
@@ -308,22 +309,21 @@ Ces classes ne sont pas toutes définies dans Tailwind, elles servent de vocabul
 
 **Crons** ([`convex/crons.ts`](convex/crons.ts)).
 
-- **Daily 23:30 UTC** — `ensureTomorrowGrid` → `ensureGridForDate(tomorrow)` : pioche dans le pool via le scheduler ; si pool vide, **fallback d'urgence** (génération inline avec un seed aléatoire, sans contrôle d'overlap) plutôt que de servir une page sans grille.
-- **Weekly Sunday 04:00 UTC** — `autoRefillPool` : si `available < POOL_LOW_THRESHOLD`, lance `generatePoolInternal` pour reremplir le stock.
-
-Avertissement console (`POOL LOW`) émis dès que le pool restant passe sous le seuil après une assignation — visible aussi dans `PoolOverviewPanel`.
+- **Daily 12:00 UTC** — `ensureTomorrowGrid` → `ensureGridForDate(today)` + `ensureGridForDate(tomorrow)` : pioche dans le pool via le scheduler ; si pool vide, **fallback d'urgence** (génération inline avec un seed aléatoire, sans contrôle d'overlap) plutôt que de servir une page sans grille.
+- **Weekly Sunday 04:00 UTC** — `autoRefillPool` : si `available < POOL_LOW_THRESHOLD`, lance `generatePoolInternal` pour reremplir le stock (additif).
 
 **Endpoints clés** ([`convex/grids.ts`](convex/grids.ts)).
 
 - `getTodayGrid` (query, public) — grille du jour ou `null`.
-- `getScheduledGrids` (query, admin UI) — grilles depuis J-30, ordre asc.
-- `getGridDetailByDate` (query, admin UI) — grille + métadonnées de son candidate.
+- `getScheduledGrids` (query, admin UI) — grilles depuis J-30 avec métadonnées candidate embarquées.
 - `getPoolStats` (query, admin) — taille du pool par status, couverture par contrainte/pays.
 - `getExposureStats` (query, admin) — exposition passée (15 grilles) vs. à venir (14 jours), pour les barres comparées du dashboard.
 - `getUpcomingScheduledPreview` (query, admin) — 1..14 jours, marque chaque jour `scheduled` (déjà inscrit) / `predicted` (simulé en lecture seule depuis le pool) / `missing`.
 - `getGridFeedbackStats` (query, admin) — stats de feedback observé (winRate, difficulté ressentie, etc.).
 - `submitGridFeedback` (mutation, public) — feedback de fin de partie.
-- `generatePool` (action, admin avec `adminToken`) — déclenche manuellement un refill du pool.
+- `refreshPool` (action, admin avec `adminToken`) — supprime le stock `available` puis regénère un pool complet.
+- `runEnsureTomorrow` (action, admin avec `adminToken`) — planifie today + tomorrow (équivalent manuel du cron daily).
+- `scheduleGridForDate` (action, admin avec `adminToken`) — planifie une date précise via le scheduler.
 
 **Auth admin.**
 
@@ -335,12 +335,12 @@ Avertissement console (`POOL LOW`) émis dès que le pool restant passe sous le 
 
 [`src/features/admin/AdminPage.tsx`](src/features/admin/AdminPage.tsx) compose :
 
-- `PoolOverviewPanel` — taille du pool, runway, bouton « Générer un pool » (gated par token), barres comparées d'exposition passée vs à venir (constraints + countries), badge ambre si une contrainte apparaît dans ≥ 33 % des 15 dernières grilles.
+- `PoolOverviewPanel` — taille du pool, runway, alerte demain avec bouton « Planifier maintenant », bouton « Regénérer le pool » (confirmation modale), barres comparées d'exposition passée vs à venir (constraints + countries), badge ambre si une contrainte apparaît dans ≥ 33 % des 15 dernières grilles.
 - `ScheduleCalendar` + `GridDetail` — calendrier avec point de difficulté par jour, sélection → preview détaillée avec `cellDifficulties` colorées.
 - `UpcomingGridsPanel` — accordéon (shadcn) sur les 7 prochains jours, distinguant `scheduled` (vert) et `predicted` (violet, lecture seule).
 - `DiversityMetricsPanel` — corrélation difficulté estimée ↔ feedback observé.
 
-Pas de panneau de tuning des constantes : on ajuste dans `gridConstants.ts`, on simule (`simulate-scheduling`), puis `wipe:db` + `seed:grids` en dev si on veut un historique cohérent.
+Pas de panneau de tuning des constantes : on ajuste dans `gridConstants.ts`, on simule (`simulate-scheduling`), puis `wipe:db` + `seed:grids` en dev pour un reset complet, ou « Regénérer le pool » dans `/admin` pour renouveler le stock futur sans toucher aux grilles planifiées.
 
 **Règles Convex à respecter.**
 
@@ -377,14 +377,15 @@ pnpm validate:constraints         # rapport de calibrage des contraintes
 # Simulation hors-ligne (sans Convex) — pool + 30 jours de scheduling, pass/fail checks
 pnpm simulate:scheduling
 
-# Seed historique (échoue si `grids` non vide — wipe en dev avant reseed) — `seed:seedHistoricalGrids`
-pnpm seed:grids
+# Seed historique (échoue si `grids` non vide — wipe en dev avant reseed)
+pnpm seed:grids                   # npx convex run --internal seed:seedHistoricalGrids
 
 # Tuning loop (dev local) :
 #   1. ajuster les tunables dans convex/lib/gridConstants.ts (hard filters, scheduler weights, popularity)
 #      ou les courbes dans convex/lib/gridGenerator.ts (POPULARITY_WEIGHT, DIFFICULTY_CURVE_K…)
 #   2. simuler hors-ligne avec `pnpm simulate:scheduling` pour valider la santé du pool
-#   3. wipe + reseed pour régénérer un historique cohérent côté Convex
+#   3. wipe + reseed pour régénérer un historique cohérent côté Convex (dev)
+#      ou « Regénérer le pool » dans /admin (prod/preview, stock futur uniquement)
 #   4. inspecter dans /admin (PoolOverviewPanel + UpcomingGridsPanel)
 pnpm wipe:db                      # internal action wipe:wipeAllData (paginé)
 
@@ -394,9 +395,31 @@ pnpm dlx convex@latest env set ADMIN_TOKEN "xxx"
 
 ## 8. CI, Vercel et `convex/_generated`
 
-- Le dossier **`convex/_generated/` est versionné** (recommandation Convex) : sans lui, `pnpm build` / `tsc` échouent sur Vercel ou toute CI qui clone le repo sans avoir lancé `convex dev` avant.
-- Après un changement de **schéma** ou d’**API Convex** (`convex dev` régénère les fichiers), **commiter** les fichiers mis à jour dans `convex/_generated/`.
-- **Alternative** quand le backend prod est prêt : build Vercel du type `pnpm dlx convex@latest deploy --cmd 'pnpm run build'` avec `CONVEX_DEPLOY_KEY` (voir [hosting Vercel](https://docs.convex.dev/production/hosting/vercel)) — déploie Convex et injecte l’URL pour le build ; ici on reste sur **build statique** + `_generated` commité tant que tu sépares volontairement prod et front.
+**Mapping branche → environnement :**
+
+| Contexte | Front | Backend Convex | Données |
+|---|---|---|---|
+| `main` | Vercel Production | prod | persistantes |
+| `develop` | Vercel Preview | `preview/develop` | persistantes |
+| autre branche WIP | Vercel Preview | `preview/<branch>` | seedées auto au 1er deploy |
+| local | `pnpm dev` | cloud dev perso (`convex dev`) | gérées manuellement |
+
+**Build command Vercel (tous environnements) :**
+
+```bash
+pnpm exec convex deploy --run seed:autoSeedIfEmpty --cmd 'vite build' --cmd-url-env-var-name VITE_CONVEX_URL
+```
+
+`autoSeedIfEmpty` est idempotent — elle ne fait rien si des grids existent déjà (`main`, `develop`), et seed le backend complet (pool + J-30..today + demain via `ensureTomorrowGrid`) si vide (nouvelle branche WIP). Une seule commande pour tous les environnements.
+
+**Variable d'environnement clé sur Vercel : `CONVEX_DEPLOY_KEY`**, une clé par environnement :
+- Production → clé prod ([dashboard.convex.dev](https://dashboard.convex.dev))
+- Preview → clé preview dédiée
+
+**Autres variables Convex à poser (`convex env set` ou dashboard) :**
+- `ADMIN_TOKEN` — token bearer pour les mutations admin (UI `/admin`)
+
+**`convex/_generated/` est versionné** : sans lui, `pnpm build` / `tsc` échouent sur toute CI qui clone sans lancer `convex dev`. Après un changement de schéma ou d'API Convex, régénérer avec `pnpm dlx convex@latest dev` (ou `codegen`) et **commiter le diff**.
 
 ## 9. Anti-patterns à bannir
 

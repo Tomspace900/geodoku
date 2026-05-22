@@ -21,47 +21,25 @@ pnpm dlx convex@latest dev
 
 This will prompt you to create or link a Convex project and write `VITE_CONVEX_URL` to `.env.local`.
 
-`convex/_generated/` is tracked in git so `pnpm build` works locally without a live Convex deployment. Regenerate it with `pnpm dlx convex@latest dev` (or `codegen`) after schema changes, then commit the diff.
+`convex/_generated/` is tracked in git so `pnpm build` works without a live Convex deployment. After schema or API changes, regenerate with `pnpm dlx convex@latest dev` (or `codegen`) and commit the diff.
 
-## Deployment
+## Admin
 
-Vercel deploys front and backend together via the build command:
+Dashboard at `/admin` — requires the Convex `ADMIN_TOKEN` env var. From there you can:
 
-```bash
-pnpm exec convex deploy --cmd 'pnpm run build' --cmd-url-env-var-name VITE_CONVEX_URL
-```
+- Plan tomorrow's grid if the daily cron hasn't run yet
+- Regenerate the candidate pool (after tuning generator/scheduler constants)
+- Preview upcoming grids and inspect scheduling metrics
 
-| Git branch | Vercel | Convex backend | Data |
-|------------|--------|----------------|------|
-| `main` | Production | prod | persistent |
-| any other branch | Preview | `preview/<branch>` | empty on first deploy |
-| local | — | personal dev cloud (`convex dev`) | persistent |
+See `CLAUDE.md §6` for the full admin API and UI panels.
 
-Preview Convex backends start empty. To seed grids for manual testing on a preview:
+## Dev data
+
+Reset and seed a local or preview backend:
 
 ```bash
-# Seed a preview deployment (after the branch has been pushed once)
-pnpm exec convex run seed:seedHistoricalGrids --deployment preview/<branch-name>
-
-# Wipe and reseed
-pnpm exec convex run wipe:wipeAllData --deployment preview/<branch-name>
-pnpm exec convex run seed:seedHistoricalGrids --deployment preview/<branch-name>
+pnpm wipe:db      # clears all game tables (dev only)
+pnpm seed:grids   # pool + J-30..today + tomorrow (fails if grids non-empty)
 ```
 
-### Manual dashboard setup
-
-**Convex** ([dashboard.convex.dev](https://dashboard.convex.dev)) — project settings:
-
-1. Generate **Production Deploy Key** → Vercel env `CONVEX_DEPLOY_KEY` (Production only)
-2. Generate **Preview Deploy Key** → Vercel env `CONVEX_DEPLOY_KEY` (Preview only)
-3. Preview **Environment Variable Defaults**: `ADMIN_TOKEN`, `ALLOW_UNSCHEDULE_CURRENT_DAY=true`
-
-**Vercel** — project `geodoku`:
-
-1. Build command override (see command above)
-2. Remove static `VITE_CONVEX_URL` from all environments (injected at build by `convex deploy`)
-3. Add `CONVEX_DEPLOY_KEY` per environment (prod key → Production, preview key → Preview)
-
-**GitHub** — repo settings → Actions secrets:
-
-- Remove `CONVEX_DEPLOY_KEY_DEV` (no GitHub Actions Convex deploy)
+For CI/deployment (Vercel build command, preview auto-seed, environment mapping), see `CLAUDE.md §8`.
