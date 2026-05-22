@@ -1,4 +1,12 @@
 import { Button } from "@/components/ui/button";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
 import { constraintLabel } from "@/features/admin/logic/display";
 import { getCountryByCode } from "@/features/countries/lib/search";
 import { useAction, useQuery } from "convex/react";
@@ -62,7 +70,6 @@ function ExposureList({
     .sort((a, b) => b.pastCount - a.pastCount)
     .slice(0, EXPOSURE_LIST_LIMIT);
 
-  // Normalize both bars on the same scale so lengths are directly comparable
   const globalMax = Math.max(
     ...sorted.map((r) => r.pastCount / pastGridCount),
     upcomingGridCount > 0
@@ -99,8 +106,6 @@ function ExposureList({
             upcomingGridCount > 0 && upcomingCount > 0
               ? Math.max(2, Math.round((upcomingRate / globalMax) * 100))
               : 0;
-
-          // Amber warning if appeared in 33%+ of recent grids
           const isHighPast = pastRate >= 1 / 3;
 
           return (
@@ -108,7 +113,6 @@ function ExposureList({
               <span className="w-28 shrink-0 truncate text-[10px] text-on-surface">
                 {label}
               </span>
-              {/* Past bar */}
               <div className="flex flex-1 items-center gap-1">
                 <div className="relative h-1.5 flex-1 overflow-hidden rounded-full bg-surface-highest">
                   <span
@@ -127,7 +131,6 @@ function ExposureList({
                   {pastCount}
                 </span>
               </div>
-              {/* Upcoming bar */}
               <div className="flex flex-1 items-center gap-1">
                 <div className="relative h-1.5 flex-1 overflow-hidden rounded-full bg-surface-highest">
                   <span
@@ -156,6 +159,15 @@ type Props = {
   hasTomorrowGrid: boolean | undefined;
 };
 
+type RefreshReport = GenerationReport & { deletedAvailable: number };
+
+type RefreshStatus = "idle" | "loading" | RefreshReport;
+
+function isUnauthorizedError(err: unknown): boolean {
+  const msg = err instanceof Error ? err.message : String(err);
+  return msg.includes("Unauthorized");
+}
+
 export function PoolOverviewPanel({
   token,
   clearToken,
@@ -169,23 +181,40 @@ export function PoolOverviewPanel({
     api.grids.getExposureStats,
     token ? { adminToken: token } : "skip",
   );
-  const generatePool = useAction(api.grids.generatePool);
+  const refreshPool = useAction(api.grids.refreshPool);
+  const runEnsureTomorrow = useAction(api.grids.runEnsureTomorrow);
 
-  const [status, setStatus] = useState<
-    "idle" | "loading" | { report: GenerationReport }
+  const [refreshStatus, setRefreshStatus] = useState<RefreshStatus>("idle");
+  const [refreshDialogOpen, setRefreshDialogOpen] = useState(false);
+  const [ensureTomorrowStatus, setEnsureTomorrowStatus] = useState<
+    "idle" | "loading" | "error"
   >("idle");
 
-  async function handleGenerate() {
-    setStatus("loading");
+  async function handleRefreshPool() {
+    setRefreshStatus("loading");
     try {
-      const report = await generatePool({ adminToken: token });
-      setStatus({ report });
+      const report = await refreshPool({ adminToken: token });
+      setRefreshStatus(report);
+      setRefreshDialogOpen(false);
     } catch (err) {
-      const msg = err instanceof Error ? err.message : String(err);
-      if (msg.includes("Unauthorized")) {
+      if (isUnauthorizedError(err)) {
         clearToken();
       } else {
-        setStatus("idle");
+        setRefreshStatus("idle");
+      }
+    }
+  }
+
+  async function handleEnsureTomorrow() {
+    setEnsureTomorrowStatus("loading");
+    try {
+      await runEnsureTomorrow({ adminToken: token });
+      setEnsureTomorrowStatus("idle");
+    } catch (err) {
+      if (isUnauthorizedError(err)) {
+        clearToken();
+      } else {
+        setEnsureTomorrowStatus("error");
       }
     }
   }
@@ -230,9 +259,30 @@ export function PoolOverviewPanel({
       </div>
 
       {hasTomorrowGrid === false && (
-        <div className="mb-4 flex items-center gap-2 rounded-lg bg-rarity-ultra/10 px-3 py-2 text-sm text-rarity-ultra">
-          <AlertTriangle className="h-4 w-4 shrink-0" />
-          Aucune grille planifiée pour demain.
+        <div className="mb-4 flex flex-col gap-3 rounded-lg bg-rarity-ultra/10 px-3 py-3 sm:flex-row sm:items-center sm:justify-between">
+          <div className="flex items-center gap-2 text-sm text-rarity-ultra">
+            <AlertTriangle className="h-4 w-4 shrink-0" />
+            Aucune grille planifiée pour demain.
+          </div>
+          <Button
+            type="button"
+            size="sm"
+            onClick={handleEnsureTomorrow}
+            disabled={ensureTomorrowStatus === "loading"}
+            className="shrink-0 bg-on-surface text-surface-lowest hover:bg-on-surface/90"
+          >
+            {ensureTomorrowStatus === "loading" && (
+              <Loader2 className="h-3 w-3 animate-spin" />
+            )}
+            {ensureTomorrowStatus === "loading"
+              ? "Planification…"
+              : "Planifier maintenant"}
+          </Button>
+          {ensureTomorrowStatus === "error" && (
+            <p className="text-xs text-rarity-ultra sm:basis-full">
+              Erreur lors de la planification.
+            </p>
+          )}
         </div>
       )}
       {hasTomorrowGrid === true && (
@@ -243,29 +293,65 @@ export function PoolOverviewPanel({
       )}
 
       <div className="mb-6">
-        <div className="flex items-center gap-3">
+        <div className="flex flex-wrap items-center gap-3">
           <Button
             type="button"
-            onClick={handleGenerate}
-            disabled={status === "loading"}
+            onClick={() => setRefreshDialogOpen(true)}
+            disabled={refreshStatus === "loading"}
             className="bg-on-surface text-surface-lowest hover:bg-on-surface/90"
           >
-            {status === "loading" && <Loader2 className="animate-spin" />}
-            {status === "loading" ? "Génération…" : "Générer une batch"}
+            {refreshStatus === "loading" && (
+              <Loader2 className="animate-spin" />
+            )}
+            {refreshStatus === "loading"
+              ? "Regénération…"
+              : "Regénérer le pool"}
           </Button>
-          {typeof status === "object" && (
+          {typeof refreshStatus === "object" && (
             <span className="text-xs text-on-surface-variant">
-              {status.report.totalGenerated} grille
-              {status.report.totalGenerated !== 1 ? "s" : ""} ajoutée
-              {status.report.totalGenerated !== 1 ? "s" : ""} en{" "}
-              {status.report.durationMs} ms
+              {refreshStatus.deletedAvailable} supprimée
+              {refreshStatus.deletedAvailable !== 1 ? "s" : ""},{" "}
+              {refreshStatus.totalGenerated} ajoutée
+              {refreshStatus.totalGenerated !== 1 ? "s" : ""} en{" "}
+              {refreshStatus.durationMs} ms
             </span>
           )}
         </div>
-        <p className="mt-1.5 text-xs text-on-surface-variant">
-          Génère ~12 nouvelles grilles par seed et les ajoute au stock.
-        </p>
       </div>
+
+      <Dialog open={refreshDialogOpen} onOpenChange={setRefreshDialogOpen}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Regénérer le pool ?</DialogTitle>
+            <DialogDescription className="text-on-surface-variant">
+              Supprime toutes les grilles candidates en stock (available) puis
+              génère un nouveau lot. Les grilles déjà planifiées et publiées ne
+              seront pas modifiées.
+            </DialogDescription>
+          </DialogHeader>
+          <DialogFooter className="gap-2 sm:gap-0">
+            <Button
+              type="button"
+              variant="ghost"
+              onClick={() => setRefreshDialogOpen(false)}
+              disabled={refreshStatus === "loading"}
+            >
+              Annuler
+            </Button>
+            <Button
+              type="button"
+              onClick={() => {
+                setRefreshDialogOpen(false);
+                handleRefreshPool();
+              }}
+              disabled={refreshStatus === "loading"}
+              className="bg-on-surface text-surface-lowest hover:bg-on-surface/90"
+            >
+              Confirmer
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
 
       {exposure && (
         <div className="grid grid-cols-1 gap-8 md:grid-cols-2">
