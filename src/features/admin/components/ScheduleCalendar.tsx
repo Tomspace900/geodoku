@@ -1,8 +1,9 @@
 import { Calendar, CalendarDayButton } from "@/components/ui/calendar";
+import { todayUTC } from "@/lib/dates";
 import { cn } from "@/lib/utils";
 import type { DayButton } from "react-day-picker";
 import { difficultySolidDotClass } from "../logic/display";
-import { dateToStr } from "../logic/scheduling";
+import { dateToStr, strToCalendarDate } from "../logic/scheduling";
 
 type ScheduledGrid = {
   date: string;
@@ -15,18 +16,14 @@ type Props = {
   onSelectDate: (date: string | null) => void;
 };
 
-function strToLocalDate(str: string): Date {
-  const [y, m, d] = str.split("-").map(Number);
-  return new Date(y, (m as number) - 1, d as number);
-}
-
 export function ScheduleCalendar({
   scheduledGrids,
   selectedDate,
   onSelectDate,
 }: Props) {
   const gridByDate = new Map(scheduledGrids.map((g) => [g.date, g]));
-  const selected = selectedDate ? strToLocalDate(selectedDate) : undefined;
+  const selected = selectedDate ? strToCalendarDate(selectedDate) : undefined;
+  const today = strToCalendarDate(todayUTC());
 
   function handleSelect(date: Date | undefined) {
     if (!date) {
@@ -76,6 +73,7 @@ export function ScheduleCalendar({
       <Calendar
         mode="single"
         selected={selected}
+        today={today}
         onSelect={handleSelect}
         components={{ DayButton: ScheduleDayButton }}
         className="w-full bg-transparent p-0"

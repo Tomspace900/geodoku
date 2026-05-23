@@ -59,6 +59,7 @@ export function ResultScreen({
   const gridScore = computeGridScore(state);
   const originality = computeOriginalityScore(state);
   const isWon = state.status === "won";
+  const hasRated = hadFeedbackBeforeOpen || feedbackThanksVisible;
   const submitGridFeedback = useMutation(api.grids.submitGridFeedback);
 
   async function handleShare() {
@@ -147,9 +148,6 @@ export function ResultScreen({
             {isWon ? t("ui.magnificent") : t("ui.tooBad")}
           </h2>
           <div className="w-12 h-1 bg-brand rounded-full" />
-          <p className="text-[10px] tracking-widest text-on-surface-variant uppercase mt-1">
-            {t("ui.finalResult")}
-          </p>
         </div>
 
         <div className="flex flex-col items-center gap-1">
@@ -203,32 +201,43 @@ export function ResultScreen({
 
         <AchievementCard state={state} />
 
-        {!hadFeedbackBeforeOpen &&
-          (feedbackThanksVisible ? (
-            <p className="text-center text-xs text-on-surface-variant">
-              {t("ui.feedbackThanks")}
+        {hasRated ? (
+          <Button
+            onClick={onViewAnswers}
+            variant="secondary"
+            size="lg"
+            className="w-full bg-surface-highest text-on-surface hover:bg-surface-highest/80"
+          >
+            {t("ui.viewAnswers")}
+          </Button>
+        ) : (
+          <div className="flex flex-col gap-3">
+            <p className="text-[10px] tracking-widest text-on-surface-variant uppercase text-center">
+              {t("ui.feedbackQuestion")}
             </p>
-          ) : (
-            <div className="flex flex-col gap-2">
-              <p className="text-[10px] tracking-widest text-on-surface-variant uppercase text-center">
-                {t("ui.feedbackQuestion")}
-              </p>
-              <div className="grid grid-cols-1 gap-2 sm:grid-cols-3">
-                {DIFFICULTY_RATINGS.map(({ rating, labelKey }) => (
-                  <Button
-                    key={rating}
-                    type="button"
-                    variant="secondary"
-                    disabled={ratingPending}
-                    className="bg-surface-highest text-on-surface hover:bg-surface-highest/80"
-                    onClick={() => handleRateDifficulty(rating)}
-                  >
-                    {t(labelKey)}
-                  </Button>
-                ))}
-              </div>
+            <div className="grid grid-cols-1 gap-2 sm:grid-cols-3">
+              {DIFFICULTY_RATINGS.map(({ rating, labelKey }) => (
+                <Button
+                  key={rating}
+                  type="button"
+                  variant="secondary"
+                  disabled={ratingPending}
+                  className="bg-surface-highest text-on-surface hover:bg-surface-highest/80"
+                  onClick={() => handleRateDifficulty(rating)}
+                >
+                  {t(labelKey)}
+                </Button>
+              ))}
             </div>
-          ))}
+            <button
+              type="button"
+              onClick={onViewAnswers}
+              className="text-center text-xs text-on-surface-variant underline underline-offset-2 decoration-outline-variant/40 hover:text-on-surface"
+            >
+              {t("ui.skipFeedback")}
+            </button>
+          </div>
+        )}
 
         <Button
           onClick={handleShare}
@@ -238,14 +247,6 @@ export function ResultScreen({
           <Copy size={16} />
           {copied ? t("ui.shareCopied") : t("ui.share")}
         </Button>
-
-        <button
-          type="button"
-          onClick={onViewAnswers}
-          className="w-full text-center text-xs text-on-surface-variant underline underline-offset-2 decoration-outline-variant/40 hover:text-on-surface"
-        >
-          {t("ui.viewAnswers")}
-        </button>
 
         <p className="text-center text-xs text-on-surface-variant italic">
           {t("ui.comeBackTomorrowGrid")}

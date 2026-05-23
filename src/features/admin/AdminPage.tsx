@@ -1,6 +1,7 @@
 import AppFooter from "@/app/AppFooter";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { todayUTC, tomorrowUTC } from "@/lib/dates";
 import { useQuery } from "convex/react";
 import { useState } from "react";
 import { api } from "../../../convex/_generated/api";
@@ -11,7 +12,6 @@ import { PoolOverviewPanel } from "./components/PoolOverviewPanel";
 import { ScheduleCalendar } from "./components/ScheduleCalendar";
 import { UpcomingGridsPanel } from "./components/UpcomingGridsPanel";
 import { useAdminToken } from "./hooks/useAdminToken";
-import { dateToStr } from "./logic/scheduling";
 
 // ─── Header ───────────────────────────────────────────────────────────────────
 
@@ -45,9 +45,7 @@ function AdminHeader({ onLogout }: { onLogout: () => void }) {
 export function AdminPage() {
   const [token, setToken, clearToken] = useAdminToken();
   const [tokenInput, setTokenInput] = useState("");
-  const [selectedDate, setSelectedDate] = useState<string | null>(
-    dateToStr(new Date()),
-  );
+  const [selectedDate, setSelectedDate] = useState<string | null>(todayUTC());
 
   const scheduledGrids = useQuery(
     api.grids.getScheduledGrids,
@@ -63,9 +61,7 @@ export function AdminPage() {
     (scheduledGrids ?? []).map((g) => g.date),
   );
 
-  const tomorrow = new Date();
-  tomorrow.setDate(tomorrow.getDate() + 1);
-  const tomorrowStr = dateToStr(tomorrow);
+  const tomorrowStr = tomorrowUTC();
 
   const selectedGrid =
     selectedDate != null
