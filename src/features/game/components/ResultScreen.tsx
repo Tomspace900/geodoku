@@ -128,6 +128,7 @@ export function ResultScreen({
           "relative z-10 bg-surface-lowest w-full max-w-[500px] shadow-editorial",
           "rounded-t-2xl sm:rounded-2xl",
           "p-6 flex flex-col gap-5",
+          "max-h-[90dvh] overflow-y-auto",
           "animate-in slide-in-from-bottom-4 sm:zoom-in-95 duration-300",
         )}
       >
@@ -215,14 +216,15 @@ export function ResultScreen({
             <p className="text-[10px] tracking-widest text-on-surface-variant uppercase text-center">
               {t("ui.feedbackQuestion")}
             </p>
-            <div className="grid grid-cols-1 gap-2 sm:grid-cols-3">
+            <div className="grid grid-cols-3 gap-1.5">
               {DIFFICULTY_RATINGS.map(({ rating, labelKey }) => (
                 <Button
                   key={rating}
                   type="button"
                   variant="secondary"
+                  size="sm"
                   disabled={ratingPending}
-                  className="bg-surface-highest text-on-surface hover:bg-surface-highest/80"
+                  className="h-auto min-h-9 whitespace-normal bg-surface-highest px-2 py-2 text-xs leading-tight text-on-surface hover:bg-surface-highest/80"
                   onClick={() => handleRateDifficulty(rating)}
                 >
                   {t(labelKey)}
