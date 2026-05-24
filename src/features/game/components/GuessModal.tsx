@@ -12,7 +12,12 @@ import {
   DrawerTitle,
 } from "@/components/ui/drawer";
 import { searchCountries } from "@/features/countries/lib/search";
+import { RARITY_STYLES } from "@/features/game/logic/constants";
 import { CONSTRAINTS } from "@/features/game/logic/constraints";
+import {
+  type ConstraintFailureReason,
+  isConstraintFailureReason,
+} from "@/features/game/logic/validation";
 import type { CellPosition, GameState } from "@/features/game/types";
 import { useLocale, useT } from "@/i18n/LocaleContext";
 import type { TKey } from "@/i18n/types";
@@ -21,14 +26,16 @@ import { useEffect, useRef, useState } from "react";
 
 const CONSTRAINT_MAP = new Map(CONSTRAINTS.map((c) => [c.id, c]));
 
-// Maps error reason to i18n key
 const ERROR_KEY_MAP: Record<string, TKey> = {
-  wrong_row: "error.wrong_row",
-  wrong_col: "error.wrong_col",
-  wrong_constraints: "error.wrong_constraints",
   already_used: "error.already_used",
   invalid_country: "error.invalid_country",
 };
+
+const ERROR_FEEDBACK_MS = 1500;
+const FAILED_CONSTRAINT_CLASS = cn(
+  RARITY_STYLES.ultra,
+  "rounded-md px-1.5 py-0.5",
+);
 
 type SubmitResult =
   | { ok: true; rarity: number }
@@ -56,6 +63,8 @@ export function GuessModal({
   const [open, setOpen] = useState(true);
   const [query, setQuery] = useState("");
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
+  const [errorReason, setErrorReason] =
+    useState<ConstraintFailureReason | null>(null);
   const [submitting, setSubmitting] = useState(false);
   const errorTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const { locale } = useLocale();
@@ -74,9 +83,15 @@ export function GuessModal({
 
   function showError(reason: string) {
     if (errorTimerRef.current) clearTimeout(errorTimerRef.current);
-    const key = ERROR_KEY_MAP[reason] ?? "error.unknown";
-    setErrorMsg(t(key));
-    errorTimerRef.current = setTimeout(() => setErrorMsg(null), 1200);
+    const isConstraintError = isConstraintFailureReason(reason);
+    setErrorReason(isConstraintError ? reason : null);
+    setErrorMsg(
+      isConstraintError ? null : t(ERROR_KEY_MAP[reason] ?? "error.unknown"),
+    );
+    errorTimerRef.current = setTimeout(() => {
+      setErrorMsg(null);
+      setErrorReason(null);
+    }, ERROR_FEEDBACK_MS);
   }
 
   async function handleSelect(countryCode: string) {
@@ -111,6 +126,11 @@ export function GuessModal({
   const hasMinSearchLength = query.length >= 3;
   const results = hasMinSearchLength ? searchCountries(query, locale, 12) : [];
 
+  const rowFailed =
+    errorReason === "wrong_row" || errorReason === "wrong_constraints";
+  const colFailed =
+    errorReason === "wrong_col" || errorReason === "wrong_constraints";
+
   return (
     <Drawer
       open={open}
@@ -121,7 +141,13 @@ export function GuessModal({
       <DrawerContent className="mt-10 max-h-[94svh] w-full overflow-x-hidden pb-[env(safe-area-inset-bottom)] sm:mx-auto sm:mt-24 sm:max-w-xl">
         <DrawerHeader className="text-left px-4 pb-2 pt-3 sm:pt-4">
           <DrawerTitle className="font-serif text-lg font-medium text-on-surface leading-snug">
-            {rowLabel} × {colLabel}
+            <span className={cn(rowFailed && FAILED_CONSTRAINT_CLASS)}>
+              {rowLabel}
+            </span>
+            {" × "}
+            <span className={cn(colFailed && FAILED_CONSTRAINT_CLASS)}>
+              {colLabel}
+            </span>
           </DrawerTitle>
           {totalPossible > 0 && (
             <p className="text-xs text-on-surface-variant mt-2">

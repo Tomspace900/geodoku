@@ -57,9 +57,6 @@ export const en = {
     dontShowAgain: "Don't show again",
   },
   error: {
-    wrong_row: "This country doesn't match both constraints.",
-    wrong_col: "This country doesn't match both constraints.",
-    wrong_constraints: "This country doesn't match both constraints.",
     already_used: "This country has already been used in another cell.",
     invalid_country: "Invalid country.",
     unknown: "Unknown error.",

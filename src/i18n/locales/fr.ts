@@ -57,9 +57,6 @@ export const fr = {
     dontShowAgain: "Ne plus afficher",
   },
   error: {
-    wrong_row: "Ce pays ne correspond pas aux deux contraintes.",
-    wrong_col: "Ce pays ne correspond pas aux deux contraintes.",
-    wrong_constraints: "Ce pays ne correspond pas aux deux contraintes.",
     already_used: "Ce pays a déjà été utilisé dans une autre cellule.",
     invalid_country: "Pays invalide.",
     unknown: "Erreur inconnue.",
