@@ -48,6 +48,7 @@ export function useGameState() {
         persisted: rehydratePayload,
         rows: todayGrid.rows as ConstraintId[],
         cols: todayGrid.cols as ConstraintId[],
+        validAnswers: todayGrid.validAnswers,
       });
     } else {
       dispatch({
@@ -98,6 +99,7 @@ export function useGameState() {
           cell,
           countryCode,
           rarity: result.rarity,
+          validAnswers: todayGrid.validAnswers,
         });
         return { ok: true as const, rarity: result.rarity };
       } catch {

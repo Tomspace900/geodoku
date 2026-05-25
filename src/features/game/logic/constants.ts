@@ -36,7 +36,8 @@ export const ORIGINALITY_TIER_VALUES: Record<RarityTier, number> = {
 };
 
 export const SHARE_EMOJIS = {
-  failed: "⬜", // Blanc : pas de pays trouvé
+  failed: "⬜", // Blanc : pas de pays trouvé (sortie par les vies)
+  blocked: "⬛", // Carré noir : case bloquée par la règle 1 pays = 1 placement
   common: "🟪", // Violet : le plus commun
   uncommon: "🟦", // Bleu : moins commun
   rare: "🟨", // Jaune : plus rare

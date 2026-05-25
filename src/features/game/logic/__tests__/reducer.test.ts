@@ -11,6 +11,18 @@ function freshState(): GameState {
   );
 }
 
+const emptyValidAnswers: Record<string, string[]> = {
+  "0,0": ["FRA"],
+  "0,1": ["DEU"],
+  "0,2": ["ESP"],
+  "1,0": ["ITA"],
+  "1,1": ["PRT"],
+  "1,2": ["NLD"],
+  "2,0": ["BEL"],
+  "2,1": ["AUT"],
+  "2,2": ["CHE"],
+};
+
 describe("createInitialState", () => {
   it("creates 9 empty cells", () => {
     const state = freshState();
@@ -62,6 +74,7 @@ describe("gameReducer — guessSuccess", () => {
       cell: { row: 0, col: 0 },
       countryCode: "FRA",
       rarity: 0.6,
+      validAnswers: emptyValidAnswers,
     });
     expect(state.cells["0,0"].status).toBe("filled");
     expect(state.usedCountries.has("FRA")).toBe(true);
@@ -77,6 +90,7 @@ describe("gameReducer — guessSuccess", () => {
       cell: { row: 0, col: 0 },
       countryCode: "FRA",
       rarity: 0.6,
+      validAnswers: emptyValidAnswers,
     });
     expect(s2.selectedCell).toBeNull();
   });
@@ -87,6 +101,7 @@ describe("gameReducer — guessSuccess", () => {
       cell: { row: 0, col: 0 },
       countryCode: "FRA",
       rarity: 0.6,
+      validAnswers: emptyValidAnswers,
     });
     expect(state.remainingLives).toBe(3);
   });
@@ -122,6 +137,7 @@ describe("gameReducer — guessSuccess", () => {
         cell: { row, col },
         countryCode: codes[i],
         rarity: 0.5,
+        validAnswers: emptyValidAnswers,
       });
     }
     expect(state.status).toBe("won");
@@ -159,6 +175,7 @@ describe("gameReducer — guessSuccess", () => {
         cell: { row, col },
         countryCode: codes[i],
         rarity: 0.5,
+        validAnswers: emptyValidAnswers,
       });
     }
     expect(state.status).toBe("won");
@@ -168,8 +185,98 @@ describe("gameReducer — guessSuccess", () => {
       cell: { row: 0, col: 0 },
       countryCode: "USA",
       rarity: 0.5,
+      validAnswers: emptyValidAnswers,
     });
     expect(stateAfter).toBe(state); // same reference
+  });
+
+  it("marks an empty cell as blocked when its valid answers are exhausted, status stays playing", () => {
+    const validAnswers = {
+      "0,0": ["FRA"],
+      "0,1": ["DEU"],
+      "0,2": ["FRA", "DEU"],
+      "1,0": ["ITA"],
+      "1,1": ["PRT"],
+      "1,2": ["NLD"],
+      "2,0": ["BEL"],
+      "2,1": ["AUT"],
+      "2,2": ["CHE"],
+    };
+    let state = gameReducer(freshState(), {
+      type: "guessSuccess",
+      cell: { row: 0, col: 0 },
+      countryCode: "FRA",
+      rarity: 0.5,
+      validAnswers,
+    });
+    state = gameReducer(state, {
+      type: "guessSuccess",
+      cell: { row: 0, col: 1 },
+      countryCode: "DEU",
+      rarity: 0.5,
+      validAnswers,
+    });
+    expect(state.status).toBe("playing");
+    expect(state.cells["0,2"].status).toBe("blocked");
+    expect(state.remainingLives).toBe(3);
+    expect(state.finishedAt).toBeNull();
+  });
+
+  it("transitions to lost when all remaining empty cells become blocked", () => {
+    const validAnswers = {
+      "0,0": ["FRA"],
+      "0,1": ["DEU"],
+      "0,2": ["FRA", "DEU"],
+      "1,0": ["FRA"],
+      "1,1": ["DEU"],
+      "1,2": ["FRA", "DEU"],
+      "2,0": ["FRA"],
+      "2,1": ["DEU"],
+      "2,2": ["FRA", "DEU"],
+    };
+    let state = gameReducer(freshState(), {
+      type: "guessSuccess",
+      cell: { row: 0, col: 0 },
+      countryCode: "FRA",
+      rarity: 0.5,
+      validAnswers,
+    });
+    state = gameReducer(state, {
+      type: "guessSuccess",
+      cell: { row: 0, col: 1 },
+      countryCode: "DEU",
+      rarity: 0.5,
+      validAnswers,
+    });
+    expect(state.status).toBe("lost");
+    expect(state.remainingLives).toBe(3);
+    expect(state.finishedAt).not.toBeNull();
+    expect(
+      Object.values(state.cells).filter((c) => c.status === "blocked"),
+    ).toHaveLength(7);
+  });
+
+  it("stays playing when empty cells still have unused valid answers", () => {
+    const validAnswers = {
+      "0,0": ["FRA"],
+      "0,1": ["DEU"],
+      "0,2": ["ESP"],
+      "1,0": ["ITA"],
+      "1,1": ["PRT"],
+      "1,2": ["NLD"],
+      "2,0": ["BEL"],
+      "2,1": ["AUT"],
+      "2,2": ["CHE"],
+    };
+    const state = gameReducer(freshState(), {
+      type: "guessSuccess",
+      cell: { row: 0, col: 0 },
+      countryCode: "FRA",
+      rarity: 0.5,
+      validAnswers,
+    });
+    expect(state.status).toBe("playing");
+    expect(state.finishedAt).toBeNull();
   });
 
   it("is ignored when state is lost", () => {
@@ -184,6 +291,7 @@ describe("gameReducer — guessSuccess", () => {
       cell: { row: 0, col: 0 },
       countryCode: "FRA",
       rarity: 0.5,
+      validAnswers: emptyValidAnswers,
     });
     expect(stateAfter).toBe(state);
   });
@@ -241,6 +349,7 @@ describe("gameReducer — rehydrate", () => {
       persisted,
       rows: ["borders_china", "borders_brazil", "borders_russia"],
       cols: ["population_gt_30M", "area_gt_500k", "flag_has_star"],
+      validAnswers: emptyValidAnswers,
     });
     expect(state.date).toBe("2026-04-15");
     expect(state.rows).toEqual([
@@ -268,9 +377,68 @@ describe("gameReducer — rehydrate", () => {
       persisted,
       rows: ["borders_china", "borders_brazil", "borders_russia"],
       cols: ["population_gt_30M", "area_gt_500k", "flag_has_star"],
+      validAnswers: emptyValidAnswers,
     });
     expect(state.usedCountries).toBeInstanceOf(Set);
     expect(state.usedCountries.has("FRA")).toBe(true);
     expect(state.usedCountries.size).toBe(1);
+  });
+
+  it("rehydrates blocked cells and stays playing when empty cells remain", () => {
+    const persisted = makePersistedGame();
+    persisted.cells["0,1"] = {
+      status: "filled",
+      countryCode: "DEU",
+      rarity: 0.4,
+      rarityTier: "uncommon",
+    };
+    persisted.usedCountries = ["FRA", "DEU"];
+    const validAnswers = {
+      ...emptyValidAnswers,
+      "0,2": ["FRA", "DEU"],
+    };
+    const state = gameReducer(freshState(), {
+      type: "rehydrate",
+      persisted,
+      rows: ["borders_china", "borders_brazil", "borders_russia"],
+      cols: ["population_gt_30M", "area_gt_500k", "flag_has_star"],
+      validAnswers,
+    });
+    expect(state.status).toBe("playing");
+    expect(state.cells["0,2"].status).toBe("blocked");
+    expect(state.remainingLives).toBe(2);
+    expect(state.finishedAt).toBeNull();
+  });
+
+  it("rehydrates to lost when no empty cells remain after marking blocked", () => {
+    const persisted = makePersistedGame();
+    persisted.cells["0,1"] = {
+      status: "filled",
+      countryCode: "DEU",
+      rarity: 0.4,
+      rarityTier: "uncommon",
+    };
+    persisted.usedCountries = ["FRA", "DEU"];
+    const validAnswers = {
+      "0,0": ["FRA"],
+      "0,1": ["DEU"],
+      "0,2": ["FRA", "DEU"],
+      "1,0": ["FRA"],
+      "1,1": ["DEU"],
+      "1,2": ["FRA", "DEU"],
+      "2,0": ["FRA"],
+      "2,1": ["DEU"],
+      "2,2": ["FRA", "DEU"],
+    };
+    const state = gameReducer(freshState(), {
+      type: "rehydrate",
+      persisted,
+      rows: ["borders_china", "borders_brazil", "borders_russia"],
+      cols: ["population_gt_30M", "area_gt_500k", "flag_has_star"],
+      validAnswers,
+    });
+    expect(state.status).toBe("lost");
+    expect(state.remainingLives).toBe(2);
+    expect(state.finishedAt).toBe(persisted.startedAt);
   });
 });

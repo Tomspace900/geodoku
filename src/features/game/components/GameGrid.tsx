@@ -51,15 +51,15 @@ export function GameGrid({ state, onCellClick }: Props) {
           ...COLS.map((col) => {
             const key = `${row},${col}` as CellKey;
             const cell = state.cells[key];
-            const isFilled = cell.status === "filled";
+            const isPlayable = isPlaying && cell.status === "empty";
             return (
               <CellComponent
                 key={key}
                 cell={cell}
                 position={{ row, col }}
-                isDisabled={!isPlaying || isFilled}
+                isDisabled={!isPlayable}
                 onClick={() => {
-                  if (isPlaying && !isFilled) onCellClick({ row, col });
+                  if (isPlayable) onCellClick({ row, col });
                 }}
               />
             );

@@ -51,6 +51,17 @@ describe("savePersistedGame / loadPersistedGame", () => {
       cell: { row: 0, col: 0 },
       countryCode: "FRA",
       rarity: 0.4,
+      validAnswers: {
+        "0,0": ["FRA"],
+        "0,1": ["DEU"],
+        "0,2": ["ESP"],
+        "1,0": ["ITA"],
+        "1,1": ["PRT"],
+        "1,2": ["NLD"],
+        "2,0": ["BEL"],
+        "2,1": ["AUT"],
+        "2,2": ["CHE"],
+      },
     });
     savePersistedGame(state);
 
@@ -61,6 +72,19 @@ describe("savePersistedGame / loadPersistedGame", () => {
     const loaded = loadPersistedGame();
     expect(Array.isArray(loaded?.usedCountries)).toBe(true);
     expect(loaded?.usedCountries).toContain("FRA");
+  });
+
+  it("serialises blocked cells and deserialises them", () => {
+    const state = createInitialState(
+      "2026-04-15",
+      [...TEST_ROWS],
+      [...TEST_COLS],
+    );
+    state.cells["0,0"] = { status: "blocked" };
+    savePersistedGame(state);
+
+    const loaded = loadPersistedGame();
+    expect(loaded?.cells["0,0"].status).toBe("blocked");
   });
 });
 
