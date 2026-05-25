@@ -9,10 +9,7 @@ import { internalMutation, internalQuery } from "./_generated/server";
 
 // ─── Helpers (shared across queries/mutations) ───────────────────────────────
 
-/**
- * Fetch validAnswers for a candidate via the satellite table, with fallback
- * to the inline field on the candidate doc (compat widen phase).
- */
+/** Fetch validAnswers for a candidate via the satellite table. */
 export async function getCandidateAnswers(
   ctx: QueryCtx | MutationCtx,
   candidateId: Id<"gridCandidates">,
@@ -21,38 +18,18 @@ export async function getCandidateAnswers(
     .query("gridAnswers")
     .withIndex("by_candidate", (q) => q.eq("candidateId", candidateId))
     .unique();
-  if (satellite) return satellite.validAnswers;
-  const candidate = await ctx.db.get(candidateId);
-  return candidate?.validAnswers ?? null;
+  return satellite?.validAnswers ?? null;
 }
 
 /**
  * Resolve validAnswers for a published grid. The satellite is keyed on
- * candidateId, so we always go through the candidate. Falls back to the
- * inline field on grids for pre-migration docs.
+ * candidateId, so we always go through the candidate.
  */
 export async function getGridAnswers(
   ctx: QueryCtx | MutationCtx,
   grid: Doc<"grids">,
 ): Promise<Record<string, string[]> | null> {
-  const fromSatellite = await getCandidateAnswers(ctx, grid.candidateId);
-  if (fromSatellite) return fromSatellite;
-  return grid.validAnswers ?? null;
-}
-
-/**
- * Widen-phase compat : retourne le `countryPool` dénormalisé d'une grille
- * publiée, avec fallback inline sur `validAnswers` pour les docs pré-migration.
- *
- * À supprimer au narrow (countryPool devient obligatoire, plus de fallback).
- */
-export function resolveCountryPool(grid: {
-  countryPool?: string[];
-  validAnswers?: Record<string, string[]>;
-}): string[] {
-  if (grid.countryPool) return grid.countryPool;
-  if (grid.validAnswers) return Object.values(grid.validAnswers).flat();
-  return [];
+  return await getCandidateAnswers(ctx, grid.candidateId);
 }
 
 // ─── Internal queries ─────────────────────────────────────────────────────────
@@ -74,7 +51,7 @@ export const getRecentPublishedGrids = internalQuery({
     return grids.map((g) => ({
       rows: g.rows,
       cols: g.cols,
-      countryPool: resolveCountryPool(g),
+      countryPool: g.countryPool,
     }));
   },
 });

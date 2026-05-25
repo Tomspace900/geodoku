@@ -17,7 +17,6 @@ import type * as lib_dates from "../lib/dates.js";
 import type * as lib_gridConstants from "../lib/gridConstants.js";
 import type * as lib_gridGenerator from "../lib/gridGenerator.js";
 import type * as lib_gridScheduler from "../lib/gridScheduler.js";
-import type * as migrations from "../migrations.js";
 import type * as rateLimit from "../rateLimit.js";
 import type * as seed from "../seed.js";
 import type * as wipe from "../wipe.js";
@@ -38,7 +37,6 @@ declare const fullApi: ApiFromModules<{
   "lib/gridConstants": typeof lib_gridConstants;
   "lib/gridGenerator": typeof lib_gridGenerator;
   "lib/gridScheduler": typeof lib_gridScheduler;
-  migrations: typeof migrations;
   rateLimit: typeof rateLimit;
   seed: typeof seed;
   wipe: typeof wipe;
