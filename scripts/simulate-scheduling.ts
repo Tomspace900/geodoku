@@ -74,13 +74,18 @@ type PoolGrid = {
   metadata: FinalizedPoolGrid["metadata"];
 };
 
-const poolQueue: PoolGrid[] = pool.map((g, i) => ({
-  _id: `cand_${i}`,
-  rows: g.rows,
-  cols: g.cols,
-  validAnswers: g.validAnswers,
-  metadata: g.metadata,
-}));
+const poolByCandId = new Map<string, PoolGrid>();
+const poolQueue: PoolGrid[] = pool.map((g, i) => {
+  const entry: PoolGrid = {
+    _id: `cand_${i}`,
+    rows: g.rows,
+    cols: g.cols,
+    validAnswers: g.validAnswers,
+    metadata: g.metadata,
+  };
+  poolByCandId.set(entry._id, entry);
+  return entry;
+});
 
 type ScheduledDay = {
   day: number;
@@ -107,9 +112,11 @@ for (let day = 1; day <= 30; day++) {
   }
 
   usedIds.add(result.grid._id);
+  const fullGrid = poolByCandId.get(result.grid._id);
+  if (!fullGrid) throw new Error(`Missing pool entry for ${result.grid._id}`);
   scheduled.push({
     day,
-    grid: result.grid,
+    grid: fullGrid,
     score: result.score,
     difficulty: result.grid.metadata.difficultyEstimate,
     constraintIds: result.grid.metadata.constraintIds,

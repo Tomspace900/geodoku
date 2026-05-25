@@ -4,6 +4,11 @@ import { internal } from "./_generated/api";
 import type { Id } from "./_generated/dataModel";
 import { action, internalAction, mutation, query } from "./_generated/server";
 import { checkAdminToken } from "./auth";
+import {
+  getCandidateAnswers,
+  getGridAnswers,
+  resolveCountryPool,
+} from "./gridData";
 import { daysAgoUTC, offsetUTC, todayUTC, tomorrowUTC } from "./lib/dates";
 import {
   type GenerationReport,
@@ -120,13 +125,12 @@ export const ensureGridForDate = internalAction({
       _id: g._id as string,
       rows: g.rows,
       cols: g.cols,
-      validAnswers: g.validAnswers,
       metadata: g.metadata,
     }));
 
     const recentForScheduler = recentGrids.map((g) => ({
       constraintIds: [...g.rows, ...g.cols],
-      countryPool: Object.values(g.validAnswers).flat(),
+      countryPool: g.countryPool,
     }));
 
     const selected = selectNextGrid(poolForScheduler, recentForScheduler);
@@ -175,7 +179,7 @@ export const ensureGridForDate = internalAction({
         date: args.date,
         rows: finalized.rows,
         cols: finalized.cols,
-        validAnswers: finalized.validAnswers,
+        countryPool: finalized.metadata.countryPool,
         difficulty: finalized.metadata.difficultyEstimate,
         candidateId,
       });
@@ -190,7 +194,7 @@ export const ensureGridForDate = internalAction({
       date: args.date,
       rows: selected.grid.rows,
       cols: selected.grid.cols,
-      validAnswers: selected.grid.validAnswers,
+      countryPool: selected.grid.metadata.countryPool,
       difficulty: selected.grid.metadata.difficultyEstimate,
       candidateId: selected.grid._id as Id<"gridCandidates">,
     });
@@ -235,21 +239,41 @@ export const autoRefillPool = internalAction({
 
 // ─── Public queries ───────────────────────────────────────────────────────────
 
-/** Returns today's grid, or null if not yet generated. */
+/**
+ * Returns today's grid, or null if not yet generated.
+ *
+ * `validAnswers` est jointe depuis le satellite `gridAnswers` via candidateId.
+ * Le doc `grids` lui-même n'embarque plus ce champ lourd.
+ */
 export const getTodayGrid = query({
   args: {},
   handler: async (ctx) => {
     const today = todayUTC();
-    return await ctx.db
+    const grid = await ctx.db
       .query("grids")
       .withIndex("by_date", (q) => q.eq("date", today))
       .unique();
+    if (!grid) return null;
+    const validAnswers = (await getGridAnswers(ctx, grid)) ?? {};
+    return {
+      _id: grid._id,
+      _creationTime: grid._creationTime,
+      date: grid.date,
+      rows: grid.rows,
+      cols: grid.cols,
+      difficulty: grid.difficulty,
+      candidateId: grid.candidateId,
+      validAnswers,
+    };
   },
 });
 
 /**
  * Returns all grids scheduled from the past 30 days onwards, with candidate metadata.
  * Used by the admin calendar and grid detail panel.
+ *
+ * `validAnswers` n'est pas inclus pour limiter la bande passante : utiliser
+ * `getScheduledGridPreviewDetail` à la sélection d'une date.
  */
 export const getScheduledGrids = query({
   args: { adminToken: v.string() },
@@ -269,13 +293,50 @@ export const getScheduledGrids = query({
           date: grid.date,
           rows: grid.rows,
           cols: grid.cols,
-          validAnswers: grid.validAnswers,
           difficulty: grid.difficulty,
           candidateId: grid.candidateId,
           metadata: candidate?.metadata ?? null,
         };
       }),
     );
+  },
+});
+
+/** Charge validAnswers d'une grille planifiée (lazy fetch admin). */
+export const getScheduledGridPreviewDetail = query({
+  args: { adminToken: v.string(), date: v.string() },
+  handler: async (ctx, args) => {
+    checkAdminToken(args.adminToken);
+    const grid = await ctx.db
+      .query("grids")
+      .withIndex("by_date", (q) => q.eq("date", args.date))
+      .unique();
+    if (!grid) return null;
+    const validAnswers = (await getGridAnswers(ctx, grid)) ?? {};
+    return {
+      date: grid.date,
+      rows: grid.rows,
+      cols: grid.cols,
+      validAnswers,
+      difficulty: grid.difficulty,
+    };
+  },
+});
+
+/** Charge validAnswers d'une candidate du pool (lazy fetch admin). */
+export const getCandidatePreviewDetail = query({
+  args: { adminToken: v.string(), candidateId: v.id("gridCandidates") },
+  handler: async (ctx, args) => {
+    checkAdminToken(args.adminToken);
+    const candidate = await ctx.db.get(args.candidateId);
+    if (!candidate) return null;
+    const validAnswers = (await getCandidateAnswers(ctx, candidate._id)) ?? {};
+    return {
+      rows: candidate.rows,
+      cols: candidate.cols,
+      validAnswers,
+      cellDifficulties: candidate.metadata.cellDifficulties,
+    };
   },
 });
 
@@ -351,7 +412,8 @@ export const getExposureStats = query({
       grids: Array<{
         rows: string[];
         cols: string[];
-        validAnswers: Record<string, string[]>;
+        countryPool?: string[];
+        validAnswers?: Record<string, string[]>;
       }>,
     ) {
       const constraintCounts: Record<string, number> = {};
@@ -360,8 +422,9 @@ export const getExposureStats = query({
         for (const id of [...g.rows, ...g.cols]) {
           constraintCounts[id] = (constraintCounts[id] ?? 0) + 1;
         }
-        // Count each country once per grid (even if valid in multiple cells)
-        const unique = new Set(Object.values(g.validAnswers).flat());
+        // Count each country once per grid (countryPool dénormalisé, fallback
+        // inline validAnswers en phase widen — voir resolveCountryPool).
+        const unique = new Set(resolveCountryPool(g));
         for (const code of unique) {
           countryCounts[code] = (countryCounts[code] ?? 0) + 1;
         }
@@ -380,9 +443,12 @@ export const getExposureStats = query({
 
 /**
  * Aperçu lecture seule des `days` prochains jours :
- * - `kind: "scheduled"` si la grille est déjà inscrite dans `grids` (assignée par le cron) ;
- * - `kind: "predicted"` si on simule le scheduler à partir du pool actuel (lecture seule, rien n'est écrit) ;
+ * - `kind: "scheduled"` si la grille est déjà inscrite dans `grids` ;
+ * - `kind: "predicted"` si on simule le scheduler depuis le pool actuel ;
  * - `kind: "missing"` si le pool est vide pour ce jour-là.
+ *
+ * `validAnswers` n'est PAS embarqué : le front fetch via
+ * `getScheduledGridPreviewDetail` / `getCandidatePreviewDetail` à l'ouverture.
  */
 export const getUpcomingScheduledPreview = query({
   args: { adminToken: v.string(), days: v.optional(v.number()) },
@@ -409,7 +475,6 @@ export const getUpcomingScheduledPreview = query({
       _id: g._id as string,
       rows: g.rows,
       cols: g.cols,
-      validAnswers: g.validAnswers,
       metadata: g.metadata,
     }));
 
@@ -420,7 +485,7 @@ export const getUpcomingScheduledPreview = query({
       .take(HISTORY_WINDOW);
     let recentForScheduler = recentPublished.map((g) => ({
       constraintIds: [...g.rows, ...g.cols],
-      countryPool: Object.values(g.validAnswers).flat(),
+      countryPool: resolveCountryPool(g),
     }));
 
     type UpcomingDay =
@@ -429,9 +494,9 @@ export const getUpcomingScheduledPreview = query({
           kind: "scheduled" | "predicted";
           rows: string[];
           cols: string[];
-          validAnswers: Record<string, string[]>;
           difficulty: number;
           cellDifficulties: number[] | null;
+          candidateId: Id<"gridCandidates"> | null;
         }
       | { date: string; kind: "missing" };
 
@@ -449,14 +514,14 @@ export const getUpcomingScheduledPreview = query({
           kind: "scheduled",
           rows: existing.rows,
           cols: existing.cols,
-          validAnswers: existing.validAnswers,
           difficulty: existing.difficulty,
           cellDifficulties: candidate?.metadata.cellDifficulties ?? null,
+          candidateId: existing.candidateId,
         });
         recentForScheduler = [
           {
             constraintIds: [...existing.rows, ...existing.cols],
-            countryPool: Object.values(existing.validAnswers).flat(),
+            countryPool: resolveCountryPool(existing),
           },
           ...recentForScheduler,
         ];
@@ -475,9 +540,9 @@ export const getUpcomingScheduledPreview = query({
         kind: "predicted",
         rows: picked.grid.rows,
         cols: picked.grid.cols,
-        validAnswers: picked.grid.validAnswers,
         difficulty: picked.grid.metadata.difficultyEstimate,
         cellDifficulties: picked.grid.metadata.cellDifficulties,
+        candidateId: picked.grid._id as Id<"gridCandidates">,
       });
       usedIds.add(picked.grid._id);
       recentForScheduler = [
