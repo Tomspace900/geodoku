@@ -17,39 +17,6 @@ const config: Config = {
         sans: ["Inter", "system-ui", "sans-serif"],
       },
       colors: {
-        border: "hsl(var(--border))",
-        input: "hsl(var(--input))",
-        ring: "hsl(var(--ring))",
-        background: "hsl(var(--background))",
-        foreground: "hsl(var(--foreground))",
-        primary: {
-          DEFAULT: "hsl(var(--primary))",
-          foreground: "hsl(var(--primary-foreground))",
-        },
-        secondary: {
-          DEFAULT: "hsl(var(--secondary))",
-          foreground: "hsl(var(--secondary-foreground))",
-        },
-        destructive: {
-          DEFAULT: "hsl(var(--destructive))",
-          foreground: "hsl(var(--destructive-foreground))",
-        },
-        muted: {
-          DEFAULT: "hsl(var(--muted))",
-          foreground: "hsl(var(--muted-foreground))",
-        },
-        accent: {
-          DEFAULT: "hsl(var(--accent))",
-          foreground: "hsl(var(--accent-foreground))",
-        },
-        popover: {
-          DEFAULT: "hsl(var(--popover))",
-          foreground: "hsl(var(--popover-foreground))",
-        },
-        card: {
-          DEFAULT: "hsl(var(--card))",
-          foreground: "hsl(var(--card-foreground))",
-        },
         surface: {
           DEFAULT: "hsl(var(--color-surface) / <alpha-value>)",
           low: "hsl(var(--color-surface-low) / <alpha-value>)",
@@ -64,6 +31,9 @@ const config: Config = {
         brand: {
           DEFAULT: "hsl(var(--color-brand) / <alpha-value>)",
         },
+        success: "hsl(var(--color-success) / <alpha-value>)",
+        warning: "hsl(var(--color-warning) / <alpha-value>)",
+        error: "hsl(var(--color-error) / <alpha-value>)",
         rarity: {
           common: "hsl(var(--color-rarity-common) / <alpha-value>)",
           uncommon: "hsl(var(--color-rarity-uncommon) / <alpha-value>)",
