@@ -1,3 +1,4 @@
+import { AppMark } from "@/components/AppMark";
 import { useLocale } from "@/i18n/LocaleContext";
 import { Heart } from "lucide-react";
 import { STARTING_LIVES } from "../logic/constants";
@@ -25,9 +26,12 @@ export function Header({ remainingLives, date, gridNumber }: Props) {
   return (
     <header className="relative flex items-center justify-between py-2">
       <div className="flex flex-col">
-        <h1 className="font-serif text-2xl font-medium italic text-on-surface leading-none">
-          Geodoku
-        </h1>
+        <div className="flex items-center gap-2">
+          <AppMark />
+          <h1 className="font-serif text-2xl font-medium italic text-on-surface leading-none mt-1">
+            Geodoku
+          </h1>
+        </div>
         {dateLabel && (
           <>
             <div

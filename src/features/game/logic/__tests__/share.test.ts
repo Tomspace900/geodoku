@@ -74,8 +74,8 @@ describe("formatShareString", () => {
 
   it("includes site URL at the end", () => {
     const state = makeState();
-    const result = formatShareString(state, 1, "geodoku.app");
-    expect(result.endsWith("geodoku.app")).toBe(true);
+    const result = formatShareString(state, 1, "https://geodoku.app");
+    expect(result.endsWith("https://geodoku.app")).toBe(true);
   });
 
   it("omits issue number in title when gridNumber is null", () => {

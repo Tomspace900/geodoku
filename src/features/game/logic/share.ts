@@ -17,7 +17,7 @@ export function cellShareEmoji(cell: Cell): string {
 export function formatShareString(
   state: GameState,
   gridNumber: number | null,
-  siteUrl = "geodoku.app",
+  siteUrl = "https://geodoku.app",
 ): string {
   const { percent } = computeGridScore(state);
   const { grade } = computeOriginalityScore(state);
