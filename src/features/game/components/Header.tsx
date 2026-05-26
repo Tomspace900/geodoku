@@ -2,6 +2,7 @@ import { AppMark } from "@/components/AppMark";
 import { useLocale } from "@/i18n/LocaleContext";
 import { Heart } from "lucide-react";
 import { STARTING_LIVES } from "../logic/constants";
+import { DisplayHeader } from "./DisplayHeader";
 
 type Props = {
   remainingLives: number;
@@ -23,30 +24,25 @@ export function Header({ remainingLives, date, gridNumber }: Props) {
         .toUpperCase()
     : "";
 
+  const eyebrow = dateLabel ? (
+    <>
+      {dateLabel}
+      {gridNumber !== null && (
+        <span className="text-on-surface-variant/70 normal-case tracking-normal">{` · #${gridNumber}`}</span>
+      )}
+    </>
+  ) : undefined;
+
   return (
-    <header className="relative flex items-center justify-between py-2">
-      <div className="flex flex-col">
-        <div className="flex items-center gap-2">
-          <AppMark />
-          <h1 className="font-serif text-2xl font-medium italic text-on-surface leading-none mt-1">
-            Geodoku
-          </h1>
-        </div>
-        {dateLabel && (
-          <>
-            <div
-              className="mt-2 h-1 w-12 shrink-0 rounded-full bg-brand"
-              aria-hidden
-            />
-            <p className="mt-1 text-[10px] tracking-widest text-on-surface-variant uppercase">
-              {dateLabel}
-              {gridNumber !== null && (
-                <span className="text-on-surface-variant/70 normal-case tracking-normal">{` · #${gridNumber}`}</span>
-              )}
-            </p>
-          </>
-        )}
-      </div>
+    <header className="relative flex items-center justify-between pb-4">
+      <DisplayHeader
+        as="h1"
+        size="md"
+        leftIcon={<AppMark />}
+        title="Geodoku"
+        eyebrow={eyebrow}
+        accentBar={eyebrow !== undefined}
+      />
 
       <div className="flex items-center gap-0.5">
         {Array.from({ length: STARTING_LIVES }, (_, i) => (

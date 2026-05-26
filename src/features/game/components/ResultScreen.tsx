@@ -18,6 +18,8 @@ import { Copy, X } from "lucide-react";
 import { useEffect, useState } from "react";
 import { api } from "../../../../convex/_generated/api";
 import { AchievementCard } from "./AchievementCard";
+import { DisplayHeader } from "./DisplayHeader";
+import { Eyebrow } from "./Eyebrow";
 
 const ROWS = [0, 1, 2] as const;
 const COLS = [0, 1, 2] as const;
@@ -127,7 +129,7 @@ export function ResultScreen({
       <div
         className={cn(
           "relative z-10 bg-surface-lowest w-full max-w-[500px] shadow-editorial",
-          "rounded-t-2xl sm:rounded-2xl",
+          "rounded-t-2xl sm:rounded-xl",
           "p-6 flex flex-col gap-5",
           "max-h-[90dvh] overflow-y-auto",
           "animate-in slide-in-from-bottom-4 sm:zoom-in-95 duration-300",
@@ -142,22 +144,23 @@ export function ResultScreen({
           <X size={20} strokeWidth={1.75} />
         </button>
 
-        <div className="flex flex-col items-center gap-2 text-center">
-          <h2
-            id="result-screen-title"
-            className="font-serif text-3xl italic text-on-surface"
-          >
-            {isWon ? t("ui.magnificent") : t("ui.tooBad")}
-          </h2>
-          <div className="w-12 h-1 bg-brand rounded-full" />
-          {!isWon && (
-            <p className="text-[10px] tracking-widest uppercase text-on-surface-variant">
-              {state.remainingLives > 0
+        <DisplayHeader
+          as="h2"
+          size="lg"
+          centered
+          title={
+            <span id="result-screen-title">
+              {isWon ? t("ui.magnificent") : t("ui.tooBad")}
+            </span>
+          }
+          eyebrow={
+            !isWon
+              ? state.remainingLives > 0
                 ? t("ui.lostByBlock")
-                : t("ui.lostByLives")}
-            </p>
-          )}
-        </div>
+                : t("ui.lostByLives")
+              : undefined
+          }
+        />
 
         <div className="flex flex-col items-center gap-1">
           <div className="flex flex-wrap items-center justify-center gap-x-3 gap-y-2 text-center leading-none">
@@ -174,13 +177,16 @@ export function ResultScreen({
               {originality.grade}
             </span>
           </div>
-          <div className="flex flex-wrap justify-center gap-x-2 gap-y-0.5 text-center text-[10px] tracking-widest uppercase text-on-surface-variant">
+          <Eyebrow
+            as="div"
+            className="flex flex-wrap justify-center gap-x-2 gap-y-0.5 text-center"
+          >
             <span>{t("ui.gridScore")}</span>
             <span className="text-on-surface-variant/60" aria-hidden>
               ·
             </span>
             <span>{t("ui.originalityScore")}</span>
-          </div>
+          </Eyebrow>
         </div>
 
         <div className="flex flex-col items-center gap-1">
@@ -213,15 +219,15 @@ export function ResultScreen({
               onClick={onViewAnswers}
               variant="secondary"
               size="lg"
-              className="w-full bg-surface-highest text-on-surface hover:bg-surface-highest/80"
+              className="w-full"
             >
               {t("ui.viewAnswers")}
             </Button>
           ) : (
             <>
-              <p className="text-[10px] tracking-widest text-on-surface-variant uppercase text-center">
+              <Eyebrow className="text-center">
                 {t("ui.feedbackQuestion")}
-              </p>
+              </Eyebrow>
               <div className="grid grid-cols-3 gap-1.5">
                 {DIFFICULTY_RATINGS.map(({ rating, labelKey }) => (
                   <Button
@@ -230,28 +236,25 @@ export function ResultScreen({
                     variant="secondary"
                     size="sm"
                     disabled={ratingPending}
-                    className="h-auto min-h-9 whitespace-normal bg-surface-highest px-2 py-2 text-xs leading-tight text-on-surface hover:bg-surface-highest/80"
+                    className="h-auto min-h-9 whitespace-normal px-2 py-2 text-xs leading-tight"
                     onClick={() => handleRateDifficulty(rating)}
                   >
                     {t(labelKey)}
                   </Button>
                 ))}
               </div>
-              <button
+              <Button
                 type="button"
+                variant="link"
                 onClick={onViewAnswers}
-                className="text-center text-xs text-on-surface-variant underline underline-offset-2 decoration-outline-variant/40 hover:text-on-surface"
+                className="self-center text-xs"
               >
                 {t("ui.skipFeedback")}
-              </button>
+              </Button>
             </>
           )}
 
-          <Button
-            onClick={handleShare}
-            className="w-full bg-on-surface text-surface-lowest hover:bg-on-surface/90 gap-2"
-            size="lg"
-          >
+          <Button onClick={handleShare} className="w-full" size="lg">
             <Copy size={16} />
             {copied ? t("ui.shareCopied") : t("ui.share")}
           </Button>

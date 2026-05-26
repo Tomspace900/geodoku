@@ -9,6 +9,7 @@ import {
 import { useT } from "@/i18n/LocaleContext";
 import { HelpCircle } from "lucide-react";
 import { useState } from "react";
+import { AccentBar } from "./AccentBar";
 
 const STORAGE_KEY = "geodoku.showHowToPlay";
 
@@ -47,7 +48,7 @@ export function HowToPlayLink() {
         variant="ghost"
         size="sm"
         onClick={() => setOpen(true)}
-        className="self-center gap-1.5 text-on-surface-variant text-xs tracking-wide"
+        className="self-center gap-1.5 text-xs tracking-wide"
       >
         <HelpCircle size={13} />
         {t("ui.howToPlay")}
@@ -59,10 +60,7 @@ export function HowToPlayLink() {
             <DialogTitle className="font-serif text-2xl font-medium italic tracking-normal text-on-surface leading-none">
               {t("howToPlay.title")}
             </DialogTitle>
-            <div
-              aria-hidden
-              className="mt-3 h-1 w-12 shrink-0 rounded-full bg-brand"
-            />
+            <AccentBar className="mt-3" />
           </DialogHeader>
           <div className="space-y-3 text-sm text-on-surface-variant leading-relaxed">
             <p>

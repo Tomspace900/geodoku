@@ -15,6 +15,7 @@ import type { Cell, CellKey, RarityTier } from "@/features/game/types";
 import { useLocale } from "@/i18n/LocaleContext";
 import type { Locale } from "@/i18n/types";
 import { cn } from "@/lib/utils";
+import { Eyebrow } from "./Eyebrow";
 
 const CONSTRAINT_MAP = new Map(CONSTRAINTS.map((c) => [c.id, c]));
 
@@ -161,11 +162,11 @@ export function SolutionGrid({
                   <span
                     key={iso}
                     className={cn(
-                      "inline-flex max-w-full min-w-0 items-baseline gap-x-0.5 gap-y-0 rounded-md border border-transparent px-1 py-[3px] text-[8px] font-medium leading-snug sm:gap-x-1 sm:px-1.5 sm:py-0.5 sm:text-[11px]",
+                      "inline-flex max-w-full min-w-0 items-baseline gap-x-0.5 gap-y-0 rounded-md px-1 py-[3px] text-[8px] font-medium leading-snug sm:gap-x-1 sm:px-1.5 sm:py-0.5 sm:text-[11px]",
                       tier
                         ? RARITY_STYLES[tier]
                         : "bg-surface-low text-on-surface",
-                      isUserPick && "border-on-surface/50",
+                      isUserPick && "ring-1 ring-inset ring-on-surface/50",
                     )}
                   >
                     <span
@@ -213,9 +214,7 @@ export function SolutionGrid({
       </div>
 
       <div className="space-y-2 rounded-lg bg-surface-low p-4">
-        <p className="text-[10px] tracking-widest uppercase text-on-surface-variant">
-          {t("ui.solutionRarityEyebrow")}
-        </p>
+        <Eyebrow>{t("ui.solutionRarityEyebrow")}</Eyebrow>
         <p className="text-xs text-on-surface-variant leading-relaxed">
           {t("ui.solutionRarityHint")}
         </p>
