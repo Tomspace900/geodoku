@@ -4,11 +4,7 @@ import { internal } from "./_generated/api";
 import type { Id } from "./_generated/dataModel";
 import { action, internalAction, mutation, query } from "./_generated/server";
 import { checkAdminToken } from "./auth";
-import {
-  getCandidateAnswers,
-  getGridAnswers,
-  resolveCountryPool,
-} from "./gridData";
+import { getCandidateAnswers, getGridAnswers } from "./gridData";
 import { daysAgoUTC, offsetUTC, todayUTC, tomorrowUTC } from "./lib/dates";
 import {
   type GenerationReport,
@@ -409,12 +405,7 @@ export const getExposureStats = query({
       .take(UPCOMING_PREVIEW_MAX_DAYS);
 
     function aggregate(
-      grids: Array<{
-        rows: string[];
-        cols: string[];
-        countryPool?: string[];
-        validAnswers?: Record<string, string[]>;
-      }>,
+      grids: Array<{ rows: string[]; cols: string[]; countryPool: string[] }>,
     ) {
       const constraintCounts: Record<string, number> = {};
       const countryCounts: Record<string, number> = {};
@@ -422,9 +413,8 @@ export const getExposureStats = query({
         for (const id of [...g.rows, ...g.cols]) {
           constraintCounts[id] = (constraintCounts[id] ?? 0) + 1;
         }
-        // Count each country once per grid (countryPool dénormalisé, fallback
-        // inline validAnswers en phase widen — voir resolveCountryPool).
-        const unique = new Set(resolveCountryPool(g));
+        // Count each country once per grid (countryPool dénormalisé à insertGrid).
+        const unique = new Set(g.countryPool);
         for (const code of unique) {
           countryCounts[code] = (countryCounts[code] ?? 0) + 1;
         }
@@ -485,7 +475,7 @@ export const getUpcomingScheduledPreview = query({
       .take(HISTORY_WINDOW);
     let recentForScheduler = recentPublished.map((g) => ({
       constraintIds: [...g.rows, ...g.cols],
-      countryPool: resolveCountryPool(g),
+      countryPool: g.countryPool,
     }));
 
     type UpcomingDay =
@@ -521,7 +511,7 @@ export const getUpcomingScheduledPreview = query({
         recentForScheduler = [
           {
             constraintIds: [...existing.rows, ...existing.cols],
-            countryPool: resolveCountryPool(existing),
+            countryPool: existing.countryPool,
           },
           ...recentForScheduler,
         ];
