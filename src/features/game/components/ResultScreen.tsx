@@ -18,8 +18,8 @@ import { Copy, X } from "lucide-react";
 import { useEffect, useState } from "react";
 import { api } from "../../../../convex/_generated/api";
 import { AchievementCard } from "./AchievementCard";
-import { DisplayHeader } from "./DisplayHeader";
-import { Eyebrow } from "./Eyebrow";
+import { DisplayHeader } from "@/components/editorial/DisplayHeader";
+import { Eyebrow } from "@/components/editorial/Eyebrow";
 
 const ROWS = [0, 1, 2] as const;
 const COLS = [0, 1, 2] as const;

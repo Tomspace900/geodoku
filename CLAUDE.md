@@ -270,11 +270,11 @@ Les patterns ci-dessous ont un **nom canonique** et un **composant partagé**. *
 
 **`display-header`** — triplette titre + barre + eyebrow.
 
-Composant : [`<DisplayHeader>`](src/features/game/components/DisplayHeader.tsx). Props `{ title, eyebrow?, as?: 'h1'|'h2'|'h3', size?: 'md'|'lg', centered?: boolean }`. Rend :
+Composant : [`<DisplayHeader>`](src/components/editorial/DisplayHeader.tsx). Props `{ title, eyebrow?, as?: 'h1'|'h2'|'h3', size?: 'md'|'lg', centered?: boolean }`. Rend :
 
 1. Un titre serif italique `font-medium leading-none` (size `md` = `text-2xl`, `lg` = `text-3xl`).
-2. Une [`<AccentBar>`](src/features/game/components/AccentBar.tsx) (`h-1 w-12 bg-brand rounded-full`).
-3. Une [`<Eyebrow>`](src/features/game/components/Eyebrow.tsx) optionnelle en dessous.
+2. Une [`<AccentBar>`](src/components/editorial/AccentBar.tsx) (`h-1 w-12 bg-brand rounded-full`).
+3. Une [`<Eyebrow>`](src/components/editorial/Eyebrow.tsx) optionnelle en dessous.
 
 Exception : quand un `<DialogTitle>` Radix est requis pour l'a11y (cas de `HowToPlayLink`), composer manuellement `DialogTitle + AccentBar` (sans `DisplayHeader`).
 
@@ -293,7 +293,7 @@ Voir §5.1 règle éditoriale n°2. Implémentation : `<span className="text-bra
 
 **`eyebrow`** — les micro-labels all-caps.
 
-Composant : [`<Eyebrow>`](src/features/game/components/Eyebrow.tsx). Props `{ children, as?: 'p'|'span'|'div', className? }`. Rend `text-[10px] tracking-widest uppercase text-on-surface-variant`.
+Composant : [`<Eyebrow>`](src/components/editorial/Eyebrow.tsx). Props `{ children, as?: 'p'|'span'|'div', className? }`. Rend `text-[10px] tracking-widest uppercase text-on-surface-variant`.
 
 Pour la variante « panel header » (section title), passer `className="font-semibold"` — ou utiliser directement [`<PanelHeader>`](src/features/admin/components/PanelHeader.tsx) qui le fait pour toi.
 

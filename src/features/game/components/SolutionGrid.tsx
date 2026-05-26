@@ -15,7 +15,7 @@ import type { Cell, CellKey, RarityTier } from "@/features/game/types";
 import { useLocale } from "@/i18n/LocaleContext";
 import type { Locale } from "@/i18n/types";
 import { cn } from "@/lib/utils";
-import { Eyebrow } from "./Eyebrow";
+import { Eyebrow } from "@/components/editorial/Eyebrow";
 
 const CONSTRAINT_MAP = new Map(CONSTRAINTS.map((c) => [c.id, c]));
 

@@ -2,7 +2,7 @@ import { AppMark } from "@/components/AppMark";
 import { useLocale, useT } from "@/i18n/LocaleContext";
 import { Heart } from "lucide-react";
 import { STARTING_LIVES } from "../logic/constants";
-import { DisplayHeader } from "./DisplayHeader";
+import { DisplayHeader } from "@/components/editorial/DisplayHeader";
 
 type Props = {
   remainingLives: number;

@@ -1,4 +1,4 @@
-import { Eyebrow } from "@/features/game/components/Eyebrow";
+import { Eyebrow } from "@/components/editorial/Eyebrow";
 import { cn } from "@/lib/utils";
 
 type Props = {

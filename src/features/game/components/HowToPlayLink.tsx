@@ -9,7 +9,7 @@ import {
 import { useT } from "@/i18n/LocaleContext";
 import { HelpCircle } from "lucide-react";
 import { useState } from "react";
-import { AccentBar } from "./AccentBar";
+import { AccentBar } from "@/components/editorial/AccentBar";
 
 const STORAGE_KEY = "geodoku.showHowToPlay";
 
