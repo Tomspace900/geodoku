@@ -183,4 +183,92 @@ describe("sanitizePersistedForGrid", () => {
     const p = basePersisted({ startedAt: Number.NaN });
     expect(sanitizePersistedForGrid(p, validAnswers)).toBeNull();
   });
+
+  it("marque les cellules bloquées et reste en playing si des cases empty restent", () => {
+    const cells = { ...emptyCells() };
+    cells["0,0"] = {
+      status: "filled",
+      countryCode: "FRA",
+      rarity: 0.2,
+      rarityTier: "uncommon",
+    };
+    cells["0,1"] = {
+      status: "filled",
+      countryCode: "DEU",
+      rarity: 0.2,
+      rarityTier: "uncommon",
+    };
+    const blockedAnswers = {
+      ...validAnswers,
+      "0,2": ["FRA", "DEU"],
+    };
+    const p = basePersisted({
+      cells,
+      usedCountries: ["FRA", "DEU"],
+      remainingLives: 3,
+      status: "playing",
+    });
+    const out = sanitizePersistedForGrid(p, blockedAnswers);
+    expect(out?.status).toBe("playing");
+    expect(out?.cells["0,2"].status).toBe("blocked");
+    expect(out?.remainingLives).toBe(3);
+    expect(out?.finishedAt).toBeNull();
+  });
+
+  it("canonise une partie incompletable en lost tout en conservant les vies", () => {
+    const cells = { ...emptyCells() };
+    cells["0,0"] = {
+      status: "filled",
+      countryCode: "FRA",
+      rarity: 0.2,
+      rarityTier: "uncommon",
+    };
+    cells["0,1"] = {
+      status: "filled",
+      countryCode: "DEU",
+      rarity: 0.2,
+      rarityTier: "uncommon",
+    };
+    const trapAnswers = {
+      "0,0": ["FRA"],
+      "0,1": ["DEU"],
+      "0,2": ["FRA", "DEU"],
+      "1,0": ["FRA"],
+      "1,1": ["DEU"],
+      "1,2": ["FRA", "DEU"],
+      "2,0": ["FRA"],
+      "2,1": ["DEU"],
+      "2,2": ["FRA", "DEU"],
+    };
+    const p = basePersisted({
+      cells,
+      usedCountries: ["FRA", "DEU"],
+      remainingLives: 3,
+      status: "playing",
+    });
+    const out = sanitizePersistedForGrid(p, trapAnswers);
+    expect(out?.status).toBe("lost");
+    expect(out?.remainingLives).toBe(3);
+    expect(out?.finishedAt).toBe(p.startedAt);
+  });
+
+  it("accepte une cellule blocked sérialisée cohérente", () => {
+    const cells = { ...emptyCells() };
+    cells["0,0"] = {
+      status: "filled",
+      countryCode: "FRA",
+      rarity: 0.2,
+      rarityTier: "uncommon",
+    };
+    cells["0,2"] = { status: "blocked" };
+    const va = { ...validAnswers, "0,2": ["FRA"] };
+    const p = basePersisted({
+      cells,
+      usedCountries: ["FRA"],
+      remainingLives: 3,
+      status: "playing",
+    });
+    const out = sanitizePersistedForGrid(p, va);
+    expect(out?.cells["0,2"].status).toBe("blocked");
+  });
 });

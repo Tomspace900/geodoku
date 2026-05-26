@@ -13,7 +13,8 @@ export type FilledCell = {
 };
 
 export type EmptyCell = { status: "empty" };
-export type Cell = FilledCell | EmptyCell;
+export type BlockedCell = { status: "blocked" };
+export type Cell = FilledCell | EmptyCell | BlockedCell;
 
 export type GameStatus = "playing" | "won" | "lost";
 

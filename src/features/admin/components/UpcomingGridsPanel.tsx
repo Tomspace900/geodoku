@@ -14,6 +14,7 @@ import { useAction, useQuery } from "convex/react";
 import { Calendar, Loader2, Sparkles } from "lucide-react";
 import { useState } from "react";
 import { api } from "../../../../convex/_generated/api";
+import type { Id } from "../../../../convex/_generated/dataModel";
 import { GridPreview } from "./GridPreview";
 
 const UPCOMING_DAYS = 7;
@@ -21,6 +22,18 @@ const UPCOMING_DAYS = 7;
 type Props = { token: string };
 
 type ScheduleStatus = "idle" | "loading" | "error";
+
+type UpcomingDay =
+  | {
+      date: string;
+      kind: "scheduled" | "predicted";
+      rows: string[];
+      cols: string[];
+      difficulty: number;
+      cellDifficulties: number[] | null;
+      candidateId: Id<"gridCandidates"> | null;
+    }
+  | { date: string; kind: "missing" };
 
 function ScheduleButton({
   date,
@@ -65,11 +78,74 @@ function ScheduleButton({
   );
 }
 
+function LazyGridPreview({
+  token,
+  day,
+  isOpen,
+}: {
+  token: string;
+  day: Extract<UpcomingDay, { kind: "scheduled" | "predicted" }>;
+  isOpen: boolean;
+}) {
+  const scheduledDetail = useQuery(
+    api.grids.getScheduledGridPreviewDetail,
+    isOpen && day.kind === "scheduled"
+      ? { adminToken: token, date: day.date }
+      : "skip",
+  );
+  const candidateDetail = useQuery(
+    api.grids.getCandidatePreviewDetail,
+    isOpen && day.kind === "predicted" && day.candidateId
+      ? { adminToken: token, candidateId: day.candidateId }
+      : "skip",
+  );
+
+  if (!isOpen) {
+    return (
+      <p className="text-xs text-on-surface-variant">
+        Ouvrez pour afficher la grille détaillée.
+      </p>
+    );
+  }
+
+  const detail = day.kind === "scheduled" ? scheduledDetail : candidateDetail;
+
+  if (detail === undefined) {
+    return (
+      <p className="text-sm text-on-surface-variant animate-pulse">
+        Chargement de la grille…
+      </p>
+    );
+  }
+
+  if (detail === null) {
+    return (
+      <p className="text-sm text-on-surface-variant">
+        Détail de grille indisponible.
+      </p>
+    );
+  }
+
+  return (
+    <GridPreview
+      cellDifficulties={
+        day.kind === "scheduled"
+          ? day.cellDifficulties
+          : (candidateDetail?.cellDifficulties ?? day.cellDifficulties)
+      }
+      cols={detail.cols}
+      rows={detail.rows}
+      validAnswers={detail.validAnswers}
+    />
+  );
+}
+
 export function UpcomingGridsPanel({ token }: Props) {
   const upcoming = useQuery(api.grids.getUpcomingScheduledPreview, {
     adminToken: token,
     days: UPCOMING_DAYS,
   });
+  const [openDate, setOpenDate] = useState<string | null>(null);
 
   return (
     <section className="rounded-2xl bg-surface-low p-4 md:p-5">
@@ -94,6 +170,8 @@ export function UpcomingGridsPanel({ token }: Props) {
           className="flex w-full flex-col gap-1.5"
           type="single"
           collapsible
+          value={openDate ?? undefined}
+          onValueChange={(value) => setOpenDate(value || null)}
         >
           {upcoming.map((day) => {
             if (day.kind === "missing") {
@@ -124,6 +202,7 @@ export function UpcomingGridsPanel({ token }: Props) {
 
             const allConstraints = [...day.rows, ...day.cols];
             const isScheduled = day.kind === "scheduled";
+            const isOpen = openDate === day.date;
 
             return (
               <AccordionItem
@@ -173,12 +252,7 @@ export function UpcomingGridsPanel({ token }: Props) {
                 </AccordionTrigger>
                 <AccordionContent className="px-4 pb-4">
                   <div className="mx-auto max-w-[700px] overflow-x-auto pb-3">
-                    <GridPreview
-                      cellDifficulties={day.cellDifficulties}
-                      cols={day.cols}
-                      rows={day.rows}
-                      validAnswers={day.validAnswers}
-                    />
+                    <LazyGridPreview token={token} day={day} isOpen={isOpen} />
                   </div>
                   {!isScheduled && (
                     <div className="flex justify-end pt-1">

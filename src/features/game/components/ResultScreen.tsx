@@ -1,11 +1,12 @@
 import { Button } from "@/components/ui/button";
 import { getOrCreateClientId } from "@/features/game/logic/clientId";
-import { SHARE_EMOJIS, STARTING_LIVES } from "@/features/game/logic/constants";
+import { STARTING_LIVES } from "@/features/game/logic/constants";
 import {
   computeGridScore,
   computeOriginalityScore,
 } from "@/features/game/logic/rarity";
 import {
+  cellShareEmoji,
   copyShareToClipboard,
   formatShareString,
 } from "@/features/game/logic/share";
@@ -149,6 +150,13 @@ export function ResultScreen({
             {isWon ? t("ui.magnificent") : t("ui.tooBad")}
           </h2>
           <div className="w-12 h-1 bg-brand rounded-full" />
+          {!isWon && (
+            <p className="text-[10px] tracking-widest uppercase text-on-surface-variant">
+              {state.remainingLives > 0
+                ? t("ui.lostByBlock")
+                : t("ui.lostByLives")}
+            </p>
+          )}
         </div>
 
         <div className="flex flex-col items-center gap-1">
@@ -180,10 +188,7 @@ export function ResultScreen({
             <div key={row} className="flex gap-1">
               {COLS.map((col) => {
                 const cell = state.cells[`${row},${col}` as CellKey];
-                const emoji =
-                  cell.status === "filled"
-                    ? SHARE_EMOJIS[cell.rarityTier]
-                    : SHARE_EMOJIS.failed;
+                const emoji = cellShareEmoji(cell);
                 return (
                   <span
                     key={col}

@@ -148,7 +148,11 @@ export function AdminPage() {
                 />
               </div>
               <div className="col-span-1 h-full md:col-span-3">
-                <GridDetail grid={selectedGrid} selectedDate={selectedDate} />
+                <GridDetail
+                  token={token}
+                  grid={selectedGrid}
+                  selectedDate={selectedDate}
+                />
               </div>
             </div>
           </section>

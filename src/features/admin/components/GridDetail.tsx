@@ -3,24 +3,31 @@ import {
   difficultyTierSurfaceClass,
   formatGridDateHeadingFr,
 } from "@/features/admin/logic/display";
+import { useQuery } from "convex/react";
+import { api } from "../../../../convex/_generated/api";
 import type { PoolGridMetadata } from "../../../../convex/lib/gridConstants";
 import { GridPreview } from "./GridPreview";
 
-type ScheduledGridDetail = {
+type ScheduledGridSummary = {
   date: string;
   difficulty: number;
   rows: string[];
   cols: string[];
-  validAnswers: Record<string, string[]>;
   metadata: PoolGridMetadata | null;
 };
 
 type Props = {
-  grid: ScheduledGridDetail | null;
+  token: string;
+  grid: ScheduledGridSummary | null;
   selectedDate: string | null;
 };
 
-export function GridDetail({ grid, selectedDate }: Props) {
+export function GridDetail({ token, grid, selectedDate }: Props) {
+  const previewDetail = useQuery(
+    api.grids.getScheduledGridPreviewDetail,
+    grid ? { adminToken: token, date: grid.date } : "skip",
+  );
+
   if (!selectedDate) {
     return (
       <div className="flex h-full min-h-[320px] flex-col items-center justify-center gap-2 rounded-xl bg-surface-lowest p-6 shadow-editorial">
@@ -98,12 +105,24 @@ export function GridDetail({ grid, selectedDate }: Props) {
       )}
       <div className="px-4 pb-4">
         <div className="mx-auto w-full max-w-[860px]">
-          <GridPreview
-            rows={grid.rows}
-            cols={grid.cols}
-            validAnswers={grid.validAnswers}
-            cellDifficulties={metadata?.cellDifficulties ?? null}
-          />
+          {previewDetail === undefined && (
+            <p className="text-sm text-on-surface-variant animate-pulse">
+              Chargement de la grille…
+            </p>
+          )}
+          {previewDetail === null && (
+            <p className="text-sm text-on-surface-variant">
+              Détail de grille indisponible.
+            </p>
+          )}
+          {previewDetail && (
+            <GridPreview
+              rows={previewDetail.rows}
+              cols={previewDetail.cols}
+              validAnswers={previewDetail.validAnswers}
+              cellDifficulties={metadata?.cellDifficulties ?? null}
+            />
+          )}
         </div>
       </div>
     </div>

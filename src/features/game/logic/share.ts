@@ -1,6 +1,13 @@
-import type { CellKey, GameState } from "../types";
+import type { Cell, CellKey, GameState } from "../types";
 import { SHARE_EMOJIS, STARTING_LIVES } from "./constants";
 import { computeGridScore, computeOriginalityScore } from "./rarity";
+
+/** Emoji de partage pour une cellule selon son état. */
+export function cellShareEmoji(cell: Cell): string {
+  if (cell.status === "filled") return SHARE_EMOJIS[cell.rarityTier];
+  if (cell.status === "blocked") return SHARE_EMOJIS.blocked;
+  return SHARE_EMOJIS.failed;
+}
 
 /**
  * Chaîne copiée « partage » : format volontairement international, sans texte
@@ -29,10 +36,7 @@ export function formatShareString(
     let line = "";
     for (let j = 0; j < 3; j++) {
       const cell = state.cells[`${i},${j}` as CellKey];
-      line +=
-        cell.status === "filled"
-          ? SHARE_EMOJIS[cell.rarityTier]
-          : SHARE_EMOJIS.failed;
+      line += cellShareEmoji(cell);
     }
     rows.push(line);
   }

@@ -1,5 +1,6 @@
 import { ConvexError, v } from "convex/values";
 import { mutation, query } from "./_generated/server";
+import { getGridAnswers } from "./gridData";
 import { rateLimiter } from "./rateLimit";
 
 const CELL_KEYS = [
@@ -77,8 +78,9 @@ export const submitGuess = mutation({
       .unique();
     if (!grid) throw new Error(`Grid not found for date: ${args.date}`);
 
-    // 2. Verify the guess is a valid answer for this cell
-    const validForCell = grid.validAnswers[args.cellKey];
+    // 2. Verify the guess is a valid answer for this cell (jointure satellite)
+    const validAnswers = await getGridAnswers(ctx, grid);
+    const validForCell = validAnswers?.[args.cellKey];
     if (!validForCell?.includes(args.countryCode)) {
       throw new ConvexError("Invalid guess");
     }

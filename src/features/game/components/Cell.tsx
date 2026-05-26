@@ -2,7 +2,7 @@ import { getCountryByCode } from "@/features/countries/lib/search";
 import type { Cell, CellPosition } from "@/features/game/types";
 import { useLocale } from "@/i18n/LocaleContext";
 import { cn } from "@/lib/utils";
-import { Plus } from "lucide-react";
+import { Plus, X } from "lucide-react";
 import { RarityBadge } from "./RarityBadge";
 
 type Props = {
@@ -30,6 +30,17 @@ export function CellComponent({ cell, position, isDisabled, onClick }: Props) {
           {countryName}
         </span>
         <RarityBadge tier={cell.rarityTier} className="mt-0.5" />
+      </div>
+    );
+  }
+
+  if (cell.status === "blocked") {
+    return (
+      <div
+        className="aspect-square w-full rounded-xl bg-surface-low flex items-center justify-center"
+        aria-label={t("ui.cellBlockedAriaLabel")}
+      >
+        <X size={18} className="text-on-surface-variant/40" strokeWidth={1.5} />
       </div>
     );
   }

@@ -15,6 +15,7 @@ const DELETE_BATCH_SIZE = 512;
 type WipeTable =
   | "grids"
   | "gridCandidates"
+  | "gridAnswers"
   | "guesses"
   | "dailyStats"
   | "gridFeedback";
@@ -22,6 +23,7 @@ type WipeTable =
 const WIPE_TABLES: WipeTable[] = [
   "grids",
   "gridCandidates",
+  "gridAnswers",
   "guesses",
   "dailyStats",
   "gridFeedback",
@@ -32,6 +34,7 @@ export const deleteBatch = internalMutation({
     table: v.union(
       v.literal("grids"),
       v.literal("gridCandidates"),
+      v.literal("gridAnswers"),
       v.literal("guesses"),
       v.literal("dailyStats"),
       v.literal("gridFeedback"),

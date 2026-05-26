@@ -1,4 +1,8 @@
 import type { Cell, CellKey, CellPosition, GameState } from "../types";
+import {
+  markBlockedCells,
+  resolveStatusAfterPlacement,
+} from "./blockedDetection";
 import { STARTING_LIVES } from "./constants";
 import type { ConstraintId } from "./constraints";
 import type { PersistedGame } from "./persistence";
@@ -12,6 +16,7 @@ export type GameAction =
       cell: CellPosition;
       countryCode: string;
       rarity: number;
+      validAnswers: Record<string, string[]>;
     }
   | { type: "guessFailure" }
   | {
@@ -19,6 +24,7 @@ export type GameAction =
       persisted: PersistedGame;
       rows: ConstraintId[];
       cols: ConstraintId[];
+      validAnswers: Record<string, string[]>;
     };
 
 export function createInitialState(
@@ -44,6 +50,26 @@ export function createInitialState(
   };
 }
 
+function cellsAfterSuccessfulGuess(
+  cells: Record<CellKey, Cell>,
+  key: CellKey,
+  countryCode: string,
+  rarity: number,
+  validAnswers: Record<string, string[]>,
+  usedCountries: Set<string>,
+): Record<CellKey, Cell> {
+  const withFill = {
+    ...cells,
+    [key]: {
+      status: "filled" as const,
+      countryCode,
+      rarity,
+      rarityTier: rarityToTier(rarity),
+    },
+  };
+  return markBlockedCells(withFill, validAnswers, usedCountries);
+}
+
 export function gameReducer(state: GameState, action: GameAction): GameState {
   switch (action.type) {
     case "init":
@@ -57,27 +83,25 @@ export function gameReducer(state: GameState, action: GameAction): GameState {
     case "guessSuccess": {
       if (state.status !== "playing") return state;
       const key = `${action.cell.row},${action.cell.col}` as CellKey;
-      const newCells = {
-        ...state.cells,
-        [key]: {
-          status: "filled" as const,
-          countryCode: action.countryCode,
-          rarity: action.rarity,
-          rarityTier: rarityToTier(action.rarity),
-        },
-      };
       const used = new Set(state.usedCountries);
       used.add(action.countryCode);
-      const allFilled = Object.values(newCells).every(
-        (c) => c.status === "filled",
+      const newCells = cellsAfterSuccessfulGuess(
+        state.cells,
+        key,
+        action.countryCode,
+        action.rarity,
+        action.validAnswers,
+        used,
       );
+      const status = resolveStatusAfterPlacement(newCells);
+      const finished = status !== "playing";
       return {
         ...state,
         cells: newCells,
         usedCountries: used,
         selectedCell: null,
-        status: allFilled ? "won" : "playing",
-        finishedAt: allFilled ? Date.now() : null,
+        status,
+        finishedAt: finished ? Date.now() : null,
       };
     }
 
@@ -93,18 +117,33 @@ export function gameReducer(state: GameState, action: GameAction): GameState {
       };
     }
 
-    case "rehydrate":
+    case "rehydrate": {
+      const usedCountries = new Set(action.persisted.usedCountries);
+      let cells = { ...action.persisted.cells };
+      cells = markBlockedCells(cells, action.validAnswers, usedCountries);
+
+      let status = action.persisted.status;
+      if (status === "playing") {
+        status = resolveStatusAfterPlacement(cells);
+      }
+
+      const finishedAt =
+        status === "playing"
+          ? null
+          : (action.persisted.finishedAt ?? action.persisted.startedAt);
+
       return {
         date: action.persisted.date,
         rows: action.rows,
         cols: action.cols,
-        cells: action.persisted.cells,
+        cells,
         remainingLives: action.persisted.remainingLives,
         selectedCell: null,
-        usedCountries: new Set(action.persisted.usedCountries),
-        status: action.persisted.status,
+        usedCountries,
+        status,
         startedAt: action.persisted.startedAt,
-        finishedAt: action.persisted.finishedAt,
+        finishedAt,
       };
+    }
   }
 }

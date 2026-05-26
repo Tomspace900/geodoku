@@ -5,7 +5,9 @@ export default defineSchema({
   gridCandidates: defineTable({
     rows: v.array(v.string()),
     cols: v.array(v.string()),
-    validAnswers: v.record(v.string(), v.array(v.string())),
+    // Pendant la phase widen, validAnswers reste optionnel sur les docs
+    // historiques (backfill -> satellite). À supprimer après narrow.
+    validAnswers: v.optional(v.record(v.string(), v.array(v.string()))),
     metadata: v.object({
       seedConstraint: v.string(),
       constraintIds: v.array(v.string()),
@@ -32,10 +34,21 @@ export default defineSchema({
     date: v.string(), // "YYYY-MM-DD"
     rows: v.array(v.string()),
     cols: v.array(v.string()),
-    validAnswers: v.record(v.string(), v.array(v.string())),
+    // Optionnel pendant widen, retiré au narrow (les answers vivent dans gridAnswers).
+    validAnswers: v.optional(v.record(v.string(), v.array(v.string()))),
+    // Dénormalisé depuis metadata.countryPool pour éviter de lire le satellite
+    // lors des agrégats scheduler/admin. Optionnel pendant widen.
+    countryPool: v.optional(v.array(v.string())),
     difficulty: v.number(),
     candidateId: v.id("gridCandidates"),
   }).index("by_date", ["date"]),
+
+  // Satellite : validAnswers extraits de gridCandidates pour alléger les
+  // lectures en masse (scheduler, admin stats). 1-to-1 avec gridCandidates.
+  gridAnswers: defineTable({
+    candidateId: v.id("gridCandidates"),
+    validAnswers: v.record(v.string(), v.array(v.string())),
+  }).index("by_candidate", ["candidateId"]),
 
   guesses: defineTable({
     date: v.string(),

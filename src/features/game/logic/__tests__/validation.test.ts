@@ -52,6 +52,17 @@ describe("validateGuess", () => {
     expect(result).toEqual({ valid: false, reason: "wrong_col" });
   });
 
+  it("returns wrong_constraints when country satisfies neither constraint", () => {
+    // Zimbabwe is NOT in Europe and is NOT an island
+    const result = validateGuess({
+      rowConstraintId: "continent_europe",
+      colConstraintId: "water_island",
+      country: zimbabwe,
+      usedCountries: new Set(),
+    });
+    expect(result).toEqual({ valid: false, reason: "wrong_constraints" });
+  });
+
   it("returns valid when country satisfies both constraints", () => {
     // Austria IS in Europe AND IS landlocked
     const result = validateGuess({

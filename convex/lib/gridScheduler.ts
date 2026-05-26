@@ -12,7 +12,6 @@ type PoolGrid = {
   _id: string;
   rows: string[];
   cols: string[];
-  validAnswers: Record<string, string[]>;
   metadata: PoolGridMetadata;
 };
 

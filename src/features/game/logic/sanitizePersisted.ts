@@ -1,4 +1,5 @@
 import type { Cell, CellKey, GameStatus } from "../types";
+import { hasEmptyCell, markBlockedCells } from "./blockedDetection";
 import { STARTING_LIVES } from "./constants";
 import type { PersistedGame } from "./persistence";
 import { rarityToTier } from "./rarity";
@@ -46,9 +47,21 @@ function parseEmptyCell(raw: unknown): Cell | null {
   return { status: "empty" };
 }
 
-function canonicalStatus(filledCount: number, lives: number): GameStatus {
+function parseBlockedCell(raw: unknown): Cell | null {
+  if (!raw || typeof raw !== "object") return null;
+  const o = raw as Record<string, unknown>;
+  if (o.status !== "blocked") return null;
+  return { status: "blocked" };
+}
+
+function canonicalStatus(
+  filledCount: number,
+  lives: number,
+  cells: Record<CellKey, Cell>,
+): GameStatus {
   if (filledCount === 9) return "won";
   if (lives <= 0) return "lost";
+  if (!hasEmptyCell(cells)) return "lost";
   return "playing";
 }
 
@@ -57,6 +70,7 @@ function persistedStatusMatchesCanonical(
   canonical: GameStatus,
   filledCount: number,
   lives: number,
+  cells: Record<CellKey, Cell>,
 ): boolean {
   if (canonical === "won") {
     if (persisted === "lost") return false;
@@ -66,9 +80,10 @@ function persistedStatusMatchesCanonical(
   if (canonical === "lost") {
     if (persisted === "won") return false;
     if (persisted === "lost") return true;
-    return persisted === "playing" && lives === 0 && filledCount < 9;
+    if (persisted !== "playing") return false;
+    return lives === 0 || !hasEmptyCell(cells);
   }
-  return persisted === "playing" && lives > 0 && filledCount < 9;
+  return persisted === "playing" && lives > 0 && hasEmptyCell(cells);
 }
 
 /**
@@ -103,6 +118,12 @@ export function sanitizePersistedForGrid(
       (raw as { status?: string }).status === "empty"
     ) {
       cell = parseEmptyCell(raw);
+    } else if (
+      raw &&
+      typeof raw === "object" &&
+      (raw as { status?: string }).status === "blocked"
+    ) {
+      cell = parseBlockedCell(raw);
     } else {
       cell = parseFilledCell(raw, validForCell);
     }
@@ -122,13 +143,26 @@ export function sanitizePersistedForGrid(
     STARTING_LIVES,
   );
 
-  const canonical = canonicalStatus(filledCount, lives);
+  const usedSet = new Set(usedCodes);
+
+  // Rejet : une cellule sérialisée `blocked` doit l'être vraiment d'après usedCountries.
+  // Si elle a encore une réponse valide non utilisée, c'est de la corruption.
+  for (const key of CELL_KEYS) {
+    if (cells[key].status !== "blocked") continue;
+    const answers = validAnswers[key] ?? [];
+    if (answers.some((code) => !usedSet.has(code))) return null;
+  }
+
+  const canonicalCells = markBlockedCells(cells, validAnswers, usedSet);
+  const canonical = canonicalStatus(filledCount, lives, canonicalCells);
+
   if (
     !persistedStatusMatchesCanonical(
       persisted.status,
       canonical,
       filledCount,
       lives,
+      canonicalCells,
     )
   ) {
     return null;
@@ -144,8 +178,8 @@ export function sanitizePersistedForGrid(
   return {
     version: persisted.version,
     date: persisted.date,
-    cells,
-    remainingLives: canonical === "lost" ? 0 : lives,
+    cells: canonicalCells,
+    remainingLives: lives,
     usedCountries: [...new Set(usedCodes)],
     status: canonical,
     startedAt: persisted.startedAt,
