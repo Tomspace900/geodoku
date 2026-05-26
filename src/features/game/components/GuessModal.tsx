@@ -23,6 +23,7 @@ import { useLocale, useT } from "@/i18n/LocaleContext";
 import type { TKey } from "@/i18n/types";
 import { cn } from "@/lib/utils";
 import { useEffect, useRef, useState } from "react";
+import { Eyebrow } from "@/components/editorial/Eyebrow";
 
 const CONSTRAINT_MAP = new Map(CONSTRAINTS.map((c) => [c.id, c]));
 
@@ -162,7 +163,7 @@ export function GuessModal({
         </DrawerHeader>
 
         {errorMsg && (
-          <div className="mx-4 mb-2 px-3 py-2 bg-rarity-ultra/10 text-rarity-ultra text-sm rounded-lg">
+          <div className="mx-4 mb-2 px-3 py-2 bg-error/10 text-error text-sm rounded-lg">
             {errorMsg}
           </div>
         )}
@@ -227,9 +228,9 @@ export function GuessModal({
                       {country.names[locale]}
                     </span>
                     {alreadyUsed && (
-                      <span className="shrink-0 text-[10px] tracking-widest text-on-surface-variant uppercase">
+                      <Eyebrow as="span" className="shrink-0">
                         {t("ui.searchResultUsed")}
-                      </span>
+                      </Eyebrow>
                     )}
                   </CommandItem>
                 );

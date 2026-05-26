@@ -59,7 +59,7 @@ describe("translate", () => {
     const result = translate("fr", "achievement.eliteCollectorDesc", {
       country: "Bhoutan",
     });
-    expect(result).toBe("Vous avez trouvé Bhoutan, un pays ultra-rare.");
+    expect(result).toBe("Tu as trouvé Bhoutan, un pays ultra-rare.");
   });
 
   it("handles count interpolation for globe trotter", () => {

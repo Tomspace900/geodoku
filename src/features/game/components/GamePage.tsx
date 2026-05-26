@@ -1,4 +1,5 @@
 import AppFooter from "@/app/AppFooter";
+import { Button } from "@/components/ui/button";
 import { ErrorScreen } from "@/features/errors/components/ErrorScreen";
 import { useBackendDownTimeout } from "@/features/errors/hooks/useBackendDownTimeout";
 import { useGameState } from "@/features/game/hooks/useGameState";
@@ -118,13 +119,14 @@ export function GamePage() {
                 cells={state.cells}
               />
               {resultModalDismissed && (
-                <button
+                <Button
                   type="button"
+                  variant="link"
                   onClick={() => setResultModalDismissed(false)}
-                  className="w-full text-center text-xs text-on-surface-variant underline underline-offset-2 decoration-outline-variant/40 hover:text-on-surface"
+                  className="w-full justify-center text-xs"
                 >
                   {t("ui.viewMyResult")}
-                </button>
+                </Button>
               )}
             </div>
           ) : (

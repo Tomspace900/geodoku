@@ -11,11 +11,15 @@ import {
   formatGridDateHeadingFr,
 } from "@/features/admin/logic/display";
 import { useAction, useQuery } from "convex/react";
-import { Calendar, Loader2, Sparkles } from "lucide-react";
+import { Loader2 } from "lucide-react";
 import { useState } from "react";
 import { api } from "../../../../convex/_generated/api";
 import type { Id } from "../../../../convex/_generated/dataModel";
 import { GridPreview } from "./GridPreview";
+import { PanelCard } from "./PanelCard";
+import { PanelHeader } from "./PanelHeader";
+import { StatusPill } from "./StatusPill";
+import { TagPill } from "./TagPill";
 
 const UPCOMING_DAYS = 7;
 
@@ -64,13 +68,12 @@ function ScheduleButton({
         onClick={handleClick}
         disabled={status === "loading"}
         size="sm"
-        className="bg-on-surface text-surface-lowest hover:bg-on-surface/90 gap-2"
       >
         {status === "loading" && <Loader2 className="h-3 w-3 animate-spin" />}
         {status === "loading" ? "Planification…" : label}
       </Button>
       {status === "error" && (
-        <p className="text-[10px] text-rarity-ultra">
+        <p className="text-[10px] text-error">
           Erreur lors de la planification.
         </p>
       )}
@@ -148,12 +151,8 @@ export function UpcomingGridsPanel({ token }: Props) {
   const [openDate, setOpenDate] = useState<string | null>(null);
 
   return (
-    <section className="rounded-2xl bg-surface-low p-4 md:p-5">
-      <div className="mb-3 flex flex-wrap items-center gap-3">
-        <p className="text-[10px] font-semibold text-on-surface-variant tracking-widest uppercase">
-          Prochaines grilles ({UPCOMING_DAYS} jours)
-        </p>
-      </div>
+    <PanelCard>
+      <PanelHeader title={`Prochaines grilles (${UPCOMING_DAYS} jours)`} />
 
       {upcoming === undefined && (
         <p className="text-sm text-on-surface-variant">Chargement…</p>
@@ -170,14 +169,14 @@ export function UpcomingGridsPanel({ token }: Props) {
           className="flex w-full flex-col gap-1.5"
           type="single"
           collapsible
-          value={openDate ?? undefined}
+          value={openDate ?? ""}
           onValueChange={(value) => setOpenDate(value || null)}
         >
           {upcoming.map((day) => {
             if (day.kind === "missing") {
               return (
                 <AccordionItem
-                  className="rounded-xl bg-rarity-ultra/10 px-4 py-4"
+                  className="rounded-xl bg-error/10 px-4 py-4"
                   key={day.date}
                   value={day.date}
                 >
@@ -186,7 +185,7 @@ export function UpcomingGridsPanel({ token }: Props) {
                       <h3 className="font-serif text-xl font-medium capitalize text-on-surface">
                         {formatGridDateHeadingFr(day.date)}
                       </h3>
-                      <p className="text-sm font-medium text-rarity-ultra">
+                      <p className="text-sm font-medium text-error">
                         Pool vide — fallback d'urgence à la génération
                       </p>
                     </div>
@@ -218,15 +217,9 @@ export function UpcomingGridsPanel({ token }: Props) {
                           {formatGridDateHeadingFr(day.date)}
                         </h3>
                         {isScheduled ? (
-                          <span className="inline-flex items-center gap-1 rounded-full bg-surface-highest px-2 py-0.5 text-[10px] font-medium text-on-surface-variant">
-                            <Calendar className="h-3 w-3 shrink-0" />
-                            programmée
-                          </span>
+                          <StatusPill kind="scheduled">programmée</StatusPill>
                         ) : (
-                          <span className="inline-flex items-center gap-1 rounded-full bg-brand/10 px-2 py-0.5 text-[10px] font-medium text-brand">
-                            <Sparkles className="h-3 w-3 shrink-0" />
-                            prédite
-                          </span>
+                          <StatusPill kind="predicted">prédite</StatusPill>
                         )}
                       </div>
                       <div className="flex flex-wrap items-center gap-2">
@@ -240,12 +233,9 @@ export function UpcomingGridsPanel({ token }: Props) {
                     </div>
                     <div className="flex flex-wrap gap-1">
                       {allConstraints.map((id) => (
-                        <span
-                          className="rounded-full bg-surface-low px-2 py-0.5 text-[10px] text-on-surface-variant"
-                          key={`${day.date}-${id}`}
-                        >
+                        <TagPill key={`${day.date}-${id}`}>
                           {constraintLabel(id)}
-                        </span>
+                        </TagPill>
                       ))}
                     </div>
                   </div>
@@ -269,6 +259,6 @@ export function UpcomingGridsPanel({ token }: Props) {
           })}
         </Accordion>
       )}
-    </section>
+    </PanelCard>
   );
 }

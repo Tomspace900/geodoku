@@ -177,6 +177,18 @@ Inspiration : publications digitales haut de gamme type NYT Games. Spacieux, sop
 
 Les tokens `brand` et `rarity.*` sont **sémantiquement distincts** : `brand` est l'identité éditoriale (accent de marque), `rarity.*` qualifient la rareté fonctionnelle d'une cellule. Ne pas utiliser `rarity.*` pour du branding ou inversement.
 
+**Tokens sémantiques additionnels.**
+
+| Token     | Hex (light) | Usage                                                                                  |
+| --------- | ----------- | -------------------------------------------------------------------------------------- |
+| `success` | `#16a34a`   | Indicateur positif — tier « easy » de difficulté, confirmations de validation. |
+| `warning` | `#d97706`   | Alerte douce — tier « medium » de difficulté, highlight d'une contrainte trop fréquente (`ExposureBar`), écart > 20 dans les métriques. |
+| `error`   | `#dc2626`   | Erreur ou état bloquant — tier « hard » de difficulté, alertes « pool vide / grille manquante », message d'erreur dans `GuessModal`. |
+
+Règle d'application : background à 10–15% opacity, texte à 100% (même convention que `rarity.*`).
+
+Note : `warning` et `error` partagent visuellement les valeurs HSL avec `rarity-rare`/`rarity-ultra` mais sont **sémantiquement distincts** — `warning`/`error` qualifient des états applicatifs, `rarity-*` qualifient la rareté fonctionnelle d'une cellule. Garder la distinction pour pouvoir diverger les teintes plus tard si besoin.
+
 **Rarity tiers (couleurs fonctionnelles).**
 
 Les couleurs UI sont **volontairement alignées** sur les émojis de partage Wordle pour que le joueur retrouve instinctivement les mêmes codes visuels en jeu et en partage.
@@ -195,11 +207,15 @@ Les couleurs UI sont **volontairement alignées** sur les émojis de partage Wor
 **Interdictions absolues.**
 
 - ❌ Pas de `border: 1px solid` pour sectionner. On délimite par shift de background.
-- ❌ Pas de noir pur `#000`. Toujours `on-surface` (`#2d3435`).
-- ❌ Pas de blanc pur dans les backgrounds principaux (`#ffffff` est réservé aux cellules remplies et cartes flottantes).
-- ❌ Pas d'ombres lourdes. L'ombre d'élévation unique autorisée est `0 20px 40px rgba(45, 52, 53, 0.06)` (classe `shadow-editorial`).
+- ❌ Pas de noir pur `#000`. Toujours `on-surface` (`#2d3435`). Y compris pour les voiles de modales : `bg-on-surface/40`, jamais `bg-black/*`.
+- ❌ Pas de blanc pur dans les backgrounds principaux (`#ffffff` est réservé aux cellules remplies, cartes flottantes, et glassmorphism `bg-white/80 backdrop-blur-md`).
+- ❌ Pas de `text-white` hors variant `default` du `<Button>` (où il vient via `text-surface-lowest`).
+- ❌ Pas d'ombres lourdes. L'ombre d'élévation unique autorisée est `0 20px 40px rgba(45, 52, 53, 0.06)` (classe `shadow-editorial`). Donc pas de `shadow-sm|md|lg|xl|2xl`, pas de `drop-shadow-*`.
 - ❌ Pas d'icônes en navigation sans label texte associé.
-- ❌ Pas de borders à 100% opacity. Si un séparateur est vraiment nécessaire pour l'accessibilité, `outline-variant` à 15% opacity max.
+- ❌ Pas de borders à 100% opacity. Si un séparateur est vraiment nécessaire pour l'accessibilité, `outline-variant` à 15% opacity max. Pour marquer une sélection (highlight), utiliser `ring-1 ring-inset ring-<token>` plutôt que `border-1` (n'affecte pas le layout).
+- ❌ **Pas de `<button>` HTML natif avec classes Tailwind** — toujours `<Button variant="...">`. Exceptions tolérées : bouton-case de grille de jeu, icon-button de fermeture modale (sans label texte).
+- ❌ **Pas de palette Tailwind native** (`text-gray-*`, `bg-slate-*`, `text-zinc-*`, `bg-amber-*`, etc.). Utiliser les tokens Geodoku (`surface-*`, `on-surface`, `brand`, `rarity.*`, `success`, `warning`, `error`).
+- ❌ **Pas de tokens shadcn parasites** (`muted-foreground`, `accent-foreground`, `border-input`, `ring-ring`, `ring-offset-background`, `bg-primary`, `bg-accent`, `destructive`, etc.). Tous les composants `src/components/ui/*` (button, dialog, drawer, input, checkbox, accordion, calendar, command) ont été refondus aux tokens Geodoku après installation via la CLI shadcn. Les définitions shadcn par défaut (`--primary`, `--accent`, `--ring`, etc.) ont été supprimées de [src/index.css](src/index.css) et [tailwind.config.ts](tailwind.config.ts) — toute réintroduction est un bug.
 
 **Principes positifs.**
 
@@ -211,11 +227,17 @@ Les couleurs UI sont **volontairement alignées** sur les émojis de partage Wor
 
 ### 5.4 Composants récurrents
 
-**Boutons.**
+**Boutons.** Toujours `<Button variant="...">` depuis [`src/components/ui/button.tsx`](src/components/ui/button.tsx). Cinq variants couvrent l'intégralité des usages — toute classe `bg-*`/`text-*`/`border-*` ajoutée par-dessus est un *code smell* (vérifier d'abord si un variant existant matche).
 
-- **Primary** : `bg-on-surface text-white rounded-md`. Hover : légère opacity. Pas d'ombre.
-- **Secondary** : `bg-surface-highest text-on-surface rounded-md`. Hover : shift d'un tier (`surface-highest` → plus foncé, à définir au cas par cas).
-- **Ghost** : pas de background. Label en ALL CAPS, taille `label-md`, `text-on-surface-variant`. Hover : underline subtil.
+| Variant | Apparence | Quand l'utiliser |
+| --- | --- | --- |
+| `default` (= primary) | `bg-on-surface text-surface-lowest rounded-md`, hover `bg-on-surface/90` | CTA principal d'une vue (ex. « Recommencer », « Confirmer ») |
+| `secondary` | `bg-surface-highest text-on-surface rounded-md`, hover `bg-surface-highest/70` | Action secondaire à côté du primary (ex. « Annuler », « Voir la solution ») |
+| `ghost` | Pas de bg, `text-on-surface-variant` hover `text-on-surface` | Bouton tertiaire « quiet » à texte lisible (ex. « Comment jouer », « FR / EN ») |
+| `ghost-label` | `text-[10px] font-semibold tracking-widest uppercase text-on-surface-variant`, hover `text-on-surface` | Action discrète façon eyebrow ALL CAPS (ex. « Déconnexion ») |
+| `link` | `underline decoration-outline-variant/40 text-on-surface-variant`, hover `text-on-surface` | Lien texte inline (ex. « Skip feedback », « Voir mon résultat ») |
+
+Sizes : `default` (h-10), `sm` (h-9), `lg` (h-11), `icon` (h-10 w-10), `auto` (h-auto p-0). Les variants `ghost-label` et `link` forcent `auto` par défaut via `compoundVariants`.
 
 **Inputs.**
 
@@ -244,17 +266,17 @@ Les couleurs UI sont **volontairement alignées** sur les émojis de partage Wor
 
 ### 5.5 Patterns éditoriaux nommés
 
-Les patterns ci-dessous ont un **nom canonique**. La référence visuelle pour tous est `src/features/game/components/ResultScreen.tsx`. Avant d'en composer un à la main, relire ce fichier.
+Les patterns ci-dessous ont un **nom canonique** et un **composant partagé**. **Avant d'en composer un à la main, importer le composant correspondant.** La référence visuelle reste `src/features/game/components/ResultScreen.tsx` pour les patterns inline.
 
 **`display-header`** — triplette titre + barre + eyebrow.
 
-Trois éléments superposés, empilés verticalement, centrés (ou légèrement off-center pour les écrans de contenu) :
+Composant : [`<DisplayHeader>`](src/components/editorial/DisplayHeader.tsx). Props `{ title, eyebrow?, as?: 'h1'|'h2'|'h3', size?: 'md'|'lg', centered?: boolean }`. Rend :
 
-1. Un titre serif italique (`font-serif italic font-medium`), taille `text-3xl` (header de modale) à `text-5xl` (hero de page).
-2. Une barre d'accent `w-12 h-1 bg-brand rounded-full`. Pas plus large, pas plus épaisse — la discrétion est le point.
-3. Un eyebrow label : `text-[10px] tracking-widest text-on-surface-variant uppercase`, en dessous de la barre (pas au-dessus du titre comme les kickers de presse classique — ici l'eyebrow est une **légende**, pas une introduction).
+1. Un titre serif italique `font-medium leading-none` (size `md` = `text-2xl`, `lg` = `text-3xl`).
+2. Une [`<AccentBar>`](src/components/editorial/AccentBar.tsx) (`h-1 w-12 bg-brand rounded-full`).
+3. Une [`<Eyebrow>`](src/components/editorial/Eyebrow.tsx) optionnelle en dessous.
 
-Exemple de référence : `ResultScreen.tsx` ll. 47-55.
+Exception : quand un `<DialogTitle>` Radix est requis pour l'a11y (cas de `HowToPlayLink`), composer manuellement `DialogTitle + AccentBar` (sans `DisplayHeader`).
 
 **`hero-number`** — un chiffre ou un score mis en évidence.
 
@@ -263,7 +285,7 @@ Exemple de référence : `ResultScreen.tsx` ll. 47-55.
 - Accompagné obligatoirement d'une ligne de caption juste en dessous : `text-xs text-on-surface-variant`, décrivant ce que le chiffre mesure.
 - Jamais deux `hero-number` dans la même vue. Si deux chiffres se disputent l'attention, l'un doit être un `hero-number` et l'autre en body.
 
-Exemple de référence : `ResultScreen.tsx` ll. 58-65.
+Reste inline (1 seule occurrence dans `ResultScreen.tsx` aujourd'hui). Si une 2e apparaît, extraire en `<HeroNumber>`.
 
 **`accent-word`** — un mot en violet dans une phrase.
 
@@ -271,9 +293,34 @@ Voir §5.1 règle éditoriale n°2. Implémentation : `<span className="text-bra
 
 **`eyebrow`** — les micro-labels all-caps.
 
-- `text-[10px] tracking-widest uppercase text-on-surface-variant`.
-- Toujours associés à un élément serif au-dessus ou en dessous (jamais seuls). Leur rôle est de légender un bloc, pas de titrer.
-- En alternative plus grande : `label-md` (voir §5.6).
+Composant : [`<Eyebrow>`](src/components/editorial/Eyebrow.tsx). Props `{ children, as?: 'p'|'span'|'div', className? }`. Rend `text-[10px] tracking-widest uppercase text-on-surface-variant`.
+
+Pour la variante « panel header » (section title), passer `className="font-semibold"` — ou utiliser directement [`<PanelHeader>`](src/features/admin/components/PanelHeader.tsx) qui le fait pour toi.
+
+### 5.5.1 Composants partagés admin
+
+Les panels admin ont leurs propres composants atomiques. **Avant de composer un panel à la main, importer ces composants.**
+
+| Composant | Usage |
+| --- | --- |
+| [`<PanelCard>`](src/features/admin/components/PanelCard.tsx) | `<section className="rounded-lg bg-surface-low p-4 md:p-5">` — wrapper de tous les panels admin |
+| [`<PanelHeader>`](src/features/admin/components/PanelHeader.tsx) | Titre eyebrow + slot `children` pour badges/actions |
+| [`<StatBlock>`](src/features/admin/components/StatBlock.tsx) | Chiffre hero + label eyebrow (KPIs) |
+| [`<DifficultyPill>`](src/features/admin/components/DifficultyPill.tsx) | Pill 0-100 par tier de difficulté (`value` numérique ou `tier+children`) |
+| [`<StatusPill>`](src/features/admin/components/StatusPill.tsx) | `scheduled` (gris, icône Calendar) / `predicted` (brand, icône Sparkles) |
+| [`<TagPill>`](src/features/admin/components/TagPill.tsx) | Pill neutre pour contrainte/catégorie (`bg-surface-low text-on-surface-variant`) |
+| [`<ExposureBar>`](src/features/admin/components/ExposureBar.tsx) | Ligne « label + barre passé + chiffre + barre futur » (graphes du PoolOverviewPanel) |
+
+### 5.5.2 Convention `rounded-*`
+
+| Classe | Usage |
+| --- | --- |
+| `rounded-md` | Boutons (matché par le variant `default`/`secondary` du `<Button>`) |
+| `rounded-lg` | Cartes / panels de section (matché par `<PanelCard>`) |
+| `rounded-full` | Badges, pills (matché par `<DifficultyPill>`, `<StatusPill>`, `<TagPill>`, `<RarityBadge>`) |
+| `rounded-xl` | **Cellules interactives, surfaces flottantes et dialogs** — cellules de grille de jeu (`Cell`), mini-cellules de preview (`GridPreview`), cartes flottantes en `shadow-editorial` (`GridDetail`, `ScheduleCalendar`, `AchievementCard`), `DialogContent`, `ResultScreen` desktop. Convention spécifique à Geodoku : `rounded-xl` (12px) donne une « softness » d'interactivité qu'on ne veut pas sur les sections plates. |
+| `rounded-t-2xl` | **Drawer mobile** uniquement (cf. shadcn Drawer, ResultScreen bottom-up). Pas de `rounded-2xl` complet. |
+| `rounded-3xl` et plus | **Interdit.** |
 
 ### 5.6 Typographie suggérée (classes Tailwind)
 
@@ -290,6 +337,10 @@ caption       → font-sans text-xs text-on-surface-variant
 ```
 
 Ces classes ne sont pas toutes définies dans Tailwind, elles servent de vocabulaire partagé pour discuter du design. À utiliser comme guide, pas comme API.
+
+### 5.7 Vérification automatique : `/verify-design-system`
+
+Le skill [`/verify-design-system`](.claude/skills/verify-design-system/SKILL.md) audite le code à la recherche des violations §5.3 (couleurs interdites, tokens shadcn parasites, shadows non-editorial, bordures dures, rounded non conformes, `<button>` HTML natifs, patterns dupliqués). À lancer **après chaque feature qui touche au visuel**, avant ouverture de PR. Aucun fix automatique — un rapport actionnable `file:line` par catégorie.
 
 ## 6. Backend Convex — ce qu'il faut savoir
 

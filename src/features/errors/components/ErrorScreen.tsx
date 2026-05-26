@@ -1,4 +1,5 @@
 import { Button } from "@/components/ui/button";
+import { DisplayHeader } from "@/components/editorial/DisplayHeader";
 import { useT } from "@/i18n/LocaleContext";
 import type { TKey } from "@/i18n/types";
 
@@ -73,27 +74,20 @@ export function ErrorScreen(props: ErrorScreenProps) {
       aria-live="polite"
       className="flex flex-col items-center justify-center py-12 text-center gap-5"
     >
-      <div className="flex flex-col items-center gap-2">
-        <h2 className="font-serif text-3xl italic text-on-surface">
-          {t(content.title)}
-        </h2>
-        <div className="h-1 w-12 rounded-full bg-brand" />
-        <p className="mt-1 text-[10px] uppercase tracking-widest text-on-surface-variant">
-          {t(content.eyebrow)}
-        </p>
-      </div>
+      <DisplayHeader
+        as="h2"
+        size="lg"
+        centered
+        title={t(content.title)}
+        eyebrow={t(content.eyebrow)}
+      />
       <p className="max-w-[360px] text-sm leading-relaxed text-on-surface-variant">
         {t(content.bodyPre)}{" "}
         <span className="font-medium text-brand">{t(content.bodyAccent)}</span>
         {joinPost(t(content.bodyPost))}
       </p>
       {content.cta ? (
-        <Button
-          type="button"
-          onClick={handleCta}
-          size="lg"
-          className="bg-on-surface text-surface-lowest hover:bg-on-surface/90"
-        >
+        <Button type="button" onClick={handleCta} size="lg">
           {t(content.cta)}
         </Button>
       ) : null}

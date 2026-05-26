@@ -40,15 +40,15 @@ export function difficultyTierFromScore(d: number): DifficultyTier {
 }
 
 const TIER_SURFACE_TEXT: Record<DifficultyTier, string> = {
-  easy: "bg-green-600/15 text-green-600",
-  medium: "bg-rarity-rare/15 text-rarity-rare",
-  hard: "bg-rarity-ultra/15 text-rarity-ultra",
+  easy: "bg-success/15 text-success",
+  medium: "bg-warning/15 text-warning",
+  hard: "bg-error/15 text-error",
 };
 
 const TIER_SOLID_BG: Record<DifficultyTier, string> = {
-  easy: "bg-green-600",
-  medium: "bg-rarity-rare",
-  hard: "bg-rarity-ultra",
+  easy: "bg-success",
+  medium: "bg-warning",
+  hard: "bg-error",
 };
 
 /** Pastille avec fond léger + texte (scores dans la grille preview). */
