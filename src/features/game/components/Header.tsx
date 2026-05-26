@@ -14,7 +14,7 @@ export function Header({ remainingLives, date, gridNumber }: Props) {
   const { locale } = useLocale();
   const t = useT();
 
-  const localeTag = locale === "fr" ? "fr-FR" : "en-GB";
+  const localeTag = locale === "fr" ? "fr-FR" : "en-US";
   const dateLabel = date
     ? new Intl.DateTimeFormat(localeTag, {
         weekday: "long",
@@ -23,6 +23,7 @@ export function Header({ remainingLives, date, gridNumber }: Props) {
       })
         .format(new Date(`${date}T12:00:00`))
         .toUpperCase()
+        .replace(/,\s*/g, " ")
     : "";
 
   const eyebrow = dateLabel ? (
