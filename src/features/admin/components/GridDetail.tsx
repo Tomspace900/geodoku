@@ -1,12 +1,13 @@
 import {
   difficultyStars,
-  difficultyTierSurfaceClass,
   formatGridDateHeadingFr,
 } from "@/features/admin/logic/display";
 import { useQuery } from "convex/react";
 import { api } from "../../../../convex/_generated/api";
 import type { PoolGridMetadata } from "../../../../convex/lib/gridConstants";
+import { DifficultyPill } from "./DifficultyPill";
 import { GridPreview } from "./GridPreview";
+import { TagPill } from "./TagPill";
 
 type ScheduledGridSummary = {
   date: string;
@@ -77,28 +78,17 @@ export function GridDetail({ token, grid, selectedDate }: Props) {
       {metadata && (
         <div className="px-4 pb-3 space-y-2">
           <div className="flex flex-wrap gap-1">
-            <span
-              className={`rounded-full px-2 py-0.5 text-[10px] font-medium ${difficultyTierSurfaceClass("easy")}`}
-            >
+            <DifficultyPill tier="easy">
               {metadata.difficultyTags.easy} faciles
-            </span>
-            <span
-              className={`rounded-full px-2 py-0.5 text-[10px] font-medium ${difficultyTierSurfaceClass("medium")}`}
-            >
+            </DifficultyPill>
+            <DifficultyPill tier="medium">
               {metadata.difficultyTags.medium} moyennes
-            </span>
-            <span
-              className={`rounded-full px-2 py-0.5 text-[10px] font-medium ${difficultyTierSurfaceClass("hard")}`}
-            >
+            </DifficultyPill>
+            <DifficultyPill tier="hard">
               {metadata.difficultyTags.hard} difficiles
-            </span>
+            </DifficultyPill>
             {metadata.categories.map((cat) => (
-              <span
-                key={cat}
-                className="rounded-full bg-surface-low px-2 py-0.5 text-[10px] text-on-surface-variant"
-              >
-                {cat}
-              </span>
+              <TagPill key={cat}>{cat}</TagPill>
             ))}
           </div>
         </div>

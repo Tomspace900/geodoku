@@ -1,4 +1,6 @@
-import { difficultyPillClass } from "@/features/admin/logic/display";
+import { DifficultyPill } from "./DifficultyPill";
+import { PanelCard } from "./PanelCard";
+import { PanelHeader } from "./PanelHeader";
 
 type FeedbackRow = {
   date: string;
@@ -17,16 +19,6 @@ type Props = {
   scheduledGrids: ScheduledGrid[];
 };
 
-function DiffPill({ value }: { value: number }) {
-  return (
-    <span
-      className={`inline-block rounded-full px-2 py-0.5 text-[10px] font-medium ${difficultyPillClass(value)}`}
-    >
-      {value}
-    </span>
-  );
-}
-
 export function DiversityMetricsPanel({
   feedbackStats,
   scheduledGrids,
@@ -36,10 +28,8 @@ export function DiversityMetricsPanel({
   );
 
   return (
-    <section className="rounded-2xl bg-surface-low p-4 md:p-5">
-      <p className="mb-4 text-[10px] font-semibold text-on-surface-variant tracking-widest uppercase">
-        Métriques observées
-      </p>
+    <PanelCard>
+      <PanelHeader title="Métriques observées" className="mb-4" />
 
       {feedbackStats === undefined && (
         <p className="text-sm text-on-surface-variant">Chargement…</p>
@@ -90,14 +80,14 @@ export function DiversityMetricsPanel({
                     </td>
                     <td className="py-1.5 pr-4 text-center">
                       {row.difficultyObserved100 !== null ? (
-                        <DiffPill value={row.difficultyObserved100} />
+                        <DifficultyPill value={row.difficultyObserved100} />
                       ) : (
                         <span className="text-on-surface-variant">—</span>
                       )}
                     </td>
                     <td className="py-1.5 pr-4 text-center">
                       {estimated !== null ? (
-                        <DiffPill value={estimated} />
+                        <DifficultyPill value={estimated} />
                       ) : (
                         <span className="text-on-surface-variant">—</span>
                       )}
@@ -107,7 +97,7 @@ export function DiversityMetricsPanel({
                         <span
                           className={
                             delta > 20
-                              ? "text-rarity-ultra font-medium"
+                              ? "text-error font-medium"
                               : "text-on-surface-variant"
                           }
                         >
@@ -124,6 +114,6 @@ export function DiversityMetricsPanel({
           </table>
         </div>
       )}
-    </section>
+    </PanelCard>
   );
 }

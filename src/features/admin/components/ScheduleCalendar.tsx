@@ -4,6 +4,7 @@ import { cn } from "@/lib/utils";
 import type { DayButton } from "react-day-picker";
 import { difficultySolidDotClass } from "../logic/display";
 import { dateToStr, strToCalendarDate } from "../logic/scheduling";
+import { PanelHeader } from "./PanelHeader";
 
 type ScheduledGrid = {
   date: string;
@@ -67,9 +68,7 @@ export function ScheduleCalendar({
 
   return (
     <div className="bg-surface-lowest rounded-xl p-4 shadow-editorial w-full h-full">
-      <p className="text-[10px] font-semibold text-on-surface-variant tracking-widest uppercase mb-3">
-        Calendrier de planification
-      </p>
+      <PanelHeader title="Calendrier de planification" />
       <Calendar
         mode="single"
         selected={selected}

@@ -14,6 +14,10 @@ import { AlertTriangle, CheckCircle, Loader2 } from "lucide-react";
 import { useState } from "react";
 import { api } from "../../../../convex/_generated/api";
 import type { GenerationReport } from "../../../../convex/lib/gridConstants";
+import { ExposureBar } from "./ExposureBar";
+import { PanelCard } from "./PanelCard";
+import { PanelHeader } from "./PanelHeader";
+import { StatBlock } from "./StatBlock";
 
 function getCountryLabel(code: string): string {
   const country = getCountryByCode(code);
@@ -22,23 +26,6 @@ function getCountryLabel(code: string): string {
 }
 
 const EXPOSURE_LIST_LIMIT = 15;
-
-type Stat = { label: string; value: number | string; accent?: boolean };
-
-function StatBlock({ label, value, accent }: Stat) {
-  return (
-    <div className="flex flex-col items-center gap-1">
-      <span
-        className={`font-serif text-3xl font-medium leading-none ${accent ? "text-brand" : "text-on-surface"}`}
-      >
-        {value}
-      </span>
-      <span className="text-[10px] tracking-widest uppercase text-on-surface-variant">
-        {label}
-      </span>
-    </div>
-  );
-}
 
 type ExposureRow = { label: string; pastCount: number; upcomingCount: number };
 
@@ -56,9 +43,7 @@ function ExposureList({
   if (rows.length === 0 || pastGridCount === 0) {
     return (
       <div>
-        <p className="mb-2 text-[10px] font-semibold text-on-surface-variant tracking-widest uppercase">
-          {title}
-        </p>
+        <PanelHeader title={title} className="mb-2" />
         <p className="text-xs text-on-surface-variant">
           Aucune donnée historique.
         </p>
@@ -80,9 +65,7 @@ function ExposureList({
 
   return (
     <div className="min-w-0">
-      <p className="mb-2 text-[10px] font-semibold text-on-surface-variant tracking-widest uppercase">
-        {title}
-      </p>
+      <PanelHeader title={title} className="mb-2" />
       <div className="mb-1.5 flex items-center gap-2">
         <span className="w-28 shrink-0" />
         <span className="flex-1 text-center text-[9px] uppercase tracking-widest text-on-surface-variant/60">
@@ -106,46 +89,16 @@ function ExposureList({
             upcomingGridCount > 0 && upcomingCount > 0
               ? Math.max(2, Math.round((upcomingRate / globalMax) * 100))
               : 0;
-          const isHighPast = pastRate >= 1 / 3;
-
           return (
-            <li key={label} className="flex items-center gap-2 min-w-0">
-              <span className="w-28 shrink-0 truncate text-[10px] text-on-surface">
-                {label}
-              </span>
-              <div className="flex flex-1 items-center gap-1">
-                <div className="relative h-1.5 flex-1 overflow-hidden rounded-full bg-surface-highest">
-                  <span
-                    aria-hidden="true"
-                    className="absolute inset-y-0 left-0 rounded-full bg-on-surface-variant/50 transition-all"
-                    style={{ width: `${pastPct}%` }}
-                  />
-                </div>
-                <span
-                  className={`w-5 shrink-0 text-right text-[10px] tabular-nums ${
-                    isHighPast
-                      ? "font-semibold text-rarity-rare"
-                      : "text-on-surface-variant"
-                  }`}
-                >
-                  {pastCount}
-                </span>
-              </div>
-              <div className="flex flex-1 items-center gap-1">
-                <div className="relative h-1.5 flex-1 overflow-hidden rounded-full bg-surface-highest">
-                  <span
-                    aria-hidden="true"
-                    className={`absolute inset-y-0 left-0 rounded-full transition-all ${
-                      upcomingPct > 0 ? "bg-brand/60" : ""
-                    }`}
-                    style={{ width: `${upcomingPct}%` }}
-                  />
-                </div>
-                <span className="w-5 shrink-0 text-right text-[10px] tabular-nums text-on-surface-variant">
-                  {upcomingCount}
-                </span>
-              </div>
-            </li>
+            <ExposureBar
+              key={label}
+              label={label}
+              pastCount={pastCount}
+              upcomingCount={upcomingCount}
+              pastPct={pastPct}
+              upcomingPct={upcomingPct}
+              pastHighlighted={pastRate >= 1 / 3}
+            />
           );
         })}
       </ul>
@@ -248,10 +201,8 @@ export function PoolOverviewPanel({
     : [];
 
   return (
-    <section className="rounded-2xl bg-surface-low p-4 md:p-5">
-      <p className="mb-4 text-[10px] font-semibold text-on-surface-variant tracking-widest uppercase">
-        État du pool
-      </p>
+    <PanelCard>
+      <PanelHeader title="État du pool" className="mb-4" />
 
       <div className="mb-5 flex flex-wrap justify-around gap-4">
         <StatBlock label="en stock" value={stats?.available ?? "—"} accent />
@@ -259,8 +210,8 @@ export function PoolOverviewPanel({
       </div>
 
       {hasTomorrowGrid === false && (
-        <div className="mb-4 flex flex-col gap-3 rounded-lg bg-rarity-ultra/10 px-3 py-3 sm:flex-row sm:items-center sm:justify-between">
-          <div className="flex items-center gap-2 text-sm text-rarity-ultra">
+        <div className="mb-4 flex flex-col gap-3 rounded-lg bg-error/10 px-3 py-3 sm:flex-row sm:items-center sm:justify-between">
+          <div className="flex items-center gap-2 text-sm text-error">
             <AlertTriangle className="h-4 w-4 shrink-0" />
             Aucune grille planifiée pour demain.
           </div>
@@ -269,7 +220,7 @@ export function PoolOverviewPanel({
             size="sm"
             onClick={handleEnsureTomorrow}
             disabled={ensureTomorrowStatus === "loading"}
-            className="shrink-0 bg-on-surface text-surface-lowest hover:bg-on-surface/90"
+            className="shrink-0"
           >
             {ensureTomorrowStatus === "loading" && (
               <Loader2 className="h-3 w-3 animate-spin" />
@@ -279,7 +230,7 @@ export function PoolOverviewPanel({
               : "Planifier maintenant"}
           </Button>
           {ensureTomorrowStatus === "error" && (
-            <p className="text-xs text-rarity-ultra sm:basis-full">
+            <p className="text-xs text-error sm:basis-full">
               Erreur lors de la planification.
             </p>
           )}
@@ -298,7 +249,6 @@ export function PoolOverviewPanel({
             type="button"
             onClick={() => setRefreshDialogOpen(true)}
             disabled={refreshStatus === "loading"}
-            className="bg-on-surface text-surface-lowest hover:bg-on-surface/90"
           >
             {refreshStatus === "loading" && (
               <Loader2 className="animate-spin" />
@@ -345,7 +295,6 @@ export function PoolOverviewPanel({
                 handleRefreshPool();
               }}
               disabled={refreshStatus === "loading"}
-              className="bg-on-surface text-surface-lowest hover:bg-on-surface/90"
             >
               Confirmer
             </Button>
@@ -369,6 +318,6 @@ export function PoolOverviewPanel({
           />
         </div>
       )}
-    </section>
+    </PanelCard>
   );
 }

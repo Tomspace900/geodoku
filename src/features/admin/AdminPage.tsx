@@ -2,6 +2,8 @@ import AppFooter from "@/app/AppFooter";
 import { AppMark } from "@/components/AppMark";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { DisplayHeader } from "@/features/game/components/DisplayHeader";
+import { Eyebrow } from "@/features/game/components/Eyebrow";
 import { todayUTC, tomorrowUTC } from "@/lib/dates";
 import { useQuery } from "convex/react";
 import { useState } from "react";
@@ -9,6 +11,8 @@ import { api } from "../../../convex/_generated/api";
 import { AdminAuthBoundary } from "./components/AdminAuthBoundary";
 import { DiversityMetricsPanel } from "./components/DiversityMetricsPanel";
 import { GridDetail } from "./components/GridDetail";
+import { PanelCard } from "./components/PanelCard";
+import { PanelHeader } from "./components/PanelHeader";
 import { PoolOverviewPanel } from "./components/PoolOverviewPanel";
 import { ScheduleCalendar } from "./components/ScheduleCalendar";
 import { UpcomingGridsPanel } from "./components/UpcomingGridsPanel";
@@ -18,27 +22,18 @@ import { useAdminToken } from "./hooks/useAdminToken";
 
 function AdminHeader({ onLogout }: { onLogout: () => void }) {
   return (
-    <header className="rounded-2xl bg-surface-low p-5 md:p-6">
+    <header className="rounded-lg bg-surface-low p-5 md:p-6">
       <div className="flex items-start justify-between gap-4">
-        <div className="flex flex-col gap-2">
-          <div className="flex items-center gap-2">
-            <AppMark className="h-8 w-8" />
-            <h1 className="font-serif text-3xl font-medium italic text-on-surface leading-none mt-1">
-              Geodoku
-            </h1>
-          </div>
-          <div className="h-1 w-12 rounded-full bg-brand" />
-          <p className="text-[10px] text-on-surface-variant tracking-widest uppercase">
-            Dashboard administration
-          </p>
-        </div>
-        <button
-          type="button"
-          onClick={onLogout}
-          className="text-[10px] font-semibold text-on-surface-variant tracking-widest uppercase transition-colors hover:text-on-surface"
-        >
+        <DisplayHeader
+          as="h1"
+          size="lg"
+          leftIcon={<AppMark className="h-8 w-8" />}
+          title="Geodoku"
+          eyebrow="Dashboard administration"
+        />
+        <Button type="button" variant="ghost-label" onClick={onLogout}>
           Déconnexion
-        </button>
+        </Button>
       </div>
     </header>
   );
@@ -78,23 +73,18 @@ export function AdminPage() {
     return (
       <div className="flex min-h-svh flex-col bg-surface px-4 py-8">
         <div className="mx-auto flex w-full max-w-[460px] flex-1 flex-col gap-6">
-          <header className="rounded-2xl bg-surface-low p-6">
-            <div className="flex items-center gap-2">
-              <AppMark className="h-8 w-8" />
-              <h1 className="font-serif text-3xl font-medium italic text-on-surface leading-none mt-1">
-                Geodoku
-              </h1>
-            </div>
-            <div className="mt-2 h-1 w-12 rounded-full bg-brand" />
-            <p className="mt-2 text-[10px] text-on-surface-variant tracking-widest uppercase">
-              Administration
-            </p>
+          <header className="rounded-lg bg-surface-low p-6">
+            <DisplayHeader
+              as="h1"
+              size="lg"
+              leftIcon={<AppMark className="h-8 w-8" />}
+              title="Geodoku"
+              eyebrow="Administration"
+            />
           </header>
 
-          <div className="rounded-2xl bg-surface-lowest p-6 shadow-editorial">
-            <p className="mb-4 text-[10px] font-semibold text-on-surface-variant tracking-widest uppercase">
-              Accès sécurisé
-            </p>
+          <div className="rounded-lg bg-surface-lowest p-6 shadow-editorial">
+            <Eyebrow className="mb-4 font-semibold">Accès sécurisé</Eyebrow>
             <p className="text-sm text-on-surface-variant">
               Saisissez votre token pour accéder au panneau d'administration.
             </p>
@@ -106,12 +96,12 @@ export function AdminPage() {
               onKeyDown={(e) => {
                 if (e.key === "Enter" && tokenInput) setToken(tokenInput);
               }}
-              className="mt-4 rounded-none border-0 border-b border-outline-variant/40 bg-transparent px-0 focus-visible:ring-0"
+              className="mt-4"
             />
             <Button
               onClick={() => setToken(tokenInput)}
               disabled={!tokenInput}
-              className="mt-5 bg-on-surface text-surface-lowest hover:bg-on-surface/90"
+              className="mt-5"
             >
               Connexion
             </Button>
@@ -140,12 +130,8 @@ export function AdminPage() {
             }
           />
 
-          <section className="rounded-2xl bg-surface-low p-4 md:p-5">
-            <div className="mb-3 flex flex-wrap items-center justify-between gap-3">
-              <p className="text-[10px] font-semibold text-on-surface-variant tracking-widest uppercase">
-                Planification
-              </p>
-            </div>
+          <PanelCard>
+            <PanelHeader title="Planification" />
             <div className="grid grid-cols-1 items-stretch gap-4 md:grid-cols-5">
               <div className="col-span-1 h-full md:col-span-2">
                 <ScheduleCalendar
@@ -162,7 +148,7 @@ export function AdminPage() {
                 />
               </div>
             </div>
-          </section>
+          </PanelCard>
 
           <UpcomingGridsPanel token={token} />
 

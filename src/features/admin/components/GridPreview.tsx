@@ -77,7 +77,7 @@ export function GridPreview({
               {hasDifficulty && (
                 <span
                   className={cn(
-                    "pointer-events-none absolute bottom-1.5 right-1.5 z-10 rounded-full font-semibold tabular-nums shadow-sm",
+                    "pointer-events-none absolute bottom-1.5 right-1.5 z-10 rounded-full font-semibold tabular-nums",
                     difficultyPillClass(difficulty),
                     "px-1.5 py-0.5 text-[11px]",
                   )}
