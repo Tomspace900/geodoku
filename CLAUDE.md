@@ -4,11 +4,11 @@
 
 Geodoku est un mini-jeu web quotidien inspiré de Wordle et du Sudoku, sur le thème de la géographie.
 
-**Principe.** Chaque jour, une grille 3×3 est proposée à tous les joueurs. Chaque ligne et chaque colonne impose une contrainte géographique (ex: « Asie », « Enclavé », « Plus de 50M d'habitants », « Frontalier de la France »). Pour chacune des 9 cases, le joueur doit trouver un pays qui valide **simultanément** la contrainte de sa ligne et celle de sa colonne. Il dispose de **3 vies** et ne peut pas réutiliser deux fois le même pays.
+**Principe.** Chaque jour, une grille 3×3 est proposée à tous les joueurs. Chaque ligne et chaque colonne impose une contrainte géographique (ex: « Asie », « Enclavé », « Plus de 50M d'habitants », « Frontalier de la France »). Pour chacune des 9 cases, le joueur doit trouver un pays qui valide **simultanément** la contrainte de sa ligne et celle de sa colonne. Il dispose de **3 vies** et ne peut pas réutiliser deux fois le même pays. Une case dont tous les pays valides ont déjà été placés ailleurs devient **bloquée** (impossible à remplir) ; la partie se termine quand les vies tombent à zéro **ou** quand plus aucune case n'est remplissable.
 
 **Le twist.** Plus le pays trouvé est rare (parmi les choix des autres joueurs de la journée), meilleur est le score. Un joueur qui remplit une case « Asie × Enclavé » avec « Bhoutan » obtient un meilleur bonus qu'un joueur qui met « Mongolie ». Le score final est en pourcentage, calculé comme `completion × 20pts + bonus_rareté` sur un max de 405, puis normalisé.
 
-**L'enjeu communautaire.** À la fin, le joueur partage sa grille sous forme d'emojis colorés (🟪🟦🟨🟥⬜) avec son score, à la manière de Wordle.
+**L'enjeu communautaire.** À la fin, le joueur partage sa grille sous forme d'emojis colorés (🟪🟦🟨🟥⬜⬛) avec son score, à la manière de Wordle. `⬛` représente les cases bloquées (non remplissables) en fin de partie.
 
 **Ce que Geodoku n'est PAS.** Pas de compte, pas de login, pas de leaderboard, pas de streak inter-jours, pas de stats globales, pas d'ads, pas de mobile app. Un site web minimaliste, une partie par jour, un partage. Point.
 
@@ -30,7 +30,7 @@ Geodoku est un mini-jeu web quotidien inspiré de Wordle et du Sudoku, sur le th
 ```
 geodoku/
 ├── convex/
-│   ├── schema.ts                # tables : gridCandidates, grids, guesses, dailyStats, gridFeedback
+│   ├── schema.ts                # tables : gridCandidates, grids, gridAnswers, guesses, dailyStats, gridFeedback
 │   ├── crons.ts                 # ensureTomorrowGrid (daily) + autoRefillPool (weekly)
 │   ├── grids.ts                 # actions/queries/mutations publiques et admin (pool-based)
 │   ├── guesses.ts               # mutation submitGuess
@@ -62,7 +62,7 @@ geodoku/
 │   │   ├── game/
 │   │   │   ├── components/      # Header, GameGrid, Cell, GuessModal, ResultScreen, SolutionGrid, RarityBadge, AchievementCard, HowToPlayLink, LocaleSwitcher, GamePage
 │   │   │   ├── hooks/useGameState.ts
-│   │   │   ├── logic/           # reducer, validation, rarity, share, constants, constraints (51 contraintes / 15 catégories)
+│   │   │   ├── logic/           # reducer, validation, blockedDetection, rarity, share, constants, constraints (51 contraintes / 15 catégories)
 │   │   │   │   └── __tests__/
 │   │   │   └── types.ts
 │   │   ├── countries/
@@ -301,8 +301,9 @@ Ces classes ne sont pas toutes définies dans Tailwind, elles servent de vocabul
 
 **Schéma actuel.**
 
-- `gridCandidates` : pool de grilles ; status `available | used`. Champs : `rows`, `cols`, `validAnswers`, `metadata` (`seedConstraint`, `constraintIds`, `categories`, `avgCellSize`, `minCellSize`, `countryPool`, `difficultyEstimate`, `difficultyTags`, `cellDifficulties`), `usedAt`, `usedForDate`.
-- `grids` : grille assignée à une date (clé = `date` YYYY-MM-DD) ; pointe vers son `candidateId`.
+- `gridCandidates` : pool de grilles ; status `available | used`. Champs : `rows`, `cols`, `metadata` (`seedConstraint`, `constraintIds`, `categories`, `avgCellSize`, `minCellSize`, `countryPool`, `difficultyEstimate`, `difficultyTags`, `cellDifficulties`), `usedAt`, `usedForDate`. **Pas de `validAnswers` inline** — vit dans la table satellite `gridAnswers`.
+- `grids` : grille assignée à une date (clé = `date` YYYY-MM-DD). Champs : `rows`, `cols`, `countryPool` (dénormalisé depuis `metadata.countryPool` pour éviter de relire le satellite côté scheduler/admin), `difficulty`, `candidateId`.
+- `gridAnswers` : **satellite 1-to-1** keyé sur `candidateId`, porte uniquement `validAnswers`. Séparé pour alléger les `.collect()` du scheduler et des queries admin (un doc `gridCandidates` passe ainsi de ~3.5 KB à ~1.2 KB).
 - `guesses` : compteur par `(date, cellKey, countryCode)`.
 - `dailyStats` : dénormalisation `(date, cellKey) → totalGuesses` pour rareté O(1).
 - `gridFeedback` : agrégat par date (`tooEasyCount`, `balancedCount`, `tooHardCount`, `wins`, `losses`, `totalLivesLeft`, `totalFilledCells`, `totalGuessesSubmitted`) écrit par `submitGridFeedback` en fin de partie.
@@ -314,8 +315,10 @@ Ces classes ne sont pas toutes définies dans Tailwind, elles servent de vocabul
 
 **Endpoints clés** ([`convex/grids.ts`](convex/grids.ts)).
 
-- `getTodayGrid` (query, public) — grille du jour ou `null`.
-- `getScheduledGrids` (query, admin UI) — grilles depuis J-30 avec métadonnées candidate embarquées.
+- `getTodayGrid` (query, public) — grille du jour ou `null` ; jointure satellite `gridAnswers` pour exposer `validAnswers` au front jeu.
+- `getScheduledGrids` (query, admin UI) — grilles depuis J-30 avec métadonnées candidate embarquées. **Payload light** : pas de `validAnswers` (fetch lazy via les deux queries ci-dessous).
+- `getScheduledGridPreviewDetail` (query, admin) — fetch lazy `{rows, cols, validAnswers, difficulty}` pour une date donnée. Appelée à la sélection d'une date dans le calendrier admin.
+- `getCandidatePreviewDetail` (query, admin) — fetch lazy `{rows, cols, validAnswers, cellDifficulties}` pour un `candidateId`. Appelée à l'ouverture d'un accordéon dans `UpcomingGridsPanel`.
 - `getPoolStats` (query, admin) — taille du pool par status, couverture par contrainte/pays.
 - `getExposureStats` (query, admin) — exposition passée (15 grilles) vs. à venir (14 jours), pour les barres comparées du dashboard.
 - `getUpcomingScheduledPreview` (query, admin) — 1..14 jours, marque chaque jour `scheduled` (déjà inscrit) / `predicted` (simulé en lecture seule depuis le pool) / `missing`.
@@ -336,8 +339,8 @@ Ces classes ne sont pas toutes définies dans Tailwind, elles servent de vocabul
 [`src/features/admin/AdminPage.tsx`](src/features/admin/AdminPage.tsx) compose :
 
 - `PoolOverviewPanel` — taille du pool, runway, alerte demain avec bouton « Planifier maintenant », bouton « Regénérer le pool » (confirmation modale), barres comparées d'exposition passée vs à venir (constraints + countries), badge ambre si une contrainte apparaît dans ≥ 33 % des 15 dernières grilles.
-- `ScheduleCalendar` + `GridDetail` — calendrier avec point de difficulté par jour, sélection → preview détaillée avec `cellDifficulties` colorées.
-- `UpcomingGridsPanel` — accordéon (shadcn) sur les 7 prochains jours, distinguant `scheduled` (vert) et `predicted` (violet, lecture seule).
+- `ScheduleCalendar` + `GridDetail` — calendrier avec point de difficulté par jour, sélection → preview détaillée avec `cellDifficulties` colorées. `GridDetail` fait un **fetch lazy** via `getScheduledGridPreviewDetail` (les `validAnswers` ne transitent pas dans la query liste).
+- `UpcomingGridsPanel` — accordéon (shadcn) sur les 7 prochains jours, distinguant `scheduled` (vert) et `predicted` (violet, lecture seule). La grille détaillée se charge **uniquement à l'ouverture de l'accordéon** via `getCandidatePreviewDetail` / `getScheduledGridPreviewDetail` (`LazyGridPreview`).
 - `DiversityMetricsPanel` — corrélation difficulté estimée ↔ feedback observé.
 
 Pas de panneau de tuning des constantes : on ajuste dans `gridConstants.ts`, on simule (`simulate-scheduling`), puis `wipe:db` + `seed:grids` en dev pour un reset complet, ou « Regénérer le pool » dans `/admin` pour renouveler le stock futur sans toucher aux grilles planifiées.
