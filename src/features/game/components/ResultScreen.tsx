@@ -207,53 +207,55 @@ export function ResultScreen({
 
         <AchievementCard state={state} />
 
-        {hasRated ? (
-          <Button
-            onClick={onViewAnswers}
-            variant="secondary"
-            size="lg"
-            className="w-full bg-surface-highest text-on-surface hover:bg-surface-highest/80"
-          >
-            {t("ui.viewAnswers")}
-          </Button>
-        ) : (
-          <div className="flex flex-col gap-3">
-            <p className="text-[10px] tracking-widest text-on-surface-variant uppercase text-center">
-              {t("ui.feedbackQuestion")}
-            </p>
-            <div className="grid grid-cols-3 gap-1.5">
-              {DIFFICULTY_RATINGS.map(({ rating, labelKey }) => (
-                <Button
-                  key={rating}
-                  type="button"
-                  variant="secondary"
-                  size="sm"
-                  disabled={ratingPending}
-                  className="h-auto min-h-9 whitespace-normal bg-surface-highest px-2 py-2 text-xs leading-tight text-on-surface hover:bg-surface-highest/80"
-                  onClick={() => handleRateDifficulty(rating)}
-                >
-                  {t(labelKey)}
-                </Button>
-              ))}
-            </div>
-            <button
-              type="button"
+        <div className="flex flex-col gap-3">
+          {hasRated ? (
+            <Button
               onClick={onViewAnswers}
-              className="text-center text-xs text-on-surface-variant underline underline-offset-2 decoration-outline-variant/40 hover:text-on-surface"
+              variant="secondary"
+              size="lg"
+              className="w-full bg-surface-highest text-on-surface hover:bg-surface-highest/80"
             >
-              {t("ui.skipFeedback")}
-            </button>
-          </div>
-        )}
+              {t("ui.viewAnswers")}
+            </Button>
+          ) : (
+            <>
+              <p className="text-[10px] tracking-widest text-on-surface-variant uppercase text-center">
+                {t("ui.feedbackQuestion")}
+              </p>
+              <div className="grid grid-cols-3 gap-1.5">
+                {DIFFICULTY_RATINGS.map(({ rating, labelKey }) => (
+                  <Button
+                    key={rating}
+                    type="button"
+                    variant="secondary"
+                    size="sm"
+                    disabled={ratingPending}
+                    className="h-auto min-h-9 whitespace-normal bg-surface-highest px-2 py-2 text-xs leading-tight text-on-surface hover:bg-surface-highest/80"
+                    onClick={() => handleRateDifficulty(rating)}
+                  >
+                    {t(labelKey)}
+                  </Button>
+                ))}
+              </div>
+              <button
+                type="button"
+                onClick={onViewAnswers}
+                className="text-center text-xs text-on-surface-variant underline underline-offset-2 decoration-outline-variant/40 hover:text-on-surface"
+              >
+                {t("ui.skipFeedback")}
+              </button>
+            </>
+          )}
 
-        <Button
-          onClick={handleShare}
-          className="w-full bg-on-surface text-surface-lowest hover:bg-on-surface/90 gap-2"
-          size="lg"
-        >
-          <Copy size={16} />
-          {copied ? t("ui.shareCopied") : t("ui.share")}
-        </Button>
+          <Button
+            onClick={handleShare}
+            className="w-full bg-on-surface text-surface-lowest hover:bg-on-surface/90 gap-2"
+            size="lg"
+          >
+            <Copy size={16} />
+            {copied ? t("ui.shareCopied") : t("ui.share")}
+          </Button>
+        </div>
 
         <p className="text-center text-xs text-on-surface-variant italic">
           {t("ui.comeBackTomorrowGrid")}

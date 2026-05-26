@@ -1,4 +1,5 @@
 import AppFooter from "@/app/AppFooter";
+import { AppMark } from "@/components/AppMark";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { todayUTC, tomorrowUTC } from "@/lib/dates";
@@ -20,9 +21,12 @@ function AdminHeader({ onLogout }: { onLogout: () => void }) {
     <header className="rounded-2xl bg-surface-low p-5 md:p-6">
       <div className="flex items-start justify-between gap-4">
         <div className="flex flex-col gap-2">
-          <h1 className="font-serif text-3xl font-medium italic text-on-surface leading-none">
-            Geodoku
-          </h1>
+          <div className="flex items-center gap-2">
+            <AppMark className="h-8 w-8" />
+            <h1 className="font-serif text-3xl font-medium italic text-on-surface leading-none mt-1">
+              Geodoku
+            </h1>
+          </div>
           <div className="h-1 w-12 rounded-full bg-brand" />
           <p className="text-[10px] text-on-surface-variant tracking-widest uppercase">
             Dashboard administration
@@ -75,9 +79,12 @@ export function AdminPage() {
       <div className="flex min-h-svh flex-col bg-surface px-4 py-8">
         <div className="mx-auto flex w-full max-w-[460px] flex-1 flex-col gap-6">
           <header className="rounded-2xl bg-surface-low p-6">
-            <h1 className="font-serif text-3xl font-medium italic text-on-surface leading-none">
-              Geodoku
-            </h1>
+            <div className="flex items-center gap-2">
+              <AppMark className="h-8 w-8" />
+              <h1 className="font-serif text-3xl font-medium italic text-on-surface leading-none mt-1">
+                Geodoku
+              </h1>
+            </div>
             <div className="mt-2 h-1 w-12 rounded-full bg-brand" />
             <p className="mt-2 text-[10px] text-on-surface-variant tracking-widest uppercase">
               Administration
