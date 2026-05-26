@@ -1,5 +1,5 @@
 import { AppMark } from "@/components/AppMark";
-import { useLocale } from "@/i18n/LocaleContext";
+import { useLocale, useT } from "@/i18n/LocaleContext";
 import { Heart } from "lucide-react";
 import { STARTING_LIVES } from "../logic/constants";
 import { DisplayHeader } from "./DisplayHeader";
@@ -12,6 +12,7 @@ type Props = {
 
 export function Header({ remainingLives, date, gridNumber }: Props) {
   const { locale } = useLocale();
+  const t = useT();
 
   const localeTag = locale === "fr" ? "fr-FR" : "en-GB";
   const dateLabel = date
@@ -39,7 +40,7 @@ export function Header({ remainingLives, date, gridNumber }: Props) {
         as="h1"
         size="md"
         leftIcon={<AppMark />}
-        title="Geodoku"
+        title={t("ui.appName")}
         eyebrow={eyebrow}
         accentBar={eyebrow !== undefined}
       />
