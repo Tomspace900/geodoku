@@ -1,19 +1,8 @@
 import { ConvexError, v } from "convex/values";
 import { mutation, query } from "./_generated/server";
+import { CELL_KEYS } from "./cellKeys";
 import { getGridAnswers } from "./gridData";
 import { rateLimiter } from "./rateLimit";
-
-const CELL_KEYS = [
-  "0,0",
-  "0,1",
-  "0,2",
-  "1,0",
-  "1,1",
-  "1,2",
-  "2,0",
-  "2,1",
-  "2,2",
-] as const;
 
 /**
  * Pour chaque case : nombre total de tentatives et part (0..1) par pays parmi
