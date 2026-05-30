@@ -4,7 +4,9 @@ import { internal } from "./_generated/api";
 import type { Id } from "./_generated/dataModel";
 import { action, internalAction, mutation, query } from "./_generated/server";
 import { checkAdminToken } from "./auth";
+import { CELL_KEYS } from "./cellKeys";
 import { getCandidateAnswers, getGridAnswers } from "./gridData";
+import { computeCellMetric } from "./lib/cellMetrics";
 import { daysAgoUTC, offsetUTC, todayUTC, tomorrowUTC } from "./lib/dates";
 import {
   type GenerationReport,
@@ -548,7 +550,15 @@ export const getUpcomingScheduledPreview = query({
   },
 });
 
-/** Returns recent observed feedback metrics for scheduled grids. */
+/**
+ * Returns recent observed feedback metrics for scheduled grids.
+ *
+ * `ratingCount` = nombre de joueurs ayant noté la difficulté (clic facultatif).
+ * `gamesPlayed` = nombre de parties terminées (wins + losses), alimenté par
+ * `recordGameEnd`. C'est le dénominateur des moyennes (winRate, avgLivesLeft,
+ * avgFilledCells, avgGuessesSubmitted) — sans ça on sous-estime la base de
+ * joueurs puisque seul un sous-ensemble note la grille.
+ */
 export const getGridFeedbackStats = query({
   args: {
     adminToken: v.string(),
@@ -564,44 +574,141 @@ export const getGridFeedbackStats = query({
       .take(limit);
 
     return feedbackRows.map((row) => {
-      const total = row.totalRatings;
+      const ratings = row.totalRatings;
+      const gamesPlayed = row.wins + row.losses;
       const difficultyObserved100 =
-        total === 0
+        ratings === 0
           ? null
           : Math.round(
-              (row.balancedCount * 50 + row.tooHardCount * 100) / total,
+              (row.balancedCount * 50 + row.tooHardCount * 100) / ratings,
             );
       return {
         date: row.date,
-        ratingCount: row.totalRatings,
+        ratingCount: ratings,
+        gamesPlayed,
         difficultyObserved100,
-        winRate: total === 0 ? null : Number((row.wins / total).toFixed(3)),
+        winRate:
+          gamesPlayed === 0
+            ? null
+            : Number((row.wins / gamesPlayed).toFixed(3)),
         avgLivesLeft:
-          total === 0 ? null : Number((row.totalLivesLeft / total).toFixed(2)),
+          gamesPlayed === 0
+            ? null
+            : Number((row.totalLivesLeft / gamesPlayed).toFixed(2)),
         avgFilledCells:
-          total === 0
+          gamesPlayed === 0
             ? null
-            : Number((row.totalFilledCells / total).toFixed(2)),
+            : Number((row.totalFilledCells / gamesPlayed).toFixed(2)),
         avgGuessesSubmitted:
-          total === 0
+          gamesPlayed === 0
             ? null
-            : Number((row.totalGuessesSubmitted / total).toFixed(2)),
+            : Number((row.totalGuessesSubmitted / gamesPlayed).toFixed(2)),
+        tooEasyCount: row.tooEasyCount,
+        balancedCount: row.balancedCount,
+        tooHardCount: row.tooHardCount,
       };
     });
   },
 });
 
+/**
+ * Métriques observées par case pour une grille passée.
+ *
+ * Compose `dailyStats`, `guesses`, `grids` (validAnswers via le satellite) et
+ * `gridFeedback` (wins + losses comme dénominateur) pour exposer un rapport
+ * case par case : taux de remplissage, top des pays choisis, couverture du
+ * pool de réponses valides, pays jamais trouvés, et difficulté estimée vs
+ * observée.
+ *
+ * Renvoie `null` si la grille n'existe pas pour cette date. Pensée pour être
+ * appelée hors UI (scripts d'export analytics) — pas mountée dans /admin.
+ */
+export const getGridCellMetrics = query({
+  args: { date: v.string(), adminToken: v.string() },
+  handler: async (ctx, args) => {
+    checkAdminToken(args.adminToken);
+
+    const grid = await ctx.db
+      .query("grids")
+      .withIndex("by_date", (q) => q.eq("date", args.date))
+      .unique();
+    if (!grid) return null;
+
+    const validAnswers = (await getGridAnswers(ctx, grid)) ?? {};
+
+    const candidate = await ctx.db.get(grid.candidateId);
+    const cellDifficulties = candidate?.metadata.cellDifficulties ?? null;
+    const rows = grid.rows;
+    const cols = grid.cols;
+
+    const feedback = await ctx.db
+      .query("gridFeedback")
+      .withIndex("by_date", (q) => q.eq("date", args.date))
+      .unique();
+    const wins = feedback?.wins ?? 0;
+    const losses = feedback?.losses ?? 0;
+    const gamesPlayed = wins + losses;
+
+    const cells: Record<
+      string,
+      ReturnType<typeof computeCellMetric> & { failedAttempts: number }
+    > = {};
+
+    for (let i = 0; i < CELL_KEYS.length; i++) {
+      const cellKey = CELL_KEYS[i] as string;
+      const validForCell = validAnswers[cellKey] ?? [];
+
+      const stats = await ctx.db
+        .query("dailyStats")
+        .withIndex("by_date_and_cell", (q) =>
+          q.eq("date", args.date).eq("cellKey", cellKey),
+        )
+        .unique();
+      const totalGuesses = stats?.totalGuesses ?? 0;
+
+      const guessRows = await ctx.db
+        .query("guesses")
+        .withIndex("by_date_and_cell", (q) =>
+          q.eq("date", args.date).eq("cellKey", cellKey),
+        )
+        .collect();
+
+      cells[cellKey] = {
+        ...computeCellMetric({
+          validForCell,
+          totalGuesses,
+          // Cohorte live uniquement : les rejeux ne sont pas comparables à la
+          // cohorte d'origine et fausseraient le signal de difficulté.
+          guessRows: guessRows
+            .filter((g) => g.isReplay !== true)
+            .map((g) => ({
+              countryCode: g.countryCode,
+              count: g.count,
+            })),
+          gamesPlayed,
+          estimatedDifficulty: cellDifficulties?.[i] ?? null,
+        }),
+        // Tentatives infructueuses — expose le signal « case dure vs case
+        // abandonnée » que le fillRate seul ne capture pas.
+        failedAttempts: stats?.failedAttempts ?? 0,
+      };
+    }
+
+    return { date: args.date, rows, cols, gamesPlayed, wins, losses, cells };
+  },
+});
+
 // ─── Public mutations ─────────────────────────────────────────────────────────
 
-/** Saves end-of-game feedback and aggregates lightweight session metrics. */
-export const submitGridFeedback = mutation({
+/**
+ * Enregistre la fin de partie d'un joueur (gagnée ou perdue). Appelée
+ * automatiquement par le client quand `state.status` passe à `won` ou `lost`,
+ * idempotente côté client via un flag localStorage. Incrémente les compteurs
+ * de parties terminées dans `gridFeedback`, indépendamment du rating.
+ */
+export const recordGameEnd = mutation({
   args: {
     date: v.string(),
-    rating: v.union(
-      v.literal("too_easy"),
-      v.literal("balanced"),
-      v.literal("too_hard"),
-    ),
     won: v.boolean(),
     livesLeft: v.number(),
     filledCells: v.number(),
@@ -652,18 +759,11 @@ export const submitGridFeedback = mutation({
       .withIndex("by_date", (q) => q.eq("date", args.date))
       .unique();
 
-    const tooEasyInc = args.rating === "too_easy" ? 1 : 0;
-    const balancedInc = args.rating === "balanced" ? 1 : 0;
-    const tooHardInc = args.rating === "too_hard" ? 1 : 0;
     const winsInc = args.won ? 1 : 0;
     const lossesInc = args.won ? 0 : 1;
 
     if (existing) {
       await ctx.db.patch(existing._id, {
-        tooEasyCount: existing.tooEasyCount + tooEasyInc,
-        balancedCount: existing.balancedCount + balancedInc,
-        tooHardCount: existing.tooHardCount + tooHardInc,
-        totalRatings: existing.totalRatings + 1,
         wins: existing.wins + winsInc,
         losses: existing.losses + lossesInc,
         totalLivesLeft: existing.totalLivesLeft + args.livesLeft,
@@ -676,15 +776,70 @@ export const submitGridFeedback = mutation({
 
     await ctx.db.insert("gridFeedback", {
       date: args.date,
-      tooEasyCount: tooEasyInc,
-      balancedCount: balancedInc,
-      tooHardCount: tooHardInc,
-      totalRatings: 1,
+      tooEasyCount: 0,
+      balancedCount: 0,
+      tooHardCount: 0,
+      totalRatings: 0,
       wins: winsInc,
       losses: lossesInc,
       totalLivesLeft: args.livesLeft,
       totalFilledCells: args.filledCells,
       totalGuessesSubmitted: args.guessesSubmitted,
+    });
+  },
+});
+
+/**
+ * Enregistre la note de difficulté d'un joueur (facultative). Touche
+ * uniquement aux compteurs de rating ; les compteurs de parties terminées
+ * sont alimentés par `recordGameEnd`.
+ */
+export const submitGridFeedback = mutation({
+  args: {
+    date: v.string(),
+    rating: v.union(
+      v.literal("too_easy"),
+      v.literal("balanced"),
+      v.literal("too_hard"),
+    ),
+    clientId: v.string(),
+  },
+  handler: async (ctx, args) => {
+    await rateLimiter.limit(ctx, "feedback", {
+      key: args.clientId,
+      throws: true,
+    });
+
+    const existing = await ctx.db
+      .query("gridFeedback")
+      .withIndex("by_date", (q) => q.eq("date", args.date))
+      .unique();
+
+    const tooEasyInc = args.rating === "too_easy" ? 1 : 0;
+    const balancedInc = args.rating === "balanced" ? 1 : 0;
+    const tooHardInc = args.rating === "too_hard" ? 1 : 0;
+
+    if (existing) {
+      await ctx.db.patch(existing._id, {
+        tooEasyCount: existing.tooEasyCount + tooEasyInc,
+        balancedCount: existing.balancedCount + balancedInc,
+        tooHardCount: existing.tooHardCount + tooHardInc,
+        totalRatings: existing.totalRatings + 1,
+      });
+      return;
+    }
+
+    await ctx.db.insert("gridFeedback", {
+      date: args.date,
+      tooEasyCount: tooEasyInc,
+      balancedCount: balancedInc,
+      tooHardCount: tooHardInc,
+      totalRatings: 1,
+      wins: 0,
+      losses: 0,
+      totalLivesLeft: 0,
+      totalFilledCells: 0,
+      totalGuessesSubmitted: 0,
     });
   },
 });

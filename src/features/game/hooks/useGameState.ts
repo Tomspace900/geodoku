@@ -3,6 +3,7 @@ import { useMutation, useQuery } from "convex/react";
 import { useCallback, useEffect, useReducer } from "react";
 import { api } from "../../../../convex/_generated/api";
 import { getOrCreateClientId } from "../logic/clientId";
+import { STARTING_LIVES } from "../logic/constants";
 import type { ConstraintId } from "../logic/constraints";
 import {
   type PersistedGame,
@@ -13,12 +14,16 @@ import {
 } from "../logic/persistence";
 import { createInitialState, gameReducer } from "../logic/reducer";
 import { sanitizePersistedForGrid } from "../logic/sanitizePersisted";
-import { validateGuess } from "../logic/validation";
+import { isConstraintFailureReason, validateGuess } from "../logic/validation";
 import type { CellPosition, GameState } from "../types";
+
+const GAME_ENDED_STORAGE_PREFIX = "geodoku:ended:";
 
 export function useGameState() {
   const todayGrid = useQuery(api.grids.getTodayGrid);
   const submit = useMutation(api.guesses.submitGuess);
+  const recordFailedGuess = useMutation(api.guesses.recordFailedGuess);
+  const recordGameEnd = useMutation(api.grids.recordGameEnd);
 
   const [state, dispatch] = useReducer(
     gameReducer,
@@ -65,6 +70,43 @@ export function useGameState() {
     savePersistedGame(state);
   }, [state]);
 
+  // Notifie Convex de la fin de partie une seule fois (gagnée ou perdue) :
+  // c'est ce qui alimente les compteurs de joueurs (wins/losses + agrégats),
+  // indépendamment du rating qui reste facultatif.
+  useEffect(() => {
+    if (!state.date) return;
+    if (state.status !== "won" && state.status !== "lost") return;
+
+    const storageKey = `${GAME_ENDED_STORAGE_PREFIX}${state.date}`;
+    if (localStorage.getItem(storageKey) === "1") return;
+
+    const filledCells = Object.values(state.cells).filter(
+      (cell) => cell.status === "filled",
+    ).length;
+    const failedGuesses = STARTING_LIVES - state.remainingLives;
+
+    localStorage.setItem(storageKey, "1");
+
+    recordGameEnd({
+      date: state.date,
+      won: state.status === "won",
+      livesLeft: state.remainingLives,
+      filledCells,
+      guessesSubmitted: filledCells + failedGuesses,
+      clientId: getOrCreateClientId(),
+    }).catch(() => {
+      // Retire le flag pour permettre une nouvelle tentative au prochain
+      // changement d'état si le serveur a rejeté l'enregistrement.
+      localStorage.removeItem(storageKey);
+    });
+  }, [
+    state.date,
+    state.status,
+    state.cells,
+    state.remainingLives,
+    recordGameEnd,
+  ]);
+
   const selectCell = useCallback((cell: CellPosition | null) => {
     dispatch({ type: "selectCell", cell });
   }, []);
@@ -85,6 +127,16 @@ export function useGameState() {
       });
       if (!local.valid) {
         dispatch({ type: "guessFailure" });
+        // Log la tentative infructueuse côté serveur (fire-and-forget) : un
+        // vrai pays qui rate le croisement est un signal de difficulté. On
+        // ignore `already_used` (pas un échec de croisement) et les non-pays.
+        if (isConstraintFailureReason(local.reason)) {
+          recordFailedGuess({
+            date: state.date,
+            cellKey: `${cell.row},${cell.col}`,
+            clientId: getOrCreateClientId(),
+          }).catch(() => {});
+        }
         return { ok: false as const, reason: local.reason };
       }
       try {
@@ -107,7 +159,7 @@ export function useGameState() {
         return { ok: false as const, reason: "wrong_constraints" as const };
       }
     },
-    [state, todayGrid, submit],
+    [state, todayGrid, submit, recordFailedGuess],
   );
 
   return {

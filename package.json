@@ -15,6 +15,7 @@
     "build:countries": "tsx scripts/prod/build-countries.ts",
     "validate:constraints": "tsx scripts/prod/validate-constraints.ts",
     "simulate:scheduling": "tsx scripts/simulate-scheduling.ts",
+    "export:analytics": "tsx --env-file-if-exists=.env.local scripts/export-analytics.ts",
     "seed:grids": "npx convex run seed:seedHistoricalGrids",
     "wipe:db": "npx convex run wipe:wipeAllData",
     "preview": "vite preview",
