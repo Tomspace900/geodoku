@@ -14,7 +14,7 @@ import {
 } from "../logic/persistence";
 import { createInitialState, gameReducer } from "../logic/reducer";
 import { sanitizePersistedForGrid } from "../logic/sanitizePersisted";
-import { validateGuess } from "../logic/validation";
+import { isConstraintFailureReason, validateGuess } from "../logic/validation";
 import type { CellPosition, GameState } from "../types";
 
 const GAME_ENDED_STORAGE_PREFIX = "geodoku:ended:";
@@ -22,6 +22,7 @@ const GAME_ENDED_STORAGE_PREFIX = "geodoku:ended:";
 export function useGameState() {
   const todayGrid = useQuery(api.grids.getTodayGrid);
   const submit = useMutation(api.guesses.submitGuess);
+  const recordFailedGuess = useMutation(api.guesses.recordFailedGuess);
   const recordGameEnd = useMutation(api.grids.recordGameEnd);
 
   const [state, dispatch] = useReducer(
@@ -126,6 +127,16 @@ export function useGameState() {
       });
       if (!local.valid) {
         dispatch({ type: "guessFailure" });
+        // Log la tentative infructueuse côté serveur (fire-and-forget) : un
+        // vrai pays qui rate le croisement est un signal de difficulté. On
+        // ignore `already_used` (pas un échec de croisement) et les non-pays.
+        if (isConstraintFailureReason(local.reason)) {
+          recordFailedGuess({
+            date: state.date,
+            cellKey: `${cell.row},${cell.col}`,
+            clientId: getOrCreateClientId(),
+          }).catch(() => {});
+        }
         return { ok: false as const, reason: local.reason };
       }
       try {
@@ -148,7 +159,7 @@ export function useGameState() {
         return { ok: false as const, reason: "wrong_constraints" as const };
       }
     },
-    [state, todayGrid, submit],
+    [state, todayGrid, submit, recordFailedGuess],
   );
 
   return {

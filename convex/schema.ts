@@ -50,6 +50,11 @@ export default defineSchema({
     cellKey: v.string(),
     countryCode: v.string(),
     count: v.number(),
+    // Amorce rejeu : distingue la cohorte live (absent / false) des futurs
+    // rejeux d'anciennes grilles (true). Le chemin d'écriture rejeu n'existe
+    // pas encore — quand il arrivera, il devra inclure `isReplay` dans la clé
+    // d'upsert (sinon un rejeu incrémenterait la ligne live). Cf. submitGuess.
+    isReplay: v.optional(v.boolean()),
   })
     .index("by_date_and_cell_and_country", ["date", "cellKey", "countryCode"])
     .index("by_date_and_cell", ["date", "cellKey"]),
@@ -58,6 +63,10 @@ export default defineSchema({
     date: v.string(),
     cellKey: v.string(),
     totalGuesses: v.number(),
+    // Tentatives infructueuses (pays valide mais ne satisfait pas le croisement)
+    // par case. Permet de distinguer « case dure, beaucoup d'échecs » de « case
+    // abandonnée, jamais tentée » — les deux ont aujourd'hui le même fillRate.
+    failedAttempts: v.optional(v.number()),
   }).index("by_date_and_cell", ["date", "cellKey"]),
 
   gridFeedback: defineTable({

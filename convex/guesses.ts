@@ -33,9 +33,13 @@ export const getGuessDistributionForDate = query({
         )
         .collect();
 
+      // Cohorte live uniquement : la rareté « parmi les joueurs du jour » n'a de
+      // sens que pour la cohorte d'origine. Les futurs rejeux (isReplay) sont
+      // exclus pour ne pas polluer la distribution montrée aux joueurs.
       const rarityByCountry: Record<string, number> = {};
       if (totalGuesses > 0) {
         for (const row of rows) {
+          if (row.isReplay === true) continue;
           rarityByCountry[row.countryCode] = row.count / totalGuesses;
         }
       }
@@ -96,6 +100,7 @@ export const submitGuess = mutation({
         cellKey: args.cellKey,
         countryCode: args.countryCode,
         count: 1,
+        isReplay: false,
       });
     }
 
@@ -121,5 +126,45 @@ export const submitGuess = mutation({
     }
 
     return { count, total, rarity: count / total };
+  },
+});
+
+/**
+ * Enregistre une tentative infructueuse sur une case : un pays réel choisi qui
+ * ne satisfait pas le croisement (validé côté client, jamais envoyé à
+ * `submitGuess`). Incrémente `dailyStats.failedAttempts` sans toucher au
+ * compteur de coups réussis ni à la rareté. Fire-and-forget côté client.
+ */
+export const recordFailedGuess = mutation({
+  args: {
+    date: v.string(),
+    cellKey: v.string(),
+    clientId: v.string(),
+  },
+  handler: async (ctx, args) => {
+    await rateLimiter.limit(ctx, "guess", {
+      key: args.clientId,
+      throws: true,
+    });
+
+    const stats = await ctx.db
+      .query("dailyStats")
+      .withIndex("by_date_and_cell", (q) =>
+        q.eq("date", args.date).eq("cellKey", args.cellKey),
+      )
+      .unique();
+
+    if (stats) {
+      await ctx.db.patch(stats._id, {
+        failedAttempts: (stats.failedAttempts ?? 0) + 1,
+      });
+    } else {
+      await ctx.db.insert("dailyStats", {
+        date: args.date,
+        cellKey: args.cellKey,
+        totalGuesses: 0,
+        failedAttempts: 1,
+      });
+    }
   },
 });

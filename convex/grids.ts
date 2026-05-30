@@ -649,7 +649,10 @@ export const getGridCellMetrics = query({
     const losses = feedback?.losses ?? 0;
     const gamesPlayed = wins + losses;
 
-    const cells: Record<string, ReturnType<typeof computeCellMetric>> = {};
+    const cells: Record<
+      string,
+      ReturnType<typeof computeCellMetric> & { failedAttempts: number }
+    > = {};
 
     for (let i = 0; i < CELL_KEYS.length; i++) {
       const cellKey = CELL_KEYS[i] as string;
@@ -670,16 +673,25 @@ export const getGridCellMetrics = query({
         )
         .collect();
 
-      cells[cellKey] = computeCellMetric({
-        validForCell,
-        totalGuesses,
-        guessRows: guessRows.map((g) => ({
-          countryCode: g.countryCode,
-          count: g.count,
-        })),
-        gamesPlayed,
-        estimatedDifficulty: cellDifficulties?.[i] ?? null,
-      });
+      cells[cellKey] = {
+        ...computeCellMetric({
+          validForCell,
+          totalGuesses,
+          // Cohorte live uniquement : les rejeux ne sont pas comparables à la
+          // cohorte d'origine et fausseraient le signal de difficulté.
+          guessRows: guessRows
+            .filter((g) => g.isReplay !== true)
+            .map((g) => ({
+              countryCode: g.countryCode,
+              count: g.count,
+            })),
+          gamesPlayed,
+          estimatedDifficulty: cellDifficulties?.[i] ?? null,
+        }),
+        // Tentatives infructueuses — expose le signal « case dure vs case
+        // abandonnée » que le fillRate seul ne capture pas.
+        failedAttempts: stats?.failedAttempts ?? 0,
+      };
     }
 
     return { date: args.date, rows, cols, gamesPlayed, wins, losses, cells };
