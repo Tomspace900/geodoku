@@ -14,6 +14,7 @@ import type * as crons from "../crons.js";
 import type * as gridData from "../gridData.js";
 import type * as grids from "../grids.js";
 import type * as guesses from "../guesses.js";
+import type * as http from "../http.js";
 import type * as lib_cellMetrics from "../lib/cellMetrics.js";
 import type * as lib_dates from "../lib/dates.js";
 import type * as lib_gridConstants from "../lib/gridConstants.js";
@@ -36,6 +37,7 @@ declare const fullApi: ApiFromModules<{
   gridData: typeof gridData;
   grids: typeof grids;
   guesses: typeof guesses;
+  http: typeof http;
   "lib/cellMetrics": typeof lib_cellMetrics;
   "lib/dates": typeof lib_dates;
   "lib/gridConstants": typeof lib_gridConstants;

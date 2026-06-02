@@ -7,7 +7,8 @@
 import { ConvexError } from "convex/values";
 import { internal } from "./_generated/api";
 import { internalAction } from "./_generated/server";
-import { formatYMD, todayUTC } from "./lib/dates";
+import { ensureGridForDateImpl } from "./grids";
+import { formatYMD, todayUTC, tomorrowUTC } from "./lib/dates";
 
 /** Inclusive span: today plus 30 days back (31 dates). */
 const SEED_PAST_DAY_COUNT = 31;
@@ -53,9 +54,8 @@ export const seedHistoricalGrids = internalAction({
     const steps: { date: string; candidateId: string }[] = [];
 
     for (const date of dates) {
-      const result = await ctx.runAction(internal.grids.ensureGridForDate, {
-        date,
-      });
+      // Appel DIRECT au helper (pas de ctx.runAction imbriqué).
+      const result = await ensureGridForDateImpl(ctx, date);
       if (result) {
         steps.push(result);
         console.log(
@@ -66,7 +66,8 @@ export const seedHistoricalGrids = internalAction({
       }
     }
 
-    await ctx.runAction(internal.grids.ensureTomorrowGrid, {});
+    // today est déjà couvert par la boucle ; on ajoute demain.
+    await ensureGridForDateImpl(ctx, tomorrowUTC());
 
     return {
       seeded: dates.length,
