@@ -43,56 +43,51 @@ const DELETE_BATCH_SIZE = 512;
 
 /**
  * Generates a full diverse pool and inserts all grids into gridCandidates.
- * Called by refreshPoolInternal, seed, and autoRefillPool cron.
+ *
+ * Helper async **direct** (pas une action) : appelé in-process par
+ * `refreshPoolImpl`, le seed et le cron `autoRefillPool`, jamais via
+ * `ctx.runAction` (cf. anti-pattern action→action des guidelines Convex).
  */
-export const generatePoolInternal = internalAction({
-  args: {},
-  handler: async (ctx): Promise<GenerationReport> => {
-    const existing = await ctx.runQuery(
-      internal.gridData.getAvailablePoolGrids,
-    );
-    const { grids, report } = generateDiversePool(
-      existing.map((g) => ({ constraintIds: g.metadata.constraintIds })),
-    );
+export async function generatePoolImpl(
+  ctx: ActionCtx,
+): Promise<GenerationReport> {
+  const existing = await ctx.runQuery(internal.gridData.getAvailablePoolGrids);
+  const { grids, report } = generateDiversePool(
+    existing.map((g) => ({ constraintIds: g.metadata.constraintIds })),
+  );
 
-    for (const grid of grids) {
-      await ctx.runMutation(internal.gridData.insertPoolGrid, {
-        rows: grid.rows,
-        cols: grid.cols,
-        validAnswers: grid.validAnswers,
-        metadata: grid.metadata,
-      });
-    }
+  for (const grid of grids) {
+    await ctx.runMutation(internal.gridData.insertPoolGrid, {
+      rows: grid.rows,
+      cols: grid.cols,
+      validAnswers: grid.validAnswers,
+      metadata: grid.metadata,
+    });
+  }
 
-    return report;
-  },
-});
+  return report;
+}
 
 /**
- * Vide le stock available puis regénère un pool complet.
+ * Vide le stock available puis regénère un pool complet (helper direct).
  * Les candidates used et les grilles planifiées ne sont pas touchées.
  */
-export const refreshPoolInternal = internalAction({
-  args: {},
-  handler: async (
-    ctx,
-  ): Promise<GenerationReport & { deletedAvailable: number }> => {
-    let deletedAvailable = 0;
-    for (;;) {
-      const deleted = await ctx.runMutation(
-        internal.gridData.deleteAvailableCandidatesBatch,
-        { limit: DELETE_BATCH_SIZE },
-      );
-      deletedAvailable += deleted;
-      if (deleted < DELETE_BATCH_SIZE) break;
-    }
-    console.log(
-      `[refreshPoolInternal] ${deletedAvailable} available candidates deleted`,
+export async function refreshPoolImpl(
+  ctx: ActionCtx,
+): Promise<GenerationReport & { deletedAvailable: number }> {
+  let deletedAvailable = 0;
+  for (;;) {
+    const deleted = await ctx.runMutation(
+      internal.gridData.deleteAvailableCandidatesBatch,
+      { limit: DELETE_BATCH_SIZE },
     );
-    const report = await ctx.runAction(internal.grids.generatePoolInternal, {});
-    return { ...report, deletedAvailable };
-  },
-});
+    deletedAvailable += deleted;
+    if (deleted < DELETE_BATCH_SIZE) break;
+  }
+  console.log(`[refreshPool] ${deletedAvailable} available candidates deleted`);
+  const report = await generatePoolImpl(ctx);
+  return { ...report, deletedAvailable };
+}
 
 /**
  * Assigns a grid from the pool to a specific date.
@@ -223,7 +218,8 @@ export const autoRefillPool = internalAction({
     if (available.length >= POOL_LOW_THRESHOLD) {
       return;
     }
-    await ctx.runAction(internal.grids.generatePoolInternal, {});
+    // Helper direct (pas de ctx.runAction imbriqué) — autoRefillPool est un cron.
+    await generatePoolImpl(ctx);
   },
 });
 
@@ -852,7 +848,7 @@ export const refreshPool = action({
     args,
   ): Promise<GenerationReport & { deletedAvailable: number }> => {
     checkAdminToken(args.adminToken);
-    return await ctx.runAction(internal.grids.refreshPoolInternal, {});
+    return await refreshPoolImpl(ctx);
   },
 });
 

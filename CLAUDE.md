@@ -461,10 +461,10 @@ pnpm dlx convex@latest env set ADMIN_TOKEN "xxx"
 **Build command Vercel (tous environnements) :**
 
 ```bash
-pnpm exec convex deploy --run seed:autoSeedIfEmpty --cmd 'vite build' --cmd-url-env-var-name VITE_CONVEX_URL
+pnpm exec convex deploy --preview-run seed:autoSeedIfEmpty --cmd 'vite build' --cmd-url-env-var-name VITE_CONVEX_URL
 ```
 
-`autoSeedIfEmpty` est idempotent — elle ne fait rien si des grids existent déjà (`main`, `develop`), et seed le backend complet (pool + J-30..today + demain via `ensureTomorrowGrid`) si vide (nouvelle branche WIP). Une seule commande pour tous les environnements.
+`--preview-run` n'exécute `autoSeedIfEmpty` que sur les déploiements **preview** (`develop`, branches WIP) — **jamais en production** (`main`), qui reste seedée une fois pour toutes. `autoSeedIfEmpty` est idempotent : no-op si des grids existent déjà (`develop`), seed complet (pool + J-30..today + demain via `ensureTomorrowGrid`) si vide (nouvelle branche WIP). Une seule commande pour tous les environnements.
 
 **Variable d'environnement clé sur Vercel : `CONVEX_DEPLOY_KEY`**, une clé par environnement :
 - Production → clé prod ([dashboard.convex.dev](https://dashboard.convex.dev))

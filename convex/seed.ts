@@ -6,8 +6,9 @@
  */
 import { ConvexError } from "convex/values";
 import { internal } from "./_generated/api";
+import type { ActionCtx } from "./_generated/server";
 import { internalAction } from "./_generated/server";
-import { ensureGridForDateImpl } from "./grids";
+import { ensureGridForDateImpl, generatePoolImpl } from "./grids";
 import { formatYMD, todayUTC, tomorrowUTC } from "./lib/dates";
 
 /** Inclusive span: today plus 30 days back (31 dates). */
@@ -33,54 +34,61 @@ type SeedHistoricalResult = {
 
 type AutoSeedResult = { skipped: true } | SeedHistoricalResult;
 
+/**
+ * Helper direct (pas une action) du seed historique. Appelé in-process par le
+ * wrapper `seedHistoricalGrids` (script CLI) et par `autoSeedIfEmpty` (deploy),
+ * jamais via `ctx.runAction` (anti-pattern action→action des guidelines Convex).
+ */
+async function seedHistoricalGridsImpl(
+  ctx: ActionCtx,
+): Promise<SeedHistoricalResult> {
+  if (await ctx.runQuery(internal.gridData.hasAnyGrid)) {
+    throw new ConvexError(
+      "grids table is not empty — run wipe:wipeAllData in dev first, or skip seed if prod is already live",
+    );
+  }
+
+  const today = todayUTC();
+  const dates = datesFromPastToToday(today);
+
+  // Generate a pool first (helper direct, pas de ctx.runAction imbriqué)
+  const report = await generatePoolImpl(ctx);
+  console.log(
+    `[seedHistoricalGrids] Pool generated: ${report.totalGenerated} grids in ${report.durationMs}ms`,
+  );
+
+  const steps: { date: string; candidateId: string }[] = [];
+
+  for (const date of dates) {
+    // Appel DIRECT au helper (pas de ctx.runAction imbriqué).
+    const result = await ensureGridForDateImpl(ctx, date);
+    if (result) {
+      steps.push(result);
+      console.log(
+        `[seedHistoricalGrids] ${date} → candidate ${result.candidateId}`,
+      );
+    } else {
+      console.warn(`[seedHistoricalGrids] No grid assigned for ${date}`);
+    }
+  }
+
+  // today est déjà couvert par la boucle ; on ajoute demain.
+  await ensureGridForDateImpl(ctx, tomorrowUTC());
+
+  return { seeded: dates.length, dates, steps };
+}
+
+/** Thin wrapper exposé pour le script CLI `pnpm seed:grids`. */
 export const seedHistoricalGrids = internalAction({
   args: {},
-  handler: async (ctx): Promise<SeedHistoricalResult> => {
-    if (await ctx.runQuery(internal.gridData.hasAnyGrid)) {
-      throw new ConvexError(
-        "grids table is not empty — run wipe:wipeAllData in dev first, or skip seed if prod is already live",
-      );
-    }
-
-    const today = todayUTC();
-    const dates = datesFromPastToToday(today);
-
-    // Generate a pool first
-    const report = await ctx.runAction(internal.grids.generatePoolInternal, {});
-    console.log(
-      `[seedHistoricalGrids] Pool generated: ${report.totalGenerated} grids in ${report.durationMs}ms`,
-    );
-
-    const steps: { date: string; candidateId: string }[] = [];
-
-    for (const date of dates) {
-      // Appel DIRECT au helper (pas de ctx.runAction imbriqué).
-      const result = await ensureGridForDateImpl(ctx, date);
-      if (result) {
-        steps.push(result);
-        console.log(
-          `[seedHistoricalGrids] ${date} → candidate ${result.candidateId}`,
-        );
-      } else {
-        console.warn(`[seedHistoricalGrids] No grid assigned for ${date}`);
-      }
-    }
-
-    // today est déjà couvert par la boucle ; on ajoute demain.
-    await ensureGridForDateImpl(ctx, tomorrowUTC());
-
-    return {
-      seeded: dates.length,
-      dates,
-      steps,
-    };
-  },
+  handler: async (ctx): Promise<SeedHistoricalResult> =>
+    seedHistoricalGridsImpl(ctx),
 });
 
 /**
  * Idempotent seed pour les déploiements preview automatiques.
  * No-op si grids non vide (develop, prod) ; seed complet si vide (nouvelle branche WIP).
- * Appelé par la build command Vercel : `convex deploy --run seed:autoSeedIfEmpty`
+ * Appelé par la build command Vercel : `convex deploy --preview-run seed:autoSeedIfEmpty`
  */
 export const autoSeedIfEmpty = internalAction({
   args: {},
@@ -90,6 +98,7 @@ export const autoSeedIfEmpty = internalAction({
       return { skipped: true };
     }
     console.log("[autoSeedIfEmpty] grids vides — démarrage du seed historique");
-    return ctx.runAction(internal.seed.seedHistoricalGrids, {});
+    // Helper direct (pas de ctx.runAction imbriqué).
+    return seedHistoricalGridsImpl(ctx);
   },
 });
