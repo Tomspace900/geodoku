@@ -74,8 +74,8 @@ geodoku/
 │   │   ├── errors/              # ErrorBoundary, fallback UI
 │   │   └── admin/
 │   │       ├── AdminPage.tsx
-│   │       ├── components/      # PoolOverviewPanel, ScheduleCalendar, GridDetail, GridPreview, UpcomingGridsPanel, DiversityMetricsPanel
-│   │       ├── logic/           # display.ts (constraintLabel, difficulty pills/dots), scheduling.ts (dateToStr)
+│   │       ├── components/      # PoolOverviewPanel, GameCalendar, GridDayDetail, GridPreview, GameHealthPanel, StatGlyph
+│   │       ├── logic/           # display.ts (constraintLabel, difficulty pills/dots), analytics.ts (struggle, markers, summary/trend), scheduling.ts (dateToStr)
 │   │       └── hooks/useAdminToken.ts
 │   ├── components/ui/           # shadcn dump (button, input, accordion, dialog, popover…)
 │   └── lib/utils.ts             # cn()
@@ -184,7 +184,7 @@ Les tokens `brand` et `rarity.*` sont **sémantiquement distincts** : `brand` es
 | Token     | Hex (light) | Usage                                                                                  |
 | --------- | ----------- | -------------------------------------------------------------------------------------- |
 | `success` | `#16a34a`   | Indicateur positif — tier « easy » de difficulté, confirmations de validation. |
-| `warning` | `#d97706`   | Alerte douce — tier « medium » de difficulté, highlight d'une contrainte trop fréquente (`ExposureBar`), écart > 20 dans les métriques. |
+| `warning` | `#d97706`   | Alerte douce — tier « medium » de difficulté, stock pool en baisse (`PoolHealthBanner`), bandeau « struggle indisponible / ventilation en attente ». |
 | `error`   | `#dc2626`   | Erreur ou état bloquant — tier « hard » de difficulté, alertes « pool vide / grille manquante », message d'erreur dans `GuessModal`. |
 
 Règle d'application : background à 10–15% opacity, texte à 100% (même convention que `rarity.*`).
@@ -307,11 +307,10 @@ Les panels admin ont leurs propres composants atomiques. **Avant de composer un 
 | --- | --- |
 | [`<PanelCard>`](src/features/admin/components/PanelCard.tsx) | `<section className="rounded-lg bg-surface-low p-4 md:p-5">` — wrapper de tous les panels admin |
 | [`<PanelHeader>`](src/features/admin/components/PanelHeader.tsx) | Titre eyebrow + slot `children` pour badges/actions |
-| [`<StatBlock>`](src/features/admin/components/StatBlock.tsx) | Chiffre hero + label eyebrow (KPIs) |
 | [`<DifficultyPill>`](src/features/admin/components/DifficultyPill.tsx) | Pill 0-100 par tier de difficulté (`value` numérique ou `tier+children`) |
-| [`<StatusPill>`](src/features/admin/components/StatusPill.tsx) | `scheduled` (gris, icône Calendar) / `predicted` (brand, icône Sparkles) |
+| [`<StatusPill>`](src/features/admin/components/StatusPill.tsx) | État d'un jour : `scheduled` / `predicted` (brand, Sparkles) / `active` (aujourd'hui, success, Radio) / `past` (archivé, Archive) |
 | [`<TagPill>`](src/features/admin/components/TagPill.tsx) | Pill neutre pour contrainte/catégorie (`bg-surface-low text-on-surface-variant`) |
-| [`<ExposureBar>`](src/features/admin/components/ExposureBar.tsx) | Ligne « label + barre passé + chiffre + barre futur » (graphes du PoolOverviewPanel) |
+| [`<StatGlyph>`](src/features/admin/components/StatGlyph.tsx) | Icône + valeur d'une métrique (style KDA, vocabulaire partagé) ; `showLabel` ajoute le mot inline, `<StatLegend>` rend la légende des icônes |
 
 ### 5.5.2 Convention `rounded-*`
 
@@ -320,7 +319,7 @@ Les panels admin ont leurs propres composants atomiques. **Avant de composer un 
 | `rounded-md` | Boutons (matché par le variant `default`/`secondary` du `<Button>`) |
 | `rounded-lg` | Cartes / panels de section (matché par `<PanelCard>`) |
 | `rounded-full` | Badges, pills (matché par `<DifficultyPill>`, `<StatusPill>`, `<TagPill>`, `<RarityBadge>`) |
-| `rounded-xl` | **Cellules interactives, surfaces flottantes et dialogs** — cellules de grille de jeu (`Cell`), mini-cellules de preview (`GridPreview`), cartes flottantes en `shadow-editorial` (`GridDetail`, `ScheduleCalendar`, `AchievementCard`), `DialogContent`, `ResultScreen` desktop. Convention spécifique à Geodoku : `rounded-xl` (12px) donne une « softness » d'interactivité qu'on ne veut pas sur les sections plates. |
+| `rounded-xl` | **Cellules interactives, surfaces flottantes et dialogs** — cellules de grille de jeu (`Cell`), mini-cellules de preview (`GridPreview`), cartes flottantes en `shadow-editorial` (`GridDayDetail`, `GameCalendar`, `AchievementCard`), `DialogContent`, `ResultScreen` desktop. Convention spécifique à Geodoku : `rounded-xl` (12px) donne une « softness » d'interactivité qu'on ne veut pas sur les sections plates. |
 | `rounded-t-2xl` | **Drawer mobile** uniquement (cf. shadcn Drawer, ResultScreen bottom-up). Pas de `rounded-2xl` complet. |
 | `rounded-3xl` et plus | **Interdit.** |
 
@@ -371,11 +370,11 @@ Le skill [`/verify-design-system`](.claude/skills/verify-design-system/SKILL.md)
 - `getTodayGrid` (query, public) — grille du jour ou `null` ; jointure satellite `gridAnswers` pour exposer `validAnswers` au front jeu.
 - `getScheduledGrids` (query, admin UI) — grilles depuis J-30 avec métadonnées candidate embarquées. **Payload light** : pas de `validAnswers` (fetch lazy via les deux queries ci-dessous).
 - `getScheduledGridPreviewDetail` (query, admin) — fetch lazy `{rows, cols, validAnswers, difficulty}` pour une date donnée. Appelée à la sélection d'une date dans le calendrier admin.
-- `getCandidatePreviewDetail` (query, admin) — fetch lazy `{rows, cols, validAnswers, cellDifficulties}` pour un `candidateId`. Appelée à l'ouverture d'un accordéon dans `UpcomingGridsPanel`.
+- `getCandidatePreviewDetail` (query, admin) — fetch lazy `{rows, cols, validAnswers, cellDifficulties}` pour un `candidateId`. Appelée par `GridDayDetail` quand un jour prédit est sélectionné.
 - `getPoolStats` (query, admin) — taille du pool par status, couverture par contrainte/pays.
-- `getExposureStats` (query, admin) — exposition passée (15 grilles) vs. à venir (14 jours), pour les barres comparées du dashboard.
 - `getUpcomingScheduledPreview` (query, admin) — 1..14 jours, marque chaque jour `scheduled` (déjà inscrit) / `predicted` (simulé en lecture seule depuis le pool) / `missing`.
-- `getGridFeedbackStats` (query, admin) — stats de feedback observé (winRate, difficulté ressentie, etc.).
+- `getGridFeedbackStats` (query, admin) — stats de feedback observé par jour (winRate, défaites + split vies/blocage, difficulté ressentie, etc.). **Léger** : alimente la synthèse + tendance de `GameHealthPanel`.
+- `getGridCellMetrics(date)` (query, admin) — **lourd, au clic** : 9 `dailyStats` + 9 `guesses` d'un jour (struggle, fillRate, picks, validAnswers par case). Jamais en masse — un seul jour à la fois (`GridDayDetail` + script d'export).
 - `submitGridFeedback` (mutation, public) — feedback de fin de partie.
 - `refreshPool` (action, admin avec `adminToken`) — supprime le stock `available` puis regénère un pool complet.
 - `runEnsureTomorrow` (action, admin avec `adminToken`) — planifie today + tomorrow (équivalent manuel du cron daily).
@@ -391,10 +390,9 @@ Le skill [`/verify-design-system`](.claude/skills/verify-design-system/SKILL.md)
 
 [`src/features/admin/AdminPage.tsx`](src/features/admin/AdminPage.tsx) compose :
 
-- `PoolOverviewPanel` — taille du pool, runway, alerte demain avec bouton « Planifier maintenant », bouton « Regénérer le pool » (confirmation modale), barres comparées d'exposition passée vs à venir (constraints + countries), badge ambre si une contrainte apparaît dans ≥ 33 % des 15 dernières grilles.
-- `ScheduleCalendar` + `GridDetail` — calendrier avec point de difficulté par jour, sélection → preview détaillée avec `cellDifficulties` colorées. `GridDetail` fait un **fetch lazy** via `getScheduledGridPreviewDetail` (les `validAnswers` ne transitent pas dans la query liste).
-- `UpcomingGridsPanel` — accordéon (shadcn) sur les 7 prochains jours, distinguant `scheduled` (vert) et `predicted` (violet, lecture seule). La grille détaillée se charge **uniquement à l'ouverture de l'accordéon** via `getCandidatePreviewDetail` / `getScheduledGridPreviewDetail` (`LazyGridPreview`).
-- `DiversityMetricsPanel` — corrélation difficulté estimée ↔ feedback observé.
+- `PoolOverviewPanel` — `PoolHealthBanner` unifié (statut sain/baisse/critique calqué sur l'alerte « grille de demain » : icône + données inline `en stock · utilisées · total` + bouton « Regénérer le pool » à droite, confirmation modale), alerte demain avec bouton « Planifier maintenant ».
+- `GameCalendar` + `GridDayDetail` — calendrier unifié (jour passé : pastille **winRate observé** ; futur planifié : difficulté estimée ; prédit : brand ; manquant : rouge). Sélection → `GridDayDetail` : grille **passée/active** = `getGridCellMetrics` (chips triés par nb de choix, badge % réussite, KDA réussites/échecs/essais via `StatGlyph`) ; grille **future/prédite** = preview estimée lazy (`getScheduledGridPreviewDetail` / `getCandidatePreviewDetail`). Composant `GridPreview` partagé passé/futur.
+- `GameHealthPanel` — synthèse agrégée ~30 j (win rate global en hero + parties/jour · pic · creux) puis tendance 7 j (tableau à en-têtes `StatGlyph`). Tout depuis la query légère `getGridFeedbackStats`.
 
 Pas de panneau de tuning des constantes : on ajuste dans `gridConstants.ts`, on simule (`simulate-scheduling`), puis `wipe:db` + `seed:grids` en dev pour un reset complet, ou « Regénérer le pool » dans `/admin` pour renouveler le stock futur sans toucher aux grilles planifiées.
 
@@ -442,7 +440,7 @@ pnpm seed:grids                   # npx convex run --internal seed:seedHistorica
 #   2. simuler hors-ligne avec `pnpm simulate:scheduling` pour valider la santé du pool
 #   3. wipe + reseed pour régénérer un historique cohérent côté Convex (dev)
 #      ou « Regénérer le pool » dans /admin (prod/preview, stock futur uniquement)
-#   4. inspecter dans /admin (PoolOverviewPanel + UpcomingGridsPanel)
+#   4. inspecter dans /admin (PoolOverviewPanel + GameCalendar + GridDayDetail)
 pnpm wipe:db                      # internal action wipe:wipeAllData (paginé)
 
 # Admin Convex
