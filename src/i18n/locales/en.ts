@@ -38,7 +38,36 @@ export const en = {
     loveCreditPost: ".",
     contact: "Contact",
     support: "Buy me a coffee",
+    privacy: "Privacy",
     copyright: "©\u00A0{year}\u00A0Geodoku",
+  },
+  privacy: {
+    eyebrow: "Legal · Privacy",
+    title: "Privacy",
+    lead: "Geodoku is a game I build on my own. No account needed: I only collect the bare minimum, just enough to run the game and see how the grids are doing.",
+    updatedLabel: "Last updated",
+    updatedValue: "June 2026",
+    backToGame: "Back to the game",
+    essenceTitle: "No account, no tracking",
+    essenceBody:
+      "No sign-up, no login, no ads. I don't sell or share any data, and there are no third-party trackers on the site.",
+    deviceTitle: "On your device",
+    deviceBody:
+      "Your browser keeps a few settings in local storage: your language, the progress of the current day's grid, and a random identifier used only to curb spam. None of it is an advertising or tracking cookie. Clearing the site data removes it.",
+    serverTitle: "What gets sent to me",
+    serverBody:
+      "While you play, I record anonymous, aggregated statistics (the countries picked per cell, the difficulty feedback). They aren't linked to any identity: there's no way to tell who guessed what.",
+    thirdPartyTitle: "Third-party services",
+    thirdPartyBody:
+      "Geodoku relies on Vercel (hosting and anonymous, cookieless audience metrics), Convex (the database holding the game statistics) and Google Fonts (typefaces, which exposes your IP address to Google when they load).",
+    rightsTitle: "Your rights",
+    rightsBody:
+      "Since no data can identify you, there's no account to access or delete. You stay in control from your browser: clearing the site data for Geodoku erases everything.",
+    supportTitle: "Support the project",
+    supportBodyPre:
+      "Geodoku is free and ad-free. If you'd like to support it, you can buy me a coffee on",
+    contactTitle: "Contact",
+    contactBodyPre: "A question? Write to me at",
   },
   howToPlay: {
     title: "How to play?",

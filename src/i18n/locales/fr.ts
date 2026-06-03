@@ -38,7 +38,36 @@ export const fr = {
     loveCreditPost: ".",
     contact: "Contact",
     support: "Offrir un café",
+    privacy: "Confidentialité",
     copyright: "©\u00A0{year}\u00A0Geodoku",
+  },
+  privacy: {
+    eyebrow: "Mentions \u00B7 Confidentialit\u00E9",
+    title: "Confidentialit\u00E9",
+    lead: "Geodoku est un jeu que je d\u00E9veloppe seul. Pas besoin de compte\u00A0: je ne collecte que le strict minimum, juste de quoi faire tourner le jeu et voir comment se portent les grilles.",
+    updatedLabel: "Derni\u00E8re mise \u00E0 jour",
+    updatedValue: "Juin 2026",
+    backToGame: "Retour au jeu",
+    essenceTitle: "Aucun compte, aucun pistage",
+    essenceBody:
+      "Pas d'inscription, pas de connexion, pas de publicit\u00E9. Je ne vends ni ne partage aucune donn\u00E9e, et il n'y a aucun traceur tiers sur le site.",
+    deviceTitle: "Sur ton appareil",
+    deviceBody:
+      "Ton navigateur garde quelques r\u00E9glages en stockage local\u00A0: ta langue, la progression de la grille du jour et un identifiant al\u00E9atoire qui sert seulement \u00E0 freiner le spam. Rien de tout \u00E7a n'est un cookie publicitaire ou traceur. Effacer les donn\u00E9es du site les supprime.",
+    serverTitle: "Ce qui m'est envoy\u00E9",
+    serverBody:
+      "Quand tu joues, j'enregistre des statistiques anonymes et agr\u00E9g\u00E9es (les pays choisis par case, le ressenti de difficult\u00E9). Elles ne sont rattach\u00E9es \u00E0 aucune identit\u00E9\u00A0: impossible de savoir qui a propos\u00E9 quoi.",
+    thirdPartyTitle: "Services tiers",
+    thirdPartyBody:
+      "Geodoku s'appuie sur Vercel (h\u00E9bergement et mesure d'audience anonyme, sans cookie), Convex (la base de donn\u00E9es des statistiques de jeu) et Google Fonts (les polices, qui expose ton adresse IP \u00E0 Google au chargement).",
+    rightsTitle: "Tes droits",
+    rightsBody:
+      "Comme aucune donn\u00E9e ne permet de t'identifier, il n'y a pas de compte \u00E0 consulter ni \u00E0 supprimer. Tu gardes le contr\u00F4le depuis ton navigateur\u00A0: effacer les donn\u00E9es du site pour Geodoku efface tout.",
+    supportTitle: "Soutenir le projet",
+    supportBodyPre:
+      "Geodoku est gratuit et sans pub. Si tu veux soutenir le projet, tu peux m'offrir un café sur",
+    contactTitle: "Contact",
+    contactBodyPre: "Une question\u00A0? \u00C9cris-moi \u00E0",
   },
   howToPlay: {
     title: "Comment jouer\u00A0?",

@@ -74,6 +74,10 @@ export default function AppFooter({ className }: { className?: string }) {
             {t("footer.support")}
           </a>
           <Middot />
+          <a href="/privacy" className={linkClass}>
+            {t("footer.privacy")}
+          </a>
+          <Middot />
           <span>{t("footer.copyright", { year })}</span>
           <Middot />
           <LocaleSwitcher />
