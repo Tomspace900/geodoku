@@ -257,52 +257,6 @@ export const getPoolStats = query({
   },
 });
 
-/** Exposition passée vs. prochaine des contraintes et pays, pour l'admin dashboard. */
-export const getExposureStats = query({
-  args: { adminToken: v.string() },
-  handler: async (ctx, args) => {
-    checkAdminToken(args.adminToken);
-    const tomorrow = tomorrowUTC();
-
-    const pastGrids = await ctx.db
-      .query("grids")
-      .withIndex("by_date", (q) => q.lt("date", tomorrow))
-      .order("desc")
-      .take(HISTORY_WINDOW);
-
-    const upcomingGrids = await ctx.db
-      .query("grids")
-      .withIndex("by_date", (q) => q.gte("date", tomorrow))
-      .order("asc")
-      .take(UPCOMING_PREVIEW_MAX_DAYS);
-
-    function aggregate(
-      grids: Array<{ rows: string[]; cols: string[]; countryPool: string[] }>,
-    ) {
-      const constraintCounts: Record<string, number> = {};
-      const countryCounts: Record<string, number> = {};
-      for (const g of grids) {
-        for (const id of [...g.rows, ...g.cols]) {
-          constraintCounts[id] = (constraintCounts[id] ?? 0) + 1;
-        }
-        // Count each country once per grid (countryPool dénormalisé à l'insert).
-        const unique = new Set(g.countryPool);
-        for (const code of unique) {
-          countryCounts[code] = (countryCounts[code] ?? 0) + 1;
-        }
-      }
-      return { constraintCounts, countryCounts };
-    }
-
-    return {
-      pastGridCount: pastGrids.length,
-      upcomingGridCount: upcomingGrids.length,
-      past: aggregate(pastGrids),
-      upcoming: aggregate(upcomingGrids),
-    };
-  },
-});
-
 /**
  * Aperçu lecture seule des `days` prochains jours :
  * - `kind: "scheduled"` si la grille est déjà inscrite dans `grids` ;
@@ -495,8 +449,9 @@ export const getGridFeedbackStats = query({
  * pool de réponses valides, pays jamais trouvés, et difficulté estimée vs
  * observée.
  *
- * Renvoie `null` si la grille n'existe pas pour cette date. Pensée pour être
- * appelée hors UI (scripts d'export analytics) — pas mountée dans /admin.
+ * Renvoie `null` si la grille n'existe pas pour cette date. Lourde (9 dailyStats
+ * + 9 guesses) : consommée AU CLIC seulement dans /admin (détail d'un jour) et
+ * par les scripts d'export analytics — jamais en masse sur le calendrier.
  */
 export const getGridCellMetrics = query({
   args: { date: v.string(), adminToken: v.string() },
@@ -568,7 +523,11 @@ export const getGridCellMetrics = query({
 
     const cells: Record<
       string,
-      ReturnType<typeof computeCellMetric> & { failedAttempts: number }
+      ReturnType<typeof computeCellMetric> & {
+        failedAttempts: number;
+        validAnswers: string[];
+        picks: Array<{ countryCode: string; count: number }>;
+      }
     > = {};
     for (let i = 0; i < CELL_KEYS.length; i++) {
       const cellKey = CELL_KEYS[i] as string;
@@ -582,6 +541,12 @@ export const getGridCellMetrics = query({
           estimatedDifficulty: input.estimatedDifficulty,
         }),
         failedAttempts: input.failedAttempts,
+        // Liste complète des solutions de la case (pour réafficher les chips
+        // côté admin sans seconde query).
+        validAnswers: input.validForCell,
+        // Distribution complète des choix (countryCode → nb de fois choisi),
+        // pour trier les chips et afficher le compte. Non plafonnée (≠ topAnswers).
+        picks: input.guessRows,
       };
     }
 

@@ -1,8 +1,8 @@
 import { cn } from "@/lib/utils";
-import { Calendar, Sparkles } from "lucide-react";
+import { Archive, Calendar, Radio, Sparkles } from "lucide-react";
 import type { ReactNode } from "react";
 
-type Kind = "scheduled" | "predicted";
+type Kind = "scheduled" | "predicted" | "active" | "past";
 
 const STYLES: Record<
   Kind,
@@ -14,6 +14,12 @@ const STYLES: Record<
     Icon: Calendar,
   },
   predicted: { bg: "bg-brand/10", text: "text-brand", Icon: Sparkles },
+  active: { bg: "bg-success/15", text: "text-success", Icon: Radio },
+  past: {
+    bg: "bg-surface-low",
+    text: "text-on-surface-variant",
+    Icon: Archive,
+  },
 };
 
 type Props = {
