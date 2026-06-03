@@ -8,7 +8,7 @@ import { ConvexError } from "convex/values";
 import { internal } from "./_generated/api";
 import type { ActionCtx } from "./_generated/server";
 import { internalAction } from "./_generated/server";
-import { ensureGridForDateImpl, generatePoolImpl } from "./grids";
+import { generatePoolImpl } from "./grids";
 import { formatYMD, todayUTC, tomorrowUTC } from "./lib/dates";
 
 /** Inclusive span: today plus 30 days back (31 dates). */
@@ -29,7 +29,7 @@ function datesFromPastToToday(today: string): string[] {
 type SeedHistoricalResult = {
   seeded: number;
   dates: string[];
-  steps: { date: string; candidateId: string }[];
+  steps: { date: string }[];
 };
 
 type AutoSeedResult = { skipped: true } | SeedHistoricalResult;
@@ -57,23 +57,26 @@ async function seedHistoricalGridsImpl(
     `[seedHistoricalGrids] Pool generated: ${report.totalGenerated} grids in ${report.durationMs}ms`,
   );
 
-  const steps: { date: string; candidateId: string }[] = [];
+  const steps: { date: string }[] = [];
 
   for (const date of dates) {
-    // Appel DIRECT au helper (pas de ctx.runAction imbriqué).
-    const result = await ensureGridForDateImpl(ctx, date);
+    // Mutation légère (scheduling.ts) via ctx.runMutation — action→mutation OK.
+    const result = await ctx.runMutation(
+      internal.scheduling.assignGridForDate,
+      { date },
+    );
     if (result) {
       steps.push(result);
-      console.log(
-        `[seedHistoricalGrids] ${date} → candidate ${result.candidateId}`,
-      );
+      console.log(`[seedHistoricalGrids] ${date} assigned`);
     } else {
-      console.warn(`[seedHistoricalGrids] No grid assigned for ${date}`);
+      console.error(`[seedHistoricalGrids] No grid assigned for ${date}`);
     }
   }
 
   // today est déjà couvert par la boucle ; on ajoute demain.
-  await ensureGridForDateImpl(ctx, tomorrowUTC());
+  await ctx.runMutation(internal.scheduling.assignGridForDate, {
+    date: tomorrowUTC(),
+  });
 
   return { seeded: dates.length, dates, steps };
 }

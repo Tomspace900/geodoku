@@ -14,12 +14,7 @@ import {
   HISTORY_WINDOW,
   POOL_LOW_THRESHOLD,
 } from "./lib/gridConstants";
-import {
-  buildConstraintMatches,
-  finalizeGrid,
-  generateDiversePool,
-  tryBuildGridWithSeed,
-} from "./lib/gridGenerator";
+import { generateDiversePool } from "./lib/gridGenerator";
 import { selectNextGrid } from "./lib/gridScheduler";
 import { rateLimiter } from "./rateLimit";
 
@@ -88,122 +83,6 @@ export async function refreshPoolImpl(
   const report = await generatePoolImpl(ctx);
   return { ...report, deletedAvailable };
 }
-
-/**
- * Assigns a grid from the pool to a specific date.
- * Uses the scheduler to pick the best available grid.
- * Falls back to emergency generation if the pool is empty.
- *
- * Helper async **direct** (pas une action) : on l'appelle in-process depuis les
- * actions (`ensureTomorrowGrid`, `runEnsureTomorrow`, `scheduleGridForDate`,
- * seed) plutôt que via `ctx.runAction`. Appeler une action depuis une action
- * est l'anti-pattern
- * Convex (cf. `_generated/ai/guidelines.md`) qui faisait planter le cron en
- * contexte planifié. `ctx.runQuery` / `ctx.runMutation` depuis une action
- * restent corrects et sont conservés ici.
- */
-export async function ensureGridForDateImpl(
-  ctx: ActionCtx,
-  date: string,
-): Promise<{ date: string; candidateId: string } | null> {
-  const exists = await ctx.runQuery(internal.gridData.hasGridForDate, { date });
-  if (exists) {
-    return null;
-  }
-
-  const available = await ctx.runQuery(internal.gridData.getAvailablePoolGrids);
-  const recentGrids = await ctx.runQuery(
-    internal.gridData.getRecentPublishedGrids,
-    { limit: HISTORY_WINDOW },
-  );
-
-  const poolForScheduler = available.map((g) => ({
-    _id: g._id as string,
-    rows: g.rows,
-    cols: g.cols,
-    metadata: g.metadata,
-  }));
-
-  const recentForScheduler = recentGrids.map((g) => ({
-    constraintIds: [...g.rows, ...g.cols],
-    countryPool: g.countryPool,
-  }));
-
-  const selected = selectNextGrid(poolForScheduler, recentForScheduler);
-
-  if (!selected) {
-    // FALLBACK: emergency generation with a random seed — no overlap check
-    console.error(
-      `[ensureGridForDate] POOL EMPTY: no grid for ${date}, using emergency fallback`,
-    );
-    const matches = buildConstraintMatches();
-    const randomSeed =
-      CONSTRAINTS[Math.floor(Math.random() * CONSTRAINTS.length)];
-    const gridResult = tryBuildGridWithSeed(randomSeed.id, "row", matches);
-    if (!gridResult) {
-      // Throw (pas return null) pour que le cron remonte une Failure visible.
-      throw new Error(
-        `[ensureGridForDate] Emergency grid generation failed for ${date}`,
-      );
-    }
-    const finalized = finalizeGrid(
-      gridResult.rows,
-      gridResult.cols,
-      randomSeed.id,
-      matches,
-    );
-    if (!finalized) {
-      throw new Error(
-        `[ensureGridForDate] Emergency grid finalization failed for ${date}`,
-      );
-    }
-    const candidateId = await ctx.runMutation(
-      internal.gridData.insertPoolGrid,
-      {
-        rows: finalized.rows,
-        cols: finalized.cols,
-        validAnswers: finalized.validAnswers,
-        metadata: finalized.metadata,
-      },
-    );
-    await ctx.runMutation(internal.gridData.assignCandidateToGrid, {
-      candidateId,
-      date,
-      rows: finalized.rows,
-      cols: finalized.cols,
-      countryPool: finalized.metadata.countryPool,
-      difficulty: finalized.metadata.difficultyEstimate,
-    });
-    return { date, candidateId };
-  }
-
-  await ctx.runMutation(internal.gridData.assignCandidateToGrid, {
-    candidateId: selected.grid._id as Id<"gridCandidates">,
-    date,
-    rows: selected.grid.rows,
-    cols: selected.grid.cols,
-    countryPool: selected.grid.metadata.countryPool,
-    difficulty: selected.grid.metadata.difficultyEstimate,
-  });
-
-  return { date, candidateId: selected.grid._id };
-}
-
-/**
- * Ensures today's and tomorrow's grids exist. Called by the daily cron (03:00
- * UTC) and the hourly self-heal cron. Today est rattrapé en plus de tomorrow :
- * si un passage précédent a échoué, on évite que `getTodayGrid` renvoie null.
- * `ensureGridForDateImpl` est idempotent.
- */
-export const ensureTomorrowGrid = internalAction({
-  args: {},
-  handler: async (ctx) => {
-    // Appels DIRECTS au helper (pas de ctx.runAction imbriqué) — c'est le fix
-    // de l'incident : action→action plantait en contexte planifié.
-    await ensureGridForDateImpl(ctx, todayUTC());
-    await ensureGridForDateImpl(ctx, tomorrowUTC());
-  },
-});
 
 /**
  * Refills the pool if it falls below POOL_LOW_THRESHOLD.
@@ -406,7 +285,7 @@ export const getExposureStats = query({
         for (const id of [...g.rows, ...g.cols]) {
           constraintCounts[id] = (constraintCounts[id] ?? 0) + 1;
         }
-        // Count each country once per grid (countryPool dénormalisé à assignCandidateToGrid).
+        // Count each country once per grid (countryPool dénormalisé à l'insert).
         const unique = new Set(g.countryPool);
         for (const code of unique) {
           countryCounts[code] = (countryCounts[code] ?? 0) + 1;
@@ -860,9 +739,7 @@ export const runEnsureTomorrow = action({
   args: { adminToken: v.string() },
   handler: async (ctx, args) => {
     checkAdminToken(args.adminToken);
-    // Helper direct (pas de ctx.runAction imbriqué) — même fix que le cron.
-    await ensureGridForDateImpl(ctx, todayUTC());
-    await ensureGridForDateImpl(ctx, tomorrowUTC());
+    await ctx.runMutation(internal.scheduling.ensureDailyGrids, {});
   },
 });
 
@@ -873,11 +750,10 @@ export const runEnsureTomorrow = action({
  */
 export const scheduleGridForDate = action({
   args: { adminToken: v.string(), date: v.string() },
-  handler: async (
-    ctx,
-    args,
-  ): Promise<{ date: string; candidateId: string } | null> => {
+  handler: async (ctx, args): Promise<{ date: string } | null> => {
     checkAdminToken(args.adminToken);
-    return await ensureGridForDateImpl(ctx, args.date);
+    return await ctx.runMutation(internal.scheduling.assignGridForDate, {
+      date: args.date,
+    });
   },
 });

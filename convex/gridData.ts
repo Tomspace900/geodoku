@@ -34,28 +34,6 @@ export async function getGridAnswers(
 
 // ─── Internal queries ─────────────────────────────────────────────────────────
 
-/**
- * Returns the N most-recently published grids (ordered by date desc).
- *
- * Retourne `countryPool` dénormalisé (recopié depuis metadata à `assignCandidateToGrid`)
- * pour que le scheduler n'ait pas à recharger `validAnswers`.
- */
-export const getRecentPublishedGrids = internalQuery({
-  args: { limit: v.number() },
-  handler: async (ctx, args) => {
-    const grids = await ctx.db
-      .query("grids")
-      .withIndex("by_date")
-      .order("desc")
-      .take(args.limit);
-    return grids.map((g) => ({
-      rows: g.rows,
-      cols: g.cols,
-      countryPool: g.countryPool,
-    }));
-  },
-});
-
 /** True if at least one published grid exists (idempotence guard for seed). */
 export const hasAnyGrid = internalQuery({
   args: {},
@@ -141,55 +119,6 @@ export const insertPoolGrid = internalMutation({
       validAnswers: args.validAnswers,
     });
     return candidateId;
-  },
-});
-
-/**
- * Marque une candidate `used` ET insère la grille publiée du jour dans **une
- * seule transaction**. Atomique : impossible de consommer une candidate sans
- * créer sa grille (et inversement), ce qui élimine les orphelins.
- *
- * `countryPool` est dénormalisé depuis le metadata de la candidate pour éviter
- * de relire le satellite à chaque appel scheduler/admin. `validAnswers` ne sont
- * PAS écrits ici : ils vivent dans `gridAnswers` via `candidateId` (1-to-1,
- * créé par `insertPoolGrid`).
- *
- * Idempotent et défensif : ne fait rien (retourne `false`) si une grille existe
- * déjà pour la date ou si la candidate n'est plus `available`.
- */
-export const assignCandidateToGrid = internalMutation({
-  args: {
-    candidateId: v.id("gridCandidates"),
-    date: v.string(),
-    rows: v.array(v.string()),
-    cols: v.array(v.string()),
-    countryPool: v.array(v.string()),
-    difficulty: v.number(),
-  },
-  handler: async (ctx, args) => {
-    const existing = await ctx.db
-      .query("grids")
-      .withIndex("by_date", (q) => q.eq("date", args.date))
-      .unique();
-    if (existing) return false;
-
-    const candidate = await ctx.db.get(args.candidateId);
-    if (!candidate || candidate.status !== "available") return false;
-
-    await ctx.db.patch(args.candidateId, {
-      status: "used",
-      usedAt: Date.now(),
-      usedForDate: args.date,
-    });
-    await ctx.db.insert("grids", {
-      date: args.date,
-      rows: args.rows,
-      cols: args.cols,
-      countryPool: args.countryPool,
-      difficulty: args.difficulty,
-      candidateId: args.candidateId,
-    });
-    return true;
   },
 });
 
