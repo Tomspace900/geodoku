@@ -257,52 +257,6 @@ export const getPoolStats = query({
   },
 });
 
-/** Exposition passée vs. prochaine des contraintes et pays, pour l'admin dashboard. */
-export const getExposureStats = query({
-  args: { adminToken: v.string() },
-  handler: async (ctx, args) => {
-    checkAdminToken(args.adminToken);
-    const tomorrow = tomorrowUTC();
-
-    const pastGrids = await ctx.db
-      .query("grids")
-      .withIndex("by_date", (q) => q.lt("date", tomorrow))
-      .order("desc")
-      .take(HISTORY_WINDOW);
-
-    const upcomingGrids = await ctx.db
-      .query("grids")
-      .withIndex("by_date", (q) => q.gte("date", tomorrow))
-      .order("asc")
-      .take(UPCOMING_PREVIEW_MAX_DAYS);
-
-    function aggregate(
-      grids: Array<{ rows: string[]; cols: string[]; countryPool: string[] }>,
-    ) {
-      const constraintCounts: Record<string, number> = {};
-      const countryCounts: Record<string, number> = {};
-      for (const g of grids) {
-        for (const id of [...g.rows, ...g.cols]) {
-          constraintCounts[id] = (constraintCounts[id] ?? 0) + 1;
-        }
-        // Count each country once per grid (countryPool dénormalisé à l'insert).
-        const unique = new Set(g.countryPool);
-        for (const code of unique) {
-          countryCounts[code] = (countryCounts[code] ?? 0) + 1;
-        }
-      }
-      return { constraintCounts, countryCounts };
-    }
-
-    return {
-      pastGridCount: pastGrids.length,
-      upcomingGridCount: upcomingGrids.length,
-      past: aggregate(pastGrids),
-      upcoming: aggregate(upcomingGrids),
-    };
-  },
-});
-
 /**
  * Aperçu lecture seule des `days` prochains jours :
  * - `kind: "scheduled"` si la grille est déjà inscrite dans `grids` ;
@@ -476,6 +430,10 @@ export const getGridFeedbackStats = query({
         tooEasyCount: row.tooEasyCount,
         balancedCount: row.balancedCount,
         tooHardCount: row.tooHardCount,
+        wins: row.wins,
+        losses: row.losses,
+        lostByLives: row.lostByLivesCount ?? 0,
+        lostByBlocked: row.lostByBlockedCount ?? 0,
       };
     });
   },
@@ -491,8 +449,9 @@ export const getGridFeedbackStats = query({
  * pool de réponses valides, pays jamais trouvés, et difficulté estimée vs
  * observée.
  *
- * Renvoie `null` si la grille n'existe pas pour cette date. Pensée pour être
- * appelée hors UI (scripts d'export analytics) — pas mountée dans /admin.
+ * Renvoie `null` si la grille n'existe pas pour cette date. Lourde (9 dailyStats
+ * + 9 guesses) : consommée AU CLIC seulement dans /admin (détail d'un jour) et
+ * par les scripts d'export analytics — jamais en masse sur le calendrier.
  */
 export const getGridCellMetrics = query({
   args: { date: v.string(), adminToken: v.string() },
@@ -564,7 +523,11 @@ export const getGridCellMetrics = query({
 
     const cells: Record<
       string,
-      ReturnType<typeof computeCellMetric> & { failedAttempts: number }
+      ReturnType<typeof computeCellMetric> & {
+        failedAttempts: number;
+        validAnswers: string[];
+        picks: Array<{ countryCode: string; count: number }>;
+      }
     > = {};
     for (let i = 0; i < CELL_KEYS.length; i++) {
       const cellKey = CELL_KEYS[i] as string;
@@ -578,6 +541,12 @@ export const getGridCellMetrics = query({
           estimatedDifficulty: input.estimatedDifficulty,
         }),
         failedAttempts: input.failedAttempts,
+        // Liste complète des solutions de la case (pour réafficher les chips
+        // côté admin sans seconde query).
+        validAnswers: input.validForCell,
+        // Distribution complète des choix (countryCode → nb de fois choisi),
+        // pour trier les chips et afficher le compte. Non plafonnée (≠ topAnswers).
+        picks: input.guessRows,
       };
     }
 
@@ -605,7 +574,13 @@ export const getGridCellMetrics = query({
 export const recordGameEnd = mutation({
   args: {
     date: v.string(),
-    won: v.boolean(),
+    // Cause de fin de partie ; `won` en est dérivé. Front et back déployés
+    // ensemble → requis, pas de hedge de rollout.
+    endReason: v.union(
+      v.literal("win"),
+      v.literal("lives"),
+      v.literal("blocked"),
+    ),
     livesLeft: v.number(),
     filledCells: v.number(),
     guessesSubmitted: v.number(),
@@ -638,16 +613,21 @@ export const recordGameEnd = mutation({
     ) {
       throw new ConvexError("Invalid guessesSubmitted");
     }
-    if (args.won && args.filledCells !== 9) {
-      throw new ConvexError("Invalid: won requires 9 filled cells");
+    const won = args.endReason === "win";
+    if (won && args.filledCells !== 9) {
+      throw new ConvexError("Invalid: win requires 9 filled cells");
     }
-    if (args.won && args.livesLeft <= 0) {
-      throw new ConvexError("Invalid: won requires lives left");
+    if (won && args.livesLeft <= 0) {
+      throw new ConvexError("Invalid: win requires lives left");
     }
-    if (!args.won && args.livesLeft > 0 && args.filledCells === 9) {
-      throw new ConvexError(
-        "Invalid: 9 filled with lives left should be a win",
-      );
+    if (args.endReason === "lives" && args.livesLeft > 0) {
+      throw new ConvexError("Invalid: 'lives' end requires no lives left");
+    }
+    if (args.endReason === "blocked" && args.livesLeft <= 0) {
+      throw new ConvexError("Invalid: 'blocked' end requires lives left");
+    }
+    if (args.endReason === "blocked" && args.filledCells === 9) {
+      throw new ConvexError("Invalid: 'blocked' end can't have 9 filled");
     }
 
     const existing = await ctx.db
@@ -655,13 +635,17 @@ export const recordGameEnd = mutation({
       .withIndex("by_date", (q) => q.eq("date", args.date))
       .unique();
 
-    const winsInc = args.won ? 1 : 0;
-    const lossesInc = args.won ? 0 : 1;
+    const winsInc = won ? 1 : 0;
+    const lossesInc = won ? 0 : 1;
+    const livesLossInc = args.endReason === "lives" ? 1 : 0;
+    const blockedLossInc = args.endReason === "blocked" ? 1 : 0;
 
     if (existing) {
       await ctx.db.patch(existing._id, {
         wins: existing.wins + winsInc,
         losses: existing.losses + lossesInc,
+        lostByLivesCount: (existing.lostByLivesCount ?? 0) + livesLossInc,
+        lostByBlockedCount: (existing.lostByBlockedCount ?? 0) + blockedLossInc,
         totalLivesLeft: existing.totalLivesLeft + args.livesLeft,
         totalFilledCells: existing.totalFilledCells + args.filledCells,
         totalGuessesSubmitted:
@@ -678,6 +662,8 @@ export const recordGameEnd = mutation({
       totalRatings: 0,
       wins: winsInc,
       losses: lossesInc,
+      lostByLivesCount: livesLossInc,
+      lostByBlockedCount: blockedLossInc,
       totalLivesLeft: args.livesLeft,
       totalFilledCells: args.filledCells,
       totalGuessesSubmitted: args.guessesSubmitted,

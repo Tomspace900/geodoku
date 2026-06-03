@@ -9,8 +9,6 @@
  */
 
 import type * as auth from "../auth.js";
-import type * as canary from "../canary.js";
-import type * as canaryHeavy from "../canaryHeavy.js";
 import type * as cellKeys from "../cellKeys.js";
 import type * as crons from "../crons.js";
 import type * as gridData from "../gridData.js";
@@ -35,8 +33,6 @@ import type {
 
 declare const fullApi: ApiFromModules<{
   auth: typeof auth;
-  canary: typeof canary;
-  canaryHeavy: typeof canaryHeavy;
   cellKeys: typeof cellKeys;
   crons: typeof crons;
   gridData: typeof gridData;

@@ -1,22 +1,24 @@
 import AppFooter from "@/app/AppFooter";
 import { AppMark } from "@/components/AppMark";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 import { DisplayHeader } from "@/components/editorial/DisplayHeader";
 import { Eyebrow } from "@/components/editorial/Eyebrow";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 import { todayUTC, tomorrowUTC } from "@/lib/dates";
 import { useQuery } from "convex/react";
 import { useState } from "react";
 import { api } from "../../../convex/_generated/api";
 import { AdminAuthBoundary } from "./components/AdminAuthBoundary";
-import { DiversityMetricsPanel } from "./components/DiversityMetricsPanel";
-import { GridDetail } from "./components/GridDetail";
+import { GameCalendar } from "./components/GameCalendar";
+import { GameHealthPanel } from "./components/GameHealthPanel";
+import { type DayView, GridDayDetail } from "./components/GridDayDetail";
 import { PanelCard } from "./components/PanelCard";
 import { PanelHeader } from "./components/PanelHeader";
 import { PoolOverviewPanel } from "./components/PoolOverviewPanel";
-import { ScheduleCalendar } from "./components/ScheduleCalendar";
-import { UpcomingGridsPanel } from "./components/UpcomingGridsPanel";
 import { useAdminToken } from "./hooks/useAdminToken";
+import { buildCalendarMarkers } from "./logic/analytics";
+
+const UPCOMING_DAYS = 14;
 
 // ─── Header ───────────────────────────────────────────────────────────────────
 
@@ -56,16 +58,78 @@ export function AdminPage() {
     token ? { adminToken: token, limit: 60 } : "skip",
   );
 
-  const scheduledDates = new Set<string>(
-    (scheduledGrids ?? []).map((g) => g.date),
+  const upcoming = useQuery(
+    api.grids.getUpcomingScheduledPreview,
+    token ? { adminToken: token, days: UPCOMING_DAYS } : "skip",
   );
 
+  const today = todayUTC();
   const tomorrowStr = tomorrowUTC();
 
-  const selectedGrid =
-    selectedDate != null
-      ? ((scheduledGrids ?? []).find((g) => g.date === selectedDate) ?? null)
-      : null;
+  const scheduledByDate = new Map(
+    (scheduledGrids ?? []).map((g) => [g.date, g]),
+  );
+  const upcomingByDate = new Map((upcoming ?? []).map((d) => [d.date, d]));
+
+  const winRateByDate = new Map(
+    (feedbackStats ?? []).map((f) => [f.date, f.winRate]),
+  );
+
+  const markers = buildCalendarMarkers({
+    today,
+    scheduled: (scheduledGrids ?? []).map((g) => ({
+      date: g.date,
+      difficulty: g.difficulty,
+    })),
+    winRateByDate,
+    upcoming: (upcoming ?? []).map((d) => ({ date: d.date, kind: d.kind })),
+  });
+
+  const selectedView = computeDayView();
+
+  function computeDayView(): DayView | null {
+    if (!selectedDate) return null;
+
+    const grid = scheduledByDate.get(selectedDate);
+    if (grid) {
+      if (selectedDate <= today) {
+        return {
+          kind: "observed",
+          date: selectedDate,
+          difficulty: grid.difficulty,
+          status: selectedDate === today ? "active" : "past",
+        };
+      }
+      return {
+        kind: "estimated",
+        status: "scheduled",
+        date: selectedDate,
+        difficulty: grid.difficulty,
+        cellDifficulties: grid.metadata?.cellDifficulties ?? null,
+        candidateId: null,
+      };
+    }
+
+    const day = upcomingByDate.get(selectedDate);
+    if (day && day.kind !== "missing") {
+      return {
+        kind: "estimated",
+        status: day.kind === "predicted" ? "predicted" : "scheduled",
+        date: selectedDate,
+        difficulty: day.difficulty,
+        cellDifficulties: day.cellDifficulties,
+        candidateId: day.kind === "predicted" ? day.candidateId : null,
+      };
+    }
+    if (day && day.kind === "missing") {
+      return { kind: "missing", date: selectedDate };
+    }
+
+    return null;
+  }
+
+  const hasTomorrowGrid =
+    scheduledGrids === undefined ? undefined : scheduledByDate.has(tomorrowStr);
 
   // ── Écran de connexion ──────────────────────────────────────────────────────
 
@@ -123,39 +187,30 @@ export function AdminPage() {
           <PoolOverviewPanel
             token={token}
             clearToken={clearToken}
-            hasTomorrowGrid={
-              scheduledGrids === undefined
-                ? undefined
-                : scheduledDates.has(tomorrowStr)
-            }
+            hasTomorrowGrid={hasTomorrowGrid}
           />
 
           <PanelCard>
             <PanelHeader title="Planification" />
             <div className="grid grid-cols-1 items-stretch gap-4 md:grid-cols-5">
               <div className="col-span-1 h-full md:col-span-2">
-                <ScheduleCalendar
-                  scheduledGrids={scheduledGrids ?? []}
+                <GameCalendar
+                  markers={markers}
                   selectedDate={selectedDate}
                   onSelectDate={setSelectedDate}
                 />
               </div>
               <div className="col-span-1 h-full md:col-span-3">
-                <GridDetail
+                <GridDayDetail
                   token={token}
-                  grid={selectedGrid}
                   selectedDate={selectedDate}
+                  view={selectedView}
                 />
               </div>
             </div>
           </PanelCard>
 
-          <UpcomingGridsPanel token={token} />
-
-          <DiversityMetricsPanel
-            feedbackStats={feedbackStats}
-            scheduledGrids={scheduledGrids ?? []}
-          />
+          <GameHealthPanel feedbackStats={feedbackStats} />
         </div>
         <AppFooter className="mt-auto shrink-0 px-4 pb-6" />
       </div>

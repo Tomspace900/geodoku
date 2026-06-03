@@ -11,7 +11,7 @@ export function constraintLabel(id: string): string {
   return c ? translate("fr", c.labelKey) : id;
 }
 
-/** Titre de grille admin (ex. en-tête GridDetail, résumés accordéon). */
+/** Titre de grille admin (ex. en-tête du détail de grille au clic). */
 export function formatGridDateHeadingFr(dateStr: string): string {
   const [y, m, d] = dateStr.split("-").map(Number);
   return new Intl.DateTimeFormat("fr-FR", {
@@ -20,11 +20,6 @@ export function formatGridDateHeadingFr(dateStr: string): string {
     month: "long",
     year: "numeric",
   }).format(new Date(y as number, (m as number) - 1, d as number));
-}
-
-export function difficultyStars(d: number): string {
-  const stars = Math.round((d / 100) * 5);
-  return "★".repeat(stars) + "☆".repeat(5 - stars);
 }
 
 /** Seuils 0–100 alignés sur l’admin (facile / moyen / difficile). */

@@ -77,6 +77,11 @@ export default defineSchema({
     totalRatings: v.number(),
     wins: v.number(),
     losses: v.number(),
+    // Ventilation des défaites par cause (sous-ensemble de `losses`). Optionnel
+    // car les lignes gridFeedback créées avant l'ajout d'endReason ne les portent
+    // pas (→ « cause inconnue ») ; toute nouvelle partie les renseigne.
+    lostByLivesCount: v.optional(v.number()),
+    lostByBlockedCount: v.optional(v.number()),
     totalLivesLeft: v.number(),
     totalFilledCells: v.number(),
     totalGuessesSubmitted: v.number(),

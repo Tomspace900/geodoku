@@ -87,9 +87,18 @@ export function useGameState() {
 
     localStorage.setItem(storageKey, "1");
 
+    // Cause de fin : gagné, sinon vies épuisées (remainingLives ≤ 0) ou bloqué
+    // (perdu alors qu'il restait des vies → plus aucune case remplissable).
+    const endReason =
+      state.status === "won"
+        ? "win"
+        : state.remainingLives <= 0
+          ? "lives"
+          : "blocked";
+
     recordGameEnd({
       date: state.date,
-      won: state.status === "won",
+      endReason,
       livesLeft: state.remainingLives,
       filledCells,
       guessesSubmitted: filledCells + failedGuesses,
