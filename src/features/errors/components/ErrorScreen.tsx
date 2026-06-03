@@ -1,5 +1,5 @@
-import { Button } from "@/components/ui/button";
 import { DisplayHeader } from "@/components/editorial/DisplayHeader";
+import { Button } from "@/components/ui/button";
 import { useT } from "@/i18n/LocaleContext";
 import type { TKey } from "@/i18n/types";
 

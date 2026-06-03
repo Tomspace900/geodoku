@@ -1,3 +1,4 @@
+import { Eyebrow } from "@/components/editorial/Eyebrow";
 import {
   Command,
   CommandEmpty,
@@ -23,7 +24,6 @@ import { useLocale, useT } from "@/i18n/LocaleContext";
 import type { TKey } from "@/i18n/types";
 import { cn } from "@/lib/utils";
 import { useEffect, useRef, useState } from "react";
-import { Eyebrow } from "@/components/editorial/Eyebrow";
 
 const CONSTRAINT_MAP = new Map(CONSTRAINTS.map((c) => [c.id, c]));
 
