@@ -1,9 +1,11 @@
 import { LocaleSwitcher } from "@/features/game/components/LocaleSwitcher";
 import { useT } from "@/i18n/LocaleContext";
 import { cn } from "@/lib/utils";
+import { Coffee, Mail } from "lucide-react";
 
 const SUPPORT_EMAIL = "support.geodoku@gmail.com";
 const METRODOKU_URL = "https://metrodoku.fr";
+const KOFI_URL = "https://ko-fi.com/geodoku";
 
 function Middot() {
   return (
@@ -51,8 +53,25 @@ export default function AppFooter({ className }: { className?: string }) {
         </p>
 
         <div className="flex flex-wrap items-center justify-center gap-x-1.5 gap-y-0.5 font-sans text-[10px] text-on-surface-variant sm:gap-x-2 sm:gap-y-1 sm:text-xs">
-          <a href={`mailto:${SUPPORT_EMAIL}`} className={linkClass}>
+          <a
+            href={`mailto:${SUPPORT_EMAIL}`}
+            className={cn("inline-flex items-center gap-1", linkClass)}
+          >
+            <Mail className="size-3 sm:size-3.5" aria-hidden="true" />
             {t("footer.contact")}
+          </a>
+          <Middot />
+          <a
+            href={KOFI_URL}
+            className={cn(
+              "inline-flex items-center gap-1 text-on-surface-variant",
+              linkClass,
+            )}
+            rel="noopener noreferrer"
+            target="_blank"
+          >
+            <Coffee className="size-3 sm:size-3.5" aria-hidden="true" />
+            {t("footer.support")}
           </a>
           <Middot />
           <span>{t("footer.copyright", { year })}</span>
