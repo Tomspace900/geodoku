@@ -23,14 +23,26 @@ export type CellMetric = {
 
 const TOP_ANSWERS_LIMIT = 5;
 
+/**
+ * Proxy « joueurs ayant engagé » : max des remplissages réussis sur les 9 cases.
+ * Couvre les abandons en cours de partie (comptés dans totalGuesses, pas dans
+ * wins+losses). Une case isolée peut dépasser ce max si un joueur remplit deux
+ * fois la même case — cas rare, négligeable en analytics.
+ */
+export function computePlayersEngaged(
+  totalGuessesPerCell: ReadonlyArray<number>,
+): number {
+  return totalGuessesPerCell.reduce((max, n) => Math.max(max, n), 0);
+}
+
 export function computeCellMetric(input: {
   validForCell: ReadonlyArray<string>;
   totalGuesses: number;
   guessRows: ReadonlyArray<GuessRow>;
-  gamesPlayed: number;
+  playersEngaged: number;
   estimatedDifficulty: number | null;
 }): CellMetric {
-  const { validForCell, totalGuesses, guessRows, gamesPlayed } = input;
+  const { validForCell, totalGuesses, guessRows, playersEngaged } = input;
 
   const sortedRows = [...guessRows].sort((a, b) => b.count - a.count);
   const topAnswers = sortedRows.slice(0, TOP_ANSWERS_LIMIT).map((row) => ({
@@ -47,7 +59,7 @@ export function computeCellMetric(input: {
   const coverage =
     validAnswersCount === 0 ? 0 : distinctCountries / validAnswersCount;
 
-  const fillRate = gamesPlayed === 0 ? null : totalGuesses / gamesPlayed;
+  const fillRate = playersEngaged === 0 ? null : totalGuesses / playersEngaged;
   const observedDifficulty100 =
     fillRate === null
       ? null

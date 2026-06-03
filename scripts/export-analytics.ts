@@ -72,6 +72,7 @@ type FeedbackRow = {
 
 type CellMetric = {
   totalGuesses: number;
+  failedAttempts: number;
   distinctCountries: number;
   validAnswersCount: number;
   coverage: number;
@@ -82,14 +83,23 @@ type CellMetric = {
   missingCountries: string[];
 };
 
+/** Réponse `getGridCellMetrics` (champ legacy `gamesPlayed` = parties terminées). */
 type CellMetricsResult = {
   date: string;
   rows: string[];
   cols: string[];
-  gamesPlayed: number;
+  gamesFinished?: number;
+  gamesPlayed?: number;
+  playersEngaged?: number;
   wins: number;
   losses: number;
   cells: Record<string, CellMetric>;
+};
+
+type GridEngagement = {
+  gamesFinished: number;
+  playersEngaged: number;
+  abandonGap: number;
 };
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
@@ -129,6 +139,33 @@ function cellPosition(i: number): { row: number; col: number } {
   return { row: Math.floor(i / 3), col: i % 3 };
 }
 
+function gridEngagement(m: CellMetricsResult): GridEngagement {
+  const gamesFinished = m.gamesFinished ?? m.gamesPlayed ?? m.wins + m.losses;
+  const playersEngaged =
+    m.playersEngaged ??
+    Math.max(0, ...CELL_KEYS.map((k) => m.cells[k]?.totalGuesses ?? 0));
+  return {
+    gamesFinished,
+    playersEngaged,
+    abandonGap: Math.max(0, playersEngaged - gamesFinished),
+  };
+}
+
+/** Part des tentatives sur la case qui ont échoué (pays valide, mauvais croisement). */
+function struggleRate(cell: CellMetric): number | null {
+  const attempts = cell.totalGuesses + cell.failedAttempts;
+  if (attempts === 0) return null;
+  return cell.failedAttempts / attempts;
+}
+
+function struggleRatePerEngaged(
+  cell: CellMetric,
+  playersEngaged: number,
+): number | null {
+  if (playersEngaged === 0) return null;
+  return cell.failedAttempts / playersEngaged;
+}
+
 // ─── Fetch ────────────────────────────────────────────────────────────────────
 
 async function fetchAll() {
@@ -156,11 +193,25 @@ function renderHeader(
   feedback: FeedbackRow[],
   cellMetricsByDate: Record<string, CellMetricsResult>,
 ): string {
-  const totalGames = feedback.reduce((s, r) => s + r.gamesPlayed, 0);
+  const totalFinished = feedback.reduce((s, r) => s + r.gamesPlayed, 0);
   const totalWins = Object.values(cellMetricsByDate).reduce(
     (s, r) => s + r.wins,
     0,
   );
+  const totalEngaged = Object.values(cellMetricsByDate).reduce(
+    (s, m) => s + gridEngagement(m).playersEngaged,
+    0,
+  );
+  const totalAbandonGap = Object.values(cellMetricsByDate).reduce(
+    (s, m) => s + gridEngagement(m).abandonGap,
+    0,
+  );
+  let totalFailed = 0;
+  for (const m of Object.values(cellMetricsByDate)) {
+    for (const key of CELL_KEYS) {
+      totalFailed += m.cells[key]?.failedAttempts ?? 0;
+    }
+  }
   const totalRatings = feedback.reduce((s, r) => s + r.ratingCount, 0);
   const datedRows = feedback.map((r) => r.date).sort();
   const period = datedRows.length
@@ -172,11 +223,14 @@ function renderHeader(
     "",
     `- Fenêtre demandée : ${DAYS_WINDOW} jours`,
     `- Grilles couvertes : ${feedback.length} (période ${period})`,
-    `- Parties terminées : ${totalGames}`,
-    `- Win rate global : ${totalGames === 0 ? "—" : pct(totalWins / totalGames, 1)}`,
-    `- Ratings reçus : ${totalRatings}${totalGames > 0 ? ` (${pct(totalRatings / totalGames, 1)} des parties)` : ""}`,
+    `- Parties terminées (wins+losses) : ${totalFinished}`,
+    `- Joueurs engagés (Σ max remplissages/grille) : ${totalEngaged}`,
+    `- Écart abandon (engagés − terminés, Σ grilles) : ${totalAbandonGap}`,
+    `- Tentatives infructueuses (failedAttempts, Σ cases) : ${totalFailed}`,
+    `- Win rate global : ${totalFinished === 0 ? "—" : pct(totalWins / totalFinished, 1)}`,
+    `- Ratings reçus : ${totalRatings}${totalFinished > 0 ? ` (${pct(totalRatings / totalFinished, 1)} des parties terminées)` : ""}`,
     "",
-    "> Convention de lecture : `observedDifficulty100` = 100·(1 − fillRate). Plus c'est haut, plus la case résiste aux joueurs. `estimatedDifficulty` est la note 0–100 du générateur. Les pays sont en ISO 3166-1 alpha-3.",
+    "> **Dénominateurs.** `gamesFinished` = wins+losses (`recordGameEnd`). `playersEngaged` = max des `totalGuesses` sur les 9 cases — proxy des joueurs ayant rempli au moins une case (inclut les abandons). `fillRate` et `observedDifficulty100` utilisent `playersEngaged`, pas `gamesFinished` (évite les taux > 100 % quand des abandons remplissent des cases faciles). `failedAttempts` = pays réel mais mauvais croisement (`recordFailedGuess`) : distingue case **dure** (beaucoup d'échecs) de case **abandonnée** (fillRate bas, peu d'échecs). `struggleRate` = failed / (failed + succès sur la case). Les pays sont en ISO 3166-1 alpha-3.",
     "",
   ].join("\n");
 }
@@ -187,10 +241,10 @@ function renderCalibration(
   const lines: string[] = [
     "## Calibration estimé ↔ observé (par case)",
     "",
-    "Pour chaque case d'une grille terminée par au moins 1 joueur : `delta = observed − estimated`. Positif = générateur trop optimiste (sous-estime la difficulté). Négatif = générateur trop pessimiste.",
+    "Pour chaque case avec au moins 1 joueur engagé sur la grille : `delta = observed − estimated`. Positif = générateur trop optimiste (sous-estime la difficulté). Négatif = générateur trop pessimiste.",
     "",
-    "| date | row × col | estimated | observed | Δ | gamesPlayed |",
-    "|---|---|---:|---:|---:|---:|",
+    "| date | row × col | estimated | observed | Δ | playersEngaged | failed | struggle |",
+    "|---|---|---:|---:|---:|---:|---:|---:|",
   ];
   const rows: Array<{
     date: string;
@@ -198,10 +252,14 @@ function renderCalibration(
     est: number;
     obs: number;
     delta: number;
-    games: number;
+    engaged: number;
+    failed: number;
+    struggle: number | null;
   }> = [];
 
   for (const [date, m] of Object.entries(cellMetricsByDate)) {
+    const { playersEngaged } = gridEngagement(m);
+    if (playersEngaged === 0) continue;
     for (let i = 0; i < CELL_KEYS.length; i++) {
       const cell = m.cells[CELL_KEYS[i]];
       if (!cell || cell.observedDifficulty100 === null) continue;
@@ -213,7 +271,9 @@ function renderCalibration(
         est: cell.estimatedDifficulty,
         obs: cell.observedDifficulty100,
         delta: cell.observedDifficulty100 - cell.estimatedDifficulty,
-        games: m.gamesPlayed,
+        engaged: playersEngaged,
+        failed: cell.failedAttempts,
+        struggle: struggleRate(cell),
       });
     }
   }
@@ -221,7 +281,7 @@ function renderCalibration(
   rows.sort((a, b) => Math.abs(b.delta) - Math.abs(a.delta));
   for (const r of rows.slice(0, 40)) {
     lines.push(
-      `| ${r.date} | ${r.rc} | ${r.est} | ${r.obs} | ${r.delta >= 0 ? "+" : ""}${r.delta} | ${r.games} |`,
+      `| ${r.date} | ${r.rc} | ${r.est} | ${r.obs} | ${r.delta >= 0 ? "+" : ""}${r.delta} | ${r.engaged} | ${r.failed} | ${pct(r.struggle, 0)} |`,
     );
   }
   if (rows.length > 40) {
@@ -264,13 +324,21 @@ function renderConstraintRollup(
     cellsAggregated: number;
     sumObservedDifficulty: number;
     sumFillRate: number;
+    sumStruggleRate: number;
+    sumFailedPerEngaged: number;
+    struggleSamples: number;
     sumTooHardShare: number; // poids par grille, pas par case
     gridDates: Set<string>;
   };
   const byConstraint = new Map<string, Agg>();
   const feedbackByDate = new Map(feedback.map((f) => [f.date, f]));
 
-  function bump(constraintId: string, m: CellMetricsResult, cell: CellMetric) {
+  function bump(
+    constraintId: string,
+    m: CellMetricsResult,
+    cell: CellMetric,
+    playersEngaged: number,
+  ) {
     let agg = byConstraint.get(constraintId);
     if (!agg) {
       agg = {
@@ -278,6 +346,9 @@ function renderConstraintRollup(
         cellsAggregated: 0,
         sumObservedDifficulty: 0,
         sumFillRate: 0,
+        sumStruggleRate: 0,
+        sumFailedPerEngaged: 0,
+        struggleSamples: 0,
         sumTooHardShare: 0,
         gridDates: new Set(),
       };
@@ -291,15 +362,26 @@ function renderConstraintRollup(
     if (cell.fillRate !== null) {
       agg.sumFillRate += cell.fillRate;
     }
+    const struggle = struggleRate(cell);
+    if (struggle !== null) {
+      agg.sumStruggleRate += struggle;
+      agg.struggleSamples += 1;
+    }
+    const failedPerEngaged = struggleRatePerEngaged(cell, playersEngaged);
+    if (failedPerEngaged !== null) {
+      agg.sumFailedPerEngaged += failedPerEngaged;
+    }
   }
 
   for (const m of Object.values(cellMetricsByDate)) {
+    const { playersEngaged } = gridEngagement(m);
+    if (playersEngaged === 0) continue;
     for (let i = 0; i < CELL_KEYS.length; i++) {
       const cell = m.cells[CELL_KEYS[i]];
       if (!cell) continue;
       const { row, col } = cellPosition(i);
-      bump(m.rows[row], m, cell);
-      bump(m.cols[col], m, cell);
+      bump(m.rows[row], m, cell, playersEngaged);
+      bump(m.cols[col], m, cell, playersEngaged);
     }
   }
 
@@ -339,24 +421,30 @@ function renderConstraintRollup(
         agg.cellsAggregated === 0
           ? null
           : agg.sumFillRate / agg.cellsAggregated,
+      avgStruggleRate:
+        agg.struggleSamples === 0
+          ? null
+          : agg.sumStruggleRate / agg.struggleSamples,
+      avgFailedPerEngaged:
+        agg.cellsAggregated === 0
+          ? null
+          : agg.sumFailedPerEngaged / agg.cellsAggregated,
       avgTooHardShare:
         agg.appearances === 0 ? null : agg.sumTooHardShare / agg.appearances,
     }))
-    .sort(
-      (a, b) => (b.avgObservedDifficulty ?? 0) - (a.avgObservedDifficulty ?? 0),
-    );
+    .sort((a, b) => (b.avgStruggleRate ?? 0) - (a.avgStruggleRate ?? 0));
 
   const lines: string[] = [
     "## Rollup par contrainte (toute la fenêtre)",
     "",
-    "Une apparence = une grille où la contrainte sort en ligne ou colonne. Les `cells` agrégées sont 3 par apparition (les 3 cases de la ligne ou colonne). `avgTooHardShare` = moyenne pondérée des `too_hard / ratingCount` des grilles où la contrainte apparaît.",
+    "Une apparence = une grille où la contrainte sort en ligne ou colonne. Les `cells` agrégées sont 3 par apparition. `avgFillRate` / `avgObsDiff` utilisent `playersEngaged` comme dénominateur. `avgStruggle` = moyenne de `failed/(failed+succès)` par case. `avgFailed/engagé` = échecs rapportés aux joueurs engagés de la grille. Tri par `avgStruggle` décroissant (signal calibration prioritaire).",
     "",
-    "| contrainte | catégorie | apparitions | avgObsDiff | avgFillRate | avgTooHard |",
-    "|---|---|---:|---:|---:|---:|",
+    "| contrainte | catégorie | apparitions | avgObsDiff | avgFillRate | avgStruggle | avgFailed/engagé | avgTooHard |",
+    "|---|---|---:|---:|---:|---:|---:|---:|",
   ];
   for (const r of rows) {
     lines.push(
-      `| ${r.label} | ${r.category} | ${r.appearances} | ${num(r.avgObservedDifficulty, 1)} | ${pct(r.avgFillRate, 1)} | ${pct(r.avgTooHardShare, 1)} |`,
+      `| ${r.label} | ${r.category} | ${r.appearances} | ${num(r.avgObservedDifficulty, 1)} | ${pct(r.avgFillRate, 1)} | ${pct(r.avgStruggleRate, 1)} | ${num(r.avgFailedPerEngaged, 2)} | ${pct(r.avgTooHardShare, 1)} |`,
     );
   }
   lines.push("");
@@ -389,7 +477,7 @@ function renderDeadCountries(
   }
 
   for (const m of Object.values(cellMetricsByDate)) {
-    if (m.gamesPlayed === 0) continue;
+    if (gridEngagement(m).playersEngaged === 0) continue;
     for (let i = 0; i < CELL_KEYS.length; i++) {
       const cell = m.cells[CELL_KEYS[i]];
       if (!cell) continue;
@@ -442,20 +530,21 @@ function renderConcentration(
     "",
     "`top1Share` = part du pays le plus choisi parmi toutes les tentatives sur la case. `top3Share` = somme des 3 premiers. Concentration > 0.5 → la case a une réponse évidente qui écrase tout (signal d'un problème de calibrage si répété).",
     "",
-    "| date | row × col | gamesPlayed | top-1 country | top1Share | top3Share |",
+    "| date | row × col | playersEngaged | top-1 country | top1Share | top3Share |",
     "|---|---|---:|---|---:|---:|",
   ];
   type ConcRow = {
     date: string;
     rc: string;
-    games: number;
+    engaged: number;
     top1Country: string;
     top1Share: number;
     top3Share: number;
   };
   const rows: ConcRow[] = [];
   for (const [date, m] of Object.entries(cellMetricsByDate)) {
-    if (m.gamesPlayed === 0) continue;
+    const { playersEngaged } = gridEngagement(m);
+    if (playersEngaged === 0) continue;
     for (let i = 0; i < CELL_KEYS.length; i++) {
       const cell = m.cells[CELL_KEYS[i]];
       if (!cell || cell.topAnswers.length === 0) continue;
@@ -467,7 +556,7 @@ function renderConcentration(
       rows.push({
         date,
         rc: `${constraintLabel(m.rows[row])} × ${constraintLabel(m.cols[col])}`,
-        games: m.gamesPlayed,
+        engaged: playersEngaged,
         top1Country: top1.countryCode,
         top1Share: top1.share,
         top3Share,
@@ -477,7 +566,7 @@ function renderConcentration(
   rows.sort((a, b) => b.top1Share - a.top1Share);
   for (const r of rows.slice(0, 30)) {
     lines.push(
-      `| ${r.date} | ${r.rc} | ${r.games} | ${r.top1Country} | ${pct(r.top1Share, 1)} | ${pct(r.top3Share, 1)} |`,
+      `| ${r.date} | ${r.rc} | ${r.engaged} | ${r.top1Country} | ${pct(r.top1Share, 1)} | ${pct(r.top3Share, 1)} |`,
     );
   }
   lines.push("");
@@ -497,20 +586,21 @@ function renderSoftBlockSignal(
     "",
     "Les parties peuvent se terminer par épuisement des vies **ou** par blocage (toutes les cases restantes sont impossibles). Cet agrégat est un proxy : pour chaque grille on calcule `avgLivesLeftAcrossAllGames > 0` ET `avgFilledCells < 9`, ce qui ne peut s'expliquer que par des fins de partie par blocage.",
     "",
-    "| date | gamesPlayed | winRate | avgFilledCells | avgLivesLeft | indice soft-block |",
-    "|---|---:|---:|---:|---:|---:|",
+    "| date | finished | engaged | winRate | avgFilledCells | avgLivesLeft | indice soft-block |",
+    "|---|---:|---:|---:|---:|---:|---:|",
   ];
   for (const f of feedback) {
     if (f.gamesPlayed === 0) continue;
     const cellMetrics = cellMetricsByDate[f.date];
     if (!cellMetrics) continue;
+    const { playersEngaged } = gridEngagement(cellMetrics);
     const livesLeftAvg = f.avgLivesLeft ?? 0;
     const filledAvg = f.avgFilledCells ?? 0;
     // Indice = manque de cellules remplies pondéré par vies restantes (proxy
     // grossier : > 0.5 fortement suggestif, > 1 quasi-certain).
     const blockingScore = livesLeftAvg * (9 - filledAvg);
     lines.push(
-      `| ${f.date} | ${f.gamesPlayed} | ${pct(f.winRate, 1)} | ${num(f.avgFilledCells, 2)} | ${num(f.avgLivesLeft, 2)} | ${num(blockingScore, 2)} |`,
+      `| ${f.date} | ${f.gamesPlayed} | ${playersEngaged} | ${pct(f.winRate, 1)} | ${num(f.avgFilledCells, 2)} | ${num(f.avgLivesLeft, 2)} | ${num(blockingScore, 2)} |`,
     );
   }
   lines.push("");
@@ -550,21 +640,108 @@ function renderRatingCoherence(feedback: FeedbackRow[]): string {
   return lines.join("\n");
 }
 
-function renderDailySummary(feedback: FeedbackRow[]): string {
+function renderDailySummary(
+  feedback: FeedbackRow[],
+  cellMetricsByDate: Record<string, CellMetricsResult>,
+): string {
   const lines: string[] = [
     "## Tableau journalier (vue d'ensemble)",
     "",
-    "| date | games | wins | winRate | avgFilled | avgGuesses | ratings | diffObs100 |",
-    "|---|---:|---:|---:|---:|---:|---:|---:|",
+    "| date | finished | engaged | abandonΔ | wins | winRate | failedΣ | avgStruggle | avgFilled | ratings | diffObs100 |",
+    "|---|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|",
   ];
   const sorted = [...feedback].sort((a, b) => (a.date < b.date ? 1 : -1));
   for (const f of sorted) {
+    const m = cellMetricsByDate[f.date];
+    const engagement = m ? gridEngagement(m) : null;
     const wins =
       f.winRate !== null && f.gamesPlayed > 0
         ? Math.round(f.winRate * f.gamesPlayed)
         : 0;
+    let failedSum = 0;
+    let struggleSum = 0;
+    let struggleCount = 0;
+    if (m) {
+      for (const key of CELL_KEYS) {
+        const cell = m.cells[key];
+        if (!cell) continue;
+        failedSum += cell.failedAttempts;
+        const s = struggleRate(cell);
+        if (s !== null) {
+          struggleSum += s;
+          struggleCount += 1;
+        }
+      }
+    }
+    const avgStruggle =
+      struggleCount === 0 ? null : struggleSum / struggleCount;
     lines.push(
-      `| ${f.date} | ${f.gamesPlayed} | ${wins} | ${pct(f.winRate, 1)} | ${num(f.avgFilledCells, 2)} | ${num(f.avgGuessesSubmitted, 2)} | ${f.ratingCount} | ${f.difficultyObserved100 ?? "—"} |`,
+      `| ${f.date} | ${f.gamesPlayed} | ${engagement?.playersEngaged ?? "—"} | ${engagement?.abandonGap ?? "—"} | ${wins} | ${pct(f.winRate, 1)} | ${failedSum} | ${pct(avgStruggle, 0)} | ${num(f.avgFilledCells, 2)} | ${f.ratingCount} | ${f.difficultyObserved100 ?? "—"} |`,
+    );
+  }
+  lines.push("");
+  return lines.join("\n");
+}
+
+function renderStruggleByCell(
+  cellMetricsByDate: Record<string, CellMetricsResult>,
+): string {
+  type StruggleRow = {
+    date: string;
+    rc: string;
+    engaged: number;
+    failed: number;
+    success: number;
+    struggle: number;
+    fillRate: number | null;
+    estimated: number | null;
+  };
+  const rows: StruggleRow[] = [];
+
+  for (const [date, m] of Object.entries(cellMetricsByDate)) {
+    const { playersEngaged } = gridEngagement(m);
+    if (playersEngaged === 0) continue;
+    for (let i = 0; i < CELL_KEYS.length; i++) {
+      const cell = m.cells[CELL_KEYS[i]];
+      if (!cell || cell.failedAttempts === 0) continue;
+      const struggle = struggleRate(cell);
+      if (struggle === null) continue;
+      const { row, col } = cellPosition(i);
+      rows.push({
+        date,
+        rc: `${constraintLabel(m.rows[row])} × ${constraintLabel(m.cols[col])}`,
+        engaged: playersEngaged,
+        failed: cell.failedAttempts,
+        success: cell.totalGuesses,
+        struggle,
+        fillRate: cell.fillRate,
+        estimated: cell.estimatedDifficulty,
+      });
+    }
+  }
+
+  rows.sort((a, b) => b.struggle - a.struggle || b.failed - a.failed);
+
+  const lines: string[] = [
+    "## Échecs de croisement (`failedAttempts`)",
+    "",
+    "Cases où au moins un joueur a proposé un **pays réel** mais **mauvais croisement** (`recordFailedGuess`). `struggle` = failed / (failed + remplissages réussis sur la case). Une case avec fillRate bas et struggle élevé = **dure** ; fillRate bas et struggle ≈ 0 = plutôt **abandonnée** avant d'être tentée.",
+    "",
+    "| date | row × col | engaged | failed | success | struggle | fillRate | estimated |",
+    "|---|---|---:|---:|---:|---:|---:|---:|",
+  ];
+  for (const r of rows.slice(0, 35)) {
+    lines.push(
+      `| ${r.date} | ${r.rc} | ${r.engaged} | ${r.failed} | ${r.success} | ${pct(r.struggle, 0)} | ${pct(r.fillRate, 0)} | ${r.estimated ?? "—"} |`,
+    );
+  }
+  if (rows.length === 0) {
+    lines.push(
+      "| _aucun failedAttempts dans la fenêtre (instrumentation post-déploiement ?)_ | | | | | | | |",
+    );
+  } else if (rows.length > 35) {
+    lines.push(
+      `| … | ${rows.length - 35} cases supplémentaires omises | | | | | | |`,
     );
   }
   lines.push("");
@@ -578,8 +755,9 @@ async function main() {
 
   const sections = [
     renderHeader(feedback, cellMetricsByDate),
-    renderDailySummary(feedback),
+    renderDailySummary(feedback, cellMetricsByDate),
     renderCalibration(cellMetricsByDate),
+    renderStruggleByCell(cellMetricsByDate),
     renderConstraintRollup(cellMetricsByDate, feedback),
     renderDeadCountries(cellMetricsByDate),
     renderConcentration(cellMetricsByDate),

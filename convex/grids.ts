@@ -7,7 +7,7 @@ import { action, internalAction, mutation, query } from "./_generated/server";
 import { checkAdminToken } from "./auth";
 import { CELL_KEYS } from "./cellKeys";
 import { getCandidateAnswers, getGridAnswers } from "./gridData";
-import { computeCellMetric } from "./lib/cellMetrics";
+import { computeCellMetric, computePlayersEngaged } from "./lib/cellMetrics";
 import { daysAgoUTC, offsetUTC, todayUTC, tomorrowUTC } from "./lib/dates";
 import {
   type GenerationReport,
@@ -485,7 +485,8 @@ export const getGridFeedbackStats = query({
  * Métriques observées par case pour une grille passée.
  *
  * Compose `dailyStats`, `guesses`, `grids` (validAnswers via le satellite) et
- * `gridFeedback` (wins + losses comme dénominateur) pour exposer un rapport
+ * `gridFeedback` (wins + losses pour les parties terminées ; fillRate via
+ * `playersEngaged` = max des totalGuesses sur les 9 cases) pour exposer un rapport
  * case par case : taux de remplissage, top des pays choisis, couverture du
  * pool de réponses valides, pays jamais trouvés, et difficulté estimée vs
  * observée.
@@ -517,25 +518,25 @@ export const getGridCellMetrics = query({
       .unique();
     const wins = feedback?.wins ?? 0;
     const losses = feedback?.losses ?? 0;
-    const gamesPlayed = wins + losses;
+    const gamesFinished = wins + losses;
 
-    const cells: Record<
-      string,
-      ReturnType<typeof computeCellMetric> & { failedAttempts: number }
-    > = {};
+    type CellInput = {
+      validForCell: string[];
+      totalGuesses: number;
+      failedAttempts: number;
+      guessRows: Array<{ countryCode: string; count: number }>;
+      estimatedDifficulty: number | null;
+    };
+    const cellInputs: CellInput[] = [];
 
     for (let i = 0; i < CELL_KEYS.length; i++) {
       const cellKey = CELL_KEYS[i] as string;
-      const validForCell = validAnswers[cellKey] ?? [];
-
       const stats = await ctx.db
         .query("dailyStats")
         .withIndex("by_date_and_cell", (q) =>
           q.eq("date", args.date).eq("cellKey", cellKey),
         )
         .unique();
-      const totalGuesses = stats?.totalGuesses ?? 0;
-
       const guessRows = await ctx.db
         .query("guesses")
         .withIndex("by_date_and_cell", (q) =>
@@ -543,28 +544,53 @@ export const getGridCellMetrics = query({
         )
         .collect();
 
+      cellInputs.push({
+        validForCell: validAnswers[cellKey] ?? [],
+        totalGuesses: stats?.totalGuesses ?? 0,
+        failedAttempts: stats?.failedAttempts ?? 0,
+        guessRows: guessRows
+          .filter((g) => g.isReplay !== true)
+          .map((g) => ({
+            countryCode: g.countryCode,
+            count: g.count,
+          })),
+        estimatedDifficulty: cellDifficulties?.[i] ?? null,
+      });
+    }
+
+    const playersEngaged = computePlayersEngaged(
+      cellInputs.map((c) => c.totalGuesses),
+    );
+
+    const cells: Record<
+      string,
+      ReturnType<typeof computeCellMetric> & { failedAttempts: number }
+    > = {};
+    for (let i = 0; i < CELL_KEYS.length; i++) {
+      const cellKey = CELL_KEYS[i] as string;
+      const input = cellInputs[i];
       cells[cellKey] = {
         ...computeCellMetric({
-          validForCell,
-          totalGuesses,
-          // Cohorte live uniquement : les rejeux ne sont pas comparables à la
-          // cohorte d'origine et fausseraient le signal de difficulté.
-          guessRows: guessRows
-            .filter((g) => g.isReplay !== true)
-            .map((g) => ({
-              countryCode: g.countryCode,
-              count: g.count,
-            })),
-          gamesPlayed,
-          estimatedDifficulty: cellDifficulties?.[i] ?? null,
+          validForCell: input.validForCell,
+          totalGuesses: input.totalGuesses,
+          guessRows: input.guessRows,
+          playersEngaged,
+          estimatedDifficulty: input.estimatedDifficulty,
         }),
-        // Tentatives infructueuses — expose le signal « case dure vs case
-        // abandonnée » que le fillRate seul ne capture pas.
-        failedAttempts: stats?.failedAttempts ?? 0,
+        failedAttempts: input.failedAttempts,
       };
     }
 
-    return { date: args.date, rows, cols, gamesPlayed, wins, losses, cells };
+    return {
+      date: args.date,
+      rows,
+      cols,
+      gamesFinished,
+      playersEngaged,
+      wins,
+      losses,
+      cells,
+    };
   },
 });
 
