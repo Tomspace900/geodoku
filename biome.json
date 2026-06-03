@@ -23,6 +23,7 @@
       "dist",
       "convex/_generated",
       "src/components/ui",
+      "scripts/dev",
       ".pnpm-store"
     ]
   }

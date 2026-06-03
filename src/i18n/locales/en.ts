@@ -37,6 +37,7 @@ export const en = {
     loveCreditPre: "Made with love ❤️, inspired by ",
     loveCreditPost: ".",
     contact: "Contact",
+    support: "Buy me a coffee",
     copyright: "©\u00A0{year}\u00A0Geodoku",
   },
   howToPlay: {
