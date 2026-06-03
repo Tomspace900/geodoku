@@ -476,6 +476,10 @@ export const getGridFeedbackStats = query({
         tooEasyCount: row.tooEasyCount,
         balancedCount: row.balancedCount,
         tooHardCount: row.tooHardCount,
+        wins: row.wins,
+        losses: row.losses,
+        lostByLives: row.lostByLivesCount ?? 0,
+        lostByBlocked: row.lostByBlockedCount ?? 0,
       };
     });
   },
@@ -605,7 +609,13 @@ export const getGridCellMetrics = query({
 export const recordGameEnd = mutation({
   args: {
     date: v.string(),
-    won: v.boolean(),
+    // Cause de fin de partie ; `won` en est dérivé. Front et back déployés
+    // ensemble → requis, pas de hedge de rollout.
+    endReason: v.union(
+      v.literal("win"),
+      v.literal("lives"),
+      v.literal("blocked"),
+    ),
     livesLeft: v.number(),
     filledCells: v.number(),
     guessesSubmitted: v.number(),
@@ -638,16 +648,21 @@ export const recordGameEnd = mutation({
     ) {
       throw new ConvexError("Invalid guessesSubmitted");
     }
-    if (args.won && args.filledCells !== 9) {
-      throw new ConvexError("Invalid: won requires 9 filled cells");
+    const won = args.endReason === "win";
+    if (won && args.filledCells !== 9) {
+      throw new ConvexError("Invalid: win requires 9 filled cells");
     }
-    if (args.won && args.livesLeft <= 0) {
-      throw new ConvexError("Invalid: won requires lives left");
+    if (won && args.livesLeft <= 0) {
+      throw new ConvexError("Invalid: win requires lives left");
     }
-    if (!args.won && args.livesLeft > 0 && args.filledCells === 9) {
-      throw new ConvexError(
-        "Invalid: 9 filled with lives left should be a win",
-      );
+    if (args.endReason === "lives" && args.livesLeft > 0) {
+      throw new ConvexError("Invalid: 'lives' end requires no lives left");
+    }
+    if (args.endReason === "blocked" && args.livesLeft <= 0) {
+      throw new ConvexError("Invalid: 'blocked' end requires lives left");
+    }
+    if (args.endReason === "blocked" && args.filledCells === 9) {
+      throw new ConvexError("Invalid: 'blocked' end can't have 9 filled");
     }
 
     const existing = await ctx.db
@@ -655,13 +670,17 @@ export const recordGameEnd = mutation({
       .withIndex("by_date", (q) => q.eq("date", args.date))
       .unique();
 
-    const winsInc = args.won ? 1 : 0;
-    const lossesInc = args.won ? 0 : 1;
+    const winsInc = won ? 1 : 0;
+    const lossesInc = won ? 0 : 1;
+    const livesLossInc = args.endReason === "lives" ? 1 : 0;
+    const blockedLossInc = args.endReason === "blocked" ? 1 : 0;
 
     if (existing) {
       await ctx.db.patch(existing._id, {
         wins: existing.wins + winsInc,
         losses: existing.losses + lossesInc,
+        lostByLivesCount: (existing.lostByLivesCount ?? 0) + livesLossInc,
+        lostByBlockedCount: (existing.lostByBlockedCount ?? 0) + blockedLossInc,
         totalLivesLeft: existing.totalLivesLeft + args.livesLeft,
         totalFilledCells: existing.totalFilledCells + args.filledCells,
         totalGuessesSubmitted:
@@ -678,6 +697,8 @@ export const recordGameEnd = mutation({
       totalRatings: 0,
       wins: winsInc,
       losses: lossesInc,
+      lostByLivesCount: livesLossInc,
+      lostByBlockedCount: blockedLossInc,
       totalLivesLeft: args.livesLeft,
       totalFilledCells: args.filledCells,
       totalGuessesSubmitted: args.guessesSubmitted,
