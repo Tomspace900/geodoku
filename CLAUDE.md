@@ -31,10 +31,12 @@ Geodoku est un mini-jeu web quotidien inspiré de Wordle et du Sudoku, sur le th
 geodoku/
 ├── convex/
 │   ├── schema.ts                # tables : gridCandidates, grids, gridAnswers, guesses, dailyStats, gridFeedback
-│   ├── crons.ts                 # ensureTomorrowGrid (daily) + autoRefillPool (weekly)
+│   ├── crons.ts                 # ensureDailyGrids (hourly) + autoRefillPool (daily 03:00 UTC)
+│   ├── scheduling.ts            # internalMutation ensureDailyGrids (module léger, hot-path cron)
 │   ├── grids.ts                 # actions/queries/mutations publiques et admin (pool-based)
 │   ├── guesses.ts               # mutation submitGuess
 │   ├── gridData.ts              # queries/mutations internes (accès DB)
+│   ├── http.ts                  # GET /health (monitoring externe)
 │   ├── seed.ts                  # autoSeedIfEmpty (deploy) + seedHistoricalGrids (J-30..today + demain)
 │   ├── wipe.ts                  # wipeAllData (paginé, dev only)
 │   └── lib/
@@ -361,8 +363,8 @@ Le skill [`/verify-design-system`](.claude/skills/verify-design-system/SKILL.md)
 
 **Crons** ([`convex/crons.ts`](convex/crons.ts)).
 
-- **Daily 12:00 UTC** — `ensureTomorrowGrid` → `ensureGridForDate(today)` + `ensureGridForDate(tomorrow)` : pioche dans le pool via le scheduler ; si pool vide, **fallback d'urgence** (génération inline avec un seed aléatoire, sans contrôle d'overlap) plutôt que de servir une page sans grille.
-- **Weekly Sunday 04:00 UTC** — `autoRefillPool` : si `available < POOL_LOW_THRESHOLD`, lance `generatePoolInternal` pour reremplir le stock (additif).
+- **Toutes les heures** — `ensureDailyGrids` (mutation légère dans `scheduling.ts`) : assigne today + tomorrow depuis le pool via `selectNextGrid` ; si pool vide, planifie `autoRefillPool` via le scheduler. Idempotent (early-return si grilles présentes) → fait office de self-heal automatique.
+- **Daily 03:00 UTC** — `autoRefillPool` : si `available < POOL_LOW_THRESHOLD`, lance `generatePoolImpl` pour reremplir le stock (additif).
 
 **Endpoints clés** ([`convex/grids.ts`](convex/grids.ts)).
 
@@ -461,10 +463,10 @@ pnpm dlx convex@latest env set ADMIN_TOKEN "xxx"
 **Build command Vercel (tous environnements) :**
 
 ```bash
-pnpm exec convex deploy --run seed:autoSeedIfEmpty --cmd 'vite build' --cmd-url-env-var-name VITE_CONVEX_URL
+pnpm exec convex deploy --preview-run seed:autoSeedIfEmpty --cmd 'vite build' --cmd-url-env-var-name VITE_CONVEX_URL
 ```
 
-`autoSeedIfEmpty` est idempotent — elle ne fait rien si des grids existent déjà (`main`, `develop`), et seed le backend complet (pool + J-30..today + demain via `ensureTomorrowGrid`) si vide (nouvelle branche WIP). Une seule commande pour tous les environnements.
+`--preview-run` n'exécute `autoSeedIfEmpty` que sur les déploiements **preview** (`develop`, branches WIP) — **jamais en production** (`main`), qui reste seedée une fois pour toutes. `autoSeedIfEmpty` est idempotent : no-op si des grids existent déjà (`develop`), seed complet (pool + J-30..today + demain via `ensureDailyGrids`) si vide (nouvelle branche WIP). Une seule commande pour tous les environnements.
 
 **Variable d'environnement clé sur Vercel : `CONVEX_DEPLOY_KEY`**, une clé par environnement :
 - Production → clé prod ([dashboard.convex.dev](https://dashboard.convex.dev))

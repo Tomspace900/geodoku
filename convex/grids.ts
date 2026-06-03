@@ -7,19 +7,14 @@ import { action, internalAction, mutation, query } from "./_generated/server";
 import { checkAdminToken } from "./auth";
 import { CELL_KEYS } from "./cellKeys";
 import { getCandidateAnswers, getGridAnswers } from "./gridData";
-import { computeCellMetric } from "./lib/cellMetrics";
+import { computeCellMetric, computePlayersEngaged } from "./lib/cellMetrics";
 import { daysAgoUTC, offsetUTC, todayUTC, tomorrowUTC } from "./lib/dates";
 import {
   type GenerationReport,
   HISTORY_WINDOW,
   POOL_LOW_THRESHOLD,
 } from "./lib/gridConstants";
-import {
-  buildConstraintMatches,
-  finalizeGrid,
-  generateDiversePool,
-  tryBuildGridWithSeed,
-} from "./lib/gridGenerator";
+import { generateDiversePool } from "./lib/gridGenerator";
 import { selectNextGrid } from "./lib/gridScheduler";
 import { rateLimiter } from "./rateLimit";
 
@@ -43,172 +38,51 @@ const DELETE_BATCH_SIZE = 512;
 
 /**
  * Generates a full diverse pool and inserts all grids into gridCandidates.
- * Called by refreshPoolInternal, seed, and autoRefillPool cron.
- */
-export const generatePoolInternal = internalAction({
-  args: {},
-  handler: async (ctx): Promise<GenerationReport> => {
-    const existing = await ctx.runQuery(
-      internal.gridData.getAvailablePoolGrids,
-    );
-    const { grids, report } = generateDiversePool(
-      existing.map((g) => ({ constraintIds: g.metadata.constraintIds })),
-    );
-
-    for (const grid of grids) {
-      await ctx.runMutation(internal.gridData.insertPoolGrid, {
-        rows: grid.rows,
-        cols: grid.cols,
-        validAnswers: grid.validAnswers,
-        metadata: grid.metadata,
-      });
-    }
-
-    return report;
-  },
-});
-
-/**
- * Vide le stock available puis regénère un pool complet.
- * Les candidates used et les grilles planifiées ne sont pas touchées.
- */
-export const refreshPoolInternal = internalAction({
-  args: {},
-  handler: async (
-    ctx,
-  ): Promise<GenerationReport & { deletedAvailable: number }> => {
-    let deletedAvailable = 0;
-    for (;;) {
-      const deleted = await ctx.runMutation(
-        internal.gridData.deleteAvailableCandidatesBatch,
-        { limit: DELETE_BATCH_SIZE },
-      );
-      deletedAvailable += deleted;
-      if (deleted < DELETE_BATCH_SIZE) break;
-    }
-    console.log(
-      `[refreshPoolInternal] ${deletedAvailable} available candidates deleted`,
-    );
-    const report = await ctx.runAction(internal.grids.generatePoolInternal, {});
-    return { ...report, deletedAvailable };
-  },
-});
-
-/**
- * Assigns a grid from the pool to a specific date.
- * Uses the scheduler to pick the best available grid.
- * Falls back to emergency generation if the pool is empty.
  *
- * Helper async **direct** (pas une action) : on l'appelle in-process depuis les
- * actions (`ensureTomorrowGrid`, `runEnsureTomorrow`, `scheduleGridForDate`,
- * seed) plutôt que via `ctx.runAction`. Appeler une action depuis une action
- * est l'anti-pattern
- * Convex (cf. `_generated/ai/guidelines.md`) qui faisait planter le cron en
- * contexte planifié. `ctx.runQuery` / `ctx.runMutation` depuis une action
- * restent corrects et sont conservés ici.
+ * Helper async **direct** (pas une action) : appelé in-process par
+ * `refreshPoolImpl`, le seed et le cron `autoRefillPool`, jamais via
+ * `ctx.runAction` (cf. anti-pattern action→action des guidelines Convex).
  */
-export async function ensureGridForDateImpl(
+export async function generatePoolImpl(
   ctx: ActionCtx,
-  date: string,
-): Promise<{ date: string; candidateId: string } | null> {
-  const exists = await ctx.runQuery(internal.gridData.hasGridForDate, { date });
-  if (exists) {
-    return null;
-  }
-
-  const available = await ctx.runQuery(internal.gridData.getAvailablePoolGrids);
-  const recentGrids = await ctx.runQuery(
-    internal.gridData.getRecentPublishedGrids,
-    { limit: HISTORY_WINDOW },
+): Promise<GenerationReport> {
+  const existing = await ctx.runQuery(internal.gridData.getAvailablePoolGrids);
+  const { grids, report } = generateDiversePool(
+    existing.map((g) => ({ constraintIds: g.metadata.constraintIds })),
   );
 
-  const poolForScheduler = available.map((g) => ({
-    _id: g._id as string,
-    rows: g.rows,
-    cols: g.cols,
-    metadata: g.metadata,
-  }));
-
-  const recentForScheduler = recentGrids.map((g) => ({
-    constraintIds: [...g.rows, ...g.cols],
-    countryPool: g.countryPool,
-  }));
-
-  const selected = selectNextGrid(poolForScheduler, recentForScheduler);
-
-  if (!selected) {
-    // FALLBACK: emergency generation with a random seed — no overlap check
-    console.error(
-      `[ensureGridForDate] POOL EMPTY: no grid for ${date}, using emergency fallback`,
-    );
-    const matches = buildConstraintMatches();
-    const randomSeed =
-      CONSTRAINTS[Math.floor(Math.random() * CONSTRAINTS.length)];
-    const gridResult = tryBuildGridWithSeed(randomSeed.id, "row", matches);
-    if (!gridResult) {
-      // Throw (pas return null) pour que le cron remonte une Failure visible.
-      throw new Error(
-        `[ensureGridForDate] Emergency grid generation failed for ${date}`,
-      );
-    }
-    const finalized = finalizeGrid(
-      gridResult.rows,
-      gridResult.cols,
-      randomSeed.id,
-      matches,
-    );
-    if (!finalized) {
-      throw new Error(
-        `[ensureGridForDate] Emergency grid finalization failed for ${date}`,
-      );
-    }
-    const candidateId = await ctx.runMutation(
-      internal.gridData.insertPoolGrid,
-      {
-        rows: finalized.rows,
-        cols: finalized.cols,
-        validAnswers: finalized.validAnswers,
-        metadata: finalized.metadata,
-      },
-    );
-    await ctx.runMutation(internal.gridData.assignCandidateToGrid, {
-      candidateId,
-      date,
-      rows: finalized.rows,
-      cols: finalized.cols,
-      countryPool: finalized.metadata.countryPool,
-      difficulty: finalized.metadata.difficultyEstimate,
+  for (const grid of grids) {
+    await ctx.runMutation(internal.gridData.insertPoolGrid, {
+      rows: grid.rows,
+      cols: grid.cols,
+      validAnswers: grid.validAnswers,
+      metadata: grid.metadata,
     });
-    return { date, candidateId };
   }
 
-  await ctx.runMutation(internal.gridData.assignCandidateToGrid, {
-    candidateId: selected.grid._id as Id<"gridCandidates">,
-    date,
-    rows: selected.grid.rows,
-    cols: selected.grid.cols,
-    countryPool: selected.grid.metadata.countryPool,
-    difficulty: selected.grid.metadata.difficultyEstimate,
-  });
-
-  return { date, candidateId: selected.grid._id };
+  return report;
 }
 
 /**
- * Ensures today's and tomorrow's grids exist. Called by the daily cron (03:00
- * UTC) and the hourly self-heal cron. Today est rattrapé en plus de tomorrow :
- * si un passage précédent a échoué, on évite que `getTodayGrid` renvoie null.
- * `ensureGridForDateImpl` est idempotent.
+ * Vide le stock available puis regénère un pool complet (helper direct).
+ * Les candidates used et les grilles planifiées ne sont pas touchées.
  */
-export const ensureTomorrowGrid = internalAction({
-  args: {},
-  handler: async (ctx) => {
-    // Appels DIRECTS au helper (pas de ctx.runAction imbriqué) — c'est le fix
-    // de l'incident : action→action plantait en contexte planifié.
-    await ensureGridForDateImpl(ctx, todayUTC());
-    await ensureGridForDateImpl(ctx, tomorrowUTC());
-  },
-});
+export async function refreshPoolImpl(
+  ctx: ActionCtx,
+): Promise<GenerationReport & { deletedAvailable: number }> {
+  let deletedAvailable = 0;
+  for (;;) {
+    const deleted = await ctx.runMutation(
+      internal.gridData.deleteAvailableCandidatesBatch,
+      { limit: DELETE_BATCH_SIZE },
+    );
+    deletedAvailable += deleted;
+    if (deleted < DELETE_BATCH_SIZE) break;
+  }
+  console.log(`[refreshPool] ${deletedAvailable} available candidates deleted`);
+  const report = await generatePoolImpl(ctx);
+  return { ...report, deletedAvailable };
+}
 
 /**
  * Refills the pool if it falls below POOL_LOW_THRESHOLD.
@@ -223,7 +97,8 @@ export const autoRefillPool = internalAction({
     if (available.length >= POOL_LOW_THRESHOLD) {
       return;
     }
-    await ctx.runAction(internal.grids.generatePoolInternal, {});
+    // Helper direct (pas de ctx.runAction imbriqué) — autoRefillPool est un cron.
+    await generatePoolImpl(ctx);
   },
 });
 
@@ -410,7 +285,7 @@ export const getExposureStats = query({
         for (const id of [...g.rows, ...g.cols]) {
           constraintCounts[id] = (constraintCounts[id] ?? 0) + 1;
         }
-        // Count each country once per grid (countryPool dénormalisé à assignCandidateToGrid).
+        // Count each country once per grid (countryPool dénormalisé à l'insert).
         const unique = new Set(g.countryPool);
         for (const code of unique) {
           countryCounts[code] = (countryCounts[code] ?? 0) + 1;
@@ -610,7 +485,8 @@ export const getGridFeedbackStats = query({
  * Métriques observées par case pour une grille passée.
  *
  * Compose `dailyStats`, `guesses`, `grids` (validAnswers via le satellite) et
- * `gridFeedback` (wins + losses comme dénominateur) pour exposer un rapport
+ * `gridFeedback` (wins + losses pour les parties terminées ; fillRate via
+ * `playersEngaged` = max des totalGuesses sur les 9 cases) pour exposer un rapport
  * case par case : taux de remplissage, top des pays choisis, couverture du
  * pool de réponses valides, pays jamais trouvés, et difficulté estimée vs
  * observée.
@@ -642,25 +518,25 @@ export const getGridCellMetrics = query({
       .unique();
     const wins = feedback?.wins ?? 0;
     const losses = feedback?.losses ?? 0;
-    const gamesPlayed = wins + losses;
+    const gamesFinished = wins + losses;
 
-    const cells: Record<
-      string,
-      ReturnType<typeof computeCellMetric> & { failedAttempts: number }
-    > = {};
+    type CellInput = {
+      validForCell: string[];
+      totalGuesses: number;
+      failedAttempts: number;
+      guessRows: Array<{ countryCode: string; count: number }>;
+      estimatedDifficulty: number | null;
+    };
+    const cellInputs: CellInput[] = [];
 
     for (let i = 0; i < CELL_KEYS.length; i++) {
       const cellKey = CELL_KEYS[i] as string;
-      const validForCell = validAnswers[cellKey] ?? [];
-
       const stats = await ctx.db
         .query("dailyStats")
         .withIndex("by_date_and_cell", (q) =>
           q.eq("date", args.date).eq("cellKey", cellKey),
         )
         .unique();
-      const totalGuesses = stats?.totalGuesses ?? 0;
-
       const guessRows = await ctx.db
         .query("guesses")
         .withIndex("by_date_and_cell", (q) =>
@@ -668,28 +544,53 @@ export const getGridCellMetrics = query({
         )
         .collect();
 
+      cellInputs.push({
+        validForCell: validAnswers[cellKey] ?? [],
+        totalGuesses: stats?.totalGuesses ?? 0,
+        failedAttempts: stats?.failedAttempts ?? 0,
+        guessRows: guessRows
+          .filter((g) => g.isReplay !== true)
+          .map((g) => ({
+            countryCode: g.countryCode,
+            count: g.count,
+          })),
+        estimatedDifficulty: cellDifficulties?.[i] ?? null,
+      });
+    }
+
+    const playersEngaged = computePlayersEngaged(
+      cellInputs.map((c) => c.totalGuesses),
+    );
+
+    const cells: Record<
+      string,
+      ReturnType<typeof computeCellMetric> & { failedAttempts: number }
+    > = {};
+    for (let i = 0; i < CELL_KEYS.length; i++) {
+      const cellKey = CELL_KEYS[i] as string;
+      const input = cellInputs[i];
       cells[cellKey] = {
         ...computeCellMetric({
-          validForCell,
-          totalGuesses,
-          // Cohorte live uniquement : les rejeux ne sont pas comparables à la
-          // cohorte d'origine et fausseraient le signal de difficulté.
-          guessRows: guessRows
-            .filter((g) => g.isReplay !== true)
-            .map((g) => ({
-              countryCode: g.countryCode,
-              count: g.count,
-            })),
-          gamesPlayed,
-          estimatedDifficulty: cellDifficulties?.[i] ?? null,
+          validForCell: input.validForCell,
+          totalGuesses: input.totalGuesses,
+          guessRows: input.guessRows,
+          playersEngaged,
+          estimatedDifficulty: input.estimatedDifficulty,
         }),
-        // Tentatives infructueuses — expose le signal « case dure vs case
-        // abandonnée » que le fillRate seul ne capture pas.
-        failedAttempts: stats?.failedAttempts ?? 0,
+        failedAttempts: input.failedAttempts,
       };
     }
 
-    return { date: args.date, rows, cols, gamesPlayed, wins, losses, cells };
+    return {
+      date: args.date,
+      rows,
+      cols,
+      gamesFinished,
+      playersEngaged,
+      wins,
+      losses,
+      cells,
+    };
   },
 });
 
@@ -852,7 +753,7 @@ export const refreshPool = action({
     args,
   ): Promise<GenerationReport & { deletedAvailable: number }> => {
     checkAdminToken(args.adminToken);
-    return await ctx.runAction(internal.grids.refreshPoolInternal, {});
+    return await refreshPoolImpl(ctx);
   },
 });
 
@@ -864,9 +765,7 @@ export const runEnsureTomorrow = action({
   args: { adminToken: v.string() },
   handler: async (ctx, args) => {
     checkAdminToken(args.adminToken);
-    // Helper direct (pas de ctx.runAction imbriqué) — même fix que le cron.
-    await ensureGridForDateImpl(ctx, todayUTC());
-    await ensureGridForDateImpl(ctx, tomorrowUTC());
+    await ctx.runMutation(internal.scheduling.ensureDailyGrids, {});
   },
 });
 
@@ -877,11 +776,10 @@ export const runEnsureTomorrow = action({
  */
 export const scheduleGridForDate = action({
   args: { adminToken: v.string(), date: v.string() },
-  handler: async (
-    ctx,
-    args,
-  ): Promise<{ date: string; candidateId: string } | null> => {
+  handler: async (ctx, args): Promise<{ date: string } | null> => {
     checkAdminToken(args.adminToken);
-    return await ensureGridForDateImpl(ctx, args.date);
+    return await ctx.runMutation(internal.scheduling.assignGridForDate, {
+      date: args.date,
+    });
   },
 });

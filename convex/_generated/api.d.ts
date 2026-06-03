@@ -9,6 +9,8 @@
  */
 
 import type * as auth from "../auth.js";
+import type * as canary from "../canary.js";
+import type * as canaryHeavy from "../canaryHeavy.js";
 import type * as cellKeys from "../cellKeys.js";
 import type * as crons from "../crons.js";
 import type * as gridData from "../gridData.js";
@@ -21,6 +23,7 @@ import type * as lib_gridConstants from "../lib/gridConstants.js";
 import type * as lib_gridGenerator from "../lib/gridGenerator.js";
 import type * as lib_gridScheduler from "../lib/gridScheduler.js";
 import type * as rateLimit from "../rateLimit.js";
+import type * as scheduling from "../scheduling.js";
 import type * as seed from "../seed.js";
 import type * as wipe from "../wipe.js";
 
@@ -32,6 +35,8 @@ import type {
 
 declare const fullApi: ApiFromModules<{
   auth: typeof auth;
+  canary: typeof canary;
+  canaryHeavy: typeof canaryHeavy;
   cellKeys: typeof cellKeys;
   crons: typeof crons;
   gridData: typeof gridData;
@@ -44,6 +49,7 @@ declare const fullApi: ApiFromModules<{
   "lib/gridGenerator": typeof lib_gridGenerator;
   "lib/gridScheduler": typeof lib_gridScheduler;
   rateLimit: typeof rateLimit;
+  scheduling: typeof scheduling;
   seed: typeof seed;
   wipe: typeof wipe;
 }>;

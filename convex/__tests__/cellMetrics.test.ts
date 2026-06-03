@@ -1,5 +1,9 @@
 import { describe, expect, it } from "vitest";
-import { computeCellMetric, concentrationIndex } from "../lib/cellMetrics";
+import {
+  computeCellMetric,
+  computePlayersEngaged,
+  concentrationIndex,
+} from "../lib/cellMetrics";
 
 describe("computeCellMetric", () => {
   it("returns zeros when no game has been played yet", () => {
@@ -7,7 +11,7 @@ describe("computeCellMetric", () => {
       validForCell: ["FRA", "ESP", "ITA"],
       totalGuesses: 0,
       guessRows: [],
-      gamesPlayed: 0,
+      playersEngaged: 0,
       estimatedDifficulty: 42,
     });
 
@@ -21,7 +25,7 @@ describe("computeCellMetric", () => {
     expect(metric.estimatedDifficulty).toBe(42);
   });
 
-  it("computes fillRate and observedDifficulty from gamesPlayed", () => {
+  it("computes fillRate and observedDifficulty from playersEngaged", () => {
     const metric = computeCellMetric({
       validForCell: ["FRA", "ESP"],
       totalGuesses: 8,
@@ -29,7 +33,7 @@ describe("computeCellMetric", () => {
         { countryCode: "FRA", count: 6 },
         { countryCode: "ESP", count: 2 },
       ],
-      gamesPlayed: 10,
+      playersEngaged: 10,
       estimatedDifficulty: 30,
     });
 
@@ -37,12 +41,12 @@ describe("computeCellMetric", () => {
     expect(metric.observedDifficulty100).toBe(20);
   });
 
-  it("clamps observedDifficulty when more guesses than games (defensive)", () => {
+  it("clamps observedDifficulty when fillRate exceeds 1 (defensive)", () => {
     const metric = computeCellMetric({
       validForCell: ["FRA"],
       totalGuesses: 12,
       guessRows: [{ countryCode: "FRA", count: 12 }],
-      gamesPlayed: 10,
+      playersEngaged: 10,
       estimatedDifficulty: null,
     });
     expect(metric.observedDifficulty100).toBe(0);
@@ -57,7 +61,7 @@ describe("computeCellMetric", () => {
         { countryCode: "FRA", count: 6 },
         { countryCode: "ITA", count: 2 },
       ],
-      gamesPlayed: 12,
+      playersEngaged: 12,
       estimatedDifficulty: null,
     });
 
@@ -77,7 +81,7 @@ describe("computeCellMetric", () => {
         countryCode: `C${i}`,
         count: 7 - i,
       })),
-      gamesPlayed: 10,
+      playersEngaged: 10,
       estimatedDifficulty: null,
     });
     expect(metric.topAnswers).toHaveLength(5);
@@ -91,11 +95,21 @@ describe("computeCellMetric", () => {
         { countryCode: "FRA", count: 3 },
         { countryCode: "ESP", count: 2 },
       ],
-      gamesPlayed: 5,
+      playersEngaged: 5,
       estimatedDifficulty: null,
     });
     expect(metric.missingCountries).toEqual(["ITA", "PRT"]);
     expect(metric.coverage).toBeCloseTo(0.5, 5);
+  });
+});
+
+describe("computePlayersEngaged", () => {
+  it("returns the max totalGuesses across cells", () => {
+    expect(computePlayersEngaged([3, 7, 2, 7, 1])).toBe(7);
+  });
+
+  it("returns 0 when all cells are empty", () => {
+    expect(computePlayersEngaged([0, 0, 0])).toBe(0);
   });
 });
 
