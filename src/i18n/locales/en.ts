@@ -28,9 +28,7 @@ export const en = {
     viewMyResult: "View my result",
     closeResult: "Close",
     searchResultUsed: "Already used",
-    solutionRarityEyebrow: "Rarity",
-    solutionRarityHint:
-      "Percentages show the share of today's players who picked that country for the cell.",
+    rarityLegendHint: "Share of today's players who picked that country.",
   },
   footer: {
     loveCreditPre: "Made with love ❤️, inspired by ",
@@ -130,22 +128,17 @@ export const en = {
   },
   howToPlay: {
     title: "How to play?",
-    p1pre: "Each grid features",
-    p1bold1: "6\u00A0constraints",
-    p1mid:
-      "geographical (3\u00A0rows, 3\u00A0columns). For each cell, find a country that satisfies",
-    p1bold2: "both crossed constraints",
-    p2: "Each country can only be used once in the grid.",
-    p2warn: "Careful not to paint yourself into a corner!",
-    p3pre: "You have",
-    p3bold: "3\u00A0lives",
-    p3post: "Each wrong answer uses one.",
-    p4: "Cells are colored by the rarity of your answer:",
-    li1: "🟪 Common — more than 50%\u00A0of players",
-    li2: "🟦 Uncommon — more than 25%",
-    li3: "🟨 Rare — more than 10%",
-    li4: "🟥 Ultra-rare — 10%\u00A0or less",
-    tip: "The rarer your answer, the better your score. Good luck!",
+    rule1Title: "Complete the grid",
+    rule1Body:
+      "Find a country that matches both the row and column. Multiple answers are possible!",
+    rule2Title: "Unique countries",
+    rule2Body: "Each country can only be used once across the entire grid.",
+    rule3Title: "3 strikes max",
+    rule3Body:
+      "You are allowed 3 mistakes. On the third wrong answer, it's game over.",
+    rule4Title: "Aim for rarity",
+    rule4Body:
+      "The more unique and less guessed your country is, the higher your score.",
     dontShowAgain: "Don't show again",
   },
   error: {

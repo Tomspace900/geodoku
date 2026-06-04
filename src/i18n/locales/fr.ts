@@ -28,9 +28,7 @@ export const fr = {
     viewMyResult: "Voir mon résultat",
     closeResult: "Fermer",
     searchResultUsed: "Déjà utilisé",
-    solutionRarityEyebrow: "Rareté",
-    solutionRarityHint:
-      "Les pourcentages indiquent la part des joueurs du jour ayant soumis ce pays pour la case.",
+    rarityLegendHint: "Pourcentage des joueurs du jour ayant soumis le pays.",
   },
   footer: {
     loveCreditPre: "Fait avec amour ❤️, inspiré par ",
@@ -131,22 +129,18 @@ export const fr = {
   },
   howToPlay: {
     title: "Comment jouer\u00A0?",
-    p1pre: "Chaque grille propose",
-    p1bold1: "6 contraintes",
-    p1mid:
-      "géographiques (3 lignes, 3 colonnes). Pour chaque case, trouve un pays qui valide",
-    p1bold2: "les deux contraintes croisées",
-    p2: "Chaque pays ne peut être utilisé qu'une seule fois dans la grille.",
-    p2warn: "Attention à ne pas te bloquer\u00A0!",
-    p3pre: "Tu as",
-    p3bold: "3 vies",
-    p3post: "Chaque mauvaise réponse en consomme une.",
-    p4: "Les cellules sont colorées selon la rareté de ta réponse\u00A0:",
-    li1: "🟪 Commun — plus de 50%\u00A0des joueurs",
-    li2: "🟦 Peu commun — plus de 25%",
-    li3: "🟨 Rare — plus de 10%",
-    li4: "🟥 Ultra-rare — 10%\u00A0ou moins",
-    tip: "Plus ta réponse est rare, meilleur est ton score. Bonne chance\u00A0!",
+    rule1Title: "Complète la grille",
+    rule1Body:
+      "Trouve un pays qui valide la ligne et la colonne. Plusieurs réponses sont possibles !",
+    rule2Title: "Pays unique",
+    rule2Body:
+      "Chaque pays ne peut être utilisé qu'une seule fois dans toute la grille.",
+    rule3Title: "3 vies maximum",
+    rule3Body:
+      "Tu as droit à 3 erreurs. À la troisième, la partie est terminée.",
+    rule4Title: "Vise la rareté",
+    rule4Body:
+      "Plus ton pays est original et peu cité par les autres joueurs, plus ton score grimpe.",
     dontShowAgain: "Ne plus afficher",
   },
   error: {

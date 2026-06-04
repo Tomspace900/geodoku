@@ -8,10 +8,35 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { useT } from "@/i18n/LocaleContext";
-import { HelpCircle } from "lucide-react";
+import type { TKey } from "@/i18n/types";
+import { Ban, Gem, Grid3x3, Heart, HelpCircle } from "lucide-react";
+import type { LucideIcon } from "lucide-react";
 import { useState } from "react";
 
 const STORAGE_KEY = "geodoku.showHowToPlay";
+
+const RULES: { icon: LucideIcon; titleKey: TKey; bodyKey: TKey }[] = [
+  {
+    icon: Grid3x3,
+    titleKey: "howToPlay.rule1Title",
+    bodyKey: "howToPlay.rule1Body",
+  },
+  {
+    icon: Ban,
+    titleKey: "howToPlay.rule2Title",
+    bodyKey: "howToPlay.rule2Body",
+  },
+  {
+    icon: Heart,
+    titleKey: "howToPlay.rule3Title",
+    bodyKey: "howToPlay.rule3Body",
+  },
+  {
+    icon: Gem,
+    titleKey: "howToPlay.rule4Title",
+    bodyKey: "howToPlay.rule4Body",
+  },
+];
 
 function readShow(): boolean {
   if (typeof window === "undefined") return true;
@@ -62,43 +87,28 @@ export function HowToPlayLink() {
             </DialogTitle>
             <AccentBar className="mt-3" />
           </DialogHeader>
-          <div className="space-y-3 text-sm text-on-surface-variant leading-relaxed">
-            <p>
-              {t("howToPlay.p1pre")}{" "}
-              <strong className="font-medium text-on-surface">
-                {t("howToPlay.p1bold1")}
-              </strong>{" "}
-              {t("howToPlay.p1mid")}{" "}
-              <strong className="font-medium text-brand">
-                {t("howToPlay.p1bold2")}
-              </strong>
-              .
-            </p>
-            <p>
-              {t("howToPlay.p2")}{" "}
-              <span className="font-medium text-brand">
-                {t("howToPlay.p2warn")}
-              </span>
-            </p>
-            <p>
-              {t("howToPlay.p3pre")}{" "}
-              <strong className="font-medium text-on-surface">
-                {t("howToPlay.p3bold")}
-              </strong>
-              . {t("howToPlay.p3post")}
-            </p>
-            <p>{t("howToPlay.p4")}</p>
-            <ul className="space-y-1 pl-1">
-              <li>{t("howToPlay.li1")}</li>
-              <li>{t("howToPlay.li2")}</li>
-              <li>{t("howToPlay.li3")}</li>
-              <li>{t("howToPlay.li4")}</li>
-            </ul>
-            <p className="italic text-xs">{t("howToPlay.tip")}</p>
-          </div>
+
+          <ol className="space-y-4">
+            {RULES.map(({ icon: Icon, titleKey, bodyKey }) => (
+              <li key={titleKey} className="flex items-start gap-3">
+                <span className="grid h-9 w-9 shrink-0 place-items-center rounded-full bg-brand/10 text-brand">
+                  <Icon size={17} strokeWidth={2} />
+                </span>
+                <div className="space-y-0.5 pt-0.5">
+                  <p className="font-sans text-sm font-semibold text-on-surface leading-snug">
+                    {t(titleKey)}
+                  </p>
+                  <p className="font-sans text-xs text-on-surface-variant leading-relaxed">
+                    {t(bodyKey)}
+                  </p>
+                </div>
+              </li>
+            ))}
+          </ol>
+
           <label
             htmlFor="howtoplay-dont-show"
-            className="flex items-center gap-2 pt-2 text-xs text-on-surface-variant cursor-pointer select-none"
+            className="flex items-center gap-2 text-xs text-on-surface-variant cursor-pointer select-none"
           >
             <Checkbox
               id="howtoplay-dont-show"

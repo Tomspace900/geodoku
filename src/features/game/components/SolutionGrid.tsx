@@ -1,5 +1,5 @@
-import { Eyebrow } from "@/components/editorial/Eyebrow";
 import { getCountryByCode } from "@/features/countries/lib/search";
+import { RarityLegend } from "@/features/game/components/RarityLegend";
 import {
   MIN_CELL_TOTAL_GUESSES_FOR_SHARE_PERCENT,
   RARITY_STYLES,
@@ -27,13 +27,6 @@ const headerClass =
 
 /** Ordre d’affichage : du plus rare au plus commun. */
 const TIER_ORDER: RarityTier[] = ["ultra", "rare", "uncommon", "common"];
-
-const RARITY_LEGEND_LI_KEYS = [
-  "howToPlay.li1",
-  "howToPlay.li2",
-  "howToPlay.li3",
-  "howToPlay.li4",
-] as const;
 
 function compareIsoByLocalizedName(
   locale: Locale,
@@ -213,17 +206,7 @@ export function SolutionGrid({
         })}
       </div>
 
-      <div className="space-y-2 rounded-lg bg-surface-low p-4">
-        <Eyebrow>{t("ui.solutionRarityEyebrow")}</Eyebrow>
-        <p className="text-xs text-on-surface-variant leading-relaxed">
-          {t("ui.solutionRarityHint")}
-        </p>
-        <ul className="space-y-1.5 text-xs text-on-surface-variant leading-snug">
-          {RARITY_LEGEND_LI_KEYS.map((key) => (
-            <li key={key}>{t(key)}</li>
-          ))}
-        </ul>
-      </div>
+      <RarityLegend />
     </div>
   );
 }
