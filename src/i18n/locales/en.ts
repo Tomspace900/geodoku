@@ -28,36 +28,117 @@ export const en = {
     viewMyResult: "View my result",
     closeResult: "Close",
     searchResultUsed: "Already used",
-    solutionRarityEyebrow: "Rarity",
-    solutionRarityHint:
-      "Percentages show the share of today's players who picked that country for the cell.",
+    rarityLegendHint: "Share of today's players who picked that country.",
   },
   footer: {
-    betaMark: "BETA",
     loveCreditPre: "Made with love ❤️, inspired by ",
     loveCreditPost: ".",
     contact: "Contact",
     support: "Buy me a coffee",
+    privacy: "Privacy",
+    changelog: "Changelog",
     copyright: "©\u00A0{year}\u00A0Geodoku",
+  },
+  legal: {
+    supportTitle: "Support the project",
+    supportPre:
+      "Geodoku is a solo project, 100% free and ad-free. If you enjoy today's grid and can spare it,",
+    supportLink: "buying me an espresso",
+    supportPost:
+      " helps cover the technical costs (server, domain). And above all, it's a huge motivation to keep building new features!",
+  },
+  privacy: {
+    eyebrow: "Last updated · June 2026",
+    title: "Privacy",
+    lead: "Geodoku is a game I build on my own. No account needed: I only collect the bare minimum, just enough to run the game and see how the grids are doing.",
+    backToGame: "Back to the game",
+    essenceTitle: "No account, no tracking",
+    essenceBody:
+      "No sign-up, no login, no ads. I don't sell or share any data, and there are no third-party trackers on the site.",
+    deviceTitle: "On your device",
+    deviceBody:
+      "Your browser keeps a few settings in local storage: your language, the progress of the current day's grid, and a random identifier used only to curb spam. None of it is an advertising or tracking cookie. Clearing the site data removes it.",
+    serverTitle: "What gets sent to me",
+    serverBody:
+      "While you play, I record anonymous, aggregated statistics (the countries picked per cell, the difficulty feedback). They aren't linked to any identity: there's no way to tell who guessed what.",
+    thirdPartyTitle: "Third-party services",
+    thirdPartyBody:
+      "Geodoku relies on Vercel (hosting and anonymous, cookieless audience metrics), Convex (the database holding the game statistics) and Google Fonts (typefaces, which exposes your IP address to Google when they load).",
+    rightsTitle: "Your rights",
+    rightsBody:
+      "Since no data can identify you, there's no account to access or delete. You stay in control from your browser: clearing the site data for Geodoku erases everything.",
+    contactTitle: "Contact",
+    contactBodyPre: "A question? Write to me at",
+  },
+  changelog: {
+    eyebrow: "Last updated · June 2026",
+    title: "Changelog",
+    backToGame: "Back to the game",
+    entries: {
+      reliabilityDate: "June 2, 2026",
+      reliabilityTitle: "A reliable grid, every day",
+      reliabilityBody:
+        "The game now heals itself if something hiccups on the server side: the daily grid is always there, on time. I also published a clear, jargon-free privacy page.",
+      darkModeDate: "May 29, 2026",
+      darkModeTitle: "Dark mode",
+      darkModeBody:
+        "Geodoku follows your system theme. In dark mode, the icon and colors adapt automatically to go easy on your eyes at night.",
+      identityDate: "May 26, 2026",
+      identityTitle: "A fresh visual identity",
+      identityBody:
+        "A full editorial redesign of the interface, a new favicon, and polished share cards when you send a link around.",
+      comfortDate: "May 25, 2026",
+      comfortTitle: "Fairer, less frustrating",
+      comfortBody:
+        "When you miss, the unmet constraints light up to help you see why. And a cell that has become impossible to fill is simply blocked (⬛) instead of costing you a life outright.",
+      helpDate: "May 22, 2026",
+      helpTitle: "Help within reach",
+      helpBody:
+        'A "How to play" reminder shows up for newcomers and tucks itself away once you\'ve got the hang of it.',
+      footerDate: "April 30, 2026",
+      footerTitle: "Issue number & credits",
+      footerBody:
+        "Each daily grid now carries its issue number, counted from the very first day. A discreet footer gathers the credits and the language switch.",
+      scoringDate: "April 29, 2026",
+      scoringTitle: "A score that rewards boldness",
+      scoringBody:
+        "Scoring was reworked to better reward rare answers, and the geographic constraints rebalanced for fairer difficulty, day after day.",
+      solutionDate: "April 17, 2026",
+      solutionTitle: "The solution grid",
+      solutionBody:
+        "At the end of a game, you uncover the possible answers for each cell and how rare your picks were compared to the day's other players.",
+      bilingualDate: "April 15, 2026",
+      bilingualTitle: "Bilingual, right where you left off",
+      bilingualBody:
+        "Geodoku speaks French and English. Your daily game is saved on your device: close the tab and come back to finish it later.",
+      launchDate: "April 10, 2026",
+      launchTitle: "Geodoku's first steps",
+      launchBody:
+        "The heart of the game comes to life: a daily 3×3 grid, crossing geographic constraints, 3 lives, a typo-tolerant country search, rarity-based scoring, and a Wordle-style emoji share.",
+    },
+    roadmapTitle: "What's next?",
+    roadmapLead:
+      "A few directions I'd love to explore. Nothing is set in stone. Your ideas are very welcome.",
+    roadmapReplay: "Replay previous grids",
+    roadmapScore: "A reworked score calculation",
+    roadmapConstraints: "New constraints",
+    roadmapLives: "More (or unlimited) lives, or an easy mode",
+    contactTitle: "Got an idea or a remark?",
+    contactBodyPre: "I welcome every suggestion. Write to me at",
   },
   howToPlay: {
     title: "How to play?",
-    p1pre: "Each grid features",
-    p1bold1: "6\u00A0constraints",
-    p1mid:
-      "geographical (3\u00A0rows, 3\u00A0columns). For each cell, find a country that satisfies",
-    p1bold2: "both crossed constraints",
-    p2: "Each country can only be used once in the grid.",
-    p2warn: "Careful not to paint yourself into a corner!",
-    p3pre: "You have",
-    p3bold: "3\u00A0lives",
-    p3post: "Each wrong answer uses one.",
-    p4: "Cells are colored by the rarity of your answer:",
-    li1: "🟪 Common — more than 50%\u00A0of players",
-    li2: "🟦 Uncommon — more than 25%",
-    li3: "🟨 Rare — more than 10%",
-    li4: "🟥 Ultra-rare — 10%\u00A0or less",
-    tip: "The rarer your answer, the better your score. Good luck!",
+    rule1Title: "Complete the grid",
+    rule1Body:
+      "Find a country that matches both the row and column. Multiple answers are possible!",
+    rule2Title: "Unique countries",
+    rule2Body: "Each country can only be used once across the entire grid.",
+    rule3Title: "3 strikes max",
+    rule3Body:
+      "You are allowed 3 mistakes. On the third wrong answer, it's game over.",
+    rule4Title: "Aim for rarity",
+    rule4Body:
+      "The more unique and less guessed your country is, the higher your score.",
     dontShowAgain: "Don't show again",
   },
   error: {

@@ -2,8 +2,10 @@ import { Providers } from "@/app/providers";
 import { useDailyReload } from "@/app/useDailyReload";
 import { AdminPage } from "@/features/admin/AdminPage";
 import { GamePage } from "@/features/game/components/GamePage";
+import { ChangelogPage } from "@/features/legal/ChangelogPage";
+import { PrivacyPage } from "@/features/legal/PrivacyPage";
 
-const KNOWN_PATHS = new Set(["/", "/admin"]);
+const KNOWN_PATHS = new Set(["/", "/admin", "/privacy", "/changelog"]);
 
 function App() {
   useDailyReload();
@@ -18,6 +20,22 @@ function App() {
     return (
       <Providers>
         <AdminPage />
+      </Providers>
+    );
+  }
+
+  if (path === "/privacy") {
+    return (
+      <Providers>
+        <PrivacyPage />
+      </Providers>
+    );
+  }
+
+  if (path === "/changelog") {
+    return (
+      <Providers>
+        <ChangelogPage />
       </Providers>
     );
   }

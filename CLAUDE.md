@@ -6,9 +6,14 @@ Geodoku est un mini-jeu web quotidien inspiré de Wordle et du Sudoku, sur le th
 
 **Principe.** Chaque jour, une grille 3×3 est proposée à tous les joueurs. Chaque ligne et chaque colonne impose une contrainte géographique (ex: « Asie », « Enclavé », « Plus de 50M d'habitants », « Frontalier de la France »). Pour chacune des 9 cases, le joueur doit trouver un pays qui valide **simultanément** la contrainte de sa ligne et celle de sa colonne. Il dispose de **3 vies** et ne peut pas réutiliser deux fois le même pays. Une case dont tous les pays valides ont déjà été placés ailleurs devient **bloquée** (impossible à remplir) ; la partie se termine quand les vies tombent à zéro **ou** quand plus aucune case n'est remplissable.
 
-**Le twist.** Plus le pays trouvé est rare (parmi les choix des autres joueurs de la journée), meilleur est le score. Un joueur qui remplit une case « Asie × Enclavé » avec « Bhoutan » obtient un meilleur bonus qu'un joueur qui met « Mongolie ». Le score final est en pourcentage, calculé comme `completion × 20pts + bonus_rareté` sur un max de 405, puis normalisé.
+**Le twist — rareté.** Plus le pays trouvé est rare (parmi les choix des autres joueurs de la journée), plus le tier de rareté est élevé (🟪 commun → 🟥 ultra). Un joueur qui remplit « Asie × Enclavé » avec « Bhoutan » obtient un meilleur tier qu'avec « Mongolie ».
 
-**L'enjeu communautaire.** À la fin, le joueur partage sa grille sous forme d'emojis colorés (🟪🟦🟨🟥⬜⬛) avec son score, à la manière de Wordle. `⬛` représente les cases bloquées (non remplissables) en fin de partie.
+**Deux scores indépendants (V2).** Voir `[src/features/game/logic/rarity.ts](src/features/game/logic/rarity.ts)` et `[constants.ts](src/features/game/logic/constants.ts)`.
+
+- **Grille** (`computeGridScore`) : `(cellules remplies + vies restantes) / 12` → pourcentage 0–100 % (9 cases + 3 vies = 12 points max). Mesure la performance de la partie.
+- **Originalité** (`computeOriginalityScore`) : moyenne des valeurs de tier sur les 9 cases (vide = 0 ; common 0, uncommon 33, rare 66, ultra 100) → score 0–100 et grade **S / A / B / C / D**.
+
+**L'enjeu communautaire.** À la fin, le joueur partage sa grille sous forme d'emojis colorés (🟪🟦🟨🟥⬜⬛) avec `percent% · grade` (ex. `67% · A`), à la manière de Wordle. `⬛` = cases bloquées ; `⬜` = cases non remplies en défaite.
 
 **Ce que Geodoku n'est PAS.** Pas de compte, pas de login, pas de leaderboard, pas de streak inter-jours, pas de stats globales, pas d'ads, pas de mobile app. Un site web minimaliste, une partie par jour, un partage. Point.
 
@@ -16,14 +21,15 @@ Geodoku est un mini-jeu web quotidien inspiré de Wordle et du Sudoku, sur le th
 
 - **Frontend** : Vite + React + TypeScript (strict mode)
 - **Styling** : Tailwind CSS + shadcn/ui (install manuelle par composant) + Lucide React
-- **Backend** : Convex (cloud remote, pas local) — DB, mutations, queries, crons
-- **Package manager** : pnpm
+- **Backend** : Convex (cloud remote, pas local) — DB, mutations, queries, crons ; rate limiting via `@convex-dev/rate-limiter` (`[convex/rateLimit.ts](convex/rateLimit.ts)`, `[convex/convex.config.ts](convex/convex.config.ts)`)
+- **Observabilité front** : `@vercel/analytics` + `@vercel/speed-insights` (`[src/main.tsx](src/main.tsx)`)
+- **Package manager** : pnpm (Node **≥ 22.12**, Volta 22.19)
 - **Lint/format** : Biome (pas ESLint, pas Prettier)
 - **Tests** : Vitest + @testing-library/react
 - **Recherche fuzzy** : match-sorter (normalisation NFD côté requête)
 - **Fonts** : Newsreader (serif, via Google Fonts CDN) + Inter (sans-serif)
 
-**Choix assumés et non négociables.** Pas de state manager externe (Redux/Zustand) : `useReducer` + `Context` suffisent. Pas de TanStack Query : Convex a ses propres hooks réactifs. Pas de Zod : les types Convex sont générés automatiquement. Pas de date-fns/dayjs : les dates sont des strings `YYYY-MM-DD`. Pas de react-router en V1 : un toggle sur `window.location.pathname` suffit pour séparer `/` de `/admin`.
+**Choix assumés et non négociables.** Pas de state manager externe (Redux/Zustand) : `useReducer` + `Context` suffisent. Pas de TanStack Query : Convex a ses propres hooks réactifs. Pas de Zod : les types Convex sont générés automatiquement. Pas de date-fns/dayjs : les dates sont des strings `YYYY-MM-DD` (`[src/lib/dates.ts](src/lib/dates.ts)`, réexporté par `[convex/lib/dates.ts](convex/lib/dates.ts)`). Pas de react-router en V1 : un toggle sur `window.location.pathname` suffit pour `/`, `/admin`, `/privacy`, `/changelog` (`[src/App.tsx](src/App.tsx)`).
 
 ## 3. Architecture des dossiers
 
@@ -31,22 +37,30 @@ Geodoku est un mini-jeu web quotidien inspiré de Wordle et du Sudoku, sur le th
 geodoku/
 ├── convex/
 │   ├── schema.ts                # tables : gridCandidates, grids, gridAnswers, guesses, dailyStats, gridFeedback
+│   ├── convex.config.ts         # app Convex + composant @convex-dev/rate-limiter
 │   ├── crons.ts                 # ensureDailyGrids (hourly) + autoRefillPool (daily 03:00 UTC)
-│   ├── scheduling.ts            # internalMutation ensureDailyGrids (module léger, hot-path cron)
-│   ├── grids.ts                 # actions/queries/mutations publiques et admin (pool-based)
-│   ├── guesses.ts               # mutation submitGuess
-│   ├── gridData.ts              # queries/mutations internes (accès DB)
+│   ├── scheduling.ts            # ensureDailyGrids + assignGridForDate (module léger, hot-path cron)
+│   ├── grids.ts                 # pool, queries/mutations publiques et admin
+│   ├── guesses.ts               # submitGuess, recordFailedGuess, getGuessDistributionForDate
+│   ├── gridData.ts              # queries/mutations internes (pool, satellite, seed idempotence)
+│   ├── auth.ts                  # checkAdminToken, safeEqual
+│   ├── cellKeys.ts              # CELL_KEYS (9 cases)
+│   ├── rateLimit.ts             # token buckets guess + feedback (clé clientId)
 │   ├── http.ts                  # GET /health (monitoring externe)
 │   ├── seed.ts                  # autoSeedIfEmpty (deploy) + seedHistoricalGrids (J-30..today + demain)
 │   ├── wipe.ts                  # wipeAllData (paginé, dev only)
+│   ├── __tests__/               # auth, cellMetrics
 │   └── lib/
-│       ├── dates.ts             # todayUTC, tomorrowUTC, offsetUTC (helpers UTC partagés)
+│       ├── dates.ts             # réexport src/lib/dates.ts (ne pas dupliquer)
 │       ├── gridConstants.ts     # tunables (hard filters, pool, scheduler weights)
 │       ├── gridGenerator.ts     # pur : backtracking + finalize + generateDiversePool (importe pays/contraintes depuis src/)
 │       ├── gridScheduler.ts     # pur : selectNextGrid (greedy : freshness + overuse + novelty + difficulty)
-│       └── *.test.ts
+│       ├── cellMetrics.ts       # pur : struggle, concentration (admin + export-analytics)
+│       ├── gridGenerator.test.ts
+│       └── gridScheduler.test.ts
 ├── scripts/
 │   ├── simulate-scheduling.ts   # sim 30 jours sans Convex (pool + scheduler), versionné
+│   ├── export-analytics.ts      # bundle Markdown admin → analytics-YYYY-MM-DD.md
 │   ├── prod/                    # build & validation (versionné)
 │   │   ├── build-countries.ts   # one-shot : génère countries.json (Wikimedia + popularité)
 │   │   ├── buildCountriesLib.ts # parseFlagFromAlt, aliases, gameplay tags, assignPopularity… (+ tests)
@@ -55,32 +69,44 @@ geodoku/
 │   │   └── validate-constraints.ts  # rapport de calibrage des contraintes
 │   └── dev/                     # audits locaux (gitignored ; exclu de tsconfig)
 ├── src/
-│   ├── main.tsx
-│   ├── App.tsx                  # toggle / (GamePage) ou /admin (AdminPage)
+│   ├── main.tsx                 # + Vercel Analytics / Speed Insights
+│   ├── App.tsx                  # toggle /, /admin, /privacy, /changelog
 │   ├── app/
-│   │   └── providers.tsx        # ConvexProvider
+│   │   ├── providers.tsx        # ConvexProvider
+│   │   ├── AppFooter.tsx        # pied de page jeu / admin / legal
+│   │   └── useDailyReload.ts    # reload au rollover jour UTC (onglet visible)
 │   ├── i18n/                    # translate() FR/EN, LocaleContext, locales/{fr,en}.ts
 │   ├── features/
 │   │   ├── game/
 │   │   │   ├── components/      # Header, GameGrid, Cell, GuessModal, ResultScreen, SolutionGrid, RarityBadge, AchievementCard, HowToPlayLink, LocaleSwitcher, GamePage
 │   │   │   ├── hooks/useGameState.ts
-│   │   │   ├── logic/           # reducer, validation, blockedDetection, rarity, share, constants, constraints (51 contraintes / 15 catégories)
+│   │   │   ├── logic/           # reducer, validation, blockedDetection, rarity, share, constants, constraints (51 / 15)
 │   │   │   │   └── __tests__/
 │   │   │   └── types.ts
 │   │   ├── countries/
 │   │   │   ├── data/countries.json
 │   │   │   ├── lib/search.ts    # match-sorter wrapper (+ __tests__)
 │   │   │   └── types.ts         # type Country (regime, physicalFeatures, flagColors/Symbols, popularityIndex…)
-│   │   ├── errors/              # ErrorBoundary, fallback UI
+│   │   ├── errors/              # ErrorBoundary, ErrorScreen ; hooks/useBackendDownTimeout
+│   │   ├── legal/               # pages éditoriales statiques
+│   │   │   ├── PrivacyPage.tsx  # /privacy
+│   │   │   ├── ChangelogPage.tsx # /changelog (timeline daté + roadmap)
+│   │   │   └── components/      # LegalLayout, LegalSection, LegalParagraph, LegalBullet, LegalContactSection, LegalSupportSection, constants
 │   │   └── admin/
 │   │       ├── AdminPage.tsx
-│   │       ├── components/      # PoolOverviewPanel, GameCalendar, GridDayDetail, GridPreview, GameHealthPanel, StatGlyph
-│   │       ├── logic/           # display.ts (constraintLabel, difficulty pills/dots), analytics.ts (struggle, markers, summary/trend), scheduling.ts (dateToStr)
+│   │       ├── components/      # PoolOverviewPanel, GameCalendar, GridDayDetail, GridPreview, GameHealthPanel, StatGlyph, AdminAuthBoundary, AlertBanner, PanelCard, …
+│   │       ├── logic/           # display.ts, analytics.ts, scheduling.ts (+ __tests__)
 │   │       └── hooks/useAdminToken.ts
-│   ├── components/ui/           # shadcn dump (button, input, accordion, dialog, popover…)
-│   └── lib/utils.ts             # cn()
+│   ├── components/
+│   │   ├── editorial/           # DisplayHeader, Eyebrow, AccentBar
+│   │   ├── AppMark.tsx
+│   │   └── ui/                  # shadcn : button, input, accordion, dialog, drawer, calendar, command, checkbox
+│   └── lib/
+│       ├── utils.ts             # cn()
+│       └── dates.ts             # todayUTC, tomorrowUTC, offsetUTC… (source unique UTC)
 ├── biome.json
 ├── tailwind.config.ts
+├── vercel.json                  # SPA rewrites + headers sécurité
 ├── tsconfig.json                # `include: ["src", "scripts"]`, `exclude: ["scripts/dev"]`
 ├── vite.config.ts
 └── package.json
@@ -88,22 +114,18 @@ geodoku/
 
 ### Pays, contraintes et difficulté (`countries.json`, `gridConstants.ts`, `gridGenerator.ts`)
 
-- **51 contraintes / 15 catégories** ([`src/features/game/logic/constraints.ts`](src/features/game/logic/constraints.ts)) : `continent`, `water_access`, `borders_count`, `borders_pivot`, `area`, `population`, `language`, `flag`, `latitude`, `subregion`, `event`, `political` (EU, G20, NATO, Commonwealth), `regime` (monarchie), `physical` (équateur, Méditerranée, Caraïbes, pic > 5000 m), `density`. Le type `Country` porte les axes nécessaires : `regime`, `physicalFeatures`, `groups`, `flagColors`, `flagSymbols`, `events`, `popularityIndex`. Toutes les contraintes restent dans la sweet-spot (3..15 pays valides côté `MIN_CELL_SIZE` / `MAX_CELL_SIZE`).
-
-- **Build `pnpm build:countries`.** Enrichit chaque pays avec des **pageviews mensuelles** (API REST Wikimedia `en.wikipedia`). Requêtes **séquentielles** avec intervalle entre pays et **retry / backoff** sur HTTP 429 ; échec du script si trop de pays sans métriques (évite de committer un JSON incomplet). Les titres d’article ambigus se surchargent via **`wikiTitles`** dans [`scripts/prod/patches.json`](scripts/prod/patches.json) (ex. `Georgia_(country)`, `The_Gambia`). Les listes additionnelles (NATO, Commonwealth, monarchies, mers/équateur, pics > 5000 m) vivent aussi dans `patches.json` et sont consommées par [`buildCountriesLib.ts`](scripts/prod/buildCountriesLib.ts) (couvert par `buildCountriesLib.test.ts` + `patches.test.ts`).
-
-- **`popularityIndex`.** [0, 1], **percentile rank** des vues sur l’ensemble du jeu (ex-aequo → rang moyen). Calcul dans `assignPopularity`. Pays sans pageviews obtenues au build : **fallback médiane 0,5**.
-
-- **`computeCellDifficulty`** ([`convex/lib/gridGenerator.ts`](convex/lib/gridGenerator.ts)). Score 0–100 par case : cardinalité du pool × pondérations « easy / medium / hard » des deux contraintes × **facteur popularité** dérivé de la moyenne des **3 pays les plus connus** du pool (`topKPopularity`), puis courbe `1 − exp(−raw × k)`. Constantes **`POPULARITY_WEIGHT`**, **`POPULARITY_TOP_K`**, **`DIFFICULTY_CURVE_K`** en tête de fichier. Un changement de ces constantes ou une regénération massive de `countries.json` rend les **`cellDifficulties` / `difficultyEstimate`** déjà stockées en Convex désuètes pour la comparaison ; en dev, `wipe` + `seed` si besoin d’historique cohérent.
-
-- **`gridConstants.ts`** centralise *tous* les tunables backend : hard filters (`MIN_CELL_SIZE`, `MAX_SAME_CATEGORY`…), pool (`TARGET_GRIDS_PER_SEED`, `MAX_OVERLAP_BETWEEN_GRIDS`), poids du scheduler (`HISTORY_WINDOW`, `TARGET_DIFFICULTY`, `FRESH_CONSTRAINT_BONUS`, `OVERUSE_CONSTRAINT_MALUS`, `FRESH_COUNTRY_BONUS`, `DIFFICULTY_PROXIMITY_WEIGHT`), seuil `POOL_LOW_THRESHOLD`. Pour calibrer : ajuster ici, lancer `pnpm simulate:scheduling` (sim 30 jours, sans Convex) puis, si OK, `wipe:db` + `seed:grids` en dev pour repartir d’un historique cohérent.
+- **51 contraintes / 15 catégories** (`[src/features/game/logic/constraints.ts](src/features/game/logic/constraints.ts)`) : `continent`, `water_access`, `borders_count`, `borders_pivot`, `area`, `population`, `language`, `flag`, `latitude`, `subregion`, `event`, `political` (EU, G20, NATO, Commonwealth), `regime` (monarchie), `physical` (équateur, Méditerranée, Caraïbes, pic > 5000 m), `density`. Le type `Country` porte les axes nécessaires : `regime`, `physicalFeatures`, `groups`, `flagColors`, `flagSymbols`, `events`, `popularityIndex`. Toutes les contraintes restent dans la sweet-spot (3..15 pays valides côté `MIN_CELL_SIZE` / `MAX_CELL_SIZE`).
+- **Build `pnpm build:countries`.** Enrichit chaque pays avec des **pageviews mensuelles** (API REST Wikimedia `en.wikipedia`). Requêtes **séquentielles** avec intervalle entre pays et **retry / backoff** sur HTTP 429 ; échec du script si trop de pays sans métriques (évite de committer un JSON incomplet). Les titres d’article ambigus se surchargent via `**wikiTitles`\*\* dans `[scripts/prod/patches.json](scripts/prod/patches.json)` (ex. `Georgia_(country)`, `The_Gambia`). Les listes additionnelles (NATO, Commonwealth, monarchies, mers/équateur, pics > 5000 m) vivent aussi dans `patches.json` et sont consommées par `[buildCountriesLib.ts](scripts/prod/buildCountriesLib.ts)` (couvert par `buildCountriesLib.test.ts` + `patches.test.ts`).
+- `**popularityIndex`.** [0, 1], **percentile rank** des vues sur l’ensemble du jeu (ex-aequo → rang moyen). Calcul dans `assignPopularity`. Pays sans pageviews obtenues au build : **fallback médiane 0,5\*\*.
+- `**computeCellDifficulty`** (`[convex/lib/gridGenerator.ts](convex/lib/gridGenerator.ts)`). Score 0–100 par case : cardinalité du pool × pondérations « easy / medium / hard » des deux contraintes × **facteur popularité** dérivé de la moyenne des **3 pays les plus connus** du pool (`topKPopularity`), puis courbe `1 − exp(−raw × k)`. Constantes `**POPULARITY_WEIGHT`**, `**POPULARITY_TOP_K**`, `**DIFFICULTY_CURVE_K**`en tête de fichier. Un changement de ces constantes ou une regénération massive de`countries.json`rend les`**cellDifficulties`/`difficultyEstimate**`déjà stockées en Convex désuètes pour la comparaison ; en dev,`wipe`+`seed` si besoin d’historique cohérent.
+- `**gridConstants.ts**` centralise _tous_ les tunables backend : hard filters (`MIN_CELL_SIZE`, `MAX_SAME_CATEGORY`…), pool (`TARGET_GRIDS_PER_SEED`, `MAX_OVERLAP_BETWEEN_GRIDS`), poids du scheduler (`HISTORY_WINDOW`, `TARGET_DIFFICULTY`, `FRESH_CONSTRAINT_BONUS`, `OVERUSE_CONSTRAINT_MALUS`, `FRESH_COUNTRY_BONUS`, `DIFFICULTY_PROXIMITY_WEIGHT`), seuil `POOL_LOW_THRESHOLD`. Pour calibrer : ajuster ici, lancer `pnpm simulate:scheduling` (sim 30 jours, sans Convex) puis, si OK, `wipe:db` + `seed:grids` en dev pour repartir d’un historique cohérent.
 
 **Règles de placement.**
 
 - Toute logique métier pure vit dans `features/<feature>/logic/`. Zéro import React, zéro import Convex. Testée en isolation.
 - Les hooks React (`features/<feature>/hooks/`) sont la seule couche qui connecte logique pure + Convex + état React.
 - Les composants ne calculent rien de significatif. Ils consomment l'état du reducer et dispatchent des actions.
-- Pas de copie statique entre `src/` et `convex/lib/` : `gridGenerator.ts`, `gridScheduler.ts` et `gridConstants.ts` importent directement `countries.json`, `constraints`, types depuis `src/`. Si une copie devenait inévitable (sandboxing), porter un commentaire `// Copie de src/... — ne pas éditer ici, regénérer si la source change.` en tête du fichier dupliqué.
+- Pas de copie statique entre `src/` et `convex/lib/` : `gridGenerator.ts`, `gridScheduler.ts` et `gridConstants.ts` importent directement `countries.json`, `constraints`, types depuis `src/`. **Exception** : `convex/lib/dates.ts` réexporte `[src/lib/dates.ts](src/lib/dates.ts)` (une seule implémentation). Si une autre copie devenait inévitable (sandboxing), porter un commentaire `// Copie de src/... — ne pas éditer ici, regénérer si la source change.` en tête du fichier dupliqué.
 
 ## 4. Conventions de code
 
@@ -167,7 +189,7 @@ Inspiration : publications digitales haut de gamme type NYT Games. Spacieux, sop
 | `on-surface-variant` | `#56606e` | Texte secondaire, labels                                |
 | `outline-variant`    | `#adb3b4` | Séparateurs, à utiliser à **15% opacity max**           |
 
-**Format de stockage.** Les tokens vivent dans [`src/index.css`](src/index.css) en **canaux HSL bruts** (`<h s% l%>` sans wrapper `hsl()`) et sont consommés via `hsl(var(--…) / <alpha-value>)` dans Tailwind. C'est ce qui fait fonctionner les utilitaires d'opacité (`bg-brand/10`, `text-on-surface-variant/60`, `bg-outline-variant/15`…). **Ne jamais** réintroduire des valeurs `hsl(…)` ou `#hex` dans les `--color-*` : ça casserait silencieusement toutes les opacités.
+**Format de stockage.** Les tokens vivent dans `[src/index.css](src/index.css)` en **canaux HSL bruts** (`<h s% l%>` sans wrapper `hsl()`) et sont consommés via `hsl(var(--…) / <alpha-value>)` dans Tailwind. C'est ce qui fait fonctionner les utilitaires d'opacité (`bg-brand/10`, `text-on-surface-variant/60`, `bg-outline-variant/15`…). **Ne jamais** réintroduire des valeurs `hsl(…)` ou `#hex` dans les `--color-`\* : ça casserait silencieusement toutes les opacités.
 
 **Accent éditorial.**
 
@@ -181,11 +203,11 @@ Les tokens `brand` et `rarity.*` sont **sémantiquement distincts** : `brand` es
 
 **Tokens sémantiques additionnels.**
 
-| Token     | Hex (light) | Usage                                                                                  |
-| --------- | ----------- | -------------------------------------------------------------------------------------- |
-| `success` | `#16a34a`   | Indicateur positif — tier « easy » de difficulté, confirmations de validation. |
+| Token     | Hex (light) | Usage                                                                                                                                                |
+| --------- | ----------- | ---------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `success` | `#16a34a`   | Indicateur positif — tier « easy » de difficulté, confirmations de validation.                                                                       |
 | `warning` | `#d97706`   | Alerte douce — tier « medium » de difficulté, stock pool en baisse (`PoolHealthBanner`), bandeau « struggle indisponible / ventilation en attente ». |
-| `error`   | `#dc2626`   | Erreur ou état bloquant — tier « hard » de difficulté, alertes « pool vide / grille manquante », message d'erreur dans `GuessModal`. |
+| `error`   | `#dc2626`   | Erreur ou état bloquant — tier « hard » de difficulté, alertes « pool vide / grille manquante », message d'erreur dans `GuessModal`.                 |
 
 Règle d'application : background à 10–15% opacity, texte à 100% (même convention que `rarity.*`).
 
@@ -195,12 +217,12 @@ Note : `warning` et `error` partagent visuellement les valeurs HSL avec `rarity-
 
 Les couleurs UI sont **volontairement alignées** sur les émojis de partage Wordle pour que le joueur retrouve instinctivement les mêmes codes visuels en jeu et en partage.
 
-| Tier              | Hex       | Couleur  | Emoji partage |
-| ----------------- | --------- | -------- | ------------- |
-| `rarity.common`   | `#7c3aed` | violet   | 🟪            |
-| `rarity.uncommon` | `#2563eb` | bleu     | 🟦            |
-| `rarity.rare`     | `#d97706` | ambre    | 🟨            |
-| `rarity.ultra`    | `#dc2626` | rouge    | 🟥            |
+| Tier              | Hex       | Couleur | Emoji partage |
+| ----------------- | --------- | ------- | ------------- |
+| `rarity.common`   | `#7c3aed` | violet  | 🟪            |
+| `rarity.uncommon` | `#2563eb` | bleu    | 🟦            |
+| `rarity.rare`     | `#d97706` | ambre   | 🟨            |
+| `rarity.ultra`    | `#dc2626` | rouge   | 🟥            |
 
 **Règle d'application rareté** : background = couleur à 10% opacity, texte = couleur à 100%. Pill arrondi complet.
 
@@ -229,15 +251,15 @@ Les couleurs UI sont **volontairement alignées** sur les émojis de partage Wor
 
 ### 5.4 Composants récurrents
 
-**Boutons.** Toujours `<Button variant="...">` depuis [`src/components/ui/button.tsx`](src/components/ui/button.tsx). Cinq variants couvrent l'intégralité des usages — toute classe `bg-*`/`text-*`/`border-*` ajoutée par-dessus est un *code smell* (vérifier d'abord si un variant existant matche).
+**Boutons.** Toujours `<Button variant="...">` depuis `[src/components/ui/button.tsx](src/components/ui/button.tsx)`. Cinq variants couvrent l'intégralité des usages — toute classe `bg-*`/`text-*`/`border-*` ajoutée par-dessus est un _code smell_ (vérifier d'abord si un variant existant matche).
 
-| Variant | Apparence | Quand l'utiliser |
-| --- | --- | --- |
-| `default` (= primary) | `bg-on-surface text-surface-lowest rounded-md`, hover `bg-on-surface/90` | CTA principal d'une vue (ex. « Recommencer », « Confirmer ») |
-| `secondary` | `bg-surface-highest text-on-surface rounded-md`, hover `bg-surface-highest/70` | Action secondaire à côté du primary (ex. « Annuler », « Voir la solution ») |
-| `ghost` | Pas de bg, `text-on-surface-variant` hover `text-on-surface` | Bouton tertiaire « quiet » à texte lisible (ex. « Comment jouer », « FR / EN ») |
-| `ghost-label` | `text-[10px] font-semibold tracking-widest uppercase text-on-surface-variant`, hover `text-on-surface` | Action discrète façon eyebrow ALL CAPS (ex. « Déconnexion ») |
-| `link` | `underline decoration-outline-variant/40 text-on-surface-variant`, hover `text-on-surface` | Lien texte inline (ex. « Skip feedback », « Voir mon résultat ») |
+| Variant               | Apparence                                                                                              | Quand l'utiliser                                                                |
+| --------------------- | ------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------- |
+| `default` (= primary) | `bg-on-surface text-surface-lowest rounded-md`, hover `bg-on-surface/90`                               | CTA principal d'une vue (ex. « Recommencer », « Confirmer »)                    |
+| `secondary`           | `bg-surface-highest text-on-surface rounded-md`, hover `bg-surface-highest/70`                         | Action secondaire à côté du primary (ex. « Annuler », « Voir la solution »)     |
+| `ghost`               | Pas de bg, `text-on-surface-variant` hover `text-on-surface`                                           | Bouton tertiaire « quiet » à texte lisible (ex. « Comment jouer », « FR / EN ») |
+| `ghost-label`         | `text-[10px] font-semibold tracking-widest uppercase text-on-surface-variant`, hover `text-on-surface` | Action discrète façon eyebrow ALL CAPS (ex. « Déconnexion »)                    |
+| `link`                | `underline decoration-outline-variant/40 text-on-surface-variant`, hover `text-on-surface`             | Lien texte inline (ex. « Skip feedback », « Voir mon résultat »)                |
 
 Sizes : `default` (h-10), `sm` (h-9), `lg` (h-11), `icon` (h-10 w-10), `auto` (h-auto p-0). Les variants `ghost-label` et `link` forcent `auto` par défaut via `compoundVariants`.
 
@@ -270,17 +292,17 @@ Sizes : `default` (h-10), `sm` (h-9), `lg` (h-11), `icon` (h-10 w-10), `auto` (h
 
 Les patterns ci-dessous ont un **nom canonique** et un **composant partagé**. **Avant d'en composer un à la main, importer le composant correspondant.** La référence visuelle reste `src/features/game/components/ResultScreen.tsx` pour les patterns inline.
 
-**`display-header`** — triplette titre + barre + eyebrow.
+`**display-header`\*\* — triplette titre + barre + eyebrow.
 
-Composant : [`<DisplayHeader>`](src/components/editorial/DisplayHeader.tsx). Props `{ title, eyebrow?, as?: 'h1'|'h2'|'h3', size?: 'md'|'lg', centered?: boolean }`. Rend :
+Composant : `[<DisplayHeader>](src/components/editorial/DisplayHeader.tsx)`. Props `{ title, eyebrow?, as?: 'h1'|'h2'|'h3', size?: 'md'|'lg', centered?: boolean }`. Rend :
 
 1. Un titre serif italique `font-medium leading-none` (size `md` = `text-2xl`, `lg` = `text-3xl`).
-2. Une [`<AccentBar>`](src/components/editorial/AccentBar.tsx) (`h-1 w-12 bg-brand rounded-full`).
-3. Une [`<Eyebrow>`](src/components/editorial/Eyebrow.tsx) optionnelle en dessous.
+2. Une `[<AccentBar>](src/components/editorial/AccentBar.tsx)` (`h-1 w-12 bg-brand rounded-full`).
+3. Une `[<Eyebrow>](src/components/editorial/Eyebrow.tsx)` optionnelle en dessous.
 
 Exception : quand un `<DialogTitle>` Radix est requis pour l'a11y (cas de `HowToPlayLink`), composer manuellement `DialogTitle + AccentBar` (sans `DisplayHeader`).
 
-**`hero-number`** — un chiffre ou un score mis en évidence.
+`**hero-number**` — un chiffre ou un score mis en évidence.
 
 - `font-serif font-medium text-brand`.
 - Taille `text-5xl` (score final, modale) à `text-6xl` (landing, si jamais).
@@ -289,39 +311,39 @@ Exception : quand un `<DialogTitle>` Radix est requis pour l'a11y (cas de `HowTo
 
 Reste inline (1 seule occurrence dans `ResultScreen.tsx` aujourd'hui). Si une 2e apparaît, extraire en `<HeroNumber>`.
 
-**`accent-word`** — un mot en violet dans une phrase.
+`**accent-word**` — un mot en violet dans une phrase.
 
 Voir §5.1 règle éditoriale n°2. Implémentation : `<span className="text-brand font-medium">mot</span>`. Pas de composant dédié — c'est une micro-convention typographique, pas un atome d'UI.
 
-**`eyebrow`** — les micro-labels all-caps.
+`**eyebrow**` — les micro-labels all-caps.
 
-Composant : [`<Eyebrow>`](src/components/editorial/Eyebrow.tsx). Props `{ children, as?: 'p'|'span'|'div', className? }`. Rend `text-[10px] tracking-widest uppercase text-on-surface-variant`.
+Composant : `[<Eyebrow>](src/components/editorial/Eyebrow.tsx)`. Props `{ children, as?: 'p'|'span'|'div', className? }`. Rend `text-[10px] tracking-widest uppercase text-on-surface-variant`.
 
-Pour la variante « panel header » (section title), passer `className="font-semibold"` — ou utiliser directement [`<PanelHeader>`](src/features/admin/components/PanelHeader.tsx) qui le fait pour toi.
+Pour la variante « panel header » (section title), passer `className="font-semibold"` — ou utiliser directement `[<PanelHeader>](src/features/admin/components/PanelHeader.tsx)` qui le fait pour toi.
 
 ### 5.5.1 Composants partagés admin
 
 Les panels admin ont leurs propres composants atomiques. **Avant de composer un panel à la main, importer ces composants.**
 
-| Composant | Usage |
-| --- | --- |
-| [`<PanelCard>`](src/features/admin/components/PanelCard.tsx) | `<section className="rounded-lg bg-surface-low p-4 md:p-5">` — wrapper de tous les panels admin |
-| [`<PanelHeader>`](src/features/admin/components/PanelHeader.tsx) | Titre eyebrow + slot `children` pour badges/actions |
-| [`<DifficultyPill>`](src/features/admin/components/DifficultyPill.tsx) | Pill 0-100 par tier de difficulté (`value` numérique ou `tier+children`) |
-| [`<StatusPill>`](src/features/admin/components/StatusPill.tsx) | État d'un jour : `scheduled` / `predicted` (brand, Sparkles) / `active` (aujourd'hui, success, Radio) / `past` (archivé, Archive) |
-| [`<TagPill>`](src/features/admin/components/TagPill.tsx) | Pill neutre pour contrainte/catégorie (`bg-surface-low text-on-surface-variant`) |
-| [`<StatGlyph>`](src/features/admin/components/StatGlyph.tsx) | Icône + valeur d'une métrique (style KDA, vocabulaire partagé) ; `showLabel` ajoute le mot inline, `<StatLegend>` rend la légende des icônes |
+| Composant                                                              | Usage                                                                                                                                        |
+| ---------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------- |
+| `[<PanelCard>](src/features/admin/components/PanelCard.tsx)`           | `<section className="rounded-lg bg-surface-low p-4 md:p-5">` — wrapper de tous les panels admin                                              |
+| `[<PanelHeader>](src/features/admin/components/PanelHeader.tsx)`       | Titre eyebrow + slot `children` pour badges/actions                                                                                          |
+| `[<DifficultyPill>](src/features/admin/components/DifficultyPill.tsx)` | Pill 0-100 par tier de difficulté (`value` numérique ou `tier+children`)                                                                     |
+| `[<StatusPill>](src/features/admin/components/StatusPill.tsx)`         | État d'un jour : `scheduled` / `predicted` (brand, Sparkles) / `active` (aujourd'hui, success, Radio) / `past` (archivé, Archive)            |
+| `[<TagPill>](src/features/admin/components/TagPill.tsx)`               | Pill neutre pour contrainte/catégorie (`bg-surface-low text-on-surface-variant`)                                                             |
+| `[<StatGlyph>](src/features/admin/components/StatGlyph.tsx)`           | Icône + valeur d'une métrique (style KDA, vocabulaire partagé) ; `showLabel` ajoute le mot inline, `<StatLegend>` rend la légende des icônes |
 
-### 5.5.2 Convention `rounded-*`
+### 5.5.2 Convention `rounded-`\*
 
-| Classe | Usage |
-| --- | --- |
-| `rounded-md` | Boutons (matché par le variant `default`/`secondary` du `<Button>`) |
-| `rounded-lg` | Cartes / panels de section (matché par `<PanelCard>`) |
-| `rounded-full` | Badges, pills (matché par `<DifficultyPill>`, `<StatusPill>`, `<TagPill>`, `<RarityBadge>`) |
-| `rounded-xl` | **Cellules interactives, surfaces flottantes et dialogs** — cellules de grille de jeu (`Cell`), mini-cellules de preview (`GridPreview`), cartes flottantes en `shadow-editorial` (`GridDayDetail`, `GameCalendar`, `AchievementCard`), `DialogContent`, `ResultScreen` desktop. Convention spécifique à Geodoku : `rounded-xl` (12px) donne une « softness » d'interactivité qu'on ne veut pas sur les sections plates. |
-| `rounded-t-2xl` | **Drawer mobile** uniquement (cf. shadcn Drawer, ResultScreen bottom-up). Pas de `rounded-2xl` complet. |
-| `rounded-3xl` et plus | **Interdit.** |
+| Classe                | Usage                                                                                                                                                                                                                                                                                                                                                                                                                    |
+| --------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `rounded-md`          | Boutons (matché par le variant `default`/`secondary` du `<Button>`)                                                                                                                                                                                                                                                                                                                                                      |
+| `rounded-lg`          | Cartes / panels de section (matché par `<PanelCard>`)                                                                                                                                                                                                                                                                                                                                                                    |
+| `rounded-full`        | Badges, pills (matché par `<DifficultyPill>`, `<StatusPill>`, `<TagPill>`, `<RarityBadge>`)                                                                                                                                                                                                                                                                                                                              |
+| `rounded-xl`          | **Cellules interactives, surfaces flottantes et dialogs** — cellules de grille de jeu (`Cell`), mini-cellules de preview (`GridPreview`), cartes flottantes en `shadow-editorial` (`GridDayDetail`, `GameCalendar`, `AchievementCard`), `DialogContent`, `ResultScreen` desktop. Convention spécifique à Geodoku : `rounded-xl` (12px) donne une « softness » d'interactivité qu'on ne veut pas sur les sections plates. |
+| `rounded-t-2xl`       | **Drawer mobile** uniquement (cf. shadcn Drawer, ResultScreen bottom-up). Pas de `rounded-2xl` complet.                                                                                                                                                                                                                                                                                                                  |
+| `rounded-3xl` et plus | **Interdit.**                                                                                                                                                                                                                                                                                                                                                                                                            |
 
 ### 5.6 Typographie suggérée (classes Tailwind)
 
@@ -341,54 +363,75 @@ Ces classes ne sont pas toutes définies dans Tailwind, elles servent de vocabul
 
 ### 5.7 Vérification automatique : `/verify-design-system`
 
-Le skill [`/verify-design-system`](.claude/skills/verify-design-system/SKILL.md) audite le code à la recherche des violations §5.3 (couleurs interdites, tokens shadcn parasites, shadows non-editorial, bordures dures, rounded non conformes, `<button>` HTML natifs, patterns dupliqués). À lancer **après chaque feature qui touche au visuel**, avant ouverture de PR. Aucun fix automatique — un rapport actionnable `file:line` par catégorie.
+Le skill `[/verify-design-system](.claude/skills/verify-design-system/SKILL.md)` audite le code à la recherche des violations §5.3 (couleurs interdites, tokens shadcn parasites, shadows non-editorial, bordures dures, rounded non conformes, `<button>` HTML natifs, patterns dupliqués). À lancer **après chaque feature qui touche au visuel**, avant ouverture de PR. Aucun fix automatique — un rapport actionnable `file:line` par catégorie.
 
 ## 6. Backend Convex — ce qu'il faut savoir
 
 **Architecture en pool.** On ne génère plus une grille par jour à l’aveugle : on entretient un **pool** de grilles candidates pré-générées (status `available`), et un **scheduler greedy** choisit chaque jour celle qui maximise la diversité par rapport aux 15 dernières grilles publiées. Pipeline :
 
-1. `generateDiversePool` ([`convex/lib/gridGenerator.ts`](convex/lib/gridGenerator.ts)) parcourt chaque contrainte comme **seed**, tente jusqu'à `MAX_ATTEMPTS_PER_SEED` backtrackings, garde les grilles qui passent les hard filters et n'overlap pas trop avec les grilles déjà en pool (`MAX_OVERLAP_BETWEEN_GRIDS`).
+1. `generateDiversePool` (`[convex/lib/gridGenerator.ts](convex/lib/gridGenerator.ts)`) parcourt chaque contrainte comme **seed**, tente jusqu'à `MAX_ATTEMPTS_PER_SEED` backtrackings, garde les grilles qui passent les hard filters et n'overlap pas trop avec les grilles déjà en pool (`MAX_OVERLAP_BETWEEN_GRIDS`).
 2. Chaque grille est **finalisée** avec ses métadonnées (`cellDifficulties`, `difficultyEstimate`, `difficultyTags`, `countryPool`, `categories`, `seedConstraint`).
-3. `selectNextGrid` ([`convex/lib/gridScheduler.ts`](convex/lib/gridScheduler.ts)) score chaque grille disponible : `fresh_constraints × bonus − overuse × malus + new_countries × bonus + difficulty_proximity × weight` (cible `TARGET_DIFFICULTY`), prend la meilleure, l'insère dans `grids` et la marque `used`.
+3. `selectNextGrid` (`[convex/lib/gridScheduler.ts](convex/lib/gridScheduler.ts)`) score chaque grille disponible : `fresh_constraints × bonus − overuse × malus + new_countries × bonus + difficulty_proximity × weight` (cible `TARGET_DIFFICULTY`), prend la meilleure, l'insère dans `grids` et la marque `used`.
 
 **Schéma actuel.**
 
 - `gridCandidates` : pool de grilles ; status `available | used`. Champs : `rows`, `cols`, `metadata` (`seedConstraint`, `constraintIds`, `categories`, `avgCellSize`, `minCellSize`, `countryPool`, `difficultyEstimate`, `difficultyTags`, `cellDifficulties`), `usedAt`, `usedForDate`. **Pas de `validAnswers` inline** — vit dans la table satellite `gridAnswers`.
 - `grids` : grille assignée à une date (clé = `date` YYYY-MM-DD). Champs : `rows`, `cols`, `countryPool` (dénormalisé depuis `metadata.countryPool` pour éviter de relire le satellite côté scheduler/admin), `difficulty`, `candidateId`.
 - `gridAnswers` : **satellite 1-to-1** keyé sur `candidateId`, porte uniquement `validAnswers`. Séparé pour alléger les `.collect()` du scheduler et des queries admin (un doc `gridCandidates` passe ainsi de ~3.5 KB à ~1.2 KB).
-- `guesses` : compteur par `(date, cellKey, countryCode)`.
-- `dailyStats` : dénormalisation `(date, cellKey) → totalGuesses` pour rareté O(1).
-- `gridFeedback` : agrégat par date (`tooEasyCount`, `balancedCount`, `tooHardCount`, `wins`, `losses`, `totalLivesLeft`, `totalFilledCells`, `totalGuessesSubmitted`) écrit par `submitGridFeedback` en fin de partie.
+- `guesses` : compteur par `(date, cellKey, countryCode)` ; `isReplay` optionnel (cohorte live vs futurs rejeux — exclus de la rareté affichée).
+- `dailyStats` : dénormalisation `(date, cellKey) → totalGuesses` pour rareté O(1) ; `failedAttempts` optionnel (échecs sur pays valides mais mauvais croisement → struggle admin).
+- `gridFeedback` : agrégat par date. **Parties** (`recordGameEnd`) : `wins`, `losses`, `lostByLivesCount`, `lostByBlockedCount`, `totalLivesLeft`, `totalFilledCells`, `totalGuessesSubmitted`. **Ratings** (`submitGridFeedback`) : `tooEasyCount`, `balancedCount`, `tooHardCount`, `totalRatings`.
 
-**Crons** ([`convex/crons.ts`](convex/crons.ts)).
+**Crons** (`[convex/crons.ts](convex/crons.ts)`).
 
 - **Toutes les heures** — `ensureDailyGrids` (mutation légère dans `scheduling.ts`) : assigne today + tomorrow depuis le pool via `selectNextGrid` ; si pool vide, planifie `autoRefillPool` via le scheduler. Idempotent (early-return si grilles présentes) → fait office de self-heal automatique.
 - **Daily 03:00 UTC** — `autoRefillPool` : si `available < POOL_LOW_THRESHOLD`, lance `generatePoolImpl` pour reremplir le stock (additif).
 
-**Endpoints clés** ([`convex/grids.ts`](convex/grids.ts)).
+**Endpoints publics (jeu).**
 
-- `getTodayGrid` (query, public) — grille du jour ou `null` ; jointure satellite `gridAnswers` pour exposer `validAnswers` au front jeu.
-- `getScheduledGrids` (query, admin UI) — grilles depuis J-30 avec métadonnées candidate embarquées. **Payload light** : pas de `validAnswers` (fetch lazy via les deux queries ci-dessous).
-- `getScheduledGridPreviewDetail` (query, admin) — fetch lazy `{rows, cols, validAnswers, difficulty}` pour une date donnée. Appelée à la sélection d'une date dans le calendrier admin.
-- `getCandidatePreviewDetail` (query, admin) — fetch lazy `{rows, cols, validAnswers, cellDifficulties}` pour un `candidateId`. Appelée par `GridDayDetail` quand un jour prédit est sélectionné.
-- `getPoolStats` (query, admin) — taille du pool par status, couverture par contrainte/pays.
-- `getUpcomingScheduledPreview` (query, admin) — 1..14 jours, marque chaque jour `scheduled` (déjà inscrit) / `predicted` (simulé en lecture seule depuis le pool) / `missing`.
-- `getGridFeedbackStats` (query, admin) — stats de feedback observé par jour (winRate, défaites + split vies/blocage, difficulté ressentie, etc.). **Léger** : alimente la synthèse + tendance de `GameHealthPanel`.
-- `getGridCellMetrics(date)` (query, admin) — **lourd, au clic** : 9 `dailyStats` + 9 `guesses` d'un jour (struggle, fillRate, picks, validAnswers par case). Jamais en masse — un seul jour à la fois (`GridDayDetail` + script d'export).
-- `submitGridFeedback` (mutation, public) — feedback de fin de partie.
-- `refreshPool` (action, admin avec `adminToken`) — supprime le stock `available` puis regénère un pool complet.
-- `runEnsureTomorrow` (action, admin avec `adminToken`) — planifie today + tomorrow (équivalent manuel du cron daily).
-- `scheduleGridForDate` (action, admin avec `adminToken`) — planifie une date précise via le scheduler.
+`[convex/grids.ts](convex/grids.ts)` :
+
+- `getTodayGrid` (query) — grille du jour ou `null` ; jointure satellite `gridAnswers` → `validAnswers`.
+- `recordGameEnd` (mutation) — compteurs de fin de partie dans `gridFeedback` (win/loss, cause, vies/cases/essais) ; rate-limited ; idempotent côté client (localStorage).
+- `submitGridFeedback` (mutation) — note de difficulté facultative (`too_easy` / `balanced` / `too_hard`) ; **ne touche pas** aux compteurs win/loss.
+
+`[convex/guesses.ts](convex/guesses.ts)` :
+
+- `submitGuess` (mutation) — soumission réussie ; incrémente `guesses` + `dailyStats`.
+- `recordFailedGuess` (mutation) — pays valide mais mauvais croisement ; incrémente `dailyStats.failedAttempts`.
+- `getGuessDistributionForDate` (query) — rareté live par case (exclut `isReplay === true`).
+
+**Endpoints admin** (`[convex/grids.ts](convex/grids.ts)`, token via `[convex/auth.ts](convex/auth.ts)`) :
+
+- `getScheduledGrids` (query) — grilles depuis J-30, métadonnées candidate. **Payload light** : pas de `validAnswers`.
+- `getScheduledGridPreviewDetail` (query) — lazy `{rows, cols, validAnswers, difficulty}` pour une date planifiée.
+- `getCandidatePreviewDetail` (query) — lazy preview pour un `candidateId` (jour prédit).
+- `getPoolStats` (query) — taille du pool, couverture contrainte/pays.
+- `getUpcomingScheduledPreview` (query) — 1..14 jours : `scheduled` / `predicted` / `missing`.
+- `getGridFeedbackStats` (query) — winRate, split défaites, difficulté ressentie. **Léger** → `GameHealthPanel`.
+- `getGridCellMetrics(date)` (query) — **lourd, au clic** : struggle, fillRate, picks, validAnswers. Un jour à la fois (`GridDayDetail`, `export-analytics`).
+- `refreshPool` (action) — vide le stock `available` puis regénère.
+- `runEnsureTomorrow` (action) — today + tomorrow (manuel du cron).
+- `scheduleGridForDate` (action) — une date via `internal.scheduling.assignGridForDate`.
+
+**Internes utiles** (agents / ops, pas d'appel front direct) :
+
+- `grids.generatePoolImpl`, `refreshPoolImpl`, `autoRefillPool` (cron refill)
+- `scheduling.ensureDailyGrids`, `assignGridForDate`
+- `gridData` : `hasAnyGrid`, `getAvailablePoolGrids`, `hasGridForDate`, `insertPoolGrid`, `deleteAvailableCandidatesBatch`, helpers `getCandidateAnswers` / `getGridAnswers`
+- `seed.seedHistoricalGrids`, `seed.autoSeedIfEmpty` ; `wipe.wipeAllData`
+
+**Rate limiting** (`[convex/rateLimit.ts](convex/rateLimit.ts)`) : clé `clientId` (localStorage). Buckets `guess` (soumissions) et `feedback` (`recordGameEnd` + `submitGridFeedback`). Pas anti-bot déterminé — plafond de facture Convex.
 
 **Auth admin.**
 
-- Token bearer via variable d'environnement Convex `ADMIN_TOKEN`.
+- Token bearer via variable d'environnement Convex `ADMIN_TOKEN` ; vérification `[checkAdminToken](convex/auth.ts)`.
 - Toute mutation/action admin prend `adminToken: string` et throw `ConvexError("Unauthorized")` si mismatch.
 - Côté client : `sessionStorage` via hook `useAdminToken` (effacé à la fermeture de l’onglet).
 
 **Admin (UI).**
 
-[`src/features/admin/AdminPage.tsx`](src/features/admin/AdminPage.tsx) compose :
+`[src/features/admin/AdminPage.tsx](src/features/admin/AdminPage.tsx)` compose :
 
 - `PoolOverviewPanel` — `PoolHealthBanner` unifié (statut sain/baisse/critique calqué sur l'alerte « grille de demain » : icône + données inline `en stock · utilisées · total` + bouton « Regénérer le pool » à droite, confirmation modale), alerte demain avec bouton « Planifier maintenant ».
 - `GameCalendar` + `GridDayDetail` — calendrier unifié (jour passé : pastille **winRate observé** ; futur planifié : difficulté estimée ; prédit : brand ; manquant : rouge). Sélection → `GridDayDetail` : grille **passée/active** = `getGridCellMetrics` (chips triés par nb de choix, badge % réussite, KDA réussites/échecs/essais via `StatGlyph`) ; grille **future/prédite** = preview estimée lazy (`getScheduledGridPreviewDetail` / `getCandidatePreviewDetail`). Composant `GridPreview` partagé passé/futur.
@@ -402,27 +445,26 @@ Pas de panneau de tuning des constantes : on ajuste dans `gridConstants.ts`, on 
 - Nommage des index : `by_<field>_and_<field>` (snake_case avec `and`).
 - `gridGenerator`, `gridScheduler`, `gridConstants` sont **purs** (pas de `convex/server` ni de `_generated`) : on peut les charger depuis Vitest, depuis `scripts/simulate-scheduling.ts`, et depuis les actions Convex sans duplication.
 
-<!-- convex-ai-start -->
-
 This project uses [Convex](https://convex.dev) as its backend.
 
 When working on Convex code, **always read `convex/_generated/ai/guidelines.md` first** for important guidelines on how to correctly use Convex APIs and patterns. The file contains rules that override what you may have learned about Convex from training data.
 
 Convex agent skills for common tasks can be installed by running `npx convex ai-files install`.
 
-<!-- convex-ai-end -->
-
 ## 7. Commandes utiles
 
 ```bash
 # Dev
-pnpm dev                          # Vite dev server
+pnpm dev                          # Vite dev server (--host)
 pnpm dlx convex@latest dev        # Convex dev en remote cloud
 
 # Build / CI
-pnpm build                        # tsc + vite build
-pnpm lint                         # Biome
-pnpm test                         # Vitest
+pnpm build                        # tsc --noEmit + vite build
+pnpm lint                         # biome check + tsc --noEmit
+pnpm typecheck                    # tsc --noEmit seul
+pnpm format                       # biome format --write
+pnpm test                         # vitest run
+pnpm preview                      # vite preview (build local requis)
 
 # Génération de données
 pnpm build:countries              # régénère countries.json (fetch Wikimedia EN + popularityIndex percentile)
@@ -431,8 +473,11 @@ pnpm validate:constraints         # rapport de calibrage des contraintes
 # Simulation hors-ligne (sans Convex) — pool + 30 jours de scheduling, pass/fail checks
 pnpm simulate:scheduling
 
+# Export analytics admin → Markdown (ADMIN_TOKEN + VITE_CONVEX_URL dans .env.local)
+pnpm export:analytics             # scripts/export-analytics.ts [--days=30] [--out=foo.md]
+
 # Seed historique (échoue si `grids` non vide — wipe en dev avant reseed)
-pnpm seed:grids                   # npx convex run --internal seed:seedHistoricalGrids
+pnpm seed:grids                   # npx convex run seed:seedHistoricalGrids
 
 # Tuning loop (dev local) :
 #   1. ajuster les tunables dans convex/lib/gridConstants.ts (hard filters, scheduler weights, popularity)
@@ -441,7 +486,7 @@ pnpm seed:grids                   # npx convex run --internal seed:seedHistorica
 #   3. wipe + reseed pour régénérer un historique cohérent côté Convex (dev)
 #      ou « Regénérer le pool » dans /admin (prod/preview, stock futur uniquement)
 #   4. inspecter dans /admin (PoolOverviewPanel + GameCalendar + GridDayDetail)
-pnpm wipe:db                      # internal action wipe:wipeAllData (paginé)
+pnpm wipe:db                      # npx convex run wipe:wipeAllData (paginé)
 
 # Admin Convex
 pnpm dlx convex@latest env set ADMIN_TOKEN "xxx"
@@ -451,12 +496,12 @@ pnpm dlx convex@latest env set ADMIN_TOKEN "xxx"
 
 **Mapping branche → environnement :**
 
-| Contexte | Front | Backend Convex | Données |
-|---|---|---|---|
-| `main` | Vercel Production | prod | persistantes |
-| `develop` | Vercel Preview | `preview/develop` | persistantes |
-| autre branche WIP | Vercel Preview | `preview/<branch>` | seedées auto au 1er deploy |
-| local | `pnpm dev` | cloud dev perso (`convex dev`) | gérées manuellement |
+| Contexte          | Front             | Backend Convex                 | Données                    |
+| ----------------- | ----------------- | ------------------------------ | -------------------------- |
+| `main`            | Vercel Production | prod                           | persistantes               |
+| `develop`         | Vercel Preview    | `preview/develop`              | persistantes               |
+| autre branche WIP | Vercel Preview    | `preview/<branch>`             | seedées auto au 1er deploy |
+| local             | `pnpm dev`        | cloud dev perso (`convex dev`) | gérées manuellement        |
 
 **Build command Vercel (tous environnements) :**
 
@@ -467,13 +512,15 @@ pnpm exec convex deploy --preview-run seed:autoSeedIfEmpty --cmd 'vite build' --
 `--preview-run` n'exécute `autoSeedIfEmpty` que sur les déploiements **preview** (`develop`, branches WIP) — **jamais en production** (`main`), qui reste seedée une fois pour toutes. `autoSeedIfEmpty` est idempotent : no-op si des grids existent déjà (`develop`), seed complet (pool + J-30..today + demain via `ensureDailyGrids`) si vide (nouvelle branche WIP). Une seule commande pour tous les environnements.
 
 **Variable d'environnement clé sur Vercel : `CONVEX_DEPLOY_KEY`**, une clé par environnement :
+
 - Production → clé prod ([dashboard.convex.dev](https://dashboard.convex.dev))
 - Preview → clé preview dédiée
 
 **Autres variables Convex à poser (`convex env set` ou dashboard) :**
+
 - `ADMIN_TOKEN` — token bearer pour les mutations admin (UI `/admin`)
 
-**`convex/_generated/` est versionné** : sans lui, `pnpm build` / `tsc` échouent sur toute CI qui clone sans lancer `convex dev`. Après un changement de schéma ou d'API Convex, régénérer avec `pnpm dlx convex@latest dev` (ou `codegen`) et **commiter le diff**.
+`**convex/_generated/` est versionné** : sans lui, `pnpm build` / `tsc` échouent sur toute CI qui clone sans lancer `convex dev`. Après un changement de schéma ou d'API Convex, régénérer avec `pnpm dlx convex@latest dev` (ou `codegen`) et **commiter le diff\*\*.
 
 ## 9. Anti-patterns à bannir
 

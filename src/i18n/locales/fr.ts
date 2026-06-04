@@ -28,36 +28,119 @@ export const fr = {
     viewMyResult: "Voir mon résultat",
     closeResult: "Fermer",
     searchResultUsed: "Déjà utilisé",
-    solutionRarityEyebrow: "Rareté",
-    solutionRarityHint:
-      "Les pourcentages indiquent la part des joueurs du jour ayant soumis ce pays pour la case.",
+    rarityLegendHint: "Pourcentage des joueurs du jour ayant soumis le pays.",
   },
   footer: {
-    betaMark: "BETA",
     loveCreditPre: "Fait avec amour ❤️, inspiré par ",
     loveCreditPost: ".",
     contact: "Contact",
     support: "Offrir un café",
+    privacy: "Confidentialité",
+    changelog: "Changelog",
     copyright: "©\u00A0{year}\u00A0Geodoku",
+  },
+  legal: {
+    supportTitle: "Soutenir le projet",
+    supportPre:
+      "Geodoku est un projet solo, 100 % gratuit et sans pub. Si tu passes un bon moment sur la grille du jour et que tu en as les moyens,",
+    supportLink: "m'offrir un petit café",
+    supportPost:
+      " aide à couvrir les frais techniques (serveur, nom de domaine). Et c'est surtout une énorme motivation pour continuer à développer de nouvelles fonctionnalités !",
+  },
+  privacy: {
+    eyebrow: "Derni\u00E8re mise \u00E0 jour · Juin 2026",
+    title: "Confidentialit\u00E9",
+    lead: "Geodoku est un jeu que je d\u00E9veloppe seul. Pas besoin de compte\u00A0: je ne collecte que le strict minimum, juste de quoi faire tourner le jeu et voir comment se portent les grilles.",
+    backToGame: "Retour au jeu",
+    essenceTitle: "Aucun compte, aucun pistage",
+    essenceBody:
+      "Pas d'inscription, pas de connexion, pas de publicit\u00E9. Je ne vends ni ne partage aucune donn\u00E9e, et il n'y a aucun traceur tiers sur le site.",
+    deviceTitle: "Sur ton appareil",
+    deviceBody:
+      "Ton navigateur garde quelques r\u00E9glages en stockage local\u00A0: ta langue, la progression de la grille du jour et un identifiant al\u00E9atoire qui sert seulement \u00E0 freiner le spam. Rien de tout \u00E7a n'est un cookie publicitaire ou traceur. Effacer les donn\u00E9es du site les supprime.",
+    serverTitle: "Ce qui m'est envoy\u00E9",
+    serverBody:
+      "Quand tu joues, j'enregistre des statistiques anonymes et agr\u00E9g\u00E9es (les pays choisis par case, le ressenti de difficult\u00E9). Elles ne sont rattach\u00E9es \u00E0 aucune identit\u00E9\u00A0: impossible de savoir qui a propos\u00E9 quoi.",
+    thirdPartyTitle: "Services tiers",
+    thirdPartyBody:
+      "Geodoku s'appuie sur Vercel (h\u00E9bergement et mesure d'audience anonyme, sans cookie), Convex (la base de donn\u00E9es des statistiques de jeu) et Google Fonts (les polices, qui expose ton adresse IP \u00E0 Google au chargement).",
+    rightsTitle: "Tes droits",
+    rightsBody:
+      "Comme aucune donn\u00E9e ne permet de t'identifier, il n'y a pas de compte \u00E0 consulter ni \u00E0 supprimer. Tu gardes le contr\u00F4le depuis ton navigateur\u00A0: effacer les donn\u00E9es du site pour Geodoku efface tout.",
+    contactTitle: "Contact",
+    contactBodyPre: "Une question\u00A0? \u00C9cris-moi \u00E0",
+  },
+  changelog: {
+    eyebrow: "Derni\u00E8re mise \u00E0 jour · Juin 2026",
+    title: "Changelog",
+    backToGame: "Retour au jeu",
+    entries: {
+      reliabilityDate: "2 juin 2026",
+      reliabilityTitle: "Une grille fiable, tous les jours",
+      reliabilityBody:
+        "Le jeu se r\u00E9pare d\u00E9sormais tout seul si quelque chose coince c\u00F4t\u00E9 serveur\u00A0: la grille du jour est toujours l\u00E0, \u00E0 l'heure. J'ai aussi publi\u00E9 une page de confidentialit\u00E9 claire et sans jargon.",
+      darkModeDate: "29 mai 2026",
+      darkModeTitle: "Mode sombre",
+      darkModeBody:
+        "Geodoku suit le th\u00E8me de ton syst\u00E8me. En mode sombre, l'ic\u00F4ne et les couleurs s'adaptent automatiquement pour m\u00E9nager tes yeux le soir.",
+      identityDate: "26 mai 2026",
+      identityTitle: "Nouvelle identit\u00E9 visuelle",
+      identityBody:
+        "Refonte \u00E9ditoriale compl\u00E8te de l'interface, nouveau favicon et cartes de partage soign\u00E9es quand tu envoies un lien. Le jeu passe aussi au tutoiement, plus direct et convivial.",
+      comfortDate: "25 mai 2026",
+      comfortTitle: "Plus juste, moins frustrant",
+      comfortBody:
+        "Quand tu te trompes, les contraintes non respect\u00E9es s'\u00E9clairent pour t'aider \u00E0 comprendre. Et une case devenue impossible \u00E0 remplir est simplement bloqu\u00E9e (\u2B1B) au lieu de te co\u00FBter une vie d'un coup.",
+      helpDate: "22 mai 2026",
+      helpTitle: "Une aide \u00E0 port\u00E9e de main",
+      helpBody:
+        "Un rappel \u00AB\u00A0Comment jouer\u00A0\u00BB appara\u00EEt pour les nouveaux venus, et se referme d\u00E8s que tu as compris le principe.",
+      footerDate: "30 avril 2026",
+      footerTitle: "Num\u00E9ro de grille & cr\u00E9dits",
+      footerBody:
+        "Chaque grille quotidienne a d\u00E9sormais son num\u00E9ro d'\u00E9dition, compt\u00E9 depuis le tout premier jour. Un pied de page discret rassemble les cr\u00E9dits et le choix de la langue.",
+      scoringDate: "29 avril 2026",
+      scoringTitle: "Un score qui r\u00E9compense l'audace",
+      scoringBody:
+        "Le calcul du score a \u00E9t\u00E9 repens\u00E9 pour mieux valoriser les r\u00E9ponses rares, et les contraintes g\u00E9ographiques r\u00E9\u00E9quilibr\u00E9es pour une difficult\u00E9 plus juste, jour apr\u00E8s jour.",
+      solutionDate: "17 avril 2026",
+      solutionTitle: "La grille solution",
+      solutionBody:
+        "En fin de partie, tu d\u00E9couvres les r\u00E9ponses possibles pour chaque case et la raret\u00E9 de tes choix face \u00E0 ceux des autres joueurs du jour.",
+      bilingualDate: "15 avril 2026",
+      bilingualTitle: "Bilingue, et l\u00E0 o\u00F9 tu t'es arr\u00EAt\u00E9",
+      bilingualBody:
+        "Geodoku parle fran\u00E7ais et anglais. Ta partie du jour est sauvegard\u00E9e sur ton appareil\u00A0: tu peux fermer l'onglet et revenir la terminer plus tard.",
+      launchDate: "10 avril 2026",
+      launchTitle: "Les premiers pas de Geodoku",
+      launchBody:
+        "Le c\u0153ur du jeu voit le jour\u00A0: une grille 3\u00D73 quotidienne, des contraintes g\u00E9ographiques crois\u00E9es, 3 vies, une recherche de pays tol\u00E9rante aux fautes, un score bas\u00E9 sur la raret\u00E9 et un partage en \u00E9mojis \u00E0 la Wordle.",
+    },
+    roadmapTitle: "Et la suite\u00A0?",
+    roadmapLead:
+      "Quelques pistes que j'aimerais explorer. Rien n'est grav\u00E9 dans le marbre. Tes id\u00E9es sont les bienvenues.",
+    roadmapReplay: "Rejouer les grilles pr\u00E9c\u00E9dentes",
+    roadmapScore: "Refonte du calcul du score",
+    roadmapConstraints: "De nouvelles contraintes",
+    roadmapLives: "Plus de vies (voire illimit\u00E9es) ou un mode facile",
+    contactTitle: "Une id\u00E9e, une remarque\u00A0?",
+    contactBodyPre:
+      "J'accueille toutes les suggestions avec plaisir. \u00C9cris-moi \u00E0",
   },
   howToPlay: {
     title: "Comment jouer\u00A0?",
-    p1pre: "Chaque grille propose",
-    p1bold1: "6 contraintes",
-    p1mid:
-      "géographiques (3 lignes, 3 colonnes). Pour chaque case, trouve un pays qui valide",
-    p1bold2: "les deux contraintes croisées",
-    p2: "Chaque pays ne peut être utilisé qu'une seule fois dans la grille.",
-    p2warn: "Attention à ne pas te bloquer\u00A0!",
-    p3pre: "Tu as",
-    p3bold: "3 vies",
-    p3post: "Chaque mauvaise réponse en consomme une.",
-    p4: "Les cellules sont colorées selon la rareté de ta réponse\u00A0:",
-    li1: "🟪 Commun — plus de 50%\u00A0des joueurs",
-    li2: "🟦 Peu commun — plus de 25%",
-    li3: "🟨 Rare — plus de 10%",
-    li4: "🟥 Ultra-rare — 10%\u00A0ou moins",
-    tip: "Plus ta réponse est rare, meilleur est ton score. Bonne chance\u00A0!",
+    rule1Title: "Complète la grille",
+    rule1Body:
+      "Trouve un pays qui valide la ligne et la colonne. Plusieurs réponses sont possibles !",
+    rule2Title: "Pays unique",
+    rule2Body:
+      "Chaque pays ne peut être utilisé qu'une seule fois dans toute la grille.",
+    rule3Title: "3 vies maximum",
+    rule3Body:
+      "Tu as droit à 3 erreurs. À la troisième, la partie est terminée.",
+    rule4Title: "Vise la rareté",
+    rule4Body:
+      "Plus ton pays est original et peu cité par les autres joueurs, plus ton score grimpe.",
     dontShowAgain: "Ne plus afficher",
   },
   error: {
