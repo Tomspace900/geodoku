@@ -5,7 +5,7 @@ import { Coffee, Mail } from "lucide-react";
 
 const SUPPORT_EMAIL = "support.geodoku@gmail.com";
 const METRODOKU_URL = "https://metrodoku.fr";
-const KOFI_URL = "https://ko-fi.com/geodoku";
+const KOFI_URL = "https://ko-fi.com/geodoku/tip";
 
 function Middot() {
   return (
@@ -25,20 +25,11 @@ export default function AppFooter({ className }: { className?: string }) {
   return (
     <footer
       className={cn(
-        "flex justify-center px-2 pb-1 pt-6 sm:pb-2 sm:pt-8 md:pt-10",
+        "flex justify-center px-2 pt-6 sm:pt-8 md:pt-10",
         className,
       )}
     >
       <div className="flex flex-col items-center gap-2.5 text-center sm:gap-3 md:gap-4">
-        <div className="flex flex-wrap items-baseline justify-center gap-x-1.5 gap-y-0.5 sm:gap-x-2 sm:gap-y-1">
-          <span className="font-serif text-base font-medium italic text-on-surface sm:text-lg md:text-xl">
-            {t("ui.appName")}
-          </span>
-          <span className="font-sans text-[9px] font-semibold uppercase tracking-wider text-on-surface-variant sm:text-[10px] sm:tracking-widest">
-            {t("footer.betaMark")}
-          </span>
-        </div>
-
         <p className="max-w-md px-1 font-sans text-[10px] leading-snug text-on-surface-variant sm:px-2 sm:text-xs sm:leading-relaxed">
           {t("footer.loveCreditPre")}
           <a
@@ -54,14 +45,6 @@ export default function AppFooter({ className }: { className?: string }) {
 
         <div className="flex flex-wrap items-center justify-center gap-x-1.5 gap-y-0.5 font-sans text-[10px] text-on-surface-variant sm:gap-x-2 sm:gap-y-1 sm:text-xs">
           <a
-            href={`mailto:${SUPPORT_EMAIL}`}
-            className={cn("inline-flex items-center gap-1", linkClass)}
-          >
-            <Mail className="size-3 sm:size-3.5" aria-hidden="true" />
-            {t("footer.contact")}
-          </a>
-          <Middot />
-          <a
             href={KOFI_URL}
             className={cn(
               "inline-flex items-center gap-1 text-on-surface-variant",
@@ -74,10 +57,24 @@ export default function AppFooter({ className }: { className?: string }) {
             {t("footer.support")}
           </a>
           <Middot />
+          <a
+            href={`mailto:${SUPPORT_EMAIL}`}
+            className={cn("inline-flex items-center gap-1", linkClass)}
+          >
+            <Mail className="size-3 sm:size-3.5" aria-hidden="true" />
+            {t("footer.contact")}
+          </a>
+          <Middot />
           <a href="/privacy" className={linkClass}>
             {t("footer.privacy")}
           </a>
           <Middot />
+          <a href="/changelog" className={linkClass}>
+            {t("footer.changelog")}
+          </a>
+        </div>
+
+        <div className="flex flex-wrap items-center justify-center gap-x-1.5 gap-y-0.5 font-sans text-[10px] text-on-surface-variant sm:gap-x-2 sm:gap-y-1 sm:text-xs">
           <span>{t("footer.copyright", { year })}</span>
           <Middot />
           <LocaleSwitcher />

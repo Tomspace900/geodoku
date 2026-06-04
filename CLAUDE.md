@@ -56,7 +56,7 @@ geodoku/
 │   └── dev/                     # audits locaux (gitignored ; exclu de tsconfig)
 ├── src/
 │   ├── main.tsx
-│   ├── App.tsx                  # toggle / (GamePage) ou /admin (AdminPage)
+│   ├── App.tsx                  # toggle / (GamePage), /admin (AdminPage), /privacy, /changelog
 │   ├── app/
 │   │   └── providers.tsx        # ConvexProvider
 │   ├── i18n/                    # translate() FR/EN, LocaleContext, locales/{fr,en}.ts
@@ -72,6 +72,10 @@ geodoku/
 │   │   │   ├── lib/search.ts    # match-sorter wrapper (+ __tests__)
 │   │   │   └── types.ts         # type Country (regime, physicalFeatures, flagColors/Symbols, popularityIndex…)
 │   │   ├── errors/              # ErrorBoundary, fallback UI
+│   │   ├── legal/               # pages éditoriales statiques
+│   │   │   ├── PrivacyPage.tsx  # /privacy
+│   │   │   ├── ChangelogPage.tsx # /changelog (timeline daté + roadmap)
+│   │   │   └── components/      # LegalLayout, LegalSection, LegalParagraph, LegalBullet, LegalContactSection, LegalSupportSection (+ constants partagés : email, Ko-fi, inlineLinkClass)
 │   │   └── admin/
 │   │       ├── AdminPage.tsx
 │   │       ├── components/      # PoolOverviewPanel, GameCalendar, GridDayDetail, GridPreview, GameHealthPanel, StatGlyph
