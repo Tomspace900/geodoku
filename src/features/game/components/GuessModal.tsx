@@ -13,7 +13,10 @@ import {
   DrawerTitle,
 } from "@/components/ui/drawer";
 import { searchCountries } from "@/features/countries/lib/search";
-import { RARITY_STYLES } from "@/features/game/logic/constants";
+import {
+  RARITY_STYLES,
+  UI_ANIMATION_MS,
+} from "@/features/game/logic/constants";
 import { CONSTRAINTS } from "@/features/game/logic/constraints";
 import {
   type ConstraintFailureReason,
@@ -23,6 +26,7 @@ import type { CellPosition, GameState } from "@/features/game/types";
 import { useLocale, useT } from "@/i18n/LocaleContext";
 import type { TKey } from "@/i18n/types";
 import { cn } from "@/lib/utils";
+import { Heart } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 
 const CONSTRAINT_MAP = new Map(CONSTRAINTS.map((c) => [c.id, c]));
@@ -32,7 +36,6 @@ const ERROR_KEY_MAP: Record<string, TKey> = {
   invalid_country: "error.invalid_country",
 };
 
-const ERROR_FEEDBACK_MS = 1500;
 const FAILED_CONSTRAINT_CLASS = cn(
   RARITY_STYLES.ultra,
   "rounded-md px-1.5 py-0.5",
@@ -40,7 +43,60 @@ const FAILED_CONSTRAINT_CLASS = cn(
 
 type SubmitResult =
   | { ok: true; rarity: number }
-  | { ok: false; reason: string };
+  | { ok: false; reason: string; gameOver?: boolean };
+
+type LifeFlash = {
+  key: number;
+  from: number;
+  phase: "shake" | "empty";
+};
+
+type LivesIndicatorProps = {
+  lives: number;
+  lifeFlash: LifeFlash | null;
+};
+
+function LivesIndicator({ lives, lifeFlash }: LivesIndicatorProps) {
+  const displayLives = lifeFlash
+    ? lifeFlash.phase === "shake"
+      ? lifeFlash.from
+      : lifeFlash.from - 1
+    : lives;
+  const heartFilled = lifeFlash ? lifeFlash.phase === "shake" : lives > 0;
+
+  return (
+    <div
+      key={lifeFlash?.key ?? "lives-idle"}
+      className={cn(
+        "mt-0.5 flex shrink-0 items-center gap-1 origin-center",
+        lifeFlash?.phase === "shake" && "animate-heart-shake",
+      )}
+      aria-hidden
+    >
+      <span
+        key={
+          lifeFlash?.phase === "empty"
+            ? `lives-down-${lifeFlash.key}`
+            : "lives-steady"
+        }
+        className={cn(
+          "text-sm font-semibold tabular-nums text-on-surface",
+          lifeFlash?.phase === "empty" && "animate-lives-tick",
+        )}
+      >
+        {displayLives}
+      </span>
+      <Heart
+        size={18}
+        className={
+          heartFilled
+            ? "text-rarity-ultra fill-rarity-ultra"
+            : "text-on-surface-variant"
+        }
+      />
+    </div>
+  );
+}
 
 type Props = {
   cell: CellPosition;
@@ -66,14 +122,35 @@ export function GuessModal({
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
   const [errorReason, setErrorReason] =
     useState<ConstraintFailureReason | null>(null);
+  const [lifeFlash, setLifeFlash] = useState<LifeFlash | null>(null);
   const [submitting, setSubmitting] = useState(false);
   const errorTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const lifeFlashTimersRef = useRef<ReturnType<typeof setTimeout>[]>([]);
   const { locale } = useLocale();
   const t = useT();
+
+  function triggerLifeLoss(from: number) {
+    for (const timer of lifeFlashTimersRef.current) clearTimeout(timer);
+    lifeFlashTimersRef.current = [];
+    const key = Date.now();
+    setLifeFlash({ key, from, phase: "shake" });
+    lifeFlashTimersRef.current.push(
+      setTimeout(() => {
+        setLifeFlash((flash) =>
+          flash?.key === key ? { ...flash, phase: "empty" } : flash,
+        );
+      }, UI_ANIMATION_MS.heartBreak),
+      setTimeout(() => {
+        setLifeFlash((flash) => (flash?.key === key ? null : flash));
+      }, UI_ANIMATION_MS.errorFeedback),
+    );
+  }
 
   useEffect(() => {
     return () => {
       if (errorTimerRef.current) clearTimeout(errorTimerRef.current);
+      for (const timer of lifeFlashTimersRef.current) clearTimeout(timer);
+      lifeFlashTimersRef.current = [];
     };
   }, []);
 
@@ -92,19 +169,21 @@ export function GuessModal({
     errorTimerRef.current = setTimeout(() => {
       setErrorMsg(null);
       setErrorReason(null);
-    }, ERROR_FEEDBACK_MS);
+    }, UI_ANIMATION_MS.errorFeedback);
   }
 
   async function handleSelect(countryCode: string) {
     if (submitting || state.usedCountries.has(countryCode)) return;
+    const livesBeforeSubmit = state.remainingLives;
     setSubmitting(true);
     const result = await onSubmit(cell, countryCode);
     setSubmitting(false);
-    if (result?.ok) {
+    if (result?.ok || result?.gameOver) {
       handleClose();
     } else if (result) {
       setQuery("");
       showError(result.reason);
+      triggerLifeLoss(livesBeforeSubmit);
     }
   }
 
@@ -141,15 +220,21 @@ export function GuessModal({
     >
       <DrawerContent className="mt-10 max-h-[94svh] w-full overflow-x-hidden pb-[env(safe-area-inset-bottom)] sm:mx-auto sm:mt-24 sm:max-w-xl">
         <DrawerHeader className="text-left px-4 pb-2 pt-3 sm:pt-4">
-          <DrawerTitle className="font-serif text-lg font-medium text-on-surface leading-snug">
-            <span className={cn(rowFailed && FAILED_CONSTRAINT_CLASS)}>
-              {rowLabel}
-            </span>
-            {" × "}
-            <span className={cn(colFailed && FAILED_CONSTRAINT_CLASS)}>
-              {colLabel}
-            </span>
-          </DrawerTitle>
+          <div className="flex items-start justify-between gap-3">
+            <DrawerTitle className="min-w-0 font-serif text-lg font-medium text-on-surface leading-snug">
+              <span className={cn(rowFailed && FAILED_CONSTRAINT_CLASS)}>
+                {rowLabel}
+              </span>
+              {" × "}
+              <span className={cn(colFailed && FAILED_CONSTRAINT_CLASS)}>
+                {colLabel}
+              </span>
+            </DrawerTitle>
+            <LivesIndicator
+              lives={state.remainingLives}
+              lifeFlash={lifeFlash}
+            />
+          </div>
           {totalPossible > 0 && (
             <p className="text-xs text-on-surface-variant mt-2">
               {remainingPossible === totalPossible

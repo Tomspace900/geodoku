@@ -62,3 +62,67 @@ body {
 body {
   @apply bg-surface text-on-surface font-sans antialiased;
 }
+
+/* Durées synchronisées avec UI_ANIMATION_MS (constants.ts). */
+@keyframes flag-bounce {
+  0%,
+  100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.32);
+  }
+}
+
+@keyframes lives-tick {
+  0% {
+    transform: translateY(0);
+    opacity: 1;
+  }
+  40% {
+    transform: translateY(3px);
+    opacity: 0.35;
+  }
+  100% {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+@keyframes heart-shake {
+  0%,
+  100% {
+    transform: translateX(0);
+  }
+  15% {
+    transform: translateX(-4px);
+  }
+  30% {
+    transform: translateX(4px);
+  }
+  45% {
+    transform: translateX(-3px);
+  }
+  60% {
+    transform: translateX(3px);
+  }
+  75% {
+    transform: translateX(-1px);
+  }
+}
+
+@layer utilities {
+  .animate-flag-bounce {
+    animation: flag-bounce 0.7s ease-in-out;
+    transform-origin: center;
+  }
+
+  .animate-lives-tick {
+    animation: lives-tick 0.35s ease-out;
+  }
+
+  .animate-heart-shake {
+    animation: heart-shake 0.45s ease-in-out;
+    transform-origin: center;
+  }
+}

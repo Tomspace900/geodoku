@@ -2,6 +2,13 @@ import type { RarityTier } from "@/features/game/types";
 
 export const STARTING_LIVES = 5;
 
+/** Durées JS alignées sur les `animate-*` de `src/index.css`. */
+export const UI_ANIMATION_MS = {
+  errorFeedback: 1500,
+  heartBreak: 450,
+  flagBounce: 700,
+} as const;
+
 /** Pastilles / lignes de rareté (aligné cellules de jeu et grille solution). */
 export const RARITY_STYLES: Record<RarityTier, string> = {
   common: "bg-rarity-common/10 text-rarity-common",
