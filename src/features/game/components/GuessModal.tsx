@@ -301,15 +301,7 @@ export function GuessModal({
                       alreadyUsed && "text-on-surface-variant",
                     )}
                   >
-                    <span
-                      className={cn(
-                        "text-xl leading-none",
-                        alreadyUsed && "opacity-70",
-                      )}
-                    >
-                      {country.flagEmoji}
-                    </span>
-                    <span className="min-w-0 flex-1 text-sm font-medium truncate">
+                    <span className="pl-3 min-w-0 flex-1 text-sm font-medium truncate">
                       {country.names[locale]}
                     </span>
                     {alreadyUsed && (
