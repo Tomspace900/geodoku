@@ -10,6 +10,11 @@ import { LegalSupportSection } from "./components/LegalSupportSection";
 // Étapes marquantes côté joueur, de la plus récente à la plus ancienne.
 const ENTRIES: { date: TKey; title: TKey; body: TKey }[] = [
   {
+    date: "changelog.entries.scoringV2Date",
+    title: "changelog.entries.scoringV2Title",
+    body: "changelog.entries.scoringV2Body",
+  },
+  {
     date: "changelog.entries.reliabilityDate",
     title: "changelog.entries.reliabilityTitle",
     body: "changelog.entries.reliabilityBody",
@@ -63,7 +68,6 @@ const ENTRIES: { date: TKey; title: TKey; body: TKey }[] = [
 
 const ROADMAP: TKey[] = [
   "changelog.roadmapReplay",
-  "changelog.roadmapScore",
   "changelog.roadmapConstraints",
   "changelog.roadmapLives",
 ];

@@ -34,7 +34,7 @@ describe("savePersistedGame / loadPersistedGame", () => {
     const loaded = loadPersistedGame();
     expect(loaded).not.toBeNull();
     expect(loaded?.date).toBe("2026-04-15");
-    expect(loaded?.remainingLives).toBe(3);
+    expect(loaded?.remainingLives).toBe(5);
     expect(loaded?.status).toBe("playing");
     expect(loaded?.finishedAt).toBeNull();
     expect(loaded?.cells["0,0"].status).toBe("empty");

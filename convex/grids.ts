@@ -24,13 +24,13 @@ const UPCOMING_PREVIEW_DEFAULT_DAYS = 7;
 
 /**
  * Borne haute défensive sur les soumissions par grille (9 succès + N échecs).
- * Trois vies max, donc 9 + 3 = 12 en théorie ; on autorise une marge x4 pour
+ * Cinq vies max, donc 9 + 5 = 14 en théorie ; on autorise une marge pour
  * absorber les variations futures sans bloquer les vrais joueurs.
  */
 const MAX_GUESSES_PER_GAME = 50;
 
 /** Doit rester aligné avec STARTING_LIVES dans src/features/game/logic/constants.ts. */
-const MAX_LIVES = 3;
+const MAX_LIVES = 5;
 
 const DELETE_BATCH_SIZE = 512;
 

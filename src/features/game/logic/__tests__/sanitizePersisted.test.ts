@@ -74,7 +74,7 @@ describe("sanitizePersistedForGrid", () => {
   it("borne remainingLives au maximum autorisé", () => {
     const p = basePersisted({ remainingLives: 99 });
     const out = sanitizePersistedForGrid(p, validAnswers);
-    expect(out?.remainingLives).toBe(3);
+    expect(out?.remainingLives).toBe(5);
   });
 
   it("rejette deux fois le même pays sur deux cases", () => {

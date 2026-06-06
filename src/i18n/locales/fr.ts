@@ -75,10 +75,14 @@ export const fr = {
     title: "Changelog",
     backToGame: "Retour au jeu",
     entries: {
+      scoringV2Date: "6 juin 2026",
+      scoringV2Title: "Cinq vies et un score plus malin",
+      scoringV2Body:
+        "Tu disposes maintenant de cinq vies au lieu de trois, pour des parties un peu plus cl\u00E9mentes. Et le score d'originalit\u00E9 a \u00E9t\u00E9 repens\u00E9\u00A0: il ne juge plus que la qualit\u00E9 de tes choix, ind\u00E9pendamment du remplissage de la grille.",
       reliabilityDate: "2 juin 2026",
       reliabilityTitle: "Une grille fiable, tous les jours",
       reliabilityBody:
-        "Le jeu se r\u00E9pare d\u00E9sormais tout seul si quelque chose coince c\u00F4t\u00E9 serveur\u00A0: la grille du jour est toujours l\u00E0, \u00E0 l'heure. J'ai aussi publi\u00E9 une page de confidentialit\u00E9 claire et sans jargon.",
+        "Le jeu se r\u00E9pare d\u00E9sormais tout seul si quelque chose coince c\u00F4t\u00E9 serveur\u00A0: la grille du jour est toujours l\u00E0, \u00E0 l'heure. J'ai aussi publi\u00E9 une page de confidentialit\u00E9 claire et sans jargon, ainsi que cette page de changelog pour suivre les nouveaut\u00E9s.",
       darkModeDate: "29 mai 2026",
       darkModeTitle: "Mode sombre",
       darkModeBody:
@@ -120,7 +124,6 @@ export const fr = {
     roadmapLead:
       "Quelques pistes que j'aimerais explorer. Rien n'est grav\u00E9 dans le marbre. Tes id\u00E9es sont les bienvenues.",
     roadmapReplay: "Rejouer les grilles pr\u00E9c\u00E9dentes",
-    roadmapScore: "Refonte du calcul du score",
     roadmapConstraints: "De nouvelles contraintes",
     roadmapLives: "Plus de vies (voire illimit\u00E9es) ou un mode facile",
     contactTitle: "Une id\u00E9e, une remarque\u00A0?",
@@ -135,9 +138,9 @@ export const fr = {
     rule2Title: "Pays unique",
     rule2Body:
       "Chaque pays ne peut être utilisé qu'une seule fois dans toute la grille.",
-    rule3Title: "3 vies maximum",
+    rule3Title: "5 vies maximum",
     rule3Body:
-      "Tu as droit à 3 erreurs. À la troisième, la partie est terminée.",
+      "Tu as droit à 5 erreurs. À la cinquième, la partie est terminée.",
     rule4Title: "Vise la rareté",
     rule4Body:
       "Plus ton pays est original et peu cité par les autres joueurs, plus ton score grimpe.",

@@ -4,14 +4,14 @@
 
 Geodoku est un mini-jeu web quotidien inspiré de Wordle et du Sudoku, sur le thème de la géographie.
 
-**Principe.** Chaque jour, une grille 3×3 est proposée à tous les joueurs. Chaque ligne et chaque colonne impose une contrainte géographique (ex: « Asie », « Enclavé », « Plus de 50M d'habitants », « Frontalier de la France »). Pour chacune des 9 cases, le joueur doit trouver un pays qui valide **simultanément** la contrainte de sa ligne et celle de sa colonne. Il dispose de **3 vies** et ne peut pas réutiliser deux fois le même pays. Une case dont tous les pays valides ont déjà été placés ailleurs devient **bloquée** (impossible à remplir) ; la partie se termine quand les vies tombent à zéro **ou** quand plus aucune case n'est remplissable.
+**Principe.** Chaque jour, une grille 3×3 est proposée à tous les joueurs. Chaque ligne et chaque colonne impose une contrainte géographique (ex: « Asie », « Enclavé », « Plus de 50M d'habitants », « Frontalier de la France »). Pour chacune des 9 cases, le joueur doit trouver un pays qui valide **simultanément** la contrainte de sa ligne et celle de sa colonne. Il dispose de **5 vies** et ne peut pas réutiliser deux fois le même pays. Une case dont tous les pays valides ont déjà été placés ailleurs devient **bloquée** (impossible à remplir) ; la partie se termine quand les vies tombent à zéro **ou** quand plus aucune case n'est remplissable.
 
 **Le twist — rareté.** Plus le pays trouvé est rare (parmi les choix des autres joueurs de la journée), plus le tier de rareté est élevé (🟪 commun → 🟥 ultra). Un joueur qui remplit « Asie × Enclavé » avec « Bhoutan » obtient un meilleur tier qu'avec « Mongolie ».
 
 **Deux scores indépendants (V2).** Voir `[src/features/game/logic/rarity.ts](src/features/game/logic/rarity.ts)` et `[constants.ts](src/features/game/logic/constants.ts)`.
 
-- **Grille** (`computeGridScore`) : `(cellules remplies + vies restantes) / 12` → pourcentage 0–100 % (9 cases + 3 vies = 12 points max). Mesure la performance de la partie.
-- **Originalité** (`computeOriginalityScore`) : moyenne des valeurs de tier sur les 9 cases (vide = 0 ; common 0, uncommon 33, rare 66, ultra 100) → score 0–100 et grade **S / A / B / C / D**.
+- **Grille** (`computeGridScore`) : `(cellules remplies + vies restantes) / 14` → pourcentage 0–100 % (9 cases + 5 vies = 14 points max). Mesure la performance de la partie.
+- **Originalité** (`computeOriginalityScore`) : moyenne des valeurs de tier sur les **cases remplies** uniquement (grille vide = 0) — **découplé de la complétion** (que mesure déjà le score de grille) : ne juge que la qualité des choix faits. Valeurs : common 0, uncommon 40, rare 70, ultra 100. Grades : **S ≥ 70 · A ≥ 50 · B ≥ 30 · C ≥ 12 · D < 12**. Conséquence assumée : peu de cases mais toutes rares → score élevé (le score de grille raconte l'incomplétion).
 
 **L'enjeu communautaire.** À la fin, le joueur partage sa grille sous forme d'emojis colorés (🟪🟦🟨🟥⬜⬛) avec `percent% · grade` (ex. `67% · A`), à la manière de Wordle. `⬛` = cases bloquées ; `⬜` = cases non remplies en défaite.
 

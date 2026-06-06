@@ -32,12 +32,12 @@ function getUnlockedAchievement(
     (c): c is FilledCell => c.status === "filled",
   );
 
-  // « Cartographe Émérite » — originalité grade S (≥ 80). On le teste avant
+  // « Cartographe Émérite » — originalité grade S (≥ 70). On le teste avant
   // « Collectionneur Élite » : sinon il serait toujours masqué (le seuil S
   // implique plusieurs ultras → hasUltra serait toujours vrai en premier).
   if (state.status === "won") {
     const originality = computeOriginalityScore(state);
-    if (originality.score >= 80) {
+    if (originality.grade === "S") {
       return {
         id: "elite_originality",
         emoji: "🌟",
