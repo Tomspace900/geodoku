@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { todayUTC, tomorrowUTC } from "@/lib/dates";
 import { useQuery } from "convex/react";
+import { ArrowLeft } from "lucide-react";
 import { useState } from "react";
 import { api } from "../../../convex/_generated/api";
 import { AdminAuthBoundary } from "./components/AdminAuthBoundary";
@@ -22,21 +23,35 @@ const UPCOMING_DAYS = 14;
 
 // ─── Header ───────────────────────────────────────────────────────────────────
 
+const backLinkClassName =
+  "inline-flex w-fit items-center gap-1.5 rounded-sm font-sans text-xs text-on-surface-variant underline-offset-2 transition-colors hover:text-on-surface focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-on-surface/20 focus-visible:ring-offset-2 focus-visible:ring-offset-surface";
+
 function AdminHeader({ onLogout }: { onLogout: () => void }) {
   return (
-    <header className="rounded-lg bg-surface-low p-5 md:p-6">
-      <div className="flex items-start justify-between gap-4">
-        <DisplayHeader
-          as="h1"
-          size="lg"
-          leftIcon={<AppMark className="h-8 w-8" />}
-          title="Geodoku"
-          eyebrow="Dashboard administration"
-        />
-        <Button type="button" variant="ghost-label" onClick={onLogout}>
+    <header className="flex flex-col gap-5">
+      <div className="flex items-center justify-between">
+        <a href="/" className={backLinkClassName}>
+          <ArrowLeft className="size-3.5" aria-hidden="true" />
+          Retour au jeu
+        </a>
+
+        <Button
+          type="button"
+          variant="ghost"
+          onClick={onLogout}
+          className={backLinkClassName}
+        >
           Déconnexion
         </Button>
       </div>
+
+      <DisplayHeader
+        as="h1"
+        size="lg"
+        leftIcon={<AppMark />}
+        title="Geodoku"
+        eyebrow="Dashboard admin"
+      />
     </header>
   );
 }
@@ -135,13 +150,18 @@ export function AdminPage() {
 
   if (!token) {
     return (
-      <div className="flex min-h-svh flex-col bg-surface px-4 py-8">
-        <div className="mx-auto flex w-full max-w-[460px] flex-1 flex-col gap-6">
-          <header className="rounded-lg bg-surface-low p-6">
+      <div className="flex min-h-svh flex-col items-center bg-surface px-4 py-6">
+        <div className="flex w-full max-w-[460px] flex-1 flex-col gap-8">
+          <header className="flex flex-col gap-5">
+            <a href="/" className={backLinkClassName}>
+              <ArrowLeft className="size-3.5" aria-hidden="true" />
+              Retour au jeu
+            </a>
+
             <DisplayHeader
               as="h1"
               size="lg"
-              leftIcon={<AppMark className="h-8 w-8" />}
+              leftIcon={<AppMark />}
               title="Geodoku"
               eyebrow="Administration"
             />
@@ -171,7 +191,7 @@ export function AdminPage() {
             </Button>
           </div>
         </div>
-        <AppFooter className="mt-auto shrink-0" />
+        <AppFooter className="mt-auto w-full shrink-0" />
       </div>
     );
   }
@@ -180,8 +200,8 @@ export function AdminPage() {
 
   return (
     <AdminAuthBoundary onUnauthorized={clearToken}>
-      <div className="flex min-h-svh flex-col bg-surface">
-        <div className="mx-auto flex w-full max-w-6xl flex-1 flex-col gap-6 px-4 py-8">
+      <div className="flex min-h-svh flex-col items-center bg-surface px-4 py-6">
+        <div className="flex w-full max-w-6xl flex-1 flex-col gap-8">
           <AdminHeader onLogout={clearToken} />
 
           <PoolOverviewPanel
@@ -212,7 +232,7 @@ export function AdminPage() {
 
           <GameHealthPanel feedbackStats={feedbackStats} />
         </div>
-        <AppFooter className="mt-auto shrink-0 px-4 pb-6" />
+        <AppFooter className="mt-auto w-full shrink-0" />
       </div>
     </AdminAuthBoundary>
   );

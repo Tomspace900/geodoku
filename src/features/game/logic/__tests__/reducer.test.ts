@@ -33,8 +33,8 @@ describe("createInitialState", () => {
     }
   });
 
-  it("starts with 3 lives", () => {
-    expect(freshState().remainingLives).toBe(3);
+  it("starts with 5 lives", () => {
+    expect(freshState().remainingLives).toBe(5);
   });
 
   it("starts with status playing", () => {
@@ -103,7 +103,7 @@ describe("gameReducer — guessSuccess", () => {
       rarity: 0.6,
       validAnswers: emptyValidAnswers,
     });
-    expect(state.remainingLives).toBe(3);
+    expect(state.remainingLives).toBe(5);
   });
 
   it("transitions to won when all 9 cells are filled", () => {
@@ -218,7 +218,7 @@ describe("gameReducer — guessSuccess", () => {
     });
     expect(state.status).toBe("playing");
     expect(state.cells["0,2"].status).toBe("blocked");
-    expect(state.remainingLives).toBe(3);
+    expect(state.remainingLives).toBe(5);
     expect(state.finishedAt).toBeNull();
   });
 
@@ -249,7 +249,7 @@ describe("gameReducer — guessSuccess", () => {
       validAnswers,
     });
     expect(state.status).toBe("lost");
-    expect(state.remainingLives).toBe(3);
+    expect(state.remainingLives).toBe(5);
     expect(state.finishedAt).not.toBeNull();
     expect(
       Object.values(state.cells).filter((c) => c.status === "blocked"),
@@ -284,6 +284,8 @@ describe("gameReducer — guessSuccess", () => {
     state = gameReducer(state, { type: "guessFailure" });
     state = gameReducer(state, { type: "guessFailure" });
     state = gameReducer(state, { type: "guessFailure" });
+    state = gameReducer(state, { type: "guessFailure" });
+    state = gameReducer(state, { type: "guessFailure" });
     expect(state.status).toBe("lost");
 
     const stateAfter = gameReducer(state, {
@@ -300,11 +302,13 @@ describe("gameReducer — guessSuccess", () => {
 describe("gameReducer — guessFailure", () => {
   it("decrements remainingLives", () => {
     const state = gameReducer(freshState(), { type: "guessFailure" });
-    expect(state.remainingLives).toBe(2);
+    expect(state.remainingLives).toBe(4);
   });
 
-  it("transitions to lost after 3 consecutive failures", () => {
+  it("transitions to lost after 5 consecutive failures", () => {
     let state = freshState();
+    state = gameReducer(state, { type: "guessFailure" });
+    state = gameReducer(state, { type: "guessFailure" });
     state = gameReducer(state, { type: "guessFailure" });
     state = gameReducer(state, { type: "guessFailure" });
     state = gameReducer(state, { type: "guessFailure" });

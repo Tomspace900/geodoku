@@ -75,10 +75,14 @@ export const en = {
     title: "Changelog",
     backToGame: "Back to the game",
     entries: {
+      scoringV2Date: "June 6, 2026",
+      scoringV2Title: "Five lives and a smarter score",
+      scoringV2Body:
+        "You now get five lives instead of three, for slightly more forgiving games. And the originality score was rethought: it now judges only the quality of your picks, regardless of how full the grid is.",
       reliabilityDate: "June 2, 2026",
       reliabilityTitle: "A reliable grid, every day",
       reliabilityBody:
-        "The game now heals itself if something hiccups on the server side: the daily grid is always there, on time. I also published a clear, jargon-free privacy page.",
+        "The game now heals itself if something hiccups on the server side: the daily grid is always there, on time. I also published a clear, jargon-free privacy page, plus this changelog page to keep track of what's new.",
       darkModeDate: "May 29, 2026",
       darkModeTitle: "Dark mode",
       darkModeBody:
@@ -120,7 +124,6 @@ export const en = {
     roadmapLead:
       "A few directions I'd love to explore. Nothing is set in stone. Your ideas are very welcome.",
     roadmapReplay: "Replay previous grids",
-    roadmapScore: "A reworked score calculation",
     roadmapConstraints: "New constraints",
     roadmapLives: "More (or unlimited) lives, or an easy mode",
     contactTitle: "Got an idea or a remark?",
@@ -133,9 +136,9 @@ export const en = {
       "Find a country that matches both the row and column. Multiple answers are possible!",
     rule2Title: "Unique countries",
     rule2Body: "Each country can only be used once across the entire grid.",
-    rule3Title: "3 strikes max",
+    rule3Title: "5 strikes max",
     rule3Body:
-      "You are allowed 3 mistakes. On the third wrong answer, it's game over.",
+      "You are allowed 5 mistakes. On the fifth wrong answer, it's game over.",
     rule4Title: "Aim for rarity",
     rule4Body:
       "The more unique and less guessed your country is, the higher your score.",

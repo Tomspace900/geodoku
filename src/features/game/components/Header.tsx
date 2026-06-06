@@ -47,17 +47,20 @@ export function Header({ remainingLives, date, gridNumber }: Props) {
       />
 
       <div className="flex items-center gap-0.5">
-        {Array.from({ length: STARTING_LIVES }, (_, i) => (
-          <Heart
-            key={`heart-${i + 1}`}
-            size={18}
-            className={
-              i < remainingLives
-                ? "text-rarity-ultra fill-rarity-ultra"
-                : "text-on-surface-variant"
-            }
-          />
-        ))}
+        {Array.from({ length: STARTING_LIVES }, (_, i) => {
+          const index = STARTING_LIVES - 1 - i;
+          return (
+            <Heart
+              key={`heart-${index + 1}`}
+              size={18}
+              className={
+                index < remainingLives
+                  ? "text-rarity-ultra fill-rarity-ultra"
+                  : "text-on-surface-variant"
+              }
+            />
+          );
+        })}
       </div>
     </header>
   );

@@ -1,8 +1,10 @@
 import { getCountryByCode } from "@/features/countries/lib/search";
+import { UI_ANIMATION_MS } from "@/features/game/logic/constants";
 import type { Cell, CellPosition } from "@/features/game/types";
 import { useLocale } from "@/i18n/LocaleContext";
 import { cn } from "@/lib/utils";
 import { Plus, X } from "lucide-react";
+import { useEffect, useRef, useState } from "react";
 import { RarityBadge } from "./RarityBadge";
 
 type Props = {
@@ -14,6 +16,21 @@ type Props = {
 
 export function CellComponent({ cell, position, isDisabled, onClick }: Props) {
   const { locale, t } = useLocale();
+  const prevStatusRef = useRef(cell.status);
+  const [flagBounce, setFlagBounce] = useState(false);
+
+  useEffect(() => {
+    if (cell.status === "filled" && prevStatusRef.current !== "filled") {
+      setFlagBounce(true);
+      const timer = setTimeout(
+        () => setFlagBounce(false),
+        UI_ANIMATION_MS.flagBounce,
+      );
+      prevStatusRef.current = cell.status;
+      return () => clearTimeout(timer);
+    }
+    prevStatusRef.current = cell.status;
+  }, [cell.status]);
 
   if (cell.status === "filled") {
     const country = getCountryByCode(cell.countryCode);
@@ -23,7 +40,12 @@ export function CellComponent({ cell, position, isDisabled, onClick }: Props) {
         className="aspect-square w-full rounded-xl bg-surface-lowest flex flex-col items-center justify-center gap-0.5 p-1 shadow-editorial"
         aria-label={countryName ?? cell.countryCode}
       >
-        <span className="text-2xl leading-none">
+        <span
+          className={cn(
+            "inline-block origin-center text-2xl leading-none",
+            flagBounce && "animate-flag-bounce",
+          )}
+        >
           {country?.flagEmoji ?? "🏳️"}
         </span>
         <span className="text-[9px] font-medium text-on-surface text-center leading-tight line-clamp-2 px-0.5">

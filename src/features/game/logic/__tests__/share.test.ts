@@ -31,10 +31,10 @@ function fillCell(
 
 describe("formatShareString", () => {
   it("shows percent + grade but no hearts/skull for a partial (playing) state", () => {
-    // 3 vies, 0 cellules → (0 + 3) / 12 = 25 %, originalité = 0 → grade D.
+    // 5 vies, 0 cellules → (0 + 5) / 14 = 36 %, originalité = 0 → grade D.
     const state = makeState();
     const result = formatShareString(state, 1);
-    expect(result).toContain("Geodoku #1\n25% · D");
+    expect(result).toContain("Geodoku #1\n36% · D");
     expect(result).not.toContain("❤️");
     expect(result).not.toContain("💀");
   });
@@ -43,7 +43,7 @@ describe("formatShareString", () => {
     const state = makeState({ status: "won", remainingLives: 2 });
     const result = formatShareString(state, 42);
     expect(result).toContain("Geodoku #42");
-    expect(result).toContain("❤️❤️🤍"); // 2 hearts + 1 white
+    expect(result).toContain("❤️❤️🤍🤍🤍"); // 2 hearts + 3 white
   });
 
   it("shows skull for a lost state", () => {

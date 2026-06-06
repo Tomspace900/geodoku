@@ -111,47 +111,48 @@ describe("computeGridScore", () => {
     });
   });
 
-  it("returns 100% for 9 filled cells + 3 lives (flawless win)", () => {
+  it("returns 100% for 9 filled cells + 5 lives (flawless win)", () => {
     const state = fillAllCells(makeState(), "ultra");
     expect(computeGridScore(state)).toEqual({
       percent: 100,
       filledCount: 9,
-      livesLeft: 3,
+      livesLeft: 5,
     });
   });
 
-  it("returns 75% for 9 filled cells + 0 lives", () => {
+  it("returns 64% for 9 filled cells + 0 lives", () => {
     const state = fillAllCells(makeState({ remainingLives: 0 }), "common");
+    // (9 + 0) / 14 = 64.3 → 64 %
     expect(computeGridScore(state)).toEqual({
-      percent: 75,
+      percent: 64,
       filledCount: 9,
       livesLeft: 0,
     });
   });
 
-  it("returns 25% for 3 filled + 0 lives (lost mid-game)", () => {
+  it("returns 21% for 3 filled + 0 lives (lost mid-game)", () => {
     const state = fillCells(
       makeState({ status: "lost", remainingLives: 0 }),
       ["0,0", "0,1", "0,2"],
       "uncommon",
     );
-    // (3 + 0) / 12 = 25 %
+    // (3 + 0) / 14 = 21.4 → 21 %
     expect(computeGridScore(state)).toEqual({
-      percent: 25,
+      percent: 21,
       filledCount: 3,
       livesLeft: 0,
     });
   });
 
   it("rounds to nearest integer for non-integer percentages", () => {
-    // 6 filled + 2 lives = 8 / 12 = 66.67 → 67 %
+    // 6 filled + 2 lives = 8 / 14 = 57.1 → 57 %
     const state = fillCells(
       makeState({ remainingLives: 2 }),
       ["0,0", "0,1", "0,2", "1,0", "1,1", "1,2"],
       "uncommon",
     );
     expect(computeGridScore(state)).toEqual({
-      percent: 67,
+      percent: 57,
       filledCount: 6,
       livesLeft: 2,
     });
@@ -175,16 +176,16 @@ describe("computeOriginalityScore", () => {
     });
   });
 
-  it("returns 33 / C for 9 uncommon cells", () => {
+  it("returns 40 / B for 9 uncommon cells", () => {
     expect(
       computeOriginalityScore(fillAllCells(makeState(), "uncommon")),
-    ).toEqual({ score: 33, grade: "C" });
+    ).toEqual({ score: 40, grade: "B" });
   });
 
-  it("returns 66 / A for 9 rare cells", () => {
+  it("returns 70 / S for 9 rare cells", () => {
     expect(computeOriginalityScore(fillAllCells(makeState(), "rare"))).toEqual({
-      score: 66,
-      grade: "A",
+      score: 70,
+      grade: "S",
     });
   });
 
@@ -197,26 +198,26 @@ describe("computeOriginalityScore", () => {
     );
   });
 
-  it("treats empty cells as 0 (3 ultras + 6 empty → 33 / C)", () => {
+  it("ignores empty cells — averages over filled only (3 ultras + 6 empty → 100 / S)", () => {
     const state = fillCells(makeState(), ["0,0", "0,1", "0,2"], "ultra");
-    // 3 × 100 / 9 = 33.33 → 33
-    expect(computeOriginalityScore(state)).toEqual({ score: 33, grade: "C" });
+    // Découplé de la complétion : 3 × 100 / 3 cases remplies = 100.
+    expect(computeOriginalityScore(state)).toEqual({ score: 100, grade: "S" });
   });
 });
 
 describe("originalityToGrade", () => {
   it("returns S at 100", () => expect(originalityToGrade(100)).toBe("S"));
-  it("returns S at 80 (boundary)", () =>
-    expect(originalityToGrade(80)).toBe("S"));
-  it("returns A at 79", () => expect(originalityToGrade(79)).toBe("A"));
-  it("returns A at 60 (boundary)", () =>
-    expect(originalityToGrade(60)).toBe("A"));
-  it("returns B at 59", () => expect(originalityToGrade(59)).toBe("B"));
-  it("returns B at 40 (boundary)", () =>
-    expect(originalityToGrade(40)).toBe("B"));
-  it("returns C at 39", () => expect(originalityToGrade(39)).toBe("C"));
-  it("returns C at 20 (boundary)", () =>
-    expect(originalityToGrade(20)).toBe("C"));
-  it("returns D at 19", () => expect(originalityToGrade(19)).toBe("D"));
+  it("returns S at 70 (boundary)", () =>
+    expect(originalityToGrade(70)).toBe("S"));
+  it("returns A at 69", () => expect(originalityToGrade(69)).toBe("A"));
+  it("returns A at 50 (boundary)", () =>
+    expect(originalityToGrade(50)).toBe("A"));
+  it("returns B at 49", () => expect(originalityToGrade(49)).toBe("B"));
+  it("returns B at 30 (boundary)", () =>
+    expect(originalityToGrade(30)).toBe("B"));
+  it("returns C at 29", () => expect(originalityToGrade(29)).toBe("C"));
+  it("returns C at 12 (boundary)", () =>
+    expect(originalityToGrade(12)).toBe("C"));
+  it("returns D at 11", () => expect(originalityToGrade(11)).toBe("D"));
   it("returns D at 0", () => expect(originalityToGrade(0)).toBe("D"));
 });

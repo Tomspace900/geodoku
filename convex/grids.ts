@@ -24,13 +24,13 @@ const UPCOMING_PREVIEW_DEFAULT_DAYS = 7;
 
 /**
  * Borne haute défensive sur les soumissions par grille (9 succès + N échecs).
- * Trois vies max, donc 9 + 3 = 12 en théorie ; on autorise une marge x4 pour
+ * Cinq vies max, donc 9 + 5 = 14 en théorie ; on autorise une marge pour
  * absorber les variations futures sans bloquer les vrais joueurs.
  */
 const MAX_GUESSES_PER_GAME = 50;
 
 /** Doit rester aligné avec STARTING_LIVES dans src/features/game/logic/constants.ts. */
-const MAX_LIVES = 3;
+const MAX_LIVES = 5;
 
 const DELETE_BATCH_SIZE = 512;
 
@@ -574,13 +574,13 @@ export const getGridCellMetrics = query({
 export const recordGameEnd = mutation({
   args: {
     date: v.string(),
-    // Cause de fin de partie ; `won` en est dérivé. Les deux sont optionnels
-    // pour tolérer le rollout : un client en cache pré-`endReason` n'envoie que
-    // `won`. Dans ce cas la défaite reste non classée (lives vs blocked inconnu).
-    endReason: v.optional(
-      v.union(v.literal("win"), v.literal("lives"), v.literal("blocked")),
+    // Cause de fin de partie ; `won` en est dérivé. Front et back déployés
+    // ensemble → requis, pas de hedge de rollout.
+    endReason: v.union(
+      v.literal("win"),
+      v.literal("lives"),
+      v.literal("blocked"),
     ),
-    won: v.optional(v.boolean()),
     livesLeft: v.number(),
     filledCells: v.number(),
     guessesSubmitted: v.number(),
@@ -613,32 +613,21 @@ export const recordGameEnd = mutation({
     ) {
       throw new ConvexError("Invalid guessesSubmitted");
     }
-    // `won` vient soit de `endReason` (client à jour), soit du champ `won`
-    // legacy (client en cache). Au moins l'un des deux est requis.
-    const endReason = args.endReason;
-    const won = endReason !== undefined ? endReason === "win" : args.won;
-    if (won === undefined) {
-      throw new ConvexError("Missing endReason or won");
+    const won = args.endReason === "win";
+    if (won && args.filledCells !== 9) {
+      throw new ConvexError("Invalid: win requires 9 filled cells");
     }
-
-    // Invariants stricts seulement quand `endReason` est fourni : un client
-    // legacy ne transmet pas la cause, on ne peut pas la valider.
-    if (endReason !== undefined) {
-      if (won && args.filledCells !== 9) {
-        throw new ConvexError("Invalid: win requires 9 filled cells");
-      }
-      if (won && args.livesLeft <= 0) {
-        throw new ConvexError("Invalid: win requires lives left");
-      }
-      if (endReason === "lives" && args.livesLeft > 0) {
-        throw new ConvexError("Invalid: 'lives' end requires no lives left");
-      }
-      if (endReason === "blocked" && args.livesLeft <= 0) {
-        throw new ConvexError("Invalid: 'blocked' end requires lives left");
-      }
-      if (endReason === "blocked" && args.filledCells === 9) {
-        throw new ConvexError("Invalid: 'blocked' end can't have 9 filled");
-      }
+    if (won && args.livesLeft <= 0) {
+      throw new ConvexError("Invalid: win requires lives left");
+    }
+    if (args.endReason === "lives" && args.livesLeft > 0) {
+      throw new ConvexError("Invalid: 'lives' end requires no lives left");
+    }
+    if (args.endReason === "blocked" && args.livesLeft <= 0) {
+      throw new ConvexError("Invalid: 'blocked' end requires lives left");
+    }
+    if (args.endReason === "blocked" && args.filledCells === 9) {
+      throw new ConvexError("Invalid: 'blocked' end can't have 9 filled");
     }
 
     const existing = await ctx.db
@@ -648,8 +637,8 @@ export const recordGameEnd = mutation({
 
     const winsInc = won ? 1 : 0;
     const lossesInc = won ? 0 : 1;
-    const livesLossInc = endReason === "lives" ? 1 : 0;
-    const blockedLossInc = endReason === "blocked" ? 1 : 0;
+    const livesLossInc = args.endReason === "lives" ? 1 : 0;
+    const blockedLossInc = args.endReason === "blocked" ? 1 : 0;
 
     if (existing) {
       await ctx.db.patch(existing._id, {

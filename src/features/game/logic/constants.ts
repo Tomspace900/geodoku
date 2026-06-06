@@ -1,6 +1,13 @@
 import type { RarityTier } from "@/features/game/types";
 
-export const STARTING_LIVES = 3;
+export const STARTING_LIVES = 5;
+
+/** Durées JS alignées sur les `animate-*` de `src/index.css`. */
+export const UI_ANIMATION_MS = {
+  errorFeedback: 1500,
+  heartBreak: 450,
+  flagBounce: 700,
+} as const;
 
 /** Pastilles / lignes de rareté (aligné cellules de jeu et grille solution). */
 export const RARITY_STYLES: Record<RarityTier, string> = {
@@ -25,13 +32,15 @@ export const RARITY_TIERS = {
 export const MIN_CELL_TOTAL_GUESSES_FOR_SHARE_PERCENT = 10;
 
 // Scoring — V2 : deux scores indépendants
-// - Grille : 9 cellules + 3 vies = 12 points → percent = (filled + lives) / 12.
-// - Originalité : moyenne des tier values sur 9 cellules (vide = 0).
-export const MAX_GRID_POINTS = 9 + STARTING_LIVES; // 12
+// - Grille : 9 cellules + 5 vies = 14 points → percent = (filled + lives) / 14.
+// - Originalité : moyenne des tier values sur les cases REMPLIES (grille vide = 0).
+//   Découplé de la complétion (que mesure déjà le score de grille) : ne juge que
+//   la qualité des choix faits. common = 0 → un win « safe » tout-commun = grade D.
+export const MAX_GRID_POINTS = 9 + STARTING_LIVES; // 14
 export const ORIGINALITY_TIER_VALUES: Record<RarityTier, number> = {
   common: 0,
-  uncommon: 33,
-  rare: 66,
+  uncommon: 40,
+  rare: 70,
   ultra: 100,
 };
 

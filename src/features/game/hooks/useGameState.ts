@@ -14,8 +14,18 @@ import {
 } from "../logic/persistence";
 import { createInitialState, gameReducer } from "../logic/reducer";
 import { sanitizePersistedForGrid } from "../logic/sanitizePersisted";
-import { isConstraintFailureReason, validateGuess } from "../logic/validation";
+import {
+  type GuessFailureReason,
+  isConstraintFailureReason,
+  validateGuess,
+} from "../logic/validation";
 import type { CellPosition, GameState } from "../types";
+
+type GuessSubmitFailure = {
+  ok: false;
+  reason: GuessFailureReason | "invalid_country" | "wrong_constraints";
+  gameOver: boolean;
+};
 
 const GAME_ENDED_STORAGE_PREFIX = "geodoku:ended:";
 
@@ -123,10 +133,18 @@ export function useGameState() {
   const submitGuess = useCallback(
     async (cell: CellPosition, countryCode: string) => {
       if (state.status !== "playing" || !todayGrid) return;
+
+      function failGuess(
+        reason: GuessSubmitFailure["reason"],
+      ): GuessSubmitFailure {
+        const gameOver = state.remainingLives === 1;
+        dispatch({ type: "guessFailure" });
+        return { ok: false, reason, gameOver };
+      }
+
       const country = getCountryByCode(countryCode);
       if (!country) {
-        dispatch({ type: "guessFailure" });
-        return { ok: false as const, reason: "invalid_country" as const };
+        return failGuess("invalid_country");
       }
       const local = validateGuess({
         rowConstraintId: state.rows[cell.row],
@@ -135,7 +153,6 @@ export function useGameState() {
         usedCountries: state.usedCountries,
       });
       if (!local.valid) {
-        dispatch({ type: "guessFailure" });
         // Log la tentative infructueuse côté serveur (fire-and-forget) : un
         // vrai pays qui rate le croisement est un signal de difficulté. On
         // ignore `already_used` (pas un échec de croisement) et les non-pays.
@@ -146,7 +163,7 @@ export function useGameState() {
             clientId: getOrCreateClientId(),
           }).catch(() => {});
         }
-        return { ok: false as const, reason: local.reason };
+        return failGuess(local.reason);
       }
       try {
         const result = await submit({
@@ -164,8 +181,7 @@ export function useGameState() {
         });
         return { ok: true as const, rarity: result.rarity };
       } catch {
-        dispatch({ type: "guessFailure" });
-        return { ok: false as const, reason: "wrong_constraints" as const };
+        return failGuess("wrong_constraints");
       }
     },
     [state, todayGrid, submit, recordFailedGuess],

@@ -21,7 +21,7 @@ export function formatRarityPercent(rarity: number): string {
 
 /**
  * Score de grille : performance pure (cellules remplies + vies restantes).
- * 9 cellules + 3 vies = 12 points. 100 % = grille complétée sans erreur.
+ * 9 cellules + 5 vies = 14 points. 100 % = grille complétée sans erreur.
  */
 export function computeGridScore(state: GameState): {
   percent: number;
@@ -41,16 +41,17 @@ export function computeGridScore(state: GameState): {
 }
 
 export function originalityToGrade(score: number): OriginalityGrade {
-  if (score >= 80) return "S";
-  if (score >= 60) return "A";
-  if (score >= 40) return "B";
-  if (score >= 20) return "C";
+  if (score >= 70) return "S";
+  if (score >= 50) return "A";
+  if (score >= 30) return "B";
+  if (score >= 12) return "C";
   return "D";
 }
 
 /**
- * Score d'originalité : moyenne des tier values sur 9 cellules. Cellules vides
- * comptent 0 — l'incomplétion pénalise l'originalité.
+ * Score d'originalité : moyenne des tier values sur les cases REMPLIES.
+ * Découplé de la complétion (mesurée par le score de grille) — on ne juge que
+ * la qualité des choix faits. Une grille sans case remplie vaut 0.
  */
 export function computeOriginalityScore(state: GameState): {
   score: number;
@@ -59,10 +60,11 @@ export function computeOriginalityScore(state: GameState): {
   const filled = Object.values(state.cells).filter(
     (c): c is FilledCell => c.status === "filled",
   );
+  if (filled.length === 0) return { score: 0, grade: "D" };
   const total = filled.reduce(
     (sum, c) => sum + ORIGINALITY_TIER_VALUES[c.rarityTier],
     0,
   );
-  const score = Math.round(total / 9);
+  const score = Math.round(total / filled.length);
   return { score, grade: originalityToGrade(score) };
 }
