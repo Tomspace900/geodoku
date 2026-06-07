@@ -8,10 +8,8 @@ import {
   CONSTRAINTS,
   type ConstraintId,
 } from "@/features/game/logic/constraints";
-import {
-  formatRarityPercent,
-  rarityToTier,
-} from "@/features/game/logic/rarity";
+import { formatRarityPercent } from "@/features/game/logic/rarity";
+import { orderSolutionCountries } from "@/features/game/logic/solutionGridOrder";
 import type { Cell, CellKey, RarityTier } from "@/features/game/types";
 import { useLocale } from "@/i18n/LocaleContext";
 import type { Locale } from "@/i18n/types";
@@ -25,9 +23,6 @@ const COLS = [0, 1, 2] as const;
 const headerClass =
   "flex items-center justify-center text-center text-[10px] font-medium text-on-surface-variant bg-surface-low rounded-xl p-2 leading-tight min-h-[52px]";
 
-/** Ordre d’affichage : du plus rare au plus commun. */
-const TIER_ORDER: RarityTier[] = ["ultra", "rare", "uncommon", "common"];
-
 function compareIsoByLocalizedName(
   locale: Locale,
   a: string,
@@ -36,10 +31,6 @@ function compareIsoByLocalizedName(
   const na = getCountryByCode(a)?.names[locale] ?? a;
   const nb = getCountryByCode(b)?.names[locale] ?? b;
   return na.localeCompare(nb, locale);
-}
-
-function emptyTierBuckets(): Record<RarityTier, string[]> {
-  return { ultra: [], rare: [], uncommon: [], common: [] };
 }
 
 export type CellGuessDistribution = {
@@ -101,44 +92,14 @@ export function SolutionGrid({
               const totalGuesses = cellDist?.totalGuesses ?? 0;
               const userCell = cells[key];
 
-              function tierForCode(iso: string): RarityTier | null {
-                if (
-                  userCell?.status === "filled" &&
-                  userCell.countryCode === iso
-                ) {
-                  return userCell.rarityTier;
-                }
-                if (totalGuesses > 0) {
-                  const r = cellDist?.rarityByCountry[iso] ?? 0;
-                  return rarityToTier(r);
-                }
-                return null;
-              }
-
-              const byTier = emptyTierBuckets();
-              const untiered: string[] = [];
-              for (const code of codes) {
-                const tier = tierForCode(code);
-                if (tier) byTier[tier].push(code);
-                else untiered.push(code);
-              }
-
-              for (const tier of TIER_ORDER) {
-                byTier[tier].sort((a, b) =>
-                  compareIsoByLocalizedName(locale, a, b),
-                );
-              }
-              untiered.sort((a, b) => compareIsoByLocalizedName(locale, a, b));
-
-              const ordered: { iso: string; tier: RarityTier | null }[] = [];
-              for (const tier of TIER_ORDER) {
-                for (const iso of byTier[tier]) {
-                  ordered.push({ iso, tier });
-                }
-              }
-              for (const iso of untiered) {
-                ordered.push({ iso, tier: null });
-              }
+              const rarityByCountry = cellDist?.rarityByCountry ?? {};
+              const ordered = orderSolutionCountries(
+                codes,
+                totalGuesses,
+                rarityByCountry,
+                userCell,
+                (a, b) => compareIsoByLocalizedName(locale, a, b),
+              );
 
               function countryChip(iso: string, tier: RarityTier | null) {
                 const country = getCountryByCode(iso);
@@ -148,7 +109,7 @@ export function SolutionGrid({
                 const showSharePct =
                   totalGuesses >= MIN_CELL_TOTAL_GUESSES_FOR_SHARE_PERCENT;
                 const sharePct = showSharePct
-                  ? formatRarityPercent(cellDist?.rarityByCountry[iso] ?? 0)
+                  ? formatRarityPercent(rarityByCountry[iso] ?? 0)
                   : null;
 
                 return (
@@ -196,7 +157,7 @@ export function SolutionGrid({
                   key={key}
                   className="relative isolate aspect-square w-full min-h-0 rounded-xl bg-surface-lowest shadow-editorial"
                 >
-                  <div className="flex h-full min-h-0 flex-wrap content-start gap-0.5 overflow-y-auto p-1 sm:gap-1 sm:p-1.5">
+                  <div className="flex h-full min-h-0 flex-col gap-0.5 overflow-y-auto p-1 sm:gap-1 sm:p-1.5">
                     {ordered.map(({ iso, tier }) => countryChip(iso, tier))}
                   </div>
                 </div>

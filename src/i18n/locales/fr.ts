@@ -45,7 +45,7 @@ export const fr = {
       "Geodoku est un projet solo, 100 % gratuit et sans pub. Si tu passes un bon moment sur la grille du jour et que tu en as les moyens,",
     supportLink: "m'offrir un petit café",
     supportPost:
-      " aide à couvrir les frais techniques (serveur, nom de domaine). Et c'est surtout une énorme motivation pour continuer à développer de nouvelles fonctionnalités !",
+      " aide à couvrir les frais techniques (serveur, nom de domaine). Et c'est surtout une énorme motivation pour continuer à développer de nouvelles fonctionnalités\u00A0!",
   },
   privacy: {
     eyebrow: "Derni\u00E8re mise \u00E0 jour · Juin 2026",
@@ -134,7 +134,7 @@ export const fr = {
     title: "Comment jouer\u00A0?",
     rule1Title: "Complète la grille",
     rule1Body:
-      "Trouve un pays qui valide la ligne et la colonne. Plusieurs réponses sont possibles !",
+      "Trouve un pays qui valide la ligne et la colonne. Plusieurs réponses sont possibles\u00A0!",
     rule2Title: "Pays unique",
     rule2Body:
       "Chaque pays ne peut être utilisé qu'une seule fois dans toute la grille.",

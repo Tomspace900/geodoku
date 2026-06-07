@@ -29,7 +29,7 @@ export const RARITY_TIERS = {
  * Nombre minimal de soumissions agrégées pour une case avant d’afficher
  * le pourcentage de joueurs par pays (grille solution).
  */
-export const MIN_CELL_TOTAL_GUESSES_FOR_SHARE_PERCENT = 10;
+export const MIN_CELL_TOTAL_GUESSES_FOR_SHARE_PERCENT = 5;
 
 // Scoring — V2 : deux scores indépendants
 // - Grille : 9 cellules + 5 vies = 14 points → percent = (filled + lives) / 14.
