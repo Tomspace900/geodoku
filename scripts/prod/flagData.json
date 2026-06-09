@@ -1,0 +1,982 @@
+{
+  "AFG": {
+    "flagColors": ["black", "red", "green", "white"],
+    "flagSymbols": [],
+    "flagLayout": []
+  },
+  "AGO": {
+    "flagColors": ["red", "yellow", "black"],
+    "flagSymbols": ["star"],
+    "flagLayout": ["horizontal_stripes"]
+  },
+  "ALB": {
+    "flagColors": ["red", "black"],
+    "flagSymbols": ["animal"],
+    "flagLayout": []
+  },
+  "AND": {
+    "flagColors": ["red", "blue", "yellow"],
+    "flagSymbols": [],
+    "flagLayout": ["vertical_stripes"]
+  },
+  "ARE": {
+    "flagColors": ["red", "green", "white", "black"],
+    "flagSymbols": [],
+    "flagLayout": ["horizontal_stripes"]
+  },
+  "ARG": {
+    "flagColors": ["blue", "yellow", "white"],
+    "flagSymbols": ["sun"],
+    "flagLayout": ["horizontal_stripes"]
+  },
+  "ARM": {
+    "flagColors": ["red", "blue", "orange"],
+    "flagSymbols": [],
+    "flagLayout": ["horizontal_stripes"]
+  },
+  "ATG": {
+    "flagColors": ["red", "blue", "yellow", "white", "black"],
+    "flagSymbols": ["sun", "triangle"],
+    "flagLayout": []
+  },
+  "AUS": {
+    "flagColors": ["blue", "white"],
+    "flagSymbols": ["star", "cross"],
+    "flagLayout": []
+  },
+  "AUT": {
+    "flagColors": ["red", "white"],
+    "flagSymbols": [],
+    "flagLayout": ["horizontal_stripes"]
+  },
+  "AZE": {
+    "flagColors": ["red", "blue", "green", "white"],
+    "flagSymbols": ["star", "crescent"],
+    "flagLayout": ["horizontal_stripes"]
+  },
+  "BDI": {
+    "flagColors": ["red", "green", "white"],
+    "flagSymbols": ["star", "cross", "circle", "triangle"],
+    "flagLayout": []
+  },
+  "BEL": {
+    "flagColors": ["red", "yellow", "black"],
+    "flagSymbols": [],
+    "flagLayout": ["vertical_stripes"]
+  },
+  "BEN": {
+    "flagColors": ["red", "green", "yellow"],
+    "flagSymbols": [],
+    "flagLayout": []
+  },
+  "BFA": {
+    "flagColors": ["red", "green", "yellow"],
+    "flagSymbols": ["star"],
+    "flagLayout": ["horizontal_stripes"]
+  },
+  "BGD": {
+    "flagColors": ["red", "green"],
+    "flagSymbols": ["circle"],
+    "flagLayout": []
+  },
+  "BGR": {
+    "flagColors": ["red", "green", "white"],
+    "flagSymbols": [],
+    "flagLayout": ["horizontal_stripes"]
+  },
+  "BHR": {
+    "flagColors": ["red", "white"],
+    "flagSymbols": [],
+    "flagLayout": ["vertical_stripes"]
+  },
+  "BHS": {
+    "flagColors": ["blue", "yellow", "black"],
+    "flagSymbols": ["triangle"],
+    "flagLayout": ["horizontal_stripes"]
+  },
+  "BIH": {
+    "flagColors": ["blue", "yellow", "white"],
+    "flagSymbols": ["star", "triangle"],
+    "flagLayout": []
+  },
+  "BLR": {
+    "flagColors": ["red", "green", "white"],
+    "flagSymbols": [],
+    "flagLayout": []
+  },
+  "BLZ": {
+    "flagColors": ["red", "blue", "white"],
+    "flagSymbols": ["plant"],
+    "flagLayout": ["horizontal_stripes"]
+  },
+  "BOL": {
+    "flagColors": ["red", "green", "yellow"],
+    "flagSymbols": [],
+    "flagLayout": ["horizontal_stripes"]
+  },
+  "BRA": {
+    "flagColors": ["blue", "green", "yellow", "white"],
+    "flagSymbols": ["star", "circle"],
+    "flagLayout": []
+  },
+  "BRB": {
+    "flagColors": ["blue", "yellow", "black"],
+    "flagSymbols": [],
+    "flagLayout": ["vertical_stripes"]
+  },
+  "BRN": {
+    "flagColors": ["red", "yellow", "white", "black"],
+    "flagSymbols": ["crescent"],
+    "flagLayout": []
+  },
+  "BTN": {
+    "flagColors": ["yellow", "white", "orange"],
+    "flagSymbols": ["triangle", "animal"],
+    "flagLayout": []
+  },
+  "BWA": {
+    "flagColors": ["blue", "white", "black"],
+    "flagSymbols": [],
+    "flagLayout": ["horizontal_stripes"]
+  },
+  "CAF": {
+    "flagColors": ["red", "blue", "green", "yellow", "white"],
+    "flagSymbols": ["star"],
+    "flagLayout": []
+  },
+  "CAN": {
+    "flagColors": ["red", "white"],
+    "flagSymbols": ["plant"],
+    "flagLayout": ["vertical_stripes"]
+  },
+  "CHE": {
+    "flagColors": ["red", "white"],
+    "flagSymbols": ["cross"],
+    "flagLayout": []
+  },
+  "CHL": {
+    "flagColors": ["red", "blue", "white"],
+    "flagSymbols": ["star"],
+    "flagLayout": ["horizontal_stripes"]
+  },
+  "CHN": {
+    "flagColors": ["red", "yellow"],
+    "flagSymbols": ["star"],
+    "flagLayout": []
+  },
+  "CIV": {
+    "flagColors": ["green", "white", "orange"],
+    "flagSymbols": [],
+    "flagLayout": ["vertical_stripes"]
+  },
+  "CMR": {
+    "flagColors": ["red", "green", "yellow"],
+    "flagSymbols": ["star"],
+    "flagLayout": ["vertical_stripes"]
+  },
+  "COD": {
+    "flagColors": ["red", "blue", "yellow"],
+    "flagSymbols": ["star"],
+    "flagLayout": []
+  },
+  "COG": {
+    "flagColors": ["red", "green", "yellow"],
+    "flagSymbols": ["triangle"],
+    "flagLayout": []
+  },
+  "COL": {
+    "flagColors": ["red", "blue", "yellow"],
+    "flagSymbols": [],
+    "flagLayout": ["horizontal_stripes"]
+  },
+  "COM": {
+    "flagColors": ["red", "blue", "green", "yellow", "white"],
+    "flagSymbols": ["star", "crescent", "triangle"],
+    "flagLayout": ["horizontal_stripes"]
+  },
+  "CPV": {
+    "flagColors": ["red", "blue", "yellow", "white"],
+    "flagSymbols": ["star"],
+    "flagLayout": ["horizontal_stripes"]
+  },
+  "CRI": {
+    "flagColors": ["red", "blue", "white"],
+    "flagSymbols": ["circle"],
+    "flagLayout": ["horizontal_stripes"]
+  },
+  "CUB": {
+    "flagColors": ["red", "blue", "white"],
+    "flagSymbols": ["star", "triangle"],
+    "flagLayout": ["horizontal_stripes"]
+  },
+  "CYP": {
+    "flagColors": ["green", "white", "orange"],
+    "flagSymbols": ["plant"],
+    "flagLayout": []
+  },
+  "CZE": {
+    "flagColors": ["red", "blue", "white"],
+    "flagSymbols": ["triangle"],
+    "flagLayout": ["horizontal_stripes"]
+  },
+  "DEU": {
+    "flagColors": ["red", "yellow", "black"],
+    "flagSymbols": [],
+    "flagLayout": ["horizontal_stripes"]
+  },
+  "DJI": {
+    "flagColors": ["red", "blue", "green", "white"],
+    "flagSymbols": ["star", "triangle"],
+    "flagLayout": ["horizontal_stripes"]
+  },
+  "DMA": {
+    "flagColors": ["red", "green", "yellow", "white", "black"],
+    "flagSymbols": ["star", "cross", "circle", "animal"],
+    "flagLayout": []
+  },
+  "DNK": {
+    "flagColors": ["red", "white"],
+    "flagSymbols": ["cross"],
+    "flagLayout": []
+  },
+  "DOM": {
+    "flagColors": ["red", "blue", "white"],
+    "flagSymbols": ["cross"],
+    "flagLayout": []
+  },
+  "DZA": {
+    "flagColors": ["red", "green", "white"],
+    "flagSymbols": ["star", "crescent"],
+    "flagLayout": ["vertical_stripes"]
+  },
+  "ECU": {
+    "flagColors": ["red", "blue", "yellow"],
+    "flagSymbols": ["animal"],
+    "flagLayout": ["horizontal_stripes"]
+  },
+  "EGY": {
+    "flagColors": ["red", "yellow", "white", "black"],
+    "flagSymbols": ["animal"],
+    "flagLayout": ["horizontal_stripes"]
+  },
+  "ERI": {
+    "flagColors": ["red", "blue", "green", "yellow"],
+    "flagSymbols": ["triangle", "plant"],
+    "flagLayout": []
+  },
+  "ESP": {
+    "flagColors": ["red", "yellow"],
+    "flagSymbols": ["animal"],
+    "flagLayout": ["horizontal_stripes"]
+  },
+  "EST": {
+    "flagColors": ["blue", "white", "black"],
+    "flagSymbols": [],
+    "flagLayout": ["horizontal_stripes"]
+  },
+  "ETH": {
+    "flagColors": ["red", "blue", "green", "yellow"],
+    "flagSymbols": ["circle", "star"],
+    "flagLayout": ["horizontal_stripes"]
+  },
+  "FIN": {
+    "flagColors": ["blue", "white"],
+    "flagSymbols": ["cross"],
+    "flagLayout": []
+  },
+  "FJI": {
+    "flagColors": ["blue", "red", "white"],
+    "flagSymbols": ["cross", "animal"],
+    "flagLayout": []
+  },
+  "FRA": {
+    "flagColors": ["red", "blue", "white"],
+    "flagSymbols": [],
+    "flagLayout": ["vertical_stripes"]
+  },
+  "FSM": {
+    "flagColors": ["blue", "white"],
+    "flagSymbols": ["star"],
+    "flagLayout": []
+  },
+  "GAB": {
+    "flagColors": ["blue", "green", "yellow"],
+    "flagSymbols": [],
+    "flagLayout": ["horizontal_stripes"]
+  },
+  "GBR": {
+    "flagColors": ["red", "blue", "white"],
+    "flagSymbols": ["cross"],
+    "flagLayout": []
+  },
+  "GEO": {
+    "flagColors": ["red", "white"],
+    "flagSymbols": ["cross"],
+    "flagLayout": []
+  },
+  "GHA": {
+    "flagColors": ["red", "green", "yellow", "black"],
+    "flagSymbols": ["star"],
+    "flagLayout": ["horizontal_stripes"]
+  },
+  "GIN": {
+    "flagColors": ["red", "green", "yellow"],
+    "flagSymbols": [],
+    "flagLayout": ["vertical_stripes"]
+  },
+  "GMB": {
+    "flagColors": ["red", "blue", "green", "white"],
+    "flagSymbols": [],
+    "flagLayout": ["horizontal_stripes"]
+  },
+  "GNB": {
+    "flagColors": ["red", "green", "yellow", "black"],
+    "flagSymbols": ["star"],
+    "flagLayout": []
+  },
+  "GNQ": {
+    "flagColors": ["red", "blue", "green", "white"],
+    "flagSymbols": ["triangle", "plant"],
+    "flagLayout": ["horizontal_stripes"]
+  },
+  "GRC": {
+    "flagColors": ["blue", "white"],
+    "flagSymbols": ["cross"],
+    "flagLayout": ["horizontal_stripes"]
+  },
+  "GRD": {
+    "flagColors": ["red", "green", "yellow"],
+    "flagSymbols": ["star", "circle", "triangle"],
+    "flagLayout": []
+  },
+  "GTM": {
+    "flagColors": ["blue", "white"],
+    "flagSymbols": ["plant", "animal"],
+    "flagLayout": ["vertical_stripes"]
+  },
+  "GUY": {
+    "flagColors": ["red", "green", "yellow", "white", "black"],
+    "flagSymbols": ["triangle"],
+    "flagLayout": []
+  },
+  "HND": {
+    "flagColors": ["blue", "white"],
+    "flagSymbols": ["star"],
+    "flagLayout": ["horizontal_stripes"]
+  },
+  "HRV": {
+    "flagColors": ["red", "blue", "white"],
+    "flagSymbols": ["animal"],
+    "flagLayout": ["horizontal_stripes"]
+  },
+  "HTI": {
+    "flagColors": ["red", "blue", "white"],
+    "flagSymbols": ["plant"],
+    "flagLayout": ["horizontal_stripes"]
+  },
+  "HUN": {
+    "flagColors": ["red", "green", "white"],
+    "flagSymbols": [],
+    "flagLayout": ["horizontal_stripes"]
+  },
+  "IDN": {
+    "flagColors": ["red", "white"],
+    "flagSymbols": [],
+    "flagLayout": ["horizontal_stripes"]
+  },
+  "IND": {
+    "flagColors": ["orange", "white", "green", "blue"],
+    "flagSymbols": ["circle"],
+    "flagLayout": ["horizontal_stripes"]
+  },
+  "IRL": {
+    "flagColors": ["green", "white", "orange"],
+    "flagSymbols": [],
+    "flagLayout": ["vertical_stripes"]
+  },
+  "IRN": {
+    "flagColors": ["red", "green", "white"],
+    "flagSymbols": [],
+    "flagLayout": ["horizontal_stripes"]
+  },
+  "IRQ": {
+    "flagColors": ["red", "green", "white", "black"],
+    "flagSymbols": [],
+    "flagLayout": ["horizontal_stripes"]
+  },
+  "ISL": {
+    "flagColors": ["red", "blue", "white"],
+    "flagSymbols": ["cross"],
+    "flagLayout": []
+  },
+  "ISR": {
+    "flagColors": ["blue", "white"],
+    "flagSymbols": ["star"],
+    "flagLayout": ["horizontal_stripes"]
+  },
+  "ITA": {
+    "flagColors": ["red", "green", "white"],
+    "flagSymbols": [],
+    "flagLayout": ["vertical_stripes"]
+  },
+  "JAM": {
+    "flagColors": ["green", "yellow", "black"],
+    "flagSymbols": ["cross"],
+    "flagLayout": []
+  },
+  "JOR": {
+    "flagColors": ["red", "green", "white", "black"],
+    "flagSymbols": ["star", "triangle"],
+    "flagLayout": ["horizontal_stripes"]
+  },
+  "JPN": {
+    "flagColors": ["red", "white"],
+    "flagSymbols": ["circle"],
+    "flagLayout": []
+  },
+  "KAZ": {
+    "flagColors": ["blue", "yellow"],
+    "flagSymbols": ["sun", "animal"],
+    "flagLayout": []
+  },
+  "KEN": {
+    "flagColors": ["red", "green", "white", "black"],
+    "flagSymbols": [],
+    "flagLayout": ["horizontal_stripes"]
+  },
+  "KGZ": {
+    "flagColors": ["red", "yellow"],
+    "flagSymbols": ["sun"],
+    "flagLayout": []
+  },
+  "KHM": {
+    "flagColors": ["red", "blue", "white"],
+    "flagSymbols": [],
+    "flagLayout": ["horizontal_stripes"]
+  },
+  "KIR": {
+    "flagColors": ["red", "blue", "yellow", "white"],
+    "flagSymbols": ["sun", "animal"],
+    "flagLayout": ["horizontal_stripes"]
+  },
+  "KNA": {
+    "flagColors": ["red", "green", "yellow", "white", "black"],
+    "flagSymbols": ["star", "triangle"],
+    "flagLayout": []
+  },
+  "KOR": {
+    "flagColors": ["red", "blue", "white", "black"],
+    "flagSymbols": ["circle"],
+    "flagLayout": []
+  },
+  "KWT": {
+    "flagColors": ["red", "green", "white", "black"],
+    "flagSymbols": [],
+    "flagLayout": ["horizontal_stripes"]
+  },
+  "LAO": {
+    "flagColors": ["red", "blue", "white"],
+    "flagSymbols": ["circle"],
+    "flagLayout": ["horizontal_stripes"]
+  },
+  "LBN": {
+    "flagColors": ["red", "green", "white"],
+    "flagSymbols": ["plant"],
+    "flagLayout": ["horizontal_stripes"]
+  },
+  "LBR": {
+    "flagColors": ["red", "blue", "white"],
+    "flagSymbols": ["star"],
+    "flagLayout": ["horizontal_stripes"]
+  },
+  "LBY": {
+    "flagColors": ["red", "green", "white", "black"],
+    "flagSymbols": ["star", "crescent"],
+    "flagLayout": ["horizontal_stripes"]
+  },
+  "LCA": {
+    "flagColors": ["blue", "yellow", "white", "black"],
+    "flagSymbols": ["triangle"],
+    "flagLayout": []
+  },
+  "LIE": {
+    "flagColors": ["red", "blue", "yellow"],
+    "flagSymbols": [],
+    "flagLayout": ["horizontal_stripes"]
+  },
+  "LKA": {
+    "flagColors": ["yellow", "orange", "red", "green"],
+    "flagSymbols": ["animal"],
+    "flagLayout": []
+  },
+  "LSO": {
+    "flagColors": ["blue", "green", "white", "black"],
+    "flagSymbols": [],
+    "flagLayout": ["horizontal_stripes"]
+  },
+  "LTU": {
+    "flagColors": ["red", "green", "yellow"],
+    "flagSymbols": [],
+    "flagLayout": ["horizontal_stripes"]
+  },
+  "LUX": {
+    "flagColors": ["red", "blue", "white"],
+    "flagSymbols": [],
+    "flagLayout": ["horizontal_stripes"]
+  },
+  "LVA": {
+    "flagColors": ["red", "white"],
+    "flagSymbols": [],
+    "flagLayout": ["horizontal_stripes"]
+  },
+  "MAR": {
+    "flagColors": ["red", "green"],
+    "flagSymbols": ["star"],
+    "flagLayout": []
+  },
+  "MCO": {
+    "flagColors": ["red", "white"],
+    "flagSymbols": [],
+    "flagLayout": ["horizontal_stripes"]
+  },
+  "MDA": {
+    "flagColors": ["red", "blue", "yellow"],
+    "flagSymbols": ["animal"],
+    "flagLayout": ["vertical_stripes"]
+  },
+  "MDG": {
+    "flagColors": ["red", "green", "white"],
+    "flagSymbols": [],
+    "flagLayout": []
+  },
+  "MDV": {
+    "flagColors": ["red", "green", "white"],
+    "flagSymbols": ["crescent"],
+    "flagLayout": []
+  },
+  "MEX": {
+    "flagColors": ["red", "green", "white"],
+    "flagSymbols": ["animal", "plant"],
+    "flagLayout": ["vertical_stripes"]
+  },
+  "MHL": {
+    "flagColors": ["blue", "white", "orange"],
+    "flagSymbols": ["star"],
+    "flagLayout": []
+  },
+  "MKD": {
+    "flagColors": ["red", "yellow"],
+    "flagSymbols": ["sun"],
+    "flagLayout": []
+  },
+  "MLI": {
+    "flagColors": ["red", "green", "yellow"],
+    "flagSymbols": [],
+    "flagLayout": ["vertical_stripes"]
+  },
+  "MLT": {
+    "flagColors": ["red", "white"],
+    "flagSymbols": ["cross"],
+    "flagLayout": ["vertical_stripes"]
+  },
+  "MMR": {
+    "flagColors": ["red", "green", "yellow", "white"],
+    "flagSymbols": ["star"],
+    "flagLayout": ["horizontal_stripes"]
+  },
+  "MNE": {
+    "flagColors": ["red", "yellow"],
+    "flagSymbols": ["animal"],
+    "flagLayout": []
+  },
+  "MNG": {
+    "flagColors": ["red", "blue", "yellow"],
+    "flagSymbols": ["sun", "crescent"],
+    "flagLayout": ["vertical_stripes"]
+  },
+  "MOZ": {
+    "flagColors": ["red", "blue", "yellow", "white", "black"],
+    "flagSymbols": ["star", "triangle"],
+    "flagLayout": ["horizontal_stripes"]
+  },
+  "MRT": {
+    "flagColors": ["red", "green", "yellow"],
+    "flagSymbols": ["star", "crescent"],
+    "flagLayout": ["horizontal_stripes"]
+  },
+  "MUS": {
+    "flagColors": ["red", "blue", "green", "yellow"],
+    "flagSymbols": [],
+    "flagLayout": ["horizontal_stripes"]
+  },
+  "MWI": {
+    "flagColors": ["red", "green", "black"],
+    "flagSymbols": ["sun"],
+    "flagLayout": ["horizontal_stripes"]
+  },
+  "MYS": {
+    "flagColors": ["red", "blue", "yellow", "white"],
+    "flagSymbols": ["star", "crescent"],
+    "flagLayout": ["horizontal_stripes"]
+  },
+  "NAM": {
+    "flagColors": ["red", "blue", "green", "yellow", "white"],
+    "flagSymbols": ["sun", "triangle"],
+    "flagLayout": []
+  },
+  "NER": {
+    "flagColors": ["green", "white", "orange"],
+    "flagSymbols": ["circle"],
+    "flagLayout": ["horizontal_stripes"]
+  },
+  "NGA": {
+    "flagColors": ["green", "white"],
+    "flagSymbols": [],
+    "flagLayout": ["vertical_stripes"]
+  },
+  "NIC": {
+    "flagColors": ["blue", "white"],
+    "flagSymbols": ["triangle"],
+    "flagLayout": ["horizontal_stripes"]
+  },
+  "NLD": {
+    "flagColors": ["red", "blue", "white"],
+    "flagSymbols": [],
+    "flagLayout": ["horizontal_stripes"]
+  },
+  "NOR": {
+    "flagColors": ["red", "blue", "white"],
+    "flagSymbols": ["cross"],
+    "flagLayout": []
+  },
+  "NPL": {
+    "flagColors": ["red", "blue", "white"],
+    "flagSymbols": ["crescent", "sun", "triangle"],
+    "flagLayout": []
+  },
+  "NRU": {
+    "flagColors": ["blue", "yellow", "white"],
+    "flagSymbols": ["star"],
+    "flagLayout": ["horizontal_stripes"]
+  },
+  "NZL": {
+    "flagColors": ["red", "blue", "white"],
+    "flagSymbols": ["star", "cross"],
+    "flagLayout": []
+  },
+  "OMN": {
+    "flagColors": ["red", "green", "white"],
+    "flagSymbols": [],
+    "flagLayout": []
+  },
+  "PAK": {
+    "flagColors": ["green", "white"],
+    "flagSymbols": ["star", "crescent"],
+    "flagLayout": ["vertical_stripes"]
+  },
+  "PAN": {
+    "flagColors": ["red", "blue", "white"],
+    "flagSymbols": ["star"],
+    "flagLayout": []
+  },
+  "PER": {
+    "flagColors": ["red", "white"],
+    "flagSymbols": ["plant", "animal"],
+    "flagLayout": ["vertical_stripes"]
+  },
+  "PHL": {
+    "flagColors": ["red", "blue", "yellow", "white"],
+    "flagSymbols": ["star", "sun", "triangle"],
+    "flagLayout": ["horizontal_stripes"]
+  },
+  "PLW": {
+    "flagColors": ["blue", "yellow"],
+    "flagSymbols": ["circle"],
+    "flagLayout": []
+  },
+  "PNG": {
+    "flagColors": ["red", "yellow", "white", "black"],
+    "flagSymbols": ["star", "animal"],
+    "flagLayout": []
+  },
+  "POL": {
+    "flagColors": ["red", "white"],
+    "flagSymbols": [],
+    "flagLayout": ["horizontal_stripes"]
+  },
+  "PRK": {
+    "flagColors": ["red", "blue", "white"],
+    "flagSymbols": ["star", "circle"],
+    "flagLayout": ["horizontal_stripes"]
+  },
+  "PRT": {
+    "flagColors": ["red", "green"],
+    "flagSymbols": ["circle"],
+    "flagLayout": ["vertical_stripes"]
+  },
+  "PRY": {
+    "flagColors": ["red", "blue", "white"],
+    "flagSymbols": ["star", "circle", "plant"],
+    "flagLayout": ["horizontal_stripes"]
+  },
+  "PSE": {
+    "flagColors": ["red", "green", "white", "black"],
+    "flagSymbols": ["triangle"],
+    "flagLayout": ["horizontal_stripes"]
+  },
+  "QAT": {
+    "flagColors": ["red", "white"],
+    "flagSymbols": [],
+    "flagLayout": ["vertical_stripes"]
+  },
+  "ROU": {
+    "flagColors": ["red", "blue", "yellow"],
+    "flagSymbols": [],
+    "flagLayout": ["vertical_stripes"]
+  },
+  "RUS": {
+    "flagColors": ["red", "blue", "white"],
+    "flagSymbols": [],
+    "flagLayout": ["horizontal_stripes"]
+  },
+  "RWA": {
+    "flagColors": ["blue", "green", "yellow"],
+    "flagSymbols": ["sun"],
+    "flagLayout": ["horizontal_stripes"]
+  },
+  "SAU": {
+    "flagColors": ["green", "white"],
+    "flagSymbols": [],
+    "flagLayout": []
+  },
+  "SDN": {
+    "flagColors": ["red", "green", "white", "black"],
+    "flagSymbols": ["triangle"],
+    "flagLayout": ["horizontal_stripes"]
+  },
+  "SEN": {
+    "flagColors": ["red", "green", "yellow"],
+    "flagSymbols": ["star"],
+    "flagLayout": ["vertical_stripes"]
+  },
+  "SGP": {
+    "flagColors": ["red", "white"],
+    "flagSymbols": ["star", "crescent"],
+    "flagLayout": ["horizontal_stripes"]
+  },
+  "SLB": {
+    "flagColors": ["blue", "green", "yellow", "white"],
+    "flagSymbols": ["star", "triangle"],
+    "flagLayout": []
+  },
+  "SLE": {
+    "flagColors": ["blue", "green", "white"],
+    "flagSymbols": [],
+    "flagLayout": ["horizontal_stripes"]
+  },
+  "SLV": {
+    "flagColors": ["blue", "white"],
+    "flagSymbols": ["triangle", "plant"],
+    "flagLayout": ["horizontal_stripes"]
+  },
+  "SMR": {
+    "flagColors": ["blue", "white"],
+    "flagSymbols": ["plant"],
+    "flagLayout": ["horizontal_stripes"]
+  },
+  "SOM": {
+    "flagColors": ["blue", "white"],
+    "flagSymbols": ["star"],
+    "flagLayout": []
+  },
+  "SRB": {
+    "flagColors": ["red", "blue", "white"],
+    "flagSymbols": ["animal"],
+    "flagLayout": ["horizontal_stripes"]
+  },
+  "SSD": {
+    "flagColors": ["red", "blue", "green", "yellow", "white", "black"],
+    "flagSymbols": ["star", "triangle"],
+    "flagLayout": ["horizontal_stripes"]
+  },
+  "STP": {
+    "flagColors": ["red", "green", "yellow", "black"],
+    "flagSymbols": ["star", "triangle"],
+    "flagLayout": ["horizontal_stripes"]
+  },
+  "SUR": {
+    "flagColors": ["red", "green", "yellow", "white"],
+    "flagSymbols": ["star"],
+    "flagLayout": ["horizontal_stripes"]
+  },
+  "SVK": {
+    "flagColors": ["red", "blue", "white"],
+    "flagSymbols": ["cross"],
+    "flagLayout": ["horizontal_stripes"]
+  },
+  "SVN": {
+    "flagColors": ["red", "blue", "white"],
+    "flagSymbols": ["star"],
+    "flagLayout": ["horizontal_stripes"]
+  },
+  "SWE": {
+    "flagColors": ["blue", "yellow"],
+    "flagSymbols": ["cross"],
+    "flagLayout": []
+  },
+  "SWZ": {
+    "flagColors": ["red", "blue", "yellow", "white", "black"],
+    "flagSymbols": [],
+    "flagLayout": ["horizontal_stripes"]
+  },
+  "SYC": {
+    "flagColors": ["red", "blue", "green", "yellow", "white"],
+    "flagSymbols": [],
+    "flagLayout": []
+  },
+  "SYR": {
+    "flagColors": ["red", "green", "white", "black"],
+    "flagSymbols": ["star"],
+    "flagLayout": ["horizontal_stripes"]
+  },
+  "TCD": {
+    "flagColors": ["red", "blue", "yellow"],
+    "flagSymbols": [],
+    "flagLayout": ["vertical_stripes"]
+  },
+  "TGO": {
+    "flagColors": ["red", "green", "yellow", "white"],
+    "flagSymbols": ["star"],
+    "flagLayout": ["horizontal_stripes"]
+  },
+  "THA": {
+    "flagColors": ["red", "blue", "white"],
+    "flagSymbols": [],
+    "flagLayout": ["horizontal_stripes"]
+  },
+  "TJK": {
+    "flagColors": ["red", "green", "yellow", "white"],
+    "flagSymbols": ["star"],
+    "flagLayout": ["horizontal_stripes"]
+  },
+  "TKM": {
+    "flagColors": ["red", "green", "white"],
+    "flagSymbols": ["star", "crescent"],
+    "flagLayout": []
+  },
+  "TLS": {
+    "flagColors": ["red", "yellow", "white", "black"],
+    "flagSymbols": ["star", "triangle"],
+    "flagLayout": []
+  },
+  "TON": {
+    "flagColors": ["red", "white"],
+    "flagSymbols": ["cross"],
+    "flagLayout": []
+  },
+  "TTO": {
+    "flagColors": ["red", "white", "black"],
+    "flagSymbols": [],
+    "flagLayout": []
+  },
+  "TUN": {
+    "flagColors": ["red", "white"],
+    "flagSymbols": ["star", "crescent", "circle"],
+    "flagLayout": []
+  },
+  "TUR": {
+    "flagColors": ["red", "white"],
+    "flagSymbols": ["star", "crescent"],
+    "flagLayout": []
+  },
+  "TUV": {
+    "flagColors": ["blue", "yellow"],
+    "flagSymbols": ["star", "cross"],
+    "flagLayout": []
+  },
+  "TWN": {
+    "flagColors": ["red", "blue", "white"],
+    "flagSymbols": ["sun"],
+    "flagLayout": []
+  },
+  "TZA": {
+    "flagColors": ["blue", "green", "yellow", "black"],
+    "flagSymbols": ["triangle"],
+    "flagLayout": []
+  },
+  "UGA": {
+    "flagColors": ["red", "yellow", "white", "black"],
+    "flagSymbols": ["circle", "animal"],
+    "flagLayout": ["horizontal_stripes"]
+  },
+  "UKR": {
+    "flagColors": ["blue", "yellow"],
+    "flagSymbols": [],
+    "flagLayout": ["horizontal_stripes"]
+  },
+  "URY": {
+    "flagColors": ["blue", "yellow", "white"],
+    "flagSymbols": ["sun"],
+    "flagLayout": ["horizontal_stripes"]
+  },
+  "USA": {
+    "flagColors": ["red", "blue", "white"],
+    "flagSymbols": ["star"],
+    "flagLayout": ["horizontal_stripes"]
+  },
+  "UZB": {
+    "flagColors": ["red", "blue", "green", "white"],
+    "flagSymbols": ["star", "crescent"],
+    "flagLayout": ["horizontal_stripes"]
+  },
+  "VAT": {
+    "flagColors": ["yellow", "white"],
+    "flagSymbols": ["cross"],
+    "flagLayout": ["vertical_stripes"]
+  },
+  "VCT": {
+    "flagColors": ["blue", "green", "yellow"],
+    "flagSymbols": [],
+    "flagLayout": ["vertical_stripes"]
+  },
+  "VEN": {
+    "flagColors": ["red", "blue", "yellow", "white"],
+    "flagSymbols": ["star"],
+    "flagLayout": ["horizontal_stripes"]
+  },
+  "VNM": {
+    "flagColors": ["red", "yellow"],
+    "flagSymbols": ["star"],
+    "flagLayout": []
+  },
+  "VUT": {
+    "flagColors": ["red", "green", "yellow", "black"],
+    "flagSymbols": ["triangle"],
+    "flagLayout": []
+  },
+  "WSM": {
+    "flagColors": ["red", "blue", "white"],
+    "flagSymbols": ["star"],
+    "flagLayout": []
+  },
+  "YEM": {
+    "flagColors": ["red", "white", "black"],
+    "flagSymbols": [],
+    "flagLayout": ["horizontal_stripes"]
+  },
+  "ZAF": {
+    "flagColors": ["red", "blue", "green", "yellow", "white", "black"],
+    "flagSymbols": ["triangle"],
+    "flagLayout": []
+  },
+  "ZMB": {
+    "flagColors": ["red", "green", "black", "orange"],
+    "flagSymbols": ["animal"],
+    "flagLayout": []
+  },
+  "ZWE": {
+    "flagColors": ["red", "green", "yellow", "white", "black"],
+    "flagSymbols": ["star", "triangle", "animal"],
+    "flagLayout": ["horizontal_stripes"]
+  }
+}

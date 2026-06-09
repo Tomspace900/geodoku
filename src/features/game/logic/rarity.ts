@@ -14,9 +14,14 @@ export function rarityToTier(rarity: number): RarityTier {
   return "ultra";
 }
 
+/** Part des joueurs (0..1) → entier 0..100 (clé de tri = libellé affiché). */
+export function raritySharePercent(rarity: number): number {
+  return Math.round(rarity * 100);
+}
+
+/** Part des joueurs (0..1) → pourcentage entier arrondi. */
 export function formatRarityPercent(rarity: number): string {
-  const pct = Math.round(rarity * 100);
-  return pct < 1 ? "<1%" : `${pct}%`;
+  return `${raritySharePercent(rarity)}%`;
 }
 
 /**

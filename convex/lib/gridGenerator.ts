@@ -107,6 +107,12 @@ function shuffle<T>(arr: T[]): T[] {
  * Recursive backtracking: fills rows to 3, then cols to 3.
  * Checks MAX_SAME_CATEGORY and cell-size hard filters at each step.
  * The seed is already in rows or cols when this is called.
+ *
+ * Note: the MAX_CELL_SIZE check below is also what makes broad constraints
+ * self-regulating — a constraint matching many countries can only pair with
+ * narrow orthogonal partners (else the cell exceeds 15), so it lands in few
+ * grids. This is why no usage-weighting / appearance cap is needed (see
+ * generateDiversePool).
  */
 function fillSlots(
   rows: string[],
@@ -300,6 +306,16 @@ export function finalizeGrid(
  * Generates a diverse pool of grids, one seed per constraint.
  * Constraint at even index → seed in row[0]; odd index → seed in col[0].
  * Grids sharing ≥ MAX_OVERLAP_BETWEEN_GRIDS constraints with any existing pool grid are skipped.
+ *
+ * No per-constraint usage-weighting or appearance cap on purpose. Constraint
+ * over-representation is already bounded by the hard filters: MAX_CELL_SIZE
+ * confines broad constraints to narrow partners (≤~24% pool share for the most
+ * frequent), and the scheduler diversifies against published history anyway.
+ * Both a usage-weighted candidate order and a MAX_CONSTRAINT_SHARE cap were
+ * tried (2026-06) and reverted: the first is marginal (and collapses the pool
+ * if made strict, via MAX_OVERLAP), the second starves narrow seeds that depend
+ * on broad partners. Measure with `scripts/prod/analyze-pool.ts` before adding
+ * any such mechanism.
  */
 export function generateDiversePool(
   existingPool: Array<{ constraintIds: string[] }> = [],

@@ -3,12 +3,15 @@ import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 import { describe, expect, it } from "vitest";
 import type { Country } from "../../src/features/countries/types.ts";
-import type { Patches } from "./buildCountriesLib.ts";
+import type { FlagData, Patches } from "./buildCountriesLib.ts";
 
 const _dir = dirname(fileURLToPath(import.meta.url));
 const patches: Patches = JSON.parse(
   readFileSync(join(_dir, "patches.json"), "utf-8"),
 ) as Patches;
+const flagData: FlagData = JSON.parse(
+  readFileSync(join(_dir, "flagData.json"), "utf-8"),
+) as FlagData;
 const countries: Country[] = JSON.parse(
   readFileSync(
     join(_dir, "../../src/features/countries/data/countries.json"),
@@ -17,6 +20,7 @@ const countries: Country[] = JSON.parse(
 ) as Country[];
 
 const codes = new Set(countries.map((c) => c.code));
+const additionCodes = new Set(patches.additions.map((a) => a.code));
 
 /** Codes that may appear on a border edge (UN members + territories like GIB used by world-countries). */
 const validBorderTargets = new Set<string>(codes);
@@ -100,7 +104,7 @@ describe("patches.json ↔ countries.json", () => {
     noDupes(patches.peakOver5000mCodes ?? [], (x) => x);
   });
 
-  it("has wikiTitles, aliasOverrides, overrides, flagOverrides keys that exist in dataset", () => {
+  it("has wikiTitles, aliasOverrides, overrides keys that exist in dataset", () => {
     for (const k of Object.keys(patches.wikiTitles ?? {})) {
       expect(codes.has(k), `wikiTitles: ${k}`).toBe(true);
     }
@@ -109,9 +113,6 @@ describe("patches.json ↔ countries.json", () => {
     }
     for (const k of Object.keys(patches.overrides)) {
       expect(codes.has(k), `overrides: ${k}`).toBe(true);
-    }
-    for (const k of Object.keys(patches.flagOverrides ?? {})) {
-      expect(codes.has(k), `flagOverrides: ${k}`).toBe(true);
     }
   });
 
@@ -136,5 +137,32 @@ describe("patches structural invariants", () => {
   it("exposes non-empty core collections", () => {
     expect(patches.middleEastCodes?.length).toBeGreaterThan(0);
     expect(patches.additions.length).toBeGreaterThan(0);
+  });
+});
+
+describe("flagData.json ↔ countries.json", () => {
+  it("covers every world-country code (additions carry flags inline)", () => {
+    for (const c of countries) {
+      if (additionCodes.has(c.code)) continue;
+      expect(flagData[c.code], `flagData missing: ${c.code}`).toBeDefined();
+    }
+  });
+
+  it("has no flagData key absent from the dataset", () => {
+    for (const code of Object.keys(flagData)) {
+      expect(codes.has(code), `flagData stray code: ${code}`).toBe(true);
+    }
+  });
+
+  it("has non-empty flagColors and an array of flagSymbols for each entry", () => {
+    for (const [code, entry] of Object.entries(flagData)) {
+      expect(
+        entry.flagColors.length,
+        `flagColors empty: ${code}`,
+      ).toBeGreaterThan(0);
+      expect(Array.isArray(entry.flagSymbols), `flagSymbols: ${code}`).toBe(
+        true,
+      );
+    }
   });
 });

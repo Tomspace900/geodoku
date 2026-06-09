@@ -5,6 +5,7 @@ import {
   computeOriginalityScore,
   formatRarityPercent,
   originalityToGrade,
+  raritySharePercent,
   rarityToTier,
 } from "../rarity";
 import { createInitialState } from "../reducer";
@@ -41,12 +42,13 @@ describe("rarityToTier", () => {
 });
 
 describe("formatRarityPercent", () => {
-  it("returns <1% for 0", () => {
-    expect(formatRarityPercent(0)).toBe("<1%");
+  it("returns 0% for 0", () => {
+    expect(formatRarityPercent(0)).toBe("0%");
   });
 
-  it("returns <1% for very small values like 0.003", () => {
-    expect(formatRarityPercent(0.003)).toBe("<1%");
+  it("rounds very small values to nearest integer", () => {
+    expect(formatRarityPercent(0.003)).toBe("0%");
+    expect(formatRarityPercent(0.006)).toBe("1%");
   });
 
   it("returns 50% for 0.5", () => {
@@ -55,6 +57,13 @@ describe("formatRarityPercent", () => {
 
   it("returns 100% for 1", () => {
     expect(formatRarityPercent(1)).toBe("100%");
+  });
+});
+
+describe("raritySharePercent", () => {
+  it("matches formatRarityPercent without suffix", () => {
+    expect(raritySharePercent(0.083)).toBe(8);
+    expect(`${raritySharePercent(0.25)}%`).toBe(formatRarityPercent(0.25));
   });
 });
 
