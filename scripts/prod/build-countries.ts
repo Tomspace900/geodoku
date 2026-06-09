@@ -3,8 +3,9 @@
  *
  * Sources:
  * - world-countries npm (v5): name.common (EN), translations.fra.common (FR), cca2
- * - REST Countries v3.1 API: population + flags.alt (field=cca3,population,flags)
- * - scripts/prod/patches.json: overrides, additions, aliasOverrides, geo/events/political lists, flagOverrides
+ * - REST Countries v3.1 API: population (field=cca3,population)
+ * - scripts/prod/flagData.json: curated flagColors / flagSymbols / flagLayout (truth table)
+ * - scripts/prod/patches.json: overrides, additions, aliasOverrides, geo/events/political lists
  *
  * Name localisation strategy:
  * - EN: world-countries `name.common` (authoritative English name)
@@ -20,6 +21,7 @@ import { resolve } from "node:path";
 import rawWorldCountries from "world-countries";
 import type { Country } from "../../src/features/countries/types.ts";
 import {
+  type FlagData,
   type Patches,
   type RcEnrichRow,
   type RcEnrichment,
@@ -27,10 +29,9 @@ import {
   buildAliases,
   deriveContinent,
   deriveWaterAccess,
+  flagFieldsForCode,
   gameplayArraysForCode,
   mapLanguages,
-  mergeFlagFields,
-  parseFlagFromAlt,
   physicalFeaturesForCode,
   rcEnrichmentMapFromRows,
   regimeForCode,
@@ -56,7 +57,7 @@ interface WCEntry {
 }
 
 const REST_COUNTRIES_URL =
-  "https://restcountries.com/v3.1/all?fields=cca3,population,flags";
+  "https://restcountries.com/v3.1/all?fields=cca3,population";
 const WIKIPEDIA_PAGEVIEWS_API =
   "https://wikimedia.org/api/rest_v1/metrics/pageviews/per-article/en.wikipedia/all-access/user";
 
@@ -286,10 +287,13 @@ async function main(): Promise<void> {
 
   const rcByCca3 = await fetchRcEnrichment();
 
-  // 1. Load patches
+  // 1. Load patches + curated flag truth table
   const patches = JSON.parse(
     readFileSync(resolve(root, "scripts/prod/patches.json"), "utf-8"),
   ) as Patches;
+  const flagData = JSON.parse(
+    readFileSync(resolve(root, "scripts/prod/flagData.json"), "utf-8"),
+  ) as FlagData;
   const wikiTitles = patches.wikiTitles ?? {};
 
   // 2. Filter world-countries to UN members + explicit inclusions
@@ -300,11 +304,9 @@ async function main(): Promise<void> {
   const fromWC: Country[] = filtered.map((c) => {
     const rc = rcByCca3.get(c.cca3);
     const pop = rc?.population ?? 0;
-    const parsed = parseFlagFromAlt(rc?.flagAlt);
-    const { flagColors, flagSymbols } = mergeFlagFields(
+    const { flagColors, flagSymbols, flagLayout } = flagFieldsForCode(
       c.cca3,
-      parsed,
-      patches,
+      flagData,
     );
     const gameplay = gameplayArraysForCode(c.cca3, patches);
 
@@ -329,6 +331,7 @@ async function main(): Promise<void> {
       subregion: c.subregion ?? "",
       flagColors,
       flagSymbols,
+      flagLayout,
       events: gameplay.events,
       groups: gameplay.groups,
       geoTags: gameplay.geoTags,
@@ -344,17 +347,12 @@ async function main(): Promise<void> {
     return country;
   });
 
-  // 4. Merge manual additions (e.g. Kosovo, absent from world-countries)
+  // 4. Merge manual additions (e.g. Kosovo, absent from world-countries).
+  // Additions carry their own curated flagColors / flagSymbols / flagLayout inline.
   const additions: Country[] = patches.additions.map((add) => {
     const merged: Country = { ...add };
     const rc = rcByCca3.get(merged.code);
     if (rc && merged.population <= 0) merged.population = rc.population;
-    const parsed = parseFlagFromAlt(rc?.flagAlt);
-    if (merged.flagColors.length === 0 || merged.flagSymbols.length === 0) {
-      const m = mergeFlagFields(merged.code, parsed, patches);
-      if (merged.flagColors.length === 0) merged.flagColors = m.flagColors;
-      if (merged.flagSymbols.length === 0) merged.flagSymbols = m.flagSymbols;
-    }
     const g = gameplayArraysForCode(merged.code, patches);
     merged.events = g.events;
     merged.groups = g.groups;
@@ -431,11 +429,14 @@ async function main(): Promise<void> {
     }
     if (!Array.isArray(c.flagColors) || c.flagColors.length === 0) {
       throw new Error(
-        `${c.code}: flagColors must be non-empty (add flagOverrides in patches.json if needed)`,
+        `${c.code}: flagColors must be non-empty (fix scripts/prod/flagData.json)`,
       );
     }
     if (!Array.isArray(c.flagSymbols)) {
       throw new Error(`${c.code}: flagSymbols must be an array`);
+    }
+    if (!Array.isArray(c.flagLayout)) {
+      throw new Error(`${c.code}: flagLayout must be an array`);
     }
     if (!Array.isArray(c.events)) {
       throw new Error(`${c.code}: events must be an array`);

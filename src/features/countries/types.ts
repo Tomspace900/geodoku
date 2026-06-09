@@ -30,7 +30,10 @@ export type FlagSymbol =
   | "circle"
   | "triangle"
   | "animal"
-  | "other";
+  | "plant";
+
+/** Layout normalisé pour les contraintes de drapeau (dataset). */
+export type FlagLayout = "vertical_stripes" | "horizontal_stripes";
 
 export type CountryEvent = "fifa_wc_host" | "summer_olympics_host";
 
@@ -67,6 +70,8 @@ export type Country = {
   flagColors: FlagColor[];
   /** Symboles notables du drapeau (calibrage gameplay). */
   flagSymbols: FlagSymbol[];
+  /** Layout du drapeau (calibrage gameplay). */
+  flagLayout: FlagLayout[];
   /** Événements sportifs majeurs (hôte). */
   events: CountryEvent[];
   /** Regroupements politiques / économiques (EU, G20, NATO, Commonwealth…). */

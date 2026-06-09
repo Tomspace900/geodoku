@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest";
 import type { Country } from "../../src/features/countries/types.ts";
 import {
+  type FlagData,
   type Patches,
   type RcEnrichRow,
   assignPopularity,
@@ -8,10 +9,9 @@ import {
   dedupe,
   deriveContinent,
   deriveWaterAccess,
+  flagFieldsForCode,
   gameplayArraysForCode,
   mapLanguages,
-  mergeFlagFields,
-  parseFlagFromAlt,
   physicalFeaturesForCode,
   rcEnrichmentMapFromRows,
   regimeForCode,
@@ -34,6 +34,7 @@ function minimalCountry(code: string): Country {
     subregion: "",
     flagColors: ["red"],
     flagSymbols: [],
+    flagLayout: [],
     events: [],
     groups: [],
     geoTags: [],
@@ -85,7 +86,7 @@ describe("mapLanguages", () => {
 describe("rcEnrichmentMapFromRows", () => {
   it("merges cca3 string or array, skips bad codes", () => {
     const rows: RcEnrichRow[] = [
-      { cca3: "FRA", population: 1, flags: { alt: "blue white red" } },
+      { cca3: "FRA", population: 1 },
       { cca3: ["GBR", "IMN"], population: 2 },
       { cca3: "bad", population: 99 },
     ];
@@ -93,32 +94,6 @@ describe("rcEnrichmentMapFromRows", () => {
     expect(m.get("FRA")?.population).toBe(1);
     expect(m.get("IMN")?.population).toBe(2);
     expect(m.has("bad")).toBe(false);
-  });
-});
-
-describe("parseFlagFromAlt", () => {
-  it("returns empty for missing alt", () => {
-    expect(parseFlagFromAlt(undefined).flagColors).toEqual([]);
-    expect(parseFlagFromAlt("  ").flagSymbols).toEqual([]);
-  });
-
-  it("detects colors and symbols from prose", () => {
-    const p = parseFlagFromAlt(
-      "A red, blue, white flag with a golden eagle and a cross; green stripe",
-    );
-    expect(p.flagColors).toEqual(
-      expect.arrayContaining(["red", "blue", "white", "green", "yellow"]),
-    );
-    expect(p.flagSymbols).toEqual(expect.arrayContaining(["cross", "animal"]));
-  });
-
-  it("maps ultramarine and other alt words to blue (e.g. Barbados)", () => {
-    const p = parseFlagFromAlt(
-      "Three vertical bands of ultramarine, gold, ultramarine with a black trident",
-    );
-    expect(p.flagColors).toEqual(
-      expect.arrayContaining(["blue", "yellow", "black"]),
-    );
   });
 });
 
@@ -139,29 +114,32 @@ describe("toWikipediaTitle", () => {
   });
 });
 
-describe("mergeFlagFields", () => {
-  const parsed = {
-    flagColors: ["red" as const],
-    flagSymbols: [] as Country["flagSymbols"],
-  };
-  const emptyPatches: Patches = {
-    overrides: {},
-    aliasOverrides: {},
-    additions: [],
+describe("flagFieldsForCode", () => {
+  const flagData: FlagData = {
+    FRA: {
+      flagColors: ["blue", "white", "red"],
+      flagSymbols: [],
+      flagLayout: ["vertical_stripes"],
+    },
+    NOR: {
+      flagColors: ["red", "blue", "white"],
+      flagSymbols: ["cross"],
+      flagLayout: [],
+    },
   };
 
-  it("uses parsed when no flagOverrides entry", () => {
-    expect(mergeFlagFields("FRA", parsed, emptyPatches)).toEqual(parsed);
+  it("returns the curated entry for a known code", () => {
+    expect(flagFieldsForCode("NOR", flagData)).toEqual({
+      flagColors: ["red", "blue", "white"],
+      flagSymbols: ["cross"],
+      flagLayout: [],
+    });
   });
 
-  it("merges from patches.flagOverrides when set", () => {
-    const patches: Patches = {
-      ...emptyPatches,
-      flagOverrides: { FRA: { flagColors: ["blue", "white", "red"] } },
-    };
-    const m = mergeFlagFields("FRA", parsed, patches);
-    expect(m.flagColors).toEqual(["blue", "white", "red"]);
-    expect(m.flagSymbols).toEqual([]);
+  it("throws on a missing entry (no silent incomplete table)", () => {
+    expect(() => flagFieldsForCode("ZZZ", flagData)).toThrow(
+      /missing flagData/,
+    );
   });
 });
 

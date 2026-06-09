@@ -3,8 +3,7 @@
     "AUS": { "waterAccess": "coastal" },
     "LKA": {
       "waterAccess": "island",
-      "borders": [],
-      "flagColors": ["yellow", "orange", "red", "green"]
+      "borders": []
     },
     "ALB": { "borders": ["MNE", "GRC", "MKD", "XKX"] },
     "MKD": { "borders": ["ALB", "BGR", "GRC", "XKX", "SRB"] },
@@ -41,13 +40,7 @@
         "SUR",
         "CHE"
       ]
-    },
-    "AFG": { "flagColors": ["black", "red", "green", "white"] },
-    "CYP": { "flagColors": ["green", "white", "orange"] },
-    "BLZ": { "flagColors": ["red", "blue", "white"] },
-    "CAN": { "flagSymbols": ["other"] },
-    "LBN": { "flagSymbols": ["other"] },
-    "MEX": { "flagSymbols": ["animal"] }
+    }
   },
   "aliasOverrides": {
     "USA": {
@@ -495,7 +488,6 @@
     "UGA",
     "USA"
   ],
-  "flagOverrides": {},
   "additions": [
     {
       "code": "XKX",
@@ -514,7 +506,8 @@
       "latitude": 42.6,
       "subregion": "Southeast Europe",
       "flagColors": ["blue", "yellow", "white"],
-      "flagSymbols": ["other"],
+      "flagSymbols": ["star"],
+      "flagLayout": [],
       "events": [],
       "groups": [],
       "geoTags": [],

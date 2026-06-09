@@ -4,6 +4,7 @@
 import type {
   Country,
   FlagColor,
+  FlagLayout,
   FlagSymbol,
   PhysicalFeature,
   Regime,
@@ -32,20 +33,29 @@ export interface Patches {
   mediterraneanCoastCodes?: string[];
   caribbeanCoastCodes?: string[];
   peakOver5000mCodes?: string[];
-  flagOverrides?: Record<
-    string,
-    { flagColors?: FlagColor[]; flagSymbols?: FlagSymbol[] }
-  >;
 }
 
-/** REST Countries v3.1 row (fields=cca3,population,flags) */
+/**
+ * Curated flag truth table (`scripts/prod/flagData.json`), keyed by ISO3 code.
+ * Source of truth for `flagColors` / `flagSymbols` / `flagLayout` — replaces the old free-text
+ * `flags.alt` heuristic. Hand-curated (interpretive, near-static reference data).
+ */
+export type FlagData = Record<
+  string,
+  {
+    flagColors: FlagColor[];
+    flagSymbols: FlagSymbol[];
+    flagLayout: FlagLayout[];
+  }
+>;
+
+/** REST Countries v3.1 row (fields=cca3,population) */
 export interface RcEnrichRow {
   cca3?: string | string[];
   population: number;
-  flags?: { alt?: string };
 }
 
-export type RcEnrichment = { population: number; flagAlt?: string };
+export type RcEnrichment = { population: number };
 
 /**
  * ISO 639-3 → ISO 639-1 conversion table.
@@ -230,88 +240,11 @@ export function rcEnrichmentMapFromRows(
     const codes = Array.isArray(raw) ? raw : [raw];
     for (const code of codes) {
       if (typeof code === "string" && /^[A-Z]{3}$/.test(code)) {
-        map.set(code, {
-          population: row.population,
-          flagAlt: row.flags?.alt,
-        });
+        map.set(code, { population: row.population });
       }
     }
   }
   return map;
-}
-
-/**
- * Heuristic parser for REST Countries `flags.alt` (English prose).
- *
- * **Important — there is no guarantee of completeness or correctness:**
- * - The API does not expose structured color data; `flags.alt` is free-text that can
- *   change anytime. We only match a growing list of English colour words and aliases.
- * - Output is coerced to the small `FlagColor` union (gameplay), so many real-world
- *   shades (e.g. violet, bicolour phrasing) are not represented literally.
- * - Wording that omits a colour, uses unusual vocabulary, or describes only an emblem
- *   can miss colours; some cases are fixed in `patches.json` (`overrides` / `flagOverrides`)
- *   for politics, heraldry, or intentional game balance.
- */
-export function parseFlagFromAlt(alt: string | undefined): {
-  flagColors: FlagColor[];
-  flagSymbols: FlagSymbol[];
-} {
-  if (!alt || alt.trim() === "") {
-    return { flagColors: [], flagSymbols: [] };
-  }
-  const t = alt.toLowerCase();
-  const colorSet = new Set<FlagColor>();
-  // Heuristic colour words in REST `flags.alt` (English) → normalized `FlagColor`.
-  if (
-    /\b(red|crimson|scarlet|maroon|burgundy|vermilion|carmine|ruby|gules)\b/.test(
-      t,
-    )
-  ) {
-    colorSet.add("red");
-  }
-  if (
-    /\b(blue|navy|ultramarine|azure|sapphire|indigo|cerulean|cobalt|denim|periwinkle|admiralty|columbia[ -]?blue|royal[ -]blue|midnight[ -]blue|light[ -]blue|dark[ -]blue|sky[ -]blue|turquoise|aqua|aquamarine|teal)\b/.test(
-      t,
-    )
-  ) {
-    colorSet.add("blue");
-  }
-  if (
-    /\b(green|emerald|jade|olive|lime|sage|viridian|spring[ -]green|forest[ -]green|sea[ -]green|hunter[ -]green|kelly[ -]green|malachite)\b/.test(
-      t,
-    )
-  ) {
-    colorSet.add("green");
-  }
-  if (
-    /\b(yellow|gold|golden|amber|saffron|lemon|canary|ochre|ocre|buff|blonde|straw)\b/.test(
-      t,
-    )
-  ) {
-    colorSet.add("yellow");
-  }
-  if (/\b(white|silver|platinum|cream|pearl|ivory|snow|argent)\b/.test(t)) {
-    colorSet.add("white");
-  }
-  if (/\b(black|sable|charcoal|ebony|onyx)\b/.test(t)) colorSet.add("black");
-  if (/\b(orange|tangerine|apricot|peach|copper)\b/.test(t)) {
-    colorSet.add("orange");
-  }
-
-  const symbolSet = new Set<FlagSymbol>();
-  if (/\bstars?\b/.test(t)) symbolSet.add("star");
-  if (/\bcrescent\b/.test(t)) symbolSet.add("crescent");
-  if (/\bcross\b/.test(t)) symbolSet.add("cross");
-  if (/\bsun\b/.test(t)) symbolSet.add("sun");
-  if (/\b(circle|disc|disk)\b/.test(t)) symbolSet.add("circle");
-  if (/\btriangle\b/.test(t)) symbolSet.add("triangle");
-  if (/\b(dragon|eagle|lion|leopard|bear|animal)\b/.test(t))
-    symbolSet.add("animal");
-
-  return {
-    flagColors: [...colorSet],
-    flagSymbols: [...symbolSet],
-  };
 }
 
 export function dedupe(arr: string[]): string[] {
@@ -334,19 +267,25 @@ export function toWikipediaTitle(name: string): string {
   return name.replaceAll(" ", "_");
 }
 
-export function mergeFlagFields(
+/**
+ * Resolves curated flag fields for a country from the flag truth table.
+ * Throws on a missing entry so an incomplete table can never ship silently.
+ */
+export function flagFieldsForCode(
   code: string,
-  parsed: { flagColors: FlagColor[]; flagSymbols: FlagSymbol[] },
-  patches: Patches,
-): Pick<Country, "flagColors" | "flagSymbols"> {
-  const o = patches.flagOverrides?.[code];
-  if (o?.flagColors != null || o?.flagSymbols != null) {
-    return {
-      flagColors: o.flagColors ?? parsed.flagColors,
-      flagSymbols: o.flagSymbols ?? parsed.flagSymbols,
-    };
+  flagData: FlagData,
+): Pick<Country, "flagColors" | "flagSymbols" | "flagLayout"> {
+  const entry = flagData[code];
+  if (!entry) {
+    throw new Error(
+      `${code}: missing flagData entry (add it to scripts/prod/flagData.json)`,
+    );
   }
-  return parsed;
+  return {
+    flagColors: entry.flagColors,
+    flagSymbols: entry.flagSymbols,
+    flagLayout: entry.flagLayout,
+  };
 }
 
 export function gameplayArraysForCode(
