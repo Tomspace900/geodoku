@@ -398,7 +398,7 @@ console.log("\n═════════════════════�
 console.log("  COLD-START ROLLOUT (mature history + held-out batch)");
 console.log("═══════════════════════════════════════════════════════");
 
-const COLDSTART_ROLLOUT_DAYS = 40;
+const COLDSTART_ROLLOUT_DAYS = 50;
 // Hold out every 4th constraint (spread across breadths) as the synthetic batch.
 const heldOut = new Set(
   CONSTRAINTS.filter((_, i) => i % 4 === 0).map((c) => c.id as string),

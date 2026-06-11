@@ -118,14 +118,21 @@ describe("selectNextGrid", () => {
     countryPool: [] as string[],
   }));
 
-  it("caps newcomers per grid once the history is mature", () => {
-    // n1,n2 never appear in the mature history → newcomers; e* are established.
-    // gridBad packs 2 newcomers → would win on freshness, but is filtered out.
+  it("caps newcomers per grid once the history is mature (newcomer = used < graduation)", () => {
+    // Mature history where n1 appears once (1 use < graduation → still a newcomer) and
+    // n2 never. Counting uses, not mere presence, keeps n1 budgeted: a grid carrying both
+    // exceeds the 1-newcomer cap and is filtered, so the single-newcomer grid wins.
+    const history = [
+      { constraintIds: ["n1", "e1", "e2", "e3", "e4", "e5"], countryPool: [] },
+      ...Array.from({ length: KNOWN_CONSTRAINT_WINDOW - 1 }, () => ({
+        constraintIds: ["e1", "e2", "e3", "e4", "e5", "e6"],
+        countryPool: [] as string[],
+      })),
+    ];
     const gridBad = makeGrid("bad", ["n1", "n2", "e1", "e2", "e3", "e4"], []);
-    // gridGood introduces only 1 newcomer → eligible.
-    const gridGood = makeGrid("good", ["n1", "e1", "e2", "e3", "e4", "e5"], []);
+    const gridGood = makeGrid("good", ["n2", "e1", "e2", "e3", "e4", "e5"], []);
 
-    const result = selectNextGrid([gridBad, gridGood], matureHistory);
+    const result = selectNextGrid([gridBad, gridGood], history);
     expect(result!.grid._id).toBe("good");
   });
 

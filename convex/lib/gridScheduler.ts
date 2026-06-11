@@ -4,6 +4,7 @@ import {
   HISTORY_WINDOW,
   KNOWN_CONSTRAINT_WINDOW,
   MAX_NEW_CONSTRAINTS_PER_GRID,
+  NEWCOMER_GRADUATION_USES,
   OVERUSE_CONSTRAINT_MALUS,
   type PoolGridMetadata,
 } from "./gridConstants";
@@ -78,11 +79,14 @@ export function selectNextGrid(
 
 /**
  * Restricts the pool to grids introducing at most MAX_NEW_CONSTRAINTS_PER_GRID
- * "newcomer" constraints — those absent from the trailing KNOWN_CONSTRAINT_WINDOW of
- * published grids — so a freshly-added batch is woven in gradually instead of flooding
- * the schedule. Skipped until the history spans a full KNOWN_CONSTRAINT_WINDOW: a shorter
- * history means from-scratch seeding, where every constraint is legitimately new and must
- * not be throttled. Falls back to the full pool if the cap leaves nothing schedulable.
+ * "newcomer" constraints — those used fewer than NEWCOMER_GRADUATION_USES times across
+ * the trailing KNOWN_CONSTRAINT_WINDOW — so a freshly-added batch is woven in gradually
+ * instead of flooding the schedule. Counting uses (not mere presence) keeps a just-
+ * debuted constraint budgeted until it graduates, stopping it from recurring as a
+ * passenger in the days right after its debut. Skipped until the history spans a full
+ * KNOWN_CONSTRAINT_WINDOW: a shorter history means from-scratch seeding, where every
+ * constraint is legitimately new and must not be throttled. Falls back to the full pool
+ * if the cap leaves nothing schedulable.
  */
 function withinNewConstraintBudget(
   pool: PoolGrid[],
@@ -90,8 +94,9 @@ function withinNewConstraintBudget(
 ): PoolGrid[] {
   if (recentGrids.length < KNOWN_CONSTRAINT_WINDOW) return pool;
 
-  const seen = new Set(recentGrids.flatMap((g) => g.constraintIds));
-  const isNewcomer = (id: string) => !seen.has(id);
+  const usage = countUsage(recentGrids.flatMap((g) => g.constraintIds));
+  const isNewcomer = (id: string) =>
+    (usage[id] ?? 0) < NEWCOMER_GRADUATION_USES;
 
   const eligible = pool.filter(
     (g) =>
