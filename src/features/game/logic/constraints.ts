@@ -56,7 +56,6 @@ export type ConstraintId =
   | "flag_has_crescent"
   | "flag_has_cross"
   | "flag_has_star"
-  | "flag_two_colors"
   | "language_arabic"
   | "language_english"
   | "language_french"
@@ -90,6 +89,7 @@ export type ConstraintId =
   | "water_island"
   | "water_landlocked"
   // Archivées : hors génération, conservées pour rejouer d'anciennes grilles (cf. ARCHIVED_CONSTRAINTS).
+  | "flag_two_colors"
   | "area_gt_2M"
   | "area_gt_500k"
   | "area_lt_1k"
@@ -404,13 +404,6 @@ export const CONSTRAINTS: Constraint[] = [
     difficulty: "hard",
     predicate: (c) => c.flagSymbols.includes("animal"),
   },
-  {
-    id: "flag_two_colors",
-    labelKey: "constraint.flag_two_colors",
-    category: "flag",
-    difficulty: "medium",
-    predicate: (c) => c.flagColors.length === 2,
-  },
 
   // ── Latitude ───────────────────────────────────────────────────────────────
   {
@@ -624,7 +617,9 @@ export const CONSTRAINTS: Constraint[] = [
 
 // ─── Contraintes archivées ──────────────────────────────────────────────────────
 // Seuils quantitatifs (« > 500 000 km² », « densité > 300 ») retirés au profit des
-// comparaisons à un pays-repère. On les conserve **intégralement** car d'anciennes
+// comparaisons à un pays-repère. `flag_two_colors` retirée : le décompte binaire
+// `flagColors.length === 2` ne reflète pas fidèlement les drapeaux réels.
+// On les conserve **intégralement** car d'anciennes grilles publiées les référencent
 // grilles publiées les référencent encore : rejouer une grille a besoin du label ET
 // du prédicat (`validateGuess` évalue le prédicat live). Elles ne sont JAMAIS dans
 // `CONSTRAINTS`, donc jamais générées ; seul `CONSTRAINT_BY_ID` les expose.
@@ -640,6 +635,13 @@ const POP_LT_1M = 1_000_000;
 const POP_LT_2_5M = 2_500_000;
 
 export const ARCHIVED_CONSTRAINTS: Constraint[] = [
+  {
+    id: "flag_two_colors",
+    labelKey: "constraint.flag_two_colors",
+    category: "flag",
+    difficulty: "medium",
+    predicate: (c) => c.flagColors.length === 2,
+  },
   {
     id: "area_gt_2M",
     labelKey: "constraint.area_gt_2M",
