@@ -1,4 +1,5 @@
 import type { TKey } from "../../../i18n/types.ts";
+import countriesData from "../../countries/data/countries.json";
 import type { Country } from "../../countries/types.ts";
 
 // ─── Types ────────────────────────────────────────────────────────────────────
@@ -18,15 +19,20 @@ export type ConstraintCategory =
   | "political"
   | "regime"
   | "physical"
-  | "density";
+  | "density"
+  | "nature"
+  | "society"
+  | "ocean";
 
 export type ConstraintDifficulty = "easy" | "medium" | "hard";
 
 /** Identifiant stable d'une contrainte (clé i18n sans le préfixe `constraint.`). */
 export type ConstraintId =
-  | "area_gt_2M"
-  | "area_gt_500k"
-  | "area_lt_1k"
+  | "area_larger_india"
+  | "area_larger_mexico"
+  | "area_larger_france"
+  | "area_smaller_belgium"
+  | "area_smaller_luxembourg"
   | "borders_brazil"
   | "borders_china"
   | "borders_india"
@@ -40,22 +46,30 @@ export type ConstraintId =
   | "continent_north_america"
   | "continent_oceania"
   | "continent_south_america"
-  | "density_high"
-  | "density_low"
+  | "density_more_netherlands"
+  | "density_more_japan"
+  | "density_less_russia"
+  | "density_less_canada"
   | "event_fifa_wc_host"
   | "event_summer_olympics_host"
+  | "flag_has_animal"
   | "flag_has_crescent"
   | "flag_has_cross"
   | "flag_has_star"
+  | "flag_two_colors"
   | "language_arabic"
   | "language_english"
   | "language_french"
-  | "language_multilingual"
   | "language_portuguese"
   | "language_russian"
   | "language_spanish"
   | "latitude_polar"
   | "latitude_south_hemisphere"
+  | "nature_desert"
+  | "nature_rainforest"
+  | "ocean_atlantic"
+  | "ocean_indian"
+  | "ocean_pacific"
   | "physical_caribbean_coast"
   | "physical_crosses_equator"
   | "physical_mediterranean_coast"
@@ -64,11 +78,12 @@ export type ConstraintId =
   | "political_eu"
   | "political_g20"
   | "political_nato"
-  | "population_gt_100M"
-  | "population_gt_30M"
-  | "population_lt_1M"
-  | "population_lt_2_5M"
+  | "population_more_germany"
+  | "population_more_canada"
+  | "population_less_iceland"
   | "regime_monarchy"
+  | "society_capital_not_largest"
+  | "society_drives_on_left"
   | "subregion_caribbean"
   | "subregion_middle_east"
   | "subregion_southeast_asia"
@@ -84,18 +99,23 @@ export type Constraint = {
   predicate: (country: Country) => boolean;
 };
 
-// ─── Area thresholds (km²) ────────────────────────────────────────────────────
+// ─── Comparaisons à un pays-repère (superficie / population / densité) ────────
+// Plutôt qu'un seuil brut (« > 2 M km² »), on compare à un pays connu (« plus grand
+// que la France »). Le seuil = la valeur LIVE du pays-repère (auto-cohérent même si
+// countries.json est régénéré) ; le chiffre affiché vit dans le label i18n.
 
-const AREA_GT_2M = 2_000_000;
-const AREA_GT_500K = 500_000;
-const AREA_LT_1K = 1_000;
+const ALL_COUNTRIES = countriesData as unknown as Country[];
 
-// ─── Population thresholds (hab.) — calibrés sur countries.json (197 pays) ─────
+/** Pays-repère par code ISO3 (lève si absent du dataset). */
+function ref(code: string): Country {
+  const country = ALL_COUNTRIES.find((c) => c.code === code);
+  if (!country) throw new Error(`Constraint ref country not found: ${code}`);
+  return country;
+}
 
-const POP_GT_100M = 100_000_000;
-const POP_GT_30M = 30_000_000;
-const POP_LT_2_5M = 2_500_000;
-const POP_LT_1M = 1_000_000;
+function densityOf(c: Country): number {
+  return c.population / c.areaKm2;
+}
 
 // ─── Border count thresholds ──────────────────────────────────────────────────
 
@@ -105,13 +125,8 @@ const BORDERS_MIN_7 = 7;
 
 // ─── Latitude thresholds (degrés décimaux) ────────────────────────────────────
 
-/** |lat| > POLAR_ABS_LAT → pays du grand nord/sud (Scandinavie, Canada, Russie). */
+/** |lat| > POLAR_ABS_LAT → pays au-delà du 55ᵉ parallèle nord (Scandinavie, Canada, Russie). */
 const POLAR_ABS_LAT = 55;
-
-// ─── Density thresholds (hab./km²) ────────────────────────────────────────────
-
-const DENSITY_HIGH = 300;
-const DENSITY_LOW = 10;
 
 // ─── ISO 639-1 language codes ─────────────────────────────────────────────────
 
@@ -245,57 +260,64 @@ export const CONSTRAINTS: Constraint[] = [
     predicate: (c) => c.borders.includes(CODE_IND),
   },
 
-  // ── Superficie ─────────────────────────────────────────────────────────────
+  // ── Superficie — comparaison à un pays-repère ──────────────────────────────
   {
-    id: "area_gt_2M",
-    labelKey: "constraint.area_gt_2M",
+    id: "area_larger_india",
+    labelKey: "constraint.area_larger_india",
     category: "area",
-    difficulty: "medium",
-    predicate: (c) => c.areaKm2 > AREA_GT_2M,
+    difficulty: "hard",
+    predicate: (c) => c.areaKm2 > ref("IND").areaKm2,
   },
   {
-    id: "area_gt_500k",
-    labelKey: "constraint.area_gt_500k",
+    id: "area_larger_mexico",
+    labelKey: "constraint.area_larger_mexico",
     category: "area",
-    difficulty: "medium",
-    predicate: (c) => c.areaKm2 > AREA_GT_500K,
+    difficulty: "hard",
+    predicate: (c) => c.areaKm2 > ref("MEX").areaKm2,
   },
   {
-    id: "area_lt_1k",
-    labelKey: "constraint.area_lt_1k",
+    id: "area_larger_france",
+    labelKey: "constraint.area_larger_france",
     category: "area",
     difficulty: "medium",
-    predicate: (c) => c.areaKm2 < AREA_LT_1K,
+    predicate: (c) => c.areaKm2 > ref("FRA").areaKm2,
+  },
+  {
+    id: "area_smaller_belgium",
+    labelKey: "constraint.area_smaller_belgium",
+    category: "area",
+    difficulty: "easy",
+    predicate: (c) => c.areaKm2 < ref("BEL").areaKm2,
+  },
+  {
+    id: "area_smaller_luxembourg",
+    labelKey: "constraint.area_smaller_luxembourg",
+    category: "area",
+    difficulty: "medium",
+    predicate: (c) => c.areaKm2 < ref("LUX").areaKm2,
   },
 
-  // ── Population ─────────────────────────────────────────────────────────────
+  // ── Population — comparaison à un pays-repère ──────────────────────────────
   {
-    id: "population_gt_100M",
-    labelKey: "constraint.population_gt_100M",
+    id: "population_more_germany",
+    labelKey: "constraint.population_more_germany",
     category: "population",
     difficulty: "hard",
-    predicate: (c) => c.population > POP_GT_100M,
+    predicate: (c) => c.population > ref("DEU").population,
   },
   {
-    id: "population_gt_30M",
-    labelKey: "constraint.population_gt_30M",
-    category: "population",
-    difficulty: "easy",
-    predicate: (c) => c.population > POP_GT_30M,
-  },
-  {
-    id: "population_lt_2_5M",
-    labelKey: "constraint.population_lt_2_5M",
-    category: "population",
-    difficulty: "easy",
-    predicate: (c) => c.population < POP_LT_2_5M,
-  },
-  {
-    id: "population_lt_1M",
-    labelKey: "constraint.population_lt_1M",
+    id: "population_more_canada",
+    labelKey: "constraint.population_more_canada",
     category: "population",
     difficulty: "medium",
-    predicate: (c) => c.population < POP_LT_1M,
+    predicate: (c) => c.population > ref("CAN").population,
+  },
+  {
+    id: "population_less_iceland",
+    labelKey: "constraint.population_less_iceland",
+    category: "population",
+    difficulty: "medium",
+    predicate: (c) => c.population < ref("ISL").population,
   },
 
   // ── Langue ─────────────────────────────────────────────────────────────────
@@ -341,13 +363,6 @@ export const CONSTRAINTS: Constraint[] = [
     difficulty: "medium",
     predicate: (c) => c.officialLanguages.includes(LANG_RU),
   },
-  {
-    id: "language_multilingual",
-    labelKey: "constraint.language_multilingual",
-    category: "language",
-    difficulty: "easy",
-    predicate: (c) => c.officialLanguages.length >= 2,
-  },
 
   // ── Drapeau ────────────────────────────────────────────────────────────────
   {
@@ -370,6 +385,20 @@ export const CONSTRAINTS: Constraint[] = [
     category: "flag",
     difficulty: "medium",
     predicate: (c) => c.flagSymbols.includes("cross"),
+  },
+  {
+    id: "flag_has_animal",
+    labelKey: "constraint.flag_has_animal",
+    category: "flag",
+    difficulty: "hard",
+    predicate: (c) => c.flagSymbols.includes("animal"),
+  },
+  {
+    id: "flag_two_colors",
+    labelKey: "constraint.flag_two_colors",
+    category: "flag",
+    difficulty: "medium",
+    predicate: (c) => c.flagColors.length === 2,
   },
 
   // ── Latitude ───────────────────────────────────────────────────────────────
@@ -496,19 +525,88 @@ export const CONSTRAINTS: Constraint[] = [
     predicate: (c) => c.physicalFeatures.includes("peak_over_5000m"),
   },
 
-  // ── Densité de population ──────────────────────────────────────────────────
+  // ── Densité de population — comparaison à un pays-repère ───────────────────
   {
-    id: "density_high",
-    labelKey: "constraint.density_high",
+    id: "density_more_netherlands",
+    labelKey: "constraint.density_more_netherlands",
     category: "density",
-    difficulty: "medium",
-    predicate: (c) => c.population / c.areaKm2 > DENSITY_HIGH,
+    difficulty: "hard",
+    predicate: (c) => densityOf(c) > densityOf(ref("NLD")),
   },
   {
-    id: "density_low",
-    labelKey: "constraint.density_low",
+    id: "density_more_japan",
+    labelKey: "constraint.density_more_japan",
     category: "density",
     difficulty: "medium",
-    predicate: (c) => c.population / c.areaKm2 < DENSITY_LOW,
+    predicate: (c) => densityOf(c) > densityOf(ref("JPN")),
+  },
+  {
+    id: "density_less_russia",
+    labelKey: "constraint.density_less_russia",
+    category: "density",
+    difficulty: "hard",
+    predicate: (c) => densityOf(c) < densityOf(ref("RUS")),
+  },
+  {
+    id: "density_less_canada",
+    labelKey: "constraint.density_less_canada",
+    category: "density",
+    difficulty: "hard",
+    predicate: (c) => densityOf(c) < densityOf(ref("CAN")),
+  },
+
+  // ── Nature — biomes ────────────────────────────────────────────────────────
+  {
+    id: "nature_desert",
+    labelKey: "constraint.nature_desert",
+    category: "nature",
+    difficulty: "medium",
+    predicate: (c) => c.physicalFeatures.includes("has_desert"),
+  },
+  {
+    id: "nature_rainforest",
+    labelKey: "constraint.nature_rainforest",
+    category: "nature",
+    difficulty: "medium",
+    predicate: (c) => c.physicalFeatures.includes("rainforest"),
+  },
+
+  // ── Océans — façade maritime ───────────────────────────────────────────────
+  {
+    id: "ocean_atlantic",
+    labelKey: "constraint.ocean_atlantic",
+    category: "ocean",
+    difficulty: "easy",
+    predicate: (c) => c.physicalFeatures.includes("atlantic_coast"),
+  },
+  {
+    id: "ocean_pacific",
+    labelKey: "constraint.ocean_pacific",
+    category: "ocean",
+    difficulty: "easy",
+    predicate: (c) => c.physicalFeatures.includes("pacific_coast"),
+  },
+  {
+    id: "ocean_indian",
+    labelKey: "constraint.ocean_indian",
+    category: "ocean",
+    difficulty: "medium",
+    predicate: (c) => c.physicalFeatures.includes("indian_ocean_coast"),
+  },
+
+  // ── Société ────────────────────────────────────────────────────────────────
+  {
+    id: "society_drives_on_left",
+    labelKey: "constraint.society_drives_on_left",
+    category: "society",
+    difficulty: "easy",
+    predicate: (c) => c.geoTags.includes("drives_on_left"),
+  },
+  {
+    id: "society_capital_not_largest",
+    labelKey: "constraint.society_capital_not_largest",
+    category: "society",
+    difficulty: "medium",
+    predicate: (c) => c.geoTags.includes("capital_not_largest"),
   },
 ];

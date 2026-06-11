@@ -155,6 +155,8 @@ describe("gameplayArraysForCode", () => {
     natoMemberCodes: ["FRA", "USA"],
     commonwealthMemberCodes: ["GBR", "IND"],
     middleEastCodes: ["SYR"],
+    driveOnLeftCodes: ["JPN"],
+    capitalNotLargestCityCodes: ["USA"],
   };
 
   it("stacks all matching tags for one code", () => {
@@ -171,6 +173,15 @@ describe("gameplayArraysForCode", () => {
   it("adds middle_east geo tag when listed", () => {
     const g = gameplayArraysForCode("SYR", patches);
     expect(g.geoTags).toEqual(["middle_east"]);
+  });
+
+  it("adds society geo tags when listed", () => {
+    expect(gameplayArraysForCode("JPN", patches).geoTags).toEqual([
+      "drives_on_left",
+    ]);
+    expect(gameplayArraysForCode("USA", patches).geoTags).toEqual([
+      "capital_not_largest",
+    ]);
   });
 });
 
@@ -202,6 +213,11 @@ describe("physicalFeaturesForCode", () => {
     mediterraneanCoastCodes: ["FRA", "ITA"],
     caribbeanCoastCodes: ["COL", "VEN"],
     peakOver5000mCodes: ["FRA", "NPL"],
+    desertCodes: ["DZA"],
+    rainforestCodes: ["COD"],
+    atlanticCoastCodes: ["PRT"],
+    pacificCoastCodes: ["CHL"],
+    indianOceanCoastCodes: ["KEN"],
   };
 
   it("stacks all matching physical features", () => {
@@ -211,6 +227,16 @@ describe("physicalFeaturesForCode", () => {
     ]);
     expect(physicalFeaturesForCode("BRA", patches)).toEqual([
       "equator_crosser",
+    ]);
+  });
+
+  it("stacks biome and ocean features", () => {
+    expect(physicalFeaturesForCode("DZA", patches)).toEqual(["has_desert"]);
+    expect(physicalFeaturesForCode("COD", patches)).toEqual(["rainforest"]);
+    expect(physicalFeaturesForCode("PRT", patches)).toEqual(["atlantic_coast"]);
+    expect(physicalFeaturesForCode("CHL", patches)).toEqual(["pacific_coast"]);
+    expect(physicalFeaturesForCode("KEN", patches)).toEqual([
+      "indian_ocean_coast",
     ]);
   });
 

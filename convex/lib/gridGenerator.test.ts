@@ -28,7 +28,11 @@ function popularityOf(code: string): number {
 describe("intersect", () => {
   it("returns a sorted, stable result", () => {
     const matches = buildConstraintMatches();
-    const result = intersect("continent_europe", "area_lt_1k", matches);
+    const result = intersect(
+      "continent_europe",
+      "area_smaller_belgium",
+      matches,
+    );
     expect(result).toEqual([...result].sort());
     expect(result.length).toBeGreaterThan(0);
   });
@@ -190,10 +194,13 @@ describe("computeCellDifficulty", () => {
 
   it("with same pool size and constraint weight product, higher top-K popularity lowers difficulty", () => {
     const matches = buildConstraintMatches();
-    const rowA = "continent_africa";
-    const colA = "area_gt_2M";
-    const rowB = "continent_africa";
-    const colB = "borders_solo";
+    // Deux cellules de taille de pool identique et de même produit de poids
+    // (cols toutes deux « medium »), ne différant que par la notoriété des pays :
+    // étoile + Moyen-Orient (pays connus) vs étoile + Caraïbes (petits États obscurs).
+    const rowA = "flag_has_star";
+    const colA = "subregion_middle_east";
+    const rowB = "flag_has_star";
+    const colB = "subregion_caribbean";
     const nA = intersect(rowA, colA, matches).length;
     const nB = intersect(rowB, colB, matches).length;
     expect(nA).toBe(nB);
@@ -348,7 +355,7 @@ describe("finalizeGrid", () => {
     // All same category: only continent → categoryCount = 1 < 4
     const result = finalizeGrid(
       ["continent_africa", "continent_asia", "continent_europe"],
-      ["area_gt_2M", "area_gt_500k", "area_lt_1k"],
+      ["area_larger_india", "area_larger_france", "area_smaller_belgium"],
       "continent_africa",
       matches,
     );

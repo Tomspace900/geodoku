@@ -47,7 +47,12 @@ export type PhysicalFeature =
   | "equator_crosser"
   | "mediterranean_coast"
   | "caribbean_coast"
-  | "peak_over_5000m";
+  | "peak_over_5000m"
+  | "has_desert"
+  | "rainforest"
+  | "atlantic_coast"
+  | "pacific_coast"
+  | "indian_ocean_coast";
 
 export type Country = {
   code: string; // ISO 3166-1 alpha-3
