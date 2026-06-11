@@ -1,4 +1,7 @@
-import { CONSTRAINTS } from "@/features/game/logic/constraints";
+import {
+  ARCHIVED_CONSTRAINTS,
+  CONSTRAINTS,
+} from "@/features/game/logic/constraints";
 import { describe, expect, it } from "vitest";
 import { translate } from "../index";
 import type { TKey } from "../types";
@@ -79,7 +82,8 @@ describe("translate", () => {
   });
 
   it("handles all constraint keys without returning raw key", () => {
-    for (const c of CONSTRAINTS) {
+    // Archived constraints keep their labels so past grids stay replayable.
+    for (const c of [...CONSTRAINTS, ...ARCHIVED_CONSTRAINTS]) {
       const key = `constraint.${c.id}` as TKey;
       const frResult = translate("fr", key);
       const enResult = translate("en", key);

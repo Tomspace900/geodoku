@@ -1,10 +1,8 @@
-import { CONSTRAINTS } from "@/features/game/logic/constraints";
+import { CONSTRAINT_BY_ID } from "@/features/game/logic/constraints";
 import type { CellKey, CellPosition, GameState } from "@/features/game/types";
 import { useT } from "@/i18n/LocaleContext";
 import { cn } from "@/lib/utils";
 import { CellComponent } from "./Cell";
-
-const CONSTRAINT_MAP = new Map(CONSTRAINTS.map((c) => [c.id, c]));
 
 type Props = {
   state: GameState;
@@ -29,7 +27,7 @@ export function GameGrid({ state, onCellClick }: Props) {
       <div />
 
       {COLS.map((col) => {
-        const constraint = CONSTRAINT_MAP.get(state.cols[col]);
+        const constraint = CONSTRAINT_BY_ID.get(state.cols[col]);
         const label = constraint ? t(constraint.labelKey) : state.cols[col];
         return (
           <div key={`col-${col}`} className={cn(headerClass, "p-1.5")}>
@@ -39,7 +37,7 @@ export function GameGrid({ state, onCellClick }: Props) {
       })}
 
       {ROWS.map((row) => {
-        const rowConstraint = CONSTRAINT_MAP.get(state.rows[row]);
+        const rowConstraint = CONSTRAINT_BY_ID.get(state.rows[row]);
         const rowLabel = rowConstraint
           ? t(rowConstraint.labelKey)
           : state.rows[row];

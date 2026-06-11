@@ -17,7 +17,7 @@ import {
   RARITY_STYLES,
   UI_ANIMATION_MS,
 } from "@/features/game/logic/constants";
-import { CONSTRAINTS } from "@/features/game/logic/constraints";
+import { CONSTRAINT_BY_ID } from "@/features/game/logic/constraints";
 import {
   type ConstraintFailureReason,
   isConstraintFailureReason,
@@ -28,8 +28,6 @@ import type { TKey } from "@/i18n/types";
 import { cn } from "@/lib/utils";
 import { Heart } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
-
-const CONSTRAINT_MAP = new Map(CONSTRAINTS.map((c) => [c.id, c]));
 
 const ERROR_KEY_MAP: Record<string, TKey> = {
   already_used: "error.already_used",
@@ -187,8 +185,8 @@ export function GuessModal({
     }
   }
 
-  const rowConstraint = CONSTRAINT_MAP.get(state.rows[cell.row]);
-  const colConstraint = CONSTRAINT_MAP.get(state.cols[cell.col]);
+  const rowConstraint = CONSTRAINT_BY_ID.get(state.rows[cell.row]);
+  const colConstraint = CONSTRAINT_BY_ID.get(state.cols[cell.col]);
   const rowLabel = rowConstraint
     ? t(rowConstraint.labelKey)
     : state.rows[cell.row];

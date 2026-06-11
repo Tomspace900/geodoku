@@ -1,13 +1,11 @@
 import {
-  CONSTRAINTS,
+  CONSTRAINT_BY_ID,
   type ConstraintId,
 } from "@/features/game/logic/constraints";
 import { translate } from "@/i18n/index";
 
-const CONSTRAINT_MAP = new Map(CONSTRAINTS.map((c) => [c.id, c]));
-
 export function constraintLabel(id: string): string {
-  const c = CONSTRAINT_MAP.get(id as ConstraintId);
+  const c = CONSTRAINT_BY_ID.get(id as ConstraintId);
   return c ? translate("fr", c.labelKey) : id;
 }
 

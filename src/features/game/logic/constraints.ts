@@ -88,7 +88,18 @@ export type ConstraintId =
   | "subregion_middle_east"
   | "subregion_southeast_asia"
   | "water_island"
-  | "water_landlocked";
+  | "water_landlocked"
+  // Archivées : hors génération, conservées pour rejouer d'anciennes grilles (cf. ARCHIVED_CONSTRAINTS).
+  | "area_gt_2M"
+  | "area_gt_500k"
+  | "area_lt_1k"
+  | "density_high"
+  | "density_low"
+  | "language_multilingual"
+  | "population_gt_100M"
+  | "population_gt_30M"
+  | "population_lt_1M"
+  | "population_lt_2_5M";
 
 export type Constraint = {
   id: ConstraintId;
@@ -610,3 +621,102 @@ export const CONSTRAINTS: Constraint[] = [
     predicate: (c) => c.geoTags.includes("capital_not_largest"),
   },
 ];
+
+// ─── Contraintes archivées ──────────────────────────────────────────────────────
+// Seuils quantitatifs (« > 500 000 km² », « densité > 300 ») retirés au profit des
+// comparaisons à un pays-repère. On les conserve **intégralement** car d'anciennes
+// grilles publiées les référencent encore : rejouer une grille a besoin du label ET
+// du prédicat (`validateGuess` évalue le prédicat live). Elles ne sont JAMAIS dans
+// `CONSTRAINTS`, donc jamais générées ; seul `CONSTRAINT_BY_ID` les expose.
+
+const AREA_GT_2M = 2_000_000;
+const AREA_GT_500K = 500_000;
+const AREA_LT_1K = 1_000;
+const DENSITY_HIGH = 300;
+const DENSITY_LOW = 10;
+const POP_GT_100M = 100_000_000;
+const POP_GT_30M = 30_000_000;
+const POP_LT_1M = 1_000_000;
+const POP_LT_2_5M = 2_500_000;
+
+export const ARCHIVED_CONSTRAINTS: Constraint[] = [
+  {
+    id: "area_gt_2M",
+    labelKey: "constraint.area_gt_2M",
+    category: "area",
+    difficulty: "medium",
+    predicate: (c) => c.areaKm2 > AREA_GT_2M,
+  },
+  {
+    id: "area_gt_500k",
+    labelKey: "constraint.area_gt_500k",
+    category: "area",
+    difficulty: "medium",
+    predicate: (c) => c.areaKm2 > AREA_GT_500K,
+  },
+  {
+    id: "area_lt_1k",
+    labelKey: "constraint.area_lt_1k",
+    category: "area",
+    difficulty: "medium",
+    predicate: (c) => c.areaKm2 < AREA_LT_1K,
+  },
+  {
+    id: "density_high",
+    labelKey: "constraint.density_high",
+    category: "density",
+    difficulty: "medium",
+    predicate: (c) => densityOf(c) > DENSITY_HIGH,
+  },
+  {
+    id: "density_low",
+    labelKey: "constraint.density_low",
+    category: "density",
+    difficulty: "medium",
+    predicate: (c) => densityOf(c) < DENSITY_LOW,
+  },
+  {
+    id: "language_multilingual",
+    labelKey: "constraint.language_multilingual",
+    category: "language",
+    difficulty: "easy",
+    predicate: (c) => c.officialLanguages.length >= 2,
+  },
+  {
+    id: "population_gt_100M",
+    labelKey: "constraint.population_gt_100M",
+    category: "population",
+    difficulty: "hard",
+    predicate: (c) => c.population > POP_GT_100M,
+  },
+  {
+    id: "population_gt_30M",
+    labelKey: "constraint.population_gt_30M",
+    category: "population",
+    difficulty: "easy",
+    predicate: (c) => c.population > POP_GT_30M,
+  },
+  {
+    id: "population_lt_1M",
+    labelKey: "constraint.population_lt_1M",
+    category: "population",
+    difficulty: "medium",
+    predicate: (c) => c.population < POP_LT_1M,
+  },
+  {
+    id: "population_lt_2_5M",
+    labelKey: "constraint.population_lt_2_5M",
+    category: "population",
+    difficulty: "easy",
+    predicate: (c) => c.population < POP_LT_2_5M,
+  },
+];
+
+/**
+ * Lookup id → contrainte couvrant l'actif **et** l'archivé. Sert à résoudre le label
+ * ou le prédicat d'une grille quelconque, y compris une ancienne grille rejouée.
+ * `CONSTRAINTS` reste l'unique source de la génération (aucune archivée dedans).
+ */
+export const CONSTRAINT_BY_ID: ReadonlyMap<ConstraintId, Constraint> = new Map(
+  [...CONSTRAINTS, ...ARCHIVED_CONSTRAINTS].map((c) => [c.id, c]),
+);
