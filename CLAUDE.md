@@ -22,7 +22,7 @@ Geodoku est un mini-jeu web quotidien inspiré de Wordle et du Sudoku, sur le th
 - **Frontend** : Vite + React + TypeScript (strict mode)
 - **Styling** : Tailwind CSS + shadcn/ui (install manuelle par composant) + Lucide React
 - **Backend** : Convex (cloud remote, pas local) — DB, mutations, queries, crons ; rate limiting via `@convex-dev/rate-limiter` (`[convex/rateLimit.ts](convex/rateLimit.ts)`, `[convex/convex.config.ts](convex/convex.config.ts)`)
-- **Observabilité front** : `@vercel/analytics` + `@vercel/speed-insights` (`[src/main.tsx](src/main.tsx)`)
+- **Observabilité front** : `@vercel/analytics` + `@vercel/speed-insights` + **PostHog** (`posthog-js` / `@posthog/react`, analytics produit + error tracking) — voir §10 (`[src/main.tsx](src/main.tsx)`)
 - **Package manager** : pnpm (Node **≥ 22.12**, Volta 22.19)
 - **Lint/format** : Biome (pas ESLint, pas Prettier)
 - **Tests** : Vitest + @testing-library/react
@@ -535,3 +535,26 @@ pnpm exec convex deploy --preview-run seed:autoSeedIfEmpty --cmd 'vite build' --
 - 🚫 **Tests de composants visuels.** Low ROI. On teste ce qui casse : la logique pure.
 - 🚫 **Bordures pour sectionner** (cf. design system).
 - 🚫 **Commentaires de type `// increment counter`** qui paraphrasent le code. Les commentaires expliquent le _pourquoi_, pas le _quoi_.
+
+## 10. Analytics produit (PostHog)
+
+**Rôle.** PostHog (`posthog-js` + `@posthog/react`) capture le **comportement par joueur** (parcours, funnels, rétention, langue, fiabilité). C'est **complémentaire**, pas redondant avec l'admin Convex : `gridFeedback` / `dailyStats` agrègent la **santé des grilles** (win rate, struggle, rareté) côté serveur ; PostHog raconte ce que Convex ne sait pas — l'entonnoir d'engagement, l'abandon, le ressenti par session. En cas de chevauchement (win rate, justesse des guess), **Convex reste la source de vérité** ; PostHog ajoute la dimension par-utilisateur.
+
+**Init** (`[src/main.tsx](src/main.tsx)`). `posthog.init(VITE_POSTHOG_PROJECT_TOKEN, { api_host: VITE_POSTHOG_HOST, defaults, autocapture: false, persistence: "localStorage" })` puis `<PostHogProvider client={posthog}>` enveloppe l'app. Deux réglages **volontaires, à ne pas défaire** : `autocapture: false` (on ne veut que des events métier nommés) et `persistence: "localStorage"` (**aucun cookie posé** → pas de bandeau de consentement). Variables d'env : `VITE_POSTHOG_PROJECT_TOKEN`, `VITE_POSTHOG_HOST` (cf. `[src/vite-env.d.ts](src/vite-env.d.ts)`).
+
+**Posture vie privée.** Aucune PII : pas de `posthog.identify()`, pas d'email, pas de nom. Identifiant anonyme en localStorage, sans cookie. Le `clientId` (rate-limit) reste **côté Convex** et n'est pas envoyé à PostHog. La page `/privacy` mentionne PostHog comme statistiques d'usage anonymes et sans cookie (§ `privacy.thirdPartyBody` dans `[src/i18n/locales](src/i18n/locales)`) — tenir ce texte à jour si la capture évolue.
+
+**Conventions d'events.** Nom en `snake_case`, verbe au passé (`game_completed`, `result_shared`). Capture via le hook `usePostHog()` dans les composants/hooks (`posthog?.capture(...)`, toujours optional-chaining — le client peut être absent). Les exceptions de rendu passent par `posthog.captureException` dans `[ErrorBoundary](src/features/errors/components/ErrorBoundary.tsx)`. Propriété transverse `grid_date` sur les events liés à une partie. **Avant d'ajouter un event, vérifier qu'il n'existe pas déjà** (catalogue ci-dessous) pour éviter les doublons.
+
+**Catalogue d'events** (source de vérité = le code, pas le dashboard) :
+
+| Domaine | Events | Fichier |
+| ------- | ------ | ------- |
+| Cycle de partie | `game_started`, `session_resumed`, `cell_opened`, `guess_submitted`, `guess_failed`, `game_completed` | `[useGameState](src/features/game/hooks/useGameState.ts)`, `[GamePage](src/features/game/components/GamePage.tsx)` |
+| Saisie | `guess_modal_closed` | `[GuessModal](src/features/game/components/GuessModal.tsx)` |
+| Résultat / partage | `result_screen_viewed`, `result_shared`, `difficulty_rated`, `achievement_unlocked`, `solution_viewed` | `[ResultScreen](src/features/game/components/ResultScreen.tsx)`, `[AchievementCard](src/features/game/components/AchievementCard.tsx)`, `[GamePage](src/features/game/components/GamePage.tsx)` |
+| Onboarding / UI | `how_to_play_opened`, `how_to_play_closed`, `how_to_play_dont_show_toggled`, `locale_changed`, `footer_link_clicked` | `[HowToPlayLink](src/features/game/components/HowToPlayLink.tsx)`, `[LocaleSwitcher](src/features/game/components/LocaleSwitcher.tsx)`, `[AppFooter](src/app/AppFooter.tsx)` |
+| Pages légales | `legal_page_viewed`, `legal_page_left` | `[useLegalPageAnalytics](src/features/legal/hooks/useLegalPageAnalytics.ts)` |
+| Fiabilité | `backend_timeout_shown`, `$exception` | `[GamePage](src/features/game/components/GamePage.tsx)`, `[ErrorBoundary](src/features/errors/components/ErrorBoundary.tsx)` |
+
+**Dashboard.** « Analytics basics (wizard) » (`project/200018/dashboard/742421`, EU). Créé par le wizard d'install sur les **premiers** events seulement ; le reste du catalogue n'y est pas encore visualisé (funnel d'engagement, onboarding, langue, fiabilité…).

@@ -54,7 +54,7 @@ export const en = {
     backToGame: "Back to the game",
     essenceTitle: "No account, no tracking",
     essenceBody:
-      "No sign-up, no login, no ads. I don't sell or share any data, and there are no third-party trackers on the site.",
+      "No sign-up, no login, no ads. I don't sell or share any data, and there are no advertising trackers on the site.",
     deviceTitle: "On your device",
     deviceBody:
       "Your browser keeps a few settings in local storage: your language, the progress of the current day's grid, and a random identifier used only to curb spam. None of it is an advertising or tracking cookie. Clearing the site data removes it.",
@@ -63,7 +63,7 @@ export const en = {
       "While you play, I record anonymous, aggregated statistics (the countries picked per cell, the difficulty feedback). They aren't linked to any identity: there's no way to tell who guessed what.",
     thirdPartyTitle: "Third-party services",
     thirdPartyBody:
-      "Geodoku relies on Vercel (hosting and anonymous, cookieless audience metrics), Convex (the database holding the game statistics) and Google Fonts (typefaces, which exposes your IP address to Google when they load).",
+      "Geodoku relies on Vercel (hosting and anonymous, cookieless audience metrics), Convex (the database holding the game statistics), PostHog (anonymous, cookieless usage statistics, to understand how the game is played) and Google Fonts (typefaces, which exposes your IP address to Google when they load).",
     rightsTitle: "Your rights",
     rightsBody:
       "Since no data can identify you, there's no account to access or delete. You stay in control from your browser: clearing the site data for Geodoku erases everything.",
