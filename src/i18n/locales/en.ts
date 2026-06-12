@@ -37,6 +37,7 @@ export const en = {
     support: "Buy me a coffee",
     privacy: "Privacy",
     changelog: "Changelog",
+    changelogNew: "New",
     copyright: "©\u00A0{year}\u00A0Geodoku",
   },
   legal: {
