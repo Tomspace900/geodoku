@@ -11,7 +11,7 @@ import { computeCellMetric, computePlayersEngaged } from "./lib/cellMetrics";
 import { daysAgoUTC, offsetUTC, todayUTC, tomorrowUTC } from "./lib/dates";
 import {
   type GenerationReport,
-  HISTORY_WINDOW,
+  KNOWN_CONSTRAINT_WINDOW,
   POOL_LOW_THRESHOLD,
 } from "./lib/gridConstants";
 import { generateDiversePool } from "./lib/gridGenerator";
@@ -298,7 +298,7 @@ export const getUpcomingScheduledPreview = query({
       .query("grids")
       .withIndex("by_date", (q) => q.lt("date", tomorrow))
       .order("desc")
-      .take(HISTORY_WINDOW);
+      .take(KNOWN_CONSTRAINT_WINDOW);
     let recentForScheduler = recentPublished.map((g) => ({
       constraintIds: [...g.rows, ...g.cols],
       countryPool: g.countryPool,

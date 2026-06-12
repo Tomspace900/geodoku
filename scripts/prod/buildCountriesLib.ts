@@ -33,6 +33,15 @@ export interface Patches {
   mediterraneanCoastCodes?: string[];
   caribbeanCoastCodes?: string[];
   peakOver5000mCodes?: string[];
+  // ── Gameplay tags additionnels (geoTags) ──
+  driveOnLeftCodes?: string[];
+  capitalNotLargestCityCodes?: string[];
+  // ── Biomes & façades océaniques (physicalFeatures) ──
+  desertCodes?: string[];
+  rainforestCodes?: string[];
+  atlanticCoastCodes?: string[];
+  pacificCoastCodes?: string[];
+  indianOceanCoastCodes?: string[];
 }
 
 /**
@@ -304,6 +313,9 @@ export function gameplayArraysForCode(
     groups.push("commonwealth");
   const geoTags: string[] = [];
   if (patches.middleEastCodes?.includes(code)) geoTags.push("middle_east");
+  if (patches.driveOnLeftCodes?.includes(code)) geoTags.push("drives_on_left");
+  if (patches.capitalNotLargestCityCodes?.includes(code))
+    geoTags.push("capital_not_largest");
   return { events, groups, geoTags };
 }
 
@@ -324,6 +336,13 @@ export function physicalFeaturesForCode(
     features.push("caribbean_coast");
   if (patches.peakOver5000mCodes?.includes(code))
     features.push("peak_over_5000m");
+  if (patches.desertCodes?.includes(code)) features.push("has_desert");
+  if (patches.rainforestCodes?.includes(code)) features.push("rainforest");
+  if (patches.atlanticCoastCodes?.includes(code))
+    features.push("atlantic_coast");
+  if (patches.pacificCoastCodes?.includes(code)) features.push("pacific_coast");
+  if (patches.indianOceanCoastCodes?.includes(code))
+    features.push("indian_ocean_coast");
   return features;
 }
 

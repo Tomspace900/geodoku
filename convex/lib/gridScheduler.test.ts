@@ -1,10 +1,7 @@
 import { describe, expect, it } from "vitest";
 import {
-  FRESH_CONSTRAINT_BONUS,
-  FRESH_COUNTRY_BONUS,
-  OVERUSE_CONSTRAINT_MALUS,
+  KNOWN_CONSTRAINT_WINDOW,
   type PoolGridMetadata,
-  TARGET_DIFFICULTY,
 } from "./gridConstants";
 import { selectNextGrid } from "./gridScheduler";
 
@@ -12,7 +9,7 @@ function makeGrid(
   id: string,
   constraintIds: string[],
   countryPool: string[],
-  difficultyEstimate = TARGET_DIFFICULTY,
+  difficultyEstimate = 40,
 ): {
   _id: string;
   rows: string[];
@@ -74,20 +71,6 @@ describe("selectNextGrid", () => {
     expect(result!.grid._id).toBe("g2");
   });
 
-  it("prefers the grid closest to TARGET_DIFFICULTY", () => {
-    const far = makeGrid("far", ["a", "b", "c", "d", "e", "f"], [], 90);
-    const close = makeGrid(
-      "close",
-      ["g", "h", "i", "j", "k", "l"],
-      [],
-      TARGET_DIFFICULTY + 5,
-    );
-
-    // Both are equally fresh (no recent history). Difficulty is the tiebreaker.
-    const result = selectNextGrid([far, close], []);
-    expect(result!.grid._id).toBe("close");
-  });
-
   it("penalizes a grid whose constraints appear more than twice in recent history", () => {
     // Constraint "a" appears 3 times → overuse penalty triggers (>2 → excess = 1)
     const recent = [
@@ -101,7 +84,7 @@ describe("selectNextGrid", () => {
     // grid2 uses fresh constraints → no penalty
     const grid2 = makeGrid("g2", ["z1", "z2", "z3", "z4", "z5", "z6"], []);
 
-    // Both grids need same difficulty proximity. grid2 should win due to no overuse penalty.
+    // grid2 should win: it carries no overuse penalty.
     const result = selectNextGrid([grid1, grid2], recent);
     expect(result!.grid._id).toBe("g2");
   });
@@ -127,5 +110,40 @@ describe("selectNextGrid", () => {
 
     const result = selectNextGrid([grid1, grid2], recent);
     expect(result!.grid._id).toBe("g2");
+  });
+
+  // A mature history: KNOWN_CONSTRAINT_WINDOW grids over the established set e1..e6.
+  const matureHistory = Array.from({ length: KNOWN_CONSTRAINT_WINDOW }, () => ({
+    constraintIds: ["e1", "e2", "e3", "e4", "e5", "e6"],
+    countryPool: [] as string[],
+  }));
+
+  it("caps newcomers per grid once the history is mature (newcomer = used < graduation)", () => {
+    // Mature history where n1 appears once (1 use < graduation → still a newcomer) and
+    // n2 never. Counting uses, not mere presence, keeps n1 budgeted: a grid carrying both
+    // exceeds the 1-newcomer cap and is filtered, so the single-newcomer grid wins.
+    const history = [
+      { constraintIds: ["n1", "e1", "e2", "e3", "e4", "e5"], countryPool: [] },
+      ...Array.from({ length: KNOWN_CONSTRAINT_WINDOW - 1 }, () => ({
+        constraintIds: ["e1", "e2", "e3", "e4", "e5", "e6"],
+        countryPool: [] as string[],
+      })),
+    ];
+    const gridBad = makeGrid("bad", ["n1", "n2", "e1", "e2", "e3", "e4"], []);
+    const gridGood = makeGrid("good", ["n2", "e1", "e2", "e3", "e4", "e5"], []);
+
+    const result = selectNextGrid([gridBad, gridGood], history);
+    expect(result!.grid._id).toBe("good");
+  });
+
+  it("does not cap newcomers before the history is mature (from-scratch seeding)", () => {
+    // Same pool as above, but history one grid short of mature → guard skipped, so the
+    // newcomer-heavier grid wins on freshness instead of being filtered out.
+    const shortHistory = matureHistory.slice(0, KNOWN_CONSTRAINT_WINDOW - 1);
+    const gridBad = makeGrid("bad", ["n1", "n2", "e1", "e2", "e3", "e4"], []);
+    const gridGood = makeGrid("good", ["n1", "e1", "e2", "e3", "e4", "e5"], []);
+
+    const result = selectNextGrid([gridBad, gridGood], shortHistory);
+    expect(result!.grid._id).toBe("bad");
   });
 });

@@ -14,6 +14,7 @@ import {
 import type { CellKey, GameState } from "@/features/game/types";
 import { useT } from "@/i18n/LocaleContext";
 import { cn } from "@/lib/utils";
+import { usePostHog } from "@posthog/react";
 import { useMutation } from "convex/react";
 import { Copy, X } from "lucide-react";
 import { useEffect, useState } from "react";
@@ -39,7 +40,7 @@ type Props = {
   state: GameState;
   gridNumber: number | null;
   onDismiss: () => void;
-  onViewAnswers: () => void;
+  onViewAnswers: (source: "view_answers_button" | "skip_feedback") => void;
 };
 
 export function ResultScreen({
@@ -48,6 +49,7 @@ export function ResultScreen({
   onDismiss,
   onViewAnswers,
 }: Props) {
+  const posthog = usePostHog();
   const [copied, setCopied] = useState(false);
   const t = useT();
   const [hadFeedbackBeforeOpen] = useState(() => {
@@ -64,12 +66,30 @@ export function ResultScreen({
   const hasRated = hadFeedbackBeforeOpen || feedbackThanksVisible;
   const submitGridFeedback = useMutation(api.grids.submitGridFeedback);
 
+  // biome-ignore lint/correctness/useExhaustiveDependencies: fire once when result modal opens
+  useEffect(() => {
+    posthog?.capture("result_screen_viewed", {
+      grid_date: state.date,
+      grid_number: gridNumber,
+      outcome: state.status,
+      grid_score_percent: gridScore.percent,
+      originality_grade: originality.grade,
+    });
+  }, []);
+
   async function handleShare() {
     const text = formatShareString(state, gridNumber);
     const ok = await copyShareToClipboard(text);
     if (ok) {
       setCopied(true);
       setTimeout(() => setCopied(false), 2000);
+      posthog?.capture("result_shared", {
+        grid_date: state.date,
+        grid_number: gridNumber,
+        outcome: state.status,
+        grid_score_percent: gridScore.percent,
+        originality_grade: originality.grade,
+      });
     }
   }
 
@@ -95,6 +115,11 @@ export function ResultScreen({
       });
       localStorage.setItem(`${FEEDBACK_STORAGE_PREFIX}${state.date}`, "1");
       setFeedbackThanksVisible(true);
+      posthog?.capture("difficulty_rated", {
+        rating,
+        grid_date: state.date,
+        outcome: state.status,
+      });
     } finally {
       setRatingPending(false);
     }
@@ -206,7 +231,7 @@ export function ResultScreen({
         <div className="flex flex-col gap-3">
           {hasRated ? (
             <Button
-              onClick={onViewAnswers}
+              onClick={() => onViewAnswers("view_answers_button")}
               variant="secondary"
               size="lg"
               className="w-full"
@@ -236,7 +261,7 @@ export function ResultScreen({
               <Button
                 type="button"
                 variant="link"
-                onClick={onViewAnswers}
+                onClick={() => onViewAnswers("skip_feedback")}
                 className="self-center text-xs"
               >
                 {t("ui.skipFeedback")}

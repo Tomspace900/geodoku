@@ -18,7 +18,7 @@ import type { Id } from "./_generated/dataModel";
 import type { MutationCtx } from "./_generated/server";
 import { internalMutation } from "./_generated/server";
 import { todayUTC, tomorrowUTC } from "./lib/dates";
-import { HISTORY_WINDOW } from "./lib/gridConstants";
+import { KNOWN_CONSTRAINT_WINDOW } from "./lib/gridConstants";
 import { selectNextGrid } from "./lib/gridScheduler";
 
 /**
@@ -42,7 +42,7 @@ async function assignForDate(ctx: MutationCtx, date: string): Promise<boolean> {
     .query("grids")
     .withIndex("by_date")
     .order("desc")
-    .take(HISTORY_WINDOW);
+    .take(KNOWN_CONSTRAINT_WINDOW);
 
   const pool = available.map((g) => ({
     _id: g._id as string,

@@ -1,6 +1,10 @@
 import AppFooter from "@/app/AppFooter";
 import { AppMark } from "@/components/AppMark";
 import { DisplayHeader } from "@/components/editorial/DisplayHeader";
+import {
+  type LegalAnalyticsPage,
+  useLegalPageAnalytics,
+} from "@/features/legal/hooks/useLegalPageAnalytics";
 import { ArrowLeft } from "lucide-react";
 import type { ReactNode } from "react";
 
@@ -9,6 +13,7 @@ type Props = {
   eyebrow: string;
   backLabel: string;
   lead?: string;
+  analyticsPage: LegalAnalyticsPage;
   children: ReactNode;
 };
 
@@ -21,8 +26,11 @@ export function LegalLayout({
   eyebrow,
   backLabel,
   lead,
+  analyticsPage,
   children,
 }: Props) {
+  useLegalPageAnalytics(analyticsPage);
+
   return (
     <div className="min-h-svh bg-surface flex flex-col items-center px-4 py-6">
       <div className="w-full max-w-2xl flex flex-col gap-8 flex-1">

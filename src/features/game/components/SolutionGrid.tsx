@@ -5,7 +5,7 @@ import {
   RARITY_STYLES,
 } from "@/features/game/logic/constants";
 import {
-  CONSTRAINTS,
+  CONSTRAINT_BY_ID,
   type ConstraintId,
 } from "@/features/game/logic/constraints";
 import { formatRarityPercent } from "@/features/game/logic/rarity";
@@ -14,8 +14,6 @@ import type { Cell, CellKey, RarityTier } from "@/features/game/types";
 import { useLocale } from "@/i18n/LocaleContext";
 import type { Locale } from "@/i18n/types";
 import { cn } from "@/lib/utils";
-
-const CONSTRAINT_MAP = new Map(CONSTRAINTS.map((c) => [c.id, c]));
 
 const ROWS = [0, 1, 2] as const;
 const COLS = [0, 1, 2] as const;
@@ -66,7 +64,7 @@ export function SolutionGrid({
         <div />
 
         {COLS.map((col) => {
-          const constraint = CONSTRAINT_MAP.get(cols[col]);
+          const constraint = CONSTRAINT_BY_ID.get(cols[col]);
           const label = constraint ? t(constraint.labelKey) : cols[col];
           return (
             <div key={`col-${col}`} className={cn(headerClass, "p-1.5")}>
@@ -76,7 +74,7 @@ export function SolutionGrid({
         })}
 
         {ROWS.map((row) => {
-          const rowConstraint = CONSTRAINT_MAP.get(rows[row]);
+          const rowConstraint = CONSTRAINT_BY_ID.get(rows[row]);
           const rowLabel = rowConstraint
             ? t(rowConstraint.labelKey)
             : rows[row];

@@ -8,7 +8,8 @@
 import {
   type FinalizedPoolGrid,
   HISTORY_WINDOW,
-  TARGET_DIFFICULTY,
+  KNOWN_CONSTRAINT_WINDOW,
+  MAX_NEW_CONSTRAINTS_PER_GRID,
 } from "../convex/lib/gridConstants";
 import { generateDiversePool } from "../convex/lib/gridGenerator";
 import { selectNextGrid } from "../convex/lib/gridScheduler";
@@ -41,7 +42,6 @@ const sorted = [...difficulties].sort((a, b) => a - b);
 const medianDiff = sorted[Math.floor(sorted.length / 2)] ?? 0;
 console.log(`  Avg difficulty    : ${avgDiff.toFixed(1)}/100`);
 console.log(`  Median difficulty : ${medianDiff}/100`);
-console.log(`  Target difficulty : ${TARGET_DIFFICULTY}/100`);
 
 // Per-seed breakdown
 const failed = report.seedResults.filter((r) => r.failed);
@@ -100,10 +100,13 @@ const usedIds = new Set<string>();
 
 for (let day = 1; day <= 30; day++) {
   const available = poolQueue.filter((g) => !usedIds.has(g._id));
-  const recent = scheduled.slice(-HISTORY_WINDOW).map((d) => ({
-    constraintIds: d.constraintIds,
-    countryPool: Object.values(d.grid.validAnswers).flat(),
-  }));
+  const recent = scheduled
+    .slice(-KNOWN_CONSTRAINT_WINDOW)
+    .reverse()
+    .map((d) => ({
+      constraintIds: d.constraintIds,
+      countryPool: Object.values(d.grid.validAnswers).flat(),
+    }));
 
   const result = selectNextGrid(available, recent);
   if (!result) {
@@ -385,6 +388,82 @@ for (const [code, count] of bottom10Sched) {
   );
 }
 
+// ─── Cold-start sub-simulation ──────────────────────────────────────────────────
+// The from-scratch sim above never exercises the cold-start guard (an empty start
+// keeps it skipped). Here we reproduce the real trigger: a *mature* history built
+// without a held-out minority of constraints, then a rollout from the full pool —
+// the guard must weave the newcomers in gradually, not flood the schedule.
+
+console.log("\n═══════════════════════════════════════════════════════");
+console.log("  COLD-START ROLLOUT (mature history + held-out batch)");
+console.log("═══════════════════════════════════════════════════════");
+
+const COLDSTART_ROLLOUT_DAYS = 50;
+// Hold out every 4th constraint (spread across breadths) as the synthetic batch.
+const heldOut = new Set(
+  CONSTRAINTS.filter((_, i) => i % 4 === 0).map((c) => c.id as string),
+);
+const hFreePool = poolQueue.filter((g) =>
+  g.metadata.constraintIds.every((id) => !heldOut.has(id)),
+);
+
+const csUsed = new Set<string>();
+const csHistory: PoolGrid[] = []; // chronological, newest last
+
+function csRecent(): { constraintIds: string[]; countryPool: string[] }[] {
+  return [...csHistory.slice(-KNOWN_CONSTRAINT_WINDOW)].reverse().map((g) => ({
+    constraintIds: g.metadata.constraintIds,
+    countryPool: g.metadata.countryPool,
+  }));
+}
+
+// Phase 1 — establish a mature history (≥ KNOWN_CONSTRAINT_WINDOW) over the kept set.
+for (let i = 0; i < KNOWN_CONSTRAINT_WINDOW; i++) {
+  const avail = hFreePool.filter((g) => !csUsed.has(g._id));
+  const r = selectNextGrid(avail, csRecent());
+  if (!r) break;
+  csUsed.add(r.grid._id);
+  const full = poolByCandId.get(r.grid._id);
+  if (full) csHistory.push(full);
+}
+
+const matureHistoryLen = csHistory.length;
+
+// Phase 2 — roll out from the full pool, counting newcomers introduced per grid.
+const csPerGrid: number[] = [];
+const csIntroduced = new Set<string>();
+for (let d = 0; d < COLDSTART_ROLLOUT_DAYS; d++) {
+  const avail = poolQueue.filter((g) => !csUsed.has(g._id));
+  const seen = new Set(
+    csHistory
+      .slice(-KNOWN_CONSTRAINT_WINDOW)
+      .flatMap((g) => g.metadata.constraintIds),
+  );
+  const r = selectNextGrid(avail, csRecent());
+  if (!r) break;
+  const newcomers = r.grid.metadata.constraintIds.filter((id) => !seen.has(id));
+  csPerGrid.push(newcomers.length);
+  for (const id of newcomers) if (heldOut.has(id)) csIntroduced.add(id);
+  csUsed.add(r.grid._id);
+  const full = poolByCandId.get(r.grid._id);
+  if (full) csHistory.push(full);
+}
+
+const csMatured = matureHistoryLen >= KNOWN_CONSTRAINT_WINDOW;
+const csMaxPerGrid = csPerGrid.length ? Math.max(...csPerGrid) : 0;
+
+console.log(`  Held-out batch     : ${heldOut.size} constraints`);
+console.log(`  Mature history     : ${matureHistoryLen} grids (kept set only)`);
+console.log(
+  `  Rollout newcomers/grid (first 21): ${csPerGrid.slice(0, 21).join(" ")}`,
+);
+console.log(
+  `  Max newcomers/grid : ${csMaxPerGrid} (cap ${MAX_NEW_CONSTRAINTS_PER_GRID})`,
+);
+console.log(
+  `  Batch introduced   : ${csIntroduced.size}/${heldOut.size} within ${COLDSTART_ROLLOUT_DAYS} days`,
+);
+
 // ─── Pass/fail summary ────────────────────────────────────────────────────────
 
 console.log("\n═══════════════════════════════════════════════════════");
@@ -442,14 +521,28 @@ const checks: Array<{ label: string; pass: boolean; value: string }> = [
     value: String(uniqueCountries.size),
   },
   {
-    label: "Sched: median difficulty 35–45",
-    pass: schedMedian >= 35 && schedMedian <= 45,
-    value: String(schedMedian),
+    // The scheduler no longer targets difficulty; this is a pool-health guardrail
+    // (a degenerate all-trivial / all-brutal pool would land outside the band).
+    label: "Pool: median difficulty 25–45",
+    pass: medianDiff >= 25 && medianDiff <= 45,
+    value: String(medianDiff),
   },
   {
     label: "Pool: ≥ 60% remaining after 30d",
     pass: poolRemaining / pool.length >= 0.6,
     value: `${poolRemainingPct}%`,
+  },
+  {
+    label: "Cold-start: no newcomer flood",
+    pass: csMatured && csMaxPerGrid <= MAX_NEW_CONSTRAINTS_PER_GRID,
+    value: csMatured
+      ? `max ${csMaxPerGrid}/grid ≤ ${MAX_NEW_CONSTRAINTS_PER_GRID}`
+      : "history not mature",
+  },
+  {
+    label: "Cold-start: batch fully woven in",
+    pass: csIntroduced.size === heldOut.size,
+    value: `${csIntroduced.size}/${heldOut.size}`,
   },
 ];
 

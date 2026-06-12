@@ -352,7 +352,7 @@ describe("gameReducer — rehydrate", () => {
       type: "rehydrate",
       persisted,
       rows: ["borders_china", "borders_brazil", "borders_russia"],
-      cols: ["population_gt_30M", "area_gt_500k", "flag_has_star"],
+      cols: ["population_more_canada", "area_larger_france", "flag_has_star"],
       validAnswers: emptyValidAnswers,
     });
     expect(state.date).toBe("2026-04-15");
@@ -362,8 +362,8 @@ describe("gameReducer — rehydrate", () => {
       "borders_russia",
     ]);
     expect(state.cols).toEqual([
-      "population_gt_30M",
-      "area_gt_500k",
+      "population_more_canada",
+      "area_larger_france",
       "flag_has_star",
     ]);
     expect(state.remainingLives).toBe(2);
@@ -380,7 +380,7 @@ describe("gameReducer — rehydrate", () => {
       type: "rehydrate",
       persisted,
       rows: ["borders_china", "borders_brazil", "borders_russia"],
-      cols: ["population_gt_30M", "area_gt_500k", "flag_has_star"],
+      cols: ["population_more_canada", "area_larger_france", "flag_has_star"],
       validAnswers: emptyValidAnswers,
     });
     expect(state.usedCountries).toBeInstanceOf(Set);
@@ -405,7 +405,7 @@ describe("gameReducer — rehydrate", () => {
       type: "rehydrate",
       persisted,
       rows: ["borders_china", "borders_brazil", "borders_russia"],
-      cols: ["population_gt_30M", "area_gt_500k", "flag_has_star"],
+      cols: ["population_more_canada", "area_larger_france", "flag_has_star"],
       validAnswers,
     });
     expect(state.status).toBe("playing");
@@ -438,7 +438,7 @@ describe("gameReducer — rehydrate", () => {
       type: "rehydrate",
       persisted,
       rows: ["borders_china", "borders_brazil", "borders_russia"],
-      cols: ["population_gt_30M", "area_gt_500k", "flag_has_star"],
+      cols: ["population_more_canada", "area_larger_france", "flag_has_star"],
       validAnswers,
     });
     expect(state.status).toBe("lost");

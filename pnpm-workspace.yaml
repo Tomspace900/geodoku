@@ -4,6 +4,7 @@ packages:
 allowBuilds:
   "@biomejs/biome": true
   "@rolldown/binding-darwin-arm64": true
+  core-js: true
   esbuild: true
   rolldown: true
 
