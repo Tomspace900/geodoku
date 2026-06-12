@@ -1,11 +1,14 @@
 import { LocaleSwitcher } from "@/features/game/components/LocaleSwitcher";
 import { useT } from "@/i18n/LocaleContext";
 import { cn } from "@/lib/utils";
+import { usePostHog } from "@posthog/react";
 import { Coffee, Mail } from "lucide-react";
 
 const SUPPORT_EMAIL = "support.geodoku@gmail.com";
 const METRODOKU_URL = "https://metrodoku.fr";
 const KOFI_URL = "https://ko-fi.com/geodoku/tip";
+
+type FooterLink = "metrodoku" | "support" | "contact" | "privacy" | "changelog";
 
 function Middot() {
   return (
@@ -16,8 +19,13 @@ function Middot() {
 }
 
 export default function AppFooter({ className }: { className?: string }) {
+  const posthog = usePostHog();
   const t = useT();
   const year = new Date().getFullYear();
+
+  function trackFooterLink(link: FooterLink) {
+    posthog?.capture("footer_link_clicked", { link });
+  }
 
   const linkClass =
     "underline underline-offset-2 decoration-outline-variant/40 transition-colors hover:text-on-surface focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-on-surface/20 focus-visible:ring-offset-2 focus-visible:ring-offset-surface rounded-sm";
@@ -37,6 +45,7 @@ export default function AppFooter({ className }: { className?: string }) {
             className={cn("text-on-surface-variant", linkClass)}
             rel="noopener noreferrer"
             target="_blank"
+            onClick={() => trackFooterLink("metrodoku")}
           >
             Metrodoku
           </a>
@@ -52,6 +61,7 @@ export default function AppFooter({ className }: { className?: string }) {
             )}
             rel="noopener noreferrer"
             target="_blank"
+            onClick={() => trackFooterLink("support")}
           >
             <Coffee className="size-3 sm:size-3.5" aria-hidden="true" />
             {t("footer.support")}
@@ -60,16 +70,25 @@ export default function AppFooter({ className }: { className?: string }) {
           <a
             href={`mailto:${SUPPORT_EMAIL}`}
             className={cn("inline-flex items-center gap-1", linkClass)}
+            onClick={() => trackFooterLink("contact")}
           >
             <Mail className="size-3 sm:size-3.5" aria-hidden="true" />
             {t("footer.contact")}
           </a>
           <Middot />
-          <a href="/privacy" className={linkClass}>
+          <a
+            href="/privacy"
+            className={linkClass}
+            onClick={() => trackFooterLink("privacy")}
+          >
             {t("footer.privacy")}
           </a>
           <Middot />
-          <a href="/changelog" className={linkClass}>
+          <a
+            href="/changelog"
+            className={linkClass}
+            onClick={() => trackFooterLink("changelog")}
+          >
             {t("footer.changelog")}
           </a>
         </div>

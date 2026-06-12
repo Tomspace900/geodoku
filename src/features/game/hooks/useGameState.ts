@@ -1,4 +1,5 @@
 import { getCountryByCode } from "@/features/countries/lib/search";
+import { usePostHog } from "@posthog/react";
 import { useMutation, useQuery } from "convex/react";
 import { useCallback, useEffect, useReducer } from "react";
 import { api } from "../../../../convex/_generated/api";
@@ -12,6 +13,11 @@ import {
   loadPersistedGame,
   savePersistedGame,
 } from "../logic/persistence";
+import {
+  computeGridScore,
+  computeOriginalityScore,
+  rarityToTier,
+} from "../logic/rarity";
 import { createInitialState, gameReducer } from "../logic/reducer";
 import { sanitizePersistedForGrid } from "../logic/sanitizePersisted";
 import {
@@ -30,6 +36,7 @@ type GuessSubmitFailure = {
 const GAME_ENDED_STORAGE_PREFIX = "geodoku:ended:";
 
 export function useGameState() {
+  const posthog = usePostHog();
   const todayGrid = useQuery(api.grids.getTodayGrid);
   const submit = useMutation(api.guesses.submitGuess);
   const recordFailedGuess = useMutation(api.guesses.recordFailedGuess);
@@ -41,6 +48,7 @@ export function useGameState() {
     () => createInitialState("", [], []),
   );
 
+  // biome-ignore lint/correctness/useExhaustiveDependencies: posthog is a stable ref
   useEffect(() => {
     if (!todayGrid || todayGrid.date === state.date) return;
 
@@ -65,6 +73,14 @@ export function useGameState() {
         cols: todayGrid.cols as ConstraintId[],
         validAnswers: todayGrid.validAnswers,
       });
+      const filledCells = Object.values(rehydratePayload.cells).filter(
+        (cell) => cell.status === "filled",
+      ).length;
+      posthog?.capture("session_resumed", {
+        grid_date: todayGrid.date,
+        filled_cells: filledCells,
+        lives_left: rehydratePayload.remainingLives,
+      });
     } else {
       dispatch({
         type: "init",
@@ -72,6 +88,7 @@ export function useGameState() {
         rows: todayGrid.rows as ConstraintId[],
         cols: todayGrid.cols as ConstraintId[],
       });
+      posthog?.capture("game_started", { grid_date: todayGrid.date });
     }
   }, [todayGrid, state.date]);
 
@@ -83,6 +100,7 @@ export function useGameState() {
   // Notifie Convex de la fin de partie une seule fois (gagnée ou perdue) :
   // c'est ce qui alimente les compteurs de joueurs (wins/losses + agrégats),
   // indépendamment du rating qui reste facultatif.
+  // biome-ignore lint/correctness/useExhaustiveDependencies: posthog is stable; computeGridScore/computeOriginalityScore derive from state fields already in deps
   useEffect(() => {
     if (!state.date) return;
     if (state.status !== "won" && state.status !== "lost") return;
@@ -105,6 +123,21 @@ export function useGameState() {
         : state.remainingLives <= 0
           ? "lives"
           : "blocked";
+
+    const { percent: gridScorePercent } = computeGridScore(state);
+    const { grade: originalityGrade, score: originalityScore } =
+      computeOriginalityScore(state);
+
+    posthog?.capture("game_completed", {
+      outcome: state.status,
+      end_reason: endReason,
+      grid_date: state.date,
+      filled_cells: filledCells,
+      lives_left: state.remainingLives,
+      grid_score_percent: gridScorePercent,
+      originality_grade: originalityGrade,
+      originality_score: originalityScore,
+    });
 
     recordGameEnd({
       date: state.date,
@@ -130,21 +163,30 @@ export function useGameState() {
     dispatch({ type: "selectCell", cell });
   }, []);
 
+  // biome-ignore lint/correctness/useExhaustiveDependencies: posthog is a stable ref
   const submitGuess = useCallback(
     async (cell: CellPosition, countryCode: string) => {
       if (state.status !== "playing" || !todayGrid) return;
 
       function failGuess(
         reason: GuessSubmitFailure["reason"],
+        countryCode?: string,
       ): GuessSubmitFailure {
         const gameOver = state.remainingLives === 1;
         dispatch({ type: "guessFailure" });
+        posthog?.capture("guess_failed", {
+          reason,
+          grid_date: state.date,
+          cell: `${cell.row},${cell.col}`,
+          lives_remaining: state.remainingLives - 1,
+          ...(countryCode ? { country_code: countryCode } : {}),
+        });
         return { ok: false, reason, gameOver };
       }
 
       const country = getCountryByCode(countryCode);
       if (!country) {
-        return failGuess("invalid_country");
+        return failGuess("invalid_country", countryCode);
       }
       const local = validateGuess({
         rowConstraintId: state.rows[cell.row],
@@ -163,7 +205,7 @@ export function useGameState() {
             clientId: getOrCreateClientId(),
           }).catch(() => {});
         }
-        return failGuess(local.reason);
+        return failGuess(local.reason, countryCode);
       }
       try {
         const result = await submit({
@@ -179,9 +221,15 @@ export function useGameState() {
           rarity: result.rarity,
           validAnswers: todayGrid.validAnswers,
         });
+        posthog?.capture("guess_submitted", {
+          grid_date: state.date,
+          cell: `${cell.row},${cell.col}`,
+          country_code: countryCode,
+          rarity_tier: rarityToTier(result.rarity),
+        });
         return { ok: true as const, rarity: result.rarity };
       } catch {
-        return failGuess("wrong_constraints");
+        return failGuess("wrong_constraints", countryCode);
       }
     },
     [state, todayGrid, submit, recordFailedGuess],

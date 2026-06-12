@@ -1,3 +1,4 @@
+import posthog from "posthog-js";
 import { Component, type ErrorInfo, type ReactNode } from "react";
 import { ErrorScreen } from "./ErrorScreen";
 
@@ -13,6 +14,9 @@ export class ErrorBoundary extends Component<Props, State> {
 
   componentDidCatch(error: Error, info: ErrorInfo) {
     console.error("[Geodoku] Uncaught render error", error, info);
+    posthog.captureException(error, {
+      extra: { componentStack: info.componentStack },
+    });
   }
 
   render() {

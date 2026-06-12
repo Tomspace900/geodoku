@@ -9,6 +9,7 @@ import {
 } from "@/features/game/logic/gridIssue";
 import { useT } from "@/i18n/LocaleContext";
 import { cn } from "@/lib/utils";
+import { usePostHog } from "@posthog/react";
 import { useQuery } from "convex/react";
 import { useEffect, useRef, useState } from "react";
 import { api } from "../../../../convex/_generated/api";
@@ -55,6 +56,7 @@ function LoadingSkeleton() {
 }
 
 export function GamePage() {
+  const posthog = usePostHog();
   const t = useT();
   const { state, selectCell, submitGuess, isLoading, hasGrid, validAnswers } =
     useGameState();
@@ -87,9 +89,28 @@ export function GamePage() {
 
   const showResultModal = state.status !== "playing" && !resultModalDismissed;
 
-  function dismissResultModal() {
+  function dismissResultModal(
+    source:
+      | "dismiss_modal"
+      | "view_answers_button"
+      | "skip_feedback" = "dismiss_modal",
+  ) {
+    if (showResultModal) {
+      posthog?.capture("solution_viewed", {
+        grid_date: state.date,
+        outcome: state.status,
+        source,
+      });
+    }
     setResultModalDismissed(true);
   }
+
+  // biome-ignore lint/correctness/useExhaustiveDependencies: posthog is a stable ref
+  useEffect(() => {
+    if (isBackendDown) {
+      posthog?.capture("backend_timeout_shown");
+    }
+  }, [isBackendDown]);
 
   const contentMaxWidth =
     state.status !== "playing" ? "max-w-2xl" : "max-w-[500px]";
@@ -130,7 +151,16 @@ export function GamePage() {
               )}
             </div>
           ) : (
-            <GameGrid state={state} onCellClick={(cell) => selectCell(cell)} />
+            <GameGrid
+              state={state}
+              onCellClick={(cell) => {
+                posthog?.capture("cell_opened", {
+                  grid_date: state.date,
+                  cell: `${cell.row},${cell.col}`,
+                });
+                selectCell(cell);
+              }}
+            />
           )
         ) : (
           <ErrorScreen variant="no-grid-today" />
@@ -155,8 +185,8 @@ export function GamePage() {
         <ResultScreen
           state={state}
           gridNumber={gridNumber}
-          onDismiss={dismissResultModal}
-          onViewAnswers={dismissResultModal}
+          onDismiss={() => dismissResultModal("dismiss_modal")}
+          onViewAnswers={(source) => dismissResultModal(source)}
         />
       )}
     </div>

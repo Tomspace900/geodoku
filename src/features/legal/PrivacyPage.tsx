@@ -13,6 +13,7 @@ export function PrivacyPage() {
       eyebrow={t("privacy.eyebrow")}
       backLabel={t("privacy.backToGame")}
       lead={t("privacy.lead")}
+      analyticsPage="privacy"
     >
       <div className="flex flex-col gap-7">
         <LegalSection title={t("privacy.essenceTitle")}>

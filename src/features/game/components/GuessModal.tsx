@@ -26,6 +26,7 @@ import type { CellPosition, GameState } from "@/features/game/types";
 import { useLocale, useT } from "@/i18n/LocaleContext";
 import type { TKey } from "@/i18n/types";
 import { cn } from "@/lib/utils";
+import { usePostHog } from "@posthog/react";
 import { Heart } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 
@@ -115,6 +116,7 @@ export function GuessModal({
   onClose,
   onSubmit,
 }: Props) {
+  const posthog = usePostHog();
   const [open, setOpen] = useState(true);
   const [query, setQuery] = useState("");
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
@@ -152,7 +154,15 @@ export function GuessModal({
     };
   }, []);
 
-  function handleClose() {
+  function handleClose(reason: "submitted" | "dismissed") {
+    if (reason === "dismissed") {
+      posthog?.capture("guess_modal_closed", {
+        grid_date: state.date,
+        cell: cellKey,
+        had_query: query.length > 0,
+        query_length: query.length,
+      });
+    }
     setOpen(false);
     setTimeout(onClose, 300);
   }
@@ -177,7 +187,7 @@ export function GuessModal({
     const result = await onSubmit(cell, countryCode);
     setSubmitting(false);
     if (result?.ok || result?.gameOver) {
-      handleClose();
+      handleClose("submitted");
     } else if (result) {
       setQuery("");
       showError(result.reason);
@@ -213,7 +223,7 @@ export function GuessModal({
     <Drawer
       open={open}
       onOpenChange={(v) => {
-        if (!v) handleClose();
+        if (!v) handleClose("dismissed");
       }}
     >
       <DrawerContent className="mt-10 max-h-[94svh] w-full overflow-x-hidden pb-[env(safe-area-inset-bottom)] sm:mx-auto sm:mt-24 sm:max-w-xl">

@@ -5,7 +5,9 @@ import {
 } from "@/features/game/logic/rarity";
 import type { FilledCell, GameState } from "@/features/game/types";
 import { useLocale, useT } from "@/i18n/LocaleContext";
+import { usePostHog } from "@posthog/react";
 import { Award } from "lucide-react";
+import { useEffect } from "react";
 import { STARTING_LIVES } from "../logic/constants";
 
 type AchievementId =
@@ -93,9 +95,20 @@ type Props = {
 };
 
 export function AchievementCard({ state }: Props) {
+  const posthog = usePostHog();
   const { locale } = useLocale();
   const t = useT();
   const raw = getUnlockedAchievement(state, locale);
+
+  // biome-ignore lint/correctness/useExhaustiveDependencies: posthog is stable; raw?.id intentionally limits fire to one per distinct achievement; state.date stable within session
+  useEffect(() => {
+    if (!raw) return;
+    posthog?.capture("achievement_unlocked", {
+      achievement_id: raw.id,
+      grid_date: state.date,
+    });
+  }, [raw?.id]);
+
   if (!raw) return null;
 
   let title: string;

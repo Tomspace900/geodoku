@@ -80,6 +80,7 @@ export function ChangelogPage() {
       title={t("changelog.title")}
       eyebrow={t("changelog.eyebrow")}
       backLabel={t("changelog.backToGame")}
+      analyticsPage="changelog"
     >
       <div className="flex flex-col gap-6">
         {ENTRIES.map((entry) => (

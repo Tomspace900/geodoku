@@ -9,9 +9,10 @@ import {
 } from "@/components/ui/dialog";
 import { useT } from "@/i18n/LocaleContext";
 import type { TKey } from "@/i18n/types";
+import { usePostHog } from "@posthog/react";
 import { Ban, Gem, Grid3x3, Heart, HelpCircle } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 const STORAGE_KEY = "geodoku.showHowToPlay";
 
@@ -57,14 +58,47 @@ function writeShow(value: boolean) {
 }
 
 export function HowToPlayLink() {
+  const posthog = usePostHog();
   const [show, setShow] = useState<boolean>(() => readShow());
   const [open, setOpen] = useState<boolean>(show);
+  const openedAtRef = useRef<number | null>(null);
+  const openTriggerRef = useRef<"auto_first_visit" | "manual">("manual");
+  const autoOpenCapturedRef = useRef(false);
   const t = useT();
+
+  function beginOpen(trigger: "auto_first_visit" | "manual") {
+    openTriggerRef.current = trigger;
+    openedAtRef.current = Date.now();
+    posthog?.capture("how_to_play_opened", { trigger });
+    setOpen(true);
+  }
+
+  function captureClosed(dontShowAgain: boolean) {
+    if (openedAtRef.current === null) return;
+    posthog?.capture("how_to_play_closed", {
+      trigger: openTriggerRef.current,
+      duration_ms: Date.now() - openedAtRef.current,
+      dont_show_again: dontShowAgain,
+    });
+    openedAtRef.current = null;
+  }
+
+  // biome-ignore lint/correctness/useExhaustiveDependencies: fire once on mount for auto-popup only
+  useEffect(() => {
+    if (!show || autoOpenCapturedRef.current) return;
+    autoOpenCapturedRef.current = true;
+    openTriggerRef.current = "auto_first_visit";
+    openedAtRef.current = Date.now();
+    posthog?.capture("how_to_play_opened", { trigger: "auto_first_visit" });
+  }, []);
 
   function handleDontShowChange(checked: boolean) {
     const nextShow = !checked;
     setShow(nextShow);
     writeShow(nextShow);
+    posthog?.capture("how_to_play_dont_show_toggled", {
+      dont_show_again: checked,
+    });
   }
 
   return (
@@ -72,14 +106,28 @@ export function HowToPlayLink() {
       <Button
         variant="ghost"
         size="sm"
-        onClick={() => setOpen(true)}
+        onClick={() => beginOpen("manual")}
         className="self-center gap-1.5 text-xs tracking-wide"
       >
         <HelpCircle size={13} />
         {t("ui.howToPlay")}
       </Button>
 
-      <Dialog open={open} onOpenChange={setOpen}>
+      <Dialog
+        open={open}
+        onOpenChange={(nextOpen) => {
+          if (!nextOpen) {
+            captureClosed(!show);
+            setOpen(false);
+            return;
+          }
+          if (!openedAtRef.current) {
+            beginOpen("manual");
+            return;
+          }
+          setOpen(true);
+        }}
+      >
         <DialogContent className="max-w-sm">
           <DialogHeader className="items-start space-y-0 text-left sm:text-left">
             <DialogTitle className="font-serif text-2xl font-medium italic tracking-normal text-on-surface leading-none">
