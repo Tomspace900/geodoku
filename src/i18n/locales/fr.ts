@@ -75,6 +75,10 @@ export const fr = {
     title: "Changelog",
     backToGame: "Retour au jeu",
     entries: {
+      constraintsRefreshDate: "12 juin 2026",
+      constraintsRefreshTitle: "Plus de contraintes, plus parlantes",
+      constraintsRefreshBody:
+        "Les seuils chiffr\u00E9s laissent place \u00E0 des comparaisons avec des pays rep\u00E8res (\u00AB\u00A0plus grand que la France\u00A0\u00BB, \u00AB\u00A0moins dense que le Canada\u00A0\u00BB\u2026). J'ai enrichi le catalogue avec de nouvelles contraintes (déserts, océans, conduite à gauche ...) et clarifi\u00E9 certains libell\u00E9s.",
       scoringV2Date: "6 juin 2026",
       scoringV2Title: "Cinq vies et un score plus malin",
       scoringV2Body:
@@ -82,7 +86,7 @@ export const fr = {
       reliabilityDate: "2 juin 2026",
       reliabilityTitle: "Une grille fiable, tous les jours",
       reliabilityBody:
-        "Le jeu se r\u00E9pare d\u00E9sormais tout seul si quelque chose coince c\u00F4t\u00E9 serveur\u00A0: la grille du jour est toujours l\u00E0, \u00E0 l'heure. J'ai aussi publi\u00E9 une page de confidentialit\u00E9 claire et sans jargon, ainsi que cette page de changelog pour suivre les nouveaut\u00E9s.",
+        "Le jeu se r\u00E9pare d\u00E9sormais tout seul si quelque chose coince c\u00F4t\u00E9 serveur\u00A0: la grille du jour est toujours l\u00E0, \u00E0 l'heure. J'ai aussi publi\u00E9 une page de confidentialit\u00E9 claire et sans blabla, ainsi que cette page de changelog pour suivre les nouveaut\u00E9s.",
       darkModeDate: "29 mai 2026",
       darkModeTitle: "Mode sombre",
       darkModeBody:
@@ -124,8 +128,9 @@ export const fr = {
     roadmapLead:
       "Quelques pistes que j'aimerais explorer. Rien n'est grav\u00E9 dans le marbre. Tes id\u00E9es sont les bienvenues.",
     roadmapReplay: "Rejouer les grilles pr\u00E9c\u00E9dentes",
-    roadmapConstraints: "De nouvelles contraintes",
-    roadmapLives: "Plus de vies (voire illimit\u00E9es) ou un mode facile",
+    roadmapConstraints:
+      "Des grilles \u00E0 th\u00E8me ou des \u00E9ditions sp\u00E9ciales",
+    roadmapLives: "Mode facile et/ou mode hardcore",
     contactTitle: "Une id\u00E9e, une remarque\u00A0?",
     contactBodyPre:
       "J'accueille toutes les suggestions avec plaisir. \u00C9cris-moi \u00E0",
