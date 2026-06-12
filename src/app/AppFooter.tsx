@@ -1,4 +1,5 @@
 import { LocaleSwitcher } from "@/features/game/components/LocaleSwitcher";
+import { isChangelogNewBadgeVisible } from "@/features/legal/logic/changelog";
 import { useT } from "@/i18n/LocaleContext";
 import { cn } from "@/lib/utils";
 import { usePostHog } from "@posthog/react";
@@ -29,6 +30,7 @@ export default function AppFooter({ className }: { className?: string }) {
 
   const linkClass =
     "underline underline-offset-2 decoration-outline-variant/40 transition-colors hover:text-on-surface focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-on-surface/20 focus-visible:ring-offset-2 focus-visible:ring-offset-surface rounded-sm";
+  const showChangelogNewBadge = isChangelogNewBadgeVisible();
 
   return (
     <footer
@@ -84,13 +86,20 @@ export default function AppFooter({ className }: { className?: string }) {
             {t("footer.privacy")}
           </a>
           <Middot />
-          <a
-            href="/changelog"
-            className={linkClass}
-            onClick={() => trackFooterLink("changelog")}
-          >
-            {t("footer.changelog")}
-          </a>
+          <span className="inline-flex items-center gap-1">
+            {showChangelogNewBadge ? (
+              <span className="rounded-full bg-brand/10 px-1 font-sans text-[8px] font-semibold uppercase tracking-wider text-brand no-underline">
+                {t("footer.changelogNew")}
+              </span>
+            ) : null}
+            <a
+              href="/changelog"
+              className={linkClass}
+              onClick={() => trackFooterLink("changelog")}
+            >
+              {t("footer.changelog")}
+            </a>
+          </span>
         </div>
 
         <div className="flex flex-wrap items-center justify-center gap-x-1.5 gap-y-0.5 font-sans text-[10px] text-on-surface-variant sm:gap-x-2 sm:gap-y-1 sm:text-xs">

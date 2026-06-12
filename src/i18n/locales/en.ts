@@ -37,6 +37,7 @@ export const en = {
     support: "Buy me a coffee",
     privacy: "Privacy",
     changelog: "Changelog",
+    changelogNew: "New",
     copyright: "©\u00A0{year}\u00A0Geodoku",
   },
   legal: {
@@ -75,6 +76,10 @@ export const en = {
     title: "Changelog",
     backToGame: "Back to the game",
     entries: {
+      constraintsRefreshDate: "June 12, 2026",
+      constraintsRefreshTitle: "More constraints, easier to read",
+      constraintsRefreshBody:
+        'Raw number thresholds give way to comparisons with familiar countries ("larger than France", "less dense than Canada"…). I expanded the catalogue with new constraints (deserts, oceans, left-hand traffic ...) and clarified some labels.',
       scoringV2Date: "June 6, 2026",
       scoringV2Title: "Five lives and a smarter score",
       scoringV2Body:
@@ -124,8 +129,8 @@ export const en = {
     roadmapLead:
       "A few directions I'd love to explore. Nothing is set in stone. Your ideas are very welcome.",
     roadmapReplay: "Replay previous grids",
-    roadmapConstraints: "New constraints",
-    roadmapLives: "More (or unlimited) lives, or an easy mode",
+    roadmapConstraints: "Themed grids or special editions",
+    roadmapLives: "Easy mode and/or hardcore mode",
     contactTitle: "Got an idea or a remark?",
     contactBodyPre: "I welcome every suggestion. Write to me at",
   },
