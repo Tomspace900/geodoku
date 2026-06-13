@@ -12,7 +12,6 @@ describe("computeCellMetric", () => {
       totalGuesses: 0,
       guessRows: [],
       playersEngaged: 0,
-      estimatedDifficulty: 42,
     });
 
     expect(metric.totalGuesses).toBe(0);
@@ -22,7 +21,6 @@ describe("computeCellMetric", () => {
     expect(metric.observedDifficulty100).toBeNull();
     expect(metric.topAnswers).toEqual([]);
     expect(metric.missingCountries).toEqual(["FRA", "ESP", "ITA"]);
-    expect(metric.estimatedDifficulty).toBe(42);
   });
 
   it("computes fillRate and observedDifficulty from playersEngaged", () => {
@@ -34,7 +32,6 @@ describe("computeCellMetric", () => {
         { countryCode: "ESP", count: 2 },
       ],
       playersEngaged: 10,
-      estimatedDifficulty: 30,
     });
 
     expect(metric.fillRate).toBeCloseTo(0.8, 5);
@@ -47,7 +44,6 @@ describe("computeCellMetric", () => {
       totalGuesses: 12,
       guessRows: [{ countryCode: "FRA", count: 12 }],
       playersEngaged: 10,
-      estimatedDifficulty: null,
     });
     expect(metric.observedDifficulty100).toBe(0);
   });
@@ -62,7 +58,6 @@ describe("computeCellMetric", () => {
         { countryCode: "ITA", count: 2 },
       ],
       playersEngaged: 12,
-      estimatedDifficulty: null,
     });
 
     expect(metric.topAnswers.map((a) => a.countryCode)).toEqual([
@@ -82,7 +77,6 @@ describe("computeCellMetric", () => {
         count: 7 - i,
       })),
       playersEngaged: 10,
-      estimatedDifficulty: null,
     });
     expect(metric.topAnswers).toHaveLength(5);
   });
@@ -96,7 +90,6 @@ describe("computeCellMetric", () => {
         { countryCode: "ESP", count: 2 },
       ],
       playersEngaged: 5,
-      estimatedDifficulty: null,
     });
     expect(metric.missingCountries).toEqual(["ITA", "PRT"]);
     expect(metric.coverage).toBeCloseTo(0.5, 5);

@@ -1,9 +1,17 @@
+import { predictionDelta } from "@/features/admin/logic/analytics";
 import {
   constraintLabel,
+  deltaSeverityTextClass,
   difficultyPillClass,
+  popularityPillClass,
 } from "@/features/admin/logic/display";
+import {
+  popularityScore100,
+  topKPopularity,
+} from "@/features/countries/lib/popularity";
 import { getCountryByCode } from "@/features/countries/lib/search";
 import { cn } from "@/lib/utils";
+import { ArrowDown, ArrowUp, Gauge, Minus } from "lucide-react";
 import { StatGlyph } from "./StatGlyph";
 
 const headerClass =
@@ -24,8 +32,6 @@ type GridPreviewData = {
   rows: string[];
   cols: string[];
   validAnswers: Record<string, string[]>;
-  // 9 valeurs row-major (0–100) : difficulté ESTIMÉE (grilles futures).
-  cellDifficulties?: number[] | null;
   // Métriques OBSERVÉES par case (grilles passées / active).
   observed?: Record<string, ObservedCell> | null;
 };
@@ -48,17 +54,54 @@ function KdaLine({ cell }: { cell: ObservedCell }) {
   );
 }
 
+const easePillClass =
+  "inline-flex items-center gap-1 rounded-full px-1.5 py-0.5 text-[11px] font-semibold tabular-nums";
+
+/** Badge facilité estimée (jauge + score) — futur et passé (même visuel). */
+function EaseBadge({ score }: { score: number }) {
+  return (
+    <span className={cn(easePillClass, popularityPillClass(score))}>
+      <Gauge aria-hidden="true" className="size-3 shrink-0" />
+      {score}
+    </span>
+  );
+}
+
+/** Écart inline prédit − observé : flèche de sens + |écart|, teinté sévérité. */
+function DeltaInline({
+  predicted,
+  observed,
+}: {
+  predicted: number;
+  observed: number;
+}) {
+  const { value, severity } = predictionDelta(predicted, observed);
+  const Arrow = value > 0 ? ArrowDown : value < 0 ? ArrowUp : Minus;
+  return (
+    <span
+      className={cn(
+        "inline-flex items-center gap-0.5 text-[10px] font-medium tabular-nums",
+        deltaSeverityTextClass(severity),
+      )}
+    >
+      <Arrow aria-hidden="true" className="size-3 shrink-0" />
+      {Math.abs(value)}
+    </span>
+  );
+}
+
 export function GridPreview({
   rows,
   cols,
   validAnswers,
-  cellDifficulties,
   observed,
 }: GridPreviewData) {
   return (
     <div
       className="grid gap-1.5"
-      style={{ gridTemplateColumns: "minmax(0,1fr) repeat(3, minmax(0,1fr))" }}
+      style={{
+        gridTemplateColumns: "minmax(0,1fr) repeat(3, minmax(0,1fr))",
+      }}
     >
       <div />
 
@@ -79,26 +122,22 @@ export function GridPreview({
           const codes = obs
             ? sortByPicks(validAnswers[key] ?? [], obs.picks)
             : (validAnswers[key] ?? []);
-          const estimated = cellDifficulties?.[r * 3 + c];
 
-          // Pastille basse colorée : % réussite (observé, vert = haut) ou
-          // difficulté estimée (futur). difficultyPillClass donne vert pour un
-          // score bas → réussite haute = (1−réussite)·100 bas = vert.
-          let badge: { cls: string; text: string } | null = null;
-          if (obs) {
-            badge =
-              obs.reussite === null
-                ? { cls: "bg-surface-low text-on-surface-variant", text: "—" }
-                : {
-                    cls: difficultyPillClass((1 - obs.reussite) * 100),
-                    text: `${Math.round(obs.reussite * 100)} %`,
-                  };
-          } else if (typeof estimated === "number") {
-            badge = {
-              cls: difficultyPillClass(estimated),
-              text: `${estimated}`,
-            };
-          }
+          // Facilité estimée de la case (0–100, vert = solutions connues =
+          // facile) : seul prédicteur validé du taux d'échec. Picto jauge.
+          const popScore = popularityScore100(
+            topKPopularity(validAnswers[key] ?? []),
+          );
+          // Pastille basse : % réussite OBSERVÉ (passé/actif), `—` si non
+          // instrumenté ; null pour une grille future (rien d'observé).
+          const observedBadge = obs
+            ? obs.reussite === null
+              ? { cls: "bg-surface-low text-on-surface-variant", text: "—" }
+              : {
+                  cls: difficultyPillClass((1 - obs.reussite) * 100),
+                  text: `${Math.round(obs.reussite * 100)}%`,
+                }
+            : null;
 
           return (
             <div
@@ -140,17 +179,35 @@ export function GridPreview({
                 )}
               </div>
 
-              {badge && (
-                <div className="mt-1 flex shrink-0 items-center justify-between gap-1">
-                  <span
-                    className={cn(
-                      "rounded-full px-1.5 py-0.5 text-[11px] font-semibold tabular-nums",
-                      badge.cls,
+              {observedBadge ? (
+                // Passé : 2 lignes. (1) réussite observée + KDA.
+                // (2) facilité estimée + écart prédit/réel.
+                <div className="mt-1 flex shrink-0 flex-col gap-1">
+                  <div className="flex items-center justify-between gap-1">
+                    <span
+                      className={cn(
+                        "rounded-full px-1.5 py-0.5 text-[11px] font-semibold tabular-nums",
+                        observedBadge.cls,
+                      )}
+                    >
+                      {observedBadge.text}
+                    </span>
+                    {obs && <KdaLine cell={obs} />}
+                  </div>
+                  <div className="flex items-center gap-1.5">
+                    <EaseBadge score={popScore} />
+                    {obs && obs.reussite !== null && (
+                      <DeltaInline
+                        predicted={popScore}
+                        observed={Math.round(obs.reussite * 100)}
+                      />
                     )}
-                  >
-                    {badge.text}
-                  </span>
-                  {obs && <KdaLine cell={obs} />}
+                  </div>
+                </div>
+              ) : (
+                // Futur : facilité estimée seule (pas d'observé).
+                <div className="mt-1 flex shrink-0 items-center">
+                  <EaseBadge score={popScore} />
                 </div>
               )}
             </div>

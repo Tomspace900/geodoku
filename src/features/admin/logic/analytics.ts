@@ -8,6 +8,8 @@
  * donnée » (`null` → `—`) de « zéro », et on gate le bruit d'échantillon.
  */
 
+import { popularityScore100 } from "@/features/countries/lib/popularity";
+
 // ─── Constantes (mirroir scripts/export-analytics.ts) ──────────────────────────
 
 /**
@@ -44,15 +46,58 @@ export function struggleRate(cell: {
   return cell.failedAttempts / attempts;
 }
 
+// ─── Écart prédiction vs observé ────────────────────────────────────────────────
+
+/** Qualité de la prédiction : écart faible (vert) / moyen (orange) / raté (rouge). */
+export type DeltaSeverity = "good" | "off" | "missed";
+
+/** Seuils sur |écart| (points 0–100). Valeurs de départ, à affiner avec les données. */
+const DELTA_GOOD_MAX = 15;
+const DELTA_OFF_MAX = 30;
+
+function deltaSeverity(absDelta: number): DeltaSeverity {
+  if (absDelta <= DELTA_GOOD_MAX) return "good";
+  if (absDelta <= DELTA_OFF_MAX) return "off";
+  return "missed";
+}
+
+/**
+ * Écart signé entre la facilité estimée d'une case/grille (0–100, prédiction
+ * issue de `topKPopularity`) et la réussite observée (0–100). `value > 0` = on a
+ * prédit plus facile que la réalité (sur-estimation) ; `< 0` = sous-estimation.
+ */
+export function predictionDelta(
+  predicted: number,
+  observed: number,
+): { value: number; severity: DeltaSeverity } {
+  const value = Math.round(predicted - observed);
+  return { value, severity: deltaSeverity(Math.abs(value)) };
+}
+
+/** Moyenne des taux de réussite observés (0–1) → score 0–100, ou null si vide. */
+export function averageObservedSuccess100(
+  rates: ReadonlyArray<number | null>,
+): number | null {
+  const observed = rates.filter((rate): rate is number => rate !== null);
+  if (observed.length === 0) return null;
+  return Math.round(
+    (observed.reduce((sum, rate) => sum + rate, 0) / observed.length) * 100,
+  );
+}
+
 // ─── Marqueurs du calendrier ────────────────────────────────────────────────────
 
 export type CalendarMarker =
   | { kind: "observed"; winRate: number | null } // jour passé planifié
-  | { kind: "estimated"; difficulty: number } // aujourd'hui / futur planifié
+  | { kind: "scheduled"; popScore: number | null } // aujourd'hui / futur planifié (dot notoriété)
   | { kind: "predicted" } // prédit (brand)
   | { kind: "missing" }; // pool vide pour ce jour
 
-type ScheduledForMarkers = { date: string; difficulty: number };
+type ScheduledForMarkers = {
+  date: string;
+  /** Notoriété moyenne des solutions [0..1] (gridPopTop3 de getScheduledGrids). */
+  gridPopTop3: number | null;
+};
 type UpcomingForMarkers = {
   date: string;
   kind: "scheduled" | "predicted" | "missing";
@@ -61,8 +106,9 @@ type UpcomingForMarkers = {
 /**
  * Construit la table date → marqueur du calendrier à partir des 3 queries
  * légères. Un jour planifié est OBSERVÉ s'il est passé (pastille winRate),
- * ESTIMÉ s'il est aujourd'hui ou futur (difficulté générée). Les jours non
- * encore inscrits viennent de `upcoming` : `predicted` ou `missing`.
+ * SCHEDULED s'il est aujourd'hui ou futur (pastille notoriété des solutions —
+ * seul prédicteur validé de la difficulté). Les jours non encore inscrits
+ * viennent de `upcoming` : `predicted` ou `missing`.
  */
 export function buildCalendarMarkers(args: {
   today: string;
@@ -81,14 +127,17 @@ export function buildCalendarMarkers(args: {
       });
     } else {
       markers.set(grid.date, {
-        kind: "estimated",
-        difficulty: grid.difficulty,
+        kind: "scheduled",
+        popScore:
+          grid.gridPopTop3 === null
+            ? null
+            : popularityScore100(grid.gridPopTop3),
       });
     }
   }
 
   // `upcoming` ne sert qu'aux jours pas encore inscrits (les scheduled futurs
-  // sont déjà couverts ci-dessus, avec leur difficulté).
+  // sont déjà couverts ci-dessus).
   for (const day of upcoming) {
     if (markers.has(day.date)) continue;
     if (day.kind === "predicted") markers.set(day.date, { kind: "predicted" });

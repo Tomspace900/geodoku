@@ -110,7 +110,6 @@ type CellMetric = {
   coverage: number;
   fillRate: number | null;
   observedDifficulty100: number | null;
-  estimatedDifficulty: number | null;
   topAnswers: Array<{ countryCode: string; count: number; share: number }>;
   missingCountries: string[];
 };
@@ -439,12 +438,10 @@ function renderObservedDifficulty(
   type Row = {
     date: string;
     rc: string;
-    est: number;
     struggle: number;
     struggle100: number;
     attempts: number;
     fillRate: number | null;
-    delta: number;
   };
   const rows: Row[] = [];
 
@@ -452,7 +449,7 @@ function renderObservedDifficulty(
     if (!hasStruggleData(date)) continue;
     for (let i = 0; i < CELL_KEYS.length; i++) {
       const cell = m.cells[CELL_KEYS[i]];
-      if (!cell || cell.estimatedDifficulty === null) continue;
+      if (!cell) continue;
       const attempts = cell.totalGuesses + cell.failedAttempts;
       if (attempts < STRUGGLE_MIN_ATTEMPTS) continue;
       const s = struggleRate(cell);
@@ -462,54 +459,43 @@ function renderObservedDifficulty(
       rows.push({
         date,
         rc: `${constraintLabel(m.rows[row])} × ${constraintLabel(m.cols[col])}`,
-        est: cell.estimatedDifficulty,
         struggle: s,
         struggle100,
         attempts,
         fillRate: cell.fillRate,
-        delta: struggle100 - cell.estimatedDifficulty,
       });
     }
   }
 
-  rows.sort((a, b) => Math.abs(b.delta) - Math.abs(a.delta));
+  rows.sort((a, b) => b.struggle100 - a.struggle100);
 
   const lines: string[] = [
-    "## Difficulté observée par case (struggle vs estimé)",
+    "## Difficulté observée par case (struggle)",
     "",
-    `Seule section de calibration fiable : **cases réellement tentées** (≥ ${STRUGGLE_MIN_ATTEMPTS} tentatives) depuis ${FAILED_ATTEMPTS_SINCE}. \`struggle\` = part des tentatives qui échouent = difficulté ressentie une fois la case atteinte. \`Δ = struggle100 − estimated\` : **Δ > 0** = générateur trop optimiste (case plus dure qu'estimée), **Δ < 0** = trop pessimiste. \`fillRate\` en regard pour repérer l'abandon (bas + struggle bas = case esquivée, pas dure).`,
+    `Cases réellement tentées (≥ ${STRUGGLE_MIN_ATTEMPTS} tentatives) depuis ${FAILED_ATTEMPTS_SINCE}. \`struggle\` = part des tentatives qui échouent = difficulté ressentie une fois la case atteinte. \`fillRate\` en regard pour repérer l'abandon (bas + struggle bas = case esquivée, pas dure).`,
     "",
-    "| date | row × col | estimated | struggle | Δ | attempts | fillRate |",
-    "|---|---|---:|---:|---:|---:|---:|",
+    "| date | row × col | struggle | attempts | fillRate |",
+    "|---|---|---:|---:|---:|",
   ];
   for (const r of rows.slice(0, 40)) {
     lines.push(
-      `| ${r.date} | ${r.rc} | ${r.est} | ${r.struggle100} | ${r.delta >= 0 ? "+" : ""}${r.delta} | ${r.attempts} | ${pct(r.fillRate, 0)} |`,
+      `| ${r.date} | ${r.rc} | ${r.struggle100} | ${r.attempts} | ${pct(r.fillRate, 0)} |`,
     );
   }
   if (rows.length === 0) {
     lines.push(
-      `| _aucune case avec ≥ ${STRUGGLE_MIN_ATTEMPTS} tentatives dans la fenêtre instrumentée_ | | | | | | |`,
+      `| _aucune case avec ≥ ${STRUGGLE_MIN_ATTEMPTS} tentatives dans la fenêtre instrumentée_ | | | | |`,
     );
   } else {
-    const meanAbs =
-      rows.reduce((s, r) => s + Math.abs(r.delta), 0) / rows.length;
-    const meanSigned = rows.reduce((s, r) => s + r.delta, 0) / rows.length;
-    const under = rows.filter((r) => r.delta > 10).length;
-    const over = rows.filter((r) => r.delta < -10).length;
+    const meanStruggle =
+      rows.reduce((s, r) => s + r.struggle100, 0) / rows.length;
+    const hard = rows.filter((r) => r.struggle100 >= 50).length;
     lines.push("");
     lines.push(
       `- Cases avec assez de tentatives : **${rows.length}** _(échantillon faible — directionnel)_`,
     );
-    lines.push(
-      `- Écart absolu moyen (struggle vs estimé) : **${meanAbs.toFixed(1)}** pts`,
-    );
-    lines.push(
-      `- Biais signé : ${meanSigned >= 0 ? "+" : ""}${meanSigned.toFixed(1)} (＋ = générateur trop optimiste)`,
-    );
-    lines.push(
-      `- Sous-estimées (Δ > +10) : ${under} · sur-estimées (Δ < −10) : ${over}`,
-    );
+    lines.push(`- Struggle moyen : **${meanStruggle.toFixed(1)}** %`);
+    lines.push(`- Cases struggle ≥ 50 % : ${hard}`);
   }
   lines.push("");
   return lines.join("\n");

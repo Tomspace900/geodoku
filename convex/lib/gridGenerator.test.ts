@@ -1,6 +1,4 @@
 import { describe, expect, it } from "vitest";
-import countriesJson from "../../src/features/countries/data/countries.json";
-import type { Country } from "../../src/features/countries/types.ts";
 import { CONSTRAINTS } from "../../src/features/game/logic/constraints";
 import {
   MAX_SAME_CATEGORY,
@@ -9,19 +7,11 @@ import {
 } from "./gridConstants";
 import {
   buildConstraintMatches,
-  computeCellDifficulty,
   finalizeGrid,
   generateDiversePool,
   intersect,
-  topKPopularity,
   tryBuildGridWithSeed,
 } from "./gridGenerator";
-
-const COUNTRIES = countriesJson as Country[];
-
-function popularityOf(code: string): number {
-  return COUNTRIES.find((c) => c.code === code)?.popularityIndex ?? 0.5;
-}
 
 // ─── intersect ────────────────────────────────────────────────────────────────
 
@@ -128,136 +118,16 @@ describe("tryBuildGridWithSeed", () => {
   });
 });
 
-// ─── computeCellDifficulty ────────────────────────────────────────────────────
-
-describe("computeCellDifficulty", () => {
-  it("returns a low value for easy×easy with many solutions", () => {
-    const matches = buildConstraintMatches();
-    // continent_europe × language_english — both easy, should have many solutions
-    const diff = computeCellDifficulty(
-      "continent_europe",
-      "language_english",
-      matches,
-    );
-    // With ≥ 10 solutions and easy×easy (weight 1×1), expect difficulty < 30
-    const solutions = intersect(
-      "continent_europe",
-      "language_english",
-      matches,
-    );
-    if (solutions.length >= 10) {
-      expect(diff).toBeLessThan(30);
-    } else {
-      expect(diff).toBeGreaterThanOrEqual(0);
-    }
-  });
-
-  it("returns a high value for hard×hard with few solutions", () => {
-    const matches = buildConstraintMatches();
-    // flag_has_crescent (hard) × latitude_polar (hard) — should have very few solutions
-    const diff = computeCellDifficulty(
-      "flag_has_crescent",
-      "latitude_polar",
-      matches,
-    );
-    const solutions = intersect("flag_has_crescent", "latitude_polar", matches);
-    if (solutions.length <= 3 && solutions.length > 0) {
-      expect(diff).toBeGreaterThan(70);
-    } else if (solutions.length === 0) {
-      expect(diff).toBe(100);
-    }
-  });
-
-  it("returns 100 for a cell with no solutions", () => {
-    const matches = buildConstraintMatches();
-    // Two mutually exclusive constraints
-    const diff = computeCellDifficulty(
-      "continent_africa",
-      "continent_asia",
-      matches,
-    );
-    expect(diff).toBe(100);
-  });
-
-  it("returns an integer in [0, 100]", () => {
-    const matches = buildConstraintMatches();
-    for (const row of CONSTRAINTS.slice(0, 10)) {
-      for (const col of CONSTRAINTS.slice(0, 10)) {
-        if (row.id === col.id) continue;
-        const d = computeCellDifficulty(row.id, col.id, matches);
-        expect(Number.isInteger(d)).toBe(true);
-        expect(d).toBeGreaterThanOrEqual(0);
-        expect(d).toBeLessThanOrEqual(100);
-      }
-    }
-  });
-
-  it("with same pool size and constraint weight product, higher top-K popularity lowers difficulty", () => {
-    const matches = buildConstraintMatches();
-    // Deux cellules de taille de pool identique et de même produit de poids
-    // (cols toutes deux « medium »), ne différant que par la notoriété des pays :
-    // étoile + Moyen-Orient (pays connus) vs étoile + Caraïbes (petits États obscurs).
-    const rowA = "flag_has_star";
-    const colA = "subregion_middle_east";
-    const rowB = "flag_has_star";
-    const colB = "subregion_caribbean";
-    const nA = intersect(rowA, colA, matches).length;
-    const nB = intersect(rowB, colB, matches).length;
-    expect(nA).toBe(nB);
-    expect(nA).toBeGreaterThan(0);
-
-    const popA = topKPopularity(intersect(rowA, colA, matches));
-    const popB = topKPopularity(intersect(rowB, colB, matches));
-    expect(popA).toBeGreaterThan(popB + 0.1);
-
-    const dA = computeCellDifficulty(rowA, colA, matches);
-    const dB = computeCellDifficulty(rowB, colB, matches);
-    expect(dA).toBeLessThan(dB);
-  });
-});
-
-// ─── topKPopularity ───────────────────────────────────────────────────────────
-
-describe("topKPopularity", () => {
-  it("returns 0.5 for an empty code list", () => {
-    expect(topKPopularity([])).toBe(0.5);
-  });
-
-  it("returns the lone country popularity when the pool has one code", () => {
-    expect(topKPopularity(["USA"])).toBe(popularityOf("USA"));
-  });
-
-  it("averages the full pool when size is below K=3", () => {
-    const a = "SMR";
-    const b = "MCO";
-    expect(topKPopularity([a, b], 3)).toBeCloseTo(
-      (popularityOf(a) + popularityOf(b)) / 2,
-      6,
-    );
-  });
-
-  it("averages only the top-3 by popularity when the pool is larger", () => {
-    const codes = ["USA", "FSM", "AND", "TUV", "MHL"];
-    const sorted = codes
-      .map((code) => popularityOf(code))
-      .sort((x, y) => y - x);
-    const manual = (sorted[0] + sorted[1] + sorted[2]) / 3;
-    expect(topKPopularity(codes, 3)).toBeCloseTo(manual, 5);
-  });
-});
-
 // ─── generateDiversePool ─────────────────────────────────────────────────────
 
 describe("generateDiversePool (10-seed subset)", () => {
   it("produces valid grids that satisfy hard filters", () => {
-    // Use only the first 10 constraints as seeds for speed
     const CATEGORY_BY_ID: Record<string, string> = {};
     for (const c of CONSTRAINTS) CATEGORY_BY_ID[c.id] = c.category;
 
     const matches = buildConstraintMatches();
     const { grids, report } = generateDiversePool();
 
-    // At least some grids should be generated
     expect(grids.length).toBeGreaterThan(0);
     expect(report.totalGenerated).toBe(grids.length);
     expect(report.constraintCoverage).toBeGreaterThan(0);
@@ -265,11 +135,9 @@ describe("generateDiversePool (10-seed subset)", () => {
     expect(report.durationMs).toBeGreaterThan(0);
 
     for (const grid of grids) {
-      // 6 distinct constraint IDs
       const all6 = new Set(grid.metadata.constraintIds);
       expect(all6.size).toBe(6);
 
-      // All cells satisfy size constraints
       for (let r = 0; r < 3; r++) {
         for (let c = 0; c < 3; c++) {
           const size = intersect(grid.rows[r], grid.cols[c], matches).length;
@@ -278,12 +146,10 @@ describe("generateDiversePool (10-seed subset)", () => {
         }
       }
 
-      // MIN_CATEGORIES distinct categories
       expect(grid.metadata.categories.length).toBeGreaterThanOrEqual(
         MIN_CATEGORIES,
       );
 
-      // MAX_SAME_CATEGORY per category
       const catCounts: Record<string, number> = {};
       for (const id of grid.metadata.constraintIds) {
         const cat = CATEGORY_BY_ID[id] ?? "unknown";
@@ -291,14 +157,6 @@ describe("generateDiversePool (10-seed subset)", () => {
         expect(catCounts[cat]).toBeLessThanOrEqual(MAX_SAME_CATEGORY);
       }
 
-      // Difficulty in [0, 100]
-      expect(grid.metadata.difficultyEstimate).toBeGreaterThanOrEqual(0);
-      expect(grid.metadata.difficultyEstimate).toBeLessThanOrEqual(100);
-
-      // 9 cell difficulties
-      expect(grid.metadata.cellDifficulties).toHaveLength(9);
-
-      // validAnswers has 9 keys
       expect(Object.keys(grid.validAnswers)).toHaveLength(9);
     }
   }, 120_000);
@@ -313,7 +171,7 @@ describe("generateDiversePool (10-seed subset)", () => {
         for (const id of grids[j].metadata.constraintIds) {
           if (setA.has(id)) shared++;
         }
-        expect(shared).toBeLessThan(4); // MAX_OVERLAP_BETWEEN_GRIDS = 4 (strict <)
+        expect(shared).toBeLessThan(4);
       }
     }
   }, 120_000);
@@ -335,7 +193,6 @@ describe("generateDiversePool (10-seed subset)", () => {
 describe("finalizeGrid", () => {
   it("returns null for a grid with invalid cells", () => {
     const matches = buildConstraintMatches();
-    // Force a cell that will have 0 solutions (mutually exclusive pair in row/col)
     const result = finalizeGrid(
       ["continent_africa", "continent_asia", "continent_europe"],
       [
@@ -346,22 +203,18 @@ describe("finalizeGrid", () => {
       "continent_africa",
       matches,
     );
-    // continent_africa × continent_north_america = 0 → should return null
     expect(result).toBeNull();
   });
 
   it("returns null when MIN_CATEGORIES is violated", () => {
     const matches = buildConstraintMatches();
-    // All same category: only continent → categoryCount = 1 < 4
     const result = finalizeGrid(
       ["continent_africa", "continent_asia", "continent_europe"],
       ["area_larger_india", "area_larger_france", "area_smaller_belgium"],
       "continent_africa",
       matches,
     );
-    // This might pass cell size but fail MIN_CATEGORIES (2 categories)
     if (result !== null) {
-      // If it somehow has enough categories, the test is inconclusive
       expect(result.metadata.categories.length).toBeGreaterThanOrEqual(
         MIN_CATEGORIES,
       );
