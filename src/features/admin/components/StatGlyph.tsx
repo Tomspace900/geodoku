@@ -15,8 +15,8 @@ import type { ReactNode } from "react";
 
 /**
  * Vocabulaire d'icônes partagé des métriques admin (style « KDA »). Une seule
- * source de vérité pour les cases de grille, le header de grille et la tendance
- * Santé de jeu — icône + couleur + libellé (pour les légendes).
+ * source de vérité pour les KDA de grille, la légende et la tendance Santé de
+ * jeu. Le header GridDayDetail utilise `GridHeaderStat`.
  */
 export type StatKind =
   | "engages"
@@ -52,10 +52,13 @@ const GLYPHS: Record<
 
 type Size = "sm" | "md";
 
+export function getStatGlyph(kind: StatKind): (typeof GLYPHS)[StatKind] {
+  return GLYPHS[kind];
+}
+
 /**
- * Icône + valeur. `showLabel` ajoute le mot inline (header de grille, en-têtes
- * de tableau, là où il y a la place) ; sinon icône seule (cases de grille, où
- * le mot vient d'une légende sous la grille).
+ * Icône + valeur. `showLabel` ajoute le mot inline (Santé de jeu, tableaux) ;
+ * sinon icône seule (cases de grille + légende sous la preview).
  */
 export function StatGlyph({
   kind,

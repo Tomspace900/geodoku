@@ -3,7 +3,7 @@ import { todayUTC } from "@/lib/dates";
 import { cn } from "@/lib/utils";
 import type { DayButton } from "react-day-picker";
 import { type CalendarMarker, winRateDotClass } from "../logic/analytics";
-import { difficultySolidDotClass } from "../logic/display";
+import { popularitySolidDotClass } from "../logic/display";
 import { dateToStr, strToCalendarDate } from "../logic/scheduling";
 import { PanelHeader } from "./PanelHeader";
 
@@ -19,8 +19,8 @@ function MarkerIndicator({ marker }: { marker: CalendarMarker }) {
       ? "bg-brand"
       : marker.kind === "observed"
         ? winRateDotClass(marker.winRate)
-        : marker.kind === "estimated"
-          ? difficultySolidDotClass(marker.difficulty)
+        : marker.kind === "scheduled"
+          ? popularitySolidDotClass(marker.popScore)
           : "bg-error"; // missing
 
   return (
@@ -93,8 +93,9 @@ export function GameCalendar({ markers, selectedDate, onSelectDate }: Props) {
           <span className="h-1.5 w-1.5 rounded-full bg-success" />
           <span className="h-1.5 w-1.5 rounded-full bg-warning" />
           <span className="h-1.5 w-1.5 rounded-full bg-error" />
+          <span>notoriété (planifié)</span>
           <span className="h-1.5 w-1.5 rounded-full bg-brand" />
-          <span>difficulté estimée · prédite</span>
+          <span>prédit</span>
         </div>
       </div>
     </div>

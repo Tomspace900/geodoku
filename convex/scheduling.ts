@@ -75,7 +75,6 @@ async function assignForDate(ctx: MutationCtx, date: string): Promise<boolean> {
     rows: selected.grid.rows,
     cols: selected.grid.cols,
     countryPool: selected.grid.metadata.countryPool,
-    difficulty: selected.grid.metadata.difficultyEstimate,
     candidateId,
   });
   return true;

@@ -12,13 +12,16 @@ export default defineSchema({
       avgCellSize: v.number(),
       minCellSize: v.number(),
       countryPool: v.array(v.string()),
-      difficultyEstimate: v.number(),
-      difficultyTags: v.object({
-        easy: v.number(),
-        medium: v.number(),
-        hard: v.number(),
-      }),
-      cellDifficulties: v.array(v.number()),
+      // Legacy — difficulté prédite supprimée (2026-06), docs antérieurs uniquement
+      difficultyEstimate: v.optional(v.number()),
+      difficultyTags: v.optional(
+        v.object({
+          easy: v.number(),
+          medium: v.number(),
+          hard: v.number(),
+        }),
+      ),
+      cellDifficulties: v.optional(v.array(v.number())),
     }),
     status: v.union(v.literal("available"), v.literal("used")),
     usedAt: v.optional(v.number()),
@@ -34,7 +37,8 @@ export default defineSchema({
     // Dénormalisé depuis metadata.countryPool pour éviter de lire le satellite
     // gridAnswers lors des agrégats scheduler/admin.
     countryPool: v.array(v.string()),
-    difficulty: v.number(),
+    // Legacy — difficulté prédite supprimée (2026-06), docs antérieurs uniquement
+    difficulty: v.optional(v.number()),
     candidateId: v.id("gridCandidates"),
   }).index("by_date", ["date"]),
 

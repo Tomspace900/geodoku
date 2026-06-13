@@ -9,7 +9,6 @@ function makeGrid(
   id: string,
   constraintIds: string[],
   countryPool: string[],
-  difficultyEstimate = 40,
 ): {
   _id: string;
   rows: string[];
@@ -31,9 +30,6 @@ function makeGrid(
       avgCellSize: 5,
       minCellSize: 3,
       countryPool,
-      difficultyEstimate,
-      difficultyTags: { easy: 3, medium: 3, hard: 3 },
-      cellDifficulties: Array(9).fill(difficultyEstimate),
     },
   };
 }

@@ -87,13 +87,6 @@ const metadataValidator = v.object({
   avgCellSize: v.number(),
   minCellSize: v.number(),
   countryPool: v.array(v.string()),
-  difficultyEstimate: v.number(),
-  difficultyTags: v.object({
-    easy: v.number(),
-    medium: v.number(),
-    hard: v.number(),
-  }),
-  cellDifficulties: v.array(v.number()),
 });
 
 /**

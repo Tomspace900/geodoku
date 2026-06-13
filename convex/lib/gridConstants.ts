@@ -36,8 +36,6 @@ export const KNOWN_CONSTRAINT_WINDOW = HISTORY_WINDOW * 4;
 // Auto-refill thresholds
 export const POOL_LOW_THRESHOLD = 50;
 
-export type DifficultyTag = "easy" | "medium" | "hard";
-
 export type PoolGridMetadata = {
   seedConstraint: string;
   constraintIds: string[];
@@ -45,9 +43,6 @@ export type PoolGridMetadata = {
   avgCellSize: number;
   minCellSize: number;
   countryPool: string[];
-  difficultyEstimate: number;
-  difficultyTags: Record<DifficultyTag, number>;
-  cellDifficulties: number[];
 };
 
 export type FinalizedPoolGrid = {

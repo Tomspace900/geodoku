@@ -36,13 +36,6 @@ console.log(
   `  Country coverage  : ${report.countryCoverage} distinct countries`,
 );
 
-const difficulties = pool.map((g) => g.metadata.difficultyEstimate);
-const avgDiff = difficulties.reduce((a, b) => a + b, 0) / difficulties.length;
-const sorted = [...difficulties].sort((a, b) => a - b);
-const medianDiff = sorted[Math.floor(sorted.length / 2)] ?? 0;
-console.log(`  Avg difficulty    : ${avgDiff.toFixed(1)}/100`);
-console.log(`  Median difficulty : ${medianDiff}/100`);
-
 // Per-seed breakdown
 const failed = report.seedResults.filter((r) => r.failed);
 const lowYield = report.seedResults.filter(
@@ -91,7 +84,6 @@ type ScheduledDay = {
   day: number;
   grid: PoolGrid;
   score: number;
-  difficulty: number;
   constraintIds: string[];
 };
 
@@ -121,21 +113,18 @@ for (let day = 1; day <= 30; day++) {
     day,
     grid: fullGrid,
     score: result.score,
-    difficulty: result.grid.metadata.difficultyEstimate,
     constraintIds: result.grid.metadata.constraintIds,
   });
 }
 
 // Print table
-console.log(
-  `\n  ${"Day".padEnd(4)} ${"Diff".padEnd(6)} ${"Score".padEnd(7)} Constraints`,
-);
+console.log(`\n  ${"Day".padEnd(4)} ${"Score".padEnd(7)} Constraints`);
 console.log(`  ${"─".repeat(65)}`);
 for (const d of scheduled) {
   const ids = d.constraintIds.join(", ");
   const truncated = ids.length > 50 ? `${ids.slice(0, 47)}...` : ids;
   console.log(
-    `  ${String(d.day).padEnd(4)} ${String(d.difficulty).padEnd(6)} ${d.score.toFixed(1).padEnd(7)} ${truncated}`,
+    `  ${String(d.day).padEnd(4)} ${d.score.toFixed(1).padEnd(7)} ${truncated}`,
   );
 }
 
@@ -157,13 +146,6 @@ const allCountries = scheduled.flatMap((d) =>
   Object.values(d.grid.validAnswers).flat(),
 );
 const uniqueCountries = new Set(allCountries);
-
-const scheduledDifficulties = scheduled.map((d) => d.difficulty);
-const schedSorted = [...scheduledDifficulties].sort((a, b) => a - b);
-const schedMedian = schedSorted[Math.floor(schedSorted.length / 2)] ?? 0;
-const schedAvg =
-  scheduledDifficulties.reduce((a, b) => a + b, 0) /
-  scheduledDifficulties.length;
 
 const poolRemaining = pool.length - scheduled.length;
 const poolRemainingPct = ((poolRemaining / pool.length) * 100).toFixed(1);
@@ -198,8 +180,6 @@ console.log(
   `  Max reuse (worst 15d window) : ${maxWindowReuse} (${worstWindowConstraint}, days ${worstWindowStart}–${worstWindowStart + HISTORY_WINDOW - 1})`,
 );
 console.log(`  Unique countries in solution : ${uniqueCountries.size}`);
-console.log(`  Avg difficulty    : ${schedAvg.toFixed(1)}/100`);
-console.log(`  Median difficulty : ${schedMedian}/100`);
 console.log(
   `  Pool remaining    : ${poolRemaining}/${pool.length} (${poolRemainingPct}%)`,
 );
@@ -519,13 +499,6 @@ const checks: Array<{ label: string; pass: boolean; value: string }> = [
     label: "Sched: unique countries ≥ 150",
     pass: uniqueCountries.size >= 150,
     value: String(uniqueCountries.size),
-  },
-  {
-    // The scheduler no longer targets difficulty; this is a pool-health guardrail
-    // (a degenerate all-trivial / all-brutal pool would land outside the band).
-    label: "Pool: median difficulty 25–45",
-    pass: medianDiff >= 25 && medianDiff <= 45,
-    value: String(medianDiff),
   },
   {
     label: "Pool: ≥ 60% remaining after 30d",

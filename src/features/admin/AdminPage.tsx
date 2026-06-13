@@ -94,7 +94,7 @@ export function AdminPage() {
     today,
     scheduled: (scheduledGrids ?? []).map((g) => ({
       date: g.date,
-      difficulty: g.difficulty,
+      gridPopTop3: g.gridPopTop3,
     })),
     winRateByDate,
     upcoming: (upcoming ?? []).map((d) => ({ date: d.date, kind: d.kind })),
@@ -111,16 +111,13 @@ export function AdminPage() {
         return {
           kind: "observed",
           date: selectedDate,
-          difficulty: grid.difficulty,
           status: selectedDate === today ? "active" : "past",
         };
       }
       return {
-        kind: "estimated",
+        kind: "future",
         status: "scheduled",
         date: selectedDate,
-        difficulty: grid.difficulty,
-        cellDifficulties: grid.metadata?.cellDifficulties ?? null,
         candidateId: null,
       };
     }
@@ -128,11 +125,9 @@ export function AdminPage() {
     const day = upcomingByDate.get(selectedDate);
     if (day && day.kind !== "missing") {
       return {
-        kind: "estimated",
+        kind: "future",
         status: day.kind === "predicted" ? "predicted" : "scheduled",
         date: selectedDate,
-        difficulty: day.difficulty,
-        cellDifficulties: day.cellDifficulties,
         candidateId: day.kind === "predicted" ? day.candidateId : null,
       };
     }

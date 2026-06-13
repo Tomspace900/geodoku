@@ -20,37 +20,10 @@ import {
 
 const COUNTRIES: Country[] = countriesJson as Country[];
 
-// Difficulty curve: `raw` includes cardinality, constraint weights, and the
-// popularity multiplier; then maps through 1 − exp(−raw × DIFFICULTY_CURVE_K).
-const DIFFICULTY_CURVE_K = 0.8;
-
-// Popularity dampener: shifts raw difficulty toward easier cells when the
-// solution pool is well-known (top-K average popularity closer to 1).
-// 0 = ignore popularity; 1 = ±50% raw scale at extremes (pop factor 1.5 vs 0.5 vs base).
-const POPULARITY_WEIGHT = 0.6;
-
-/** Average this many highest-known candidates in each cell pool. */
-const POPULARITY_TOP_K = 3;
-
-// Constraint → category/difficulty lookups, built once at module load.
+// Constraint → category lookup, built once at module load.
 const CATEGORY_BY_ID: Record<string, string> = (() => {
   const map: Record<string, string> = {};
   for (const c of CONSTRAINTS) map[c.id] = c.category;
-  return map;
-})();
-
-const DIFFICULTY_BY_ID: Record<string, "easy" | "medium" | "hard"> = (() => {
-  const map: Record<string, "easy" | "medium" | "hard"> = {};
-  for (const c of CONSTRAINTS) map[c.id] = c.difficulty;
-  return map;
-})();
-
-/** ISO3 → percentile popularity [0..1] from bundled countries dataset. */
-const POPULARITY_BY_CODE: Record<string, number> = (() => {
-  const map: Record<string, number> = {};
-  for (const country of COUNTRIES) {
-    map[country.code] = country.popularityIndex ?? 0.5;
-  }
   return map;
 })();
 
@@ -181,50 +154,6 @@ export function tryBuildGridWithSeed(
   return fillSlots([], [seedId], remaining, matches);
 }
 
-// ─── Difficulty scoring ───────────────────────────────────────────────────────
-
-/**
- * Mean popularity of the K best-known countries in `codes` (ISO3).
- * Empty pool → median fallback so callers never propagate NaNs.
- */
-export function topKPopularity(codes: string[], k = POPULARITY_TOP_K): number {
-  if (codes.length === 0) return 0.5;
-
-  const pops = codes
-    .map((code) => POPULARITY_BY_CODE[code] ?? 0.5)
-    .sort((a, b) => b - a);
-  const slice = pops.slice(0, Math.min(k, pops.length));
-  return slice.reduce((sum, p) => sum + p, 0) / slice.length;
-}
-
-/**
- * Difficulty of a single cell: constraint weights, solution cardinality, and a
- * popularity-aware dampener on the raw score (easier well-known pools).
- * Returns an integer in [0, 100].
- */
-export function computeCellDifficulty(
-  rowId: string,
-  colId: string,
-  matches: Record<string, Set<string>>,
-): number {
-  const solutions = intersect(rowId, colId, matches);
-  if (solutions.length === 0) return 100;
-
-  const diffWeight = { easy: 1, medium: 2, hard: 3 } as const;
-  const rowDiff = diffWeight[DIFFICULTY_BY_ID[rowId] ?? "medium"];
-  const colDiff = diffWeight[DIFFICULTY_BY_ID[colId] ?? "medium"];
-
-  const baseRaw = (1 / solutions.length) * rowDiff * colDiff;
-  const pop = topKPopularity(solutions);
-  const popFactor = Math.max(0, 1 + POPULARITY_WEIGHT * (0.5 - pop));
-  const raw = baseRaw * popFactor;
-
-  return Math.min(
-    100,
-    Math.max(0, Math.round(100 * (1 - Math.exp(-raw * DIFFICULTY_CURVE_K)))),
-  );
-}
-
 // ─── Finalization ─────────────────────────────────────────────────────────────
 
 /**
@@ -242,7 +171,6 @@ export function finalizeGrid(
   matches: Record<string, Set<string>>,
 ): FinalizedPoolGrid | null {
   const validAnswers: Record<string, string[]> = {};
-  const cellDifficulties: number[] = [];
   let minCellSize = Number.POSITIVE_INFINITY;
   let totalCellSize = 0;
   const countryPoolSet = new Set<string>();
@@ -254,7 +182,6 @@ export function finalizeGrid(
       if (size < MIN_CELL_SIZE || size > MAX_CELL_SIZE) return null;
 
       validAnswers[`${r},${c}`] = solutions;
-      cellDifficulties.push(computeCellDifficulty(rows[r], cols[c], matches));
       minCellSize = Math.min(minCellSize, size);
       totalCellSize += size;
       for (const code of solutions) countryPoolSet.add(code);
@@ -274,16 +201,6 @@ export function finalizeGrid(
   if (categories.length < MIN_CATEGORIES) return null;
 
   const avgCellSize = Math.round((totalCellSize / 9) * 10) / 10;
-  const difficultyEstimate = Math.round(
-    cellDifficulties.reduce((s, d) => s + d, 0) / cellDifficulties.length,
-  );
-
-  const difficultyTags = { easy: 0, medium: 0, hard: 0 };
-  for (const d of cellDifficulties) {
-    if (d <= 33) difficultyTags.easy++;
-    else if (d <= 66) difficultyTags.medium++;
-    else difficultyTags.hard++;
-  }
 
   const metadata: PoolGridMetadata = {
     seedConstraint: seedId,
@@ -292,9 +209,6 @@ export function finalizeGrid(
     avgCellSize,
     minCellSize: minCellSize === Number.POSITIVE_INFINITY ? 0 : minCellSize,
     countryPool: [...countryPoolSet],
-    difficultyEstimate,
-    difficultyTags,
-    cellDifficulties,
   };
 
   return { rows, cols, validAnswers, metadata };
