@@ -4,6 +4,38 @@ export const MAX_CELL_SIZE = 15;
 export const MIN_CATEGORIES = 4;
 export const MAX_SAME_CATEGORY = 2;
 
+/**
+ * Anti-redundancy filter — keep a grid thematically varied.
+ *
+ * MAX_CONSTRAINT_OVERLAP: max overlap coefficient |A∩B|/min(|A|,|B|) allowed
+ * between any two constraints of a grid. Bans quasi-synonym pairs where one
+ * constraint nearly implies another ("Caribbean countries" × "bordered by the
+ * Caribbean sea" ≈ 1.0, or nested thresholds like "larger than Mexico" ×
+ * "larger than France"), which collapse a grid into a single theme. Unlike
+ * MAX_SAME_CATEGORY (caps same *category*), this catches cross-category nesting
+ * (subregion ⊆ continent, ocean ⊆ continent…). This is intra-grid redundancy —
+ * unrelated to the pool-share throttling tried & reverted (see generateDiversePool).
+ *
+ * Symmetric by construction: it only forbids the *co-occurrence* of two near-
+ * synonyms in one grid, never favouring one over the other — "larger than Mexico"
+ * and "larger than France" each still seed their full quota of grids and the
+ * scheduler alternates them. A grid-level countryPool floor was considered and
+ * rejected (2026-06): it biased representation against *narrow* constraints
+ * (whose grids naturally have smaller answer pools — India lost ~22% of its
+ * grids) for a marginal gain, since this overlap cap alone already keeps pools
+ * healthy. Equity between near-synonyms is the point — that's the challenge.
+ *
+ * Calibrated at 0.85 (not lower): it bans the genuine near-synonyms (Caribbean ×
+ * Caribbean-coast = 1.0, Caribbean × North-America = 1.0, nested area/density/pop
+ * thresholds = 1.0) while sparing merely-correlated-but-distinct axes (Caribbean
+ * × island = 0.846, Portuguese × Atlantic = 0.78, Russian × Asia = 0.75).
+ * Stricter values (0.7) over-starved narrow constraints — Caribbean, Portuguese,
+ * Russian, polar dropped to 0–3 grids and the cold-start rollout could no longer
+ * weave them in. Validate any change with `pnpm simulate:scheduling` (failed
+ * seeds + cold-start checks).
+ */
+export const MAX_CONSTRAINT_OVERLAP = 0.85;
+
 // Pool generation
 export const TARGET_GRIDS_PER_SEED = 12;
 export const MAX_ATTEMPTS_PER_SEED = 500;

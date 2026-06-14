@@ -10,6 +10,7 @@ import {
   type GenerationReport,
   MAX_ATTEMPTS_PER_SEED,
   MAX_CELL_SIZE,
+  MAX_CONSTRAINT_OVERLAP,
   MAX_OVERLAP_BETWEEN_GRIDS,
   MAX_SAME_CATEGORY,
   MIN_CATEGORIES,
@@ -65,6 +66,30 @@ export function intersect(
   return result.sort();
 }
 
+/**
+ * Overlap coefficient between two constraints' country sets: |A∩B| / min(|A|,|B|).
+ * Containment-based (not Jaccard) on purpose: it detects quasi-inclusion — when
+ * one constraint is almost a subset of another, knowing one nearly tells you the
+ * other, which makes a grid thematically redundant ("just name Caribbean islands").
+ * Jaccard would dilute that signal when the two sets differ a lot in size.
+ * Returns 0 if either set is empty (no meaningful overlap to measure).
+ */
+export function overlapCoefficient(
+  idA: string,
+  idB: string,
+  matches: Record<string, Set<string>>,
+): number {
+  const setA = matches[idA];
+  const setB = matches[idB];
+  if (!setA || !setB || setA.size === 0 || setB.size === 0) return 0;
+  const [small, large] = setA.size <= setB.size ? [setA, setB] : [setB, setA];
+  let shared = 0;
+  for (const code of small) {
+    if (large.has(code)) shared++;
+  }
+  return shared / small.size;
+}
+
 // ─── Backtracking (seed-first) ────────────────────────────────────────────────
 
 function shuffle<T>(arr: T[]): T[] {
@@ -78,14 +103,19 @@ function shuffle<T>(arr: T[]): T[] {
 
 /**
  * Recursive backtracking: fills rows to 3, then cols to 3.
- * Checks MAX_SAME_CATEGORY and cell-size hard filters at each step.
- * The seed is already in rows or cols when this is called.
+ * Checks MAX_SAME_CATEGORY, anti-redundancy (overlap coefficient) and cell-size
+ * hard filters at each step. The seed is already in rows or cols when this is called.
  *
  * Note: the MAX_CELL_SIZE check below is also what makes broad constraints
  * self-regulating — a constraint matching many countries can only pair with
  * narrow orthogonal partners (else the cell exceeds 15), so it lands in few
  * grids. This is why no usage-weighting / appearance cap is needed (see
  * generateDiversePool).
+ *
+ * The overlap-coefficient check prunes quasi-synonym constraints early so the
+ * backtracking finds a varied partner instead of discarding the whole attempt.
+ * It runs against *all* placed constraints (both axes): redundancy is intrinsic
+ * to a constraint pair, independent of whether they form a cell together.
  */
 function fillSlots(
   rows: string[],
@@ -106,6 +136,12 @@ function fillSlots(
       (pid) => (CATEGORY_BY_ID[pid] ?? "unknown") === cat,
     ).length;
     if (catCount >= MAX_SAME_CATEGORY) continue;
+
+    // Anti-redundancy: reject a quasi-synonym of any already-placed constraint
+    const redundant = allPlaced.some(
+      (pid) => overlapCoefficient(id, pid, matches) >= MAX_CONSTRAINT_OVERLAP,
+    );
+    if (redundant) continue;
 
     // Cell-size check against already-placed orthogonal constraints
     const valid = fillingRows
@@ -162,7 +198,10 @@ export function tryBuildGridWithSeed(
  *   - All 9 cells: MIN_CELL_SIZE ≤ size ≤ MAX_CELL_SIZE
  *   - ≥ MIN_CATEGORIES distinct constraint categories
  *   - ≤ MAX_SAME_CATEGORY per category
- * Returns null if any filter fails.
+ *   - no constraint pair with overlap coefficient ≥ MAX_CONSTRAINT_OVERLAP
+ * Returns null if any filter fails. The overlap check duplicates the
+ * backtracking pruning on purpose (belt-and-suspenders, like the category check)
+ * so finalizeGrid is safe to call directly with an arbitrary grid.
  */
 export function finalizeGrid(
   rows: string[],
@@ -200,6 +239,18 @@ export function finalizeGrid(
   const categories = Object.keys(catCounts);
   if (categories.length < MIN_CATEGORIES) return null;
 
+  // Anti-redundancy (final enforcement): no quasi-synonym pair in the grid.
+  for (let i = 0; i < allIds.length; i++) {
+    for (let j = i + 1; j < allIds.length; j++) {
+      if (
+        overlapCoefficient(allIds[i], allIds[j], matches) >=
+        MAX_CONSTRAINT_OVERLAP
+      ) {
+        return null;
+      }
+    }
+  }
+
   const avgCellSize = Math.round((totalCellSize / 9) * 10) / 10;
 
   const metadata: PoolGridMetadata = {
@@ -230,6 +281,10 @@ export function finalizeGrid(
  * if made strict, via MAX_OVERLAP), the second starves narrow seeds that depend
  * on broad partners. Measure with `scripts/prod/analyze-pool.ts` before adding
  * any such mechanism.
+ *
+ * Distinct from the above: MAX_CONSTRAINT_OVERLAP (applied in fillSlots +
+ * finalizeGrid) bounds *intra-grid* redundancy — how much two constraints of the
+ * same grid overlap — not a constraint's share of the pool.
  */
 export function generateDiversePool(
   existingPool: Array<{ constraintIds: string[] }> = [],

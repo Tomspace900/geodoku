@@ -19,6 +19,7 @@ import { TARGET_GRIDS_PER_SEED } from "../../convex/lib/gridConstants.ts";
 import {
   buildConstraintMatches,
   generateDiversePool,
+  overlapCoefficient,
 } from "../../convex/lib/gridGenerator.ts";
 import { CONSTRAINTS } from "../../src/features/game/logic/constraints.ts";
 
@@ -41,6 +42,14 @@ for (const c of CONSTRAINTS) {
   seeds[c.id] = 0;
 }
 
+// Per-grid redundancy stats (anti-boring-grid filter calibration).
+type GridStat = {
+  maxOverlap: number;
+  pair: [string, string];
+  poolSize: number;
+};
+const gridStats: GridStat[] = [];
+
 let totalGrids = 0;
 const log = console.log;
 for (let r = 0; r < runs; r++) {
@@ -51,7 +60,31 @@ for (let r = 0; r < runs; r++) {
   for (const g of grids) {
     for (const id of g.metadata.constraintIds) appearances[id] += 1;
     seeds[g.metadata.seedConstraint] += 1;
+
+    const ids = g.metadata.constraintIds;
+    let maxOverlap = 0;
+    let pair: [string, string] = [ids[0], ids[1]];
+    for (let a = 0; a < ids.length; a++) {
+      for (let b = a + 1; b < ids.length; b++) {
+        const o = overlapCoefficient(ids[a], ids[b], matches);
+        if (o > maxOverlap) {
+          maxOverlap = o;
+          pair = [ids[a], ids[b]];
+        }
+      }
+    }
+    gridStats.push({
+      maxOverlap,
+      pair,
+      poolSize: g.metadata.countryPool.length,
+    });
   }
+}
+
+function quantile(sorted: number[], q: number): number {
+  if (sorted.length === 0) return 0;
+  const idx = Math.min(sorted.length - 1, Math.floor(q * sorted.length));
+  return sorted[idx];
 }
 
 type Row = { id: string; breadth: number; pct: number; seedAvg: number };
@@ -87,3 +120,35 @@ const starvedDetail =
     ? ` (${starvedSeeds.map((r) => r.id).join(", ")}) — borné par MAX_OVERLAP, pas par MAX_ATTEMPTS.`
     : "";
 console.log(`  Seeds sous la cible : ${starvedSeeds.length}${starvedDetail}`);
+
+// ── Redondance intra-grille (calibration MAX_CONSTRAINT_OVERLAP) ──
+// La distribution du countryPool reste informative (diversité de l'espace de
+// réponses), même sans plancher dur : un plancher biaiserait contre les
+// contraintes étroites (cf. gridConstants MAX_CONSTRAINT_OVERLAP).
+const overlapsSorted = gridStats.map((s) => s.maxOverlap).sort((a, b) => a - b);
+const poolsSorted = gridStats.map((s) => s.poolSize).sort((a, b) => a - b);
+
+console.log("\n── Redondance intra-grille ──");
+console.log(
+  `  Max overlap coef / grille  : p50 ${quantile(overlapsSorted, 0.5).toFixed(2)} · p75 ${quantile(overlapsSorted, 0.75).toFixed(2)} · p90 ${quantile(overlapsSorted, 0.9).toFixed(2)} · p95 ${quantile(overlapsSorted, 0.95).toFixed(2)} · max ${overlapsSorted[overlapsSorted.length - 1]?.toFixed(2) ?? "—"}`,
+);
+console.log(
+  `  Taille countryPool / grille: p05 ${quantile(poolsSorted, 0.05)} · p10 ${quantile(poolsSorted, 0.1)} · p25 ${quantile(poolsSorted, 0.25)} · p50 ${quantile(poolsSorted, 0.5)} · min ${poolsSorted[0] ?? "—"}`,
+);
+
+for (const thr of [0.5, 0.6, 0.7, 0.8]) {
+  const n = gridStats.filter((s) => s.maxOverlap >= thr).length;
+  console.log(
+    `  Grilles avec ≥1 paire overlap ≥ ${thr.toFixed(1)} : ${n} (${((n / gridStats.length) * 100).toFixed(0)}%)`,
+  );
+}
+
+console.log("\n  Top 10 paires les plus redondantes (grille la pire) :");
+const worst = [...gridStats]
+  .sort((a, b) => b.maxOverlap - a.maxOverlap)
+  .slice(0, 10);
+for (const s of worst) {
+  console.log(
+    `    ${s.maxOverlap.toFixed(2)}  ${s.pair[0]} × ${s.pair[1]}  (pool ${s.poolSize})`,
+  );
+}

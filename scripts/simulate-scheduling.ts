@@ -9,9 +9,14 @@ import {
   type FinalizedPoolGrid,
   HISTORY_WINDOW,
   KNOWN_CONSTRAINT_WINDOW,
+  MAX_CONSTRAINT_OVERLAP,
   MAX_NEW_CONSTRAINTS_PER_GRID,
 } from "../convex/lib/gridConstants";
-import { generateDiversePool } from "../convex/lib/gridGenerator";
+import {
+  buildConstraintMatches,
+  generateDiversePool,
+  overlapCoefficient,
+} from "../convex/lib/gridGenerator";
 import { selectNextGrid } from "../convex/lib/gridScheduler";
 import { CONSTRAINTS } from "../src/features/game/logic/constraints";
 
@@ -450,6 +455,19 @@ console.log("\n═════════════════════�
 console.log("  PASS/FAIL SUMMARY");
 console.log("═══════════════════════════════════════════════════════");
 
+// Intra-grid redundancy invariant (MAX_CONSTRAINT_OVERLAP).
+const redundancyMatches = buildConstraintMatches();
+let poolWorstOverlap = 0;
+for (const g of pool) {
+  const ids = g.metadata.constraintIds;
+  for (let a = 0; a < ids.length; a++) {
+    for (let b = a + 1; b < ids.length; b++) {
+      const o = overlapCoefficient(ids[a], ids[b], redundancyMatches);
+      if (o > poolWorstOverlap) poolWorstOverlap = o;
+    }
+  }
+}
+
 const checks: Array<{ label: string; pass: boolean; value: string }> = [
   {
     label: "Pool: median grids/seed ≥ 10",
@@ -479,6 +497,11 @@ const checks: Array<{ label: string; pass: boolean; value: string }> = [
     label: "Pool: countries ≥ 160",
     pass: report.countryCoverage >= 160,
     value: String(report.countryCoverage),
+  },
+  {
+    label: "Pool: max constraint overlap < limit",
+    pass: poolWorstOverlap < MAX_CONSTRAINT_OVERLAP,
+    value: `${poolWorstOverlap.toFixed(3)} < ${MAX_CONSTRAINT_OVERLAP}`,
   },
   {
     label: "Sched: 30 days fully covered",

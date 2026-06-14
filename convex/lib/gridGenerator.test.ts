@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest";
 import { CONSTRAINTS } from "../../src/features/game/logic/constraints";
 import {
+  MAX_CONSTRAINT_OVERLAP,
   MAX_SAME_CATEGORY,
   MIN_CATEGORIES,
   MIN_CELL_SIZE,
@@ -10,6 +11,7 @@ import {
   finalizeGrid,
   generateDiversePool,
   intersect,
+  overlapCoefficient,
   tryBuildGridWithSeed,
 } from "./gridGenerator";
 
@@ -43,6 +45,36 @@ describe("intersect", () => {
       expect(africaSet.has(code)).toBe(true);
       expect(landlockSet.has(code)).toBe(true);
     }
+  });
+});
+
+// ─── overlapCoefficient ───────────────────────────────────────────────────────
+
+describe("overlapCoefficient", () => {
+  it("returns ~1 when one constraint is (near) a subset of another", () => {
+    const matches = buildConstraintMatches();
+    // Every country larger than Mexico is larger than France (nested thresholds).
+    expect(
+      overlapCoefficient("area_larger_mexico", "area_larger_france", matches),
+    ).toBe(1);
+    // South-East Asia ⊆ Asia.
+    expect(
+      overlapCoefficient("subregion_southeast_asia", "continent_asia", matches),
+    ).toBe(1);
+  });
+
+  it("returns 0 for disjoint constraints", () => {
+    const matches = buildConstraintMatches();
+    expect(
+      overlapCoefficient("continent_africa", "continent_asia", matches),
+    ).toBe(0);
+  });
+
+  it("is symmetric", () => {
+    const matches = buildConstraintMatches();
+    expect(
+      overlapCoefficient("continent_africa", "water_landlocked", matches),
+    ).toBe(overlapCoefficient("water_landlocked", "continent_africa", matches));
   });
 });
 
@@ -176,6 +208,22 @@ describe("generateDiversePool (10-seed subset)", () => {
     }
   }, 120_000);
 
+  it("no grid contains a quasi-synonym constraint pair", () => {
+    const matches = buildConstraintMatches();
+    const { grids } = generateDiversePool();
+
+    for (const grid of grids) {
+      const ids = grid.metadata.constraintIds;
+      for (let a = 0; a < ids.length; a++) {
+        for (let b = a + 1; b < ids.length; b++) {
+          expect(overlapCoefficient(ids[a], ids[b], matches)).toBeLessThan(
+            MAX_CONSTRAINT_OVERLAP,
+          );
+        }
+      }
+    }
+  }, 120_000);
+
   it("report contains correct seed result entries", () => {
     const { report } = generateDiversePool();
 
@@ -201,6 +249,23 @@ describe("finalizeGrid", () => {
         "continent_oceania",
       ],
       "continent_africa",
+      matches,
+    );
+    expect(result).toBeNull();
+  });
+
+  it("returns null for a grid with a quasi-synonym constraint pair", () => {
+    const matches = buildConstraintMatches();
+    // Cells and categories are all valid here; only the redundant pair
+    // (area_larger_mexico × area_larger_france, overlap 1.0) should reject it.
+    const result = finalizeGrid(
+      [
+        "area_larger_mexico",
+        "society_capital_not_largest",
+        "nature_rainforest",
+      ],
+      ["area_larger_france", "ocean_atlantic", "borders_china"],
+      "area_larger_mexico",
       matches,
     );
     expect(result).toBeNull();
