@@ -8,7 +8,6 @@ import {
   hasStruggleData,
   predictionDelta,
   struggleRate,
-  winRateDotClass,
 } from "../analytics";
 
 function feedbackRow(
@@ -106,7 +105,7 @@ describe("buildCalendarMarkers", () => {
       winRateByDate: new Map(),
       upcoming: [
         { date: "2026-06-05", kind: "scheduled" },
-        { date: "2026-06-06", kind: "predicted" },
+        { date: "2026-06-06", kind: "predicted", gridPopTop3: 0.65 },
         { date: "2026-06-07", kind: "missing" },
       ],
     });
@@ -114,7 +113,10 @@ describe("buildCalendarMarkers", () => {
       kind: "scheduled",
       popScore: 50,
     });
-    expect(markers.get("2026-06-06")).toEqual({ kind: "predicted" });
+    expect(markers.get("2026-06-06")).toEqual({
+      kind: "predicted",
+      popScore: 65,
+    });
     expect(markers.get("2026-06-07")).toEqual({ kind: "missing" });
   });
 });
@@ -243,17 +245,5 @@ describe("predictionDelta", () => {
     expect(predictionDelta(60, 50).severity).toBe("good"); // 10
     expect(predictionDelta(60, 35).severity).toBe("off"); // 25
     expect(predictionDelta(80, 30).severity).toBe("missed"); // 50
-  });
-});
-
-describe("winRateDotClass", () => {
-  it("is neutral when winRate is null", () => {
-    expect(winRateDotClass(null)).toBe("bg-outline-variant/40");
-  });
-
-  it("maps high/medium/low winRate to success/warning/error", () => {
-    expect(winRateDotClass(0.8)).toBe("bg-success");
-    expect(winRateDotClass(0.45)).toBe("bg-warning");
-    expect(winRateDotClass(0.1)).toBe("bg-error");
   });
 });

@@ -97,7 +97,11 @@ export function AdminPage() {
       gridPopTop3: g.gridPopTop3,
     })),
     winRateByDate,
-    upcoming: (upcoming ?? []).map((d) => ({ date: d.date, kind: d.kind })),
+    upcoming: (upcoming ?? []).map((d) => ({
+      date: d.date,
+      kind: d.kind,
+      gridPopTop3: d.kind === "missing" ? undefined : d.gridPopTop3,
+    })),
   });
 
   const selectedView = computeDayView();

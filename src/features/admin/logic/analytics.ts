@@ -22,10 +22,6 @@ export const FAILED_ATTEMPTS_SINCE = "2026-05-30";
 /** Nb minimal de tentatives (succès + échecs) pour qu'un `struggle` par case compte. */
 export const STRUGGLE_MIN_ATTEMPTS = 3;
 
-/** Seuils winRate observé (haut = bon). Alignés sur les tiers du design system. */
-const WIN_RATE_GOOD_MIN = 0.6;
-const WIN_RATE_MEDIUM_MIN = 0.3;
-
 // ─── Struggle (difficulté intrinsèque par case) ────────────────────────────────
 
 /** Données `failedAttempts` disponibles pour cette date (post-déploiement) ? */
@@ -89,8 +85,8 @@ export function averageObservedSuccess100(
 
 export type CalendarMarker =
   | { kind: "observed"; winRate: number | null } // jour passé planifié
-  | { kind: "scheduled"; popScore: number | null } // aujourd'hui / futur planifié (dot notoriété)
-  | { kind: "predicted" } // prédit (brand)
+  | { kind: "scheduled"; popScore: number | null } // aujourd'hui / futur planifié (facilité est.)
+  | { kind: "predicted"; popScore: number | null } // prédit (simulation pool)
   | { kind: "missing" }; // pool vide pour ce jour
 
 type ScheduledForMarkers = {
@@ -101,6 +97,8 @@ type ScheduledForMarkers = {
 type UpcomingForMarkers = {
   date: string;
   kind: "scheduled" | "predicted" | "missing";
+  /** Présent pour les jours `predicted` (getUpcomingScheduledPreview). */
+  gridPopTop3?: number | null;
 };
 
 /**
@@ -140,8 +138,17 @@ export function buildCalendarMarkers(args: {
   // sont déjà couverts ci-dessus).
   for (const day of upcoming) {
     if (markers.has(day.date)) continue;
-    if (day.kind === "predicted") markers.set(day.date, { kind: "predicted" });
-    else if (day.kind === "missing") markers.set(day.date, { kind: "missing" });
+    if (day.kind === "predicted") {
+      markers.set(day.date, {
+        kind: "predicted",
+        popScore:
+          day.gridPopTop3 === null || day.gridPopTop3 === undefined
+            ? null
+            : popularityScore100(day.gridPopTop3),
+      });
+    } else if (day.kind === "missing") {
+      markers.set(day.date, { kind: "missing" });
+    }
   }
 
   return markers;
@@ -265,17 +272,4 @@ export function buildSummary(
     peakMax,
     peakMin: rows.length === 0 ? 0 : peakMin,
   };
-}
-
-// ─── Classes Tailwind (pastilles / points) ──────────────────────────────────────
-
-/**
- * Point plein du calendrier pour un jour passé : couleur par winRate (haut =
- * bon → success). `null` (aucune partie terminée) → neutre, distinct de « 0 ».
- */
-export function winRateDotClass(winRate: number | null): string {
-  if (winRate === null) return "bg-outline-variant/40";
-  if (winRate >= WIN_RATE_GOOD_MIN) return "bg-success";
-  if (winRate >= WIN_RATE_MEDIUM_MIN) return "bg-warning";
-  return "bg-error";
 }

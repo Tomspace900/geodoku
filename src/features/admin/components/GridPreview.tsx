@@ -1,7 +1,5 @@
-import { predictionDelta } from "@/features/admin/logic/analytics";
 import {
   constraintLabel,
-  deltaSeverityTextClass,
   difficultyPillClass,
   popularityPillClass,
 } from "@/features/admin/logic/display";
@@ -11,8 +9,7 @@ import {
 } from "@/features/countries/lib/popularity";
 import { getCountryByCode } from "@/features/countries/lib/search";
 import { cn } from "@/lib/utils";
-import { ArrowDown, ArrowUp, Gauge, Minus } from "lucide-react";
-import { StatGlyph } from "./StatGlyph";
+import { StatGlyph, StatGlyphDelta, StatScorePill } from "./StatGlyph";
 
 const headerClass =
   "flex items-center justify-center text-center text-[10px] font-medium text-on-surface-variant bg-surface-low rounded-xl p-1.5 leading-tight min-h-[52px]";
@@ -21,8 +18,6 @@ const headerClass =
 export type ObservedCell = {
   /** Taux de réussite (réussites / essais), `null` si non instrumenté / trop peu d'essais. */
   reussite: number | null;
-  reussites: number;
-  echecs: number;
   essais: number;
   /** Distribution des choix : countryCode → nb de fois choisi. */
   picks: Record<string, number>;
@@ -42,52 +37,6 @@ function sortByPicks(codes: string[], picks: Record<string, number>): string[] {
     const diff = (picks[b] ?? 0) - (picks[a] ?? 0);
     return diff !== 0 ? diff : a.localeCompare(b);
   });
-}
-
-function KdaLine({ cell }: { cell: ObservedCell }) {
-  return (
-    <span className="flex items-center gap-2">
-      <StatGlyph kind="reussites" value={cell.reussites} />
-      <StatGlyph kind="echecs" value={cell.echecs} />
-      <StatGlyph kind="essais" value={cell.essais} />
-    </span>
-  );
-}
-
-const easePillClass =
-  "inline-flex items-center gap-1 rounded-full px-1.5 py-0.5 text-[11px] font-semibold tabular-nums";
-
-/** Badge facilité estimée (jauge + score) — futur et passé (même visuel). */
-function EaseBadge({ score }: { score: number }) {
-  return (
-    <span className={cn(easePillClass, popularityPillClass(score))}>
-      <Gauge aria-hidden="true" className="size-3 shrink-0" />
-      {score}
-    </span>
-  );
-}
-
-/** Écart inline prédit − observé : flèche de sens + |écart|, teinté sévérité. */
-function DeltaInline({
-  predicted,
-  observed,
-}: {
-  predicted: number;
-  observed: number;
-}) {
-  const { value, severity } = predictionDelta(predicted, observed);
-  const Arrow = value > 0 ? ArrowDown : value < 0 ? ArrowUp : Minus;
-  return (
-    <span
-      className={cn(
-        "inline-flex items-center gap-0.5 text-[10px] font-medium tabular-nums",
-        deltaSeverityTextClass(severity),
-      )}
-    >
-      <Arrow aria-hidden="true" className="size-3 shrink-0" />
-      {Math.abs(value)}
-    </span>
-  );
 }
 
 export function GridPreview({
@@ -180,24 +129,24 @@ export function GridPreview({
               </div>
 
               {observedBadge ? (
-                // Passé : 2 lignes. (1) réussite observée + KDA.
-                // (2) facilité estimée + écart prédit/réel.
+                // Passé : (1) réussite observée + essais ; (2) facilité + écart.
                 <div className="mt-1 flex shrink-0 flex-col gap-1">
-                  <div className="flex items-center justify-between gap-1">
-                    <span
-                      className={cn(
-                        "rounded-full px-1.5 py-0.5 text-[11px] font-semibold tabular-nums",
-                        observedBadge.cls,
-                      )}
-                    >
-                      {observedBadge.text}
-                    </span>
-                    {obs && <KdaLine cell={obs} />}
+                  <div className="flex items-center gap-1.5">
+                    <StatScorePill
+                      kind="reussiteObs"
+                      score={observedBadge.text}
+                      pillClass={observedBadge.cls}
+                    />
+                    {obs && <StatGlyph kind="essais" value={obs.essais} />}
                   </div>
                   <div className="flex items-center gap-1.5">
-                    <EaseBadge score={popScore} />
+                    <StatScorePill
+                      kind="faciliteEst"
+                      score={popScore}
+                      pillClass={popularityPillClass(popScore)}
+                    />
                     {obs && obs.reussite !== null && (
-                      <DeltaInline
+                      <StatGlyphDelta
                         predicted={popScore}
                         observed={Math.round(obs.reussite * 100)}
                       />
@@ -207,7 +156,11 @@ export function GridPreview({
               ) : (
                 // Futur : facilité estimée seule (pas d'observé).
                 <div className="mt-1 flex shrink-0 items-center">
-                  <EaseBadge score={popScore} />
+                  <StatScorePill
+                    kind="faciliteEst"
+                    score={popScore}
+                    pillClass={popularityPillClass(popScore)}
+                  />
                 </div>
               )}
             </div>

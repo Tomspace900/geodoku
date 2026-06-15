@@ -59,18 +59,6 @@ export function popularityPillClass(score: number): string {
   return TIER_SURFACE_TEXT[difficultyTierFromScore(100 - score)];
 }
 
-const TIER_SOLID_BG: Record<DifficultyTier, string> = {
-  easy: "bg-success",
-  medium: "bg-warning",
-  hard: "bg-error",
-};
-
-/** Dot calendrier pour la notoriété d'une grille à venir (null → neutre). */
-export function popularitySolidDotClass(score: number | null): string {
-  if (score === null) return "bg-outline-variant/40";
-  return TIER_SOLID_BG[difficultyTierFromScore(100 - score)];
-}
-
 const DELTA_SEVERITY_TEXT: Record<DeltaSeverity, string> = {
   good: "text-success",
   off: "text-warning",

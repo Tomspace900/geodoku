@@ -1,6 +1,5 @@
 import { gridEaseScore100 } from "@/features/countries/lib/popularity";
 import { useQuery } from "convex/react";
-import { ArrowDown, Check, Gauge } from "lucide-react";
 import { api } from "../../../../convex/_generated/api";
 import type { Id } from "../../../../convex/_generated/dataModel";
 import {
@@ -11,11 +10,7 @@ import {
   struggleRate,
 } from "../logic/analytics";
 import { formatGridDateHeadingFr } from "../logic/display";
-import {
-  GridHeaderStat,
-  GridHeaderStatDelta,
-  GridHeaderStatKind,
-} from "./GridHeaderStat";
+import { GridHeaderStatDelta, GridHeaderStatKind } from "./GridHeaderStat";
 import { GridPreview, type ObservedCell } from "./GridPreview";
 import { StatLegend } from "./StatGlyph";
 import { StatusPill } from "./StatusPill";
@@ -127,8 +122,6 @@ function ObservedDetail({
       tracked && essais >= STRUGGLE_MIN_ATTEMPTS ? struggleRate(cell) : null;
     observed[key] = {
       reussite: struggle === null ? null : 1 - struggle,
-      reussites: cell.totalGuesses,
-      echecs: cell.failedAttempts,
       essais,
       picks: Object.fromEntries(
         cell.picks.map((p) => [p.countryCode, p.count]),
@@ -177,17 +170,12 @@ function ObservedDetail({
         {(gridEase !== null || gridObservedEase !== null) && (
           <div className="flex flex-wrap items-center gap-x-5 gap-y-2">
             {gridEase !== null && (
-              <GridHeaderStat
-                icon={Gauge}
-                value={gridEase}
-                label="facilité est."
-              />
+              <GridHeaderStatKind kind="faciliteEst" value={gridEase} />
             )}
             {gridObservedEase !== null && (
-              <GridHeaderStat
-                icon={Check}
+              <GridHeaderStatKind
+                kind="reussiteObs"
                 value={`${gridObservedEase}%`}
-                label="réussite obs."
               />
             )}
             {gridEase !== null && gridObservedEase !== null && (
@@ -214,15 +202,9 @@ function ObservedDetail({
         />
 
         <div className="flex flex-wrap items-center gap-x-3 gap-y-1 text-[10px] text-on-surface-variant/70">
-          <p className="flex items-center gap-1.5">
-            <Gauge aria-hidden="true" className="size-3 shrink-0" />
-            Facilité estimée des solutions
-          </p>
-          <p className="flex items-center gap-1.5">
-            <ArrowDown aria-hidden="true" className="size-3 shrink-0" />
-            Écart prédit − observé
-          </p>
-          <StatLegend kinds={["reussites", "echecs", "essais"]} />
+          <StatLegend
+            kinds={["faciliteEst", "reussiteObs", "ecartDown", "essais"]}
+          />
         </div>
       </div>
     </DetailShell>
@@ -269,11 +251,7 @@ function FutureDetail({
 
         {gridEase !== null && (
           <div className="flex flex-wrap items-center gap-x-5 gap-y-2">
-            <GridHeaderStat
-              icon={Gauge}
-              value={gridEase}
-              label="facilité est."
-            />
+            <GridHeaderStatKind kind="faciliteEst" value={gridEase} />
           </div>
         )}
 

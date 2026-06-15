@@ -1,12 +1,14 @@
 import { predictionDelta } from "@/features/admin/logic/analytics";
 import { deltaSeverityTextClass } from "@/features/admin/logic/display";
 import { cn } from "@/lib/utils";
-import { ArrowDown, ArrowUp, type LucideIcon, Minus } from "lucide-react";
+import type { LucideIcon } from "lucide-react";
 import type { ReactNode } from "react";
-import { type StatKind, getStatGlyph } from "./StatGlyph";
-
-const DELTA_TITLE =
-  "Écart facilité estimée − réussite observée moyenne par case";
+import {
+  STAT_DELTA_TITLE,
+  type StatKind,
+  deltaStatKind,
+  getStatGlyph,
+} from "./StatGlyph";
 
 type Props = {
   icon: LucideIcon;
@@ -72,14 +74,14 @@ export function GridHeaderStatDelta({
   observed: number;
 }) {
   const { value, severity } = predictionDelta(predicted, observed);
-  const Arrow = value > 0 ? ArrowDown : value < 0 ? ArrowUp : Minus;
+  const { Icon, label } = getStatGlyph(deltaStatKind(value));
   return (
     <GridHeaderStat
-      icon={Arrow}
+      icon={Icon}
       value={Math.abs(value)}
-      label="écart"
+      label={label}
       tone={deltaSeverityTextClass(severity)}
-      title={DELTA_TITLE}
+      title={STAT_DELTA_TITLE}
     />
   );
 }
