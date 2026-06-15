@@ -1,15 +1,18 @@
+import { gridEaseScore100 } from "@/features/countries/lib/popularity";
 import { useQuery } from "convex/react";
 import { api } from "../../../../convex/_generated/api";
 import type { Id } from "../../../../convex/_generated/dataModel";
 import {
   FAILED_ATTEMPTS_SINCE,
   STRUGGLE_MIN_ATTEMPTS,
+  averageObservedSuccess100,
   hasStruggleData,
   struggleRate,
 } from "../logic/analytics";
 import { formatGridDateHeadingFr } from "../logic/display";
+import { GridHeaderStatDelta, GridHeaderStatKind } from "./GridHeaderStat";
 import { GridPreview, type ObservedCell } from "./GridPreview";
-import { StatGlyph, StatLegend } from "./StatGlyph";
+import { StatLegend } from "./StatGlyph";
 import { StatusPill } from "./StatusPill";
 
 /** Vue d'un jour sélectionné, calculée par AdminPage depuis les queries légères. */
@@ -17,15 +20,12 @@ export type DayView =
   | {
       kind: "observed";
       date: string;
-      difficulty: number;
       status: "active" | "past";
     }
   | {
-      kind: "estimated";
+      kind: "future";
       date: string;
       status: "scheduled" | "predicted";
-      difficulty: number;
-      cellDifficulties: number[] | null;
       /** Renseigné pour les jours prédits (fetch lazy de la candidate). */
       candidateId: Id<"gridCandidates"> | null;
     }
@@ -55,25 +55,12 @@ function DetailMessage({ children }: { children: React.ReactNode }) {
   );
 }
 
-function DayHeader({
-  date,
-  difficulty,
-  pill,
-}: {
-  date: string;
-  difficulty: number;
-  pill: React.ReactNode;
-}) {
+function DayHeader({ date, pill }: { date: string; pill: React.ReactNode }) {
   return (
     <div className="flex items-start justify-between gap-3">
-      <div className="space-y-1">
-        <h2 className="font-serif text-xl font-medium capitalize text-on-surface">
-          {formatGridDateHeadingFr(date)}
-        </h2>
-        <span className="text-xs text-on-surface-variant">
-          difficulté estimée {difficulty}/100
-        </span>
-      </div>
+      <h2 className="font-serif text-xl font-medium capitalize text-on-surface">
+        {formatGridDateHeadingFr(date)}
+      </h2>
       {pill}
     </div>
   );
@@ -99,7 +86,6 @@ function ObservedDetail({
         <div className="px-4 py-4">
           <DayHeader
             date={view.date}
-            difficulty={view.difficulty}
             pill={
               <StatusPill kind={view.status}>
                 {view.status === "active" ? "active" : "passée"}
@@ -136,8 +122,6 @@ function ObservedDetail({
       tracked && essais >= STRUGGLE_MIN_ATTEMPTS ? struggleRate(cell) : null;
     observed[key] = {
       reussite: struggle === null ? null : 1 - struggle,
-      reussites: cell.totalGuesses,
-      echecs: cell.failedAttempts,
       essais,
       picks: Object.fromEntries(
         cell.picks.map((p) => [p.countryCode, p.count]),
@@ -145,12 +129,16 @@ function ObservedDetail({
     };
   }
 
+  const gridEase = gridEaseScore100(validAnswers);
+  const gridObservedEase = averageObservedSuccess100(
+    Object.values(observed).map((cell) => cell.reussite),
+  );
+
   return (
     <DetailShell>
       <div className="space-y-3 px-4 pb-4 pt-4">
         <DayHeader
           date={view.date}
-          difficulty={view.difficulty}
           pill={
             <StatusPill kind={view.status}>
               {view.status === "active" ? "active" : "passée"}
@@ -159,35 +147,45 @@ function ObservedDetail({
         />
 
         <div className="flex flex-wrap items-center gap-x-5 gap-y-2">
-          <StatGlyph
+          <GridHeaderStatKind
             kind="engages"
-            size="md"
-            showLabel
             value={noData ? "—" : playersEngaged}
           />
-          <StatGlyph
+          <GridHeaderStatKind
             kind="terminees"
-            size="md"
-            showLabel
             value={noData ? "—" : gamesFinished}
           />
-          <StatGlyph
-            kind="abandon"
-            size="md"
-            showLabel
-            value={noData ? "—" : abandon}
-          />
-          <StatGlyph
+          <GridHeaderStatKind kind="abandon" value={noData ? "—" : abandon} />
+          <GridHeaderStatKind
             kind="victoires"
-            size="md"
-            showLabel
+            tone="text-warning"
             value={
               noData
                 ? "—"
-                : `${wins}${winRate === null ? "" : ` · ${winRate} %`}`
+                : `${wins}${winRate === null ? "" : ` · ${winRate}%`}`
             }
           />
         </div>
+
+        {(gridEase !== null || gridObservedEase !== null) && (
+          <div className="flex flex-wrap items-center gap-x-5 gap-y-2">
+            {gridEase !== null && (
+              <GridHeaderStatKind kind="faciliteEst" value={gridEase} />
+            )}
+            {gridObservedEase !== null && (
+              <GridHeaderStatKind
+                kind="reussiteObs"
+                value={`${gridObservedEase}%`}
+              />
+            )}
+            {gridEase !== null && gridObservedEase !== null && (
+              <GridHeaderStatDelta
+                predicted={gridEase}
+                observed={gridObservedEase}
+              />
+            )}
+          </div>
+        )}
 
         {!tracked && (
           <p className="rounded-lg bg-warning/10 px-3 py-2 text-xs text-warning">
@@ -203,20 +201,24 @@ function ObservedDetail({
           observed={observed}
         />
 
-        <StatLegend kinds={["reussites", "echecs", "essais"]} />
+        <div className="flex flex-wrap items-center gap-x-3 gap-y-1 text-[10px] text-on-surface-variant/70">
+          <StatLegend
+            kinds={["faciliteEst", "reussiteObs", "ecartDown", "essais"]}
+          />
+        </div>
       </div>
     </DetailShell>
   );
 }
 
-// ─── Vue estimée (grille future / prédite) ──────────────────────────────────────
+// ─── Vue future (grille planifiée / prédite) ────────────────────────────────────
 
-function EstimatedDetail({
+function FutureDetail({
   token,
   view,
 }: {
   token: string;
-  view: Extract<DayView, { kind: "estimated" }>;
+  view: Extract<DayView, { kind: "future" }>;
 }) {
   const scheduledDetail = useQuery(
     api.grids.getScheduledGridPreviewDetail,
@@ -233,23 +235,25 @@ function EstimatedDetail({
 
   const detail =
     view.status === "scheduled" ? scheduledDetail : candidateDetail;
-  const cellDifficulties =
-    view.status === "predicted"
-      ? (candidateDetail?.cellDifficulties ?? view.cellDifficulties)
-      : view.cellDifficulties;
+  const gridEase = detail ? gridEaseScore100(detail.validAnswers) : null;
 
   return (
     <DetailShell>
       <div className="space-y-3 px-4 pb-4 pt-4">
         <DayHeader
           date={view.date}
-          difficulty={view.difficulty}
           pill={
             <StatusPill kind={view.status}>
               {view.status === "scheduled" ? "programmée" : "prédite"}
             </StatusPill>
           }
         />
+
+        {gridEase !== null && (
+          <div className="flex flex-wrap items-center gap-x-5 gap-y-2">
+            <GridHeaderStatKind kind="faciliteEst" value={gridEase} />
+          </div>
+        )}
 
         <div className="mx-auto w-full max-w-[860px]">
           {detail === undefined && (
@@ -267,7 +271,6 @@ function EstimatedDetail({
               rows={detail.rows}
               cols={detail.cols}
               validAnswers={detail.validAnswers}
-              cellDifficulties={cellDifficulties}
             />
           )}
         </div>
@@ -299,5 +302,5 @@ export function GridDayDetail({ token, selectedDate, view }: Props) {
     return <ObservedDetail token={token} view={view} />;
   }
 
-  return <EstimatedDetail token={token} view={view} />;
+  return <FutureDetail token={token} view={view} />;
 }

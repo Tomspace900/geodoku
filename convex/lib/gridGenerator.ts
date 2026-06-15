@@ -10,47 +10,22 @@ import {
   type GenerationReport,
   MAX_ATTEMPTS_PER_SEED,
   MAX_CELL_SIZE,
+  MAX_CONSTRAINT_OVERLAP,
   MAX_OVERLAP_BETWEEN_GRIDS,
   MAX_SAME_CATEGORY,
   MIN_CATEGORIES,
   MIN_CELL_SIZE,
+  MIN_VIABLE_GRIDS_PER_SEED,
   type PoolGridMetadata,
   TARGET_GRIDS_PER_SEED,
 } from "./gridConstants";
 
 const COUNTRIES: Country[] = countriesJson as Country[];
 
-// Difficulty curve: `raw` includes cardinality, constraint weights, and the
-// popularity multiplier; then maps through 1 − exp(−raw × DIFFICULTY_CURVE_K).
-const DIFFICULTY_CURVE_K = 0.8;
-
-// Popularity dampener: shifts raw difficulty toward easier cells when the
-// solution pool is well-known (top-K average popularity closer to 1).
-// 0 = ignore popularity; 1 = ±50% raw scale at extremes (pop factor 1.5 vs 0.5 vs base).
-const POPULARITY_WEIGHT = 0.6;
-
-/** Average this many highest-known candidates in each cell pool. */
-const POPULARITY_TOP_K = 3;
-
-// Constraint → category/difficulty lookups, built once at module load.
+// Constraint → category lookup, built once at module load.
 const CATEGORY_BY_ID: Record<string, string> = (() => {
   const map: Record<string, string> = {};
   for (const c of CONSTRAINTS) map[c.id] = c.category;
-  return map;
-})();
-
-const DIFFICULTY_BY_ID: Record<string, "easy" | "medium" | "hard"> = (() => {
-  const map: Record<string, "easy" | "medium" | "hard"> = {};
-  for (const c of CONSTRAINTS) map[c.id] = c.difficulty;
-  return map;
-})();
-
-/** ISO3 → percentile popularity [0..1] from bundled countries dataset. */
-const POPULARITY_BY_CODE: Record<string, number> = (() => {
-  const map: Record<string, number> = {};
-  for (const country of COUNTRIES) {
-    map[country.code] = country.popularityIndex ?? 0.5;
-  }
   return map;
 })();
 
@@ -92,6 +67,30 @@ export function intersect(
   return result.sort();
 }
 
+/**
+ * Overlap coefficient between two constraints' country sets: |A∩B| / min(|A|,|B|).
+ * Containment-based (not Jaccard) on purpose: it detects quasi-inclusion — when
+ * one constraint is almost a subset of another, knowing one nearly tells you the
+ * other, which makes a grid thematically redundant ("just name Caribbean islands").
+ * Jaccard would dilute that signal when the two sets differ a lot in size.
+ * Returns 0 if either set is empty (no meaningful overlap to measure).
+ */
+export function overlapCoefficient(
+  idA: string,
+  idB: string,
+  matches: Record<string, Set<string>>,
+): number {
+  const setA = matches[idA];
+  const setB = matches[idB];
+  if (!setA || !setB || setA.size === 0 || setB.size === 0) return 0;
+  const [small, large] = setA.size <= setB.size ? [setA, setB] : [setB, setA];
+  let shared = 0;
+  for (const code of small) {
+    if (large.has(code)) shared++;
+  }
+  return shared / small.size;
+}
+
 // ─── Backtracking (seed-first) ────────────────────────────────────────────────
 
 function shuffle<T>(arr: T[]): T[] {
@@ -105,14 +104,19 @@ function shuffle<T>(arr: T[]): T[] {
 
 /**
  * Recursive backtracking: fills rows to 3, then cols to 3.
- * Checks MAX_SAME_CATEGORY and cell-size hard filters at each step.
- * The seed is already in rows or cols when this is called.
+ * Checks MAX_SAME_CATEGORY, anti-redundancy (overlap coefficient) and cell-size
+ * hard filters at each step. The seed is already in rows or cols when this is called.
  *
  * Note: the MAX_CELL_SIZE check below is also what makes broad constraints
  * self-regulating — a constraint matching many countries can only pair with
  * narrow orthogonal partners (else the cell exceeds 15), so it lands in few
  * grids. This is why no usage-weighting / appearance cap is needed (see
  * generateDiversePool).
+ *
+ * The overlap-coefficient check prunes quasi-synonym constraints early so the
+ * backtracking finds a varied partner instead of discarding the whole attempt.
+ * It runs against *all* placed constraints (both axes): redundancy is intrinsic
+ * to a constraint pair, independent of whether they form a cell together.
  */
 function fillSlots(
   rows: string[],
@@ -133,6 +137,12 @@ function fillSlots(
       (pid) => (CATEGORY_BY_ID[pid] ?? "unknown") === cat,
     ).length;
     if (catCount >= MAX_SAME_CATEGORY) continue;
+
+    // Anti-redundancy: reject a quasi-synonym of any already-placed constraint
+    const redundant = allPlaced.some(
+      (pid) => overlapCoefficient(id, pid, matches) >= MAX_CONSTRAINT_OVERLAP,
+    );
+    if (redundant) continue;
 
     // Cell-size check against already-placed orthogonal constraints
     const valid = fillingRows
@@ -181,50 +191,6 @@ export function tryBuildGridWithSeed(
   return fillSlots([], [seedId], remaining, matches);
 }
 
-// ─── Difficulty scoring ───────────────────────────────────────────────────────
-
-/**
- * Mean popularity of the K best-known countries in `codes` (ISO3).
- * Empty pool → median fallback so callers never propagate NaNs.
- */
-export function topKPopularity(codes: string[], k = POPULARITY_TOP_K): number {
-  if (codes.length === 0) return 0.5;
-
-  const pops = codes
-    .map((code) => POPULARITY_BY_CODE[code] ?? 0.5)
-    .sort((a, b) => b - a);
-  const slice = pops.slice(0, Math.min(k, pops.length));
-  return slice.reduce((sum, p) => sum + p, 0) / slice.length;
-}
-
-/**
- * Difficulty of a single cell: constraint weights, solution cardinality, and a
- * popularity-aware dampener on the raw score (easier well-known pools).
- * Returns an integer in [0, 100].
- */
-export function computeCellDifficulty(
-  rowId: string,
-  colId: string,
-  matches: Record<string, Set<string>>,
-): number {
-  const solutions = intersect(rowId, colId, matches);
-  if (solutions.length === 0) return 100;
-
-  const diffWeight = { easy: 1, medium: 2, hard: 3 } as const;
-  const rowDiff = diffWeight[DIFFICULTY_BY_ID[rowId] ?? "medium"];
-  const colDiff = diffWeight[DIFFICULTY_BY_ID[colId] ?? "medium"];
-
-  const baseRaw = (1 / solutions.length) * rowDiff * colDiff;
-  const pop = topKPopularity(solutions);
-  const popFactor = Math.max(0, 1 + POPULARITY_WEIGHT * (0.5 - pop));
-  const raw = baseRaw * popFactor;
-
-  return Math.min(
-    100,
-    Math.max(0, Math.round(100 * (1 - Math.exp(-raw * DIFFICULTY_CURVE_K)))),
-  );
-}
-
 // ─── Finalization ─────────────────────────────────────────────────────────────
 
 /**
@@ -233,7 +199,10 @@ export function computeCellDifficulty(
  *   - All 9 cells: MIN_CELL_SIZE ≤ size ≤ MAX_CELL_SIZE
  *   - ≥ MIN_CATEGORIES distinct constraint categories
  *   - ≤ MAX_SAME_CATEGORY per category
- * Returns null if any filter fails.
+ *   - no constraint pair with overlap coefficient ≥ MAX_CONSTRAINT_OVERLAP
+ * Returns null if any filter fails. The overlap check duplicates the
+ * backtracking pruning on purpose (belt-and-suspenders, like the category check)
+ * so finalizeGrid is safe to call directly with an arbitrary grid.
  */
 export function finalizeGrid(
   rows: string[],
@@ -242,7 +211,6 @@ export function finalizeGrid(
   matches: Record<string, Set<string>>,
 ): FinalizedPoolGrid | null {
   const validAnswers: Record<string, string[]> = {};
-  const cellDifficulties: number[] = [];
   let minCellSize = Number.POSITIVE_INFINITY;
   let totalCellSize = 0;
   const countryPoolSet = new Set<string>();
@@ -254,7 +222,6 @@ export function finalizeGrid(
       if (size < MIN_CELL_SIZE || size > MAX_CELL_SIZE) return null;
 
       validAnswers[`${r},${c}`] = solutions;
-      cellDifficulties.push(computeCellDifficulty(rows[r], cols[c], matches));
       minCellSize = Math.min(minCellSize, size);
       totalCellSize += size;
       for (const code of solutions) countryPoolSet.add(code);
@@ -273,17 +240,19 @@ export function finalizeGrid(
   const categories = Object.keys(catCounts);
   if (categories.length < MIN_CATEGORIES) return null;
 
-  const avgCellSize = Math.round((totalCellSize / 9) * 10) / 10;
-  const difficultyEstimate = Math.round(
-    cellDifficulties.reduce((s, d) => s + d, 0) / cellDifficulties.length,
-  );
-
-  const difficultyTags = { easy: 0, medium: 0, hard: 0 };
-  for (const d of cellDifficulties) {
-    if (d <= 33) difficultyTags.easy++;
-    else if (d <= 66) difficultyTags.medium++;
-    else difficultyTags.hard++;
+  // Anti-redundancy (final enforcement): no quasi-synonym pair in the grid.
+  for (let i = 0; i < allIds.length; i++) {
+    for (let j = i + 1; j < allIds.length; j++) {
+      if (
+        overlapCoefficient(allIds[i], allIds[j], matches) >=
+        MAX_CONSTRAINT_OVERLAP
+      ) {
+        return null;
+      }
+    }
   }
+
+  const avgCellSize = Math.round((totalCellSize / 9) * 10) / 10;
 
   const metadata: PoolGridMetadata = {
     seedConstraint: seedId,
@@ -292,9 +261,6 @@ export function finalizeGrid(
     avgCellSize,
     minCellSize: minCellSize === Number.POSITIVE_INFINITY ? 0 : minCellSize,
     countryPool: [...countryPoolSet],
-    difficultyEstimate,
-    difficultyTags,
-    cellDifficulties,
   };
 
   return { rows, cols, validAnswers, metadata };
@@ -316,6 +282,10 @@ export function finalizeGrid(
  * if made strict, via MAX_OVERLAP), the second starves narrow seeds that depend
  * on broad partners. Measure with `scripts/prod/analyze-pool.ts` before adding
  * any such mechanism.
+ *
+ * Distinct from the above: MAX_CONSTRAINT_OVERLAP (applied in fillSlots +
+ * finalizeGrid) bounds *intra-grid* redundancy — how much two constraints of the
+ * same grid overlap — not a constraint's share of the pool.
  */
 export function generateDiversePool(
   existingPool: Array<{ constraintIds: string[] }> = [],
@@ -369,7 +339,7 @@ export function generateDiversePool(
       succeeded++;
     }
 
-    if (succeeded < 5) {
+    if (succeeded < MIN_VIABLE_GRIDS_PER_SEED) {
       console.warn(
         `CONSTRAINT ${seedId} FAILED: only ${succeeded}/${TARGET_GRIDS_PER_SEED} grids. This constraint may be structurally orphaned. Consider removing or reworking it.`,
       );
@@ -383,7 +353,7 @@ export function generateDiversePool(
       constraintId: seedId,
       attempted,
       succeeded,
-      failed: succeeded < 5,
+      failed: succeeded < MIN_VIABLE_GRIDS_PER_SEED,
     });
   });
 

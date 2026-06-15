@@ -6,6 +6,7 @@ import {
   MAX_NEW_CONSTRAINTS_PER_GRID,
   NEWCOMER_GRADUATION_USES,
   OVERUSE_CONSTRAINT_MALUS,
+  OVERUSE_THRESHOLD,
   type PoolGridMetadata,
 } from "./gridConstants";
 
@@ -23,11 +24,16 @@ type RecentGrid = {
 
 /**
  * Greedy scheduler: picks the available pool grid that best completes
- * the recent 15-day constraint/country diversity.
+ * the constraint/country diversity of the trailing HISTORY_WINDOW grids.
  *
- * Score = fresh_constraints × bonus
- *       - overused_constraints × malus
- *       + new_countries × bonus
+ * Score = fresh_constraints   × FRESH_CONSTRAINT_BONUS
+ *       - overused_constraints × OVERUSE_CONSTRAINT_MALUS
+ *       + new_countries        × FRESH_COUNTRY_BONUS
+ *
+ * where, over the trailing HISTORY_WINDOW:
+ *   - fresh    = constraints with usage 0 (never seen)
+ *   - overused = Σ max(0, usage − OVERUSE_THRESHOLD) (excess appearances only)
+ *   - new      = countries not present in any recent grid's answer pool
  *
  * Cold-start guard: candidate grids are first restricted so a freshly-added batch of
  * constraints is woven in gradually instead of flooding the schedule — see
@@ -55,7 +61,8 @@ export function selectNextGrid(
 
     const fresh = ids.filter((id) => (constraintUsage[id] ?? 0) === 0).length;
     const overuse = ids.reduce(
-      (s, id) => s + Math.max(0, (constraintUsage[id] ?? 0) - 2),
+      (s, id) =>
+        s + Math.max(0, (constraintUsage[id] ?? 0) - OVERUSE_THRESHOLD),
       0,
     );
 

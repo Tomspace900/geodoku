@@ -14,6 +14,7 @@
     "build": "tsc --noEmit && vite build",
     "build:countries": "tsx scripts/prod/build-countries.ts",
     "analyze:pool": "tsx scripts/prod/analyze-pool.ts",
+    "analyze:observed": "tsx --env-file-if-exists=.env.local scripts/prod/analyze-observed-difficulty.ts",
     "simulate:scheduling": "tsx scripts/simulate-scheduling.ts",
     "export:analytics": "tsx --env-file-if-exists=.env.local scripts/export-analytics.ts",
     "dump:prod": "npx convex export --prod --path ./prod-dump.zip && npx convex import --replace-all -y ./prod-dump.zip && rm ./prod-dump.zip",

@@ -1,10 +1,15 @@
 import {
   constraintLabel,
   difficultyPillClass,
+  popularityPillClass,
 } from "@/features/admin/logic/display";
+import {
+  popularityScore100,
+  topKPopularity,
+} from "@/features/countries/lib/popularity";
 import { getCountryByCode } from "@/features/countries/lib/search";
 import { cn } from "@/lib/utils";
-import { StatGlyph } from "./StatGlyph";
+import { StatGlyph, StatGlyphDelta, StatScorePill } from "./StatGlyph";
 
 const headerClass =
   "flex items-center justify-center text-center text-[10px] font-medium text-on-surface-variant bg-surface-low rounded-xl p-1.5 leading-tight min-h-[52px]";
@@ -13,8 +18,6 @@ const headerClass =
 export type ObservedCell = {
   /** Taux de réussite (réussites / essais), `null` si non instrumenté / trop peu d'essais. */
   reussite: number | null;
-  reussites: number;
-  echecs: number;
   essais: number;
   /** Distribution des choix : countryCode → nb de fois choisi. */
   picks: Record<string, number>;
@@ -24,8 +27,6 @@ type GridPreviewData = {
   rows: string[];
   cols: string[];
   validAnswers: Record<string, string[]>;
-  // 9 valeurs row-major (0–100) : difficulté ESTIMÉE (grilles futures).
-  cellDifficulties?: number[] | null;
   // Métriques OBSERVÉES par case (grilles passées / active).
   observed?: Record<string, ObservedCell> | null;
 };
@@ -38,27 +39,18 @@ function sortByPicks(codes: string[], picks: Record<string, number>): string[] {
   });
 }
 
-function KdaLine({ cell }: { cell: ObservedCell }) {
-  return (
-    <span className="flex items-center gap-2">
-      <StatGlyph kind="reussites" value={cell.reussites} />
-      <StatGlyph kind="echecs" value={cell.echecs} />
-      <StatGlyph kind="essais" value={cell.essais} />
-    </span>
-  );
-}
-
 export function GridPreview({
   rows,
   cols,
   validAnswers,
-  cellDifficulties,
   observed,
 }: GridPreviewData) {
   return (
     <div
       className="grid gap-1.5"
-      style={{ gridTemplateColumns: "minmax(0,1fr) repeat(3, minmax(0,1fr))" }}
+      style={{
+        gridTemplateColumns: "minmax(0,1fr) repeat(3, minmax(0,1fr))",
+      }}
     >
       <div />
 
@@ -79,26 +71,22 @@ export function GridPreview({
           const codes = obs
             ? sortByPicks(validAnswers[key] ?? [], obs.picks)
             : (validAnswers[key] ?? []);
-          const estimated = cellDifficulties?.[r * 3 + c];
 
-          // Pastille basse colorée : % réussite (observé, vert = haut) ou
-          // difficulté estimée (futur). difficultyPillClass donne vert pour un
-          // score bas → réussite haute = (1−réussite)·100 bas = vert.
-          let badge: { cls: string; text: string } | null = null;
-          if (obs) {
-            badge =
-              obs.reussite === null
-                ? { cls: "bg-surface-low text-on-surface-variant", text: "—" }
-                : {
-                    cls: difficultyPillClass((1 - obs.reussite) * 100),
-                    text: `${Math.round(obs.reussite * 100)} %`,
-                  };
-          } else if (typeof estimated === "number") {
-            badge = {
-              cls: difficultyPillClass(estimated),
-              text: `${estimated}`,
-            };
-          }
+          // Facilité estimée de la case (0–100, vert = solutions connues =
+          // facile) : seul prédicteur validé du taux d'échec. Picto jauge.
+          const popScore = popularityScore100(
+            topKPopularity(validAnswers[key] ?? []),
+          );
+          // Pastille basse : % réussite OBSERVÉ (passé/actif), `—` si non
+          // instrumenté ; null pour une grille future (rien d'observé).
+          const observedBadge = obs
+            ? obs.reussite === null
+              ? { cls: "bg-surface-low text-on-surface-variant", text: "—" }
+              : {
+                  cls: difficultyPillClass((1 - obs.reussite) * 100),
+                  text: `${Math.round(obs.reussite * 100)}%`,
+                }
+            : null;
 
           return (
             <div
@@ -140,17 +128,39 @@ export function GridPreview({
                 )}
               </div>
 
-              {badge && (
-                <div className="mt-1 flex shrink-0 items-center justify-between gap-1">
-                  <span
-                    className={cn(
-                      "rounded-full px-1.5 py-0.5 text-[11px] font-semibold tabular-nums",
-                      badge.cls,
+              {observedBadge ? (
+                // Passé : (1) réussite observée + essais ; (2) facilité + écart.
+                <div className="mt-1 flex shrink-0 flex-col gap-1">
+                  <div className="flex items-center gap-1.5">
+                    <StatScorePill
+                      kind="reussiteObs"
+                      score={observedBadge.text}
+                      pillClass={observedBadge.cls}
+                    />
+                    {obs && <StatGlyph kind="essais" value={obs.essais} />}
+                  </div>
+                  <div className="flex items-center gap-1.5">
+                    <StatScorePill
+                      kind="faciliteEst"
+                      score={popScore}
+                      pillClass={popularityPillClass(popScore)}
+                    />
+                    {obs && obs.reussite !== null && (
+                      <StatGlyphDelta
+                        predicted={popScore}
+                        observed={Math.round(obs.reussite * 100)}
+                      />
                     )}
-                  >
-                    {badge.text}
-                  </span>
-                  {obs && <KdaLine cell={obs} />}
+                  </div>
+                </div>
+              ) : (
+                // Futur : facilité estimée seule (pas d'observé).
+                <div className="mt-1 flex shrink-0 items-center">
+                  <StatScorePill
+                    kind="faciliteEst"
+                    score={popScore}
+                    pillClass={popularityPillClass(popScore)}
+                  />
                 </div>
               )}
             </div>

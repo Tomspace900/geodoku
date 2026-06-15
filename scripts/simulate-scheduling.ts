@@ -9,11 +9,36 @@ import {
   type FinalizedPoolGrid,
   HISTORY_WINDOW,
   KNOWN_CONSTRAINT_WINDOW,
+  MAX_CONSTRAINT_OVERLAP,
   MAX_NEW_CONSTRAINTS_PER_GRID,
+  MIN_VIABLE_GRIDS_PER_SEED,
 } from "../convex/lib/gridConstants";
-import { generateDiversePool } from "../convex/lib/gridGenerator";
+import {
+  buildConstraintMatches,
+  generateDiversePool,
+  overlapCoefficient,
+} from "../convex/lib/gridGenerator";
 import { selectNextGrid } from "../convex/lib/gridScheduler";
 import { CONSTRAINTS } from "../src/features/game/logic/constraints";
+
+// Pass/fail thresholds for the health summary — tune here, never inline below.
+// The failed/low-yield split is anchored on MIN_VIABLE_GRIDS_PER_SEED (shared
+// with the generator): succeeded < MIN_VIABLE → failed, [MIN_VIABLE, lowYield)
+// → low-yield (informational).
+const CHECK_THRESHOLDS = {
+  lowYieldGrids: 10,
+  medianGridsPerSeed: 10,
+  maxFailedSeedRatio: 0.2,
+  minConstraintCoverage: 0.9,
+  minCountryCoverage: 160,
+  minUniqueConstraintRatio: 0.85,
+  maxReuseIn15dWindow: 4,
+  minUniqueCountries: 150,
+  minPoolRemainingRatio: 0.6,
+} as const;
+
+// Scheduling horizon simulated below.
+const SIM_DAYS = 30;
 
 // ─── Pool generation ──────────────────────────────────────────────────────────
 
@@ -36,25 +61,22 @@ console.log(
   `  Country coverage  : ${report.countryCoverage} distinct countries`,
 );
 
-const difficulties = pool.map((g) => g.metadata.difficultyEstimate);
-const avgDiff = difficulties.reduce((a, b) => a + b, 0) / difficulties.length;
-const sorted = [...difficulties].sort((a, b) => a - b);
-const medianDiff = sorted[Math.floor(sorted.length / 2)] ?? 0;
-console.log(`  Avg difficulty    : ${avgDiff.toFixed(1)}/100`);
-console.log(`  Median difficulty : ${medianDiff}/100`);
-
 // Per-seed breakdown
 const failed = report.seedResults.filter((r) => r.failed);
 const lowYield = report.seedResults.filter(
-  (r) => !r.failed && r.succeeded < 10,
+  (r) => !r.failed && r.succeeded < CHECK_THRESHOLDS.lowYieldGrids,
 );
 
-console.log(`\n  Failed seeds (< 5 grids) : ${failed.length}`);
+console.log(
+  `\n  Failed seeds (< ${MIN_VIABLE_GRIDS_PER_SEED} grids) : ${failed.length}`,
+);
 for (const r of failed) {
   console.log(`    ✗ ${r.constraintId} — ${r.succeeded}/${r.attempted} grids`);
 }
 if (lowYield.length > 0) {
-  console.log(`  Low-yield seeds (5–9 grids) : ${lowYield.length}`);
+  console.log(
+    `  Low-yield seeds (${MIN_VIABLE_GRIDS_PER_SEED}–${CHECK_THRESHOLDS.lowYieldGrids - 1} grids) : ${lowYield.length}`,
+  );
   for (const r of lowYield) {
     console.log(`    ~ ${r.constraintId} — ${r.succeeded}`);
   }
@@ -63,7 +85,7 @@ if (lowYield.length > 0) {
 // ─── 30-day simulation ────────────────────────────────────────────────────────
 
 console.log("\n═══════════════════════════════════════════════════════");
-console.log("  SCHEDULING SIMULATION (30 days)");
+console.log(`  SCHEDULING SIMULATION (${SIM_DAYS} days)`);
 console.log("═══════════════════════════════════════════════════════");
 
 type PoolGrid = {
@@ -91,14 +113,13 @@ type ScheduledDay = {
   day: number;
   grid: PoolGrid;
   score: number;
-  difficulty: number;
   constraintIds: string[];
 };
 
 const scheduled: ScheduledDay[] = [];
 const usedIds = new Set<string>();
 
-for (let day = 1; day <= 30; day++) {
+for (let day = 1; day <= SIM_DAYS; day++) {
   const available = poolQueue.filter((g) => !usedIds.has(g._id));
   const recent = scheduled
     .slice(-KNOWN_CONSTRAINT_WINDOW)
@@ -121,28 +142,25 @@ for (let day = 1; day <= 30; day++) {
     day,
     grid: fullGrid,
     score: result.score,
-    difficulty: result.grid.metadata.difficultyEstimate,
     constraintIds: result.grid.metadata.constraintIds,
   });
 }
 
 // Print table
-console.log(
-  `\n  ${"Day".padEnd(4)} ${"Diff".padEnd(6)} ${"Score".padEnd(7)} Constraints`,
-);
+console.log(`\n  ${"Day".padEnd(4)} ${"Score".padEnd(7)} Constraints`);
 console.log(`  ${"─".repeat(65)}`);
 for (const d of scheduled) {
   const ids = d.constraintIds.join(", ");
   const truncated = ids.length > 50 ? `${ids.slice(0, 47)}...` : ids;
   console.log(
-    `  ${String(d.day).padEnd(4)} ${String(d.difficulty).padEnd(6)} ${d.score.toFixed(1).padEnd(7)} ${truncated}`,
+    `  ${String(d.day).padEnd(4)} ${d.score.toFixed(1).padEnd(7)} ${truncated}`,
   );
 }
 
 // ─── Simulation metrics ───────────────────────────────────────────────────────
 
 console.log("\n═══════════════════════════════════════════════════════");
-console.log("  SIMULATION METRICS (30 days)");
+console.log(`  SIMULATION METRICS (${SIM_DAYS} days)`);
 console.log("═══════════════════════════════════════════════════════");
 
 const allConstraintIds = scheduled.flatMap((d) => d.constraintIds);
@@ -157,13 +175,6 @@ const allCountries = scheduled.flatMap((d) =>
   Object.values(d.grid.validAnswers).flat(),
 );
 const uniqueCountries = new Set(allCountries);
-
-const scheduledDifficulties = scheduled.map((d) => d.difficulty);
-const schedSorted = [...scheduledDifficulties].sort((a, b) => a - b);
-const schedMedian = schedSorted[Math.floor(schedSorted.length / 2)] ?? 0;
-const schedAvg =
-  scheduledDifficulties.reduce((a, b) => a + b, 0) /
-  scheduledDifficulties.length;
 
 const poolRemaining = pool.length - scheduled.length;
 const poolRemainingPct = ((poolRemaining / pool.length) * 100).toFixed(1);
@@ -189,26 +200,24 @@ for (let w = 0; w <= scheduled.length - HISTORY_WINDOW; w++) {
   }
 }
 
-console.log(`  Days scheduled    : ${scheduled.length}/30`);
+console.log(`  Days scheduled    : ${scheduled.length}/${SIM_DAYS}`);
 console.log(
   `  Unique constraints: ${uniqueConstraints.size} / ${CONSTRAINTS.length} (${((uniqueConstraints.size / CONSTRAINTS.length) * 100).toFixed(1)}%)`,
 );
-console.log(`  Max reuse (30d total)        : ${maxReuse}`);
+console.log(`  Max reuse (${SIM_DAYS}d total)        : ${maxReuse}`);
 console.log(
-  `  Max reuse (worst 15d window) : ${maxWindowReuse} (${worstWindowConstraint}, days ${worstWindowStart}–${worstWindowStart + HISTORY_WINDOW - 1})`,
+  `  Max reuse (worst ${HISTORY_WINDOW}d window) : ${maxWindowReuse} (${worstWindowConstraint}, days ${worstWindowStart}–${worstWindowStart + HISTORY_WINDOW - 1})`,
 );
 console.log(`  Unique countries in solution : ${uniqueCountries.size}`);
-console.log(`  Avg difficulty    : ${schedAvg.toFixed(1)}/100`);
-console.log(`  Median difficulty : ${schedMedian}/100`);
 console.log(
   `  Pool remaining    : ${poolRemaining}/${pool.length} (${poolRemainingPct}%)`,
 );
 
-// Most reused constraints (30d total)
+// Most reused constraints (whole horizon)
 const topReused = Object.entries(constraintUsage)
   .sort((a, b) => b[1] - a[1])
   .slice(0, 5);
-console.log("\n  Most reused constraints (30d):");
+console.log(`\n  Most reused constraints (${SIM_DAYS}d):`);
 for (const [id, count] of topReused) {
   console.log(`    ${count}× ${id}`);
 }
@@ -335,8 +344,8 @@ for (const [label, count] of Object.entries(buckets)) {
   );
 }
 
-// Same analysis on scheduled 30 days
-console.log("\n  ── Scheduled 30 days ──────────────────────────────");
+// Same analysis on the scheduled horizon
+console.log(`\n  ── Scheduled ${SIM_DAYS} days ──────────────────────────────`);
 const scheduledCellsPerCountry: Record<string, number> = {};
 const scheduledGridsPerCountry: Record<string, number> = {};
 for (const day of scheduled) {
@@ -373,7 +382,7 @@ console.log(
 console.log(
   `  Appearances/country  : avg ${schedAvgCells.toFixed(1)}  median ${schedMedianCells}`,
 );
-console.log("\n  Top 10 most present (30 scheduled days):");
+console.log(`\n  Top 10 most present (${SIM_DAYS} scheduled days):`);
 for (const [code, count] of top10Sched) {
   const grids = scheduledGridsPerCountry[code] ?? 0;
   console.log(
@@ -470,66 +479,76 @@ console.log("\n═════════════════════�
 console.log("  PASS/FAIL SUMMARY");
 console.log("═══════════════════════════════════════════════════════");
 
+// Intra-grid redundancy invariant (MAX_CONSTRAINT_OVERLAP).
+const redundancyMatches = buildConstraintMatches();
+let poolWorstOverlap = 0;
+for (const g of pool) {
+  const ids = g.metadata.constraintIds;
+  for (let a = 0; a < ids.length; a++) {
+    for (let b = a + 1; b < ids.length; b++) {
+      const o = overlapCoefficient(ids[a], ids[b], redundancyMatches);
+      if (o > poolWorstOverlap) poolWorstOverlap = o;
+    }
+  }
+}
+
+const seedYields = report.seedResults
+  .map((r) => r.succeeded)
+  .sort((a, b) => a - b);
+const medianGridsPerSeed = seedYields[Math.floor(seedYields.length / 2)] ?? 0;
+
 const checks: Array<{ label: string; pass: boolean; value: string }> = [
   {
-    label: "Pool: median grids/seed ≥ 10",
-    pass: (() => {
-      const counts = report.seedResults.map((r) => r.succeeded);
-      const sortedCounts = [...counts].sort((a, b) => a - b);
-      const median = sortedCounts[Math.floor(sortedCounts.length / 2)] ?? 0;
-      return median >= 10;
-    })(),
-    value: (() => {
-      const counts = report.seedResults.map((r) => r.succeeded);
-      const sortedCounts = [...counts].sort((a, b) => a - b);
-      return String(sortedCounts[Math.floor(sortedCounts.length / 2)] ?? 0);
-    })(),
+    label: `Pool: median grids/seed ≥ ${CHECK_THRESHOLDS.medianGridsPerSeed}`,
+    pass: medianGridsPerSeed >= CHECK_THRESHOLDS.medianGridsPerSeed,
+    value: String(medianGridsPerSeed),
   },
   {
-    label: "Pool: failed seeds ≤ 20%",
-    pass: failed.length / CONSTRAINTS.length <= 0.2,
+    label: `Pool: failed seeds ≤ ${CHECK_THRESHOLDS.maxFailedSeedRatio * 100}%`,
+    pass:
+      failed.length / CONSTRAINTS.length <= CHECK_THRESHOLDS.maxFailedSeedRatio,
     value: `${failed.length}/${CONSTRAINTS.length}`,
   },
   {
-    label: "Pool: constraint coverage ≥ 90%",
-    pass: report.constraintCoverage >= 0.9,
+    label: `Pool: constraint coverage ≥ ${CHECK_THRESHOLDS.minConstraintCoverage * 100}%`,
+    pass: report.constraintCoverage >= CHECK_THRESHOLDS.minConstraintCoverage,
     value: `${(report.constraintCoverage * 100).toFixed(1)}%`,
   },
   {
-    label: "Pool: countries ≥ 160",
-    pass: report.countryCoverage >= 160,
+    label: `Pool: countries ≥ ${CHECK_THRESHOLDS.minCountryCoverage}`,
+    pass: report.countryCoverage >= CHECK_THRESHOLDS.minCountryCoverage,
     value: String(report.countryCoverage),
   },
   {
-    label: "Sched: 30 days fully covered",
-    pass: scheduled.length === 30,
-    value: `${scheduled.length}/30`,
+    label: "Pool: max constraint overlap < limit",
+    pass: poolWorstOverlap < MAX_CONSTRAINT_OVERLAP,
+    value: `${poolWorstOverlap.toFixed(3)} < ${MAX_CONSTRAINT_OVERLAP}`,
   },
   {
-    label: "Sched: unique constraints ≥ 85%",
-    pass: uniqueConstraints.size / CONSTRAINTS.length >= 0.85,
+    label: `Sched: ${SIM_DAYS} days fully covered`,
+    pass: scheduled.length === SIM_DAYS,
+    value: `${scheduled.length}/${SIM_DAYS}`,
+  },
+  {
+    label: `Sched: unique constraints ≥ ${CHECK_THRESHOLDS.minUniqueConstraintRatio * 100}%`,
+    pass:
+      uniqueConstraints.size / CONSTRAINTS.length >=
+      CHECK_THRESHOLDS.minUniqueConstraintRatio,
     value: `${((uniqueConstraints.size / CONSTRAINTS.length) * 100).toFixed(1)}%`,
   },
   {
-    label: "Sched: max reuse in 15d window ≤ 4",
-    pass: maxWindowReuse <= 4,
+    label: `Sched: max reuse in ${HISTORY_WINDOW}d window ≤ ${CHECK_THRESHOLDS.maxReuseIn15dWindow}`,
+    pass: maxWindowReuse <= CHECK_THRESHOLDS.maxReuseIn15dWindow,
     value: `${maxWindowReuse} (${worstWindowConstraint})`,
   },
   {
-    label: "Sched: unique countries ≥ 150",
-    pass: uniqueCountries.size >= 150,
+    label: `Sched: unique countries ≥ ${CHECK_THRESHOLDS.minUniqueCountries}`,
+    pass: uniqueCountries.size >= CHECK_THRESHOLDS.minUniqueCountries,
     value: String(uniqueCountries.size),
   },
   {
-    // The scheduler no longer targets difficulty; this is a pool-health guardrail
-    // (a degenerate all-trivial / all-brutal pool would land outside the band).
-    label: "Pool: median difficulty 25–45",
-    pass: medianDiff >= 25 && medianDiff <= 45,
-    value: String(medianDiff),
-  },
-  {
-    label: "Pool: ≥ 60% remaining after 30d",
-    pass: poolRemaining / pool.length >= 0.6,
+    label: `Pool: ≥ ${CHECK_THRESHOLDS.minPoolRemainingRatio * 100}% remaining after ${SIM_DAYS}d`,
+    pass: poolRemaining / pool.length >= CHECK_THRESHOLDS.minPoolRemainingRatio,
     value: `${poolRemainingPct}%`,
   },
   {

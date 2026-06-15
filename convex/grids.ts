@@ -1,4 +1,5 @@
 import { ConvexError, v } from "convex/values";
+import { gridPopularity } from "../src/features/countries/lib/popularity";
 import { CONSTRAINTS } from "../src/features/game/logic/constraints";
 import { internal } from "./_generated/api";
 import type { Id } from "./_generated/dataModel";
@@ -129,7 +130,6 @@ export const getTodayGrid = query({
       date: grid.date,
       rows: grid.rows,
       cols: grid.cols,
-      difficulty: grid.difficulty,
       candidateId: grid.candidateId,
       validAnswers,
     };
@@ -142,12 +142,17 @@ export const getTodayGrid = query({
  *
  * `validAnswers` n'est pas inclus pour limiter la bande passante : utiliser
  * `getScheduledGridPreviewDetail` à la sélection d'une date.
+ *
+ * `gridPopTop3` (notoriété moyenne des solutions, pastille calendrier) n'est
+ * calculée que pour aujourd'hui/futur : les jours passés affichent le winRate
+ * observé, inutile de lire le satellite `gridAnswers` pour eux.
  */
 export const getScheduledGrids = query({
   args: { adminToken: v.string() },
   handler: async (ctx, args) => {
     checkAdminToken(args.adminToken);
     const cutoff = daysAgoUTC(30);
+    const today = todayUTC();
     const grids = await ctx.db
       .query("grids")
       .withIndex("by_date", (q) => q.gte("date", cutoff))
@@ -157,13 +162,17 @@ export const getScheduledGrids = query({
     return await Promise.all(
       grids.map(async (grid) => {
         const candidate = await ctx.db.get(grid.candidateId);
+        const gridPopTop3 =
+          grid.date >= today
+            ? gridPopularity((await getGridAnswers(ctx, grid)) ?? {})
+            : null;
         return {
           date: grid.date,
           rows: grid.rows,
           cols: grid.cols,
-          difficulty: grid.difficulty,
           candidateId: grid.candidateId,
           metadata: candidate?.metadata ?? null,
+          gridPopTop3,
         };
       }),
     );
@@ -186,7 +195,6 @@ export const getScheduledGridPreviewDetail = query({
       rows: grid.rows,
       cols: grid.cols,
       validAnswers,
-      difficulty: grid.difficulty,
     };
   },
 });
@@ -203,7 +211,6 @@ export const getCandidatePreviewDetail = query({
       rows: candidate.rows,
       cols: candidate.cols,
       validAnswers,
-      cellDifficulties: candidate.metadata.cellDifficulties,
     };
   },
 });
@@ -310,9 +317,9 @@ export const getUpcomingScheduledPreview = query({
           kind: "scheduled" | "predicted";
           rows: string[];
           cols: string[];
-          difficulty: number;
-          cellDifficulties: number[] | null;
           candidateId: Id<"gridCandidates"> | null;
+          /** Notoriété moyenne des solutions (popTop3), pastille calendrier. */
+          gridPopTop3: number | null;
         }
       | { date: string; kind: "missing" };
 
@@ -324,15 +331,15 @@ export const getUpcomingScheduledPreview = query({
       const existing = scheduledByDate.get(date);
 
       if (existing) {
-        const candidate = await ctx.db.get(existing.candidateId);
         upcoming.push({
           date,
           kind: "scheduled",
           rows: existing.rows,
           cols: existing.cols,
-          difficulty: existing.difficulty,
-          cellDifficulties: candidate?.metadata.cellDifficulties ?? null,
           candidateId: existing.candidateId,
+          gridPopTop3: gridPopularity(
+            (await getGridAnswers(ctx, existing)) ?? {},
+          ),
         });
         recentForScheduler = [
           {
@@ -356,9 +363,13 @@ export const getUpcomingScheduledPreview = query({
         kind: "predicted",
         rows: picked.grid.rows,
         cols: picked.grid.cols,
-        difficulty: picked.grid.metadata.difficultyEstimate,
-        cellDifficulties: picked.grid.metadata.cellDifficulties,
         candidateId: picked.grid._id as Id<"gridCandidates">,
+        gridPopTop3: gridPopularity(
+          (await getCandidateAnswers(
+            ctx,
+            picked.grid._id as Id<"gridCandidates">,
+          )) ?? {},
+        ),
       });
       usedIds.add(picked.grid._id);
       recentForScheduler = [
@@ -446,8 +457,7 @@ export const getGridFeedbackStats = query({
  * `gridFeedback` (wins + losses pour les parties terminées ; fillRate via
  * `playersEngaged` = max des totalGuesses sur les 9 cases) pour exposer un rapport
  * case par case : taux de remplissage, top des pays choisis, couverture du
- * pool de réponses valides, pays jamais trouvés, et difficulté estimée vs
- * observée.
+ * pool de réponses valides, pays jamais trouvés.
  *
  * Renvoie `null` si la grille n'existe pas pour cette date. Lourde (9 dailyStats
  * + 9 guesses) : consommée AU CLIC seulement dans /admin (détail d'un jour) et
@@ -466,8 +476,6 @@ export const getGridCellMetrics = query({
 
     const validAnswers = (await getGridAnswers(ctx, grid)) ?? {};
 
-    const candidate = await ctx.db.get(grid.candidateId);
-    const cellDifficulties = candidate?.metadata.cellDifficulties ?? null;
     const rows = grid.rows;
     const cols = grid.cols;
 
@@ -484,7 +492,6 @@ export const getGridCellMetrics = query({
       totalGuesses: number;
       failedAttempts: number;
       guessRows: Array<{ countryCode: string; count: number }>;
-      estimatedDifficulty: number | null;
     };
     const cellInputs: CellInput[] = [];
 
@@ -513,7 +520,6 @@ export const getGridCellMetrics = query({
             countryCode: g.countryCode,
             count: g.count,
           })),
-        estimatedDifficulty: cellDifficulties?.[i] ?? null,
       });
     }
 
@@ -538,7 +544,6 @@ export const getGridCellMetrics = query({
           totalGuesses: input.totalGuesses,
           guessRows: input.guessRows,
           playersEngaged,
-          estimatedDifficulty: input.estimatedDifficulty,
         }),
         failedAttempts: input.failedAttempts,
         // Liste complète des solutions de la case (pour réafficher les chips

@@ -12,7 +12,6 @@ export type CellMetric = {
   coverage: number;
   fillRate: number | null;
   observedDifficulty100: number | null;
-  estimatedDifficulty: number | null;
   topAnswers: Array<{
     countryCode: string;
     count: number;
@@ -40,7 +39,6 @@ export function computeCellMetric(input: {
   totalGuesses: number;
   guessRows: ReadonlyArray<GuessRow>;
   playersEngaged: number;
-  estimatedDifficulty: number | null;
 }): CellMetric {
   const { validForCell, totalGuesses, guessRows, playersEngaged } = input;
 
@@ -72,7 +70,6 @@ export function computeCellMetric(input: {
     coverage,
     fillRate,
     observedDifficulty100,
-    estimatedDifficulty: input.estimatedDifficulty,
     topAnswers,
     missingCountries,
   };

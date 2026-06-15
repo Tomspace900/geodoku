@@ -1,4 +1,5 @@
 import { Eyebrow } from "@/components/editorial/Eyebrow";
+import { GRID_LAUNCH_DATE_ISO } from "@/features/game/logic/gridIssue";
 import {
   type FeedbackRow,
   type Summary,
@@ -100,12 +101,15 @@ function splitCell(row: TrendRow): string {
 }
 
 export function GameHealthPanel({ feedbackStats }: Props) {
+  const sinceLaunch =
+    feedbackStats?.filter((row) => row.date >= GRID_LAUNCH_DATE_ISO) ?? undefined;
+
   const trend =
-    feedbackStats === undefined ? null : buildTrend(feedbackStats, TREND_DAYS);
+    sinceLaunch === undefined ? null : buildTrend(sinceLaunch, TREND_DAYS);
   const summary =
-    feedbackStats === undefined
+    sinceLaunch === undefined
       ? null
-      : buildSummary(feedbackStats, SUMMARY_DAYS);
+      : buildSummary(sinceLaunch, SUMMARY_DAYS);
 
   return (
     <PanelCard>

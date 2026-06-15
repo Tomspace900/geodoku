@@ -1,12 +1,13 @@
 import { describe, expect, it } from "vitest";
 import {
   type FeedbackRow,
+  averageObservedSuccess100,
   buildCalendarMarkers,
   buildSummary,
   buildTrend,
   hasStruggleData,
+  predictionDelta,
   struggleRate,
-  winRateDotClass,
 } from "../analytics";
 
 function feedbackRow(
@@ -57,7 +58,7 @@ describe("buildCalendarMarkers", () => {
   it("marks a past scheduled day as observed with its winRate", () => {
     const markers = buildCalendarMarkers({
       today,
-      scheduled: [{ date: "2026-06-01", difficulty: 40 }],
+      scheduled: [{ date: "2026-06-01", gridPopTop3: null }],
       winRateByDate: new Map([["2026-06-01", 0.5]]),
       upcoming: [],
     });
@@ -70,7 +71,7 @@ describe("buildCalendarMarkers", () => {
   it("marks a past scheduled day with no games as observed/null (not zero)", () => {
     const markers = buildCalendarMarkers({
       today,
-      scheduled: [{ date: "2026-06-01", difficulty: 40 }],
+      scheduled: [{ date: "2026-06-01", gridPopTop3: null }],
       winRateByDate: new Map(),
       upcoming: [],
     });
@@ -80,39 +81,42 @@ describe("buildCalendarMarkers", () => {
     });
   });
 
-  it("marks today and future scheduled days as estimated", () => {
+  it("marks today and future scheduled days with their popularity score", () => {
     const markers = buildCalendarMarkers({
       today,
       scheduled: [
-        { date: today, difficulty: 55 },
-        { date: "2026-06-05", difficulty: 70 },
+        { date: today, gridPopTop3: 0.724 },
+        { date: "2026-06-05", gridPopTop3: null },
       ],
       winRateByDate: new Map(),
       upcoming: [],
     });
-    expect(markers.get(today)).toEqual({ kind: "estimated", difficulty: 55 });
+    expect(markers.get(today)).toEqual({ kind: "scheduled", popScore: 72 });
     expect(markers.get("2026-06-05")).toEqual({
-      kind: "estimated",
-      difficulty: 70,
+      kind: "scheduled",
+      popScore: null,
     });
   });
 
   it("adds predicted and missing days from upcoming without overwriting scheduled", () => {
     const markers = buildCalendarMarkers({
       today,
-      scheduled: [{ date: "2026-06-05", difficulty: 70 }],
+      scheduled: [{ date: "2026-06-05", gridPopTop3: 0.5 }],
       winRateByDate: new Map(),
       upcoming: [
-        { date: "2026-06-05", kind: "scheduled" }, // déjà couvert → estimated conservé
-        { date: "2026-06-06", kind: "predicted" },
+        { date: "2026-06-05", kind: "scheduled" },
+        { date: "2026-06-06", kind: "predicted", gridPopTop3: 0.65 },
         { date: "2026-06-07", kind: "missing" },
       ],
     });
     expect(markers.get("2026-06-05")).toEqual({
-      kind: "estimated",
-      difficulty: 70,
+      kind: "scheduled",
+      popScore: 50,
     });
-    expect(markers.get("2026-06-06")).toEqual({ kind: "predicted" });
+    expect(markers.get("2026-06-06")).toEqual({
+      kind: "predicted",
+      popScore: 65,
+    });
     expect(markers.get("2026-06-07")).toEqual({ kind: "missing" });
   });
 });
@@ -219,14 +223,27 @@ describe("buildSummary", () => {
   });
 });
 
-describe("winRateDotClass", () => {
-  it("is neutral when winRate is null", () => {
-    expect(winRateDotClass(null)).toBe("bg-outline-variant/40");
+describe("averageObservedSuccess100", () => {
+  it("null si aucune case instrumentée", () => {
+    expect(averageObservedSuccess100([])).toBeNull();
+    expect(averageObservedSuccess100([null, null])).toBeNull();
   });
 
-  it("maps high/medium/low winRate to success/warning/error", () => {
-    expect(winRateDotClass(0.8)).toBe("bg-success");
-    expect(winRateDotClass(0.45)).toBe("bg-warning");
-    expect(winRateDotClass(0.1)).toBe("bg-error");
+  it("moyenne les taux observés en score 0–100", () => {
+    expect(averageObservedSuccess100([0.8, 0.6])).toBe(70);
+    expect(averageObservedSuccess100([null, 0.5])).toBe(50);
+  });
+});
+
+describe("predictionDelta", () => {
+  it("signe l'écart : prédit > observé = sur-estimation (positif)", () => {
+    expect(predictionDelta(70, 30).value).toBe(40);
+    expect(predictionDelta(30, 55).value).toBe(-25);
+  });
+
+  it("classe la sévérité par |écart| (≤15 bon, ≤30 moyen, sinon raté)", () => {
+    expect(predictionDelta(60, 50).severity).toBe("good"); // 10
+    expect(predictionDelta(60, 35).severity).toBe("off"); // 25
+    expect(predictionDelta(80, 30).severity).toBe("missed"); // 50
   });
 });
