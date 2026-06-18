@@ -1,0 +1,10 @@
+#!/usr/bin/env sh
+# Local quality gate (fast). E2E runs in CI, not here.
+# 1. Biome (format + lint) on staged files only, auto-fixing and re-staging.
+pnpm lint-staged
+
+# 2. Project-wide TypeScript check (catches type errors lint-staged can't see).
+pnpm typecheck
+
+# 3. Unit tests (Vitest).
+pnpm test
