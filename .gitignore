@@ -32,3 +32,9 @@ docs/
 
 # Dev-only scripts (local audits, not versioned)
 scripts/dev/
+
+# Playwright e2e artifacts
+/test-results/
+/playwright-report/
+/blob-report/
+/playwright/.cache/

@@ -25,7 +25,8 @@ Geodoku est un mini-jeu web quotidien inspiré de Wordle et du Sudoku, sur le th
 - **Observabilité front** : `@vercel/analytics` + `@vercel/speed-insights` + **PostHog** (`posthog-js` / `@posthog/react`, analytics produit + error tracking) — voir §10 (`[src/main.tsx](src/main.tsx)`)
 - **Package manager** : pnpm (Node **≥ 22.12**, Volta 22.19)
 - **Lint/format** : Biome (pas ESLint, pas Prettier)
-- **Tests** : Vitest + @testing-library/react
+- **Tests** : Vitest + @testing-library/react (unitaires) ; **Playwright** (e2e multi-navigateurs — voir §8)
+- **Hooks / CI** : husky + lint-staged (pre-commit : Biome + tsc + Vitest) ; GitHub Actions (`quality` + `e2e`) — voir §8
 - **Recherche fuzzy** : match-sorter (normalisation NFD côté requête)
 - **Fonts** : Newsreader (serif, via Google Fonts CDN) + Inter (sans-serif)
 
@@ -105,11 +106,21 @@ geodoku/
 │   └── lib/
 │       ├── utils.ts             # cn()
 │       └── dates.ts             # todayUTC, tomorrowUTC, offsetUTC… (source unique UTC)
+├── e2e/                         # tests Playwright (multi-navigateurs) — voir §8
+│   ├── helpers.ts               # fetchTodayGrid (ConvexHttpClient), solveGrid (matching biparti), findBlockingPlan, fillCell, prepareSession…
+│   ├── game.shared.spec.ts      # gameplay cœur (load, fill, mauvaise réponse, unicité, défaite) — tous navigateurs
+│   ├── persistence.shared.spec.ts  # reprise / localStorage corrompu / périmé — tous navigateurs
+│   ├── mobile.mobile.spec.ts    # tactile / layout (drawer, swipe) — profils mobiles
+│   ├── completion.desktop.spec.ts  # victoire, partage, case bloquée, solution, feedback — chromium-desktop
+│   └── navigation.desktop.spec.ts  # routes (/privacy, /changelog, /admin), bascule langue — chromium-desktop
+├── .husky/pre-commit            # gate local : Biome (staged) + tsc + Vitest
+├── .github/workflows/ci.yml     # GitHub Actions : jobs quality + e2e
+├── playwright.config.ts         # 6 projets navigateur, routing par suffixe de fichier, workers=1
 ├── biome.json
 ├── tailwind.config.ts
 ├── vercel.json                  # SPA rewrites + headers sécurité
 ├── tsconfig.json                # `include: ["src", "scripts"]`, `exclude: ["scripts/dev"]`
-├── vite.config.ts
+├── vite.config.ts               # Vitest : `exclude` e2e/** (specs Playwright, sinon collectées par erreur)
 └── package.json
 ```
 
@@ -164,9 +175,14 @@ geodoku/
 
 **Tests.**
 
-- Tous les tests sont co-localisés dans `__tests__/` à côté du code testé.
+- Tous les tests **unitaires** sont co-localisés dans `__tests__/` à côté du code testé.
 - On teste la logique pure en priorité. Très peu de tests sur les composants (faible ROI sur du visuel). Aucun test sur les hooks Convex (mock pénible).
 - Un test = une assertion fonctionnelle, pas un test par ligne de code.
+- **E2E (Playwright)** dans `[e2e/](e2e)` (voir §8) : pilotent la **vraie app** (serveur Vite) contre Convex et lisent la grille du jour via `ConvexHttpClient` — **jamais de réponses devinées**. Routés vers les projets navigateur **par suffixe de nom de fichier** (`*.shared` = tous moteurs · `*.desktop` = chromium-desktop seul : flux lourds + presse-papiers · `*.mobile` = profils tactiles) plutôt que par `test.skip` → ~zéro skip. `workers: 1` (série) car tous les navigateurs partagent une grille Convex et la satureraient en parallèle. Helpers clés (`[e2e/helpers.ts](e2e/helpers.ts)`) : `solveGrid` (matching biparti → victoire déterministe), `findBlockingPlan` (case ⬛), `fillCell` (ouverture+saisie+`Enter`, retryable).
+
+**Documentation.**
+
+- Après chaque feature, **se demander si un fichier de doc mérite une mise à jour** (`README`, `CLAUDE.md`, `/changelog`, docstrings) — **pas systématiquement** : beaucoup de changements (fix isolé, refacto interne, renommage) ne touchent rien de documenté. Mettre à jour quand la feature change une **convention, une commande, une structure de dossier, un contrat d'API, un flux ou une décision** que la doc décrit (ou devrait décrire).
 
 ## 5. Design system — Editorial Intellectual
 
@@ -467,8 +483,13 @@ pnpm build                        # tsc --noEmit + vite build
 pnpm lint                         # biome check + tsc --noEmit
 pnpm typecheck                    # tsc --noEmit seul
 pnpm format                       # biome format --write
-pnpm test                         # vitest run
+pnpm test                         # vitest run (unitaires ; e2e/ exclu via vite.config)
 pnpm preview                      # vite preview (build local requis)
+
+# Tests e2e (Playwright) — démarre le serveur dev tout seul, lit la grille du jour via Convex
+pnpm test:e2e                     # lance la suite (réutilise un `pnpm dev` en cours sinon le démarre)
+pnpm test:e2e:ui                  # mode UI interactif (timeline, re-run, debug)
+pnpm test:e2e:reset               # wipe:db + seed:grids + playwright test (reset complet, dev local)
 
 # Génération de données
 pnpm build:countries              # régénère countries.json (fetch Wikimedia EN + popularityIndex percentile)
@@ -527,6 +548,17 @@ pnpm exec convex deploy --preview-run seed:autoSeedIfEmpty --cmd 'vite build' --
 - `ADMIN_TOKEN` — token bearer pour les mutations admin (UI `/admin`)
 
 `**convex/_generated/` est versionné** : sans lui, `pnpm build` / `tsc` échouent sur toute CI qui clone sans lancer `convex dev`. Après un changement de schéma ou d'API Convex, régénérer avec `pnpm convex:dev` (ou `pnpm exec convex codegen`) et **commiter le diff\*\*.
+
+**Hooks pre-commit (local) — `[.husky/pre-commit](.husky/pre-commit)`.** husky + lint-staged. À chaque commit : Biome (`biome check --write` sur les fichiers **stagés**, auto-corrigés et re-stagés), puis `tsc --noEmit`, puis `vitest`. L'e2e n'y est **pas** (trop lent, dépend du serveur/navigateurs — il vit en CI). Auto-installé via le script `prepare: husky` au `pnpm install` (rien à faire sur un nouveau clone). Bypass ponctuel : `git commit --no-verify`.
+
+**GitHub Actions — `[.github/workflows/ci.yml](.github/workflows/ci.yml)`** (runners publics gratuits, repo public). Deux jobs :
+
+- `quality` (sans secret) — `pnpm lint` + `pnpm test`. Sur push `main`/`develop` + PR vers `main`.
+- `e2e` — `pnpm test:e2e` sur push `develop`/`main` + PR vers `main`. Tourne contre **`preview/develop`** (variable repo `VITE_CONVEX_URL`) : **pas de deploy key, pas de seed** (develop est déjà seedé, son cron horaire maintient la grille du jour). Gardé par la variable repo `RUN_E2E=true` ; **sérialisé** (`concurrency: e2e-develop`, l'env est partagé) ; `cancel-in-progress` collapse les rafales de push. ⚠️ l'e2e envoie de **vrais guesses** → bruite les stats/rareté de `preview/develop` (assumé, c'est l'env de staging).
+
+**Vitest ne doit pas collecter les specs Playwright.** `[vite.config.ts](vite.config.ts)` ajoute `"e2e/**"` à `test.exclude` — sinon le glob par défaut de Vitest (`*.spec.ts`) ramasse `e2e/*.spec.ts` (qui importent `@playwright/test`, incompatible avec le runner Vitest) et `pnpm test` casse.
+
+**Protection de `main`** (réglée via l'API GitHub, **pas** versionnée dans le repo). PR obligatoire (0 review — projet solo), **checks requis** `Lint, typecheck & unit tests` **et** `Playwright e2e`, force-push & suppression interdits, `enforce_admins: true` (la règle s'applique aussi à l'admin — sinon le propriétaire bypasse tout). → la prod ne part que de code dont les deux suites sont vertes. Échappatoire si un check ne peut pas tourner et bloque un merge : `gh api -X DELETE repos/<owner>/<repo>/branches/main/protection/enforce_admins` (puis `-X POST` pour réactiver).
 
 ## 9. Anti-patterns à bannir
 
