@@ -16,12 +16,12 @@ pnpm lint     # Lint with Biome
 Initialize the Convex backend (required before first run):
 
 ```bash
-pnpm dlx convex@latest dev
+pnpm convex:dev
 ```
 
 This will prompt you to create or link a Convex project and write `VITE_CONVEX_URL` to `.env.local`.
 
-`convex/_generated/` is tracked in git so `pnpm build` works without a live Convex deployment. After schema or API changes, regenerate with `pnpm dlx convex@latest dev` (or `codegen`) and commit the diff.
+`convex/_generated/` is tracked in git so `pnpm build` works without a live Convex deployment. After schema or API changes, regenerate with `pnpm convex:dev` (or `codegen`) and commit the diff.
 
 ## Admin
 

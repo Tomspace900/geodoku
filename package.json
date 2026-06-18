@@ -11,6 +11,7 @@
   },
   "scripts": {
     "dev": "vite --host",
+    "convex:dev": "convex dev",
     "build": "tsc --noEmit && vite build",
     "build:countries": "tsx scripts/prod/build-countries.ts",
     "analyze:pool": "tsx scripts/prod/analyze-pool.ts",
@@ -40,7 +41,7 @@
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "cmdk": "^1.1.1",
-    "convex": "^1.39.1",
+    "convex": "^1.41.0",
     "lucide-react": "^0.460.0",
     "match-sorter": "^8.3.0",
     "posthog-js": "^1.386.1",

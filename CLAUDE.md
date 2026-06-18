@@ -460,7 +460,7 @@ Convex agent skills for common tasks can be installed by running `npx convex ai-
 ```bash
 # Dev
 pnpm dev                          # Vite dev server (--host)
-pnpm dlx convex@latest dev        # Convex dev en remote cloud
+pnpm convex:dev                   # Convex dev en remote cloud
 
 # Build / CI
 pnpm build                        # tsc --noEmit + vite build
@@ -495,7 +495,7 @@ pnpm seed:grids                   # npx convex run seed:seedHistoricalGrids
 pnpm wipe:db                      # npx convex run wipe:wipeAllData (paginé)
 
 # Admin Convex
-pnpm dlx convex@latest env set ADMIN_TOKEN "xxx"
+pnpm exec convex env set ADMIN_TOKEN "xxx"
 ```
 
 ## 8. CI, Vercel et `convex/_generated`
@@ -526,7 +526,7 @@ pnpm exec convex deploy --preview-run seed:autoSeedIfEmpty --cmd 'vite build' --
 
 - `ADMIN_TOKEN` — token bearer pour les mutations admin (UI `/admin`)
 
-`**convex/_generated/` est versionné** : sans lui, `pnpm build` / `tsc` échouent sur toute CI qui clone sans lancer `convex dev`. Après un changement de schéma ou d'API Convex, régénérer avec `pnpm dlx convex@latest dev` (ou `codegen`) et **commiter le diff\*\*.
+`**convex/_generated/` est versionné** : sans lui, `pnpm build` / `tsc` échouent sur toute CI qui clone sans lancer `convex dev`. Après un changement de schéma ou d'API Convex, régénérer avec `pnpm convex:dev` (ou `pnpm exec convex codegen`) et **commiter le diff\*\*.
 
 ## 9. Anti-patterns à bannir
 

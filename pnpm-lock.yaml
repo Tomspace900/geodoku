@@ -10,7 +10,7 @@ importers:
     dependencies:
       '@convex-dev/rate-limiter':
         specifier: ^0.3.2
-        version: 0.3.2(convex@1.39.1(react@18.3.1))(react@18.3.1)
+        version: 0.3.2(convex@1.41.0(react@18.3.1))(react@18.3.1)
       '@posthog/react':
         specifier: ^1.10.1
         version: 1.10.1(@types/react@18.3.28)(posthog-js@1.386.1)(react@18.3.1)
@@ -42,8 +42,8 @@ importers:
         specifier: ^1.1.1
         version: 1.1.1(@types/react-dom@18.3.7(@types/react@18.3.28))(@types/react@18.3.28)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       convex:
-        specifier: ^1.39.1
-        version: 1.39.1(react@18.3.1)
+        specifier: ^1.41.0
+        version: 1.41.0(react@18.3.1)
       lucide-react:
         specifier: ^0.460.0
         version: 0.460.0(react@18.3.1)
@@ -1193,8 +1193,8 @@ packages:
   convert-source-map@2.0.0:
     resolution: {integrity: sha512-Kvp459HrV2FEJ1CAsi1Ku+MY3kasH19TFykTz2xWmMeq6bk2NU3XXvfJ+Q61m0xktWwt+1HSYf3JZsTms3aRJg==}
 
-  convex@1.39.1:
-    resolution: {integrity: sha512-W+gVXA7BpRF1xLlS1kGTtKVaqd5yonqbGESKiPtIUXjV744GdDz8IG7RVsSY5KzHbgxuJBHKaJYk+92OIHTskQ==}
+  convex@1.41.0:
+    resolution: {integrity: sha512-euxVf6yfpB7/VGKOobkLgjpbJidsUgW+b0ezonEyCUPqlpHFwR4/yIiI1hjjErzraiw91GxrtxpXQClMLNqU+w==}
     engines: {node: '>=18.0.0', npm: '>=7.0.0'}
     hasBin: true
     peerDependencies:
@@ -1882,18 +1882,6 @@ packages:
   world-countries@5.1.0:
     resolution: {integrity: sha512-CXR6EBvTbArDlDDIWU3gfKb7Qk0ck2WNZ234b/A0vuecPzIfzzxH+O6Ejnvg1sT8XuiZjVlzOH0h08ZtaO7g0w==}
 
-  ws@8.18.0:
-    resolution: {integrity: sha512-8VbfWfHLbbwu3+N6OKsOMpBdT4kXPDDB9cJk2bJ6mh9ucxdlnNvH1e+roYkKmN9Nxw2yjz7VzeO9oOz2zJ04Pw==}
-    engines: {node: '>=10.0.0'}
-    peerDependencies:
-      bufferutil: ^4.0.1
-      utf-8-validate: '>=5.0.2'
-    peerDependenciesMeta:
-      bufferutil:
-        optional: true
-      utf-8-validate:
-        optional: true
-
   ws@8.20.1:
     resolution: {integrity: sha512-It4dO0K5v//JtTXuPkfEOaI3uUN87iYPnqo/ZzqCoG3g8uhA66QUMs/SrM0YK7/NAu+r4LMh/9dq2A7k+rHs+w==}
     engines: {node: '>=10.0.0'}
@@ -1955,9 +1943,9 @@ snapshots:
   '@biomejs/cli-win32-x64@1.9.4':
     optional: true
 
-  '@convex-dev/rate-limiter@0.3.2(convex@1.39.1(react@18.3.1))(react@18.3.1)':
+  '@convex-dev/rate-limiter@0.3.2(convex@1.41.0(react@18.3.1))(react@18.3.1)':
     dependencies:
-      convex: 1.39.1(react@18.3.1)
+      convex: 1.41.0(react@18.3.1)
     optionalDependencies:
       react: 18.3.1
 
@@ -2680,11 +2668,11 @@ snapshots:
 
   convert-source-map@2.0.0: {}
 
-  convex@1.39.1(react@18.3.1):
+  convex@1.41.0(react@18.3.1):
     dependencies:
       esbuild: 0.27.0
       prettier: 3.8.3
-      ws: 8.18.0
+      ws: 8.20.1
     optionalDependencies:
       react: 18.3.1
     transitivePeerDependencies:
@@ -3306,7 +3294,5 @@ snapshots:
       stackback: 0.0.2
 
   world-countries@5.1.0: {}
-
-  ws@8.18.0: {}
 
   ws@8.20.1: {}
