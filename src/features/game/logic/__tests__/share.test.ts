@@ -1,7 +1,12 @@
-import { describe, expect, it } from "vitest";
+import { describe, expect, it, vi } from "vitest";
 import type { CellKey, GameState } from "../../types";
 import { createInitialState } from "../reducer";
-import { formatShareString } from "../share";
+import {
+  buildSharePayload,
+  canUseNativeShare,
+  formatShareString,
+  shareGameResult,
+} from "../share";
 
 function makeState(overrides: Partial<GameState> = {}): GameState {
   return { ...createInitialState("2024-01-01", [], []), ...overrides };
@@ -83,5 +88,116 @@ describe("formatShareString", () => {
     const result = formatShareString(state, null);
     expect(result.startsWith("Geodoku\n")).toBe(true);
     expect(result).not.toContain("Geodoku #");
+  });
+});
+
+describe("buildSharePayload", () => {
+  it("splits title, text and url for native share", () => {
+    const state = makeState({ status: "won", remainingLives: 3 });
+    const payload = buildSharePayload(state, 5);
+    expect(payload.title).toBe("Geodoku #5 ❤️❤️❤️🤍🤍");
+    expect(payload.text).toContain("% · ");
+    expect(payload.text).not.toContain("https://geodoku.app");
+    expect(payload.url).toBe("https://geodoku.app");
+  });
+
+  it("reconstructs clipboard text from payload", () => {
+    const state = makeState({ status: "won", remainingLives: 3 });
+    const payload = buildSharePayload(state, 5);
+    expect(`${payload.text}\n\n${payload.url}`).toBe(
+      formatShareString(state, 5),
+    );
+  });
+});
+
+describe("canUseNativeShare", () => {
+  it("returns false when navigator.share is missing", () => {
+    vi.stubGlobal("navigator", {
+      maxTouchPoints: 1,
+      clipboard: { writeText: vi.fn() },
+    });
+    expect(canUseNativeShare()).toBe(false);
+    vi.unstubAllGlobals();
+  });
+
+  it("returns true on a touch device that exposes navigator.share", () => {
+    vi.stubGlobal("navigator", { share: vi.fn(), maxTouchPoints: 5 });
+    expect(canUseNativeShare()).toBe(true);
+    vi.unstubAllGlobals();
+  });
+
+  it("returns false on desktop even when navigator.share exists", () => {
+    // Desktop = pas de pointeur tactile : Safari/Chrome exposent navigator.share
+    // mais on garde le presse-papiers (maxTouchPoints 0, pointer fine en happy-dom).
+    vi.stubGlobal("navigator", { share: vi.fn(), maxTouchPoints: 0 });
+    expect(canUseNativeShare()).toBe(false);
+    vi.unstubAllGlobals();
+  });
+});
+
+describe("shareGameResult", () => {
+  it("uses native share on a touch device", async () => {
+    const share = vi.fn().mockResolvedValue(undefined);
+    vi.stubGlobal("navigator", {
+      share,
+      canShare: () => true,
+      maxTouchPoints: 5,
+      clipboard: { writeText: vi.fn() },
+    });
+
+    const outcome = await shareGameResult(makeState(), 1);
+    expect(outcome).toBe("shared");
+    expect(share).toHaveBeenCalledOnce();
+
+    vi.unstubAllGlobals();
+  });
+
+  it("falls back to clipboard when native share is unavailable", async () => {
+    const writeText = vi.fn().mockResolvedValue(undefined);
+    vi.stubGlobal("navigator", {
+      maxTouchPoints: 1,
+      clipboard: { writeText },
+    });
+
+    const outcome = await shareGameResult(makeState(), 1);
+    expect(outcome).toBe("copied");
+    expect(writeText).toHaveBeenCalledOnce();
+
+    vi.unstubAllGlobals();
+  });
+
+  it("copies to clipboard on desktop instead of opening the share sheet", async () => {
+    const share = vi.fn().mockResolvedValue(undefined);
+    const writeText = vi.fn().mockResolvedValue(undefined);
+    vi.stubGlobal("navigator", {
+      share,
+      canShare: () => true,
+      maxTouchPoints: 0,
+      clipboard: { writeText },
+    });
+
+    const outcome = await shareGameResult(makeState(), 1);
+    expect(outcome).toBe("copied");
+    expect(share).not.toHaveBeenCalled();
+    expect(writeText).toHaveBeenCalledOnce();
+
+    vi.unstubAllGlobals();
+  });
+
+  it("returns cancelled when user dismisses native share sheet", async () => {
+    const share = vi
+      .fn()
+      .mockRejectedValue(new DOMException("Abort", "AbortError"));
+    vi.stubGlobal("navigator", {
+      share,
+      canShare: () => true,
+      maxTouchPoints: 5,
+      clipboard: { writeText: vi.fn() },
+    });
+
+    const outcome = await shareGameResult(makeState(), 1);
+    expect(outcome).toBe("cancelled");
+
+    vi.unstubAllGlobals();
   });
 });
