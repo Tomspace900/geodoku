@@ -31,7 +31,7 @@ Dashboard at `/admin` — requires the Convex `ADMIN_TOKEN` env var. From there 
 - Regenerate the candidate pool (after tuning generator/scheduler constants)
 - Preview upcoming grids and inspect scheduling metrics
 
-See `CLAUDE.md §6` for the full admin API and UI panels.
+See `AGENTS.md §6` for the full admin API and UI panels.
 
 ## Dev data
 
@@ -42,4 +42,4 @@ pnpm wipe:db      # clears all game tables (dev only)
 pnpm seed:grids   # pool + J-30..today + tomorrow (fails if grids non-empty)
 ```
 
-For CI/deployment (Vercel build command, preview auto-seed, environment mapping), see `CLAUDE.md §8`.
+For CI/deployment (Vercel build command, preview auto-seed, environment mapping), see `AGENTS.md §8`.
