@@ -35,7 +35,7 @@ Geodoku est un mini-jeu web quotidien inspiré de Wordle et du Sudoku, sur le th
 - **Lint/format** : Biome (pas ESLint, pas Prettier)
 - **Tests unitaires** : Vitest + @testing-library/react (`e2e/**` exclu dans [`vite.config.ts`](vite.config.ts))
 - **Tests e2e** : Playwright ([`playwright.config.ts`](playwright.config.ts), [`e2e/`](e2e/))
-- **Hooks / CI** : husky + lint-staged (pre-commit) ; GitHub Actions — voir §8
+- **Hooks / CI** : Git hook `pre-commit` (lint-staged) ; GitHub Actions — voir §8
 - **Recherche fuzzy** : match-sorter (normalisation NFD côté requête)
 - **Fonts** : Newsreader (serif) + Inter (sans-serif)
 
@@ -163,7 +163,7 @@ pnpm dump:develop
 pnpm dump:prod-to-develop
 ```
 
-**Pre-commit** ([`.husky/pre-commit`](.husky/pre-commit)) : `lint-staged` (Biome sur fichiers stagés, auto-fix + re-stage) → `typecheck` → `pnpm test`. Pas d'e2e (trop lent) — e2e en CI. Auto-installé via `prepare: husky`. Bypass ponctuel : `git commit --no-verify`.
+**Pre-commit** ([`.husky/pre-commit`](.husky/pre-commit)) : `lint-staged` (Biome sur fichiers stagés, auto-fix + re-stage) → si fichiers stagés : `typecheck` → `pnpm test` (skip si rien en stage, ex. `amend --no-edit`). Pas d'e2e (trop lent) — e2e en CI. `core.hooksPath` posé au `pnpm install` (`prepare`). Bypass : `git commit --no-verify` ou `HUSKY=0`.
 
 ## 8. CI, Vercel et `convex/_generated`
 

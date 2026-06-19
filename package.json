@@ -31,7 +31,7 @@
     "typecheck": "tsc --noEmit",
     "lint": "biome check . && tsc --noEmit",
     "format": "biome format --write .",
-    "prepare": "husky"
+    "prepare": "git rev-parse --git-dir >/dev/null 2>&1 && git config core.hooksPath .husky || true"
   },
   "lint-staged": {
     "*": "biome check --write --no-errors-on-unmatched --files-ignore-unknown=true"
@@ -68,7 +68,6 @@
     "@vitejs/plugin-react": "^6.0.2",
     "autoprefixer": "^10.5.0",
     "happy-dom": "^20.9.0",
-    "husky": "^9.1.7",
     "lint-staged": "^17.0.7",
     "postcss": "^8.5.15",
     "tailwindcss": "^3.4.19",
