@@ -1,0 +1,71 @@
+name: CI
+
+on:
+  push:
+    branches: [main, develop]
+  pull_request:
+    branches: [main]
+
+# Many pushes a day → keep only the latest run per branch/PR; cancel the rest.
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  # Fast, no-secrets gate: same checks as the local pre-commit hook, repo-wide.
+  # Runs on every push to main/develop and on every PR into main.
+  quality:
+    name: Lint, typecheck & unit tests
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 11
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm lint # biome check + tsc --noEmit
+      - run: pnpm test # vitest
+
+  # End-to-end suite, run against the existing "develop" Convex deployment (its
+  # URL, exposed in the client bundle anyway, lives in the repo variable
+  # VITE_CONVEX_URL). No deploy key, no seeding: develop is already seeded and
+  # its hourly cron keeps today's grid current. NB: e2e submits real guesses, so
+  # it adds noise to develop's stats/rarity — intended, it's the staging env.
+  #
+  # Runs on every push to develop and main, and on every PR into main (where it
+  # is a required check). The workflow-level concurrency cancels superseded runs
+  # so rapid develop pushes don't pile up.
+  # Enable with repo variables: RUN_E2E = true  and  VITE_CONVEX_URL = <develop url>.
+  e2e:
+    name: Playwright e2e
+    if: ${{ vars.RUN_E2E == 'true' }}
+    needs: quality
+    runs-on: ubuntu-latest
+    # The e2e suite shares the develop Convex env, so never run two at once.
+    concurrency:
+      group: e2e-develop
+      cancel-in-progress: false
+    env:
+      VITE_CONVEX_URL: ${{ vars.VITE_CONVEX_URL }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 11
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm exec playwright install --with-deps chromium firefox webkit
+      - run: pnpm test:e2e
+      - uses: actions/upload-artifact@v4
+        if: ${{ !cancelled() }}
+        with:
+          name: playwright-report
+          path: playwright-report/
+          retention-days: 7

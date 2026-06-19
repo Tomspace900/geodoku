@@ -1,0 +1,19 @@
+#!/usr/bin/env sh
+# Local quality gate (fast). E2E runs in CI, not here.
+# Bypass: HUSKY=0 git commit …  or  git commit --no-verify
+
+[ "${HUSKY:-}" = "0" ] && exit 0
+
+# 1. Biome (format + lint) on staged files only, auto-fixing and re-staging.
+pnpm lint-staged || exit 1
+
+# 2–3. Skip project-wide checks when nothing is staged (e.g. amend --no-edit).
+if [ -z "$(git diff --cached --name-only)" ]; then
+	exit 0
+fi
+
+# 2. Project-wide TypeScript check (catches type errors lint-staged can't see).
+pnpm typecheck || exit 1
+
+# 3. Unit tests (Vitest).
+pnpm test || exit 1

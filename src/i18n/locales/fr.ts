@@ -19,6 +19,7 @@ export const fr = {
     skipFeedback: "Passer et voir les réponses",
     share: "Partager mon résultat",
     shareCopied: "Copié\u00A0! ✓",
+    shareShared: "Partagé\u00A0! ✓",
     comeBackTomorrowGrid: "Reviens demain pour une nouvelle grille\u00A0!",
     cellAriaLabel: "Sélectionner case ligne {row} colonne {col}",
     cellBlockedAriaLabel: "Case bloquée",

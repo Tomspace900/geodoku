@@ -102,14 +102,13 @@ function splitCell(row: TrendRow): string {
 
 export function GameHealthPanel({ feedbackStats }: Props) {
   const sinceLaunch =
-    feedbackStats?.filter((row) => row.date >= GRID_LAUNCH_DATE_ISO) ?? undefined;
+    feedbackStats?.filter((row) => row.date >= GRID_LAUNCH_DATE_ISO) ??
+    undefined;
 
   const trend =
     sinceLaunch === undefined ? null : buildTrend(sinceLaunch, TREND_DAYS);
   const summary =
-    sinceLaunch === undefined
-      ? null
-      : buildSummary(sinceLaunch, SUMMARY_DAYS);
+    sinceLaunch === undefined ? null : buildSummary(sinceLaunch, SUMMARY_DAYS);
 
   return (
     <PanelCard>
