@@ -7,17 +7,17 @@ import {
   computeOriginalityScore,
 } from "@/features/game/logic/rarity";
 import {
-  canUseNativeShare,
   cellShareEmoji,
-  shareGameResult,
+  copyShareToClipboard,
+  formatShareString,
 } from "@/features/game/logic/share";
 import type { CellKey, GameState } from "@/features/game/types";
 import { useT } from "@/i18n/LocaleContext";
 import { cn } from "@/lib/utils";
 import { usePostHog } from "@posthog/react";
 import { useMutation } from "convex/react";
-import { Copy, Share2, X } from "lucide-react";
-import { useEffect, useRef, useState } from "react";
+import { Copy, X } from "lucide-react";
+import { useEffect, useState } from "react";
 import { api } from "../../../../convex/_generated/api";
 import { AchievementCard } from "./AchievementCard";
 
@@ -50,13 +50,7 @@ export function ResultScreen({
   onViewAnswers,
 }: Props) {
   const posthog = usePostHog();
-  const [shareFeedback, setShareFeedback] = useState<
-    "shared" | "copied" | null
-  >(null);
-  const shareFeedbackTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(
-    null,
-  );
-  const nativeShareAvailable = canUseNativeShare();
+  const [copied, setCopied] = useState(false);
   const t = useT();
   const [hadFeedbackBeforeOpen] = useState(() => {
     if (!state.date) return false;
@@ -84,25 +78,19 @@ export function ResultScreen({
   }, []);
 
   async function handleShare() {
-    const outcome = await shareGameResult(state, gridNumber);
-    if (outcome === "cancelled" || outcome === "failed") return;
-
-    setShareFeedback(outcome);
-    if (shareFeedbackTimeoutRef.current) {
-      clearTimeout(shareFeedbackTimeoutRef.current);
+    const text = formatShareString(state, gridNumber);
+    const ok = await copyShareToClipboard(text);
+    if (ok) {
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
+      posthog?.capture("result_shared", {
+        grid_date: state.date,
+        grid_number: gridNumber,
+        outcome: state.status,
+        grid_score_percent: gridScore.percent,
+        originality_grade: originality.grade,
+      });
     }
-    shareFeedbackTimeoutRef.current = setTimeout(() => {
-      setShareFeedback(null);
-      shareFeedbackTimeoutRef.current = null;
-    }, 2000);
-    posthog?.capture("result_shared", {
-      grid_date: state.date,
-      grid_number: gridNumber,
-      outcome: state.status,
-      grid_score_percent: gridScore.percent,
-      originality_grade: originality.grade,
-      share_method: outcome === "shared" ? "native" : "clipboard",
-    });
   }
 
   useEffect(() => {
@@ -112,14 +100,6 @@ export function ResultScreen({
     window.addEventListener("keydown", onEscape);
     return () => window.removeEventListener("keydown", onEscape);
   }, [onDismiss]);
-
-  useEffect(() => {
-    return () => {
-      if (shareFeedbackTimeoutRef.current) {
-        clearTimeout(shareFeedbackTimeoutRef.current);
-      }
-    };
-  }, []);
 
   async function handleRateDifficulty(rating: DifficultyRating) {
     if (hadFeedbackBeforeOpen || feedbackThanksVisible || ratingPending) {
@@ -290,12 +270,8 @@ export function ResultScreen({
           )}
 
           <Button onClick={handleShare} className="w-full" size="lg">
-            {nativeShareAvailable ? <Share2 size={16} /> : <Copy size={16} />}
-            {shareFeedback === "shared"
-              ? t("ui.shareShared")
-              : shareFeedback === "copied"
-                ? t("ui.shareCopied")
-                : t("ui.share")}
+            <Copy size={16} />
+            {copied ? t("ui.shareCopied") : t("ui.share")}
           </Button>
         </div>
 

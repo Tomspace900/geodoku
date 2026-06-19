@@ -19,7 +19,6 @@ export const en = {
     skipFeedback: "Skip and view answers",
     share: "Share my result",
     shareCopied: "Copied!\u00A0✓",
-    shareShared: "Shared!\u00A0✓",
     comeBackTomorrowGrid: "Come back tomorrow for a new grid!",
     cellAriaLabel: "Select cell row {row} column {col}",
     cellBlockedAriaLabel: "Blocked cell",
