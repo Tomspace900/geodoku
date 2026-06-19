@@ -172,8 +172,6 @@ pnpm dump:prod-to-develop
 - `quality` (sans secret) — `pnpm lint` + `pnpm test`. Push `main`/`develop` + PR vers `main`.
 - `e2e` — `pnpm test:e2e` si variable repo `RUN_E2E=true` + `VITE_CONVEX_URL` = deploy `preview/develop`. Pas de deploy key ni seed (develop déjà seedé, cron horaire). **Sérialisé** (`concurrency: e2e-develop`). ⚠️ soumet de vrais guesses → bruite les stats develop (staging assumé).
 
-**Protection de `main`** (API GitHub, pas versionnée). PR obligatoire, checks requis `Lint, typecheck & unit tests` **et** `Playwright e2e`, `enforce_admins: true`.
-
 **Mapping branche → environnement :**
 
 | Contexte          | Front             | Backend Convex                 | Données                    |

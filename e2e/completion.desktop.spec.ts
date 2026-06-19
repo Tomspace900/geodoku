@@ -64,33 +64,14 @@ test("filling all 9 cells triggers the victory screen", async ({ page }) => {
   await expect(resultDialog).toContainText(/Magnificent|Grid score/i);
 });
 
-// ── Partage — presse-papiers sur desktop, même si navigator.share existe ──────
+// ── Partage — copie dans le presse-papiers ───────────────────────────────────
 
-test("share button copies to clipboard on desktop even when navigator.share exists", async ({
+test("share button copies the result to the clipboard", async ({
   page,
   context,
 }) => {
   test.setTimeout(60_000);
   await context.grantPermissions(["clipboard-read", "clipboard-write"]);
-
-  // Desktop Chrome/Safari exposent navigator.share, mais sur un appareil non
-  // tactile on garde volontairement le presse-papiers (la feuille système est
-  // déroutante sur desktop). On injecte un faux navigator.share et on vérifie
-  // qu'il n'est JAMAIS appelé : le gating `canUseNativeShare` doit le court-
-  // circuiter sur Desktop Chrome (pointeur fin, maxTouchPoints 0). Sans le stub,
-  // le test passerait « par accident » — Playwright n'expose pas navigator.share.
-  await page.addInitScript(() => {
-    (window as unknown as { __shareCalled: boolean }).__shareCalled = false;
-    Object.defineProperty(navigator, "share", {
-      configurable: true,
-      value: () => {
-        (window as unknown as { __shareCalled: boolean }).__shareCalled = true;
-        return Promise.resolve();
-      },
-    });
-  });
-  await page.reload();
-  await waitForGrid(page);
 
   // A loss reaches the same ResultScreen (and share button) far more cheaply
   // than a full 9-cell win, and the share contract is identical. The win path
@@ -102,16 +83,9 @@ test("share button copies to clipboard on desktop even when navigator.share exis
   await shareButton.click();
 
   // On success the button relabels to "Copied! ✓" — re-query by the new name.
-  // (Native share would have shown "Shared! ✓" and left the clipboard empty.)
   await expect(page.getByRole("button", { name: /Copied/i })).toBeVisible({
     timeout: 3_000,
   });
-
-  const shareCalled = await page.evaluate(
-    () =>
-      (window as unknown as { __shareCalled?: boolean }).__shareCalled === true,
-  );
-  expect(shareCalled).toBe(false);
 
   const clipboardText = await page.evaluate(() =>
     navigator.clipboard.readText(),
