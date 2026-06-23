@@ -307,8 +307,8 @@ export const getUpcomingScheduledPreview = query({
       .order("desc")
       .take(KNOWN_CONSTRAINT_WINDOW);
     let recentForScheduler = recentPublished.map((g) => ({
-      constraintIds: [...g.rows, ...g.cols],
-      countryPool: g.countryPool,
+      rows: g.rows,
+      cols: g.cols,
     }));
 
     type UpcomingDay =
@@ -342,10 +342,7 @@ export const getUpcomingScheduledPreview = query({
           ),
         });
         recentForScheduler = [
-          {
-            constraintIds: [...existing.rows, ...existing.cols],
-            countryPool: existing.countryPool,
-          },
+          { rows: existing.rows, cols: existing.cols },
           ...recentForScheduler,
         ];
         continue;
@@ -373,10 +370,7 @@ export const getUpcomingScheduledPreview = query({
       });
       usedIds.add(picked.grid._id);
       recentForScheduler = [
-        {
-          constraintIds: picked.grid.metadata.constraintIds,
-          countryPool: picked.grid.metadata.countryPool,
-        },
+        { rows: picked.grid.rows, cols: picked.grid.cols },
         ...recentForScheduler,
       ];
     }

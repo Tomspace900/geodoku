@@ -49,36 +49,64 @@ export const MAX_OVERLAP_BETWEEN_GRIDS = 4; // out of 6 constraints
  */
 export const MIN_VIABLE_GRIDS_PER_SEED = 5;
 
-// Scheduler weights
-export const HISTORY_WINDOW = 15;
-export const FRESH_CONSTRAINT_BONUS = 10;
-export const OVERUSE_CONSTRAINT_MALUS = 15;
-export const FRESH_COUNTRY_BONUS = 1;
-/**
- * Overuse onset — a constraint earns the OVERUSE_CONSTRAINT_MALUS only once it
- * has appeared more than this many times within HISTORY_WINDOW. This carves the
- * freshness score into three zones: usage 0 → FRESH_CONSTRAINT_BONUS, usage
- * 1..OVERUSE_THRESHOLD → neutral (a recent constraint is allowed to recur a
- * little without penalty), usage > OVERUSE_THRESHOLD → malus per extra
- * appearance. See `selectNextGrid`.
- */
-export const OVERUSE_THRESHOLD = 2;
+// Scheduler — sélection de la grille du lendemain
+//
+// Modèle : on ne limite PAS la réapparition d'une contrainte (au-delà du gap
+// dur) — une contrainte peut revenir souvent tant que le CONTEXTE de grille
+// change. On cible la non-redondance de grille via deux filtres durs + un seul
+// scoring de chevauchement. Voir `selectNextGrid`.
 
 /**
- * Cold-start guard — gradual introduction of newly-added constraints.
- * When a batch of brand-new constraints is added to a mature catalogue, they are the
- * only ones the freshness term has never seen, so grids built mostly of newcomers would
- * otherwise be scheduled back-to-back and the whole batch would land within days. The
- * guard caps each grid to MAX_NEW_CONSTRAINTS_PER_GRID "newcomers" — constraints used
- * fewer than NEWCOMER_GRADUATION_USES times in the trailing KNOWN_CONSTRAINT_WINDOW — so
- * the batch is woven in gradually. Counting *uses* (not mere presence) keeps a just-
- * debuted constraint rate-limited until it has appeared a couple of times, instead of
- * riding along as a passenger in the very next grids. It engages only once the history
- * spans a full KNOWN_CONSTRAINT_WINDOW (a mature catalogue); a shorter history means
- * from-scratch seeding, where every constraint is legitimately new and the cap is skipped.
+ * Fenêtre de redondance (jours) : portée du filtre de croisement éliminatoire ET
+ * du malus de chevauchement. Sur cette fenêtre, aucun croisement (cellule) ne se
+ * répète et le chevauchement de contraintes est minimisé. Sert aussi de fenêtre
+ * d'analyse aux scripts de simulation/diagnostic. KNOWN_CONSTRAINT_WINDOW en dérive.
+ */
+export const HISTORY_WINDOW = 15;
+/**
+ * Espacement minimal (jours) entre deux apparitions d'une même contrainte —
+ * filtre DUR. À 2, une contrainte vue la veille est exclue → jamais deux jours de
+ * suite. Nécessaire : le scoring de chevauchement seul laisse une contrainte solo
+ * revenir à J+1 (mesuré). `selectNextGrid` retombe sur l'ensemble complet si le
+ * filtre vide la sélection.
+ */
+export const MIN_CONSTRAINT_GAP_DAYS = 2;
+/**
+ * Malus de chevauchement, indexé par le nombre de contraintes qu'une grille
+ * candidate partage avec une grille de la fenêtre HISTORY_WINDOW. Le score d'une
+ * grille = −Σ (sur les grilles de la fenêtre) OVERLAP_PENALTY[partagées], maximisé.
+ * La croissance géométrique (4 ≫ 3 ≫ 2 ≫ 1) rend le pire chevauchement décisif :
+ * minimiser le malus revient à choisir la grille la plus dissemblable des récentes
+ * — ce qui assure à la fois la non-redondance et la rotation du catalogue. Indices
+ * 0..6 ; 4+ partagées partagent le malus maximal (quasi rédhibitoire).
+ */
+export const OVERLAP_PENALTY = [0, 1, 8, 64, 512] as const;
+
+/**
+ * Bonus de fraîcheur, symétrique au malus : le score d'une grille =
+ * Σ BONUS_TIERS[palier d'ancienneté] − malus de chevauchement. Le palier d'une
+ * contrainte monte avec son ancienneté (jours depuis la dernière apparition) selon
+ * BONUS_FRESHNESS_THRESHOLDS : une contrainte longtemps absente déclenche un bonus
+ * croissant qui finit par compenser un malus → elle est « rappelée ». Borne ainsi
+ * l'oubli (sans bonus une contrainte rare peut disparaître ~100 j ; ici ~37 j).
+ * Échelle volontairement SOUS celle du malus (max 64 vs 512) : la non-redondance
+ * reste prioritaire, le bonus ne fait que rééquilibrer la rotation. Indices 0..4.
+ */
+export const BONUS_TIERS = [0, 1, 4, 16, 64] as const;
+/** Seuils d'ancienneté (jours) délimitant les paliers de BONUS_TIERS. */
+export const BONUS_FRESHNESS_THRESHOLDS = [7, 14, 30, 45] as const;
+
+/**
+ * Cold-start guard — introduction graduelle des contraintes nouvellement ajoutées.
+ * Une contrainte jamais vue ne partage rien → malus de chevauchement nul → les
+ * grilles qui en concentrent plusieurs gagneraient et un lot entier débarquerait
+ * d'un coup (mesuré : jusqu'à 4 nouvelles dans une grille). Le garde plafonne chaque
+ * grille à MAX_NEW_CONSTRAINTS_PER_GRID « newcomer » — une contrainte absente de la
+ * fenêtre KNOWN_CONSTRAINT_WINDOW (présence, pas comptage) — pour les tisser une par
+ * une. Ne s'active qu'une fois l'historique mûr (≥ KNOWN_CONSTRAINT_WINDOW) ; un
+ * historique plus court = seeding from-scratch, où tout est neuf et le cap est ignoré.
  */
 export const MAX_NEW_CONSTRAINTS_PER_GRID = 1;
-export const NEWCOMER_GRADUATION_USES = 2;
 /** Trailing published grids that define "already established" (and the maturity gate). */
 export const KNOWN_CONSTRAINT_WINDOW = HISTORY_WINDOW * 4;
 

@@ -11,6 +11,7 @@ import {
   KNOWN_CONSTRAINT_WINDOW,
   MAX_CONSTRAINT_OVERLAP,
   MAX_NEW_CONSTRAINTS_PER_GRID,
+  MIN_CONSTRAINT_GAP_DAYS,
   MIN_VIABLE_GRIDS_PER_SEED,
 } from "../convex/lib/gridConstants";
 import {
@@ -32,7 +33,7 @@ const CHECK_THRESHOLDS = {
   minConstraintCoverage: 0.9,
   minCountryCoverage: 160,
   minUniqueConstraintRatio: 0.85,
-  maxReuseIn15dWindow: 4,
+  maxSharedConstraints: 3,
   minUniqueCountries: 150,
   minPoolRemainingRatio: 0.6,
 } as const;
@@ -124,10 +125,7 @@ for (let day = 1; day <= SIM_DAYS; day++) {
   const recent = scheduled
     .slice(-KNOWN_CONSTRAINT_WINDOW)
     .reverse()
-    .map((d) => ({
-      constraintIds: d.constraintIds,
-      countryPool: Object.values(d.grid.validAnswers).flat(),
-    }));
+    .map((d) => ({ rows: d.grid.rows, cols: d.grid.cols }));
 
   const result = selectNextGrid(available, recent);
   if (!result) {
@@ -200,7 +198,67 @@ for (let w = 0; w <= scheduled.length - HISTORY_WINDOW; w++) {
   }
 }
 
+// Smallest gap (days) between two appearances of the same constraint — the
+// recency invariant the old aggregate checks were blind to.
+const scheduledDaysByConstraint: Record<string, number[]> = {};
+scheduled.forEach((d, i) => {
+  for (const id of d.constraintIds) {
+    if (!scheduledDaysByConstraint[id]) scheduledDaysByConstraint[id] = [];
+    scheduledDaysByConstraint[id].push(i);
+  }
+});
+let minConstraintGap = Number.POSITIVE_INFINITY;
+let minGapConstraint = "";
+for (const [id, days] of Object.entries(scheduledDaysByConstraint)) {
+  for (let i = 1; i < days.length; i++) {
+    const gap = days[i] - days[i - 1];
+    if (gap < minConstraintGap) {
+      minConstraintGap = gap;
+      minGapConstraint = id;
+    }
+  }
+}
+const minGapValue = Number.isFinite(minConstraintGap)
+  ? minConstraintGap
+  : SIM_DAYS;
+
+// Non-redondance de grille : croisements (cellules) répétés et chevauchement de
+// contraintes, sur la fenêtre HISTORY_WINDOW — la dimension que cible le scheduler.
+const crossingsOf = (rows: string[], cols: string[]): string[] => {
+  const o: string[] = [];
+  for (const r of rows)
+    for (const c of cols) o.push(r < c ? `${r}|${c}` : `${c}|${r}`);
+  return o;
+};
+let crossingRepeats = 0;
+let maxShared = 0;
+scheduled.forEach((d, i) => {
+  const xs = crossingsOf(d.grid.rows, d.grid.cols);
+  const set = new Set(d.constraintIds);
+  for (const x of xs) {
+    for (let j = i - 1; j >= 0 && i - j <= HISTORY_WINDOW; j--) {
+      if (
+        crossingsOf(scheduled[j].grid.rows, scheduled[j].grid.cols).includes(x)
+      ) {
+        crossingRepeats++;
+        break;
+      }
+    }
+  }
+  for (let j = i - 1; j >= 0 && i - j <= HISTORY_WINDOW; j--) {
+    let sh = 0;
+    for (const id of scheduled[j].constraintIds) if (set.has(id)) sh++;
+    if (sh > maxShared) maxShared = sh;
+  }
+});
+
 console.log(`  Days scheduled    : ${scheduled.length}/${SIM_DAYS}`);
+console.log(
+  `  Crossings repeated (≤${HISTORY_WINDOW}d) : ${crossingRepeats} ; max shared constraints : ${maxShared}`,
+);
+console.log(
+  `  Min gap between reappearances : ${minGapValue} days (${minGapConstraint || "n/a"})`,
+);
 console.log(
   `  Unique constraints: ${uniqueConstraints.size} / ${CONSTRAINTS.length} (${((uniqueConstraints.size / CONSTRAINTS.length) * 100).toFixed(1)}%)`,
 );
@@ -419,11 +477,10 @@ const hFreePool = poolQueue.filter((g) =>
 const csUsed = new Set<string>();
 const csHistory: PoolGrid[] = []; // chronological, newest last
 
-function csRecent(): { constraintIds: string[]; countryPool: string[] }[] {
-  return [...csHistory.slice(-KNOWN_CONSTRAINT_WINDOW)].reverse().map((g) => ({
-    constraintIds: g.metadata.constraintIds,
-    countryPool: g.metadata.countryPool,
-  }));
+function csRecent(): { rows: string[]; cols: string[] }[] {
+  return [...csHistory.slice(-KNOWN_CONSTRAINT_WINDOW)]
+    .reverse()
+    .map((g) => ({ rows: g.rows, cols: g.cols }));
 }
 
 // Phase 1 — establish a mature history (≥ KNOWN_CONSTRAINT_WINDOW) over the kept set.
@@ -537,9 +594,19 @@ const checks: Array<{ label: string; pass: boolean; value: string }> = [
     value: `${((uniqueConstraints.size / CONSTRAINTS.length) * 100).toFixed(1)}%`,
   },
   {
-    label: `Sched: max reuse in ${HISTORY_WINDOW}d window ≤ ${CHECK_THRESHOLDS.maxReuseIn15dWindow}`,
-    pass: maxWindowReuse <= CHECK_THRESHOLDS.maxReuseIn15dWindow,
-    value: `${maxWindowReuse} (${worstWindowConstraint})`,
+    label: `Sched: écart min réapparitions ≥ ${MIN_CONSTRAINT_GAP_DAYS}`,
+    pass: minGapValue >= MIN_CONSTRAINT_GAP_DAYS,
+    value: `${minGapValue} (${minGapConstraint || "n/a"})`,
+  },
+  {
+    label: `Sched: 0 croisement répété (≤${HISTORY_WINDOW}d)`,
+    pass: crossingRepeats === 0,
+    value: String(crossingRepeats),
+  },
+  {
+    label: `Sched: chevauchement max ≤ ${CHECK_THRESHOLDS.maxSharedConstraints}`,
+    pass: maxShared <= CHECK_THRESHOLDS.maxSharedConstraints,
+    value: String(maxShared),
   },
   {
     label: `Sched: unique countries ≥ ${CHECK_THRESHOLDS.minUniqueCountries}`,
