@@ -51,8 +51,8 @@ async function assignForDate(ctx: MutationCtx, date: string): Promise<boolean> {
     metadata: g.metadata,
   }));
   const recentForScheduler = recent.map((g) => ({
-    constraintIds: [...g.rows, ...g.cols],
-    countryPool: g.countryPool,
+    rows: g.rows,
+    cols: g.cols,
   }));
 
   const selected = selectNextGrid(pool, recentForScheduler);
