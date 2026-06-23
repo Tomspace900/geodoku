@@ -1,5 +1,6 @@
 import { describe, expect, it } from "vitest";
 import {
+  BONUS_TIERS,
   KNOWN_CONSTRAINT_WINDOW,
   type PoolGridMetadata,
 } from "./gridConstants";
@@ -8,12 +9,10 @@ import { selectNextGrid } from "./gridScheduler";
 function makeGrid(
   id: string,
   constraintIds: string[],
-  countryPool: string[],
 ): {
   _id: string;
   rows: string[];
   cols: string[];
-  validAnswers: Record<string, string[]>;
   metadata: PoolGridMetadata;
 } {
   const rows = constraintIds.slice(0, 3);
@@ -22,17 +21,22 @@ function makeGrid(
     _id: id,
     rows,
     cols,
-    validAnswers: {},
     metadata: {
       seedConstraint: constraintIds[0],
       constraintIds,
       categories: ["cat_a", "cat_b", "cat_c", "cat_d"],
       avgCellSize: 5,
       minCellSize: 3,
-      countryPool,
+      countryPool: [],
     },
   };
 }
+
+const recent = (ids: string[]) => ({
+  rows: ids.slice(0, 3),
+  cols: ids.slice(3, 6),
+});
+const unrelated = () => recent(["u1", "u2", "u3", "u4", "u5", "u6"]);
 
 // ─── selectNextGrid ───────────────────────────────────────────────────────────
 
@@ -41,105 +45,62 @@ describe("selectNextGrid", () => {
     expect(selectNextGrid([], [])).toBeNull();
   });
 
-  it("returns a valid grid when history is empty", () => {
-    const grid = makeGrid(
-      "g1",
-      ["a", "b", "c", "d", "e", "f"],
-      ["FR", "DE", "ES"],
-    );
+  it("applies the full freshness bonus when history is empty", () => {
+    const grid = makeGrid("g1", ["a", "b", "c", "d", "e", "f"]);
     const result = selectNextGrid([grid], []);
-    expect(result).not.toBeNull();
     expect(result!.grid._id).toBe("g1");
+    // empty history → all 6 constraints at the top staleness tier, zero malus.
+    expect(result!.score).toBe(6 * BONUS_TIERS[BONUS_TIERS.length - 1]);
   });
 
-  it("prefers the grid with more fresh constraints", () => {
-    // history uses constraints a, b, c, d, e once each
-    const recent = [
-      { constraintIds: ["a", "b", "c", "d", "e", "x"], countryPool: [] },
-    ];
-
-    // grid1: 1 fresh constraint (f is new)
-    const grid1 = makeGrid("g1", ["a", "b", "c", "d", "e", "f"], []);
-    // grid2: 3 fresh constraints (p, q, r are new)
-    const grid2 = makeGrid("g2", ["a", "b", "c", "p", "q", "r"], []);
-
-    const result = selectNextGrid([grid1, grid2], recent);
-    expect(result!.grid._id).toBe("g2");
+  it("excludes a grid reusing a constraint seen yesterday (recency gap)", () => {
+    const history = [recent(["a", "b", "c", "d", "e", "f"])];
+    const grid1 = makeGrid("g1", ["a", "p", "q", "r", "s", "t"]); // reuses "a"
+    const grid2 = makeGrid("g2", ["p", "q", "r", "s", "t", "u"]); // nothing recent
+    expect(selectNextGrid([grid1, grid2], history)!.grid._id).toBe("g2");
   });
 
-  it("penalizes a grid whose constraints appear more than twice in recent history", () => {
-    // Constraint "a" appears 3 times → overuse penalty triggers (>2 → excess = 1)
-    const recent = [
-      { constraintIds: ["a", "b", "c", "d", "e", "f"], countryPool: [] },
-      { constraintIds: ["a", "g", "h", "i", "j", "k"], countryPool: [] },
-      { constraintIds: ["a", "l", "m", "n", "o", "p"], countryPool: [] },
-    ];
-
-    // grid1 uses "a" heavily → penalized
-    const grid1 = makeGrid("g1", ["a", "b", "c", "d", "e", "f"], []);
-    // grid2 uses fresh constraints → no penalty
-    const grid2 = makeGrid("g2", ["z1", "z2", "z3", "z4", "z5", "z6"], []);
-
-    // grid2 should win: it carries no overuse penalty.
-    const result = selectNextGrid([grid1, grid2], recent);
-    expect(result!.grid._id).toBe("g2");
+  it("excludes a grid repeating a crossing within the window", () => {
+    // "a×d" is a cell of the day-before grid; the gap shield (unrelated yesterday)
+    // keeps a,d eligible so only the crossing filter can reject grid1.
+    const history = [unrelated(), recent(["a", "b", "c", "d", "e", "f"])];
+    const grid1 = makeGrid("g1", ["a", "p", "q", "d", "r", "s"]); // a×d crossing
+    const grid2 = makeGrid("g2", ["a", "d", "p", "q", "r", "s"]); // a,d both rows → no a×d
+    expect(selectNextGrid([grid1, grid2], history)!.grid._id).toBe("g2");
   });
 
-  it("adds country freshness bonus to grids with new countries", () => {
-    // recent history exhausts some countries
-    const recent = [
-      { constraintIds: [], countryPool: ["FR", "DE", "ES", "IT", "PT"] },
-    ];
-
-    // grid1: only stale countries
-    const grid1 = makeGrid(
-      "g1",
-      ["a", "b", "c", "d", "e", "f"],
-      ["FR", "DE", "ES"],
-    );
-    // grid2: all fresh countries — same constraints → freshness bonus should push grid2 ahead
-    const grid2 = makeGrid(
-      "g2",
-      ["a", "b", "c", "d", "e", "f"],
-      ["JP", "KR", "CN"],
-    );
-
-    const result = selectNextGrid([grid1, grid2], recent);
-    expect(result!.grid._id).toBe("g2");
+  it("prefers the grid sharing the fewest constraints with recent grids", () => {
+    const history = [unrelated(), recent(["a", "b", "c", "d", "e", "f"])];
+    const grid1 = makeGrid("g1", ["a", "b", "c", "p", "q", "r"]); // shares 3
+    const grid2 = makeGrid("g2", ["p", "q", "r", "s", "t", "u"]); // shares 0
+    expect(selectNextGrid([grid1, grid2], history)!.grid._id).toBe("g2");
   });
 
-  // A mature history: KNOWN_CONSTRAINT_WINDOW grids over the established set e1..e6.
-  const matureHistory = Array.from({ length: KNOWN_CONSTRAINT_WINDOW }, () => ({
-    constraintIds: ["e1", "e2", "e3", "e4", "e5", "e6"],
-    countryPool: [] as string[],
-  }));
-
-  it("caps newcomers per grid once the history is mature (newcomer = used < graduation)", () => {
-    // Mature history where n1 appears once (1 use < graduation → still a newcomer) and
-    // n2 never. Counting uses, not mere presence, keeps n1 budgeted: a grid carrying both
-    // exceeds the 1-newcomer cap and is filtered, so the single-newcomer grid wins.
+  it("caps newcomers per grid once the history is mature", () => {
+    // u-grids fill the recency window (indices 0..14) so a,b,c,d,e are only seen
+    // in OLD history (≥15 days) — established (not newcomers) but free of gap /
+    // crossing / overlap interference. n1, n2 never appear → newcomers.
     const history = [
-      { constraintIds: ["n1", "e1", "e2", "e3", "e4", "e5"], countryPool: [] },
-      ...Array.from({ length: KNOWN_CONSTRAINT_WINDOW - 1 }, () => ({
-        constraintIds: ["e1", "e2", "e3", "e4", "e5", "e6"],
-        countryPool: [] as string[],
-      })),
+      ...Array.from({ length: 15 }, unrelated),
+      ...Array.from({ length: KNOWN_CONSTRAINT_WINDOW - 15 }, () =>
+        recent(["e1", "e2", "e3", "e4", "e5", "e6"]),
+      ),
     ];
-    const gridBad = makeGrid("bad", ["n1", "n2", "e1", "e2", "e3", "e4"], []);
-    const gridGood = makeGrid("good", ["n2", "e1", "e2", "e3", "e4", "e5"], []);
-
-    const result = selectNextGrid([gridBad, gridGood], history);
-    expect(result!.grid._id).toBe("good");
+    const gridBad = makeGrid("bad", ["n1", "n2", "e1", "e2", "e3", "e4"]);
+    const gridGood = makeGrid("good", ["n1", "e1", "e2", "e3", "e4", "e5"]);
+    expect(selectNextGrid([gridBad, gridGood], history)!.grid._id).toBe("good");
   });
 
-  it("does not cap newcomers before the history is mature (from-scratch seeding)", () => {
-    // Same pool as above, but history one grid short of mature → guard skipped, so the
-    // newcomer-heavier grid wins on freshness instead of being filtered out.
-    const shortHistory = matureHistory.slice(0, KNOWN_CONSTRAINT_WINDOW - 1);
-    const gridBad = makeGrid("bad", ["n1", "n2", "e1", "e2", "e3", "e4"], []);
-    const gridGood = makeGrid("good", ["n1", "e1", "e2", "e3", "e4", "e5"], []);
-
-    const result = selectNextGrid([gridBad, gridGood], shortHistory);
-    expect(result!.grid._id).toBe("bad");
+  it("does not cap newcomers before the history is mature", () => {
+    // Short history → cold-start guard skipped, so the newcomer-heavier grid is not
+    // filtered; it wins by sharing fewer constraints with the window.
+    const history = [
+      unrelated(),
+      recent(["e5", "e6", "w1", "w2", "w3", "w4"]), // shares e5 with gridGood
+      ...Array.from({ length: 8 }, unrelated),
+    ];
+    const gridBad = makeGrid("bad", ["n1", "n2", "e1", "e2", "e3", "e4"]);
+    const gridGood = makeGrid("good", ["n1", "e1", "e2", "e3", "e4", "e5"]);
+    expect(selectNextGrid([gridBad, gridGood], history)!.grid._id).toBe("bad");
   });
 });
