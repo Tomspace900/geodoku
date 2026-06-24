@@ -18,7 +18,7 @@ const POPULARITY_TOP_K = 3;
 
 /** ISO3 → percentile de notoriété [0..1] (popularityIndex de countries.json). */
 const POPULARITY_BY_CODE: ReadonlyMap<string, number> = new Map(
-  COUNTRIES.map((c) => [c.code, c.popularityIndex ?? POPULARITY_FALLBACK]),
+  COUNTRIES.map((c) => [c.iso3, c.popularityIndex ?? POPULARITY_FALLBACK]),
 );
 
 export function countryPopularity(code: string): number {

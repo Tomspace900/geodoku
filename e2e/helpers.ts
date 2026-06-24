@@ -5,12 +5,12 @@ import { api } from "../convex/_generated/api";
 
 const require = createRequire(import.meta.url);
 
-type CountryRecord = { code: string; names: { en: string; fr: string } };
+type CountryRecord = { iso3: string; names: { en: string; fr: string } };
 const countries =
   require("../src/features/countries/data/countries.json") as CountryRecord[];
 
 function getCountryName(code: string): string {
-  return countries.find((c) => c.code === code)?.names.en ?? code;
+  return countries.find((c) => c.iso3 === code)?.names.en ?? code;
 }
 
 export type TodayGrid = {
@@ -91,10 +91,10 @@ export function pickCountry(
   validAnswers: Record<string, string[]>,
   cellKey: string,
   usedCodes: Set<string>,
-): { code: string; name: string } | null {
-  const code = (validAnswers[cellKey] ?? []).find((c) => !usedCodes.has(c));
-  if (!code) return null;
-  return { code, name: getCountryName(code) };
+): { iso3: string; name: string } | null {
+  const iso3 = (validAnswers[cellKey] ?? []).find((c) => !usedCodes.has(c));
+  if (!iso3) return null;
+  return { iso3, name: getCountryName(iso3) };
 }
 
 /**
@@ -104,12 +104,12 @@ export function pickCountry(
 export function pickWrongCountry(
   validAnswers: Record<string, string[]>,
   targetCellKey: string,
-): { code: string; name: string } | null {
+): { iso3: string; name: string } | null {
   const targetValid = new Set(validAnswers[targetCellKey] ?? []);
   for (const [key, codes] of Object.entries(validAnswers)) {
     if (key === targetCellKey) continue;
     const wrong = codes.find((c) => !targetValid.has(c));
-    if (wrong) return { code: wrong, name: getCountryName(wrong) };
+    if (wrong) return { iso3: wrong, name: getCountryName(wrong) };
   }
   return null;
 }

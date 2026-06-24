@@ -115,7 +115,7 @@ const ALL_COUNTRIES = countriesData as unknown as Country[];
 
 /** Pays-repère par code ISO3 (lève si absent du dataset). */
 function ref(code: string): Country {
-  const country = ALL_COUNTRIES.find((c) => c.code === code);
+  const country = ALL_COUNTRIES.find((c) => c.iso3 === code);
   if (!country) throw new Error(`Constraint ref country not found: ${code}`);
   return country;
 }
@@ -416,30 +416,30 @@ export const CONSTRAINTS: Constraint[] = [
     predicate: (c) => c.events.includes("summer_olympics_host"),
   },
 
-  // ── Politique / groupes ────────────────────────────────────────────────────
+  // ── Politique / memberships ────────────────────────────────────────────────
   {
     id: "political_eu",
     labelKey: "constraint.political_eu",
     category: "political",
-    predicate: (c) => c.groups.includes("eu"),
+    predicate: (c) => c.memberships.includes("eu"),
   },
   {
     id: "political_g20",
     labelKey: "constraint.political_g20",
     category: "political",
-    predicate: (c) => c.groups.includes("g20"),
+    predicate: (c) => c.memberships.includes("g20"),
   },
   {
     id: "political_nato",
     labelKey: "constraint.political_nato",
     category: "political",
-    predicate: (c) => c.groups.includes("nato"),
+    predicate: (c) => c.memberships.includes("nato"),
   },
   {
     id: "political_commonwealth",
     labelKey: "constraint.political_commonwealth",
     category: "political",
-    predicate: (c) => c.groups.includes("commonwealth"),
+    predicate: (c) => c.memberships.includes("commonwealth"),
   },
 
   // ── Régime ─────────────────────────────────────────────────────────────────

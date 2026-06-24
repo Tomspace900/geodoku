@@ -33,7 +33,7 @@ export function isConstraintFailureReason(
 }
 
 export function validateGuess(ctx: ValidationContext): ValidationResult {
-  if (ctx.usedCountries.has(ctx.country.code))
+  if (ctx.usedCountries.has(ctx.country.iso3))
     return { valid: false, reason: "already_used" };
   const rowC = CONSTRAINT_BY_ID.get(ctx.rowConstraintId);
   const colC = CONSTRAINT_BY_ID.get(ctx.colConstraintId);

@@ -3,46 +3,48 @@
  */
 import type {
   Country,
+  CountryCapital,
+  DrivingSide,
   FlagColor,
   FlagLayout,
   FlagSymbol,
   PhysicalFeature,
+  PoliticalGroup,
   Regime,
   WaterAccess,
 } from "../../src/features/countries/types.ts";
 
-export interface AliasOverride {
-  fr?: string[];
-  en?: string[];
-}
+/** Explicit source fixes — only fields where world-countries / REST need gameplay correction. */
+export type SourceCorrection = {
+  borders?: string[];
+  waterAccess?: WaterAccess;
+};
 
-export interface Patches {
-  overrides: Record<string, Partial<Omit<Country, "code">>>;
-  aliasOverrides: Record<string, AliasOverride>;
-  additions: Country[];
-  wikiTitles?: Record<string, string>;
-  middleEastCodes?: string[];
-  eventFifaWcHost?: string[];
-  eventSummerOlympicsHost?: string[];
-  euMemberCodes?: string[];
-  g20MemberCodes?: string[];
-  natoMemberCodes?: string[];
-  commonwealthMemberCodes?: string[];
-  monarchyCodes?: string[];
-  equatorCrosserCodes?: string[];
-  mediterraneanCoastCodes?: string[];
-  caribbeanCoastCodes?: string[];
-  peakOver5000mCodes?: string[];
-  // ── Gameplay tags additionnels (geoTags) ──
-  driveOnLeftCodes?: string[];
-  capitalNotLargestCityCodes?: string[];
-  // ── Biomes & façades océaniques (physicalFeatures) ──
-  desertCodes?: string[];
-  rainforestCodes?: string[];
-  atlanticCoastCodes?: string[];
-  pacificCoastCodes?: string[];
-  indianOceanCoastCodes?: string[];
-}
+/** Curated constraint tag lists (events, geo, physical features, regime). */
+export type GameplayClassifications = {
+  middleEast: string[];
+  eventFifaWcHost: string[];
+  eventSummerOlympicsHost: string[];
+  monarchy: string[];
+  equatorCrosser: string[];
+  mediterraneanCoast: string[];
+  caribbeanCoast: string[];
+  peakOver5000m: string[];
+  capitalNotLargest: string[];
+  desert: string[];
+  rainforest: string[];
+  atlanticCoast: string[];
+  pacificCoast: string[];
+  indianOceanCoast: string[];
+};
+
+export type CountryPatchesConfig = {
+  sourceCorrectionsByIso3: Record<string, SourceCorrection>;
+  searchAliasesByIso3: Record<string, string[]>;
+  wikipediaTitlesByIso3: Record<string, string>;
+  gameplayClassifications: GameplayClassifications;
+  manualCountryAdditions: Country[];
+};
 
 /**
  * Curated flag truth table (`scripts/prod/flagData.json`), keyed by ISO3 code.
@@ -58,13 +60,31 @@ export type FlagData = Record<
   }
 >;
 
-/** REST Countries v3.1 row (fields=cca3,population) */
+/** REST Countries v5 row (subset consumed by build-countries). */
 export interface RcEnrichRow {
   cca3?: string | string[];
+  iso2?: string;
   population: number;
+  officialName?: string;
+  alternateNames?: string[];
+  capitals?: CountryCapital[];
+  drivingSide?: DrivingSide;
+  memberships?: PoliticalGroup[];
+  borders?: string[];
+  landlocked?: boolean;
 }
 
-export type RcEnrichment = { population: number };
+export type RcEnrichment = {
+  iso2: string;
+  population: number;
+  officialName?: string;
+  alternateNames: string[];
+  capitals: CountryCapital[];
+  drivingSide: DrivingSide;
+  memberships: PoliticalGroup[];
+  borders?: string[];
+  landlocked?: boolean;
+};
 
 /**
  * ISO 639-3 → ISO 639-1 conversion table.
@@ -248,8 +268,24 @@ export function rcEnrichmentMapFromRows(
     if (raw == null) continue;
     const codes = Array.isArray(raw) ? raw : [raw];
     for (const code of codes) {
-      if (typeof code === "string" && /^[A-Z]{3}$/.test(code)) {
-        map.set(code, { population: row.population });
+      if (
+        typeof code === "string" &&
+        /^[A-Z]{3}$/.test(code) &&
+        row.iso2 &&
+        /^[A-Z]{2}$/.test(row.iso2) &&
+        row.drivingSide
+      ) {
+        map.set(code, {
+          iso2: row.iso2,
+          population: row.population,
+          officialName: row.officialName,
+          alternateNames: row.alternateNames ?? [],
+          capitals: row.capitals ?? [],
+          drivingSide: row.drivingSide,
+          memberships: row.memberships ?? [],
+          borders: row.borders,
+          landlocked: row.landlocked,
+        });
       }
     }
   }
@@ -260,16 +296,8 @@ export function dedupe(arr: string[]): string[] {
   return [...new Set(arr)];
 }
 
-export function buildAliases(
-  nameFr: string,
-  nameEn: string,
-  cca2: string,
-  cca3: string,
-  overrides?: AliasOverride,
-): { fr: string[]; en: string[] } {
-  const fr = dedupe([nameFr, cca2, cca3, ...(overrides?.fr ?? [])]);
-  const en = dedupe([nameEn, cca2, cca3, ...(overrides?.en ?? [])]);
-  return { fr, en };
+export function buildAliases(extra?: string[]): string[] {
+  return dedupe(extra ?? []);
 }
 
 export function toWikipediaTitle(name: string): string {
@@ -297,51 +325,64 @@ export function flagFieldsForCode(
   };
 }
 
-export function gameplayArraysForCode(
-  code: string,
-  patches: Patches,
-): Pick<Country, "events" | "groups" | "geoTags"> {
-  const events: Country["events"] = [];
-  if (patches.eventFifaWcHost?.includes(code)) events.push("fifa_wc_host");
-  if (patches.eventSummerOlympicsHost?.includes(code))
-    events.push("summer_olympics_host");
-  const groups: Country["groups"] = [];
-  if (patches.euMemberCodes?.includes(code)) groups.push("eu");
-  if (patches.g20MemberCodes?.includes(code)) groups.push("g20");
-  if (patches.natoMemberCodes?.includes(code)) groups.push("nato");
-  if (patches.commonwealthMemberCodes?.includes(code))
-    groups.push("commonwealth");
-  const geoTags: string[] = [];
-  if (patches.middleEastCodes?.includes(code)) geoTags.push("middle_east");
-  if (patches.driveOnLeftCodes?.includes(code)) geoTags.push("drives_on_left");
-  if (patches.capitalNotLargestCityCodes?.includes(code))
-    geoTags.push("capital_not_largest");
-  return { events, groups, geoTags };
+export function applySourceCorrections(
+  country: Country,
+  correction?: SourceCorrection,
+): void {
+  if (!correction) return;
+  if (correction.borders !== undefined) country.borders = correction.borders;
+  if (correction.waterAccess !== undefined) {
+    country.waterAccess = correction.waterAccess;
+  }
 }
 
-export function regimeForCode(code: string, patches: Patches): Regime {
-  return patches.monarchyCodes?.includes(code) ? "monarchy" : "republic";
+export function gameplayArraysForCode(
+  code: string,
+  classifications: GameplayClassifications,
+  rc: RcEnrichment,
+): Pick<Country, "events" | "geoTags"> {
+  const events: Country["events"] = [];
+  if (classifications.eventFifaWcHost.includes(code))
+    events.push("fifa_wc_host");
+  if (classifications.eventSummerOlympicsHost.includes(code))
+    events.push("summer_olympics_host");
+  const geoTags: string[] = [];
+  if (classifications.middleEast.includes(code)) geoTags.push("middle_east");
+  if (rc.drivingSide === "left") {
+    geoTags.push("drives_on_left");
+  }
+  if (classifications.capitalNotLargest.includes(code))
+    geoTags.push("capital_not_largest");
+  return { events, geoTags };
+}
+
+export function regimeForCode(
+  code: string,
+  classifications: GameplayClassifications,
+): Regime {
+  return classifications.monarchy.includes(code) ? "monarchy" : "republic";
 }
 
 export function physicalFeaturesForCode(
   code: string,
-  patches: Patches,
+  classifications: GameplayClassifications,
 ): PhysicalFeature[] {
   const features: PhysicalFeature[] = [];
-  if (patches.equatorCrosserCodes?.includes(code))
+  if (classifications.equatorCrosser.includes(code))
     features.push("equator_crosser");
-  if (patches.mediterraneanCoastCodes?.includes(code))
+  if (classifications.mediterraneanCoast.includes(code))
     features.push("mediterranean_coast");
-  if (patches.caribbeanCoastCodes?.includes(code))
+  if (classifications.caribbeanCoast.includes(code))
     features.push("caribbean_coast");
-  if (patches.peakOver5000mCodes?.includes(code))
+  if (classifications.peakOver5000m.includes(code))
     features.push("peak_over_5000m");
-  if (patches.desertCodes?.includes(code)) features.push("has_desert");
-  if (patches.rainforestCodes?.includes(code)) features.push("rainforest");
-  if (patches.atlanticCoastCodes?.includes(code))
+  if (classifications.desert.includes(code)) features.push("has_desert");
+  if (classifications.rainforest.includes(code)) features.push("rainforest");
+  if (classifications.atlanticCoast.includes(code))
     features.push("atlantic_coast");
-  if (patches.pacificCoastCodes?.includes(code)) features.push("pacific_coast");
-  if (patches.indianOceanCoastCodes?.includes(code))
+  if (classifications.pacificCoast.includes(code))
+    features.push("pacific_coast");
+  if (classifications.indianOceanCoast.includes(code))
     features.push("indian_ocean_coast");
   return features;
 }
@@ -358,7 +399,7 @@ export function assignPopularity(
   pageviewsByCode: Map<string, number>,
 ): void {
   for (const country of countries) {
-    const v = pageviewsByCode.get(country.code);
+    const v = pageviewsByCode.get(country.iso3);
     if (typeof v === "number" && v > 0) {
       country.wikipediaMonthlyViews = v;
     }

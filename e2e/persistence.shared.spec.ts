@@ -36,7 +36,7 @@ test("resumes an in-progress game after page reload", async ({ page }) => {
   const usedCodes = new Set<string>();
   const picks = (["0,0", "0,1"] as const).map((key) => {
     const p = pickCountry(grid.validAnswers, key, usedCodes);
-    if (p) usedCodes.add(p.code);
+    if (p) usedCodes.add(p.iso3);
     return p;
   });
 

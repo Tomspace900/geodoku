@@ -89,7 +89,7 @@ test("a country placed in one cell is marked used in another", async ({
   // Need a second cell where the same country is also a valid answer.
   const otherKey = pick
     ? CELL_KEYS.find(
-        (k) => k !== "0,0" && (grid.validAnswers[k] ?? []).includes(pick.code),
+        (k) => k !== "0,0" && (grid.validAnswers[k] ?? []).includes(pick.iso3),
       )
     : undefined;
   if (!pick || !otherKey)

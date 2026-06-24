@@ -1,4 +1,4 @@
-import { getCountryByCode } from "@/features/countries/lib/search";
+import { getCountryByIso3 } from "@/features/countries/lib/search";
 import { UI_ANIMATION_MS } from "@/features/game/logic/constants";
 import type { Cell, CellPosition } from "@/features/game/types";
 import { useLocale } from "@/i18n/LocaleContext";
@@ -33,7 +33,7 @@ export function CellComponent({ cell, position, isDisabled, onClick }: Props) {
   }, [cell.status]);
 
   if (cell.status === "filled") {
-    const country = getCountryByCode(cell.countryCode);
+    const country = getCountryByIso3(cell.countryCode);
     const countryName = country ? country.names[locale] : cell.countryCode;
     return (
       <div

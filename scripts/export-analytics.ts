@@ -79,7 +79,7 @@ if (!ADMIN_TOKEN) {
 
 const client = new ConvexHttpClient(CONVEX_URL);
 const COUNTRIES = COUNTRIES_JSON as unknown as Country[];
-const COUNTRY_BY_CODE = new Map(COUNTRIES.map((c) => [c.code, c]));
+const COUNTRY_BY_CODE = new Map(COUNTRIES.map((c) => [c.iso3, c]));
 const CONSTRAINT_BY_ID = new Map(CONSTRAINTS.map((c) => [c.id, c]));
 
 // ─── Types issus des queries Convex ───────────────────────────────────────────

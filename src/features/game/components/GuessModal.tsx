@@ -295,13 +295,13 @@ export function GuessModal({
               </CommandEmpty>
             ) : (
               results.map((country) => {
-                const alreadyUsed = state.usedCountries.has(country.code);
+                const alreadyUsed = state.usedCountries.has(country.iso3);
                 return (
                   <CommandItem
-                    key={country.code}
-                    value={country.code}
+                    key={country.iso3}
+                    value={country.iso3}
                     onSelect={() => {
-                      void handleSelect(country.code);
+                      void handleSelect(country.iso3);
                     }}
                     disabled={submitting || alreadyUsed}
                     className={cn(

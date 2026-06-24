@@ -77,6 +77,10 @@ export const en = {
     title: "Changelog",
     backToGame: "Back to the game",
     entries: {
+      countryDataRefreshDate: "June 24, 2026",
+      countryDataRefreshTitle: "Sharper search, more varied grids",
+      countryDataRefreshBody:
+        'Search handles hyphens and common variants more gracefully, regardless of language "England", "Holland", and the like. I also reworked daily grid scheduling to limit redundancy: fewer repeats from one day to the next, more diverse pairings. A few behind-the-scenes fixes and country-data updates.',
       constraintsRefreshDate: "June 12, 2026",
       constraintsRefreshTitle: "More constraints, easier to read",
       constraintsRefreshBody:

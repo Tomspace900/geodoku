@@ -2,8 +2,10 @@ import { describe, expect, it } from "vitest";
 import type { Country } from "../../src/features/countries/types.ts";
 import {
   type FlagData,
-  type Patches,
+  type GameplayClassifications,
   type RcEnrichRow,
+  type RcEnrichment,
+  applySourceCorrections,
   assignPopularity,
   buildAliases,
   dedupe,
@@ -20,9 +22,10 @@ import {
 
 function minimalCountry(code: string): Country {
   return {
-    code,
+    iso3: code,
+    iso2: code.slice(0, 2),
     names: { fr: "X", en: "X" },
-    aliases: { fr: [code], en: [code] },
+    aliases: [code],
     flagEmoji: "🏳️",
     continent: "europe",
     waterAccess: "landlocked",
@@ -36,7 +39,9 @@ function minimalCountry(code: string): Country {
     flagSymbols: [],
     flagLayout: [],
     events: [],
-    groups: [],
+    memberships: [],
+    capitals: [],
+    drivingSide: "right",
     geoTags: [],
     regime: "republic",
     physicalFeatures: [],
@@ -86,8 +91,8 @@ describe("mapLanguages", () => {
 describe("rcEnrichmentMapFromRows", () => {
   it("merges cca3 string or array, skips bad codes", () => {
     const rows: RcEnrichRow[] = [
-      { cca3: "FRA", population: 1 },
-      { cca3: ["GBR", "IMN"], population: 2 },
+      { cca3: "FRA", iso2: "FR", population: 1, drivingSide: "right" },
+      { cca3: ["GBR", "IMN"], iso2: "GB", population: 2, drivingSide: "left" },
       { cca3: "bad", population: 99 },
     ];
     const m = rcEnrichmentMapFromRows(rows);
@@ -98,13 +103,11 @@ describe("rcEnrichmentMapFromRows", () => {
 });
 
 describe("buildAliases", () => {
-  it("dedupes [localized name, cca2, cca3] and appends overrides", () => {
-    const a = buildAliases("France", "France", "FR", "FRA", {
-      en: ["French Republic", "FRA", "FR"],
-    });
-    expect(a.en[0]).toBe("France");
-    expect(new Set(a.en).size).toBe(a.en.length);
-    expect(a.en).toContain("French Republic");
+  it("dedupes extra aliases only", () => {
+    const a = buildAliases(["French Republic", "FRA", "FR", "FRA"]);
+    expect(a[0]).toBe("French Republic");
+    expect(new Set(a).size).toBe(a.length);
+    expect(a).toEqual(["French Republic", "FRA", "FR"]);
   });
 });
 
@@ -143,105 +146,143 @@ describe("flagFieldsForCode", () => {
   });
 });
 
+describe("applySourceCorrections", () => {
+  it("only patches allowed source fields", () => {
+    const country = minimalCountry("AUS");
+    country.waterAccess = "island";
+    applySourceCorrections(country, { waterAccess: "coastal" });
+    expect(country.waterAccess).toBe("coastal");
+    applySourceCorrections(country, { borders: ["NZL"] });
+    expect(country.borders).toEqual(["NZL"]);
+  });
+});
+
 describe("gameplayArraysForCode", () => {
-  const patches: Patches = {
-    overrides: {},
-    aliasOverrides: {},
-    additions: [],
+  const classifications: GameplayClassifications = {
+    middleEast: ["SYR"],
     eventFifaWcHost: ["FRA"],
     eventSummerOlympicsHost: ["FRA", "GRC"],
-    euMemberCodes: ["FRA"],
-    g20MemberCodes: ["FRA", "USA"],
-    natoMemberCodes: ["FRA", "USA"],
-    commonwealthMemberCodes: ["GBR", "IND"],
-    middleEastCodes: ["SYR"],
-    driveOnLeftCodes: ["JPN"],
-    capitalNotLargestCityCodes: ["USA"],
+    monarchy: [],
+    equatorCrosser: [],
+    mediterraneanCoast: [],
+    caribbeanCoast: [],
+    peakOver5000m: [],
+    capitalNotLargest: ["USA"],
+    desert: [],
+    rainforest: [],
+    atlanticCoast: [],
+    pacificCoast: [],
+    indianOceanCoast: [],
+  };
+  const rc: RcEnrichment = {
+    iso2: "FR",
+    population: 1,
+    alternateNames: [],
+    capitals: [],
+    drivingSide: "right" as const,
+    memberships: ["eu", "g20", "nato"],
   };
 
   it("stacks all matching tags for one code", () => {
-    const g = gameplayArraysForCode("FRA", patches);
+    const g = gameplayArraysForCode("FRA", classifications, rc);
     expect(g.events).toEqual(["fifa_wc_host", "summer_olympics_host"]);
-    expect(g.groups).toEqual(["eu", "g20", "nato"]);
-  });
-
-  it("emits commonwealth group when listed", () => {
-    const g = gameplayArraysForCode("IND", patches);
-    expect(g.groups).toEqual(["commonwealth"]);
   });
 
   it("adds middle_east geo tag when listed", () => {
-    const g = gameplayArraysForCode("SYR", patches);
+    const g = gameplayArraysForCode("SYR", classifications, rc);
     expect(g.geoTags).toEqual(["middle_east"]);
   });
 
-  it("adds society geo tags when listed", () => {
-    expect(gameplayArraysForCode("JPN", patches).geoTags).toEqual([
-      "drives_on_left",
-    ]);
-    expect(gameplayArraysForCode("USA", patches).geoTags).toEqual([
+  it("adds society geo tags from REST Countries and curated classifications", () => {
+    expect(
+      gameplayArraysForCode("JPN", classifications, {
+        ...rc,
+        drivingSide: "left",
+      }).geoTags,
+    ).toEqual(["drives_on_left"]);
+    expect(gameplayArraysForCode("USA", classifications, rc).geoTags).toEqual([
       "capital_not_largest",
     ]);
   });
 });
 
 describe("regimeForCode", () => {
-  const patches: Patches = {
-    overrides: {},
-    aliasOverrides: {},
-    additions: [],
-    monarchyCodes: ["GBR", "JPN"],
+  const classifications: GameplayClassifications = {
+    middleEast: [],
+    eventFifaWcHost: [],
+    eventSummerOlympicsHost: [],
+    monarchy: ["GBR", "JPN"],
+    equatorCrosser: [],
+    mediterraneanCoast: [],
+    caribbeanCoast: [],
+    peakOver5000m: [],
+    capitalNotLargest: [],
+    desert: [],
+    rainforest: [],
+    atlanticCoast: [],
+    pacificCoast: [],
+    indianOceanCoast: [],
   };
 
   it("returns monarchy when code is listed", () => {
-    expect(regimeForCode("GBR", patches)).toBe("monarchy");
-    expect(regimeForCode("JPN", patches)).toBe("monarchy");
+    expect(regimeForCode("GBR", classifications)).toBe("monarchy");
+    expect(regimeForCode("JPN", classifications)).toBe("monarchy");
   });
 
   it("defaults to republic otherwise", () => {
-    expect(regimeForCode("FRA", patches)).toBe("republic");
-    expect(regimeForCode("USA", patches)).toBe("republic");
+    expect(regimeForCode("FRA", classifications)).toBe("republic");
+    expect(regimeForCode("USA", classifications)).toBe("republic");
   });
 });
 
 describe("physicalFeaturesForCode", () => {
-  const patches: Patches = {
-    overrides: {},
-    aliasOverrides: {},
-    additions: [],
-    equatorCrosserCodes: ["ECU", "BRA"],
-    mediterraneanCoastCodes: ["FRA", "ITA"],
-    caribbeanCoastCodes: ["COL", "VEN"],
-    peakOver5000mCodes: ["FRA", "NPL"],
-    desertCodes: ["DZA"],
-    rainforestCodes: ["COD"],
-    atlanticCoastCodes: ["PRT"],
-    pacificCoastCodes: ["CHL"],
-    indianOceanCoastCodes: ["KEN"],
+  const classifications: GameplayClassifications = {
+    middleEast: [],
+    eventFifaWcHost: [],
+    eventSummerOlympicsHost: [],
+    monarchy: [],
+    equatorCrosser: ["ECU", "BRA"],
+    mediterraneanCoast: ["FRA", "ITA"],
+    caribbeanCoast: ["COL", "VEN"],
+    peakOver5000m: ["FRA", "NPL"],
+    capitalNotLargest: [],
+    desert: ["DZA"],
+    rainforest: ["COD"],
+    atlanticCoast: ["PRT"],
+    pacificCoast: ["CHL", "JPN"],
+    indianOceanCoast: ["KEN", "IND"],
   };
 
   it("stacks all matching physical features", () => {
-    expect(physicalFeaturesForCode("FRA", patches)).toEqual([
+    expect(physicalFeaturesForCode("FRA", classifications)).toEqual([
       "mediterranean_coast",
       "peak_over_5000m",
     ]);
-    expect(physicalFeaturesForCode("BRA", patches)).toEqual([
+    expect(physicalFeaturesForCode("BRA", classifications)).toEqual([
       "equator_crosser",
     ]);
   });
 
   it("stacks biome and ocean features", () => {
-    expect(physicalFeaturesForCode("DZA", patches)).toEqual(["has_desert"]);
-    expect(physicalFeaturesForCode("COD", patches)).toEqual(["rainforest"]);
-    expect(physicalFeaturesForCode("PRT", patches)).toEqual(["atlantic_coast"]);
-    expect(physicalFeaturesForCode("CHL", patches)).toEqual(["pacific_coast"]);
-    expect(physicalFeaturesForCode("KEN", patches)).toEqual([
+    expect(physicalFeaturesForCode("DZA", classifications)).toEqual([
+      "has_desert",
+    ]);
+    expect(physicalFeaturesForCode("COD", classifications)).toEqual([
+      "rainforest",
+    ]);
+    expect(physicalFeaturesForCode("PRT", classifications)).toEqual([
+      "atlantic_coast",
+    ]);
+    expect(physicalFeaturesForCode("CHL", classifications)).toEqual([
+      "pacific_coast",
+    ]);
+    expect(physicalFeaturesForCode("KEN", classifications)).toEqual([
       "indian_ocean_coast",
     ]);
   });
 
   it("returns empty when no features listed", () => {
-    expect(physicalFeaturesForCode("JPN", patches)).toEqual([]);
+    expect(physicalFeaturesForCode("POL", classifications)).toEqual([]);
   });
 });
 

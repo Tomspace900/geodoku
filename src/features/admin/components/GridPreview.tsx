@@ -7,7 +7,7 @@ import {
   popularityScore100,
   topKPopularity,
 } from "@/features/countries/lib/popularity";
-import { getCountryByCode } from "@/features/countries/lib/search";
+import { getCountryByIso3 } from "@/features/countries/lib/search";
 import { cn } from "@/lib/utils";
 import { StatGlyph, StatGlyphDelta, StatScorePill } from "./StatGlyph";
 
@@ -95,7 +95,7 @@ export function GridPreview({
             >
               <div className="flex min-h-0 flex-1 flex-wrap content-start gap-1 overflow-y-auto">
                 {codes.map((code) => {
-                  const country = getCountryByCode(code);
+                  const country = getCountryByIso3(code);
                   const count = obs?.picks[code] ?? 0;
                   const dim = obs ? count === 0 : false;
                   return (

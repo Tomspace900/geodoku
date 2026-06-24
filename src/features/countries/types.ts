@@ -9,7 +9,6 @@ export type Continent =
 export type WaterAccess = "landlocked" | "coastal" | "island";
 
 export type LocalizedString = { fr: string; en: string };
-export type LocalizedAliases = { fr: string[]; en: string[] };
 
 /** Couleurs normalisées pour les contraintes de drapeau (dataset). */
 export type FlagColor =
@@ -37,7 +36,37 @@ export type FlagLayout = "vertical_stripes" | "horizontal_stripes";
 
 export type CountryEvent = "fifa_wc_host" | "summer_olympics_host";
 
-export type PoliticalGroup = "eu" | "g20" | "nato" | "commonwealth";
+export type PoliticalGroup =
+  | "arab_league"
+  | "asean"
+  | "brics"
+  | "commonwealth"
+  | "eu"
+  | "eurozone"
+  | "g20"
+  | "g7"
+  | "nato"
+  | "oecd"
+  | "opec"
+  | "schengen"
+  | "african_union";
+
+export type DrivingSide = "left" | "right";
+
+export type CapitalRole =
+  | "administrative"
+  | "constitutional"
+  | "executive"
+  | "judicial"
+  | "legislative"
+  | "primary";
+
+export type CountryCapital = {
+  name: string;
+  latitude: number;
+  longitude: number;
+  roles: CapitalRole[];
+};
 
 /** Political regime type. Only two values to keep the axis simple and extensible. */
 export type Regime = "monarchy" | "republic";
@@ -55,9 +84,10 @@ export type PhysicalFeature =
   | "indian_ocean_coast";
 
 export type Country = {
-  code: string; // ISO 3166-1 alpha-3
+  iso3: string; // ISO 3166-1 alpha-3
+  iso2: string; // ISO 3166-1 alpha-2
   names: LocalizedString;
-  aliases: LocalizedAliases;
+  aliases: string[];
   flagEmoji: string;
   continent: Continent;
   waterAccess: WaterAccess;
@@ -79,8 +109,12 @@ export type Country = {
   flagLayout: FlagLayout[];
   /** Événements sportifs majeurs (hôte). */
   events: CountryEvent[];
-  /** Regroupements politiques / économiques (EU, G20, NATO, Commonwealth…). */
-  groups: PoliticalGroup[];
+  /** Memberships politiques / économiques factuels exposés par REST Countries. */
+  memberships: PoliticalGroup[];
+  /** Capitales exposées par REST Countries, avec rôles quand disponibles. */
+  capitals: CountryCapital[];
+  /** Côté de conduite routière exposé par REST Countries. */
+  drivingSide: DrivingSide;
   /** Tags géo additionnels (ex. moyen-orient perçu ≠ Western Asia). */
   geoTags: string[];
   /** Régime politique officiel (monarchie incluant royaumes constitutionnels et absolus). */
