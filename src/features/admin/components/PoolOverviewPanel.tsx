@@ -1,12 +1,4 @@
 import { Button } from "@/components/ui/button";
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-} from "@/components/ui/dialog";
 import { useAction, useQuery } from "convex/react";
 import { Loader2 } from "lucide-react";
 import { useState } from "react";
@@ -15,7 +7,9 @@ import {
   type GenerationReport,
   POOL_LOW_THRESHOLD,
 } from "../../../../convex/lib/gridConstants";
+import { isUnauthorizedError } from "../logic/errors";
 import { AlertBanner } from "./AlertBanner";
+import { ConfirmDialog } from "./ConfirmDialog";
 import { PanelCard } from "./PanelCard";
 import { PanelHeader } from "./PanelHeader";
 
@@ -128,11 +122,6 @@ type RefreshReport = GenerationReport & { deletedAvailable: number };
 
 type RefreshStatus = "idle" | "loading" | RefreshReport;
 
-function isUnauthorizedError(err: unknown): boolean {
-  const msg = err instanceof Error ? err.message : String(err);
-  return msg.includes("Unauthorized");
-}
-
 export function PoolOverviewPanel({
   token,
   clearToken,
@@ -211,38 +200,14 @@ export function PoolOverviewPanel({
         </p>
       )}
 
-      <Dialog open={refreshDialogOpen} onOpenChange={setRefreshDialogOpen}>
-        <DialogContent>
-          <DialogHeader>
-            <DialogTitle>Regénérer le pool ?</DialogTitle>
-            <DialogDescription className="text-on-surface-variant">
-              Supprime toutes les grilles candidates en stock (available) puis
-              génère un nouveau lot. Les grilles déjà planifiées et publiées ne
-              seront pas modifiées.
-            </DialogDescription>
-          </DialogHeader>
-          <DialogFooter className="gap-2 sm:gap-0">
-            <Button
-              type="button"
-              variant="ghost"
-              onClick={() => setRefreshDialogOpen(false)}
-              disabled={refreshStatus === "loading"}
-            >
-              Annuler
-            </Button>
-            <Button
-              type="button"
-              onClick={() => {
-                setRefreshDialogOpen(false);
-                handleRefreshPool();
-              }}
-              disabled={refreshStatus === "loading"}
-            >
-              Confirmer
-            </Button>
-          </DialogFooter>
-        </DialogContent>
-      </Dialog>
+      <ConfirmDialog
+        open={refreshDialogOpen}
+        onOpenChange={setRefreshDialogOpen}
+        title="Regénérer le pool ?"
+        description="Supprime toutes les grilles candidates en stock (available) puis génère un nouveau lot. Les grilles déjà planifiées et publiées ne seront pas modifiées."
+        busy={refreshStatus === "loading"}
+        onConfirm={handleRefreshPool}
+      />
     </PanelCard>
   );
 }

@@ -1,4 +1,4 @@
-import { getCountryByCode } from "@/features/countries/lib/search";
+import { getCountryByIso3 } from "@/features/countries/lib/search";
 import { usePostHog } from "@posthog/react";
 import { useMutation, useQuery } from "convex/react";
 import { useCallback, useEffect, useReducer } from "react";
@@ -184,7 +184,7 @@ export function useGameState() {
         return { ok: false, reason, gameOver };
       }
 
-      const country = getCountryByCode(countryCode);
+      const country = getCountryByIso3(countryCode);
       if (!country) {
         return failGuess("invalid_country", countryCode);
       }

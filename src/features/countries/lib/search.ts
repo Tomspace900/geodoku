@@ -5,49 +5,42 @@ import { matchSorter, rankings } from "match-sorter";
 
 const TYPED = countriesJson as Country[];
 
-// Normalise: lowercase + strip accents (NFD + remove combining marks)
+// Normalise: lowercase + strip accents (NFD + remove combining marks) + hyphens as spaces
 function normalize(s: string): string {
   return s
     .toLowerCase()
     .normalize("NFD")
     .replace(/\p{Mn}/gu, "")
+    .replace(/[\u002D\u2010-\u2015]/g, " ")
+    .replace(/\s+/g, " ")
     .trim();
 }
 
-// Pre-computed locale-specific indexes to avoid recomputing on every keystroke
 type IndexedCountry = Country & { _normalized: string[] };
 
-function buildIndex(locale: Locale): IndexedCountry[] {
-  return TYPED.map((c) => ({
-    ...c,
-    _normalized: [
-      normalize(c.names[locale]),
-      ...c.aliases[locale].map(normalize),
-      c.code.toLowerCase(),
-    ],
-  }));
+function buildSearchTokens(c: Country): string[] {
+  const raw = [c.iso2, c.iso3, c.names.fr, c.names.en, ...c.aliases];
+  return [...new Set(raw.map(normalize).filter((token) => token.length > 0))];
 }
 
-const INDEX_FR: IndexedCountry[] = buildIndex("fr");
-const INDEX_EN: IndexedCountry[] = buildIndex("en");
-
-function getIndex(locale: Locale): IndexedCountry[] {
-  return locale === "fr" ? INDEX_FR : INDEX_EN;
-}
+const INDEX: IndexedCountry[] = TYPED.map((c) => ({
+  ...c,
+  _normalized: buildSearchTokens(c),
+}));
 
 export function searchCountries(
   query: string,
-  locale: Locale,
+  _locale: Locale,
   limit = 8,
 ): Country[] {
   const q = normalize(query);
   if (!q) return [];
-  return matchSorter(getIndex(locale), q, {
+  return matchSorter(INDEX, q, {
     keys: ["_normalized"],
     threshold: rankings.CONTAINS,
   }).slice(0, limit);
 }
 
-export function getCountryByCode(code: string): Country | undefined {
-  return TYPED.find((c) => c.code === code);
+export function getCountryByIso3(iso3: string): Country | undefined {
+  return TYPED.find((c) => c.iso3 === iso3);
 }

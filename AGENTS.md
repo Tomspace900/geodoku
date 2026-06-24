@@ -152,16 +152,24 @@ pnpm simulate:scheduling          # validateur changement contraintes
 pnpm analyze:observed
 pnpm export:analytics
 
-# Données Convex (dev)
+# Reproduire / observer prod (ou develop) en local — LE workflow par défaut
+pnpm dump:prod                    # copie l'état prod → cloud dev local
+pnpm dump:develop                 # copie l'état develop → cloud dev local
+pnpm dump:prod-to-develop         # ops : aligner develop sur prod
+# … puis re-générer le pool via l'UI /admin (refreshPool). JAMAIS wipe+seed pour ça.
+
+# Dev local VIDE / nouvel environnement UNIQUEMENT (ne reproduit PAS prod)
 pnpm seed:grids
 pnpm wipe:db
 pnpm exec convex env set ADMIN_TOKEN "xxx"
-
-# Ops (dumps entre envs)
-pnpm dump:prod
-pnpm dump:develop
-pnpm dump:prod-to-develop
 ```
+
+> **⚠️ Reproduire prod/develop en local = `pnpm dump:[env]` puis reseed via l'UI
+> `/admin` (`refreshPool`) — jamais `wipe:db` + `seed:grids`.** Ces deux dernières
+> n'initialisent qu'un dev local vide ou un nouvel env ; elles ne reproduisent PAS
+> l'état ni le comportement de prod (pool et grilles servies différents). Prod et
+> develop ont des **données persistantes** : on ne les wipe jamais. Pour diagnostiquer
+> un souci observé en prod, on **dump puis on observe**.
 
 **Pre-commit** ([`.husky/pre-commit`](.husky/pre-commit)) : `lint-staged` (Biome sur fichiers stagés, auto-fix + re-stage) → si fichiers stagés : `typecheck` → `pnpm test` (skip si rien en stage, ex. `amend --no-edit`). Pas d'e2e (trop lent) — e2e en CI. `core.hooksPath` posé au `pnpm install` (`prepare`). Bypass : `git commit --no-verify` ou `HUSKY=0`.
 
@@ -232,7 +240,7 @@ Source de vérité détaillée : grep `posthog?.capture` dans le code.
 | Logique pure (`logic/`, `convex/lib/*`) | tests unitaires ciblés + `pnpm test` |
 | UI / styles | skill `/verify-design-system` |
 | Parcours jeu (grille, modale, résultat, persistance) | `pnpm test:e2e` (min. `*.shared.spec.ts`) ; premier run local : `pnpm wipe:db && pnpm seed:grids` |
-| Contraintes / pool / scheduler | `pnpm simulate:scheduling` ; si OK en dev : `wipe:db` + `seed:grids` |
+| Contraintes / pool / scheduler | `pnpm simulate:scheduling` ; pour observer sur données réalistes : `pnpm dump:prod` puis reseed via `/admin` (`refreshPool`) — **pas** `wipe`+`seed` |
 | Schéma ou API Convex | `pnpm convex:dev` / codegen + commiter `convex/_generated/` |
 | Texte utilisateur | clés `fr` + `en` via `translate()` |
 | Nouvel event analytics | grep catalogue §10 / code existant |

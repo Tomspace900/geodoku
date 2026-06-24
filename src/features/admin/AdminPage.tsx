@@ -222,6 +222,7 @@ export function AdminPage() {
               <div className="col-span-1 h-full md:col-span-3">
                 <GridDayDetail
                   token={token}
+                  clearToken={clearToken}
                   selectedDate={selectedDate}
                   view={selectedView}
                 />

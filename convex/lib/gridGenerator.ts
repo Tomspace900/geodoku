@@ -41,7 +41,7 @@ export function buildConstraintMatches(): Record<string, Set<string>> {
     const matching = new Set<string>();
     for (const country of COUNTRIES) {
       if (constraint.predicate(country)) {
-        matching.add(country.code);
+        matching.add(country.iso3);
       }
     }
     result[constraint.id] = matching;

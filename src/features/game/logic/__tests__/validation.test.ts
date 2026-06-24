@@ -6,7 +6,7 @@ import { validateGuess } from "../validation";
 const countries = countriesJson as Country[];
 
 function byCode(code: string): Country {
-  const c = countries.find((c) => c.code === code);
+  const c = countries.find((c) => c.iso3 === code);
   if (!c) throw new Error(`Country not found: ${code}`);
   return c;
 }

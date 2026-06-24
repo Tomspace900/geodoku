@@ -1,4 +1,4 @@
-import { getCountryByCode } from "@/features/countries/lib/search";
+import { getCountryByIso3 } from "@/features/countries/lib/search";
 import {
   computeGridScore,
   computeOriginalityScore,
@@ -53,7 +53,7 @@ function getUnlockedAchievement(
   if (hasUltra) {
     const ultraCell = filled.find((c) => c.rarityTier === "ultra");
     const country = ultraCell
-      ? getCountryByCode(ultraCell.countryCode)
+      ? getCountryByIso3(ultraCell.countryCode)
       : undefined;
     return {
       id: "elite_collector",
@@ -71,7 +71,7 @@ function getUnlockedAchievement(
   if (state.status === "won") {
     const continents = new Set(
       filled
-        .map((c) => getCountryByCode(c.countryCode)?.continent)
+        .map((c) => getCountryByIso3(c.countryCode)?.continent)
         .filter((c) => c !== undefined),
     );
     if (continents.size >= 3) {

@@ -13,7 +13,7 @@
     "dev": "vite --host",
     "convex:dev": "convex dev",
     "build": "tsc --noEmit && vite build",
-    "build:countries": "tsx scripts/prod/build-countries.ts",
+    "build:countries": "tsx --env-file-if-exists=.env.local scripts/prod/build-countries.ts",
     "analyze:pool": "tsx scripts/prod/analyze-pool.ts",
     "analyze:observed": "tsx --env-file-if-exists=.env.local scripts/prod/analyze-observed-difficulty.ts",
     "simulate:scheduling": "tsx scripts/simulate-scheduling.ts",

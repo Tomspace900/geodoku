@@ -1,4 +1,4 @@
-import { getCountryByCode } from "@/features/countries/lib/search";
+import { getCountryByIso3 } from "@/features/countries/lib/search";
 import { RarityLegend } from "@/features/game/components/RarityLegend";
 import {
   MIN_CELL_TOTAL_GUESSES_FOR_SHARE_PERCENT,
@@ -26,8 +26,8 @@ function compareIsoByLocalizedName(
   a: string,
   b: string,
 ): number {
-  const na = getCountryByCode(a)?.names[locale] ?? a;
-  const nb = getCountryByCode(b)?.names[locale] ?? b;
+  const na = getCountryByIso3(a)?.names[locale] ?? a;
+  const nb = getCountryByIso3(b)?.names[locale] ?? b;
   return na.localeCompare(nb, locale);
 }
 
@@ -100,7 +100,7 @@ export function SolutionGrid({
               );
 
               function countryChip(iso: string, tier: RarityTier | null) {
-                const country = getCountryByCode(iso);
+                const country = getCountryByIso3(iso);
                 const countryName = country ? country.names[locale] : iso;
                 const isUserPick =
                   userCell?.status === "filled" && userCell.countryCode === iso;

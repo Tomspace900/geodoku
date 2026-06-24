@@ -768,3 +768,68 @@ export const scheduleGridForDate = action({
     });
   },
 });
+
+/**
+ * Programme une candidate précise (grille prédite) sur une date future, en
+ * verrouillant exactement la grille affichée. Protected by adminToken.
+ */
+export const scheduleCandidateForDate = action({
+  args: {
+    adminToken: v.string(),
+    date: v.string(),
+    candidateId: v.id("gridCandidates"),
+  },
+  handler: async (ctx, args): Promise<{ date: string } | null> => {
+    checkAdminToken(args.adminToken);
+    return await ctx.runMutation(internal.scheduling.scheduleCandidateForDate, {
+      date: args.date,
+      candidateId: args.candidateId,
+    });
+  },
+});
+
+/**
+ * Déprogramme une grille future : la retire du calendrier et remet sa candidate
+ * dans le pool (le scheduler pourra la re-sélectionner). Protected by adminToken.
+ */
+export const unscheduleGrid = action({
+  args: { adminToken: v.string(), date: v.string() },
+  handler: async (ctx, args): Promise<{ date: string } | null> => {
+    checkAdminToken(args.adminToken);
+    return await ctx.runMutation(internal.scheduling.unscheduleGridForDate, {
+      date: args.date,
+    });
+  },
+});
+
+/**
+ * Supprime définitivement une grille future programmée (retirée du calendrier et
+ * du pool). Protected by adminToken.
+ */
+export const deleteScheduledGrid = action({
+  args: { adminToken: v.string(), date: v.string() },
+  handler: async (ctx, args): Promise<{ date: string } | null> => {
+    checkAdminToken(args.adminToken);
+    return await ctx.runMutation(
+      internal.scheduling.deleteScheduledGridForDate,
+      { date: args.date },
+    );
+  },
+});
+
+/**
+ * Supprime une candidate disponible (grille prédite) du pool.
+ * Protected by adminToken.
+ */
+export const deletePoolCandidate = action({
+  args: { adminToken: v.string(), candidateId: v.id("gridCandidates") },
+  handler: async (
+    ctx,
+    args,
+  ): Promise<{ candidateId: Id<"gridCandidates"> } | null> => {
+    checkAdminToken(args.adminToken);
+    return await ctx.runMutation(internal.scheduling.deletePoolCandidate, {
+      candidateId: args.candidateId,
+    });
+  },
+});

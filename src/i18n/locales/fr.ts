@@ -77,6 +77,11 @@ export const fr = {
     title: "Changelog",
     backToGame: "Retour au jeu",
     entries: {
+      countryDataRefreshDate: "24 juin 2026",
+      countryDataRefreshTitle:
+        "Recherche affin\u00E9e, grilles plus vari\u00E9es",
+      countryDataRefreshBody:
+        "La recherche tol\u00E8re mieux les tirets et les variantes usuelles quelle que soit la langue du type \u00AB\u00A0Angleterre\u00A0\u00BB, \u00AB\u00A0Hollande\u00A0\u00BB, etc. J'ai aussi fait un gros travail de refonte de la planification des grilles pour limiter la redondance\u00A0: moins de r\u00E9p\u00E9titions d'un jour \u00E0 l'autre, des combinaisons plus diversifi\u00E9es. Quelques corrections et mises \u00E0 jour sur les donn\u00E9es pays en coulisses.",
       constraintsRefreshDate: "12 juin 2026",
       constraintsRefreshTitle: "Plus de contraintes, plus parlantes",
       constraintsRefreshBody:

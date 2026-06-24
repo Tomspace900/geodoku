@@ -51,7 +51,7 @@ const COUNTRIES = countriesJson as Country[];
 const LABEL_BY_ID: Record<string, string> = {};
 for (const c of CONSTRAINTS) LABEL_BY_ID[c.id] = translate("en", c.labelKey);
 const NAME_BY_CODE: Record<string, string> = {};
-for (const c of COUNTRIES) NAME_BY_CODE[c.code] = c.names.en;
+for (const c of COUNTRIES) NAME_BY_CODE[c.iso3] = c.names.en;
 
 const labelFor = (id: string): string => LABEL_BY_ID[id] ?? id;
 const nameFor = (code: string): string => NAME_BY_CODE[code] ?? code;
