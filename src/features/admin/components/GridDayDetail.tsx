@@ -1,5 +1,8 @@
+import { Button } from "@/components/ui/button";
 import { gridEaseScore100 } from "@/features/countries/lib/popularity";
-import { useQuery } from "convex/react";
+import { useAction, useQuery } from "convex/react";
+import { CalendarCheck, Trash2, Undo2 } from "lucide-react";
+import { useState } from "react";
 import { api } from "../../../../convex/_generated/api";
 import type { Id } from "../../../../convex/_generated/dataModel";
 import {
@@ -10,6 +13,8 @@ import {
   struggleRate,
 } from "../logic/analytics";
 import { formatGridDateHeadingFr } from "../logic/display";
+import { isUnauthorizedError } from "../logic/errors";
+import { ConfirmDialog } from "./ConfirmDialog";
 import { GridHeaderStatDelta, GridHeaderStatKind } from "./GridHeaderStat";
 import { GridPreview, type ObservedCell } from "./GridPreview";
 import { StatLegend } from "./StatGlyph";
@@ -33,6 +38,7 @@ export type DayView =
 
 type Props = {
   token: string;
+  clearToken: () => void;
   selectedDate: string | null;
   view: DayView | null;
 };
@@ -215,9 +221,11 @@ function ObservedDetail({
 
 function FutureDetail({
   token,
+  clearToken,
   view,
 }: {
   token: string;
+  clearToken: () => void;
   view: Extract<DayView, { kind: "future" }>;
 }) {
   const scheduledDetail = useQuery(
@@ -274,14 +282,155 @@ function FutureDetail({
             />
           )}
         </div>
+
+        <FutureGridActions token={token} clearToken={clearToken} view={view} />
       </div>
     </DetailShell>
   );
 }
 
+// ─── Actions sur une grille future ──────────────────────────────────────────────
+
+type PendingAction = "schedule" | "unschedule" | "delete";
+
+const DIALOG_COPY: Record<
+  PendingAction,
+  (isScheduled: boolean) => { title: string; description: string }
+> = {
+  schedule: () => ({
+    title: "Planifier cette grille ?",
+    description:
+      "La grille prédite est verrouillée pour cette date et retirée du pool des grilles disponibles. Tu pourras la déprogrammer ensuite.",
+  }),
+  unschedule: () => ({
+    title: "Déprogrammer la grille ?",
+    description:
+      "La grille est retirée du calendrier et remise dans le pool. Elle n'est pas perdue, elle pourra être re-planifiée pour une date ultérieure.",
+  }),
+  delete: (isScheduled) => ({
+    title: "Supprimer la grille du pool ?",
+    description: isScheduled
+      ? "La grille est retirée du calendrier et définitivement supprimée du pool. Action irréversible."
+      : "La grille est définitivement supprimée du pool. Action irréversible.",
+  }),
+};
+
+/**
+ * Boutons de gestion d'une grille future. Une grille **prédite** peut être
+ * planifiée (verrouillée pour le jour) ou supprimée du pool ; une grille
+ * **programmée** peut être déprogrammée (retour au pool) ou supprimée. Chaque
+ * action est confirmée via `ConfirmDialog`.
+ */
+function FutureGridActions({
+  token,
+  clearToken,
+  view,
+}: {
+  token: string;
+  clearToken: () => void;
+  view: Extract<DayView, { kind: "future" }>;
+}) {
+  const scheduleCandidate = useAction(api.grids.scheduleCandidateForDate);
+  const unscheduleGrid = useAction(api.grids.unscheduleGrid);
+  const deleteScheduledGrid = useAction(api.grids.deleteScheduledGrid);
+  const deletePoolCandidate = useAction(api.grids.deletePoolCandidate);
+
+  const [pending, setPending] = useState<PendingAction | null>(null);
+  const [busy, setBusy] = useState(false);
+
+  const isScheduled = view.status === "scheduled";
+
+  async function run(action: () => Promise<unknown>) {
+    setBusy(true);
+    try {
+      await action();
+      setPending(null);
+    } catch (err) {
+      if (isUnauthorizedError(err)) clearToken();
+    } finally {
+      setBusy(false);
+    }
+  }
+
+  function confirmPending() {
+    if (pending === "schedule" && view.candidateId) {
+      const candidateId = view.candidateId;
+      run(() =>
+        scheduleCandidate({ adminToken: token, date: view.date, candidateId }),
+      );
+      return;
+    }
+    if (pending === "unschedule") {
+      run(() => unscheduleGrid({ adminToken: token, date: view.date }));
+      return;
+    }
+    if (pending === "delete") {
+      if (isScheduled) {
+        run(() => deleteScheduledGrid({ adminToken: token, date: view.date }));
+      } else if (view.candidateId) {
+        const candidateId = view.candidateId;
+        run(() => deletePoolCandidate({ adminToken: token, candidateId }));
+      }
+    }
+  }
+
+  const copy = pending ? DIALOG_COPY[pending](isScheduled) : null;
+
+  return (
+    <div className="flex flex-wrap items-center justify-end gap-2 pt-1">
+      {isScheduled ? (
+        <Button
+          type="button"
+          variant="secondary"
+          size="sm"
+          onClick={() => setPending("unschedule")}
+        >
+          <Undo2 />
+          Déprogrammer
+        </Button>
+      ) : (
+        <Button
+          type="button"
+          variant="secondary"
+          size="sm"
+          onClick={() => setPending("schedule")}
+        >
+          <CalendarCheck />
+          Planifier
+        </Button>
+      )}
+      <Button
+        type="button"
+        variant="ghost"
+        size="sm"
+        onClick={() => setPending("delete")}
+      >
+        <Trash2 />
+        Supprimer du pool
+      </Button>
+
+      <ConfirmDialog
+        open={pending !== null}
+        onOpenChange={(open) => {
+          if (!open) setPending(null);
+        }}
+        title={copy?.title ?? ""}
+        description={copy?.description ?? ""}
+        busy={busy}
+        onConfirm={confirmPending}
+      />
+    </div>
+  );
+}
+
 // ─── Aiguillage ─────────────────────────────────────────────────────────────────
 
-export function GridDayDetail({ token, selectedDate, view }: Props) {
+export function GridDayDetail({
+  token,
+  clearToken,
+  selectedDate,
+  view,
+}: Props) {
   if (!selectedDate) {
     return (
       <DetailMessage>
@@ -302,5 +451,5 @@ export function GridDayDetail({ token, selectedDate, view }: Props) {
     return <ObservedDetail token={token} view={view} />;
   }
 
-  return <FutureDetail token={token} view={view} />;
+  return <FutureDetail token={token} clearToken={clearToken} view={view} />;
 }

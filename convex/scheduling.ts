@@ -12,7 +12,7 @@
  * `autoRefillPool`) via le scheduler — jamais de génération inline ici, pour
  * garder ce module léger.
  */
-import { v } from "convex/values";
+import { ConvexError, v } from "convex/values";
 import { internal } from "./_generated/api";
 import type { Id } from "./_generated/dataModel";
 import type { MutationCtx } from "./_generated/server";
@@ -95,5 +95,124 @@ export const assignGridForDate = internalMutation({
   handler: async (ctx, args) => {
     const ok = await assignForDate(ctx, args.date);
     return ok ? { date: args.date } : null;
+  },
+});
+
+/**
+ * Programme une candidate **précise** sur une date future (override admin
+ * « Planifier » depuis l'aperçu prédit). Contrairement à `assignGridForDate`,
+ * qui laisse le scheduler choisir, on verrouille la candidate affichée
+ * (WYSIWYG). Idempotent : early-return si la date est déjà programmée.
+ */
+export const scheduleCandidateForDate = internalMutation({
+  args: { date: v.string(), candidateId: v.id("gridCandidates") },
+  handler: async (ctx, args) => {
+    if (args.date < todayUTC()) {
+      throw new ConvexError("Cannot schedule a past grid");
+    }
+    const existing = await ctx.db
+      .query("grids")
+      .withIndex("by_date", (q) => q.eq("date", args.date))
+      .unique();
+    if (existing) return null;
+
+    const candidate = await ctx.db.get(args.candidateId);
+    if (!candidate || candidate.status !== "available") {
+      throw new ConvexError("Candidate is not available");
+    }
+
+    await ctx.db.patch(args.candidateId, {
+      status: "used",
+      usedAt: Date.now(),
+      usedForDate: args.date,
+    });
+    await ctx.db.insert("grids", {
+      date: args.date,
+      rows: candidate.rows,
+      cols: candidate.cols,
+      countryPool: candidate.metadata.countryPool,
+      candidateId: args.candidateId,
+    });
+    return { date: args.date };
+  },
+});
+
+/** Supprime une candidate du pool ainsi que son satellite `gridAnswers` (1-to-1). */
+async function deleteCandidateAndSatellite(
+  ctx: MutationCtx,
+  candidateId: Id<"gridCandidates">,
+): Promise<void> {
+  const satellite = await ctx.db
+    .query("gridAnswers")
+    .withIndex("by_candidate", (q) => q.eq("candidateId", candidateId))
+    .unique();
+  if (satellite) await ctx.db.delete(satellite._id);
+  await ctx.db.delete(candidateId);
+}
+
+/**
+ * Déprogramme la grille d'une date **future** : retire la ligne `grids` et remet
+ * la candidate dans le pool (`available`, marqueurs d'usage effacés). Le
+ * scheduler pourra la re-sélectionner. Refuse les dates passées ou active
+ * (aujourd'hui) — une partie peut être en cours.
+ */
+export const unscheduleGridForDate = internalMutation({
+  args: { date: v.string() },
+  handler: async (ctx, args) => {
+    if (args.date <= todayUTC()) {
+      throw new ConvexError("Cannot unschedule a past or active grid");
+    }
+    const grid = await ctx.db
+      .query("grids")
+      .withIndex("by_date", (q) => q.eq("date", args.date))
+      .unique();
+    if (!grid) return null;
+    await ctx.db.delete(grid._id);
+    await ctx.db.patch(grid.candidateId, {
+      status: "available",
+      usedAt: undefined,
+      usedForDate: undefined,
+    });
+    return { date: args.date };
+  },
+});
+
+/**
+ * Supprime définitivement la grille programmée d'une date **future** : ligne
+ * `grids` + candidate + satellite. La candidate ne reviendra jamais dans le
+ * pool. Refuse les dates passées ou active.
+ */
+export const deleteScheduledGridForDate = internalMutation({
+  args: { date: v.string() },
+  handler: async (ctx, args) => {
+    if (args.date <= todayUTC()) {
+      throw new ConvexError("Cannot delete a past or active grid");
+    }
+    const grid = await ctx.db
+      .query("grids")
+      .withIndex("by_date", (q) => q.eq("date", args.date))
+      .unique();
+    if (!grid) return null;
+    await ctx.db.delete(grid._id);
+    await deleteCandidateAndSatellite(ctx, grid.candidateId);
+    return { date: args.date };
+  },
+});
+
+/**
+ * Supprime une candidate « disponible » du pool (grille prédite jamais
+ * programmée) + son satellite. Refuse une candidate `used` : passer par
+ * `deleteScheduledGridForDate` pour retirer une grille déjà programmée.
+ */
+export const deletePoolCandidate = internalMutation({
+  args: { candidateId: v.id("gridCandidates") },
+  handler: async (ctx, args) => {
+    const candidate = await ctx.db.get(args.candidateId);
+    if (!candidate) return null;
+    if (candidate.status !== "available") {
+      throw new ConvexError("Candidate is not available");
+    }
+    await deleteCandidateAndSatellite(ctx, args.candidateId);
+    return { candidateId: args.candidateId };
   },
 });
