@@ -77,7 +77,7 @@ export const fr = {
     title: "Changelog",
     backToGame: "Retour au jeu",
     entries: {
-      countryDataRefreshDate: "24 juin 2026",
+      countryDataRefreshDate: "25 juin 2026",
       countryDataRefreshTitle:
         "Recherche affin\u00E9e, grilles plus vari\u00E9es",
       countryDataRefreshBody:
