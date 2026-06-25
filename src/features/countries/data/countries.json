@@ -182,7 +182,7 @@
       }
     ],
     "drivingSide": "right",
-    "geoTags": ["middle_east"],
+    "geoTags": ["middle_east", "capital_not_largest"],
     "regime": "monarchy",
     "physicalFeatures": ["has_desert", "indian_ocean_coast"],
     "wikipediaMonthlyViews": 335642,
@@ -332,7 +332,12 @@
     "drivingSide": "left",
     "geoTags": ["drives_on_left", "capital_not_largest"],
     "regime": "monarchy",
-    "physicalFeatures": ["has_desert", "pacific_coast", "indian_ocean_coast"],
+    "physicalFeatures": [
+      "has_desert",
+      "rainforest",
+      "pacific_coast",
+      "indian_ocean_coast"
+    ],
     "wikipediaMonthlyViews": 336277,
     "popularityIndex": 0.9438775510204082
   },
@@ -705,7 +710,7 @@
     "drivingSide": "left",
     "geoTags": ["drives_on_left"],
     "regime": "monarchy",
-    "physicalFeatures": ["caribbean_coast"],
+    "physicalFeatures": ["caribbean_coast", "atlantic_coast"],
     "wikipediaMonthlyViews": 109626,
     "popularityIndex": 0.336734693877551
   },
@@ -1135,7 +1140,7 @@
     "flagColors": ["red", "white"],
     "flagSymbols": ["plant"],
     "flagLayout": ["vertical_stripes"],
-    "events": ["summer_olympics_host"],
+    "events": ["fifa_wc_host", "summer_olympics_host"],
     "memberships": ["commonwealth", "g20", "g7", "nato", "oecd"],
     "capitals": [
       {
@@ -1281,7 +1286,7 @@
       }
     ],
     "drivingSide": "right",
-    "geoTags": [],
+    "geoTags": ["capital_not_largest"],
     "regime": "republic",
     "physicalFeatures": ["peak_over_5000m", "has_desert", "pacific_coast"],
     "wikipediaMonthlyViews": 396726,
@@ -1320,7 +1325,7 @@
     "drivingSide": "right",
     "geoTags": ["capital_not_largest"],
     "regime": "republic",
-    "physicalFeatures": ["atlantic_coast"],
+    "physicalFeatures": ["rainforest", "atlantic_coast"],
     "wikipediaMonthlyViews": 89148,
     "popularityIndex": 0.22959183673469388
   },
@@ -1787,7 +1792,7 @@
     "drivingSide": "right",
     "geoTags": [],
     "regime": "republic",
-    "physicalFeatures": [],
+    "physicalFeatures": ["has_desert", "indian_ocean_coast"],
     "wikipediaMonthlyViews": 69953,
     "popularityIndex": 0.12755102040816327
   },
@@ -2014,7 +2019,11 @@
     "drivingSide": "right",
     "geoTags": ["middle_east"],
     "regime": "republic",
-    "physicalFeatures": ["mediterranean_coast", "has_desert"],
+    "physicalFeatures": [
+      "mediterranean_coast",
+      "has_desert",
+      "indian_ocean_coast"
+    ],
     "wikipediaMonthlyViews": 177601,
     "popularityIndex": 0.6887755102040817
   },
@@ -2051,7 +2060,7 @@
     "drivingSide": "right",
     "geoTags": [],
     "regime": "republic",
-    "physicalFeatures": [],
+    "physicalFeatures": ["has_desert", "indian_ocean_coast"],
     "wikipediaMonthlyViews": 126579,
     "popularityIndex": 0.44387755102040816
   },
@@ -2288,7 +2297,11 @@
     "drivingSide": "right",
     "geoTags": [],
     "regime": "republic",
-    "physicalFeatures": ["mediterranean_coast", "atlantic_coast"],
+    "physicalFeatures": [
+      "mediterranean_coast",
+      "atlantic_coast",
+      "indian_ocean_coast"
+    ],
     "wikipediaMonthlyViews": 271332,
     "popularityIndex": 0.9030612244897959
   },
@@ -2482,7 +2495,7 @@
     "drivingSide": "right",
     "geoTags": [],
     "regime": "republic",
-    "physicalFeatures": ["atlantic_coast"],
+    "physicalFeatures": ["rainforest", "atlantic_coast"],
     "wikipediaMonthlyViews": 122203,
     "popularityIndex": 0.40816326530612246
   },
@@ -3006,7 +3019,7 @@
       }
     ],
     "drivingSide": "left",
-    "geoTags": ["drives_on_left"],
+    "geoTags": ["drives_on_left", "capital_not_largest"],
     "regime": "republic",
     "physicalFeatures": [
       "peak_over_5000m",
@@ -3789,7 +3802,7 @@
     "drivingSide": "right",
     "geoTags": [],
     "regime": "republic",
-    "physicalFeatures": ["atlantic_coast"],
+    "physicalFeatures": ["rainforest", "atlantic_coast"],
     "wikipediaMonthlyViews": 131631,
     "popularityIndex": 0.4744897959183674
   },
@@ -4517,7 +4530,7 @@
     "drivingSide": "right",
     "geoTags": ["capital_not_largest"],
     "regime": "republic",
-    "physicalFeatures": ["rainforest", "indian_ocean_coast"],
+    "physicalFeatures": ["peak_over_5000m", "rainforest", "indian_ocean_coast"],
     "wikipediaMonthlyViews": 185934,
     "popularityIndex": 0.7295918367346939
   },
@@ -4900,7 +4913,7 @@
     "drivingSide": "right",
     "geoTags": ["capital_not_largest"],
     "regime": "republic",
-    "physicalFeatures": ["atlantic_coast"],
+    "physicalFeatures": ["rainforest", "atlantic_coast"],
     "wikipediaMonthlyViews": 196318,
     "popularityIndex": 0.7551020408163265
   },
@@ -5852,9 +5865,9 @@
       }
     ],
     "drivingSide": "right",
-    "geoTags": [],
+    "geoTags": ["capital_not_largest"],
     "regime": "republic",
-    "physicalFeatures": ["has_desert"],
+    "physicalFeatures": ["has_desert", "indian_ocean_coast"],
     "wikipediaMonthlyViews": 142063,
     "popularityIndex": 0.5153061224489796
   },
@@ -6117,7 +6130,7 @@
     "drivingSide": "right",
     "geoTags": [],
     "regime": "republic",
-    "physicalFeatures": ["indian_ocean_coast"],
+    "physicalFeatures": ["equator_crosser", "has_desert", "indian_ocean_coast"],
     "wikipediaMonthlyViews": 157943,
     "popularityIndex": 0.5918367346938775
   },
@@ -7173,6 +7186,7 @@
     "physicalFeatures": [
       "peak_over_5000m",
       "has_desert",
+      "rainforest",
       "atlantic_coast",
       "pacific_coast"
     ],

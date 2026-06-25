@@ -84,6 +84,25 @@ const MAX_MISSING_PAGEVIEWS = 2;
 /** Throttle between Wikimedia pageview requests (avoids burst 429 rate limits). */
 const PAGEVIEW_REQUEST_GAP_MS = 250;
 
+function log(step: string, message: string): void {
+  console.log(`[${step}] ${message}`);
+}
+
+function warn(step: string, message: string): void {
+  console.warn(`[${step}] ${message}`);
+}
+
+function formatDuration(ms: number): string {
+  const totalSec = Math.round(ms / 1000);
+  const min = Math.floor(totalSec / 60);
+  const sec = totalSec % 60;
+  return min > 0 ? `${min}m ${sec}s` : `${sec}s`;
+}
+
+function formatViews(views: number): string {
+  return views.toLocaleString("en-US");
+}
+
 // ─── Network ──────────────────────────────────────────────────────────────────
 
 type RestCountriesV5Object = Record<string, unknown>;
@@ -332,12 +351,15 @@ function restCountriesAuthHeader(): string {
 }
 
 async function fetchRcEnrichment(): Promise<Map<string, RcEnrichment>> {
+  log("REST Countries", "Fetching enrichment…");
   const authHeader = restCountriesAuthHeader();
   const rows: RcEnrichRow[] = [];
   const limit = 100;
   let offset = 0;
+  let page = 0;
 
   while (true) {
+    page += 1;
     const url = new URL(REST_COUNTRIES_BASE_URL);
     url.searchParams.set("response_fields", REST_COUNTRIES_FIELDS.join(","));
     url.searchParams.set("limit", String(limit));
@@ -361,6 +383,11 @@ async function fetchRcEnrichment(): Promise<Map<string, RcEnrichment>> {
       if (row) rows.push(row);
     }
 
+    log(
+      "REST Countries",
+      `Page ${page}: ${objects.length} rows (${rows.length} total)`,
+    );
+
     if (objects.length === 0 || payload.data?.meta?.more !== true) break;
     offset += payload.data.meta.limit ?? limit;
   }
@@ -368,6 +395,7 @@ async function fetchRcEnrichment(): Promise<Map<string, RcEnrichment>> {
   if (rows.length === 0) {
     throw new Error("REST Countries: expected non-empty data.objects");
   }
+  log("REST Countries", `Done — ${rows.length} countries`);
   return rcEnrichmentMapFromRows(rows);
 }
 
@@ -426,6 +454,10 @@ async function fetchCountryPageviews(
       if (attempt === maxRetries) {
         return { kind: "exhausted", detail: "HTTP 429 after retries" };
       }
+      log(
+        "Wikipedia",
+        `Rate limited on ${title}, retry ${attempt + 1}/${maxRetries}`,
+      );
       const retryAfter = response.headers.get("retry-after");
       const fromHeaderSec = retryAfter
         ? Number.parseFloat(retryAfter)
@@ -517,6 +549,10 @@ async function fetchPageviewsByCountryCode(
   const range = getWikipediaRange();
   const pageviews = new Map<string, number>();
   const failures: CountryPageviewFailure[] = [];
+  const total = countries.length;
+  const startedAt = Date.now();
+
+  log("Wikipedia", `Fetching pageviews for ${total} countries…`);
 
   for (let i = 0; i < countries.length; i++) {
     const country = countries[i];
@@ -527,18 +563,27 @@ async function fetchPageviewsByCountryCode(
 
     if (outcome.kind === "ok") {
       pageviews.set(country.iso3, outcome.views);
+      log(
+        "Wikipedia",
+        `${i + 1}/${total} ${country.iso3} — ${formatViews(outcome.views)} views/month`,
+      );
     } else if (outcome.kind === "not_found") {
       failures.push({
         iso3: country.iso3,
         title,
         reason: "404 (article not found or no metrics)",
       });
+      log("Wikipedia", `${i + 1}/${total} ${country.iso3} — article not found`);
     } else {
       failures.push({
         iso3: country.iso3,
         title,
         reason: outcome.detail,
       });
+      log(
+        "Wikipedia",
+        `${i + 1}/${total} ${country.iso3} — failed: ${outcome.detail}`,
+      );
     }
 
     if (i + 1 < countries.length) {
@@ -547,6 +592,11 @@ async function fetchPageviewsByCountryCode(
       );
     }
   }
+
+  log(
+    "Wikipedia",
+    `Done in ${formatDuration(Date.now() - startedAt)} — ${pageviews.size} ok, ${failures.length} failed`,
+  );
 
   return { pageviews, failures };
 }
@@ -559,10 +609,6 @@ function latitudeFromWc(c: WCEntry): number {
     throw new Error(`${c.cca3}: missing or invalid latlng`);
   }
   return lat;
-}
-
-function formatCodes(codes: string[]): string {
-  return codes.length > 0 ? codes.join(", ") : "none";
 }
 
 function sameCodeSet(a: string[], b: string[]): boolean {
@@ -585,13 +631,11 @@ function auditSourceCorrectionDifferences(
     if (!playableCodes.has(code) || !correction.borders) continue;
     const apiBorders = rcByCca3.get(code)?.borders;
     if (!apiBorders) {
-      differences.push(`${code} borders correction: no REST Countries borders`);
+      differences.push(`${code}: borders missing from API`);
       continue;
     }
     if (!sameCodeSet(correction.borders, apiBorders)) {
-      differences.push(
-        `${code} borders correction differs: curated [${formatCodes([...correction.borders].sort())}], api [${formatCodes([...apiBorders].sort())}]`,
-      );
+      differences.push(`${code}: borders differ`);
     }
   }
 
@@ -613,6 +657,8 @@ function requireRestEnrichment(
 
 async function main(): Promise<void> {
   const root = process.cwd();
+  const startedAt = Date.now();
+  log("build:countries", "Starting build…");
 
   const rcByCca3 = await fetchRcEnrichment();
 
@@ -620,11 +666,13 @@ async function main(): Promise<void> {
   const wikiTitles = countryPatches.wikipediaTitlesByIso3;
 
   // 1. Load curated flag truth table
+  log("Flag data", "Loading flagData.json…");
   const flagData = JSON.parse(
     readFileSync(resolve(root, "scripts/prod/flagData.json"), "utf-8"),
   ) as FlagData;
 
   // 2. Filter world-countries to UN members + explicit inclusions
+  log("World-countries", "Filtering UN members and explicit inclusions…");
   const wc = rawWorldCountries as unknown as WCEntry[];
   const filtered = wc.filter((c) => c.unMember || EXPLICIT_CODES.has(c.cca3));
   const playableCodes = new Set([
@@ -637,15 +685,13 @@ async function main(): Promise<void> {
     playableCodes,
   );
   if (sourceCorrectionDiffs.length > 0) {
-    console.warn("REST Countries differs from curated source corrections:");
     for (const diff of sourceCorrectionDiffs) {
-      console.warn(`  ${diff}`);
+      warn("Source audit", diff);
     }
-  } else {
-    console.log("✓ REST Countries source correction audit: no differences");
   }
 
   // 3. Transform to Country, merge REST Countries + gameplay fields, then corrections
+  log("Build records", "Building from world-countries and manual additions…");
   const fromWC: Country[] = filtered.map((c) => {
     const rc = requireRestEnrichment(c.cca3, rcByCca3);
     const pop = rc.population;
@@ -734,15 +780,15 @@ async function main(): Promise<void> {
   );
 
   const result: Country[] = [...fromWC, ...additions];
+  log("Build records", `${result.length} countries ready`);
 
   // 5. Enrich with Wikipedia pageviews-based popularity index
   const { pageviews: pageviewsByCode, failures: pageviewFailures } =
     await fetchPageviewsByCountryCode(result, wikiTitles);
 
   if (pageviewFailures.length > 0) {
-    console.warn("Wikipedia pageviews missing or failed:");
     for (const f of pageviewFailures) {
-      console.warn(`  ${f.iso3} (${f.title}): ${f.reason}`);
+      warn("Wikipedia", `${f.iso3}: ${f.reason}`);
     }
   }
 
@@ -752,9 +798,11 @@ async function main(): Promise<void> {
     );
   }
 
+  log("Popularity", "Assigning tiers from pageviews…");
   assignPopularity(result, pageviewsByCode);
 
   // 6. Validate
+  log("Validation", "Checking records…");
   if (result.length !== EXPECTED_COUNT) {
     throw new Error(
       `Expected ${EXPECTED_COUNT} countries, got ${result.length}`,
@@ -864,10 +912,15 @@ async function main(): Promise<void> {
 
   // 8. Write
   const outPath = resolve(root, "src/features/countries/data/countries.json");
+  log("Output", "Writing countries.json…");
   writeFileSync(outPath, `${JSON.stringify(result, null, 2)}\n`, "utf-8");
-  console.log(`✓ ${result.length} countries → ${outPath}`);
-  console.log(
-    `✓ Wikipedia popularity: ${pageviewsByCode.size} fetched, ${pageviewFailures.length} median fallback`,
+  log(
+    "Output",
+    `Done in ${formatDuration(Date.now() - startedAt)} — ${result.length} countries written`,
+  );
+  log(
+    "Output",
+    `Pageviews: ${pageviewsByCode.size} fetched, ${pageviewFailures.length} fallback`,
   );
 }
 
