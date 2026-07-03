@@ -40,6 +40,7 @@ export const fr = {
     privacy: "Confidentialité",
     changelog: "Changelog",
     changelogNew: "New",
+    survey: "Donner mon avis",
     copyright: "©\u00A0{year}\u00A0Geodoku",
   },
   legal: {

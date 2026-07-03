@@ -77,6 +77,12 @@ const LEGACY_RENAMES: ReadonlyArray<[string, string]> = [
 const LEGACY_GAME_KEY = "geodoku.currentGame";
 const LEGACY_ENDED_PREFIX = "geodoku:ended:";
 const LEGACY_RATED_PREFIX = "geodoku:rated:";
+export const LEGACY_SURVEY_DISMISSED_DATE = "2026-07-03";
+const LEGACY_SURVEY_DONE_VALUE = "1";
+const LEGACY_SURVEY_DISMISSED_VALUE = JSON.stringify({
+  kind: "dismissed",
+  date: LEGACY_SURVEY_DISMISSED_DATE,
+});
 
 /**
  * Migre la partie persistée de l'ancien format (clé `geodoku.currentGame`,
@@ -107,6 +113,12 @@ function migrateGame(ls: Storage): void {
   ls.removeItem(LEGACY_GAME_KEY);
 }
 
+function migrateSurveyDone(ls: Storage): void {
+  if (ls.getItem(STORAGE_KEYS.surveyDone) === LEGACY_SURVEY_DONE_VALUE) {
+    ls.setItem(STORAGE_KEYS.surveyDone, LEGACY_SURVEY_DISMISSED_VALUE);
+  }
+}
+
 /**
  * Migration one-shot exécutée une fois au démarrage, avant tout rendu React :
  * renomme les clés historiques vers le namespace `geodoku:*` et purge les flags
@@ -124,6 +136,7 @@ export function migrateLegacyStorage(): void {
       ls.removeItem(oldKey);
     });
 
+    migrateSurveyDone(ls);
     migrateGame(ls);
 
     // Purge des flags par-date (repliés dans `geodoku:game`) — croissance non bornée.

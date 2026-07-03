@@ -225,7 +225,7 @@ Complémentaire à Convex (`gridFeedback`/`dailyStats` = santé grilles ; PostHo
 | Partie | `game_started`, `session_resumed`, `cell_opened`, `guess_submitted`, `guess_failed`, `game_completed` |
 | Saisie | `guess_modal_closed` |
 | Résultat | `result_screen_viewed`, `result_shared`, `difficulty_rated`, `achievement_unlocked`, `solution_viewed` |
-| UI | `how_to_play_*`, `locale_changed`, `footer_link_clicked`, `survey_link_clicked` / `survey_dismissed` (prop `source`: `result_screen`/`solution_screen` ; banderole sondage post-partie via `SurveyCta` — écran de résultat sous le partage + écran de solution — gated par feature flag PostHog `survey_active`, masquée après clic ou fermeture via `geodoku:survey-done`) |
+| UI | `how_to_play_*`, `locale_changed`, `footer_link_clicked`, `survey_link_clicked` / `survey_dismissed` (prop `source`: `result_screen`/`solution_screen`/`footer` ; banderole sondage post-partie via `SurveyCta` — écran de résultat sous le partage + écran de solution — gated par feature flag PostHog `survey_active` ; `geodoku:survey-done` dissocie clic (masquage définitif, cf. `isSurveyDone`) et fermeture (masquage jour courant seulement, réapparaît le lendemain) ; lien permanent et discret dans `AppFooter` (même flag, toujours affiché quel que soit `geodoku:survey-done`, mais un clic dessus masque aussi la banderole) pour rester accessible aux joueurs qui changent d'avis après avoir fermé la banderole) |
 | Légal | `legal_page_viewed`, `legal_page_left` |
 | Fiabilité | `backend_timeout_shown`, `$exception` |
 
