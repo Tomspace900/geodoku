@@ -1,9 +1,16 @@
 import { LocaleSwitcher } from "@/features/game/components/LocaleSwitcher";
 import { isChangelogNewBadgeVisible } from "@/features/legal/logic/changelog";
-import { useT } from "@/i18n/LocaleContext";
+import { useLocale, useT } from "@/i18n/LocaleContext";
+import { safeSet } from "@/lib/storage";
+import {
+  SURVEY_DONE_KEY,
+  SURVEY_FLAG,
+  serializeSurveyDone,
+  surveyUrl,
+} from "@/lib/survey";
 import { cn } from "@/lib/utils";
-import { usePostHog } from "@posthog/react";
-import { Coffee, Mail } from "lucide-react";
+import { useFeatureFlagEnabled, usePostHog } from "@posthog/react";
+import { Coffee, Mail, MessageSquareText } from "lucide-react";
 
 const SUPPORT_EMAIL = "support.geodoku@gmail.com";
 const METRODOKU_URL = "https://metrodoku.fr";
@@ -22,10 +29,19 @@ function Middot() {
 export default function AppFooter({ className }: { className?: string }) {
   const posthog = usePostHog();
   const t = useT();
+  const { locale } = useLocale();
   const year = new Date().getFullYear();
+  const surveyActive = useFeatureFlagEnabled(SURVEY_FLAG);
 
   function trackFooterLink(link: FooterLink) {
     posthog?.capture("footer_link_clicked", { link });
+  }
+
+  function trackSurveyLink() {
+    // Un clic vaut réponse/décision prise : masque le CTA banderole partout,
+    // comme un clic depuis la banderole elle-même (cf. useSurveyCta).
+    safeSet(SURVEY_DONE_KEY, serializeSurveyDone({ kind: "clicked" }));
+    posthog?.capture("survey_link_clicked", { source: "footer", locale });
   }
 
   const linkClass =
@@ -100,6 +116,24 @@ export default function AppFooter({ className }: { className?: string }) {
               {t("footer.changelog")}
             </a>
           </span>
+          {surveyActive === true ? (
+            <>
+              <Middot />
+              <a
+                href={surveyUrl(locale)}
+                target="_blank"
+                rel="noopener noreferrer"
+                className={cn("inline-flex items-center gap-1", linkClass)}
+                onClick={trackSurveyLink}
+              >
+                <MessageSquareText
+                  className="size-3 sm:size-3.5"
+                  aria-hidden="true"
+                />
+                {t("footer.survey")}
+              </a>
+            </>
+          ) : null}
         </div>
 
         <div className="flex flex-wrap items-center justify-center gap-x-1.5 gap-y-0.5 font-sans text-[10px] text-on-surface-variant sm:gap-x-2 sm:gap-y-1 sm:text-xs">

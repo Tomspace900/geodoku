@@ -1,5 +1,5 @@
 import type { Locale } from "@/i18n/types";
-import { STORAGE_KEYS } from "@/lib/storage";
+import { LEGACY_SURVEY_DISMISSED_DATE, STORAGE_KEYS } from "@/lib/storage";
 
 /**
  * Pilotage du lien vers le sondage joueurs (Google Forms).
@@ -10,8 +10,42 @@ import { STORAGE_KEYS } from "@/lib/storage";
  */
 export const SURVEY_FLAG = "survey_active";
 
-/** Clé localStorage : posée au 1er clic OU à la fermeture du CTA sondage, le masque ensuite partout. */
+/**
+ * Clé localStorage mémorisant l'interaction avec le CTA sondage (JSON,
+ * cf. `SurveyDoneState`). Un clic masque le CTA définitivement (le joueur a
+ * déjà répondu ou décliné en connaissance de cause) ; une fermeture ne le
+ * masque que pour le jour courant — le CTA revient le jour suivant, pour ne
+ * pas perdre les joueurs qui ferment par réflexe sans avoir décidé.
+ */
 export const SURVEY_DONE_KEY = STORAGE_KEYS.surveyDone;
+
+export type SurveyDoneState =
+  | { kind: "clicked" }
+  | { kind: "dismissed"; date: string };
+
+export function serializeSurveyDone(state: SurveyDoneState): string {
+  return JSON.stringify(state);
+}
+
+/**
+ * `today` = date du jour (`YYYY-MM-DD`, cf. `todayUTC`), à fournir par l'appelant
+ * pour rester une fonction pure testable.
+ */
+export function isSurveyDone(raw: string | null, today: string): boolean {
+  if (raw === null) return false;
+  // Ancien format (avant dissociation clic/dismiss) : simple flag "1". La
+  // migration le réécrit au boot ; ce fallback garde le même comportement si la
+  // valeur brute arrive malgré tout jusqu'ici.
+  if (raw === "1") return today === LEGACY_SURVEY_DISMISSED_DATE;
+  try {
+    const parsed = JSON.parse(raw) as Partial<SurveyDoneState>;
+    if (parsed.kind === "clicked") return true;
+    if (parsed.kind === "dismissed") return parsed.date === today;
+  } catch {
+    // JSON corrompu → on ne bloque pas l'affichage du CTA.
+  }
+  return false;
+}
 
 const SURVEY_URLS: Record<Locale, string> = {
   fr: "https://docs.google.com/forms/d/e/1FAIpQLSdqabIpnGKutRdKbWfeZ1ZLa0vtjX_ImtdM4QVyXghSfPEaVw/viewform",

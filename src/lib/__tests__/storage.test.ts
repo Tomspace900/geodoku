@@ -1,5 +1,6 @@
 import { beforeEach, describe, expect, it } from "vitest";
 import {
+  LEGACY_SURVEY_DISMISSED_DATE,
   STORAGE_KEYS,
   migrateLegacyStorage,
   safeGet,
@@ -48,7 +49,9 @@ describe("migrateLegacyStorage — simple renames", () => {
     expect(safeGet(STORAGE_KEYS.clientId)).toBe("uuid-1");
     expect(safeGet(STORAGE_KEYS.howToPlay)).toBe("false");
     expect(safeGet(STORAGE_KEYS.locale)).toBe("fr");
-    expect(safeGet(STORAGE_KEYS.surveyDone)).toBe("1");
+    expect(safeGet(STORAGE_KEYS.surveyDone)).toBe(
+      JSON.stringify({ kind: "dismissed", date: LEGACY_SURVEY_DISMISSED_DATE }),
+    );
 
     expect(localStorage.getItem("geodoku.clientId")).toBeNull();
     expect(localStorage.getItem("geodoku.showHowToPlay")).toBeNull();
@@ -64,6 +67,16 @@ describe("migrateLegacyStorage — simple renames", () => {
 
     expect(safeGet(STORAGE_KEYS.locale)).toBe("en");
     expect(localStorage.getItem("geodoku.locale")).toBeNull();
+  });
+
+  it("rewrites the already-migrated survey flat flag as a dated dismiss", () => {
+    localStorage.setItem(STORAGE_KEYS.surveyDone, "1");
+
+    migrateLegacyStorage();
+
+    expect(safeGet(STORAGE_KEYS.surveyDone)).toBe(
+      JSON.stringify({ kind: "dismissed", date: LEGACY_SURVEY_DISMISSED_DATE }),
+    );
   });
 
   it("is idempotent and a no-op when nothing to migrate", () => {
