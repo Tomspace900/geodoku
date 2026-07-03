@@ -69,6 +69,16 @@ describe("searchCountries — FR", () => {
     const results = searchCountries("united states", "fr");
     expect(results.some((c) => c.iso3 === "USA")).toBe(true);
   });
+
+  it("finds DR Congo by alias 'RDC'", () => {
+    const results = searchCountries("rdc", "fr");
+    expect(results.some((c) => c.iso3 === "COD")).toBe(true);
+  });
+
+  it("finds Cape Verde by alias 'Cabo Verde'", () => {
+    const results = searchCountries("cabo verde", "fr");
+    expect(results.some((c) => c.iso3 === "CPV")).toBe(true);
+  });
 });
 
 describe("searchCountries — EN", () => {
@@ -95,6 +105,16 @@ describe("searchCountries — EN", () => {
   it("finds UK by alias 'UK'", () => {
     const results = searchCountries("UK", "en");
     expect(results.some((c) => c.iso3 === "GBR")).toBe(true);
+  });
+
+  it("finds UK by alias 'England'", () => {
+    const results = searchCountries("england", "en");
+    expect(results.some((c) => c.iso3 === "GBR")).toBe(true);
+  });
+
+  it("finds DR Congo by alias 'DRC'", () => {
+    const results = searchCountries("drc", "en");
+    expect(results.some((c) => c.iso3 === "COD")).toBe(true);
   });
 
   it("finds Kyrgyzstan by French name while locale is English", () => {

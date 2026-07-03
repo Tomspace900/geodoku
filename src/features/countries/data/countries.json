@@ -1378,7 +1378,10 @@
       "Congo-Kinshasa",
       "Congo, the Democratic Republic of the",
       "DR Congo",
-      "Zaire"
+      "Zaire",
+      "RDC",
+      "DRC",
+      "République démocratique du Congo"
     ],
     "flagEmoji": "🇨🇩",
     "continent": "africa",
@@ -1421,7 +1424,11 @@
       "fr": "Congo",
       "en": "Republic of the Congo"
     },
-    "aliases": ["Republic of the Congo", "Congo-Brazzaville"],
+    "aliases": [
+      "Republic of the Congo",
+      "Congo-Brazzaville",
+      "République du Congo"
+    ],
     "flagEmoji": "🇨🇬",
     "continent": "africa",
     "waterAccess": "coastal",
@@ -1538,7 +1545,12 @@
       "fr": "Îles du Cap-Vert",
       "en": "Cape Verde"
     },
-    "aliases": ["Republic of Cabo Verde", "Cape Verde", "Cap-Vert"],
+    "aliases": [
+      "Republic of Cabo Verde",
+      "Cape Verde",
+      "Cap-Vert",
+      "Cabo Verde"
+    ],
     "flagEmoji": "🇨🇻",
     "continent": "africa",
     "waterAccess": "island",
@@ -1686,7 +1698,7 @@
       "fr": "Tchéquie",
       "en": "Czechia"
     },
-    "aliases": ["Czech Republic"],
+    "aliases": ["Czech Republic", "République tchèque"],
     "flagEmoji": "🇨🇿",
     "continent": "europe",
     "waterAccess": "landlocked",
@@ -2394,7 +2406,9 @@
       "UK",
       "Great Britain",
       "Britain",
-      "Angleterre"
+      "Angleterre",
+      "Grande-Bretagne",
+      "England"
     ],
     "flagEmoji": "🇬🇧",
     "continent": "europe",
@@ -7156,7 +7170,8 @@
       "America",
       "U.S.",
       "U.S.A.",
-      "Amérique"
+      "Amérique",
+      "États-Unis d'Amérique"
     ],
     "flagEmoji": "🇺🇸",
     "continent": "north_america",
