@@ -39,10 +39,9 @@ jobs:
   # Runs on every push to develop and main, and on every PR into main (where it
   # is a required check). The workflow-level concurrency cancels superseded runs
   # so rapid develop pushes don't pile up.
-  # Enable with repo variables: RUN_E2E = true  and  VITE_CONVEX_URL = <develop url>.
+  # Requires repo variable VITE_CONVEX_URL = <develop Convex URL>.
   e2e:
     name: Playwright e2e
-    if: ${{ vars.RUN_E2E == 'true' }}
     needs: quality
     runs-on: ubuntu-latest
     # The e2e suite shares the develop Convex env, so never run two at once.
@@ -61,8 +60,9 @@ jobs:
           node-version: 22
           cache: pnpm
       - run: pnpm install --frozen-lockfile
+      - run: pnpm check:e2e-convex-url
       - run: pnpm exec playwright install --with-deps chromium firefox webkit
-      - run: pnpm test:e2e
+      - run: pnpm exec playwright test
       - uses: actions/upload-artifact@v4
         if: ${{ !cancelled() }}
         with:

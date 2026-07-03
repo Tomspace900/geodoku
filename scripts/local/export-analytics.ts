@@ -5,12 +5,11 @@
  * un fichier `analytics-<YYYY-MM-DD>.md`.
  *
  * Usage:
- *   ADMIN_TOKEN=… pnpm tsx scripts/export-analytics.ts          # 30 derniers jours
- *   ADMIN_TOKEN=… pnpm tsx scripts/export-analytics.ts --days=14
- *   ADMIN_TOKEN=… pnpm tsx scripts/export-analytics.ts --days=30 --out=foo.md
+ *   pnpm export:analytics          # 30 derniers jours
+ *   pnpm export:analytics --days=14
+ *   pnpm export:analytics --days=30 --out=foo.md
  *
- * `VITE_CONVEX_URL` est lu depuis `.env.local` via `tsx --env-file=.env.local`
- * si fourni, ou directement depuis l'env Node.
+ * `VITE_CONVEX_URL` et `ADMIN_TOKEN` lus depuis `.env.local` (`tsx --env-file=.env.local`).
  *
  * ─── Principes de lecture (faible trafic) ─────────────────────────────────────
  * Le jeu reçoit peu de joueurs : la plupart des chiffres sont **directionnels**,
@@ -26,10 +25,10 @@
  */
 import { writeFileSync } from "node:fs";
 import { ConvexHttpClient } from "convex/browser";
-import { api } from "../convex/_generated/api";
-import COUNTRIES_JSON from "../src/features/countries/data/countries.json";
-import type { Country } from "../src/features/countries/types";
-import { CONSTRAINTS } from "../src/features/game/logic/constraints";
+import { api } from "../../convex/_generated/api";
+import COUNTRIES_JSON from "../../src/features/countries/data/countries.json";
+import type { Country } from "../../src/features/countries/types";
+import { CONSTRAINTS } from "../../src/features/game/logic/constraints";
 
 // ─── Constantes ───────────────────────────────────────────────────────────────
 

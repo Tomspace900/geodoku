@@ -50,8 +50,10 @@ src/features/<feature>/   # game, countries, admin, legal, errors
   components/             # consomment l'état, dispatchent des actions
 convex/                   # schema, grids, guesses, scheduling, seed, crons
 convex/lib/               # gridGenerator, gridScheduler, gridConstants (purs)
-scripts/prod/             # build-countries, analyze-pool, flagData, patches
-scripts/                  # simulate-scheduling, export-analytics
+scripts/ci/                 # exécutés en CI (check-e2e-convex-url)
+scripts/countries/          # pipeline contenu pays (build-countries, flagData, patches)
+scripts/local/              # outillage local versionné (analytics, simulate, sync gh…)
+scripts/dev/                # scratch perso (gitignored)
 e2e/                      # Playwright — helpers.ts + *.shared|desktop|mobile.spec.ts
 .husky/pre-commit         # Biome (staged) + tsc + Vitest
 .github/workflows/ci.yml  # quality + e2e
@@ -68,7 +70,7 @@ e2e/                      # Playwright — helpers.ts + *.shared|desktop|mobile.
 
 - **Archiver, jamais supprimer** une contrainte (`ARCHIVED_CONSTRAINTS` + `CONSTRAINT_BY_ID` pour replay).
 - Changement de contrainte → `pnpm simulate:scheduling` puis reseed si OK.
-- Drapeaux → [`scripts/prod/flagData.json`](scripts/prod/flagData.json) curé, pas d'heuristique.
+- Drapeaux → [`scripts/countries/flagData.json`](scripts/countries/flagData.json) curé, pas d'heuristique.
 
 Détail complet : [`docs/content-pipeline.md`](docs/content-pipeline.md) (gitignored localement — copie de travail agent).
 
@@ -138,9 +140,11 @@ pnpm test                         # Vitest (e2e/ exclu)
 pnpm format
 
 # E2E Playwright — nécessite grille du jour (wipe + seed si env vide)
+pnpm check:e2e-convex-url         # ping VITE_CONVEX_URL avant e2e (CI + local)
 pnpm test:e2e
 pnpm test:e2e:ui
 pnpm test:e2e:reset               # wipe:db + seed:grids + e2e
+pnpm sync:e2e-convex-url          # met à jour vars.VITE_CONVEX_URL (gh) après recreate develop
 
 # Build
 pnpm build
@@ -178,7 +182,7 @@ pnpm exec convex env set ADMIN_TOKEN "xxx"
 **GitHub Actions** ([`.github/workflows/ci.yml`](.github/workflows/ci.yml)) :
 
 - `quality` (sans secret) — `pnpm lint` + `pnpm test`. Push `main`/`develop` + PR vers `main`.
-- `e2e` — `pnpm test:e2e` si variable repo `RUN_E2E=true` + `VITE_CONVEX_URL` = deploy `preview/develop`. Pas de deploy key ni seed (develop déjà seedé, cron horaire). **Sérialisé** (`concurrency: e2e-develop`). ⚠️ soumet de vrais guesses → bruite les stats develop (staging assumé).
+- `e2e` — `pnpm check:e2e-convex-url` puis Playwright (étape dédiée en CI, fail-fast avant install navigateurs) ; `vars.VITE_CONVEX_URL` = deploy `preview/develop` (si URL invalide : `pnpm sync:e2e-convex-url` en local). Pas de deploy key ni seed (develop déjà seedé, cron horaire). **Sérialisé** (`concurrency: e2e-develop`). ⚠️ soumet de vrais guesses → bruite les stats develop (staging assumé).
 
 **Mapping branche → environnement :**
 

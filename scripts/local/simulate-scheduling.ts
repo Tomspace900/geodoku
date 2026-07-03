@@ -3,7 +3,7 @@
  * Generates a full pool then simulates 30 days of scheduling,
  * printing a Pool Report + Scheduling Simulation table.
  *
- * Usage: pnpm tsx scripts/simulate-scheduling.ts
+ * Usage: pnpm simulate:scheduling
  */
 import {
   type FinalizedPoolGrid,
@@ -13,14 +13,14 @@ import {
   MAX_NEW_CONSTRAINTS_PER_GRID,
   MIN_CONSTRAINT_GAP_DAYS,
   MIN_VIABLE_GRIDS_PER_SEED,
-} from "../convex/lib/gridConstants";
+} from "../../convex/lib/gridConstants";
 import {
   buildConstraintMatches,
   generateDiversePool,
   overlapCoefficient,
-} from "../convex/lib/gridGenerator";
-import { selectNextGrid } from "../convex/lib/gridScheduler";
-import { CONSTRAINTS } from "../src/features/game/logic/constraints";
+} from "../../convex/lib/gridGenerator";
+import { selectNextGrid } from "../../convex/lib/gridScheduler";
+import { CONSTRAINTS } from "../../src/features/game/logic/constraints";
 
 // Pass/fail thresholds for the health summary — tune here, never inline below.
 // The failed/low-yield split is anchored on MIN_VIABLE_GRIDS_PER_SEED (shared

@@ -280,7 +280,7 @@ export function finalizeGrid(
  * Both a usage-weighted candidate order and a MAX_CONSTRAINT_SHARE cap were
  * tried (2026-06) and reverted: the first is marginal (and collapses the pool
  * if made strict, via MAX_OVERLAP), the second starves narrow seeds that depend
- * on broad partners. Measure with `scripts/prod/analyze-pool.ts` before adding
+ * on broad partners. Measure with `scripts/local/analyze-pool.ts` before adding
  * any such mechanism.
  *
  * Distinct from the above: MAX_CONSTRAINT_OVERLAP (applied in fillSlots +
