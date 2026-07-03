@@ -32,13 +32,19 @@ export default defineConfig({
     trace: "retain-on-failure",
     video: "retain-on-failure",
   },
-  // Start Vite dev server unless a deployed URL is provided.
-  // The dev server loads .env.local automatically (VITE_CONVEX_URL → Convex dev).
+  // Serve the app unless a deployed URL is provided.
+  // - CI: serve the production build via `vite preview`. Built assets avoid the
+  //   on-the-fly ESM transform of the dev server that saturates the runner's CPU
+  //   and makes the latency-sensitive 9-cell fills time out. `dist/` is produced
+  //   by the `pnpm build` step earlier in the CI job (must exist before preview).
+  // - Local: `pnpm dev` for fast iteration (loads .env.local automatically).
   ...(process.env.PLAYWRIGHT_BASE_URL
     ? {}
     : {
         webServer: {
-          command: "pnpm dev",
+          command: process.env.CI
+            ? "pnpm exec vite preview --port 5173 --strictPort"
+            : "pnpm dev",
           url: "http://localhost:5173",
           reuseExistingServer: !process.env.CI,
           timeout: 30_000,
