@@ -28,7 +28,7 @@ import { offsetUTC, todayUTC } from "../../src/lib/dates";
 /**
  * Date de déploiement de `recordFailedGuess` / `dailyStats.failedAttempts`.
  * AVANT : pas de tracking des échecs → taux d'échec incalculable, jours exclus.
- * Garder aligné avec FAILED_ATTEMPTS_SINCE de scripts/export-analytics.ts.
+ * Garder aligné avec FAILED_ATTEMPTS_SINCE de scripts/local/export-analytics.ts.
  */
 const FAILED_ATTEMPTS_SINCE = "2026-05-30";
 

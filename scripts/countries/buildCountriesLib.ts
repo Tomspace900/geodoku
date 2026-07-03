@@ -47,7 +47,7 @@ export type CountryPatchesConfig = {
 };
 
 /**
- * Curated flag truth table (`scripts/prod/flagData.json`), keyed by ISO3 code.
+ * Curated flag truth table (`scripts/countries/flagData.json`), keyed by ISO3 code.
  * Source of truth for `flagColors` / `flagSymbols` / `flagLayout` — replaces the old free-text
  * `flags.alt` heuristic. Hand-curated (interpretive, near-static reference data).
  */
@@ -315,7 +315,7 @@ export function flagFieldsForCode(
   const entry = flagData[code];
   if (!entry) {
     throw new Error(
-      `${code}: missing flagData entry (add it to scripts/prod/flagData.json)`,
+      `${code}: missing flagData entry (add it to scripts/countries/flagData.json)`,
     );
   }
   return {

@@ -9,12 +9,11 @@ import {
 } from "@/components/ui/dialog";
 import { useT } from "@/i18n/LocaleContext";
 import type { TKey } from "@/i18n/types";
+import { STORAGE_KEYS, safeGet, safeSet } from "@/lib/storage";
 import { usePostHog } from "@posthog/react";
 import { Ban, Gem, Grid3x3, Heart, HelpCircle } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
-
-const STORAGE_KEY = "geodoku.showHowToPlay";
 
 const RULES: { icon: LucideIcon; titleKey: TKey; bodyKey: TKey }[] = [
   {
@@ -40,21 +39,11 @@ const RULES: { icon: LucideIcon; titleKey: TKey; bodyKey: TKey }[] = [
 ];
 
 function readShow(): boolean {
-  if (typeof window === "undefined") return true;
-  try {
-    return window.localStorage.getItem(STORAGE_KEY) !== "false";
-  } catch {
-    return true;
-  }
+  return safeGet(STORAGE_KEYS.howToPlay) !== "false";
 }
 
 function writeShow(value: boolean) {
-  if (typeof window === "undefined") return;
-  try {
-    window.localStorage.setItem(STORAGE_KEY, String(value));
-  } catch {
-    // localStorage indisponible (mode privé Safari, quota…), on ignore.
-  }
+  safeSet(STORAGE_KEYS.howToPlay, String(value));
 }
 
 export function HowToPlayLink() {

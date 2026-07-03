@@ -17,8 +17,10 @@ import { GameGrid } from "./GameGrid";
 import { GuessModal } from "./GuessModal";
 import { Header } from "./Header";
 import { HowToPlayLink } from "./HowToPlayLink";
+import { RarityLegend } from "./RarityLegend";
 import { ResultScreen } from "./ResultScreen";
 import { SolutionGrid } from "./SolutionGrid";
+import { SurveyCta } from "./SurveyCta";
 
 function LoadingSkeleton() {
   return (
@@ -58,8 +60,15 @@ function LoadingSkeleton() {
 export function GamePage() {
   const posthog = usePostHog();
   const t = useT();
-  const { state, selectCell, submitGuess, isLoading, hasGrid, validAnswers } =
-    useGameState();
+  const {
+    state,
+    selectCell,
+    submitGuess,
+    markRated,
+    isLoading,
+    hasGrid,
+    validAnswers,
+  } = useGameState();
   const isBackendDown = useBackendDownTimeout(isLoading);
   const gridNumber = state.date
     ? getGridNumberForDate(state.date)
@@ -139,15 +148,25 @@ export function GamePage() {
                 distribution={guessDistribution ?? undefined}
                 cells={state.cells}
               />
+
+              <RarityLegend />
+
+              {/* Gaté sur la fermeture de la modale de résultat : évite un second
+                  CTA sondage monté en même temps que celui de ResultScreen (état
+                  `done` désynchronisé) et le rend visible seulement une fois la
+                  grille solution réellement à l'écran. */}
               {resultModalDismissed && (
-                <Button
-                  type="button"
-                  variant="link"
-                  onClick={() => setResultModalDismissed(false)}
-                  className="w-full justify-center text-xs"
-                >
-                  {t("ui.viewMyResult")}
-                </Button>
+                <>
+                  <SurveyCta source="solution_screen" />
+                  <Button
+                    type="button"
+                    variant="link"
+                    onClick={() => setResultModalDismissed(false)}
+                    className="w-full justify-center text-xs"
+                  >
+                    {t("ui.viewMyResult")}
+                  </Button>
+                </>
               )}
             </div>
           ) : (
@@ -186,6 +205,7 @@ export function GamePage() {
           state={state}
           gridNumber={gridNumber}
           onDismiss={() => dismissResultModal("dismiss_modal")}
+          onRated={() => markRated(state.date)}
           onViewAnswers={(source) => dismissResultModal(source)}
         />
       )}

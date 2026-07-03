@@ -10,12 +10,12 @@
 
 import { popularityScore100 } from "@/features/countries/lib/popularity";
 
-// ─── Constantes (mirroir scripts/export-analytics.ts) ──────────────────────────
+// ─── Constantes (mirroir scripts/local/export-analytics.ts) ────────────────────
 
 /**
  * Date de déploiement de `failedAttempts` (instrumentation struggle). AVANT
  * cette date, l'absence d'échecs = absence de tracking, PAS « facile ».
- * Garder aligné avec `FAILED_ATTEMPTS_SINCE` dans scripts/export-analytics.ts.
+ * Garder aligné avec `FAILED_ATTEMPTS_SINCE` dans scripts/local/export-analytics.ts.
  */
 export const FAILED_ATTEMPTS_SINCE = "2026-05-30";
 

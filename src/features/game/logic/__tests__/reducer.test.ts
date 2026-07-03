@@ -445,4 +445,90 @@ describe("gameReducer — rehydrate", () => {
     expect(state.remainingLives).toBe(2);
     expect(state.finishedAt).toBe(persisted.startedAt);
   });
+
+  it("carries endRecorded / rated from persisted data", () => {
+    const persisted = {
+      ...makePersistedGame(),
+      endRecorded: true,
+      rated: true,
+    };
+    const state = gameReducer(freshState(), {
+      type: "rehydrate",
+      persisted,
+      rows: ["borders_china", "borders_brazil", "borders_russia"],
+      cols: ["population_more_canada", "area_larger_france", "flag_has_star"],
+      validAnswers: emptyValidAnswers,
+    });
+    expect(state.endRecorded).toBe(true);
+    expect(state.rated).toBe(true);
+  });
+
+  it("defaults endRecorded / rated to false when absent from persisted data", () => {
+    const state = gameReducer(freshState(), {
+      type: "rehydrate",
+      persisted: makePersistedGame(),
+      rows: ["borders_china", "borders_brazil", "borders_russia"],
+      cols: ["population_more_canada", "area_larger_france", "flag_has_star"],
+      validAnswers: emptyValidAnswers,
+    });
+    expect(state.endRecorded).toBe(false);
+    expect(state.rated).toBe(false);
+  });
+});
+
+describe("gameReducer — setEndRecorded / setRated", () => {
+  it("marks endRecorded when the date matches", () => {
+    const initial = freshState();
+    const state = gameReducer(initial, {
+      type: "setEndRecorded",
+      date: initial.date,
+    });
+    expect(state.endRecorded).toBe(true);
+  });
+
+  it("ignores setEndRecorded for a different date (grid rolled over)", () => {
+    const initial = freshState();
+    const next = gameReducer(initial, {
+      type: "setEndRecorded",
+      date: "1999-01-01",
+    });
+    expect(next).toBe(initial);
+    expect(next.endRecorded).toBe(false);
+  });
+
+  it("returns the same reference when endRecorded is already set", () => {
+    const recorded = gameReducer(freshState(), {
+      type: "setEndRecorded",
+      date: freshState().date,
+    });
+    expect(
+      gameReducer(recorded, { type: "setEndRecorded", date: recorded.date }),
+    ).toBe(recorded);
+  });
+
+  it("marks the game as rated when the date matches", () => {
+    const initial = freshState();
+    const state = gameReducer(initial, {
+      type: "setRated",
+      date: initial.date,
+    });
+    expect(state.rated).toBe(true);
+  });
+
+  it("ignores setRated for a different date", () => {
+    const initial = freshState();
+    const next = gameReducer(initial, { type: "setRated", date: "1999-01-01" });
+    expect(next).toBe(initial);
+    expect(next.rated).toBe(false);
+  });
+
+  it("returns the same reference when already rated", () => {
+    const rated = gameReducer(freshState(), {
+      type: "setRated",
+      date: freshState().date,
+    });
+    expect(gameReducer(rated, { type: "setRated", date: rated.date })).toBe(
+      rated,
+    );
+  });
 });

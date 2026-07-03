@@ -30,6 +30,7 @@ export const en = {
     closeResult: "Close",
     searchResultUsed: "Already used",
     rarityLegendHint: "Share of today's players who picked that country.",
+    surveyPrompt: "Pssst, I need your feedback (5 min)",
   },
   footer: {
     loveCreditPre: "Made with love ❤️, inspired by ",

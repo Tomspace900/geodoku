@@ -4,8 +4,8 @@
  * Sources:
  * - world-countries npm (v5): name.common (EN), translations.fra.common (FR), cca2
  * - REST Countries v5 API: population + factual enrichments
- * - scripts/prod/flagData.json: curated flagColors / flagSymbols / flagLayout (truth table)
- * - scripts/prod/countryPatches.ts: source corrections, search aliases, gameplay classifications, additions
+ * - scripts/countries/flagData.json: curated flagColors / flagSymbols / flagLayout (truth table)
+ * - scripts/countries/countryPatches.ts: source corrections, search aliases, gameplay classifications, additions
  *
  * Name localisation strategy:
  * - EN: world-countries `name.common` (authoritative English name)
@@ -668,7 +668,7 @@ async function main(): Promise<void> {
   // 1. Load curated flag truth table
   log("Flag data", "Loading flagData.json…");
   const flagData = JSON.parse(
-    readFileSync(resolve(root, "scripts/prod/flagData.json"), "utf-8"),
+    readFileSync(resolve(root, "scripts/countries/flagData.json"), "utf-8"),
   ) as FlagData;
 
   // 2. Filter world-countries to UN members + explicit inclusions
@@ -851,7 +851,7 @@ async function main(): Promise<void> {
     }
     if (!Array.isArray(c.flagColors) || c.flagColors.length === 0) {
       throw new Error(
-        `${c.iso3}: flagColors must be non-empty (fix scripts/prod/flagData.json)`,
+        `${c.iso3}: flagColors must be non-empty (fix scripts/countries/flagData.json)`,
       );
     }
     if (!Array.isArray(c.flagSymbols)) {

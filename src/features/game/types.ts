@@ -29,4 +29,8 @@ export type GameState = {
   status: GameStatus;
   startedAt: number;
   finishedAt: number | null;
+  /** Fin de partie déjà notifiée au serveur (dédup `recordGameEnd`). */
+  endRecorded: boolean;
+  /** Difficulté déjà notée par le joueur pour cette grille. */
+  rated: boolean;
 };

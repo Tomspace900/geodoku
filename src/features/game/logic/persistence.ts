@@ -1,8 +1,9 @@
+import { STORAGE_KEYS, safeGet, safeRemove, safeSet } from "@/lib/storage";
 import type { Cell, CellKey, GameState, GameStatus } from "../types";
 
-/** Clé localStorage — exportée pour les tests uniquement. */
-export const PERSISTENCE_STORAGE_KEY = "geodoku.currentGame";
-const STORAGE_VERSION = 1;
+/** Clé localStorage — réexportée depuis le catalogue central, pour les tests. */
+export const PERSISTENCE_STORAGE_KEY = STORAGE_KEYS.game;
+const STORAGE_VERSION = 2;
 
 export type PersistedGame = {
   version: number;
@@ -13,12 +14,16 @@ export type PersistedGame = {
   status: GameStatus;
   startedAt: number;
   finishedAt: number | null;
+  /** Fin de partie déjà notifiée au serveur (dédup `recordGameEnd`). */
+  endRecorded?: boolean;
+  /** Difficulté déjà notée par le joueur pour cette grille. */
+  rated?: boolean;
 };
 
 export function loadPersistedGame(): PersistedGame | null {
+  const raw = safeGet(PERSISTENCE_STORAGE_KEY);
+  if (!raw) return null;
   try {
-    const raw = window.localStorage.getItem(PERSISTENCE_STORAGE_KEY);
-    if (!raw) return null;
     const parsed = JSON.parse(raw) as PersistedGame;
     if (parsed.version !== STORAGE_VERSION) return null;
     return parsed;
@@ -28,29 +33,23 @@ export function loadPersistedGame(): PersistedGame | null {
 }
 
 export function savePersistedGame(state: GameState): void {
-  try {
-    const data: PersistedGame = {
-      version: STORAGE_VERSION,
-      date: state.date,
-      cells: state.cells,
-      remainingLives: state.remainingLives,
-      usedCountries: Array.from(state.usedCountries),
-      status: state.status,
-      startedAt: state.startedAt,
-      finishedAt: state.finishedAt,
-    };
-    window.localStorage.setItem(PERSISTENCE_STORAGE_KEY, JSON.stringify(data));
-  } catch {
-    // localStorage plein ou désactivé → le jeu continue sans persistance
-  }
+  const data: PersistedGame = {
+    version: STORAGE_VERSION,
+    date: state.date,
+    cells: state.cells,
+    remainingLives: state.remainingLives,
+    usedCountries: Array.from(state.usedCountries),
+    status: state.status,
+    startedAt: state.startedAt,
+    finishedAt: state.finishedAt,
+    endRecorded: state.endRecorded,
+    rated: state.rated,
+  };
+  safeSet(PERSISTENCE_STORAGE_KEY, JSON.stringify(data));
 }
 
 export function clearPersistedGame(): void {
-  try {
-    window.localStorage.removeItem(PERSISTENCE_STORAGE_KEY);
-  } catch {
-    // même politique que save : storage indisponible → no-op
-  }
+  safeRemove(PERSISTENCE_STORAGE_KEY);
 }
 
 export function isPersistedForToday(

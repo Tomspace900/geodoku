@@ -1,3 +1,4 @@
+import { STORAGE_KEYS, safeGet, safeSet } from "@/lib/storage";
 import posthog from "posthog-js";
 import {
   type ReactNode,
@@ -10,12 +11,11 @@ import {
 import { translate } from "./index";
 import type { Locale, TKey } from "./types";
 
-const STORAGE_KEY = "geodoku.locale";
 const SUPPORTED: Locale[] = ["fr", "en"];
 
 function detectLocale(): Locale {
   if (typeof window === "undefined") return "en";
-  const stored = window.localStorage.getItem(STORAGE_KEY);
+  const stored = safeGet(STORAGE_KEYS.locale);
   if (stored && SUPPORTED.includes(stored as Locale)) return stored as Locale;
   const nav = window.navigator.language?.toLowerCase() ?? "";
   if (nav.startsWith("fr")) return "fr";
@@ -35,7 +35,7 @@ export function LocaleProvider({ children }: { children: ReactNode }) {
 
   const setLocale = useCallback((l: Locale) => {
     setLocaleState(l);
-    window.localStorage.setItem(STORAGE_KEY, l);
+    safeSet(STORAGE_KEYS.locale, l);
     document.documentElement.lang = l;
   }, []);
 
