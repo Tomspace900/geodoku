@@ -1,4 +1,4 @@
-const STORAGE_KEY = "geodoku.clientId";
+import { STORAGE_KEYS, safeGet, safeSet } from "@/lib/storage";
 
 /**
  * Stable per-browser identifier used to scope server-side rate limits.
@@ -6,14 +6,9 @@ const STORAGE_KEY = "geodoku.clientId";
  * cannot trivially spam every player out of their daily quota.
  */
 export function getOrCreateClientId(): string {
-  try {
-    const existing = window.localStorage.getItem(STORAGE_KEY);
-    if (existing) return existing;
-    const fresh = crypto.randomUUID();
-    window.localStorage.setItem(STORAGE_KEY, fresh);
-    return fresh;
-  } catch {
-    // localStorage indisponible (mode privé strict) — id éphémère par session
-    return crypto.randomUUID();
-  }
+  const existing = safeGet(STORAGE_KEYS.clientId);
+  if (existing) return existing;
+  const fresh = crypto.randomUUID();
+  safeSet(STORAGE_KEYS.clientId, fresh);
+  return fresh;
 }

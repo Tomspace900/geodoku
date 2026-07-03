@@ -9,7 +9,7 @@ import {
   waitForGrid,
 } from "./helpers";
 
-const STORAGE_KEY = "geodoku.currentGame";
+const STORAGE_KEY = "geodoku:game";
 
 let grid: TodayGrid;
 

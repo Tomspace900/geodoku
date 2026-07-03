@@ -24,7 +24,6 @@ import { AchievementCard } from "./AchievementCard";
 
 const ROWS = [0, 1, 2] as const;
 const COLS = [0, 1, 2] as const;
-const FEEDBACK_STORAGE_PREFIX = "geodoku:rated:";
 
 type DifficultyRating = "too_easy" | "balanced" | "too_hard";
 
@@ -41,6 +40,7 @@ type Props = {
   state: GameState;
   gridNumber: number | null;
   onDismiss: () => void;
+  onRated: () => void;
   onViewAnswers: (source: "view_answers_button" | "skip_feedback") => void;
 };
 
@@ -48,6 +48,7 @@ export function ResultScreen({
   state,
   gridNumber,
   onDismiss,
+  onRated,
   onViewAnswers,
 }: Props) {
   const posthog = usePostHog();
@@ -59,12 +60,9 @@ export function ResultScreen({
   );
   const nativeShareAvailable = canUseNativeShare();
   const t = useT();
-  const [hadFeedbackBeforeOpen] = useState(() => {
-    if (!state.date) return false;
-    return (
-      localStorage.getItem(`${FEEDBACK_STORAGE_PREFIX}${state.date}`) === "1"
-    );
-  });
+  // Snapshot à l'ouverture : si la grille était déjà notée (partie reprise),
+  // on affiche directement « voir les réponses » plutôt que les boutons.
+  const [hadFeedbackBeforeOpen] = useState(() => state.rated);
   const [feedbackThanksVisible, setFeedbackThanksVisible] = useState(false);
   const [ratingPending, setRatingPending] = useState(false);
   const gridScore = computeGridScore(state);
@@ -134,7 +132,7 @@ export function ResultScreen({
         rating,
         clientId: getOrCreateClientId(),
       });
-      localStorage.setItem(`${FEEDBACK_STORAGE_PREFIX}${state.date}`, "1");
+      onRated();
       setFeedbackThanksVisible(true);
       posthog?.capture("difficulty_rated", {
         rating,

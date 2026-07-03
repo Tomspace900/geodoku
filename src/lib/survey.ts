@@ -1,4 +1,5 @@
 import type { Locale } from "@/i18n/types";
+import { STORAGE_KEYS } from "@/lib/storage";
 
 /**
  * Pilotage du lien vers le sondage joueurs (Google Forms).
@@ -10,7 +11,7 @@ import type { Locale } from "@/i18n/types";
 export const SURVEY_FLAG = "survey_active";
 
 /** Clé localStorage : posée au 1er clic OU à la fermeture du CTA sondage, le masque ensuite partout. */
-export const SURVEY_DONE_KEY = "geodoku:surveyDone";
+export const SURVEY_DONE_KEY = STORAGE_KEYS.surveyDone;
 
 const SURVEY_URLS: Record<Locale, string> = {
   fr: "https://docs.google.com/forms/d/e/1FAIpQLSdqabIpnGKutRdKbWfeZ1ZLa0vtjX_ImtdM4QVyXghSfPEaVw/viewform",

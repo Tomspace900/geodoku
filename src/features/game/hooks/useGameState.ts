@@ -1,7 +1,7 @@
 import { getCountryByIso3 } from "@/features/countries/lib/search";
 import { usePostHog } from "@posthog/react";
 import { useMutation, useQuery } from "convex/react";
-import { useCallback, useEffect, useReducer } from "react";
+import { useCallback, useEffect, useReducer, useRef } from "react";
 import { api } from "../../../../convex/_generated/api";
 import { getOrCreateClientId } from "../logic/clientId";
 import { STARTING_LIVES } from "../logic/constants";
@@ -33,8 +33,6 @@ type GuessSubmitFailure = {
   gameOver: boolean;
 };
 
-const GAME_ENDED_STORAGE_PREFIX = "geodoku:ended:";
-
 export function useGameState() {
   const posthog = usePostHog();
   const todayGrid = useQuery(api.grids.getTodayGrid);
@@ -47,6 +45,12 @@ export function useGameState() {
     null as unknown as GameState,
     () => createInitialState("", [], []),
   );
+
+  // Garde-fou anti-doublon intra-session : la date dont la fin est en cours
+  // d'envoi (ou déjà claimée). `state.endRecorded` gère l'idempotence
+  // cross-reload ; ce ref évite un second envoi le temps que le dispatch se
+  // propage. Scopé par date car le hook survit au changement de jour.
+  const endClaimedDateRef = useRef<string | null>(null);
 
   // biome-ignore lint/correctness/useExhaustiveDependencies: posthog is a stable ref
   useEffect(() => {
@@ -104,16 +108,14 @@ export function useGameState() {
   useEffect(() => {
     if (!state.date) return;
     if (state.status !== "won" && state.status !== "lost") return;
-
-    const storageKey = `${GAME_ENDED_STORAGE_PREFIX}${state.date}`;
-    if (localStorage.getItem(storageKey) === "1") return;
+    // Idempotence : déjà notifié (persisté) ou envoi en cours pour cette date.
+    if (state.endRecorded || endClaimedDateRef.current === state.date) return;
+    endClaimedDateRef.current = state.date;
 
     const filledCells = Object.values(state.cells).filter(
       (cell) => cell.status === "filled",
     ).length;
     const failedGuesses = STARTING_LIVES - state.remainingLives;
-
-    localStorage.setItem(storageKey, "1");
 
     // Cause de fin : gagné, sinon vies épuisées (remainingLives ≤ 0) ou bloqué
     // (perdu alors qu'il restait des vies → plus aucune case remplissable).
@@ -146,18 +148,30 @@ export function useGameState() {
       filledCells,
       guessesSubmitted: filledCells + failedGuesses,
       clientId: getOrCreateClientId(),
-    }).catch(() => {
-      // Retire le flag pour permettre une nouvelle tentative au prochain
-      // changement d'état si le serveur a rejeté l'enregistrement.
-      localStorage.removeItem(storageKey);
-    });
+    })
+      .then(() => {
+        // Persiste l'idempotence : plus jamais ré-émis, même après reload.
+        dispatch({ type: "setEndRecorded", date: state.date });
+      })
+      .catch(() => {
+        // Libère le ref pour permettre une nouvelle tentative au prochain
+        // changement d'état / reload si le serveur a rejeté l'enregistrement.
+        if (endClaimedDateRef.current === state.date) {
+          endClaimedDateRef.current = null;
+        }
+      });
   }, [
     state.date,
     state.status,
+    state.endRecorded,
     state.cells,
     state.remainingLives,
     recordGameEnd,
   ]);
+
+  const markRated = useCallback((date: string) => {
+    dispatch({ type: "setRated", date });
+  }, []);
 
   const selectCell = useCallback((cell: CellPosition | null) => {
     dispatch({ type: "selectCell", cell });
@@ -239,6 +253,7 @@ export function useGameState() {
     state,
     selectCell,
     submitGuess,
+    markRated,
     isLoading: todayGrid === undefined,
     hasGrid: !!todayGrid,
     validAnswers: todayGrid?.validAnswers ?? {},

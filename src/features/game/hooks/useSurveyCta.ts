@@ -1,4 +1,5 @@
 import { useLocale } from "@/i18n/LocaleContext";
+import { safeGet, safeSet } from "@/lib/storage";
 import { SURVEY_DONE_KEY, SURVEY_FLAG, surveyUrl } from "@/lib/survey";
 import { useFeatureFlagEnabled, usePostHog } from "@posthog/react";
 import { useState } from "react";
@@ -14,12 +15,10 @@ export function useSurveyCta(source: SurveySource) {
   const { locale } = useLocale();
   const posthog = usePostHog();
   const active = useFeatureFlagEnabled(SURVEY_FLAG);
-  const [done, setDone] = useState(
-    () => localStorage.getItem(SURVEY_DONE_KEY) === "1",
-  );
+  const [done, setDone] = useState(() => safeGet(SURVEY_DONE_KEY) === "1");
 
   function markDone() {
-    localStorage.setItem(SURVEY_DONE_KEY, "1");
+    safeSet(SURVEY_DONE_KEY, "1");
     setDone(true);
   }
 

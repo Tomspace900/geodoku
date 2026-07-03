@@ -19,6 +19,8 @@ export type GameAction =
       validAnswers: Record<string, string[]>;
     }
   | { type: "guessFailure" }
+  | { type: "setEndRecorded"; date: string }
+  | { type: "setRated"; date: string }
   | {
       type: "rehydrate";
       persisted: PersistedGame;
@@ -47,6 +49,8 @@ export function createInitialState(
     status: "playing",
     startedAt: Date.now(),
     finishedAt: null,
+    endRecorded: false,
+    rated: false,
   };
 }
 
@@ -117,6 +121,19 @@ export function gameReducer(state: GameState, action: GameAction): GameState {
       };
     }
 
+    // Garde par date : le dispatch peut résulter d'une promesse (recordGameEnd /
+    // submitGridFeedback) résolue après un basculement de grille à minuit UTC ;
+    // on ne marque que si l'état concerne toujours la même partie.
+    case "setEndRecorded":
+      return state.date !== action.date || state.endRecorded
+        ? state
+        : { ...state, endRecorded: true };
+
+    case "setRated":
+      return state.date !== action.date || state.rated
+        ? state
+        : { ...state, rated: true };
+
     case "rehydrate": {
       const usedCountries = new Set(action.persisted.usedCountries);
       let cells = { ...action.persisted.cells };
@@ -143,6 +160,8 @@ export function gameReducer(state: GameState, action: GameAction): GameState {
         status,
         startedAt: action.persisted.startedAt,
         finishedAt,
+        endRecorded: action.persisted.endRecorded ?? false,
+        rated: action.persisted.rated ?? false,
       };
     }
   }

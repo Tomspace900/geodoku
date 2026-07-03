@@ -60,8 +60,15 @@ function LoadingSkeleton() {
 export function GamePage() {
   const posthog = usePostHog();
   const t = useT();
-  const { state, selectCell, submitGuess, isLoading, hasGrid, validAnswers } =
-    useGameState();
+  const {
+    state,
+    selectCell,
+    submitGuess,
+    markRated,
+    isLoading,
+    hasGrid,
+    validAnswers,
+  } = useGameState();
   const isBackendDown = useBackendDownTimeout(isLoading);
   const gridNumber = state.date
     ? getGridNumberForDate(state.date)
@@ -198,6 +205,7 @@ export function GamePage() {
           state={state}
           gridNumber={gridNumber}
           onDismiss={() => dismissResultModal("dismiss_modal")}
+          onRated={() => markRated(state.date)}
           onViewAnswers={(source) => dismissResultModal(source)}
         />
       )}

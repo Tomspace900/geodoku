@@ -38,6 +38,22 @@ describe("savePersistedGame / loadPersistedGame", () => {
     expect(loaded?.status).toBe("playing");
     expect(loaded?.finishedAt).toBeNull();
     expect(loaded?.cells["0,0"].status).toBe("empty");
+    expect(loaded?.endRecorded).toBe(false);
+    expect(loaded?.rated).toBe(false);
+  });
+
+  it("round-trips the endRecorded / rated flags", () => {
+    let state = createInitialState(
+      "2026-04-15",
+      [...TEST_ROWS],
+      [...TEST_COLS],
+    );
+    state = gameReducer(state, { type: "setEndRecorded", date: state.date });
+    state = gameReducer(state, { type: "setRated", date: state.date });
+    savePersistedGame(state);
+    const loaded = loadPersistedGame();
+    expect(loaded?.endRecorded).toBe(true);
+    expect(loaded?.rated).toBe(true);
   });
 
   it("serialises usedCountries Set as array and deserialises it", () => {

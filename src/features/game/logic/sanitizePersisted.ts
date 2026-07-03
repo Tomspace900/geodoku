@@ -184,5 +184,7 @@ export function sanitizePersistedForGrid(
     status: canonical,
     startedAt: persisted.startedAt,
     finishedAt,
+    endRecorded: persisted.endRecorded ?? false,
+    rated: persisted.rated ?? false,
   };
 }

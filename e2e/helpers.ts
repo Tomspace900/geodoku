@@ -125,8 +125,8 @@ export function pickWrongCountry(
  */
 export async function prepareSession(page: Page) {
   await page.addInitScript(() => {
-    localStorage.setItem("geodoku.locale", "en");
-    localStorage.setItem("geodoku.showHowToPlay", "false");
+    localStorage.setItem("geodoku:locale", "en");
+    localStorage.setItem("geodoku:how-to-play", "false");
   });
 }
 
@@ -191,10 +191,13 @@ export async function submitCountryInOpenModal(
   const input = page.getByPlaceholder("Search for a country…");
   await input.waitFor({ state: "visible" });
   await input.fill(countryName);
-  await page
-    .getByRole("option")
-    .first()
-    .waitFor({ state: "visible", timeout: 5_000 });
+  // cmdk re-render sa liste et re-surligne l'option active à chaque frappe. On
+  // attend que le pays visé soit bien l'option surlignée (`aria-selected`) avant
+  // de presser Enter : sinon Enter peut tomber sur un surlignage périmé (ou
+  // aucun), le guess ne part pas, et on paie un cycle de retry complet (10 s).
+  await expect(
+    page.getByRole("option", { name: countryName }).first(),
+  ).toHaveAttribute("aria-selected", "true", { timeout: 5_000 });
   await input.press("Enter");
 }
 
@@ -285,7 +288,7 @@ export function makeStaleGameJSON(
   const date = d.toISOString().slice(0, 10); // YYYY-MM-DD
   const startedAt = Date.now() - daysAgo * 86_400_000;
   return JSON.stringify({
-    version: 1,
+    version: 2,
     date,
     cells: Object.fromEntries(
       ["0,0", "0,1", "0,2", "1,0", "1,1", "1,2", "2,0", "2,1", "2,2"].map(
