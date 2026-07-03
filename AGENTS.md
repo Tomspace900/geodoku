@@ -100,7 +100,7 @@ Philosophie **Editorial Intellectual** (NYT Games) : spacieux, typographique, to
 
 **Patterns nommés** — importer les composants, ne pas recopier : `DisplayHeader`, `Eyebrow`, `AccentBar` ([`src/components/editorial/`](src/components/editorial/)) ; admin : `PanelCard`, `PanelHeader`, `StatGlyph` ([`src/features/admin/components/`](src/features/admin/components/)).
 
-**Règles dures (résumé).** Pas de bordures pour sectionner. Pas de `#000` / `bg-black/*`. Shadow unique : `shadow-editorial`. Toujours `<Button variant="...">` sauf `Cell.tsx` et fermeture modale `ResultScreen`. `brand` ≠ `rarity.*`.
+**Règles dures (résumé).** Pas de bordures pour sectionner. Pas de `#000` / `bg-black/*`. Shadow : `shadow-editorial` par défaut. Toujours `<Button variant="...">` sauf `Cell.tsx` et fermeture modale `ResultScreen`. `brand` (accent violet) réservé aux CTA/accents ponctuels ; `brand` ≠ `rarity.*`.
 
 **Référence complète** (palette, variants, `rounded-*`, typo) : [`docs/DESIGN_SYSTEM.md`](docs/DESIGN_SYSTEM.md) (gitignored localement — copie de travail agent).
 
@@ -221,7 +221,7 @@ Complémentaire à Convex (`gridFeedback`/`dailyStats` = santé grilles ; PostHo
 | Partie | `game_started`, `session_resumed`, `cell_opened`, `guess_submitted`, `guess_failed`, `game_completed` |
 | Saisie | `guess_modal_closed` |
 | Résultat | `result_screen_viewed`, `result_shared`, `difficulty_rated`, `achievement_unlocked`, `solution_viewed` |
-| UI | `how_to_play_*`, `locale_changed`, `footer_link_clicked` |
+| UI | `how_to_play_*`, `locale_changed`, `footer_link_clicked`, `survey_link_clicked` / `survey_dismissed` (prop `source`: `result_screen`/`solution_screen` ; banderole sondage post-partie via `SurveyCta` — écran de résultat sous le partage + écran de solution — gated par feature flag PostHog `survey_active`, masquée après clic ou fermeture via `geodoku:surveyDone`) |
 | Légal | `legal_page_viewed`, `legal_page_left` |
 | Fiabilité | `backend_timeout_shown`, `$exception` |
 

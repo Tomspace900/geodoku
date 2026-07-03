@@ -30,6 +30,7 @@ export const fr = {
     closeResult: "Fermer",
     searchResultUsed: "Déjà utilisé",
     rarityLegendHint: "Pourcentage des joueurs du jour ayant soumis le pays.",
+    surveyPrompt: "Pssst, j'ai besoin de ton avis (5 min)",
   },
   footer: {
     loveCreditPre: "Fait avec amour ❤️, inspiré par ",

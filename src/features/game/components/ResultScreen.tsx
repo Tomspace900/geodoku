@@ -1,6 +1,7 @@
 import { DisplayHeader } from "@/components/editorial/DisplayHeader";
 import { Eyebrow } from "@/components/editorial/Eyebrow";
 import { Button } from "@/components/ui/button";
+import { SurveyCta } from "@/features/game/components/SurveyCta";
 import { getOrCreateClientId } from "@/features/game/logic/clientId";
 import {
   computeGridScore,
@@ -297,6 +298,8 @@ export function ResultScreen({
                 ? t("ui.shareCopied")
                 : t("ui.share")}
           </Button>
+
+          <SurveyCta source="result_screen" />
         </div>
 
         <p className="text-center text-xs text-on-surface-variant italic">

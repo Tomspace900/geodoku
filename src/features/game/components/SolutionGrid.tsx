@@ -1,5 +1,4 @@
 import { getCountryByIso3 } from "@/features/countries/lib/search";
-import { RarityLegend } from "@/features/game/components/RarityLegend";
 import {
   MIN_CELL_TOTAL_GUESSES_FOR_SHARE_PERCENT,
   RARITY_STYLES,
@@ -164,8 +163,6 @@ export function SolutionGrid({
           ];
         })}
       </div>
-
-      <RarityLegend />
     </div>
   );
 }
