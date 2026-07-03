@@ -69,15 +69,18 @@ export const sourceCorrectionsByIso3: Record<Iso3, SourceCorrection> = {
 
 /** Variants absent from names.{fr,en}, iso codes, and REST official/alternates. */
 export const searchAliasesByIso3: Record<Iso3, string[]> = {
-  USA: ["Amérique"],
-  GBR: ["Angleterre"],
+  COD: ["RDC", "DRC", "République démocratique du Congo"],
+  COG: ["République du Congo"],
+  CPV: ["Cap-Vert", "Cabo Verde"],
+  CZE: ["République tchèque"],
+  USA: ["Amérique", "États-Unis d'Amérique"],
+  GBR: ["Angleterre", "Grande-Bretagne", "England"],
   PRK: ["RPDC"],
   KOR: ["ROK"],
   MKD: ["Macédoine"],
   PSE: ["Territoires palestiniens", "Palestinian Territories"],
   TWN: ["Formose", "Formosa"],
   VAT: ["Saint-Siège"],
-  CPV: ["Cap-Vert"],
   IRN: ["Perse"],
   ARE: ["EAU"],
   NLD: ["Hollande"],

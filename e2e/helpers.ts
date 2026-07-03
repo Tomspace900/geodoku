@@ -13,6 +13,13 @@ function getCountryName(code: string): string {
   return countries.find((c) => c.iso3 === code)?.names.en ?? code;
 }
 
+// Après un guess réussi, le Drawer (vaul) verrouille `pointer-events` sur le
+// <body> le temps de son animation de fermeture et ne le relâche qu'un poil
+// après le démontage de l'input. Cliquer la case suivante dans cette fenêtre
+// fait avaler le clic (la modale ne se rouvre pas → cycle de 40 s perdu). On
+// laisse l'animation se poser avant de rendre la main. Empirique, tunable.
+const MODAL_SETTLE_MS = 500;
+
 export type TodayGrid = {
   date: string;
   rows: string[];
@@ -173,6 +180,10 @@ export async function fillCell(
     // latency so a slow-but-successful guess isn't prematurely retried.
     await input.waitFor({ state: "detached", timeout: 10_000 });
   }).toPass({ timeout: 40_000 });
+
+  // Laisse le Drawer relâcher le verrou `pointer-events` du body avant que
+  // l'appelant clique la case suivante (cf. MODAL_SETTLE_MS).
+  await page.waitForTimeout(MODAL_SETTLE_MS);
 }
 
 /**
