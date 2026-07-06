@@ -111,7 +111,7 @@ function Calendar({
           defaultClassNames.range_end
         ),
         today: cn(
-          "bg-surface-highest text-on-surface rounded-md data-[selected=true]:rounded-none",
+          "bg-surface-low text-on-surface rounded-md data-[selected=true]:rounded-none",
           defaultClassNames.today
         ),
         outside: cn(

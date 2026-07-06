@@ -6,12 +6,10 @@ import type { CalendarMarker } from "../logic/analytics";
 import { difficultyPillClass, popularityPillClass } from "../logic/display";
 import { dateToStr, strToCalendarDate } from "../logic/scheduling";
 import { PanelHeader } from "./PanelHeader";
+import { TagPill } from "./TagPill";
 
 const calendarMarkerBadgeClass =
   "mx-auto inline-flex min-w-0 shrink-0 items-center justify-center rounded-full px-1 text-[6px] font-medium leading-none tabular-nums opacity-100";
-
-const legendBadgeClass =
-  "inline-flex min-w-[1.125rem] items-center justify-center rounded-full px-1 py-0.5 text-[10px] font-semibold leading-none tabular-nums";
 
 function neutralMarkerBadgeClass(): string {
   return "bg-surface-low text-on-surface-variant";
@@ -66,7 +64,16 @@ function LegendBadge({
   children: React.ReactNode;
   pillClass: string;
 }) {
-  return <span className={cn(legendBadgeClass, pillClass)}>{children}</span>;
+  return (
+    <TagPill
+      className={cn(
+        "inline-flex min-w-[1.125rem] items-center justify-center px-1 font-semibold leading-none tabular-nums",
+        pillClass,
+      )}
+    >
+      {children}
+    </TagPill>
+  );
 }
 
 type Props = {
@@ -115,10 +122,6 @@ export function GameCalendar({ markers, selectedDate, onSelectDate }: Props) {
         onSelect={handleSelect}
         components={{ DayButton: GameDayButton }}
         className="w-full bg-transparent p-0"
-        classNames={{
-          today:
-            "bg-surface-highest text-on-surface rounded-md data-[selected=true]:rounded-none",
-        }}
       />
 
       <div className="mt-3 space-y-1.5 border-t border-outline-variant/15 pt-3">
