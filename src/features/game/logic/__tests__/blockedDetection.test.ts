@@ -26,8 +26,6 @@ describe("findBlockedEmptyCells", () => {
     cells["0,0"] = {
       status: "filled",
       countryCode: "FRA",
-      rarity: 0.5,
-      rarityTier: "common",
     };
     const validAnswers = {
       "0,0": ["FRA"],
@@ -50,14 +48,10 @@ describe("findBlockedEmptyCells", () => {
     cells["0,0"] = {
       status: "filled",
       countryCode: "FRA",
-      rarity: 0.5,
-      rarityTier: "common",
     };
     cells["0,1"] = {
       status: "filled",
       countryCode: "DEU",
-      rarity: 0.5,
-      rarityTier: "common",
     };
     const validAnswers = {
       "0,0": ["FRA"],
@@ -80,8 +74,6 @@ describe("findBlockedEmptyCells", () => {
     cells["0,0"] = {
       status: "filled",
       countryCode: "FRA",
-      rarity: 0.5,
-      rarityTier: "common",
     };
     const validAnswers = {
       "0,0": ["FRA"],
@@ -116,8 +108,6 @@ describe("findBlockedEmptyCells", () => {
       cells[k] = {
         status: "filled",
         countryCode: codes[i],
-        rarity: 0.5,
-        rarityTier: "common",
       };
     });
     const validAnswers = Object.fromEntries(

@@ -8,8 +8,12 @@ export type RarityTier = "common" | "uncommon" | "rare" | "ultra";
 export type FilledCell = {
   status: "filled";
   countryCode: string;
-  rarity: number; // 0..1
-  rarityTier: RarityTier;
+};
+
+/** Distribution d'une case (Convex `getGuessDistributionForDate`) : total des tentatives + part (0..1) par pays. */
+export type CellGuessDistribution = {
+  totalGuesses: number;
+  rarityByCountry: Record<string, number>;
 };
 
 export type EmptyCell = { status: "empty" };

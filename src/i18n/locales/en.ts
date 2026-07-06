@@ -12,6 +12,7 @@ export const en = {
     lostByLives: "Out of lives",
     gridScore: "Grid score",
     originalityScore: "Originality",
+    rarityEvolvesHint: "Rarities keep shifting as more people play today.",
     feedbackQuestion: "How did you find this grid?",
     feedbackTooEasy: "Too easy",
     feedbackBalanced: "Just right",
@@ -29,7 +30,6 @@ export const en = {
     viewMyResult: "View my result",
     closeResult: "Close",
     searchResultUsed: "Already used",
-    rarityLegendHint: "Share of today's players who picked that country.",
     surveyPrompt: "Pssst, I need your feedback (5 min)",
   },
   footer: {

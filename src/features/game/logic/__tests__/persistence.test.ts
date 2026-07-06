@@ -66,7 +66,6 @@ describe("savePersistedGame / loadPersistedGame", () => {
       type: "guessSuccess",
       cell: { row: 0, col: 0 },
       countryCode: "FRA",
-      rarity: 0.4,
       validAnswers: {
         "0,0": ["FRA"],
         "0,1": ["DEU"],

@@ -1,4 +1,11 @@
-import type { FilledCell, GameState, RarityTier } from "../types";
+import type {
+  Cell,
+  CellGuessDistribution,
+  CellKey,
+  FilledCell,
+  GameState,
+  RarityTier,
+} from "../types";
 import {
   MAX_GRID_POINTS,
   ORIGINALITY_TIER_VALUES,
@@ -12,6 +19,17 @@ export function rarityToTier(rarity: number): RarityTier {
   if (rarity > RARITY_TIERS.uncommon) return "uncommon";
   if (rarity > RARITY_TIERS.rare) return "rare";
   return "ultra";
+}
+
+/** Tier d'une réponse dérivé de la distribution du jour ; `null` tant qu'elle n'a pas de donnée pour ce pays. */
+export function filledCellTier(
+  countryCode: string,
+  cellDist: CellGuessDistribution | undefined,
+): RarityTier | null {
+  if (!cellDist || cellDist.totalGuesses <= 0) return null;
+  const share = cellDist.rarityByCountry[countryCode];
+  if (share === undefined) return null;
+  return rarityToTier(share);
 }
 
 /** Part des joueurs (0..1) → entier 0..100 (clé de tri = libellé affiché). */
@@ -54,22 +72,26 @@ export function originalityToGrade(score: number): OriginalityGrade {
 }
 
 /**
- * Score d'originalité : moyenne des tier values sur les cases REMPLIES.
- * Découplé de la complétion (mesurée par le score de grille) — on ne juge que
- * la qualité des choix faits. Une grille sans case remplie vaut 0.
+ * Score d'originalité : moyenne des tier values des cases remplies, dérivées de
+ * la distribution dynamique. Découplé de la complétion. `null` tant que la
+ * distribution n'a pas livré tous les tiers ; grille vide → `{ 0, "D" }`.
  */
-export function computeOriginalityScore(state: GameState): {
-  score: number;
-  grade: OriginalityGrade;
-} {
-  const filled = Object.values(state.cells).filter(
-    (c): c is FilledCell => c.status === "filled",
+export function computeOriginalityScore(
+  cells: Record<CellKey, Cell>,
+  distribution: Record<string, CellGuessDistribution> | undefined,
+): { score: number; grade: OriginalityGrade } | null {
+  const filled = (Object.entries(cells) as [CellKey, Cell][]).filter(
+    (entry): entry is [CellKey, FilledCell] => entry[1].status === "filled",
   );
   if (filled.length === 0) return { score: 0, grade: "D" };
-  const total = filled.reduce(
-    (sum, c) => sum + ORIGINALITY_TIER_VALUES[c.rarityTier],
-    0,
-  );
+  if (!distribution) return null;
+
+  let total = 0;
+  for (const [key, cell] of filled) {
+    const tier = filledCellTier(cell.countryCode, distribution[key]);
+    if (tier === null) return null;
+    total += ORIGINALITY_TIER_VALUES[tier];
+  }
   const score = Math.round(total / filled.length);
   return { score, grade: originalityToGrade(score) };
 }

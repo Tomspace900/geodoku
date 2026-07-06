@@ -1,7 +1,6 @@
 import { describe, expect, it } from "vitest";
 import type { Cell, CellKey } from "../../types";
 import type { PersistedGame } from "../persistence";
-import { rarityToTier } from "../rarity";
 import { sanitizePersistedForGrid } from "../sanitizePersisted";
 
 const CELL_KEYS: CellKey[] = [
@@ -61,8 +60,6 @@ describe("sanitizePersistedForGrid", () => {
     cells["0,0"] = {
       status: "filled",
       countryCode: "USA",
-      rarity: 0.2,
-      rarityTier: "rare",
     };
     const p = basePersisted({
       cells,
@@ -82,14 +79,10 @@ describe("sanitizePersistedForGrid", () => {
     cells["0,0"] = {
       status: "filled",
       countryCode: "FRA",
-      rarity: 0.2,
-      rarityTier: "uncommon",
     };
     cells["0,1"] = {
       status: "filled",
       countryCode: "FRA",
-      rarity: 0.2,
-      rarityTier: "uncommon",
     };
     const p = basePersisted({
       cells,
@@ -108,8 +101,6 @@ describe("sanitizePersistedForGrid", () => {
     cells["0,0"] = {
       status: "filled",
       countryCode: "FRA",
-      rarity: 0.2,
-      rarityTier: "uncommon",
     };
     const p = basePersisted({
       cells,
@@ -124,26 +115,24 @@ describe("sanitizePersistedForGrid", () => {
     expect(sanitizePersistedForGrid(p, validAnswers)).toBeNull();
   });
 
-  it("recalcule rarityTier depuis rarity (corrige une tier bidon)", () => {
+  it("accepte une ancienne sauvegarde contenant encore rarity/rarityTier (ignorés)", () => {
     const cells = { ...emptyCells() };
-    cells["0,0"] = {
+    // Sauvegarde legacy : la rareté figée existe encore dans le JSON persisté.
+    const legacyCell = {
       status: "filled",
       countryCode: "FRA",
       rarity: 0.8,
       rarityTier: "ultra",
     };
+    cells["0,0"] = legacyCell as unknown as Cell;
     const p = basePersisted({
       cells,
       usedCountries: ["FRA"],
       remainingLives: 3,
     });
     const out = sanitizePersistedForGrid(p, validAnswers);
-    expect(out?.cells["0,0"]).toEqual({
-      status: "filled",
-      countryCode: "FRA",
-      rarity: 0.8,
-      rarityTier: rarityToTier(0.8),
-    });
+    // La case est conservée mais ramenée à sa forme dynamique (sans rareté).
+    expect(out?.cells["0,0"]).toEqual({ status: "filled", countryCode: "FRA" });
   });
 
   it("accepte une partie gagnée cohérente et fixe finishedAt si absent", () => {
@@ -163,8 +152,6 @@ describe("sanitizePersistedForGrid", () => {
       cells[k] = {
         status: "filled",
         countryCode: codes[i],
-        rarity: 0.3,
-        rarityTier: rarityToTier(0.3),
       };
     });
     const p = basePersisted({
@@ -189,14 +176,10 @@ describe("sanitizePersistedForGrid", () => {
     cells["0,0"] = {
       status: "filled",
       countryCode: "FRA",
-      rarity: 0.2,
-      rarityTier: "uncommon",
     };
     cells["0,1"] = {
       status: "filled",
       countryCode: "DEU",
-      rarity: 0.2,
-      rarityTier: "uncommon",
     };
     const blockedAnswers = {
       ...validAnswers,
@@ -220,14 +203,10 @@ describe("sanitizePersistedForGrid", () => {
     cells["0,0"] = {
       status: "filled",
       countryCode: "FRA",
-      rarity: 0.2,
-      rarityTier: "uncommon",
     };
     cells["0,1"] = {
       status: "filled",
       countryCode: "DEU",
-      rarity: 0.2,
-      rarityTier: "uncommon",
     };
     const trapAnswers = {
       "0,0": ["FRA"],
@@ -257,8 +236,6 @@ describe("sanitizePersistedForGrid", () => {
     cells["0,0"] = {
       status: "filled",
       countryCode: "FRA",
-      rarity: 0.2,
-      rarityTier: "uncommon",
     };
     cells["0,2"] = { status: "blocked" };
     const va = { ...validAnswers, "0,2": ["FRA"] };

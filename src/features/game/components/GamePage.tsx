@@ -17,7 +17,6 @@ import { GameGrid } from "./GameGrid";
 import { GuessModal } from "./GuessModal";
 import { Header } from "./Header";
 import { HowToPlayLink } from "./HowToPlayLink";
-import { RarityLegend } from "./RarityLegend";
 import { ResultScreen } from "./ResultScreen";
 import { SolutionGrid } from "./SolutionGrid";
 import { SurveyCta } from "./SurveyCta";
@@ -57,6 +56,18 @@ function LoadingSkeleton() {
   );
 }
 
+// Sous la grille (partie ET solution) : rappel que les raretés bougent au fil de
+// la journée. Le bouton d'explication du score n'apparaît qu'en solution (cf. bas
+// de page) pour ne pas surcharger l'écran de jeu.
+function RarityHint() {
+  const t = useT();
+  return (
+    <p className="text-center text-xs text-on-surface-variant italic">
+      {t("ui.rarityEvolvesHint")}
+    </p>
+  );
+}
+
 export function GamePage() {
   const posthog = usePostHog();
   const t = useT();
@@ -74,9 +85,11 @@ export function GamePage() {
     ? getGridNumberForDate(state.date)
     : getGridNumberForTodayUtc();
 
+  // Abonnée dès le chargement de la grille, partie en cours incluse : les badges
+  // de rareté sont dynamiques pendant le jeu comme sur l'écran de fin.
   const guessDistribution = useQuery(
     api.guesses.getGuessDistributionForDate,
-    state.date && state.status !== "playing" ? { date: state.date } : "skip",
+    state.date ? { date: state.date } : "skip",
   );
 
   const [resultModalDismissed, setResultModalDismissed] = useState(false);
@@ -149,7 +162,7 @@ export function GamePage() {
                 cells={state.cells}
               />
 
-              <RarityLegend />
+              <RarityHint />
 
               {/* Gaté sur la fermeture de la modale de résultat : évite un second
                   CTA sondage monté en même temps que celui de ResultScreen (état
@@ -170,16 +183,21 @@ export function GamePage() {
               )}
             </div>
           ) : (
-            <GameGrid
-              state={state}
-              onCellClick={(cell) => {
-                posthog?.capture("cell_opened", {
-                  grid_date: state.date,
-                  cell: `${cell.row},${cell.col}`,
-                });
-                selectCell(cell);
-              }}
-            />
+            <div className="flex flex-col gap-5">
+              <GameGrid
+                state={state}
+                distribution={guessDistribution ?? undefined}
+                onCellClick={(cell) => {
+                  posthog?.capture("cell_opened", {
+                    grid_date: state.date,
+                    cell: `${cell.row},${cell.col}`,
+                  });
+                  selectCell(cell);
+                }}
+              />
+
+              <RarityHint />
+            </div>
           )
         ) : (
           <ErrorScreen variant="no-grid-today" />
@@ -204,6 +222,7 @@ export function GamePage() {
         <ResultScreen
           state={state}
           gridNumber={gridNumber}
+          distribution={guessDistribution ?? undefined}
           onDismiss={() => dismissResultModal("dismiss_modal")}
           onRated={() => markRated(state.date)}
           onViewAnswers={(source) => dismissResultModal(source)}

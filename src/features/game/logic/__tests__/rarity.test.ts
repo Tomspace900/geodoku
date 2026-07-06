@@ -1,8 +1,15 @@
 import { describe, expect, it } from "vitest";
-import type { CellKey, GameState, RarityTier } from "../../types";
+import type {
+  Cell,
+  CellGuessDistribution,
+  CellKey,
+  GameState,
+  RarityTier,
+} from "../../types";
 import {
   computeGridScore,
   computeOriginalityScore,
+  filledCellTier,
   formatRarityPercent,
   originalityToGrade,
   raritySharePercent,
@@ -78,36 +85,42 @@ const RARITY_VALUES: Record<RarityTier, number> = {
   ultra: 0.05,
 };
 
-function fillAllCells(state: GameState, tier: RarityTier): GameState {
+function fillAllCells(state: GameState): GameState {
   const cells = { ...state.cells };
   for (let i = 0 as 0 | 1 | 2; i <= 2; i++) {
     for (let j = 0 as 0 | 1 | 2; j <= 2; j++) {
       cells[`${i},${j}` as CellKey] = {
         status: "filled",
         countryCode: `C${i}${j}`,
-        rarity: RARITY_VALUES[tier],
-        rarityTier: tier,
       };
     }
   }
   return { ...state, cells };
 }
 
-function fillCells(
-  state: GameState,
-  keys: CellKey[],
-  tier: RarityTier,
-): GameState {
+function fillCells(state: GameState, keys: CellKey[]): GameState {
   const cells = { ...state.cells };
   for (const key of keys) {
-    cells[key] = {
-      status: "filled",
-      countryCode: key,
-      rarity: RARITY_VALUES[tier],
-      rarityTier: tier,
-    };
+    cells[key] = { status: "filled", countryCode: key };
   }
   return { ...state, cells };
+}
+
+/** Distribution attribuant le même `share` à chaque pays rempli (tier uniforme). */
+function uniformDistribution(
+  cells: Record<CellKey, Cell>,
+  share: number,
+): Record<string, CellGuessDistribution> {
+  const dist: Record<string, CellGuessDistribution> = {};
+  for (const [key, cell] of Object.entries(cells) as [CellKey, Cell][]) {
+    if (cell.status === "filled") {
+      dist[key] = {
+        totalGuesses: 10,
+        rarityByCountry: { [cell.countryCode]: share },
+      };
+    }
+  }
+  return dist;
 }
 
 describe("computeGridScore", () => {
@@ -121,7 +134,7 @@ describe("computeGridScore", () => {
   });
 
   it("returns 100% for 9 filled cells + 5 lives (flawless win)", () => {
-    const state = fillAllCells(makeState(), "ultra");
+    const state = fillAllCells(makeState());
     expect(computeGridScore(state)).toEqual({
       percent: 100,
       filledCount: 9,
@@ -130,7 +143,7 @@ describe("computeGridScore", () => {
   });
 
   it("returns 64% for 9 filled cells + 0 lives", () => {
-    const state = fillAllCells(makeState({ remainingLives: 0 }), "common");
+    const state = fillAllCells(makeState({ remainingLives: 0 }));
     // (9 + 0) / 14 = 64.3 → 64 %
     expect(computeGridScore(state)).toEqual({
       percent: 64,
@@ -140,11 +153,11 @@ describe("computeGridScore", () => {
   });
 
   it("returns 21% for 3 filled + 0 lives (lost mid-game)", () => {
-    const state = fillCells(
-      makeState({ status: "lost", remainingLives: 0 }),
-      ["0,0", "0,1", "0,2"],
-      "uncommon",
-    );
+    const state = fillCells(makeState({ status: "lost", remainingLives: 0 }), [
+      "0,0",
+      "0,1",
+      "0,2",
+    ]);
     // (3 + 0) / 14 = 21.4 → 21 %
     expect(computeGridScore(state)).toEqual({
       percent: 21,
@@ -155,11 +168,14 @@ describe("computeGridScore", () => {
 
   it("rounds to nearest integer for non-integer percentages", () => {
     // 6 filled + 2 lives = 8 / 14 = 57.1 → 57 %
-    const state = fillCells(
-      makeState({ remainingLives: 2 }),
-      ["0,0", "0,1", "0,2", "1,0", "1,1", "1,2"],
-      "uncommon",
-    );
+    const state = fillCells(makeState({ remainingLives: 2 }), [
+      "0,0",
+      "0,1",
+      "0,2",
+      "1,0",
+      "1,1",
+      "1,2",
+    ]);
     expect(computeGridScore(state)).toEqual({
       percent: 57,
       filledCount: 6,
@@ -168,49 +184,102 @@ describe("computeGridScore", () => {
   });
 });
 
+describe("filledCellTier", () => {
+  it("derives the tier from the country's share", () => {
+    expect(
+      filledCellTier("FR", { totalGuesses: 10, rarityByCountry: { FR: 0.05 } }),
+    ).toBe("ultra");
+    expect(
+      filledCellTier("FR", { totalGuesses: 10, rarityByCountry: { FR: 0.8 } }),
+    ).toBe("common");
+  });
+
+  it("returns null while the distribution is loading (undefined)", () => {
+    expect(filledCellTier("FR", undefined)).toBeNull();
+  });
+
+  it("returns null when the cell has no guesses yet", () => {
+    expect(
+      filledCellTier("FR", { totalGuesses: 0, rarityByCountry: {} }),
+    ).toBeNull();
+  });
+
+  it("returns null when the country is absent from the distribution", () => {
+    expect(
+      filledCellTier("FR", { totalGuesses: 10, rarityByCountry: { IT: 0.5 } }),
+    ).toBeNull();
+  });
+});
+
 describe("computeOriginalityScore", () => {
-  it("returns 0 / D for an empty grid", () => {
-    expect(computeOriginalityScore(makeState())).toEqual({
+  it("returns 0 / D for an empty grid (même sans distribution)", () => {
+    expect(computeOriginalityScore(makeState().cells, undefined)).toEqual({
       score: 0,
       grade: "D",
     });
   });
 
+  it("returns null while the distribution is loading (cases remplies, pas encore de données)", () => {
+    const state = fillAllCells(makeState());
+    expect(computeOriginalityScore(state.cells, undefined)).toBeNull();
+  });
+
+  it("returns null when a filled cell is missing from the distribution", () => {
+    const state = fillCells(makeState(), ["0,0", "0,1"]);
+    // Seule 0,0 est couverte → 0,1 non résolu ⇒ score pas prêt.
+    const dist = {
+      "0,0": {
+        totalGuesses: 10,
+        rarityByCountry: { "0,0": RARITY_VALUES.rare },
+      },
+    };
+    expect(computeOriginalityScore(state.cells, dist)).toBeNull();
+  });
+
   it("returns 0 / D for 9 common cells", () => {
-    expect(
-      computeOriginalityScore(fillAllCells(makeState(), "common")),
-    ).toEqual({
+    const state = fillAllCells(makeState());
+    const dist = uniformDistribution(state.cells, RARITY_VALUES.common);
+    expect(computeOriginalityScore(state.cells, dist)).toEqual({
       score: 0,
       grade: "D",
     });
   });
 
   it("returns 40 / B for 9 uncommon cells", () => {
-    expect(
-      computeOriginalityScore(fillAllCells(makeState(), "uncommon")),
-    ).toEqual({ score: 40, grade: "B" });
+    const state = fillAllCells(makeState());
+    const dist = uniformDistribution(state.cells, RARITY_VALUES.uncommon);
+    expect(computeOriginalityScore(state.cells, dist)).toEqual({
+      score: 40,
+      grade: "B",
+    });
   });
 
   it("returns 70 / S for 9 rare cells", () => {
-    expect(computeOriginalityScore(fillAllCells(makeState(), "rare"))).toEqual({
+    const state = fillAllCells(makeState());
+    const dist = uniformDistribution(state.cells, RARITY_VALUES.rare);
+    expect(computeOriginalityScore(state.cells, dist)).toEqual({
       score: 70,
       grade: "S",
     });
   });
 
   it("returns 100 / S for 9 ultra cells", () => {
-    expect(computeOriginalityScore(fillAllCells(makeState(), "ultra"))).toEqual(
-      {
-        score: 100,
-        grade: "S",
-      },
-    );
+    const state = fillAllCells(makeState());
+    const dist = uniformDistribution(state.cells, RARITY_VALUES.ultra);
+    expect(computeOriginalityScore(state.cells, dist)).toEqual({
+      score: 100,
+      grade: "S",
+    });
   });
 
   it("ignores empty cells — averages over filled only (3 ultras + 6 empty → 100 / S)", () => {
-    const state = fillCells(makeState(), ["0,0", "0,1", "0,2"], "ultra");
+    const state = fillCells(makeState(), ["0,0", "0,1", "0,2"]);
+    const dist = uniformDistribution(state.cells, RARITY_VALUES.ultra);
     // Découplé de la complétion : 3 × 100 / 3 cases remplies = 100.
-    expect(computeOriginalityScore(state)).toEqual({ score: 100, grade: "S" });
+    expect(computeOriginalityScore(state.cells, dist)).toEqual({
+      score: 100,
+      grade: "S",
+    });
   });
 });
 

@@ -2,7 +2,6 @@ import type { Cell, CellKey, GameStatus } from "../types";
 import { hasEmptyCell, markBlockedCells } from "./blockedDetection";
 import { STARTING_LIVES } from "./constants";
 import type { PersistedGame } from "./persistence";
-import { rarityToTier } from "./rarity";
 
 const CELL_KEYS: CellKey[] = [
   "0,0",
@@ -30,14 +29,8 @@ function parseFilledCell(
   if (typeof o.countryCode !== "string" || o.countryCode.length === 0)
     return null;
   if (!validForCell?.includes(o.countryCode)) return null;
-  if (typeof o.rarity !== "number" || !Number.isFinite(o.rarity)) return null;
-  const rarity = clampInt(o.rarity, 0, 1);
-  return {
-    status: "filled",
-    countryCode: o.countryCode,
-    rarity,
-    rarityTier: rarityToTier(rarity),
-  };
+  // Rareté non persistée (dynamique) : un éventuel champ legacy est ignoré.
+  return { status: "filled", countryCode: o.countryCode };
 }
 
 function parseEmptyCell(raw: unknown): Cell | null {

@@ -13,11 +13,7 @@ import {
   loadPersistedGame,
   savePersistedGame,
 } from "../logic/persistence";
-import {
-  computeGridScore,
-  computeOriginalityScore,
-  rarityToTier,
-} from "../logic/rarity";
+import { computeGridScore, rarityToTier } from "../logic/rarity";
 import { createInitialState, gameReducer } from "../logic/reducer";
 import { sanitizePersistedForGrid } from "../logic/sanitizePersisted";
 import {
@@ -104,7 +100,7 @@ export function useGameState() {
   // Notifie Convex de la fin de partie une seule fois (gagnée ou perdue) :
   // c'est ce qui alimente les compteurs de joueurs (wins/losses + agrégats),
   // indépendamment du rating qui reste facultatif.
-  // biome-ignore lint/correctness/useExhaustiveDependencies: posthog is stable; computeGridScore/computeOriginalityScore derive from state fields already in deps
+  // biome-ignore lint/correctness/useExhaustiveDependencies: posthog is stable; computeGridScore derives from state fields already in deps
   useEffect(() => {
     if (!state.date) return;
     if (state.status !== "won" && state.status !== "lost") return;
@@ -127,9 +123,8 @@ export function useGameState() {
           : "blocked";
 
     const { percent: gridScorePercent } = computeGridScore(state);
-    const { grade: originalityGrade, score: originalityScore } =
-      computeOriginalityScore(state);
 
+    // Originalité non incluse ici (dynamique) : captée par `result_screen_viewed`.
     posthog?.capture("game_completed", {
       outcome: state.status,
       end_reason: endReason,
@@ -137,8 +132,6 @@ export function useGameState() {
       filled_cells: filledCells,
       lives_left: state.remainingLives,
       grid_score_percent: gridScorePercent,
-      originality_grade: originalityGrade,
-      originality_score: originalityScore,
     });
 
     recordGameEnd({
@@ -232,7 +225,6 @@ export function useGameState() {
           type: "guessSuccess",
           cell,
           countryCode,
-          rarity: result.rarity,
           validAnswers: todayGrid.validAnswers,
         });
         posthog?.capture("guess_submitted", {
@@ -241,7 +233,7 @@ export function useGameState() {
           country_code: countryCode,
           rarity_tier: rarityToTier(result.rarity),
         });
-        return { ok: true as const, rarity: result.rarity };
+        return { ok: true as const };
       } catch {
         return failGuess("wrong_constraints", countryCode);
       }
