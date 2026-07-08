@@ -8,28 +8,17 @@ import {
 const compareIso = (a: string, b: string) => a.localeCompare(b);
 
 describe("resolveSolutionCountryTier", () => {
-  it("uses the player's tier for their own pick", () => {
-    expect(
-      resolveSolutionCountryTier(
-        "FR",
-        {
-          status: "filled",
-          countryCode: "FR",
-          rarity: 0.2,
-          rarityTier: "rare",
-        },
-        10,
-        { FR: 0.5 },
-      ),
-    ).toBe("rare");
+  it("derives every country's tier from the day's share (player's pick included)", () => {
+    // 0.5 n'est pas > 0.5 → uncommon (même chemin pour la réponse du joueur).
+    expect(resolveSolutionCountryTier("FR", 10, { FR: 0.5 })).toBe("uncommon");
   });
 
   it("maps 0% share to ultra when stats exist", () => {
-    expect(resolveSolutionCountryTier("AL", undefined, 5, {})).toBe("ultra");
+    expect(resolveSolutionCountryTier("AL", 5, {})).toBe("ultra");
   });
 
   it("returns null when no stats yet", () => {
-    expect(resolveSolutionCountryTier("FR", undefined, 0, {})).toBeNull();
+    expect(resolveSolutionCountryTier("FR", 0, {})).toBeNull();
   });
 });
 
@@ -39,7 +28,6 @@ describe("orderSolutionCountries", () => {
       ["FR", "IT", "AL", "HR", "ME", "SI", "TR"],
       12,
       { IT: 0.08, HR: 0.08, TR: 0.08, FR: 0.25 },
-      undefined,
       compareIso,
     );
     expect(ordered.map((c) => c.iso)).toEqual([
@@ -58,7 +46,6 @@ describe("orderSolutionCountries", () => {
       ["DE", "AT", "CH"],
       0,
       {},
-      undefined,
       compareIso,
     );
     expect(ordered.map((c) => c.iso)).toEqual(["AT", "CH", "DE"]);
@@ -70,7 +57,6 @@ describe("orderSolutionCountries", () => {
       ["FR", "IT", "AL"],
       4,
       { FR: 0.5, IT: 0.25, AL: 0.05 },
-      undefined,
       compareIso,
     );
     expect(ordered.map((c) => c.iso)).toEqual(["AL", "IT", "FR"]);
@@ -90,7 +76,6 @@ describe("orderSolutionCountries", () => {
       ["FR", "IT", "AL", "HR", "ME", "SI", "TR"],
       12,
       rarityByCountry,
-      undefined,
       compareIso,
     );
     const displayed = ordered.map(({ iso }) =>

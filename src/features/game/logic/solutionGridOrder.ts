@@ -1,4 +1,4 @@
-import type { Cell, RarityTier } from "../types";
+import type { RarityTier } from "../types";
 import { MIN_CELL_TOTAL_GUESSES_FOR_SHARE_PERCENT } from "./constants";
 import { raritySharePercent, rarityToTier } from "./rarity";
 
@@ -12,18 +12,11 @@ function tierSortIndex(tier: RarityTier | null): number {
   return TIER_SORT_ORDER.indexOf(tier);
 }
 
-function filledUserCell(cell: Cell | undefined) {
-  return cell?.status === "filled" ? cell : undefined;
-}
-
 export function resolveSolutionCountryTier(
   iso: string,
-  userCell: Cell | undefined,
   totalGuesses: number,
   rarityByCountry: Record<string, number>,
 ): RarityTier | null {
-  const filled = filledUserCell(userCell);
-  if (filled?.countryCode === iso) return filled.rarityTier;
   if (totalGuesses > 0) return rarityToTier(rarityByCountry[iso] ?? 0);
   return null;
 }
@@ -32,18 +25,12 @@ export function orderSolutionCountries(
   codes: string[],
   totalGuesses: number,
   rarityByCountry: Record<string, number>,
-  userCell: Cell | undefined,
   compareByName: (a: string, b: string) => number,
 ): OrderedSolutionCountry[] {
   return codes
     .map((iso) => ({
       iso,
-      tier: resolveSolutionCountryTier(
-        iso,
-        userCell,
-        totalGuesses,
-        rarityByCountry,
-      ),
+      tier: resolveSolutionCountryTier(iso, totalGuesses, rarityByCountry),
     }))
     .sort((a, b) => {
       if (totalGuesses >= MIN_CELL_TOTAL_GUESSES_FOR_SHARE_PERCENT) {

@@ -41,7 +41,7 @@ const FAILED_CONSTRAINT_CLASS = cn(
 );
 
 type SubmitResult =
-  | { ok: true; rarity: number }
+  | { ok: true }
   | { ok: false; reason: string; gameOver?: boolean };
 
 type LifeFlash = {

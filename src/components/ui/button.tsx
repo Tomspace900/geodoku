@@ -16,7 +16,7 @@ const buttonVariants = cva(
         ghost:
           "text-on-surface-variant hover:text-on-surface rounded-md text-sm",
         "ghost-label":
-          "text-[10px] font-semibold tracking-widest uppercase text-on-surface-variant hover:text-on-surface",
+          "text-[0.625rem] font-semibold tracking-[0.2em] uppercase text-on-surface-variant hover:text-on-surface",
         link: "text-on-surface-variant underline underline-offset-2 decoration-outline-variant/40 hover:text-on-surface text-sm",
       },
       size: {

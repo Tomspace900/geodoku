@@ -1,10 +1,19 @@
-import type { Cell, CellKey, GameState } from "../types";
+import type { Cell, CellGuessDistribution, CellKey, GameState } from "../types";
 import { SHARE_EMOJIS, STARTING_LIVES } from "./constants";
-import { computeGridScore, computeOriginalityScore } from "./rarity";
+import {
+  computeGridScore,
+  computeOriginalityScore,
+  filledCellTier,
+} from "./rarity";
 
-/** Emoji de partage pour une cellule selon son état. */
-export function cellShareEmoji(cell: Cell): string {
-  if (cell.status === "filled") return SHARE_EMOJIS[cell.rarityTier];
+/** Emoji de partage d'une case ; le tier d'une réponse vient de la distribution du jour. */
+export function cellShareEmoji(
+  cell: Cell,
+  cellDist: CellGuessDistribution | undefined,
+): string {
+  if (cell.status === "filled") {
+    return SHARE_EMOJIS[filledCellTier(cell.countryCode, cellDist) ?? "common"];
+  }
   if (cell.status === "blocked") return SHARE_EMOJIS.blocked;
   return SHARE_EMOJIS.failed;
 }
@@ -17,10 +26,12 @@ export function cellShareEmoji(cell: Cell): string {
 export function formatShareString(
   state: GameState,
   gridNumber: number | null,
+  distribution: Record<string, CellGuessDistribution> | undefined,
   siteUrl = "https://geodoku.app",
 ): string {
   const { percent } = computeGridScore(state);
-  const { grade } = computeOriginalityScore(state);
+  const grade =
+    computeOriginalityScore(state.cells, distribution)?.grade ?? "D";
   const hearts =
     "❤️".repeat(state.remainingLives) +
     "🤍".repeat(STARTING_LIVES - state.remainingLives);
@@ -35,8 +46,8 @@ export function formatShareString(
   for (let i = 0; i < 3; i++) {
     let line = "";
     for (let j = 0; j < 3; j++) {
-      const cell = state.cells[`${i},${j}` as CellKey];
-      line += cellShareEmoji(cell);
+      const key = `${i},${j}` as CellKey;
+      line += cellShareEmoji(state.cells[key], distribution?.[key]);
     }
     rows.push(line);
   }
@@ -66,9 +77,10 @@ function clipboardShareText(payload: SharePayload): string {
 export function buildSharePayload(
   state: GameState,
   gridNumber: number | null,
+  distribution: Record<string, CellGuessDistribution> | undefined,
   siteUrl = "https://geodoku.app",
 ): SharePayload {
-  const fullText = formatShareString(state, gridNumber, siteUrl);
+  const fullText = formatShareString(state, gridNumber, distribution, siteUrl);
   const lines = fullText.split("\n");
   return {
     title: lines[0] ?? "Geodoku",
@@ -128,9 +140,10 @@ export type ShareOutcome = "shared" | "copied" | "cancelled" | "failed";
 export async function shareGameResult(
   state: GameState,
   gridNumber: number | null,
+  distribution: Record<string, CellGuessDistribution> | undefined,
   siteUrl = "https://geodoku.app",
 ): Promise<ShareOutcome> {
-  const payload = buildSharePayload(state, gridNumber, siteUrl);
+  const payload = buildSharePayload(state, gridNumber, distribution, siteUrl);
   const shareData: ShareData = {
     title: payload.title,
     text: payload.text,

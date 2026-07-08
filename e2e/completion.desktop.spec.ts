@@ -163,7 +163,7 @@ test("viewing answers after a loss reveals the solution grid", async ({
     page.getByRole("button", { name: "View my result" }),
   ).toBeVisible({ timeout: 5_000 });
   await expect(
-    page.getByText("Share of today's players who picked that country."),
+    page.getByText("Rarities keep shifting as more people play today."),
   ).toBeVisible();
 });
 

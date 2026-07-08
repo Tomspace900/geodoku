@@ -12,7 +12,11 @@ import {
   cellShareEmoji,
   shareGameResult,
 } from "@/features/game/logic/share";
-import type { CellKey, GameState } from "@/features/game/types";
+import type {
+  CellGuessDistribution,
+  CellKey,
+  GameState,
+} from "@/features/game/types";
 import { useT } from "@/i18n/LocaleContext";
 import { cn } from "@/lib/utils";
 import { usePostHog } from "@posthog/react";
@@ -39,6 +43,7 @@ const DIFFICULTY_RATINGS: ReadonlyArray<{
 type Props = {
   state: GameState;
   gridNumber: number | null;
+  distribution: Record<string, CellGuessDistribution> | undefined;
   onDismiss: () => void;
   onRated: () => void;
   onViewAnswers: (source: "view_answers_button" | "skip_feedback") => void;
@@ -47,6 +52,7 @@ type Props = {
 export function ResultScreen({
   state,
   gridNumber,
+  distribution,
   onDismiss,
   onRated,
   onViewAnswers,
@@ -66,13 +72,16 @@ export function ResultScreen({
   const [feedbackThanksVisible, setFeedbackThanksVisible] = useState(false);
   const [ratingPending, setRatingPending] = useState(false);
   const gridScore = computeGridScore(state);
-  const originality = computeOriginalityScore(state);
+  const originality = computeOriginalityScore(state.cells, distribution);
   const isWon = state.status === "won";
   const hasRated = hadFeedbackBeforeOpen || feedbackThanksVisible;
   const submitGridFeedback = useMutation(api.grids.submitGridFeedback);
 
-  // biome-ignore lint/correctness/useExhaustiveDependencies: fire once when result modal opens
+  const viewedTrackedRef = useRef(false);
+  // biome-ignore lint/correctness/useExhaustiveDependencies: une seule fois, dès que le grade dynamique est résolu (sinon il manquerait en analytics)
   useEffect(() => {
+    if (viewedTrackedRef.current || originality === null) return;
+    viewedTrackedRef.current = true;
     posthog?.capture("result_screen_viewed", {
       grid_date: state.date,
       grid_number: gridNumber,
@@ -80,10 +89,11 @@ export function ResultScreen({
       grid_score_percent: gridScore.percent,
       originality_grade: originality.grade,
     });
-  }, []);
+  }, [originality]);
 
   async function handleShare() {
-    const outcome = await shareGameResult(state, gridNumber);
+    if (originality === null) return;
+    const outcome = await shareGameResult(state, gridNumber, distribution);
     if (outcome === "cancelled" || outcome === "failed") return;
 
     setShareFeedback(outcome);
@@ -99,7 +109,7 @@ export function ResultScreen({
       grid_number: gridNumber,
       outcome: state.status,
       grid_score_percent: gridScore.percent,
-      originality_grade: originality.grade,
+      originality_grade: originality?.grade,
       share_method: outcome === "shared" ? "native" : "clipboard",
     });
   }
@@ -207,8 +217,13 @@ export function ResultScreen({
             >
               {"\u2014"}
             </span>
-            <span className="font-serif text-5xl font-medium italic tracking-tight text-on-surface">
-              {originality.grade}
+            <span
+              className={cn(
+                "font-serif text-5xl font-medium italic tracking-tight",
+                originality ? "text-on-surface" : "text-on-surface-variant/30",
+              )}
+            >
+              {originality ? originality.grade : "·"}
             </span>
           </div>
           <Eyebrow
@@ -227,8 +242,11 @@ export function ResultScreen({
           {ROWS.map((row) => (
             <div key={row} className="flex gap-1">
               {COLS.map((col) => {
-                const cell = state.cells[`${row},${col}` as CellKey];
-                const emoji = cellShareEmoji(cell);
+                const key = `${row},${col}` as CellKey;
+                const emoji = cellShareEmoji(
+                  state.cells[key],
+                  distribution?.[key],
+                );
                 return (
                   <span
                     key={col}
@@ -245,7 +263,7 @@ export function ResultScreen({
           </p>
         </div>
 
-        <AchievementCard state={state} />
+        <AchievementCard state={state} distribution={distribution} />
 
         <div className="flex flex-col gap-3">
           {hasRated ? (
@@ -288,7 +306,12 @@ export function ResultScreen({
             </>
           )}
 
-          <Button onClick={handleShare} className="w-full" size="lg">
+          <Button
+            onClick={handleShare}
+            className="w-full"
+            size="lg"
+            disabled={originality === null}
+          >
             {nativeShareAvailable ? <Share2 size={16} /> : <Copy size={16} />}
             {shareFeedback === "shared"
               ? t("ui.shareShared")

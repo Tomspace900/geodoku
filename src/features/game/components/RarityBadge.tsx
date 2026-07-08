@@ -4,12 +4,13 @@ import { useT } from "@/i18n/LocaleContext";
 import { cn } from "@/lib/utils";
 
 type Props = {
-  tier: RarityTier;
+  tier: RarityTier | null;
   className?: string;
 };
 
 export function RarityBadge({ tier, className }: Props) {
   const t = useT();
+  if (tier === null) return null;
   return (
     <span
       className={cn(

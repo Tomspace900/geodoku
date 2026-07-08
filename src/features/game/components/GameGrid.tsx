@@ -1,11 +1,18 @@
 import { CONSTRAINT_BY_ID } from "@/features/game/logic/constraints";
-import type { CellKey, CellPosition, GameState } from "@/features/game/types";
+import { filledCellTier } from "@/features/game/logic/rarity";
+import type {
+  CellGuessDistribution,
+  CellKey,
+  CellPosition,
+  GameState,
+} from "@/features/game/types";
 import { useT } from "@/i18n/LocaleContext";
 import { cn } from "@/lib/utils";
 import { CellComponent } from "./Cell";
 
 type Props = {
   state: GameState;
+  distribution: Record<string, CellGuessDistribution> | undefined;
   onCellClick: (cell: CellPosition) => void;
 };
 
@@ -15,7 +22,7 @@ const COLS = [0, 1, 2] as const;
 const headerClass =
   "flex items-center justify-center text-center text-[10px] font-medium text-on-surface-variant bg-surface-low rounded-xl p-2 leading-tight min-h-[52px]";
 
-export function GameGrid({ state, onCellClick }: Props) {
+export function GameGrid({ state, distribution, onCellClick }: Props) {
   const t = useT();
   const isPlaying = state.status === "playing";
 
@@ -50,12 +57,17 @@ export function GameGrid({ state, onCellClick }: Props) {
             const key = `${row},${col}` as CellKey;
             const cell = state.cells[key];
             const isPlayable = isPlaying && cell.status === "empty";
+            const tier =
+              cell.status === "filled"
+                ? filledCellTier(cell.countryCode, distribution?.[key])
+                : null;
             return (
               <CellComponent
                 key={key}
                 cell={cell}
                 position={{ row, col }}
                 isDisabled={!isPlayable}
+                tier={tier}
                 onClick={() => {
                   if (isPlayable) onCellClick({ row, col });
                 }}

@@ -1,5 +1,10 @@
 import { describe, expect, it, vi } from "vitest";
-import type { CellKey, GameState } from "../../types";
+import type {
+  CellGuessDistribution,
+  CellKey,
+  GameState,
+  RarityTier,
+} from "../../types";
 import { createInitialState } from "../reducer";
 import {
   buildSharePayload,
@@ -12,33 +17,37 @@ function makeState(overrides: Partial<GameState> = {}): GameState {
   return { ...createInitialState("2024-01-01", [], []), ...overrides };
 }
 
-function fillCell(
+const SHARE_BY_TIER: Record<RarityTier, number> = {
+  common: 0.8,
+  uncommon: 0.3,
+  rare: 0.15,
+  ultra: 0.05,
+};
+
+type Fill = { key: CellKey; tier: RarityTier };
+
+/** Remplit des cases (countryCode = clé) et bâtit la distribution assortie. */
+function applyFills(
   state: GameState,
-  key: CellKey,
-  tier: "common" | "uncommon" | "rare" | "ultra",
-): GameState {
-  const rarity =
-    tier === "common"
-      ? 0.8
-      : tier === "uncommon"
-        ? 0.3
-        : tier === "rare"
-          ? 0.15
-          : 0.05;
-  return {
-    ...state,
-    cells: {
-      ...state.cells,
-      [key]: { status: "filled", countryCode: key, rarity, rarityTier: tier },
-    },
-  };
+  fills: Fill[],
+): { state: GameState; distribution: Record<string, CellGuessDistribution> } {
+  const cells = { ...state.cells };
+  const distribution: Record<string, CellGuessDistribution> = {};
+  for (const { key, tier } of fills) {
+    cells[key] = { status: "filled", countryCode: key };
+    distribution[key] = {
+      totalGuesses: 10,
+      rarityByCountry: { [key]: SHARE_BY_TIER[tier] },
+    };
+  }
+  return { state: { ...state, cells }, distribution };
 }
 
 describe("formatShareString", () => {
   it("shows percent + grade but no hearts/skull for a partial (playing) state", () => {
     // 5 vies, 0 cellules → (0 + 5) / 14 = 36 %, originalité = 0 → grade D.
     const state = makeState();
-    const result = formatShareString(state, 1);
+    const result = formatShareString(state, 1, undefined);
     expect(result).toContain("Geodoku #1\n36% · D");
     expect(result).not.toContain("❤️");
     expect(result).not.toContain("💀");
@@ -46,26 +55,30 @@ describe("formatShareString", () => {
 
   it("shows hearts matching remainingLives for a won state", () => {
     const state = makeState({ status: "won", remainingLives: 2 });
-    const result = formatShareString(state, 42);
+    const result = formatShareString(state, 42, undefined);
     expect(result).toContain("Geodoku #42");
     expect(result).toContain("❤️❤️🤍🤍🤍"); // 2 hearts + 3 white
   });
 
   it("shows skull for a lost state", () => {
     const state = makeState({ status: "lost", remainingLives: 0 });
-    const result = formatShareString(state, 7);
+    const result = formatShareString(state, 7, undefined);
     expect(result).toContain("💀");
     expect(result).not.toContain("❤️");
   });
 
   it("uses correct emoji per rarity tier", () => {
-    let state = makeState({ status: "won", remainingLives: 3 });
-    state = fillCell(state, "0,0", "common");
-    state = fillCell(state, "0,1", "uncommon");
-    state = fillCell(state, "0,2", "rare");
-    state = fillCell(state, "1,0", "ultra");
+    const { state, distribution } = applyFills(
+      makeState({ status: "won", remainingLives: 3 }),
+      [
+        { key: "0,0", tier: "common" },
+        { key: "0,1", tier: "uncommon" },
+        { key: "0,2", tier: "rare" },
+        { key: "1,0", tier: "ultra" },
+      ],
+    );
 
-    const result = formatShareString(state, 1);
+    const result = formatShareString(state, 1, distribution);
     // Header occupe deux lignes (titre + cœurs, score · grade), puis ligne vide,
     // puis les 3 rows d'emojis. Donc rows à lines[3..5].
     // Row 0: common uncommon rare → 🟪🟦🟨
@@ -79,13 +92,18 @@ describe("formatShareString", () => {
 
   it("includes site URL at the end", () => {
     const state = makeState();
-    const result = formatShareString(state, 1, "https://geodoku.app");
+    const result = formatShareString(
+      state,
+      1,
+      undefined,
+      "https://geodoku.app",
+    );
     expect(result.endsWith("https://geodoku.app")).toBe(true);
   });
 
   it("omits issue number in title when gridNumber is null", () => {
     const state = makeState();
-    const result = formatShareString(state, null);
+    const result = formatShareString(state, null, undefined);
     expect(result.startsWith("Geodoku\n")).toBe(true);
     expect(result).not.toContain("Geodoku #");
   });
@@ -94,7 +112,7 @@ describe("formatShareString", () => {
 describe("buildSharePayload", () => {
   it("splits title, text and url for native share", () => {
     const state = makeState({ status: "won", remainingLives: 3 });
-    const payload = buildSharePayload(state, 5);
+    const payload = buildSharePayload(state, 5, undefined);
     expect(payload.title).toBe("Geodoku #5 ❤️❤️❤️🤍🤍");
     expect(payload.text).toContain("% · ");
     expect(payload.text).not.toContain("https://geodoku.app");
@@ -103,9 +121,9 @@ describe("buildSharePayload", () => {
 
   it("reconstructs clipboard text from payload", () => {
     const state = makeState({ status: "won", remainingLives: 3 });
-    const payload = buildSharePayload(state, 5);
+    const payload = buildSharePayload(state, 5, undefined);
     expect(`${payload.text}\n\n${payload.url}`).toBe(
-      formatShareString(state, 5),
+      formatShareString(state, 5, undefined),
     );
   });
 });
@@ -145,7 +163,7 @@ describe("shareGameResult", () => {
       clipboard: { writeText: vi.fn() },
     });
 
-    const outcome = await shareGameResult(makeState(), 1);
+    const outcome = await shareGameResult(makeState(), 1, undefined);
     expect(outcome).toBe("shared");
     expect(share).toHaveBeenCalledOnce();
 
@@ -159,7 +177,7 @@ describe("shareGameResult", () => {
       clipboard: { writeText },
     });
 
-    const outcome = await shareGameResult(makeState(), 1);
+    const outcome = await shareGameResult(makeState(), 1, undefined);
     expect(outcome).toBe("copied");
     expect(writeText).toHaveBeenCalledOnce();
 
@@ -176,7 +194,7 @@ describe("shareGameResult", () => {
       clipboard: { writeText },
     });
 
-    const outcome = await shareGameResult(makeState(), 1);
+    const outcome = await shareGameResult(makeState(), 1, undefined);
     expect(outcome).toBe("copied");
     expect(share).not.toHaveBeenCalled();
     expect(writeText).toHaveBeenCalledOnce();
@@ -195,7 +213,7 @@ describe("shareGameResult", () => {
       clipboard: { writeText: vi.fn() },
     });
 
-    const outcome = await shareGameResult(makeState(), 1);
+    const outcome = await shareGameResult(makeState(), 1, undefined);
     expect(outcome).toBe("cancelled");
 
     vi.unstubAllGlobals();

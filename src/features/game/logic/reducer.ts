@@ -6,7 +6,6 @@ import {
 import { STARTING_LIVES } from "./constants";
 import type { ConstraintId } from "./constraints";
 import type { PersistedGame } from "./persistence";
-import { rarityToTier } from "./rarity";
 
 export type GameAction =
   | { type: "init"; date: string; rows: ConstraintId[]; cols: ConstraintId[] }
@@ -15,7 +14,6 @@ export type GameAction =
       type: "guessSuccess";
       cell: CellPosition;
       countryCode: string;
-      rarity: number;
       validAnswers: Record<string, string[]>;
     }
   | { type: "guessFailure" }
@@ -58,7 +56,6 @@ function cellsAfterSuccessfulGuess(
   cells: Record<CellKey, Cell>,
   key: CellKey,
   countryCode: string,
-  rarity: number,
   validAnswers: Record<string, string[]>,
   usedCountries: Set<string>,
 ): Record<CellKey, Cell> {
@@ -67,8 +64,6 @@ function cellsAfterSuccessfulGuess(
     [key]: {
       status: "filled" as const,
       countryCode,
-      rarity,
-      rarityTier: rarityToTier(rarity),
     },
   };
   return markBlockedCells(withFill, validAnswers, usedCountries);
@@ -93,7 +88,6 @@ export function gameReducer(state: GameState, action: GameAction): GameState {
         state.cells,
         key,
         action.countryCode,
-        action.rarity,
         action.validAnswers,
         used,
       );

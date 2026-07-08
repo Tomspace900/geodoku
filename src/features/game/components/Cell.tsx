@@ -1,6 +1,6 @@
 import { getCountryByIso3 } from "@/features/countries/lib/search";
 import { UI_ANIMATION_MS } from "@/features/game/logic/constants";
-import type { Cell, CellPosition } from "@/features/game/types";
+import type { Cell, CellPosition, RarityTier } from "@/features/game/types";
 import { useLocale } from "@/i18n/LocaleContext";
 import { cn } from "@/lib/utils";
 import { Plus, X } from "lucide-react";
@@ -12,9 +12,17 @@ type Props = {
   position: CellPosition;
   isDisabled: boolean;
   onClick: () => void;
+  /** Tier dérivé de la distribution dynamique ; `null` tant qu'elle charge. */
+  tier: RarityTier | null;
 };
 
-export function CellComponent({ cell, position, isDisabled, onClick }: Props) {
+export function CellComponent({
+  cell,
+  position,
+  isDisabled,
+  onClick,
+  tier,
+}: Props) {
   const { locale, t } = useLocale();
   const prevStatusRef = useRef(cell.status);
   const [flagBounce, setFlagBounce] = useState(false);
@@ -51,7 +59,7 @@ export function CellComponent({ cell, position, isDisabled, onClick }: Props) {
         <span className="text-[9px] font-medium text-on-surface text-center leading-tight line-clamp-2 px-0.5">
           {countryName}
         </span>
-        <RarityBadge tier={cell.rarityTier} className="mt-0.5" />
+        <RarityBadge tier={tier} className="mt-0.5" />
       </div>
     );
   }

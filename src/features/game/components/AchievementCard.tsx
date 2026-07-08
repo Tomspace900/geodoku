@@ -2,8 +2,15 @@ import { getCountryByIso3 } from "@/features/countries/lib/search";
 import {
   computeGridScore,
   computeOriginalityScore,
+  filledCellTier,
 } from "@/features/game/logic/rarity";
-import type { FilledCell, GameState } from "@/features/game/types";
+import type {
+  Cell,
+  CellGuessDistribution,
+  CellKey,
+  FilledCell,
+  GameState,
+} from "@/features/game/types";
 import { useLocale, useT } from "@/i18n/LocaleContext";
 import { usePostHog } from "@posthog/react";
 import { Award } from "lucide-react";
@@ -29,17 +36,18 @@ type AchievementRaw = {
 function getUnlockedAchievement(
   state: GameState,
   locale: "fr" | "en",
+  distribution: Record<string, CellGuessDistribution> | undefined,
 ): AchievementRaw | null {
-  const filled = Object.values(state.cells).filter(
-    (c): c is FilledCell => c.status === "filled",
+  const filled = (Object.entries(state.cells) as [CellKey, Cell][]).filter(
+    (entry): entry is [CellKey, FilledCell] => entry[1].status === "filled",
   );
 
   // « Cartographe Émérite » — originalité grade S (≥ 70). On le teste avant
   // « Collectionneur Élite » : sinon il serait toujours masqué (le seuil S
   // implique plusieurs ultras → hasUltra serait toujours vrai en premier).
   if (state.status === "won") {
-    const originality = computeOriginalityScore(state);
-    if (originality.grade === "S") {
+    const originality = computeOriginalityScore(state.cells, distribution);
+    if (originality?.grade === "S") {
       return {
         id: "elite_originality",
         emoji: "🌟",
@@ -49,12 +57,12 @@ function getUnlockedAchievement(
   }
 
   // « Collectionneur Élite » — au moins une cellule ultra-rare
-  const hasUltra = filled.some((c) => c.rarityTier === "ultra");
-  if (hasUltra) {
-    const ultraCell = filled.find((c) => c.rarityTier === "ultra");
-    const country = ultraCell
-      ? getCountryByIso3(ultraCell.countryCode)
-      : undefined;
+  const ultraEntry = filled.find(
+    ([key, cell]) =>
+      filledCellTier(cell.countryCode, distribution?.[key]) === "ultra",
+  );
+  if (ultraEntry) {
+    const country = getCountryByIso3(ultraEntry[1].countryCode);
     return {
       id: "elite_collector",
       emoji: "🏆",
@@ -71,7 +79,7 @@ function getUnlockedAchievement(
   if (state.status === "won") {
     const continents = new Set(
       filled
-        .map((c) => getCountryByIso3(c.countryCode)?.continent)
+        .map(([, cell]) => getCountryByIso3(cell.countryCode)?.continent)
         .filter((c) => c !== undefined),
     );
     if (continents.size >= 3) {
@@ -92,13 +100,14 @@ function getUnlockedAchievement(
 
 type Props = {
   state: GameState;
+  distribution: Record<string, CellGuessDistribution> | undefined;
 };
 
-export function AchievementCard({ state }: Props) {
+export function AchievementCard({ state, distribution }: Props) {
   const posthog = usePostHog();
   const { locale } = useLocale();
   const t = useT();
-  const raw = getUnlockedAchievement(state, locale);
+  const raw = getUnlockedAchievement(state, locale, distribution);
 
   // biome-ignore lint/correctness/useExhaustiveDependencies: posthog is stable; raw?.id intentionally limits fire to one per distinct achievement; state.date stable within session
   useEffect(() => {

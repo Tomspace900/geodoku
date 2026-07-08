@@ -73,7 +73,6 @@ describe("gameReducer — guessSuccess", () => {
       type: "guessSuccess",
       cell: { row: 0, col: 0 },
       countryCode: "FRA",
-      rarity: 0.6,
       validAnswers: emptyValidAnswers,
     });
     expect(state.cells["0,0"].status).toBe("filled");
@@ -89,7 +88,6 @@ describe("gameReducer — guessSuccess", () => {
       type: "guessSuccess",
       cell: { row: 0, col: 0 },
       countryCode: "FRA",
-      rarity: 0.6,
       validAnswers: emptyValidAnswers,
     });
     expect(s2.selectedCell).toBeNull();
@@ -100,7 +98,6 @@ describe("gameReducer — guessSuccess", () => {
       type: "guessSuccess",
       cell: { row: 0, col: 0 },
       countryCode: "FRA",
-      rarity: 0.6,
       validAnswers: emptyValidAnswers,
     });
     expect(state.remainingLives).toBe(5);
@@ -136,7 +133,6 @@ describe("gameReducer — guessSuccess", () => {
         type: "guessSuccess",
         cell: { row, col },
         countryCode: codes[i],
-        rarity: 0.5,
         validAnswers: emptyValidAnswers,
       });
     }
@@ -174,7 +170,6 @@ describe("gameReducer — guessSuccess", () => {
         type: "guessSuccess",
         cell: { row, col },
         countryCode: codes[i],
-        rarity: 0.5,
         validAnswers: emptyValidAnswers,
       });
     }
@@ -184,7 +179,6 @@ describe("gameReducer — guessSuccess", () => {
       type: "guessSuccess",
       cell: { row: 0, col: 0 },
       countryCode: "USA",
-      rarity: 0.5,
       validAnswers: emptyValidAnswers,
     });
     expect(stateAfter).toBe(state); // same reference
@@ -206,14 +200,12 @@ describe("gameReducer — guessSuccess", () => {
       type: "guessSuccess",
       cell: { row: 0, col: 0 },
       countryCode: "FRA",
-      rarity: 0.5,
       validAnswers,
     });
     state = gameReducer(state, {
       type: "guessSuccess",
       cell: { row: 0, col: 1 },
       countryCode: "DEU",
-      rarity: 0.5,
       validAnswers,
     });
     expect(state.status).toBe("playing");
@@ -238,14 +230,12 @@ describe("gameReducer — guessSuccess", () => {
       type: "guessSuccess",
       cell: { row: 0, col: 0 },
       countryCode: "FRA",
-      rarity: 0.5,
       validAnswers,
     });
     state = gameReducer(state, {
       type: "guessSuccess",
       cell: { row: 0, col: 1 },
       countryCode: "DEU",
-      rarity: 0.5,
       validAnswers,
     });
     expect(state.status).toBe("lost");
@@ -272,7 +262,6 @@ describe("gameReducer — guessSuccess", () => {
       type: "guessSuccess",
       cell: { row: 0, col: 0 },
       countryCode: "FRA",
-      rarity: 0.5,
       validAnswers,
     });
     expect(state.status).toBe("playing");
@@ -292,7 +281,6 @@ describe("gameReducer — guessSuccess", () => {
       type: "guessSuccess",
       cell: { row: 0, col: 0 },
       countryCode: "FRA",
-      rarity: 0.5,
       validAnswers: emptyValidAnswers,
     });
     expect(stateAfter).toBe(state);
@@ -326,8 +314,6 @@ describe("gameReducer — rehydrate", () => {
         "0,0": {
           status: "filled",
           countryCode: "FRA",
-          rarity: 0.4,
-          rarityTier: "uncommon",
         },
         "0,1": { status: "empty" },
         "0,2": { status: "empty" },
@@ -393,8 +379,6 @@ describe("gameReducer — rehydrate", () => {
     persisted.cells["0,1"] = {
       status: "filled",
       countryCode: "DEU",
-      rarity: 0.4,
-      rarityTier: "uncommon",
     };
     persisted.usedCountries = ["FRA", "DEU"];
     const validAnswers = {
@@ -419,8 +403,6 @@ describe("gameReducer — rehydrate", () => {
     persisted.cells["0,1"] = {
       status: "filled",
       countryCode: "DEU",
-      rarity: 0.4,
-      rarityTier: "uncommon",
     };
     persisted.usedCountries = ["FRA", "DEU"];
     const validAnswers = {

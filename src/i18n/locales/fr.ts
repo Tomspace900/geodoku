@@ -12,6 +12,7 @@ export const fr = {
     lostByLives: "Plus de vies",
     gridScore: "Score de grille",
     originalityScore: "Originalité",
+    rarityEvolvesHint: "Les raretés évoluent au fil des parties du jour.",
     feedbackQuestion: "Comment as-tu trouvé la grille\u00A0?",
     feedbackTooEasy: "Trop facile",
     feedbackBalanced: "Bien/modérée",
@@ -29,7 +30,6 @@ export const fr = {
     viewMyResult: "Voir mon résultat",
     closeResult: "Fermer",
     searchResultUsed: "Déjà utilisé",
-    rarityLegendHint: "Pourcentage des joueurs du jour ayant soumis le pays.",
     surveyPrompt: "Pssst, j'ai besoin de ton avis (5 min)",
   },
   footer: {
