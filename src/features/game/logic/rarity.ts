@@ -48,8 +48,8 @@ export function playerLeaveOneOutShare(
 }
 
 /**
- * Tier de la réponse **du joueur** (leave-one-out) — couleur de sa case, emoji de
- * partage, succès. `null` tant que la case n'a pas de donnée.
+ * Tier de la réponse **du joueur** (leave-one-out) — couleur de sa case et emoji
+ * de partage. `null` tant que la case n'a pas de donnée.
  */
 export function playerCellTier(
   countryCode: string,

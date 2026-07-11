@@ -24,7 +24,6 @@ import { useMutation } from "convex/react";
 import { Copy, Share2, X } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import { api } from "../../../../convex/_generated/api";
-import { AchievementCard } from "./AchievementCard";
 import { ScoreDisplay } from "./ScoreDisplay";
 
 const ROWS = [0, 1, 2] as const;
@@ -241,8 +240,6 @@ export function ResultScreen({
             {`#GEODOKU${gridNumber !== null ? ` #${gridNumber}` : ""}`}
           </p>
         </div>
-
-        <AchievementCard state={state} distribution={distribution} />
 
         <div className="flex flex-col gap-3">
           {hasRated ? (

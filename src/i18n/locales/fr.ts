@@ -184,17 +184,6 @@ export const fr = {
     crashedBodyPost: ".",
     crashedCta: "Recharger l'application",
   },
-  achievement: {
-    eliteCollector: "Collectionneur\u00A0Élite",
-    eliteCollectorDesc: "Tu as trouvé {country}, un pays ultra-rare.",
-    eliteCollectorDescUnknown: "Tu as trouvé un pays ultra-rare.",
-    flawless: "Sans Faute",
-    flawlessDesc: "Aucune erreur sur cette grille.",
-    globeTrotter: "Globe-Trotter",
-    globeTrotterDesc: "Tu as parcouru {count}\u00A0continents différents.",
-    eliteOriginality: "Cartographe Émérite",
-    eliteOriginalityDesc: "Tes choix comptent parmi les plus rares du jour.",
-  },
   rarity: {
     common: "Commun",
     uncommon: "Peu commun",

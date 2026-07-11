@@ -54,22 +54,9 @@ describe("translate", () => {
   });
 
   it("leaves missing interpolation variables as {placeholder}", () => {
-    const result = translate("fr", "achievement.eliteCollectorDesc");
-    expect(result).toContain("{country}");
-  });
-
-  it("handles achievement interpolation", () => {
-    const result = translate("fr", "achievement.eliteCollectorDesc", {
-      country: "Bhoutan",
-    });
-    expect(result).toBe("Tu as trouvé Bhoutan, un pays ultra-rare.");
-  });
-
-  it("handles count interpolation for globe trotter", () => {
-    const result = translate("en", "achievement.globeTrotterDesc", {
-      count: 4,
-    });
-    expect(result).toBe("You visited 4\u00A0different continents.");
+    const result = translate("fr", "ui.possibleAnswersPartial");
+    expect(result).toContain("{remaining}");
+    expect(result).toContain("{total}");
   });
 
   it("handles constraint keys correctly", () => {

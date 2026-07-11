@@ -179,17 +179,6 @@ export const en = {
     crashedBodyPost: ".",
     crashedCta: "Reload the app",
   },
-  achievement: {
-    eliteCollector: "Elite Collector",
-    eliteCollectorDesc: "You found {country}, an ultra-rare country.",
-    eliteCollectorDescUnknown: "You found an ultra-rare country.",
-    flawless: "Flawless",
-    flawlessDesc: "No mistakes on this grid.",
-    globeTrotter: "Globe-Trotter",
-    globeTrotterDesc: "You visited {count}\u00A0different continents.",
-    eliteOriginality: "Master Cartographer",
-    eliteOriginalityDesc: "Your picks are among the rarest of the day.",
-  },
   rarity: {
     common: "Common",
     uncommon: "Uncommon",
