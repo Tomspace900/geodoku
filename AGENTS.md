@@ -156,6 +156,7 @@ pnpm build
 pnpm build:countries
 pnpm analyze:pool
 pnpm simulate:scheduling          # validateur changement contraintes
+pnpm simulate:players             # simuler N joueurs sur la grille du jour (Convex HTTP, develop/dev)
 pnpm analyze:observed
 pnpm export:analytics
 
