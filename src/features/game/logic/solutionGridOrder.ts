@@ -1,16 +1,7 @@
 import type { RarityTier } from "../types";
-import { MIN_CELL_TOTAL_GUESSES_FOR_SHARE_PERCENT } from "./constants";
 import { raritySharePercent, rarityToTier } from "./rarity";
 
 export type OrderedSolutionCountry = { iso: string; tier: RarityTier | null };
-
-/** Ordre d’affichage sans stats de part : du plus rare au plus commun. */
-const TIER_SORT_ORDER: RarityTier[] = ["ultra", "rare", "uncommon", "common"];
-
-function tierSortIndex(tier: RarityTier | null): number {
-  if (tier === null) return TIER_SORT_ORDER.length;
-  return TIER_SORT_ORDER.indexOf(tier);
-}
 
 export function resolveSolutionCountryTier(
   iso: string,
@@ -33,13 +24,11 @@ export function orderSolutionCountries(
       tier: resolveSolutionCountryTier(iso, totalGuesses, rarityByCountry),
     }))
     .sort((a, b) => {
-      if (totalGuesses >= MIN_CELL_TOTAL_GUESSES_FOR_SHARE_PERCENT) {
+      // Dès la première soumission : du plus rare au plus commun (part croissante).
+      if (totalGuesses > 0) {
         const pctA = raritySharePercent(rarityByCountry[a.iso] ?? 0);
         const pctB = raritySharePercent(rarityByCountry[b.iso] ?? 0);
         if (pctA !== pctB) return pctA - pctB;
-      } else if (totalGuesses > 0) {
-        const tierDiff = tierSortIndex(a.tier) - tierSortIndex(b.tier);
-        if (tierDiff !== 0) return tierDiff;
       }
       return compareByName(a.iso, b.iso);
     });
