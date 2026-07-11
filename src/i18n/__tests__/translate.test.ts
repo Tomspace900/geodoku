@@ -49,13 +49,13 @@ describe("translate", () => {
   });
 
   it("ignores extra vars when the string has no placeholders", () => {
-    const result = translate("fr", "ui.originalityScore", { score: 87 });
-    expect(result).toBe("Originalité");
+    const result = translate("fr", "ui.appName", { score: 87 });
+    expect(result).toBe("Geodoku");
   });
 
   it("leaves missing interpolation variables as {placeholder}", () => {
-    const result = translate("fr", "achievement.eliteOriginalityDesc");
-    expect(result).toContain("{score}");
+    const result = translate("fr", "achievement.eliteCollectorDesc");
+    expect(result).toContain("{country}");
   });
 
   it("handles achievement interpolation", () => {

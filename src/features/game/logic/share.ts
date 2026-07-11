@@ -1,18 +1,15 @@
 import type { Cell, CellGuessDistribution, CellKey, GameState } from "../types";
 import { SHARE_EMOJIS, STARTING_LIVES } from "./constants";
-import {
-  computeGridScore,
-  computeOriginalityScore,
-  filledCellTier,
-} from "./rarity";
+import { playerCellTier } from "./rarity";
+import { computeScore, computeScoreBreakdown } from "./scoreVariant";
 
-/** Emoji de partage d'une case ; le tier d'une réponse vient de la distribution du jour. */
+/** Emoji de partage d'une case ; le tier de TA réponse (leave-one-out, cf. `rarity.ts`). */
 export function cellShareEmoji(
   cell: Cell,
   cellDist: CellGuessDistribution | undefined,
 ): string {
   if (cell.status === "filled") {
-    return SHARE_EMOJIS[filledCellTier(cell.countryCode, cellDist) ?? "common"];
+    return SHARE_EMOJIS[playerCellTier(cell.countryCode, cellDist) ?? "common"];
   }
   if (cell.status === "blocked") return SHARE_EMOJIS.blocked;
   return SHARE_EMOJIS.failed;
@@ -21,7 +18,7 @@ export function cellShareEmoji(
 /**
  * Chaîne copiée « partage » : format volontairement international, sans texte
  * localisable. Marque (Geodoku), numéro d’issue si post-lancement (`gridNumber`),
- * grade ASCII (S/A/B/C/D), URL et emojis — pas d’i18n ici.
+ * total en points, URL et emojis — pas d’i18n ici (`pts` est universel).
  */
 export function formatShareString(
   state: GameState,
@@ -29,9 +26,10 @@ export function formatShareString(
   distribution: Record<string, CellGuessDistribution> | undefined,
   siteUrl = "https://geodoku.app",
 ): string {
-  const { percent } = computeGridScore(state);
-  const grade =
-    computeOriginalityScore(state.cells, distribution)?.grade ?? "D";
+  const { total, gridValue, livesValue } = computeScore(
+    computeScoreBreakdown(state, distribution),
+  );
+  const points = total ?? gridValue + livesValue;
   const hearts =
     "❤️".repeat(state.remainingLives) +
     "🤍".repeat(STARTING_LIVES - state.remainingLives);
@@ -39,7 +37,7 @@ export function formatShareString(
   let titleLine = gridNumber !== null ? `Geodoku #${gridNumber}` : "Geodoku";
   if (state.status === "won") titleLine += ` ${hearts}`;
   else if (state.status === "lost") titleLine += " 💀";
-  const scoreLine = `${percent}% · ${grade}`;
+  const scoreLine = `${points} pts`;
   const header = `${titleLine}\n${scoreLine}`;
 
   const rows: string[] = [];

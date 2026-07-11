@@ -10,8 +10,6 @@ export const fr = {
     tooBad: "Dommage...",
     lostByBlock: "Tu n'as pas pu compléter",
     lostByLives: "Plus de vies",
-    gridScore: "Score de grille",
-    originalityScore: "Originalité",
     rarityEvolvesHint: "Les raretés évoluent au fil des parties du jour.",
     feedbackQuestion: "Comment as-tu trouvé la grille\u00A0?",
     feedbackTooEasy: "Trop facile",
@@ -157,7 +155,7 @@ export const fr = {
       "Tu as droit à 5 erreurs. À la cinquième, la partie est terminée.",
     rule4Title: "Vise la rareté",
     rule4Body:
-      "Plus ton pays est original et peu cité par les autres joueurs, plus ton score grimpe.",
+      "Plus ton pays est rare parmi les choix des autres joueurs du jour, plus son tier de rareté est élevé — et plus il rapporte.",
     dontShowAgain: "Ne plus afficher",
   },
   error: {
@@ -194,17 +192,33 @@ export const fr = {
     flawlessDesc: "Aucune erreur sur cette grille.",
     globeTrotter: "Globe-Trotter",
     globeTrotterDesc: "Tu as parcouru {count}\u00A0continents différents.",
-    eliteScore: "Score Exceptionnel",
-    eliteScoreDesc: "{percent}%\u00A0sur la grille — dans le top des joueurs.",
     eliteOriginality: "Cartographe Émérite",
-    eliteOriginalityDesc:
-      "Score d’originalité {score}\u00A0— grade\u00A0S, peu de joueurs y arrivent.",
+    eliteOriginalityDesc: "Tes choix comptent parmi les plus rares du jour.",
   },
   rarity: {
     common: "Commun",
     uncommon: "Peu commun",
     rare: "Rare",
     ultra: "Ultra-rare",
+  },
+  scoring: {
+    title: "Comprendre ton score",
+    intro: "Ton score de fin cumule trois bonus, sur 1000 points.",
+    gridBody: "50 points par case remplie (jusqu'à 450).",
+    rarityBody:
+      "Plus tes pays sont rares — peu choisis par les autres joueurs du jour —, plus ils rapportent. Un pays commun ne donne aucun bonus.",
+    lives: "Vies",
+    livesBody: "20 points par vie restante (jusqu'à 100).",
+    estimated:
+      "Score estimé, encore peu de joueurs aujourd'hui — il s'affinera.",
+    legendTitle: "Les tiers de rareté",
+    legendCommon: "Choisi par plus de 50\u00A0% des joueurs",
+    legendUncommon: "Choisi par 25 à 50\u00A0% des joueurs",
+    legendRare: "Choisi par 10 à 25\u00A0% des joueurs",
+    legendUltra: "Choisi par 10\u00A0% des joueurs ou moins",
+    grid: "Grille",
+    rarity: "Rareté",
+    points: "pts",
   },
   constraint: {
     continent_africa: "Pays d'Afrique",

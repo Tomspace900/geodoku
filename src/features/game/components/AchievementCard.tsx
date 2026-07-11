@@ -1,9 +1,9 @@
 import { getCountryByIso3 } from "@/features/countries/lib/search";
+import { playerCellTier } from "@/features/game/logic/rarity";
 import {
-  computeGridScore,
-  computeOriginalityScore,
-  filledCellTier,
-} from "@/features/game/logic/rarity";
+  averageRarityTier,
+  computeScoreBreakdown,
+} from "@/features/game/logic/scoreVariant";
 import type {
   Cell,
   CellGuessDistribution,
@@ -21,16 +21,13 @@ type AchievementId =
   | "elite_originality"
   | "elite_collector"
   | "flawless"
-  | "globe_trotter"
-  | "elite_score";
+  | "globe_trotter";
 
 type AchievementRaw = {
   id: AchievementId;
   emoji: string;
   countryName?: string;
   count?: number;
-  percent?: number;
-  score?: number;
 };
 
 function getUnlockedAchievement(
@@ -42,24 +39,20 @@ function getUnlockedAchievement(
     (entry): entry is [CellKey, FilledCell] => entry[1].status === "filled",
   );
 
-  // « Cartographe Émérite » — originalité grade S (≥ 70). On le teste avant
-  // « Collectionneur Élite » : sinon il serait toujours masqué (le seuil S
-  // implique plusieurs ultras → hasUltra serait toujours vrai en premier).
+  // « Cartographe Émérite » — rareté moyenne au tier ultra (leave-one-out). Testé
+  // avant « Collectionneur Élite » : sinon toujours masqué (une moyenne ultra
+  // implique plusieurs cases ultra → l'autre succès passerait en premier).
   if (state.status === "won") {
-    const originality = computeOriginalityScore(state.cells, distribution);
-    if (originality?.grade === "S") {
-      return {
-        id: "elite_originality",
-        emoji: "🌟",
-        score: originality.score,
-      };
+    const { shares } = computeScoreBreakdown(state, distribution);
+    if (shares !== null && averageRarityTier(shares) === "ultra") {
+      return { id: "elite_originality", emoji: "🌟" };
     }
   }
 
-  // « Collectionneur Élite » — au moins une cellule ultra-rare
+  // « Collectionneur Élite » — au moins une case au tier ultra (leave-one-out).
   const ultraEntry = filled.find(
     ([key, cell]) =>
-      filledCellTier(cell.countryCode, distribution?.[key]) === "ultra",
+      playerCellTier(cell.countryCode, distribution?.[key]) === "ultra",
   );
   if (ultraEntry) {
     const country = getCountryByIso3(ultraEntry[1].countryCode);
@@ -84,14 +77,6 @@ function getUnlockedAchievement(
     );
     if (continents.size >= 3) {
       return { id: "globe_trotter", emoji: "🌍", count: continents.size };
-    }
-  }
-
-  // Score de grille exceptionnel (≥ 80 %)
-  if (state.status === "won") {
-    const gridScore = computeGridScore(state);
-    if (gridScore.percent >= 80) {
-      return { id: "elite_score", emoji: "⭐", percent: gridScore.percent };
     }
   }
 
@@ -126,9 +111,7 @@ export function AchievementCard({ state, distribution }: Props) {
   switch (raw.id) {
     case "elite_originality":
       title = t("achievement.eliteOriginality");
-      description = t("achievement.eliteOriginalityDesc", {
-        score: raw.score ?? 0,
-      });
+      description = t("achievement.eliteOriginalityDesc");
       break;
     case "elite_collector":
       title = t("achievement.eliteCollector");
@@ -144,12 +127,6 @@ export function AchievementCard({ state, distribution }: Props) {
       title = t("achievement.globeTrotter");
       description = t("achievement.globeTrotterDesc", {
         count: raw.count ?? 0,
-      });
-      break;
-    case "elite_score":
-      title = t("achievement.eliteScore");
-      description = t("achievement.eliteScoreDesc", {
-        percent: raw.percent ?? 0,
       });
       break;
   }

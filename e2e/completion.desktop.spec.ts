@@ -61,7 +61,12 @@ test("filling all 9 cells triggers the victory screen", async ({ page }) => {
 
   const resultDialog = page.locator("dialog[open]");
   await expect(resultDialog).toBeVisible({ timeout: 5_000 });
-  await expect(resultDialog).toContainText(/Magnificent|Grid score/i);
+  await expect(resultDialog).toContainText(/Magnificent/i);
+
+  // Le score de fin s'affiche (héros ScoreDisplay « <total> pts »). La
+  // distribution est abonnée dès le chargement de la grille, donc le total est
+  // chiffré au moment du résultat (pas « … »).
+  await expect(resultDialog).toContainText(/\d+\s*pts/, { timeout: 5_000 });
 });
 
 // ── Partage — presse-papiers sur desktop, même si navigator.share existe ──────
@@ -118,6 +123,29 @@ test("share button copies to clipboard on desktop even when navigator.share exis
   );
   expect(clipboardText).toMatch(/Geodoku/);
   expect(clipboardText).toMatch(/[🟪🟦🟨🟥⬜⬛]/u);
+  // La ligne de score est au format international « <total> pts ».
+  expect(clipboardText).toMatch(/\d+\s*pts/);
+});
+
+// ── Score — explication (popup Info + légende de rareté) ─────────────────────
+
+test("the score info dialog explains the score with the rarity legend", async ({
+  page,
+}) => {
+  test.setTimeout(60_000);
+  // Une défaite atteint le même écran de résultat (et le ScoreDisplay) bien plus
+  // vite qu'une victoire à 9 cases ; l'icône Info y est identique.
+  await playToDefeat(page, grid);
+
+  // L'icône Info à côté du score ouvre l'explication (ScoreInfoDialog). Son
+  // aria-label est le titre de la popup — on cible le bouton par son rôle.
+  await page.getByRole("button", { name: "Understanding your score" }).click();
+
+  // La popup (portalisée au-dessus de la modale de résultat) affiche la légende
+  // des tiers de rareté (RarityLegend), absente du reste de l'écran de résultat.
+  await expect(page.getByText("The rarity tiers")).toBeVisible({
+    timeout: 5_000,
+  });
 });
 
 // ── Case bloquée (⬛) — toutes les réponses valides épuisées ailleurs ─────────

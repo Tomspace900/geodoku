@@ -14,6 +14,7 @@ import { usePostHog } from "@posthog/react";
 import { Ban, Gem, Grid3x3, Heart, HelpCircle } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
+import { RarityLegend } from "./RarityLegend";
 
 const RULES: { icon: LucideIcon; titleKey: TKey; bodyKey: TKey }[] = [
   {
@@ -142,6 +143,8 @@ export function HowToPlayLink() {
               </li>
             ))}
           </ol>
+
+          <RarityLegend />
 
           <label
             htmlFor="howtoplay-dont-show"
