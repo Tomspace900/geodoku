@@ -4,9 +4,9 @@ import { Button } from "@/components/ui/button";
 import { SurveyCta } from "@/features/game/components/SurveyCta";
 import { getOrCreateClientId } from "@/features/game/logic/clientId";
 import {
-  computeGridScore,
-  computeOriginalityScore,
-} from "@/features/game/logic/rarity";
+  computeScore,
+  computeScoreBreakdown,
+} from "@/features/game/logic/scoreVariant";
 import {
   canUseNativeShare,
   cellShareEmoji,
@@ -24,7 +24,7 @@ import { useMutation } from "convex/react";
 import { Copy, Share2, X } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import { api } from "../../../../convex/_generated/api";
-import { AchievementCard } from "./AchievementCard";
+import { ScoreDisplay } from "./ScoreDisplay";
 
 const ROWS = [0, 1, 2] as const;
 const COLS = [0, 1, 2] as const;
@@ -71,28 +71,32 @@ export function ResultScreen({
   const [hadFeedbackBeforeOpen] = useState(() => state.rated);
   const [feedbackThanksVisible, setFeedbackThanksVisible] = useState(false);
   const [ratingPending, setRatingPending] = useState(false);
-  const gridScore = computeGridScore(state);
-  const originality = computeOriginalityScore(state.cells, distribution);
+  const scoreBreakdown = computeScoreBreakdown(state, distribution);
+  const score = computeScore(scoreBreakdown);
+  const scoreReady = scoreBreakdown.shares !== null;
   const isWon = state.status === "won";
   const hasRated = hadFeedbackBeforeOpen || feedbackThanksVisible;
   const submitGridFeedback = useMutation(api.grids.submitGridFeedback);
 
   const viewedTrackedRef = useRef(false);
-  // biome-ignore lint/correctness/useExhaustiveDependencies: une seule fois, dès que le grade dynamique est résolu (sinon il manquerait en analytics)
+  // biome-ignore lint/correctness/useExhaustiveDependencies: une seule fois, dès que la rareté dynamique est résolue (sinon elle manquerait en analytics)
   useEffect(() => {
-    if (viewedTrackedRef.current || originality === null) return;
+    if (viewedTrackedRef.current || !scoreReady) return;
     viewedTrackedRef.current = true;
     posthog?.capture("result_screen_viewed", {
       grid_date: state.date,
       grid_number: gridNumber,
       outcome: state.status,
-      grid_score_percent: gridScore.percent,
-      originality_grade: originality.grade,
+      score_total: score.total,
+      score_grid: score.gridValue,
+      score_rarity: score.rarityValue,
+      score_lives: score.livesValue,
+      score_estimated: scoreBreakdown.estimated,
     });
-  }, [originality]);
+  }, [scoreReady]);
 
   async function handleShare() {
-    if (originality === null) return;
+    if (!scoreReady) return;
     const outcome = await shareGameResult(state, gridNumber, distribution);
     if (outcome === "cancelled" || outcome === "failed") return;
 
@@ -108,8 +112,10 @@ export function ResultScreen({
       grid_date: state.date,
       grid_number: gridNumber,
       outcome: state.status,
-      grid_score_percent: gridScore.percent,
-      originality_grade: originality?.grade,
+      score_total: score.total,
+      score_grid: score.gridValue,
+      score_rarity: score.rarityValue,
+      score_lives: score.livesValue,
       share_method: outcome === "shared" ? "native" : "clipboard",
     });
   }
@@ -206,36 +212,8 @@ export function ResultScreen({
           }
         />
 
-        <div className="flex flex-col items-center gap-1">
-          <div className="flex flex-wrap items-center justify-center gap-x-3 gap-y-2 text-center leading-none">
-            <span className="font-serif text-5xl font-medium tracking-tight text-brand">
-              {gridScore.percent}%
-            </span>
-            <span
-              className="shrink-0 select-none self-center pb-0.5 text-lg leading-none tracking-[0.12em] text-on-surface-variant/40"
-              aria-hidden
-            >
-              {"\u2014"}
-            </span>
-            <span
-              className={cn(
-                "font-serif text-5xl font-medium italic tracking-tight",
-                originality ? "text-on-surface" : "text-on-surface-variant/30",
-              )}
-            >
-              {originality ? originality.grade : "·"}
-            </span>
-          </div>
-          <Eyebrow
-            as="div"
-            className="flex flex-wrap justify-center gap-x-2 gap-y-0.5 text-center"
-          >
-            <span>{t("ui.gridScore")}</span>
-            <span className="text-on-surface-variant/60" aria-hidden>
-              ·
-            </span>
-            <span>{t("ui.originalityScore")}</span>
-          </Eyebrow>
+        <div className="flex justify-center">
+          <ScoreDisplay breakdown={scoreBreakdown} />
         </div>
 
         <div className="flex flex-col items-center gap-1">
@@ -262,8 +240,6 @@ export function ResultScreen({
             {`#GEODOKU${gridNumber !== null ? ` #${gridNumber}` : ""}`}
           </p>
         </div>
-
-        <AchievementCard state={state} distribution={distribution} />
 
         <div className="flex flex-col gap-3">
           {hasRated ? (
@@ -310,7 +286,7 @@ export function ResultScreen({
             onClick={handleShare}
             className="w-full"
             size="lg"
-            disabled={originality === null}
+            disabled={!scoreReady}
           >
             {nativeShareAvailable ? <Share2 size={16} /> : <Copy size={16} />}
             {shareFeedback === "shared"

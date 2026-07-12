@@ -17,6 +17,7 @@
     "analyze:pool": "tsx scripts/local/analyze-pool.ts",
     "analyze:observed": "tsx --env-file=.env.local scripts/local/analyze-observed-difficulty.ts",
     "simulate:scheduling": "tsx scripts/local/simulate-scheduling.ts",
+    "simulate:players": "tsx --env-file-if-exists=.env.local scripts/local/simulate-players.ts",
     "export:analytics": "tsx --env-file=.env.local scripts/local/export-analytics.ts",
     "dump:prod": "npx convex export --prod --path ./prod-dump.zip && npx convex import --replace-all -y ./prod-dump.zip && rm ./prod-dump.zip",
     "dump:develop": "npx convex export --preview-name develop --path ./develop-dump.zip && npx convex import --replace-all -y ./develop-dump.zip && rm ./develop-dump.zip",

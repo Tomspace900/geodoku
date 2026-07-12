@@ -13,9 +13,16 @@ import { STORAGE_KEYS, safeGet, safeSet } from "@/lib/storage";
 import { usePostHog } from "@posthog/react";
 import { Ban, Gem, Grid3x3, Heart, HelpCircle } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
+import type { ComponentType } from "react";
 import { useEffect, useRef, useState } from "react";
+import { RarityLegend } from "./RarityLegend";
 
-const RULES: { icon: LucideIcon; titleKey: TKey; bodyKey: TKey }[] = [
+const RULES: {
+  icon: LucideIcon;
+  titleKey: TKey;
+  bodyKey: TKey;
+  BodyComponent?: ComponentType<{ className?: string }>;
+}[] = [
   {
     icon: Grid3x3,
     titleKey: "howToPlay.rule1Title",
@@ -35,6 +42,7 @@ const RULES: { icon: LucideIcon; titleKey: TKey; bodyKey: TKey }[] = [
     icon: Gem,
     titleKey: "howToPlay.rule4Title",
     bodyKey: "howToPlay.rule4Body",
+    BodyComponent: RarityLegend,
   },
 ];
 
@@ -126,7 +134,7 @@ export function HowToPlayLink() {
           </DialogHeader>
 
           <ol className="space-y-4">
-            {RULES.map(({ icon: Icon, titleKey, bodyKey }) => (
+            {RULES.map(({ icon: Icon, titleKey, bodyKey, BodyComponent }) => (
               <li key={titleKey} className="flex items-start gap-3">
                 <span className="grid h-9 w-9 shrink-0 place-items-center rounded-full bg-brand/10 text-brand">
                   <Icon size={17} strokeWidth={2} />
@@ -138,6 +146,7 @@ export function HowToPlayLink() {
                   <p className="font-sans text-xs text-on-surface-variant leading-relaxed">
                     {t(bodyKey)}
                   </p>
+                  {BodyComponent && <BodyComponent className="pt-2" />}
                 </div>
               </li>
             ))}

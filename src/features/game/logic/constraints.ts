@@ -1,5 +1,7 @@
 import type { TKey } from "../../../i18n/types.ts";
-import countriesData from "../../countries/data/countries.json";
+import countriesData from "../../countries/data/countries.json" with {
+  type: "json",
+};
 import type { Country } from "../../countries/types.ts";
 
 // ─── Types ────────────────────────────────────────────────────────────────────

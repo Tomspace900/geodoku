@@ -17,11 +17,13 @@ function makeState(overrides: Partial<GameState> = {}): GameState {
   return { ...createInitialState("2024-01-01", [], []), ...overrides };
 }
 
+// Parts BRUTES (sur 10 soumissions) choisies pour qu'après leave-one-out
+// — (count − 1) / 9 — le tier DU joueur tombe bien dans la catégorie visée.
 const SHARE_BY_TIER: Record<RarityTier, number> = {
-  common: 0.8,
-  uncommon: 0.3,
-  rare: 0.15,
-  ultra: 0.05,
+  common: 0.8, // count 8 → 7/9 → common
+  uncommon: 0.5, // count 5 → 4/9 → uncommon
+  rare: 0.3, // count 3 → 2/9 → rare
+  ultra: 0.05, // count 1 → 0/9 → ultra
 };
 
 type Fill = { key: CellKey; tier: RarityTier };
@@ -44,11 +46,11 @@ function applyFills(
 }
 
 describe("formatShareString", () => {
-  it("shows percent + grade but no hearts/skull for a partial (playing) state", () => {
-    // 5 vies, 0 cellules → (0 + 5) / 14 = 36 %, originalité = 0 → grade D.
+  it("shows the total in points but no hearts/skull for a partial (playing) state", () => {
+    // 5 vies, 0 case → grille 0 + rareté 0 + vies 5 × 20 = 100 pts.
     const state = makeState();
     const result = formatShareString(state, 1, undefined);
-    expect(result).toContain("Geodoku #1\n36% · D");
+    expect(result).toContain("Geodoku #1\n100 pts");
     expect(result).not.toContain("❤️");
     expect(result).not.toContain("💀");
   });
@@ -79,7 +81,7 @@ describe("formatShareString", () => {
     );
 
     const result = formatShareString(state, 1, distribution);
-    // Header occupe deux lignes (titre + cœurs, score · grade), puis ligne vide,
+    // Header occupe deux lignes (titre + cœurs, score + carré), puis ligne vide,
     // puis les 3 rows d'emojis. Donc rows à lines[3..5].
     // Row 0: common uncommon rare → 🟪🟦🟨
     // Row 1: ultra empty empty  → 🟥⬜⬜
@@ -114,7 +116,8 @@ describe("buildSharePayload", () => {
     const state = makeState({ status: "won", remainingLives: 3 });
     const payload = buildSharePayload(state, 5, undefined);
     expect(payload.title).toBe("Geodoku #5 ❤️❤️❤️🤍🤍");
-    expect(payload.text).toContain("% · ");
+    expect(payload.text).toContain("60 pts"); // 3 vies × 20, grille/rareté 0
+
     expect(payload.text).not.toContain("https://geodoku.app");
     expect(payload.url).toBe("https://geodoku.app");
   });

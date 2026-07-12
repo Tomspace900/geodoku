@@ -10,8 +10,6 @@ export const fr = {
     tooBad: "Dommage...",
     lostByBlock: "Tu n'as pas pu compléter",
     lostByLives: "Plus de vies",
-    gridScore: "Score de grille",
-    originalityScore: "Originalité",
     rarityEvolvesHint: "Les raretés évoluent au fil des parties du jour.",
     feedbackQuestion: "Comment as-tu trouvé la grille\u00A0?",
     feedbackTooEasy: "Trop facile",
@@ -75,10 +73,14 @@ export const fr = {
     contactBodyPre: "Une question\u00A0? \u00C9cris-moi \u00E0",
   },
   changelog: {
-    eyebrow: "Derni\u00E8re mise \u00E0 jour · Juin 2026",
+    eyebrow: "Derni\u00E8re mise \u00E0 jour · Juillet 2026",
     title: "Changelog",
     backToGame: "Retour au jeu",
     entries: {
+      scoreClarityDate: "13 juillet 2026",
+      scoreClarityTitle: "Enfin un score compréhensible",
+      scoreClarityBody:
+        "Le score de fin est maintenant exprimé en points, sur 1000, calculé à partir de trois composantes claires : les cases remplies, la rareté de tes pays, et tes vies restantes. L'affichage est plus visuel et intuitif (j'espère !) avec une révélation animée. Le partage affiche maintenant ton total en points.",
       countryDataRefreshDate: "25 juin 2026",
       countryDataRefreshTitle:
         "Recherche affin\u00E9e, grilles plus vari\u00E9es",
@@ -146,18 +148,17 @@ export const fr = {
   },
   howToPlay: {
     title: "Comment jouer\u00A0?",
-    rule1Title: "Complète la grille",
+    rule1Title: "Trouve le pays",
     rule1Body:
-      "Trouve un pays qui valide la ligne et la colonne. Plusieurs réponses sont possibles\u00A0!",
+      "Il doit valider à la fois sa ligne et sa colonne. Plusieurs réponses possibles\u00A0!",
     rule2Title: "Pays unique",
     rule2Body:
       "Chaque pays ne peut être utilisé qu'une seule fois dans toute la grille.",
-    rule3Title: "5 vies maximum",
-    rule3Body:
-      "Tu as droit à 5 erreurs. À la cinquième, la partie est terminée.",
-    rule4Title: "Vise la rareté",
+    rule3Title: "5 erreurs max",
+    rule3Body: "Tu as 5 vies : chaque mauvaise réponse t'en coûte une.",
+    rule4Title: "Sois original",
     rule4Body:
-      "Plus ton pays est original et peu cité par les autres joueurs, plus ton score grimpe.",
+      "Plus ton pays est rare parmi les choix des autres joueurs du jour, plus il rapporte de points.",
     dontShowAgain: "Ne plus afficher",
   },
   error: {
@@ -186,25 +187,34 @@ export const fr = {
     crashedBodyPost: ".",
     crashedCta: "Recharger l'application",
   },
-  achievement: {
-    eliteCollector: "Collectionneur\u00A0Élite",
-    eliteCollectorDesc: "Tu as trouvé {country}, un pays ultra-rare.",
-    eliteCollectorDescUnknown: "Tu as trouvé un pays ultra-rare.",
-    flawless: "Sans Faute",
-    flawlessDesc: "Aucune erreur sur cette grille.",
-    globeTrotter: "Globe-Trotter",
-    globeTrotterDesc: "Tu as parcouru {count}\u00A0continents différents.",
-    eliteScore: "Score Exceptionnel",
-    eliteScoreDesc: "{percent}%\u00A0sur la grille — dans le top des joueurs.",
-    eliteOriginality: "Cartographe Émérite",
-    eliteOriginalityDesc:
-      "Score d’originalité {score}\u00A0— grade\u00A0S, peu de joueurs y arrivent.",
-  },
   rarity: {
     common: "Commun",
     uncommon: "Peu commun",
     rare: "Rare",
     ultra: "Ultra-rare",
+  },
+  scoring: {
+    title: "Calcul du score",
+    intro: "Ton score final additionne trois bonus, sur 1000\u00A0points.",
+    gridTitle: "Case remplie: 50\u00A0pts",
+    gridBody: "Jusqu'à 450 points, le cœur du score.",
+    livesTitle: "Vie restante: 20\u00A0pts",
+    livesBody: "Jusqu'à 100 points.",
+    rarityTitle: "Bonus de rareté",
+    rarityBody: "Jusqu'à 450 points en fonction de la rareté du pays.",
+    estimated:
+      "Peu de joueurs pour l'instant, ce score s'affinera au fil de la journée.",
+    legendCommon: "Plus de 50\u00A0% des joueurs",
+    legendUncommon: "25 à 50\u00A0%",
+    legendRare: "10 à 25\u00A0%",
+    legendUltra: "10\u00A0% ou moins",
+    legendPointsCommon: "0\u00A0pt",
+    legendPointsUncommon: "0-25\u00A0pts",
+    legendPointsRare: "25-40\u00A0pts",
+    legendPointsUltra: "40-50\u00A0pts",
+    grid: "Grille",
+    rarity: "Rareté",
+    points: "pts",
   },
   constraint: {
     continent_africa: "Pays d'Afrique",

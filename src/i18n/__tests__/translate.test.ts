@@ -49,27 +49,14 @@ describe("translate", () => {
   });
 
   it("ignores extra vars when the string has no placeholders", () => {
-    const result = translate("fr", "ui.originalityScore", { score: 87 });
-    expect(result).toBe("Originalité");
+    const result = translate("fr", "ui.appName", { score: 87 });
+    expect(result).toBe("Geodoku");
   });
 
   it("leaves missing interpolation variables as {placeholder}", () => {
-    const result = translate("fr", "achievement.eliteOriginalityDesc");
-    expect(result).toContain("{score}");
-  });
-
-  it("handles achievement interpolation", () => {
-    const result = translate("fr", "achievement.eliteCollectorDesc", {
-      country: "Bhoutan",
-    });
-    expect(result).toBe("Tu as trouvé Bhoutan, un pays ultra-rare.");
-  });
-
-  it("handles count interpolation for globe trotter", () => {
-    const result = translate("en", "achievement.globeTrotterDesc", {
-      count: 4,
-    });
-    expect(result).toBe("You visited 4\u00A0different continents.");
+    const result = translate("fr", "ui.possibleAnswersPartial");
+    expect(result).toContain("{remaining}");
+    expect(result).toContain("{total}");
   });
 
   it("handles constraint keys correctly", () => {

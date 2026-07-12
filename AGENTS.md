@@ -16,12 +16,15 @@ Geodoku est un mini-jeu web quotidien inspiré de Wordle et du Sudoku, sur le th
 
 **Le twist — rareté.** Plus le pays trouvé est rare (parmi les choix des autres joueurs de la journée), plus le tier de rareté est élevé (🟪 commun → 🟥 ultra). Un joueur qui remplit « Asie × Enclavé » avec « Bhoutan » obtient un meilleur tier qu'avec « Mongolie ».
 
-**Deux scores indépendants (V2).** Voir [`src/features/game/logic/rarity.ts`](src/features/game/logic/rarity.ts) et [`constants.ts`](src/features/game/logic/constants.ts).
+**Score de fin — additif, en points (max 1000).** `computeScore` / `computeScoreBreakdown` dans [`scoreVariant.ts`](src/features/game/logic/scoreVariant.ts). Trois parts, additionnées :
 
-- **Grille** (`computeGridScore`) : `(cellules remplies + vies restantes) / 14` → pourcentage 0–100 % (9 cases + 5 vies = 14 points max). Mesure la performance de la partie.
-- **Originalité** (`computeOriginalityScore`) : moyenne des valeurs de tier sur les **cases remplies** uniquement (grille vide = 0) — **découplé de la complétion** : ne juge que la qualité des choix. Valeurs : common 0, uncommon 40, rare 70, ultra 100. Grades : **S ≥ 70 · A ≥ 50 · B ≥ 30 · C ≥ 12 · D < 12**.
+- **Grille** : `50 × cases remplies` (max 450). L'anneau central — **cases uniquement, jamais les vies**.
+- **Rareté** : cumulée, `Σ` sur les cases remplies, `50 ×` la fraction `commonZero` de chaque part (une case vide = 0, une case commune > 50 % = 0). Max 450.
+- **Vies** : `20 × vies restantes` (max 100).
 
-**L'enjeu communautaire.** À la fin, le joueur partage sa grille sous forme d'emojis colorés (🟪🟦🟨🟥⬜⬛) avec `percent% · grade` (ex. `67% · A`), à la manière de Wordle. `⬛` = cases bloquées ; `⬜` = cases non remplies en défaite. Le partage ([`share.ts`](src/features/game/logic/share.ts)) ouvre la **feuille native** (Web Share API) **uniquement sur appareil tactile** (`canUseNativeShare` = `navigator.share` **et** pointeur principal `coarse` / `maxTouchPoints > 0`) et retombe sur le **presse-papiers** sur desktop. **Ne pas** élargir vers « feuille native dès que `navigator.share` existe » — Safari/Chrome desktop l'exposent aussi. `share_method` (`native`/`clipboard`) part dans l'event PostHog `result_shared`.
+Barème tranché sur données réelles. La rareté d'une case s'appuie sur la **part des _autres_ joueurs** (leave-one-out `(count−1)/(total−1)`, [`rarity.ts`](src/features/game/logic/rarity.ts) `playerLeaveOneOutShare`/`playerCellTier`) — sinon ton propre coup gonfle ton dénominateur et l'arc rareté plafonne sous 100 %. **Deux seuils découplés** (`constants.ts`) : sous `LOO_MIN_TOTAL` (3) soumissions, le leave-one-out est dégénéré → on garde la part **brute** ; sous `ESTIMATED_MAX_TOTAL` (5) on **estime** (marqueur « ≈ », `ScoreBreakdown.estimated`), y compris quand le leave-one-out est déjà utilisé (total 3–4 : bon estimateur mais encore mouvant, car le score est live). Affichage : anneau (grille) + couronne à **2 arcs** (rareté, couleur du tier moyen ; vies, rouge comme les cœurs, masqué à 0 vie), total au centre — [`ScoreDisplay.tsx`](src/features/game/components/ScoreDisplay.tsx). **La couleur de l'arc rareté (`averageRarityTier`) dérive de la fraction de rareté moyenne — la grandeur que l'arc mesure — pas de la moyenne des parts brutes**, pour que couleur et nombre affiché restent cohérents (à points par case égaux, couleur égale ; une seule case très commune ne fait plus basculer la couronne). Explication in-situ : `ScoreInfoDialog` (icône Info sur `ResultScreen`) + `RarityLegend` (aussi dans How-to-play). Les tiers de couleur des cases du joueur (grille, partage) sont **leave-one-out** ; la grille solution reste en part **brute** (cohorte).
+
+**L'enjeu communautaire.** À la fin, le joueur partage sa grille sous forme d'emojis colorés (🟪🟦🟨🟥⬜⬛) avec `<total> pts`, à la manière de Wordle. `⬛` = cases bloquées ; `⬜` = cases non remplies en défaite. Le partage ([`share.ts`](src/features/game/logic/share.ts)) ouvre la **feuille native** (Web Share API) **uniquement sur appareil tactile** (`canUseNativeShare` = `navigator.share` **et** pointeur principal `coarse` / `maxTouchPoints > 0`) et retombe sur le **presse-papiers** sur desktop. **Ne pas** élargir vers « feuille native dès que `navigator.share` existe » — Safari/Chrome desktop l'exposent aussi. `share_method` (`native`/`clipboard`) part dans l'event PostHog `result_shared`.
 
 **Ce que Geodoku n'est PAS.** Pas de compte, pas de login, pas de leaderboard, pas de streak inter-jours, pas de stats globales, pas d'ads, pas de mobile app. Un site web minimaliste, une partie par jour, un partage. Point.
 
@@ -153,6 +156,7 @@ pnpm build
 pnpm build:countries
 pnpm analyze:pool
 pnpm simulate:scheduling          # validateur changement contraintes
+pnpm simulate:players             # simuler N joueurs sur la grille du jour (Convex HTTP, develop/dev)
 pnpm analyze:observed
 pnpm export:analytics
 
@@ -222,9 +226,9 @@ Complémentaire à Convex (`gridFeedback`/`dailyStats` = santé grilles ; PostHo
 
 | Domaine | Events |
 | ------- | ------ |
-| Partie | `game_started`, `session_resumed`, `cell_opened`, `guess_submitted`, `guess_failed`, `game_completed` |
+| Partie | `game_started`, `session_resumed`, `cell_opened`, `guess_submitted`, `guess_failed`, `game_completed` (n'émet plus `grid_score_percent` — dérivable de `filled_cells`+`lives_left`) |
 | Saisie | `guess_modal_closed` |
-| Résultat | `result_screen_viewed`, `result_shared`, `difficulty_rated`, `achievement_unlocked`, `solution_viewed` |
+| Résultat | `result_screen_viewed`, `result_shared` (portent `score_total`/`score_grid`/`score_rarity`/`score_lives` — les anciens `originality_*`/`grid_score_percent` sont **retirés**, groupements dashboards à recréer), `difficulty_rated`, `solution_viewed`, `scoring_info_opened` (prop `source`: `result_screen`) |
 | UI | `how_to_play_*`, `locale_changed`, `footer_link_clicked`, `survey_link_clicked` / `survey_dismissed` (prop `source`: `result_screen`/`solution_screen`/`footer` ; banderole sondage post-partie via `SurveyCta` — écran de résultat sous le partage + écran de solution — gated par feature flag PostHog `survey_active` ; `geodoku:survey-done` dissocie clic (masquage définitif, cf. `isSurveyDone`) et fermeture (masquage jour courant seulement, réapparaît le lendemain) ; lien permanent et discret dans `AppFooter` (même flag, toujours affiché quel que soit `geodoku:survey-done`, mais un clic dessus masque aussi la banderole) pour rester accessible aux joueurs qui changent d'avis après avoir fermé la banderole) |
 | Légal | `legal_page_viewed`, `legal_page_left` |
 | Fiabilité | `backend_timeout_shown`, `$exception` |

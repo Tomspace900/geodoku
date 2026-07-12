@@ -13,7 +13,7 @@ import {
   loadPersistedGame,
   savePersistedGame,
 } from "../logic/persistence";
-import { computeGridScore, rarityToTier } from "../logic/rarity";
+import { rarityToTier } from "../logic/rarity";
 import { createInitialState, gameReducer } from "../logic/reducer";
 import { sanitizePersistedForGrid } from "../logic/sanitizePersisted";
 import {
@@ -100,7 +100,7 @@ export function useGameState() {
   // Notifie Convex de la fin de partie une seule fois (gagnée ou perdue) :
   // c'est ce qui alimente les compteurs de joueurs (wins/losses + agrégats),
   // indépendamment du rating qui reste facultatif.
-  // biome-ignore lint/correctness/useExhaustiveDependencies: posthog is stable; computeGridScore derives from state fields already in deps
+  // biome-ignore lint/correctness/useExhaustiveDependencies: posthog is stable; the payload derives from state fields already in deps
   useEffect(() => {
     if (!state.date) return;
     if (state.status !== "won" && state.status !== "lost") return;
@@ -122,16 +122,15 @@ export function useGameState() {
           ? "lives"
           : "blocked";
 
-    const { percent: gridScorePercent } = computeGridScore(state);
-
-    // Originalité non incluse ici (dynamique) : captée par `result_screen_viewed`.
+    // Rareté et score de fin non inclus ici (dynamiques, dépendent de la
+    // distribution) : captés par `result_screen_viewed`. `filled_cells` +
+    // `lives_left` suffisent à reconstituer la performance de grille.
     posthog?.capture("game_completed", {
       outcome: state.status,
       end_reason: endReason,
       grid_date: state.date,
       filled_cells: filledCells,
       lives_left: state.remainingLives,
-      grid_score_percent: gridScorePercent,
     });
 
     recordGameEnd({

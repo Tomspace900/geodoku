@@ -10,8 +10,6 @@ export const en = {
     tooBad: "Too bad...",
     lostByBlock: "You couldn't complete it",
     lostByLives: "Out of lives",
-    gridScore: "Grid score",
-    originalityScore: "Originality",
     rarityEvolvesHint: "Rarities keep shifting as more people play today.",
     feedbackQuestion: "How did you find this grid?",
     feedbackTooEasy: "Too easy",
@@ -75,10 +73,14 @@ export const en = {
     contactBodyPre: "A question? Write to me at",
   },
   changelog: {
-    eyebrow: "Last updated · June 2026",
+    eyebrow: "Last updated · July 2026",
     title: "Changelog",
     backToGame: "Back to the game",
     entries: {
+      scoreClarityDate: "July 13, 2026",
+      scoreClarityTitle: "A score that finally makes sense",
+      scoreClarityBody:
+        "The end score is now shown in points, out of 1000, computed from three clear components: the cells you filled, how rare your countries were, and your remaining lives. The display is more visual and intuitive (I hope!), with an animated reveal. Sharing now shows your total in points.",
       countryDataRefreshDate: "June 25, 2026",
       countryDataRefreshTitle: "Sharper search, more varied grids",
       countryDataRefreshBody:
@@ -143,17 +145,16 @@ export const en = {
   },
   howToPlay: {
     title: "How to play?",
-    rule1Title: "Complete the grid",
+    rule1Title: "Find the country",
     rule1Body:
-      "Find a country that matches both the row and column. Multiple answers are possible!",
+      "It must satisfy both its row and its column. Several answers are possible!",
     rule2Title: "Unique countries",
     rule2Body: "Each country can only be used once across the entire grid.",
-    rule3Title: "5 strikes max",
-    rule3Body:
-      "You are allowed 5 mistakes. On the fifth wrong answer, it's game over.",
-    rule4Title: "Aim for rarity",
+    rule3Title: "5 mistakes max",
+    rule3Body: "You have 5 lives: each wrong answer costs you one.",
+    rule4Title: "Be original",
     rule4Body:
-      "The more unique and less guessed your country is, the higher your score.",
+      "The rarer your country among today's players' picks, the more points it scores.",
     dontShowAgain: "Don't show again",
   },
   error: {
@@ -181,25 +182,34 @@ export const en = {
     crashedBodyPost: ".",
     crashedCta: "Reload the app",
   },
-  achievement: {
-    eliteCollector: "Elite Collector",
-    eliteCollectorDesc: "You found {country}, an ultra-rare country.",
-    eliteCollectorDescUnknown: "You found an ultra-rare country.",
-    flawless: "Flawless",
-    flawlessDesc: "No mistakes on this grid.",
-    globeTrotter: "Globe-Trotter",
-    globeTrotterDesc: "You visited {count}\u00A0different continents.",
-    eliteScore: "Outstanding Score",
-    eliteScoreDesc: "{percent}%\u00A0grid score — top of the leaderboard.",
-    eliteOriginality: "Master Cartographer",
-    eliteOriginalityDesc:
-      "Originality score {score} — grade\u00A0S, few players reach it.",
-  },
   rarity: {
     common: "Common",
     uncommon: "Uncommon",
     rare: "Rare",
     ultra: "Ultra-rare",
+  },
+  scoring: {
+    title: "How the score works",
+    intro: "Your final score adds up three bonuses, out of 1000 points.",
+    gridTitle: "Filled cell: 50 pts",
+    gridBody: "Up to 450 points, the core of the score.",
+    livesTitle: "Remaining life: 20 pts",
+    livesBody: "Up to 100 points.",
+    rarityTitle: "Rarity bonus",
+    rarityBody: "Up to 450 points depending on the country's rarity.",
+    estimated:
+      "Few players so far today, this score will sharpen through the day.",
+    legendCommon: "Over 50\u00A0% of players",
+    legendUncommon: "25 to 50\u00A0%",
+    legendRare: "10 to 25\u00A0%",
+    legendUltra: "10\u00A0% or less",
+    legendPointsCommon: "0\u00A0pt",
+    legendPointsUncommon: "0-25\u00A0pts",
+    legendPointsRare: "25-40\u00A0pts",
+    legendPointsUltra: "40-50\u00A0pts",
+    grid: "Grid",
+    rarity: "Rarity",
+    points: "pts",
   },
   constraint: {
     continent_africa: "African country",

@@ -26,7 +26,9 @@
 import { writeFileSync } from "node:fs";
 import { ConvexHttpClient } from "convex/browser";
 import { api } from "../../convex/_generated/api";
-import COUNTRIES_JSON from "../../src/features/countries/data/countries.json";
+import COUNTRIES_JSON from "../../src/features/countries/data/countries.json" with {
+  type: "json",
+};
 import type { Country } from "../../src/features/countries/types";
 import { CONSTRAINTS } from "../../src/features/game/logic/constraints";
 

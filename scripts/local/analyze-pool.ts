@@ -30,7 +30,9 @@ import {
   generateDiversePool,
   overlapCoefficient,
 } from "../../convex/lib/gridGenerator";
-import countriesJson from "../../src/features/countries/data/countries.json";
+import countriesJson from "../../src/features/countries/data/countries.json" with {
+  type: "json",
+};
 import { topKPopularity } from "../../src/features/countries/lib/popularity";
 import type { Country } from "../../src/features/countries/types";
 import { CONSTRAINTS } from "../../src/features/game/logic/constraints";

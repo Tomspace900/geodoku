@@ -1,8 +1,5 @@
 import { getCountryByIso3 } from "@/features/countries/lib/search";
-import {
-  MIN_CELL_TOTAL_GUESSES_FOR_SHARE_PERCENT,
-  RARITY_STYLES,
-} from "@/features/game/logic/constants";
+import { RARITY_STYLES } from "@/features/game/logic/constants";
 import {
   CONSTRAINT_BY_ID,
   type ConstraintId,
@@ -99,20 +96,15 @@ export function SolutionGrid({
               const countryName = country ? country.names[locale] : iso;
               const isUserPick =
                 userCell?.status === "filled" && userCell.countryCode === iso;
-              const showSharePct =
-                totalGuesses >= MIN_CELL_TOTAL_GUESSES_FOR_SHARE_PERCENT;
-              const sharePct = showSharePct
-                ? formatRarityPercent(rarityByCountry[iso] ?? 0)
-                : null;
+              const hasData = totalGuesses > 0;
+              const share = rarityByCountry[iso] ?? 0;
 
               return (
-                <span
+                <div
                   key={iso}
                   className={cn(
-                    "inline-flex max-w-full min-w-0 items-baseline gap-x-0.5 gap-y-0 rounded-md px-1 py-[3px] text-[8px] font-medium leading-snug sm:gap-x-1 sm:px-1.5 sm:py-0.5 sm:text-[11px]",
-                    tier
-                      ? RARITY_STYLES[tier]
-                      : "bg-surface-low text-on-surface",
+                    "flex w-full min-w-0 shrink-0 items-baseline gap-x-0.5 rounded-md px-1 py-[3px] text-[8px] font-medium leading-snug sm:px-1.5 sm:py-0.5 sm:text-[11px]",
+                    tier ? RARITY_STYLES[tier] : "text-on-surface",
                     isUserPick && "ring-1 ring-inset ring-on-surface/50",
                   )}
                 >
@@ -122,15 +114,23 @@ export function SolutionGrid({
                   >
                     {country?.flagEmoji ?? "🏳️"}
                   </span>
-                  <span className="flex min-w-0 flex-wrap items-baseline gap-x-0.5 sm:gap-x-1">
-                    <span className="min-w-0 break-words">{countryName}</span>
-                    {sharePct !== null && (
-                      <span className="shrink-0 text-[7px] font-normal tabular-nums text-current/85 sm:text-[9px]">
-                        ({sharePct})
+                  {/* Sur mobile la case est trop étroite pour une colonne % dédiée :
+                      le % suit le nom INLINE (il coule dans le texte, largeur max
+                      pour le nom). Sur desktop il redevient un item aligné à droite. */}
+                  <span className="min-w-0 flex-1 break-words">
+                    {countryName}
+                    {hasData && (
+                      <span className="font-normal tabular-nums sm:hidden">
+                        {` ${formatRarityPercent(share)}`}
                       </span>
                     )}
                   </span>
-                </span>
+                  {hasData && (
+                    <span className="hidden shrink-0 text-[7px] font-normal tabular-nums sm:inline sm:text-[9px]">
+                      {formatRarityPercent(share)}
+                    </span>
+                  )}
+                </div>
               );
             }
 

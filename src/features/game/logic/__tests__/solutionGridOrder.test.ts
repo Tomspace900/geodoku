@@ -52,7 +52,7 @@ describe("orderSolutionCountries", () => {
     expect(ordered.every((c) => c.tier === null)).toBe(true);
   });
 
-  it("sorts by tier when stats exist but share percent is hidden", () => {
+  it("sorts by share ascending even below the display threshold (<5)", () => {
     const ordered = orderSolutionCountries(
       ["FR", "IT", "AL"],
       4,
@@ -60,6 +60,18 @@ describe("orderSolutionCountries", () => {
       compareIso,
     );
     expect(ordered.map((c) => c.iso)).toEqual(["AL", "IT", "FR"]);
+  });
+
+  it("below 5, orders same-tier countries by finer share, not just by tier", () => {
+    // AT 20 %, CH 15 % : même tier (rare), mais CH est plus rare → CH avant AT.
+    // Un tri par tier seul (puis nom alphabétique) donnerait AT avant CH.
+    const ordered = orderSolutionCountries(
+      ["AT", "CH"],
+      4,
+      { AT: 0.2, CH: 0.15 },
+      compareIso,
+    );
+    expect(ordered.map((c) => c.iso)).toEqual(["CH", "AT"]);
   });
 
   it("keeps displayed percents monotonic top to bottom", () => {

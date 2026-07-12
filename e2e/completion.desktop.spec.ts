@@ -61,7 +61,37 @@ test("filling all 9 cells triggers the victory screen", async ({ page }) => {
 
   const resultDialog = page.locator("dialog[open]");
   await expect(resultDialog).toBeVisible({ timeout: 5_000 });
-  await expect(resultDialog).toContainText(/Magnificent|Grid score/i);
+  await expect(resultDialog).toContainText(/Magnificent/i);
+
+  // Le score de fin s'affiche (héros ScoreDisplay « <total> pts »). La
+  // distribution est abonnée dès le chargement de la grille, donc le total est
+  // chiffré au moment du résultat (pas « … »).
+  await expect(resultDialog).toContainText(/\d+\s*pts/, { timeout: 5_000 });
+});
+
+// ── Score de fin — révélation animée (compteur) ──────────────────────────────
+
+test("the end score counts up to the final total", async ({ page }) => {
+  test.setTimeout(120_000);
+  await fillEntireGrid(page);
+
+  const resultDialog = page.locator("dialog[open]");
+  await expect(resultDialog).toBeVisible({ timeout: 5_000 });
+
+  // Le total final est porté (stable) par l'aria-label du SVG dès que la rareté
+  // est résolue ; le nombre visible, lui, grimpe depuis 0 (cf. useScoreAnimation).
+  const scoreImg = resultDialog.getByRole("img", { name: /\d+\s*pts/ });
+  await expect(scoreImg).toBeVisible({ timeout: 5_000 });
+  const finalTotal = Number(
+    (await scoreImg.getAttribute("aria-label"))?.match(/\d+/)?.[0],
+  );
+  expect(finalTotal).toBeGreaterThan(0);
+
+  // Le compteur visible (seul élément en chiffres tabulaires) est encore en
+  // cours de montée — sous le total — puis converge exactement dessus.
+  const counter = resultDialog.locator("span.tabular-nums");
+  expect(Number(await counter.textContent())).toBeLessThan(finalTotal);
+  await expect(counter).toHaveText(String(finalTotal), { timeout: 10_000 });
 });
 
 // ── Partage — presse-papiers sur desktop, même si navigator.share existe ──────
@@ -118,6 +148,30 @@ test("share button copies to clipboard on desktop even when navigator.share exis
   );
   expect(clipboardText).toMatch(/Geodoku/);
   expect(clipboardText).toMatch(/[🟪🟦🟨🟥⬜⬛]/u);
+  // La ligne de score est au format international « <total> pts ».
+  expect(clipboardText).toMatch(/\d+\s*pts/);
+});
+
+// ── Score — explication (popup Info + légende de rareté) ─────────────────────
+
+test("the score info dialog explains the score with the rarity legend", async ({
+  page,
+}) => {
+  test.setTimeout(60_000);
+  // Une défaite atteint le même écran de résultat (et le ScoreDisplay) bien plus
+  // vite qu'une victoire à 9 cases ; l'icône Info y est identique.
+  await playToDefeat(page, grid);
+
+  // L'icône Info à côté du score ouvre l'explication (ScoreInfoDialog). Son
+  // aria-label est le titre de la popup — on cible le bouton par son rôle.
+  await page.getByRole("button", { name: "How the score works" }).click();
+
+  // La popup (portalisée au-dessus de la modale de résultat) affiche la légende
+  // de rareté « en points » (RarityLegend, variante points), absente du reste de
+  // l'écran de résultat — on cible un seuil de points propre à cette légende.
+  await expect(page.getByText(/40-50\s*pts/)).toBeVisible({
+    timeout: 5_000,
+  });
 });
 
 // ── Case bloquée (⬛) — toutes les réponses valides épuisées ailleurs ─────────
