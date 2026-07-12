@@ -69,6 +69,31 @@ test("filling all 9 cells triggers the victory screen", async ({ page }) => {
   await expect(resultDialog).toContainText(/\d+\s*pts/, { timeout: 5_000 });
 });
 
+// ── Score de fin — révélation animée (compteur) ──────────────────────────────
+
+test("the end score counts up to the final total", async ({ page }) => {
+  test.setTimeout(120_000);
+  await fillEntireGrid(page);
+
+  const resultDialog = page.locator("dialog[open]");
+  await expect(resultDialog).toBeVisible({ timeout: 5_000 });
+
+  // Le total final est porté (stable) par l'aria-label du SVG dès que la rareté
+  // est résolue ; le nombre visible, lui, grimpe depuis 0 (cf. useScoreAnimation).
+  const scoreImg = resultDialog.getByRole("img", { name: /\d+\s*pts/ });
+  await expect(scoreImg).toBeVisible({ timeout: 5_000 });
+  const finalTotal = Number(
+    (await scoreImg.getAttribute("aria-label"))?.match(/\d+/)?.[0],
+  );
+  expect(finalTotal).toBeGreaterThan(0);
+
+  // Le compteur visible (seul élément en chiffres tabulaires) est encore en
+  // cours de montée — sous le total — puis converge exactement dessus.
+  const counter = resultDialog.locator("span.tabular-nums");
+  expect(Number(await counter.textContent())).toBeLessThan(finalTotal);
+  await expect(counter).toHaveText(String(finalTotal), { timeout: 10_000 });
+});
+
 // ── Partage — presse-papiers sur desktop, même si navigator.share existe ──────
 
 test("share button copies to clipboard on desktop even when navigator.share exists", async ({
@@ -139,11 +164,12 @@ test("the score info dialog explains the score with the rarity legend", async ({
 
   // L'icône Info à côté du score ouvre l'explication (ScoreInfoDialog). Son
   // aria-label est le titre de la popup — on cible le bouton par son rôle.
-  await page.getByRole("button", { name: "Understanding your score" }).click();
+  await page.getByRole("button", { name: "How the score works" }).click();
 
   // La popup (portalisée au-dessus de la modale de résultat) affiche la légende
-  // des tiers de rareté (RarityLegend), absente du reste de l'écran de résultat.
-  await expect(page.getByText("The rarity tiers")).toBeVisible({
+  // de rareté « en points » (RarityLegend, variante points), absente du reste de
+  // l'écran de résultat — on cible un seuil de points propre à cette légende.
+  await expect(page.getByText(/40-50\s*pts/)).toBeVisible({
     timeout: 5_000,
   });
 });
