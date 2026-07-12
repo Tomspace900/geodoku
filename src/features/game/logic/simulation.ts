@@ -1,4 +1,6 @@
-import countriesJson from "@/features/countries/data/countries.json";
+import countriesJson from "@/features/countries/data/countries.json" with {
+  type: "json",
+};
 import { getCountryByIso3 } from "@/features/countries/lib/search";
 import type { Cell, CellKey } from "../types";
 import {

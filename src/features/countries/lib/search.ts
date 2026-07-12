@@ -1,4 +1,6 @@
-import countriesJson from "@/features/countries/data/countries.json";
+import countriesJson from "@/features/countries/data/countries.json" with {
+  type: "json",
+};
 import type { Country } from "@/features/countries/types";
 import type { Locale } from "@/i18n/types";
 import { matchSorter, rankings } from "match-sorter";

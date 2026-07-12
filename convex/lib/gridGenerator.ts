@@ -2,7 +2,9 @@
  * Pure TypeScript grid generation — no Convex runtime dependencies.
  * Safe to import in Convex actions and in Vitest tests alike.
  */
-import countriesJson from "../../src/features/countries/data/countries.json";
+import countriesJson from "../../src/features/countries/data/countries.json" with {
+  type: "json",
+};
 import type { Country } from "../../src/features/countries/types";
 import { CONSTRAINTS } from "../../src/features/game/logic/constraints";
 import {
