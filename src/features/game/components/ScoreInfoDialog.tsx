@@ -7,26 +7,35 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { useT } from "@/i18n/LocaleContext";
+import type { TKey } from "@/i18n/types";
 import { usePostHog } from "@posthog/react";
-import { Info } from "lucide-react";
+import { Gem, Grid3x3, Heart, Info } from "lucide-react";
+import type { LucideIcon } from "lucide-react";
+import type { ComponentType } from "react";
 import { useState } from "react";
 import { RarityLegend } from "./RarityLegend";
 
-/** Une part du score dans la popup : libellé + explication. */
-function ScorePart({ label, body }: { label: string; body: string }) {
-  return (
-    <div className="space-y-0.5">
-      <p className="font-sans text-sm font-semibold text-on-surface">{label}</p>
-      <p className="font-sans text-xs text-on-surface-variant leading-relaxed">
-        {body}
-      </p>
-    </div>
-  );
-}
+// Trois parts du score, mêmes icônes que « Comment jouer » (même sémantique).
+const PARTS: {
+  icon: LucideIcon;
+  titleKey: TKey;
+  bodyKey: TKey;
+  BodyComponent?: ComponentType<{ className?: string }>;
+}[] = [
+  { icon: Grid3x3, titleKey: "scoring.gridTitle", bodyKey: "scoring.gridBody" },
+  { icon: Heart, titleKey: "scoring.livesTitle", bodyKey: "scoring.livesBody" },
+  {
+    icon: Gem,
+    titleKey: "scoring.rarityTitle",
+    bodyKey: "scoring.rarityBody",
+    BodyComponent: (props) => <RarityLegend variant="points" {...props} />,
+  },
+];
 
 /**
  * Icône « Info » + popup expliquant le score (grille + rareté + vies) et la
- * légende de rareté. Rendue à côté du score sur l'écran de résultat.
+ * légende de rareté. Rendue à côté du score sur l'écran de résultat. Partage la
+ * structure du « Comment jouer » (`HowToPlayLink`) : liste à pastilles d'icônes.
  */
 export function ScoreInfoDialog() {
   const t = useT();
@@ -64,13 +73,26 @@ export function ScoreInfoDialog() {
           <p className="font-sans text-sm text-on-surface-variant leading-relaxed">
             {t("scoring.intro")}
           </p>
-          <ScorePart label={t("scoring.grid")} body={t("scoring.gridBody")} />
-          <ScorePart
-            label={t("scoring.rarity")}
-            body={t("scoring.rarityBody")}
-          />
-          <ScorePart label={t("scoring.lives")} body={t("scoring.livesBody")} />
-          <RarityLegend />
+
+          <ol className="space-y-4">
+            {PARTS.map(({ icon: Icon, titleKey, bodyKey, BodyComponent }) => (
+              <li key={titleKey} className="flex items-start gap-3">
+                <span className="grid h-9 w-9 shrink-0 place-items-center rounded-full bg-brand/10 text-brand">
+                  <Icon size={17} strokeWidth={2} />
+                </span>
+                <div className="space-y-0.5 pt-0.5">
+                  <p className="font-sans text-sm font-semibold text-on-surface leading-snug">
+                    {t(titleKey)}
+                  </p>
+                  <p className="font-sans text-xs text-on-surface-variant leading-relaxed">
+                    {t(bodyKey)}
+                  </p>
+                  {BodyComponent && <BodyComponent className="pt-2" />}
+                </div>
+              </li>
+            ))}
+          </ol>
+
           <p className="font-sans text-xs italic text-on-surface-variant">
             {t("ui.rarityEvolvesHint")}
           </p>
