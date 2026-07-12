@@ -26,10 +26,21 @@ export const RARITY_TIERS = {
 } as const;
 
 /**
- * Nombre minimal de soumissions agrégées pour une case avant d’afficher
- * le pourcentage de joueurs par pays (grille solution).
+ * Seuil d'ESTIMATEUR : total minimal de soumissions sur une case pour passer de
+ * la part brute au leave-one-out. Sous ce seuil, le leave-one-out est dégénéré
+ * (dénominateur nul à `total = 1`) ou binaire/instable (0 ou 1 à `total = 2`),
+ * donc on garde la part brute. Dès `total ≥ 3`, le leave-one-out est non biaisé.
  */
-export const MIN_CELL_TOTAL_GUESSES_FOR_SHARE_PERCENT = 5;
+export const LOO_MIN_TOTAL = 3;
+
+/**
+ * Seuil d'AVERTISSEMENT : tant qu'une case remplie reste sous ce total, la rareté
+ * est signalée provisoire (marqueur « ≈ » + message « ça s'affinera »). Découplé
+ * de `LOO_MIN_TOTAL` : entre les deux (`total` 3–4), on utilise déjà le bon
+ * estimateur (leave-one-out) mais on prévient qu'il bouge encore — le score est
+ * live (`useQuery` réactif), donc le nombre se réajuste au fil de la journée.
+ */
+export const ESTIMATED_MAX_TOTAL = 5;
 
 export const SHARE_EMOJIS = {
   failed: "⬜", // Blanc : pas de pays trouvé (sortie par les vies)

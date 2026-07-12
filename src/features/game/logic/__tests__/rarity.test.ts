@@ -103,13 +103,43 @@ describe("playerLeaveOneOutShare (part des autres joueurs)", () => {
     ).toEqual({ share: 2 / 9, estimated: false });
   });
 
-  it("retombe sur la part brute + estimated sous 5 soumissions", () => {
+  it("total ≤ 2 : leave-one-out dégénéré → part brute + estimated", () => {
+    // total = 2 : (count − 1) / 1 ne vaudrait que 0 ou 1 → on garde la brute.
     expect(
       playerLeaveOneOutShare("FR", {
-        totalGuesses: 3,
+        totalGuesses: 2,
         rarityByCountry: { FR: 0.5 },
       }),
     ).toEqual({ share: 0.5, estimated: true });
+  });
+
+  it("total = 1 : pas de division par zéro → part brute + estimated", () => {
+    expect(
+      playerLeaveOneOutShare("FR", {
+        totalGuesses: 1,
+        rarityByCountry: { FR: 1 },
+      }),
+    ).toEqual({ share: 1, estimated: true });
+  });
+
+  it("total = 3 : leave-one-out déjà utilisé, mais encore estimated", () => {
+    // FR pris par 1 des 3 joueurs → parmi les autres 0 / 2 = 0 (≠ brute 1/3).
+    expect(
+      playerLeaveOneOutShare("FR", {
+        totalGuesses: 3,
+        rarityByCountry: { FR: 1 / 3 },
+      }),
+    ).toEqual({ share: 0, estimated: true });
+  });
+
+  it("total = 5 : leave-one-out, l'avertissement estimated s'éteint", () => {
+    // FR pris par 2 des 5 joueurs → parmi les autres 1 / 4 = 0,25.
+    expect(
+      playerLeaveOneOutShare("FR", {
+        totalGuesses: 5,
+        rarityByCountry: { FR: 2 / 5 },
+      }),
+    ).toEqual({ share: 0.25, estimated: false });
   });
 
   it("null sans donnée pour ce pays / cette case", () => {

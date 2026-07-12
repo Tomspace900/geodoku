@@ -1,8 +1,5 @@
 import type { CellGuessDistribution, RarityTier } from "../types";
-import {
-  MIN_CELL_TOTAL_GUESSES_FOR_SHARE_PERCENT,
-  RARITY_TIERS,
-} from "./constants";
+import { ESTIMATED_MAX_TOTAL, LOO_MIN_TOTAL, RARITY_TIERS } from "./constants";
 
 export function rarityToTier(rarity: number): RarityTier {
   if (rarity > RARITY_TIERS.common) return "common";
@@ -28,9 +25,11 @@ export function filledCellTier(
 /**
  * Part des **autres** joueurs pour LE pick DU joueur (leave-one-out) :
  * `(count − 1) / (total − 1)`. Sans ça, ton propre coup gonfle ton dénominateur et
- * l'arc rareté plafonne sous 100 %. Sous `MIN_CELL_TOTAL_GUESSES_FOR_SHARE_PERCENT`
- * soumissions, la donnée est trop mince → on retombe sur la part brute et on signale
- * `estimated` (le score s'affinera au fil des parties du jour). `null` si pas de donnée.
+ * l'arc rareté plafonne sous 100 %. Deux seuils découplés :
+ *   - `total ≤ 2` (< `LOO_MIN_TOTAL`) : leave-one-out dégénéré → on garde la part brute.
+ *   - `total < ESTIMATED_MAX_TOTAL` : on signale `estimated` (marqueur « ≈ »), même
+ *     quand on utilise déjà le leave-one-out (`total` 3–4) — il est juste mais bouge encore.
+ * `null` si pas de donnée pour ce pays / cette case.
  */
 export function playerLeaveOneOutShare(
   countryCode: string,
@@ -40,9 +39,10 @@ export function playerLeaveOneOutShare(
   const brute = cellDist.rarityByCountry[countryCode];
   if (brute === undefined) return null;
   const total = cellDist.totalGuesses;
-  if (total > 1 && total >= MIN_CELL_TOTAL_GUESSES_FOR_SHARE_PERCENT) {
+  const estimated = total < ESTIMATED_MAX_TOTAL;
+  if (total >= LOO_MIN_TOTAL) {
     const count = Math.round(brute * total);
-    return { share: (count - 1) / (total - 1), estimated: false };
+    return { share: (count - 1) / (total - 1), estimated };
   }
   return { share: brute, estimated: true };
 }

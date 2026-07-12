@@ -25,13 +25,32 @@ function breakdown(
 const fill = (share: number, n: number): number[] =>
   Array.from({ length: n }, () => share);
 
-describe("averageRarityTier", () => {
+describe("averageRarityTier — couleur de l'arc, dérivée de la fraction de rareté", () => {
   it("returns common for an empty grid", () => {
     expect(averageRarityTier([])).toBe("common");
   });
 
-  it("maps the average player share to a tier (5% share → ultra)", () => {
+  it("mappe la fraction moyenne au tier (part 5% → fraction 0,9 → ultra)", () => {
     expect(averageRarityTier(fill(0.05, 4))).toBe<RarityTier>("ultra");
+  });
+
+  it("grille 100 % commune (part ≥ 0,5, aucune rareté) → common", () => {
+    expect(averageRarityTier(fill(0.7, 9))).toBe<RarityTier>("common");
+  });
+
+  it("part 0,4 (fraction 0,2) → uncommon", () => {
+    expect(averageRarityTier(fill(0.4, 9))).toBe<RarityTier>("uncommon");
+  });
+
+  it("part 0,25 (fraction 0,5) → rare, à la frontière", () => {
+    expect(averageRarityTier(fill(0.25, 9))).toBe<RarityTier>("rare");
+  });
+
+  it("colle au score, pas à la moyenne des parts : une case commune ne fait pas basculer la couronne", () => {
+    // 8 cases rares (part 0,2 → fraction 0,6) + 1 case très commune (part 0,9 → fraction 0).
+    // Fraction moyenne = 4,8 / 9 ≈ 0,53 → rare (cohérent avec ~240 pts de rareté).
+    // L'ancienne moyenne des parts valait (8×0,2 + 0,9)/9 ≈ 0,28 → uncommon (incohérent).
+    expect(averageRarityTier([...fill(0.2, 8), 0.9])).toBe<RarityTier>("rare");
   });
 });
 
@@ -99,7 +118,7 @@ describe("computeScoreBreakdown — leave-one-out + estimation", () => {
     ).toEqual({ shares: [], estimated: false, filledCount: 0, lives: 4 });
   });
 
-  it("part leave-one-out quand la case a assez de soumissions (≥ 5)", () => {
+  it("part leave-one-out, non estimé quand la case a assez de soumissions", () => {
     const state = makeState();
     state.cells["0,0" as CellKey] = { status: "filled", countryCode: "FR" };
     const dist: Record<string, CellGuessDistribution> = {
@@ -110,14 +129,14 @@ describe("computeScoreBreakdown — leave-one-out + estimation", () => {
     expect(b.estimated).toBe(false);
   });
 
-  it("part brute + estimated quand la case a trop peu de soumissions (< 5)", () => {
+  it("leave-one-out mais estimated dans la zone provisoire (total 3–4)", () => {
     const state = makeState();
     state.cells["0,0" as CellKey] = { status: "filled", countryCode: "FR" };
     const dist: Record<string, CellGuessDistribution> = {
-      "0,0": { totalGuesses: 2, rarityByCountry: { FR: 0.5 } },
+      "0,0": { totalGuesses: 3, rarityByCountry: { FR: 1 / 3 } },
     };
     const b = computeScoreBreakdown(state, dist);
-    expect(b.shares).toEqual([0.5]);
+    expect(b.shares).toEqual([0]); // (1 − 1) / (3 − 1) — bon estimateur, pas la brute
     expect(b.estimated).toBe(true);
   });
 

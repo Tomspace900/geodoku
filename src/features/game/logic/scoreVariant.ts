@@ -6,7 +6,7 @@ import type {
   RarityTier,
 } from "../types";
 import { RARITY_TIERS, STARTING_LIVES } from "./constants";
-import { playerLeaveOneOutShare, rarityToTier } from "./rarity";
+import { playerLeaveOneOutShare } from "./rarity";
 
 // Score de fin de partie — additif, en points. Trois parts :
 //   grille (cases remplies) + rareté (cumulée, cases vides = 0) + vies restantes.
@@ -73,11 +73,32 @@ export function computeScoreBreakdown(
   };
 }
 
-/** Tier « couleur » de l'arc rareté : le tier de la part moyenne des autres joueurs. */
+/**
+ * Bandes de tier sur la **fraction de rareté** atteinte (`f`), inverse de
+ * `rarityToTier((1 − f) / 2)` : `f = 0,5` ↔ part 0,25 (frontière uncommon/rare),
+ * `f = 0,8` ↔ part 0,1 (rare/ultra). `f = 0` = aucune rareté gagnée (toutes les
+ * cases communes, part ≥ 0,5) → `common`, cohérent avec une grille 100 % 🟪.
+ * Sert la couleur de l'arc rareté.
+ */
+function tierFromFraction(f: number): RarityTier {
+  if (f <= 0) return "common";
+  if (f < 0.5) return "uncommon";
+  if (f < 0.8) return "rare";
+  return "ultra";
+}
+
+/**
+ * Tier « couleur » de l'arc rareté. Dérivé de la **fraction de rareté moyenne**
+ * (la grandeur même que l'arc mesure), et non de la moyenne des parts brutes :
+ * couleur et nombre affiché restent cohérents (à points par case égaux, couleur
+ * égale), et une seule case très commune ne fait plus basculer toute la couronne.
+ */
 export function averageRarityTier(shares: number[]): RarityTier {
   if (shares.length === 0) return "common";
-  const avgShare = shares.reduce((a, b) => a + b, 0) / shares.length;
-  return rarityToTier(avgShare);
+  const avgFraction =
+    shares.reduce((acc, share) => acc + rarityFraction(share), 0) /
+    shares.length;
+  return tierFromFraction(avgFraction);
 }
 
 // ── Calcul du score (3 parts : grille + rareté + vies) ───────────────────────
