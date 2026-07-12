@@ -73,10 +73,14 @@ export const fr = {
     contactBodyPre: "Une question\u00A0? \u00C9cris-moi \u00E0",
   },
   changelog: {
-    eyebrow: "Derni\u00E8re mise \u00E0 jour · Juin 2026",
+    eyebrow: "Derni\u00E8re mise \u00E0 jour · Juillet 2026",
     title: "Changelog",
     backToGame: "Retour au jeu",
     entries: {
+      scoreClarityDate: "13 juillet 2026",
+      scoreClarityTitle: "Enfin un score compréhensible",
+      scoreClarityBody:
+        "Le score de fin est maintenant exprimé en points, sur 1000, calculé à partir de trois composantes claires : les cases remplies, la rareté de tes pays, et tes vies restantes. L'affichage est plus visuel et intuitif (j'espère !) avec une révélation animée. Le partage affiche maintenant ton total en points.",
       countryDataRefreshDate: "25 juin 2026",
       countryDataRefreshTitle:
         "Recherche affin\u00E9e, grilles plus vari\u00E9es",

@@ -73,10 +73,14 @@ export const en = {
     contactBodyPre: "A question? Write to me at",
   },
   changelog: {
-    eyebrow: "Last updated · June 2026",
+    eyebrow: "Last updated · July 2026",
     title: "Changelog",
     backToGame: "Back to the game",
     entries: {
+      scoreClarityDate: "July 13, 2026",
+      scoreClarityTitle: "A score that finally makes sense",
+      scoreClarityBody:
+        "The end score is now shown in points, out of 1000, computed from three clear components: the cells you filled, how rare your countries were, and your remaining lives. The display is more visual and intuitive (I hope!), with an animated reveal. Sharing now shows your total in points.",
       countryDataRefreshDate: "June 25, 2026",
       countryDataRefreshTitle: "Sharper search, more varied grids",
       countryDataRefreshBody:
