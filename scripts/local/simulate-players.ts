@@ -1,8 +1,8 @@
 /**
  * Simule N joueurs sur la grille du jour via Convex HTTP (sans navigateur).
  * Soumet de vrais guesses + recordGameEnd — cas d'usage normal : cloud dev
- * perso (`convex dev`) ou preview develop. Refus uniquement si
- * `CONVEX_DEPLOYMENT` vaut `prod:*` (sauf `--force`).
+ * perso (`convex dev`) ou preview develop. Refus si `CONVEX_DEPLOYMENT` vaut
+ * `prod:*` ou est absente (cible non vérifiable), sauf `--force`.
  *
  * Usage:
  *   pnpm simulate:players --count 10
@@ -45,7 +45,7 @@ Options:
   --end=REASON    Cause de fin : win | lives | blocked
   --seed=N        Graine aléatoire reproductible
   --dry-run       Affiche les plans sans appeler Convex
-  --force         Autoriser même si CONVEX_DEPLOYMENT=prod:*
+  --force         Autoriser même si CONVEX_DEPLOYMENT=prod:* ou absente
   -h, --help      Afficher cette aide
 
 Profils explicites (exemples):
@@ -59,7 +59,7 @@ Mode aléatoire (défaut, sans --lives/--filled/--end):
 
 Environnement:
   VITE_CONVEX_URL     URL Convex (lu depuis .env.local)
-  CONVEX_DEPLOYMENT   Refus si prod:* (sauf --force)
+  CONVEX_DEPLOYMENT   Refus si prod:* ou absente (sauf --force)
 
 Exemples:
   pnpm simulate:players --count 20
@@ -161,9 +161,20 @@ function inferTarget(args: CliArgs): PlayerTarget | null {
 }
 
 /** Prod Convex uniquement — le cloud dev perso (`dev:*`) et les previews passent. */
-function isProductionConvexDeployment(): boolean {
+// Le script écrit de vrais guesses vers `VITE_CONVEX_URL`, mais une URL seule ne
+// dit pas si elle vise la prod. On se fie donc à `CONVEX_DEPLOYMENT`
+// (`prod:*` / `dev:*` / `preview:*`) comme signal. Par sécurité on refuse aussi
+// quand la variable est absente : sans elle, impossible de garantir que la cible
+// n'est pas la prod. `--force` court-circuite en connaissance de cause.
+function unsafeConvexTargetReason(): string | null {
   const deployment = process.env.CONVEX_DEPLOYMENT?.trim();
-  return deployment?.startsWith("prod:") ?? false;
+  if (!deployment) {
+    return "CONVEX_DEPLOYMENT non définie — impossible de vérifier que la cible n'est pas la prod";
+  }
+  if (deployment.startsWith("prod:")) {
+    return `déploiement de production (${deployment})`;
+  }
+  return null;
 }
 
 // ─── Exécution ────────────────────────────────────────────────────────────────
@@ -228,9 +239,10 @@ if (!convexUrl) {
   process.exit(1);
 }
 
-if (isProductionConvexDeployment() && !cli.force) {
+const unsafeReason = unsafeConvexTargetReason();
+if (unsafeReason && !cli.force) {
   console.error(
-    `Refus de simuler sur la prod Convex (${process.env.CONVEX_DEPLOYMENT}).`,
+    `Refus de simuler : ${unsafeReason}.`,
     "Utiliser `convex dev`, preview develop, ou passer --force en connaissance de cause.",
   );
   process.exit(1);
