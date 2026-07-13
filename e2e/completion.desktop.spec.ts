@@ -61,7 +61,9 @@ test("filling all 9 cells triggers the victory screen", async ({ page }) => {
 
   const resultDialog = page.locator("dialog[open]");
   await expect(resultDialog).toBeVisible({ timeout: 5_000 });
-  await expect(resultDialog).toContainText(/Magnificent/i);
+  // Le titre de fin est désormais tiré au sort ; on identifie la victoire par la
+  // grille de partage — 9 cases remplies, donc aucune case vide (⬜) ni bloquée (⬛).
+  await expect(resultDialog).not.toContainText(/[⬜⬛]/);
 
   // Le score de fin s'affiche (héros ScoreDisplay « <total> pts »). La
   // distribution est abonnée dès le chargement de la grille, donc le total est

@@ -124,5 +124,7 @@ test("five wrong answers trigger the defeat screen", async ({ page }) => {
   await playToDefeat(page, grid);
 
   const resultDialog = page.locator("dialog[open]");
-  await expect(resultDialog).toContainText(/Too bad|Out of lives/i);
+  // Le titre de fin est tiré au sort ; on identifie la défaite par la grille de
+  // partage, qui comporte des cases non remplies (⬜).
+  await expect(resultDialog).toContainText("⬜");
 });

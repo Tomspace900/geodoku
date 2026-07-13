@@ -4,6 +4,10 @@ import { Button } from "@/components/ui/button";
 import { SurveyCta } from "@/features/game/components/SurveyCta";
 import { getOrCreateClientId } from "@/features/game/logic/clientId";
 import {
+  type ResultOutcome,
+  resultTitleKeys,
+} from "@/features/game/logic/resultTitle";
+import {
   computeScore,
   computeScoreBreakdown,
 } from "@/features/game/logic/scoreVariant";
@@ -18,6 +22,7 @@ import type {
   GameState,
 } from "@/features/game/types";
 import { useT } from "@/i18n/LocaleContext";
+import type { TKey } from "@/i18n/types";
 import { cn } from "@/lib/utils";
 import { usePostHog } from "@posthog/react";
 import { useMutation } from "convex/react";
@@ -75,6 +80,22 @@ export function ResultScreen({
   const score = computeScore(scoreBreakdown);
   const scoreReady = scoreBreakdown.shares !== null;
   const isWon = state.status === "won";
+  // Titre de fin pioché une fois (avec un peu d'aléatoire) selon l'issue : palier de
+  // score en victoire, consolation en défaite par vies, libellé unique en cas de
+  // blocage (rare). Le total est déjà chiffré à l'ouverture (rareté abonnée au
+  // chargement de la grille) ; à défaut on retombe sur la part certaine grille + vies.
+  const resultOutcome: ResultOutcome = isWon
+    ? {
+        status: "won",
+        total: score.total ?? score.gridValue + score.livesValue,
+      }
+    : state.remainingLives > 0
+      ? { status: "lostByBlock" }
+      : { status: "lostByLives" };
+  const [resultTitleKey] = useState<TKey>(() => {
+    const keys = resultTitleKeys(resultOutcome);
+    return keys[Math.floor(Math.random() * keys.length)];
+  });
   const hasRated = hadFeedbackBeforeOpen || feedbackThanksVisible;
   const submitGridFeedback = useMutation(api.grids.submitGridFeedback);
 
@@ -198,18 +219,7 @@ export function ResultScreen({
           as="h2"
           size="lg"
           centered
-          title={
-            <span id="result-screen-title">
-              {isWon ? t("ui.magnificent") : t("ui.tooBad")}
-            </span>
-          }
-          eyebrow={
-            !isWon
-              ? state.remainingLives > 0
-                ? t("ui.lostByBlock")
-                : t("ui.lostByLives")
-              : undefined
-          }
+          title={<span id="result-screen-title">{t(resultTitleKey)}</span>}
         />
 
         <div className="flex justify-center">
