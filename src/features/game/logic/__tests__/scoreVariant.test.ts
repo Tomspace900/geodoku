@@ -30,26 +30,26 @@ describe("averageRarityTier — couleur de l'arc, dérivée de la fraction de ra
     expect(averageRarityTier([])).toBe("common");
   });
 
-  it("mappe la fraction moyenne au tier (part 5% → fraction 0,9 → ultra)", () => {
+  it("mappe la fraction au tier (part 5 % → fraction 1,0, plancher ultra → ultra)", () => {
     expect(averageRarityTier(fill(0.05, 4))).toBe<RarityTier>("ultra");
   });
 
-  it("grille 100 % commune (part ≥ 0,5, aucune rareté) → common", () => {
+  it("grille 100 % très commune (part ≥ 0,6, aucune rareté) → common", () => {
     expect(averageRarityTier(fill(0.7, 9))).toBe<RarityTier>("common");
   });
 
-  it("part 0,4 (fraction 0,2) → uncommon", () => {
+  it("part 0,4 (fraction 0,4) → uncommon", () => {
     expect(averageRarityTier(fill(0.4, 9))).toBe<RarityTier>("uncommon");
   });
 
-  it("part 0,25 (fraction 0,5) → rare, à la frontière", () => {
+  it("part 0,25 (fraction 0,7) → rare, à la frontière", () => {
     expect(averageRarityTier(fill(0.25, 9))).toBe<RarityTier>("rare");
   });
 
   it("colle au score, pas à la moyenne des parts : une case commune ne fait pas basculer la couronne", () => {
-    // 8 cases rares (part 0,2 → fraction 0,6) + 1 case très commune (part 0,9 → fraction 0).
-    // Fraction moyenne = 4,8 / 9 ≈ 0,53 → rare (cohérent avec ~240 pts de rareté).
-    // L'ancienne moyenne des parts valait (8×0,2 + 0,9)/9 ≈ 0,28 → uncommon (incohérent).
+    // 8 cases rares (part 0,2 → fraction 0,8) + 1 case très commune (part 0,9 → fraction 0).
+    // Fraction moyenne = 6,4 / 9 ≈ 0,71 → rare. La moyenne des PARTS brutes serait
+    // (8×0,2 + 0,9)/9 ≈ 0,28 (uncommon) — d'où le raisonnement en fraction.
     expect(averageRarityTier([...fill(0.2, 8), 0.9])).toBe<RarityTier>("rare");
   });
 });
@@ -67,15 +67,26 @@ describe("computeScore — barème tranché (grille 50 · rareté 50 · vies 20,
     });
   });
 
-  it("case commune (part > 50 %) → aucun bonus de rareté", () => {
+  it("part ≥ 0,6 (très commun) → aucun bonus de rareté", () => {
     const r = computeScore(breakdown(fill(0.7, 9), 9, 5));
     expect(r.rarityValue).toBe(0);
     expect(r.total).toBe(550); // 450 grille + 0 rareté + 100 vies
   });
 
-  it("sous 50 %, la case rapporte au prorata : part 0,25 → moitié de la case", () => {
-    // 9 cases à 0,25 → fraction 0,5 → 9 × 0,5 × 50 = 225.
-    expect(computeScore(breakdown(fill(0.25, 9), 9, 0)).rarityValue).toBe(225);
+  it("part 0,25 (frontière rare) → 0,7 de case = 35 pts → 315", () => {
+    // (0,6 − 0,25)/0,5 = 0,7 → 9 × 0,7 × 50 = 315.
+    expect(computeScore(breakdown(fill(0.25, 9), 9, 0)).rarityValue).toBe(315);
+  });
+
+  it("plancher ultra : part ≤ 0,1 → case pleine (50)", () => {
+    // (0,6 − 0,1)/0,5 = 1 : dès la frontière ultra, la case vaut le max.
+    expect(computeScore(breakdown(fill(0.1, 9), 9, 0)).rarityValue).toBe(450);
+  });
+
+  it("Z=0,6 : un commun proche du seuil rapporte encore, ≥ 0,6 = 0", () => {
+    // part 0,55 → (0,6 − 0,55)/0,5 = 0,1 → 5 pts/case → 45 ; part 0,6 → 0.
+    expect(computeScore(breakdown(fill(0.55, 9), 9, 0)).rarityValue).toBe(45);
+    expect(computeScore(breakdown(fill(0.6, 9), 9, 0)).rarityValue).toBe(0);
   });
 
   it("cumulée : une case non remplie vaut 0 (pas de prorata sur les vides)", () => {
@@ -102,8 +113,9 @@ describe("computeScore — barème tranché (grille 50 · rareté 50 · vies 20,
   });
 
   it("arrondi une seule fois sur la somme (pas case par case)", () => {
-    // 9 cases à 1/3 : fraction 1/3 → 9 × (1/3) × 50 = 150 exactement.
-    expect(computeScore(breakdown(fill(1 / 3, 9), 9, 0)).rarityValue).toBe(150);
+    // 9 cases à 1/3 : (0,6 − 1/3)/0,5 = 0,533… → 9 × 0,533… × 50 = 240 (arrondi
+    // global, ≠ 243 si l'on arrondissait 26,67 par case).
+    expect(computeScore(breakdown(fill(1 / 3, 9), 9, 0)).rarityValue).toBe(240);
   });
 });
 
@@ -111,32 +123,32 @@ function makeState(overrides: Partial<GameState> = {}): GameState {
   return { ...createInitialState("2024-01-01", [], []), ...overrides };
 }
 
-describe("computeScoreBreakdown — leave-one-out + estimation", () => {
+describe("computeScoreBreakdown — part brute + estimation", () => {
   it("grille vide : shares [], non estimé, sans distribution", () => {
     expect(
       computeScoreBreakdown(makeState({ remainingLives: 4 }), undefined),
     ).toEqual({ shares: [], estimated: false, filledCount: 0, lives: 4 });
   });
 
-  it("part leave-one-out, non estimé quand la case a assez de soumissions", () => {
+  it("part brute du jour, non estimé quand la case a assez de soumissions", () => {
     const state = makeState();
     state.cells["0,0" as CellKey] = { status: "filled", countryCode: "FR" };
     const dist: Record<string, CellGuessDistribution> = {
       "0,0": { totalGuesses: 10, rarityByCountry: { FR: 0.3 } },
     };
     const b = computeScoreBreakdown(state, dist);
-    expect(b.shares).toEqual([2 / 9]); // (3 − 1) / (10 − 1)
+    expect(b.shares).toEqual([0.3]);
     expect(b.estimated).toBe(false);
   });
 
-  it("leave-one-out mais estimated dans la zone provisoire (total 3–4)", () => {
+  it("part brute + estimated tant que la case est mince (total < 5)", () => {
     const state = makeState();
     state.cells["0,0" as CellKey] = { status: "filled", countryCode: "FR" };
     const dist: Record<string, CellGuessDistribution> = {
       "0,0": { totalGuesses: 3, rarityByCountry: { FR: 1 / 3 } },
     };
     const b = computeScoreBreakdown(state, dist);
-    expect(b.shares).toEqual([0]); // (1 − 1) / (3 − 1) — bon estimateur, pas la brute
+    expect(b.shares).toEqual([1 / 3]);
     expect(b.estimated).toBe(true);
   });
 

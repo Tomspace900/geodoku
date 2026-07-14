@@ -22,7 +22,6 @@ import type {
   GameState,
 } from "@/features/game/types";
 import { useT } from "@/i18n/LocaleContext";
-import type { TKey } from "@/i18n/types";
 import { cn } from "@/lib/utils";
 import { usePostHog } from "@posthog/react";
 import { useMutation } from "convex/react";
@@ -80,22 +79,33 @@ export function ResultScreen({
   const score = computeScore(scoreBreakdown);
   const scoreReady = scoreBreakdown.shares !== null;
   const isWon = state.status === "won";
-  // Titre de fin pioché une fois (avec un peu d'aléatoire) selon l'issue : palier de
-  // score en victoire, consolation en défaite par vies, libellé unique en cas de
-  // blocage (rare). Le total est déjà chiffré à l'ouverture (rareté abonnée au
-  // chargement de la grille) ; à défaut on retombe sur la part certaine grille + vies.
+  const [titleRoll] = useState(Math.random);
+  const [titleTotal, setTitleTotal] = useState<number | null>(
+    () => score.total,
+  );
+
+  // En victoire, le palier se fige au premier score complet : le fallback permet
+  // d'afficher immédiatement le titre si la rareté charge encore, puis le corrige
+  // une seule fois. Le même tirage est réutilisé entre banques et ne reroule pas.
+  useEffect(() => {
+    if (titleTotal === null && score.total !== null) {
+      setTitleTotal(score.total);
+    }
+  }, [score.total, titleTotal]);
+
   const resultOutcome: ResultOutcome = isWon
     ? {
         status: "won",
-        total: score.total ?? score.gridValue + score.livesValue,
+        total: titleTotal ?? score.gridValue + score.livesValue,
       }
     : state.remainingLives > 0
       ? { status: "lostByBlock" }
       : { status: "lostByLives" };
-  const [resultTitleKey] = useState<TKey>(() => {
-    const keys = resultTitleKeys(resultOutcome);
-    return keys[Math.floor(Math.random() * keys.length)];
-  });
+  const resultTitleKeysForOutcome = resultTitleKeys(resultOutcome);
+  const resultTitleKey =
+    resultTitleKeysForOutcome[
+      Math.floor(titleRoll * resultTitleKeysForOutcome.length)
+    ];
   const hasRated = hadFeedbackBeforeOpen || feedbackThanksVisible;
   const submitGridFeedback = useMutation(api.grids.submitGridFeedback);
 

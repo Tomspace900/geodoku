@@ -171,7 +171,7 @@ test("the score info dialog explains the score with the rarity legend", async ({
   // La popup (portalisée au-dessus de la modale de résultat) affiche la légende
   // de rareté « en points » (RarityLegend, variante points), absente du reste de
   // l'écran de résultat — on cible un seuil de points propre à cette légende.
-  await expect(page.getByText(/40-50\s*pts/)).toBeVisible({
+  await expect(page.getByText(/35-49\s*pts/)).toBeVisible({
     timeout: 5_000,
   });
 });

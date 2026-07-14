@@ -237,5 +237,11 @@ export function useScoreAnimation(input: Input): ScoreAnimation {
     };
   }
 
-  return { ...frame, finalTotal, done };
+  // Une fois la séquence terminée, le total central suit les mises à jour **live**
+  // de la rareté (query Convex réactive) au lieu de rester figé sur la dernière
+  // frame animée — sinon la légende se réactualise (ex. +336) mais le total central
+  // reste faux. Cohérent avec `finalTotal` et le chemin reduced-motion, déjà live.
+  const displayTotal =
+    done && finalTotal !== null ? finalTotal : frame.displayTotal;
+  return { ...frame, displayTotal, finalTotal, done };
 }

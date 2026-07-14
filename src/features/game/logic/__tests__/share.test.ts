@@ -17,13 +17,13 @@ function makeState(overrides: Partial<GameState> = {}): GameState {
   return { ...createInitialState("2024-01-01", [], []), ...overrides };
 }
 
-// Parts BRUTES (sur 10 soumissions) choisies pour qu'après leave-one-out
-// — (count − 1) / 9 — le tier DU joueur tombe bien dans la catégorie visée.
+// Parts brutes du jour choisies pour tomber directement dans chaque tier
+// (rarityToTier : > 0,5 common · > 0,25 uncommon · > 0,1 rare · sinon ultra).
 const SHARE_BY_TIER: Record<RarityTier, number> = {
-  common: 0.8, // count 8 → 7/9 → common
-  uncommon: 0.5, // count 5 → 4/9 → uncommon
-  rare: 0.3, // count 3 → 2/9 → rare
-  ultra: 0.05, // count 1 → 0/9 → ultra
+  common: 0.8, // > 0,5 → common
+  uncommon: 0.4, // 0,25–0,5 → uncommon
+  rare: 0.15, // 0,1–0,25 → rare
+  ultra: 0.05, // ≤ 0,1 → ultra
 };
 
 type Fill = { key: CellKey; tier: RarityTier };

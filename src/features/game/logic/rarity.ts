@@ -1,5 +1,5 @@
 import type { CellGuessDistribution, RarityTier } from "../types";
-import { ESTIMATED_MAX_TOTAL, LOO_MIN_TOTAL, RARITY_TIERS } from "./constants";
+import { ESTIMATED_MAX_TOTAL, RARITY_TIERS } from "./constants";
 
 export function rarityToTier(rarity: number): RarityTier {
   if (rarity > RARITY_TIERS.common) return "common";
@@ -9,53 +9,31 @@ export function rarityToTier(rarity: number): RarityTier {
 }
 
 /**
- * Tier dérivé de la part **brute** du jour (tous les joueurs, coup inclus).
- * Sert la grille solution (cohorte) ; `null` tant qu'il n'y a pas de donnée.
+ * Part **brute** du jour d'un pays dans une case (cohorte, coup du joueur inclus,
+ * `count / total`) + drapeau `estimated` (sous `ESTIMATED_MAX_TOTAL` soumissions →
+ * donnée mince, provisoire). Base **unique** de rareté : score, couleur des cases
+ * en jeu, emojis de partage ET grille solution s'appuient dessus, donc un pays
+ * affiche le même tier partout. `null` tant qu'il n'y a pas de donnée.
+ */
+export function filledCellShare(
+  countryCode: string,
+  cellDist: CellGuessDistribution | undefined,
+): { share: number; estimated: boolean } | null {
+  if (!cellDist || cellDist.totalGuesses <= 0) return null;
+  const share = cellDist.rarityByCountry[countryCode];
+  if (share === undefined) return null;
+  return { share, estimated: cellDist.totalGuesses < ESTIMATED_MAX_TOTAL };
+}
+
+/**
+ * Tier dérivé de la part brute du jour (cohorte). Couleur des cases en jeu, des
+ * emojis de partage et de la grille solution. `null` tant qu'il n'y a pas de donnée.
  */
 export function filledCellTier(
   countryCode: string,
   cellDist: CellGuessDistribution | undefined,
 ): RarityTier | null {
-  if (!cellDist || cellDist.totalGuesses <= 0) return null;
-  const share = cellDist.rarityByCountry[countryCode];
-  if (share === undefined) return null;
-  return rarityToTier(share);
-}
-
-/**
- * Part des **autres** joueurs pour LE pick DU joueur (leave-one-out) :
- * `(count − 1) / (total − 1)`. Sans ça, ton propre coup gonfle ton dénominateur et
- * l'arc rareté plafonne sous 100 %. Deux seuils découplés :
- *   - `total ≤ 2` (< `LOO_MIN_TOTAL`) : leave-one-out dégénéré → on garde la part brute.
- *   - `total < ESTIMATED_MAX_TOTAL` : on signale `estimated` (marqueur « ≈ »), même
- *     quand on utilise déjà le leave-one-out (`total` 3–4) — il est juste mais bouge encore.
- * `null` si pas de donnée pour ce pays / cette case.
- */
-export function playerLeaveOneOutShare(
-  countryCode: string,
-  cellDist: CellGuessDistribution | undefined,
-): { share: number; estimated: boolean } | null {
-  if (!cellDist || cellDist.totalGuesses <= 0) return null;
-  const brute = cellDist.rarityByCountry[countryCode];
-  if (brute === undefined) return null;
-  const total = cellDist.totalGuesses;
-  const estimated = total < ESTIMATED_MAX_TOTAL;
-  if (total >= LOO_MIN_TOTAL) {
-    const count = Math.round(brute * total);
-    return { share: (count - 1) / (total - 1), estimated };
-  }
-  return { share: brute, estimated: true };
-}
-
-/**
- * Tier de la réponse **du joueur** (leave-one-out) — couleur de sa case et emoji
- * de partage. `null` tant que la case n'a pas de donnée.
- */
-export function playerCellTier(
-  countryCode: string,
-  cellDist: CellGuessDistribution | undefined,
-): RarityTier | null {
-  const resolved = playerLeaveOneOutShare(countryCode, cellDist);
+  const resolved = filledCellShare(countryCode, cellDist);
   return resolved === null ? null : rarityToTier(resolved.share);
 }
 
