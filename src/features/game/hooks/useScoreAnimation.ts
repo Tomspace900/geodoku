@@ -86,6 +86,14 @@ export function useScoreAnimation(input: Input): ScoreAnimation {
         case "grid": {
           const dur = ANIMATION_TIMING.grid;
           if (inp.gridValue <= 0) {
+            // Grille à 0 : révélée (progress 1) même vide, pour que sa pastille
+            // s'allume au lieu de rester grisée (l'arc, lui, reste nul).
+            setFrame({
+              displayTotal: 0,
+              gridProgress: 1,
+              rarityProgress: 0,
+              livesProgress: 0,
+            });
             startPhase(inp.ready ? "rarity" : "hold", now);
           } else if (elapsed < dur) {
             const p = mechanicalEase(elapsed / dur);
@@ -109,10 +117,10 @@ export function useScoreAnimation(input: Input): ScoreAnimation {
           break;
         }
         case "hold": {
-          // Grille terminée, rareté pas encore chargée : on gèle le sous-total.
+          // Grille terminée (révélée), rareté pas encore chargée : sous-total gelé.
           setFrame({
             displayTotal: inp.gridValue,
-            gridProgress: inp.gridValue > 0 ? 1 : 0,
+            gridProgress: 1,
             rarityProgress: 0,
             livesProgress: 0,
           });
@@ -121,21 +129,28 @@ export function useScoreAnimation(input: Input): ScoreAnimation {
         }
         case "rarity": {
           const dur = ANIMATION_TIMING.rarity;
-          const gridDone = inp.gridValue > 0 ? 1 : 0;
           if (rarity <= 0) {
+            // Rareté à 0 (que du commun) : révélée quand même → pastille active
+            // (l'arc reste nul, sa longueur est 0).
+            setFrame({
+              displayTotal: inp.gridValue,
+              gridProgress: 1,
+              rarityProgress: 1,
+              livesProgress: 0,
+            });
             startPhase("lives", now);
           } else if (elapsed < dur) {
             const p = mechanicalEase(elapsed / dur);
             setFrame({
               displayTotal: countAt(inp.gridValue, inp.gridValue + rarity, p),
-              gridProgress: gridDone,
+              gridProgress: 1,
               rarityProgress: p,
               livesProgress: 0,
             });
           } else {
             setFrame({
               displayTotal: inp.gridValue + rarity,
-              gridProgress: gridDone,
+              gridProgress: 1,
               rarityProgress: 1,
               livesProgress: 0,
             });
@@ -147,29 +162,27 @@ export function useScoreAnimation(input: Input): ScoreAnimation {
         case "lives": {
           const dur = ANIMATION_TIMING.lives;
           const base = inp.gridValue + rarity;
-          const gridDone = inp.gridValue > 0 ? 1 : 0;
-          const rarityDone = rarity > 0 ? 1 : 0;
           if (inp.livesValue <= 0) {
             setFrame({
               displayTotal: base,
-              gridProgress: gridDone,
-              rarityProgress: rarityDone,
-              livesProgress: 0,
+              gridProgress: 1,
+              rarityProgress: 1,
+              livesProgress: 1,
             });
             phaseRef.current = "done";
           } else if (elapsed < dur) {
             const p = mechanicalEase(elapsed / dur);
             setFrame({
               displayTotal: countAt(base, base + inp.livesValue, p),
-              gridProgress: gridDone,
-              rarityProgress: rarityDone,
+              gridProgress: 1,
+              rarityProgress: 1,
               livesProgress: p,
             });
           } else {
             setFrame({
               displayTotal: base + inp.livesValue,
-              gridProgress: gridDone,
-              rarityProgress: rarityDone,
+              gridProgress: 1,
+              rarityProgress: 1,
               livesProgress: 1,
             });
             phaseRef.current = "done";
@@ -204,18 +217,19 @@ export function useScoreAnimation(input: Input): ScoreAnimation {
   // `done` reste faux : aucune séquence animée n'a joué, donc pas de sursaut.
   if (reduced) {
     if (ready) {
+      // Tout est révélé : pastilles actives même à 0 (arcs nuls si valeur nulle).
       return {
         displayTotal: finalTotal ?? 0,
-        gridProgress: gridValue > 0 ? 1 : 0,
-        rarityProgress: (rarityValue ?? 0) > 0 ? 1 : 0,
-        livesProgress: livesValue > 0 ? 1 : 0,
+        gridProgress: 1,
+        rarityProgress: 1,
+        livesProgress: 1,
         finalTotal,
         done: false,
       };
     }
     return {
       displayTotal: gridValue,
-      gridProgress: gridValue > 0 ? 1 : 0,
+      gridProgress: 1,
       rarityProgress: 0,
       livesProgress: 0,
       finalTotal: null,
@@ -223,5 +237,11 @@ export function useScoreAnimation(input: Input): ScoreAnimation {
     };
   }
 
-  return { ...frame, finalTotal, done };
+  // Une fois la séquence terminée, le total central suit les mises à jour **live**
+  // de la rareté (query Convex réactive) au lieu de rester figé sur la dernière
+  // frame animée — sinon la légende se réactualise (ex. +336) mais le total central
+  // reste faux. Cohérent avec `finalTotal` et le chemin reduced-motion, déjà live.
+  const displayTotal =
+    done && finalTotal !== null ? finalTotal : frame.displayTotal;
+  return { ...frame, displayTotal, finalTotal, done };
 }

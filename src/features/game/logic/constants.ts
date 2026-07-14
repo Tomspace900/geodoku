@@ -26,19 +26,11 @@ export const RARITY_TIERS = {
 } as const;
 
 /**
- * Seuil d'ESTIMATEUR : total minimal de soumissions sur une case pour passer de
- * la part brute au leave-one-out. Sous ce seuil, le leave-one-out est dégénéré
- * (dénominateur nul à `total = 1`) ou binaire/instable (0 ou 1 à `total = 2`),
- * donc on garde la part brute. Dès `total ≥ 3`, le leave-one-out est non biaisé.
- */
-export const LOO_MIN_TOTAL = 3;
-
-/**
- * Seuil d'AVERTISSEMENT : tant qu'une case remplie reste sous ce total, la rareté
- * est signalée provisoire (marqueur « ≈ » + message « ça s'affinera »). Découplé
- * de `LOO_MIN_TOTAL` : entre les deux (`total` 3–4), on utilise déjà le bon
- * estimateur (leave-one-out) mais on prévient qu'il bouge encore — le score est
- * live (`useQuery` réactif), donc le nombre se réajuste au fil de la journée.
+ * Seuil d'avertissement : tant qu'une case remplie reste sous ce total de
+ * soumissions, sa part brute est encore trop mince → rareté signalée provisoire
+ * (marqueur « ≈ » + message « ça s'affinera »). Le score est live (`useQuery`
+ * réactif) : il monte au fil de la journée à mesure que la cohorte se remplit,
+ * et le drapeau s'éteint dès que la case atteint ce seuil.
  */
 export const ESTIMATED_MAX_TOTAL = 5;
 

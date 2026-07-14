@@ -61,7 +61,9 @@ test("filling all 9 cells triggers the victory screen", async ({ page }) => {
 
   const resultDialog = page.locator("dialog[open]");
   await expect(resultDialog).toBeVisible({ timeout: 5_000 });
-  await expect(resultDialog).toContainText(/Magnificent/i);
+  // Le titre de fin est désormais tiré au sort ; on identifie la victoire par la
+  // grille de partage — 9 cases remplies, donc aucune case vide (⬜) ni bloquée (⬛).
+  await expect(resultDialog).not.toContainText(/[⬜⬛]/);
 
   // Le score de fin s'affiche (héros ScoreDisplay « <total> pts »). La
   // distribution est abonnée dès le chargement de la grille, donc le total est
@@ -169,7 +171,7 @@ test("the score info dialog explains the score with the rarity legend", async ({
   // La popup (portalisée au-dessus de la modale de résultat) affiche la légende
   // de rareté « en points » (RarityLegend, variante points), absente du reste de
   // l'écran de résultat — on cible un seuil de points propre à cette légende.
-  await expect(page.getByText(/40-50\s*pts/)).toBeVisible({
+  await expect(page.getByText(/35-49\s*pts/)).toBeVisible({
     timeout: 5_000,
   });
 });

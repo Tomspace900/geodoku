@@ -1,15 +1,15 @@
 import type { Cell, CellGuessDistribution, CellKey, GameState } from "../types";
 import { SHARE_EMOJIS, STARTING_LIVES } from "./constants";
-import { playerCellTier } from "./rarity";
+import { filledCellTier } from "./rarity";
 import { computeScore, computeScoreBreakdown } from "./scoreVariant";
 
-/** Emoji de partage d'une case ; le tier de TA réponse (leave-one-out, cf. `rarity.ts`). */
+/** Emoji de partage d'une case ; le tier de ta réponse (part brute cohorte, cf. `rarity.ts`). */
 export function cellShareEmoji(
   cell: Cell,
   cellDist: CellGuessDistribution | undefined,
 ): string {
   if (cell.status === "filled") {
-    return SHARE_EMOJIS[playerCellTier(cell.countryCode, cellDist) ?? "common"];
+    return SHARE_EMOJIS[filledCellTier(cell.countryCode, cellDist) ?? "common"];
   }
   if (cell.status === "blocked") return SHARE_EMOJIS.blocked;
   return SHARE_EMOJIS.failed;

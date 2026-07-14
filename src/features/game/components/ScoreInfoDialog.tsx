@@ -42,6 +42,11 @@ export function ScoreInfoDialog() {
   const posthog = usePostHog();
   const [open, setOpen] = useState(false);
 
+  // Le max « /1000 » de l'intro est mis en avant (gras + couleur pleine on-surface,
+  // face au reste du texte atténué). On scinde la phrase sur le repère `{max}`
+  // pour n'habiller que ce fragment.
+  const [introBefore, introAfter = ""] = t("scoring.intro").split("{max}");
+
   function handleOpenChange(nextOpen: boolean) {
     if (nextOpen)
       posthog?.capture("scoring_info_opened", { source: "result_screen" });
@@ -71,7 +76,11 @@ export function ScoreInfoDialog() {
 
         <div className="space-y-4">
           <p className="font-sans text-sm text-on-surface-variant leading-relaxed">
-            {t("scoring.intro")}
+            {introBefore}
+            <span className="font-semibold text-on-surface">
+              {t("scoring.introMax")}
+            </span>
+            {introAfter}
           </p>
 
           <ol className="space-y-4">

@@ -4,6 +4,10 @@ import { Button } from "@/components/ui/button";
 import { SurveyCta } from "@/features/game/components/SurveyCta";
 import { getOrCreateClientId } from "@/features/game/logic/clientId";
 import {
+  type ResultOutcome,
+  resultTitleKeys,
+} from "@/features/game/logic/resultTitle";
+import {
   computeScore,
   computeScoreBreakdown,
 } from "@/features/game/logic/scoreVariant";
@@ -75,6 +79,33 @@ export function ResultScreen({
   const score = computeScore(scoreBreakdown);
   const scoreReady = scoreBreakdown.shares !== null;
   const isWon = state.status === "won";
+  const [titleRoll] = useState(Math.random);
+  const [titleTotal, setTitleTotal] = useState<number | null>(
+    () => score.total,
+  );
+
+  // En victoire, le palier se fige au premier score complet : le fallback permet
+  // d'afficher immédiatement le titre si la rareté charge encore, puis le corrige
+  // une seule fois. Le même tirage est réutilisé entre banques et ne reroule pas.
+  useEffect(() => {
+    if (titleTotal === null && score.total !== null) {
+      setTitleTotal(score.total);
+    }
+  }, [score.total, titleTotal]);
+
+  const resultOutcome: ResultOutcome = isWon
+    ? {
+        status: "won",
+        total: titleTotal ?? score.gridValue + score.livesValue,
+      }
+    : state.remainingLives > 0
+      ? { status: "lostByBlock" }
+      : { status: "lostByLives" };
+  const resultTitleKeysForOutcome = resultTitleKeys(resultOutcome);
+  const resultTitleKey =
+    resultTitleKeysForOutcome[
+      Math.floor(titleRoll * resultTitleKeysForOutcome.length)
+    ];
   const hasRated = hadFeedbackBeforeOpen || feedbackThanksVisible;
   const submitGridFeedback = useMutation(api.grids.submitGridFeedback);
 
@@ -198,18 +229,7 @@ export function ResultScreen({
           as="h2"
           size="lg"
           centered
-          title={
-            <span id="result-screen-title">
-              {isWon ? t("ui.magnificent") : t("ui.tooBad")}
-            </span>
-          }
-          eyebrow={
-            !isWon
-              ? state.remainingLives > 0
-                ? t("ui.lostByBlock")
-                : t("ui.lostByLives")
-              : undefined
-          }
+          title={<span id="result-screen-title">{t(resultTitleKey)}</span>}
         />
 
         <div className="flex justify-center">

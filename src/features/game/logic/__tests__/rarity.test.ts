@@ -1,9 +1,8 @@
 import { describe, expect, it } from "vitest";
 import {
+  filledCellShare,
   filledCellTier,
   formatRarityPercent,
-  playerCellTier,
-  playerLeaveOneOutShare,
   raritySharePercent,
   rarityToTier,
 } from "../rarity";
@@ -92,72 +91,41 @@ describe("filledCellTier (part brute, cohorte)", () => {
   });
 });
 
-describe("playerLeaveOneOutShare (part des autres joueurs)", () => {
-  it("exclut le coup du joueur : (count − 1) / (total − 1)", () => {
-    // FR pris par 3 des 10 joueurs → parmi les autres : 2 / 9.
+describe("filledCellShare (part brute cohorte + estimated)", () => {
+  it("renvoie la part brute du jour (coup du joueur inclus)", () => {
     expect(
-      playerLeaveOneOutShare("FR", {
+      filledCellShare("FR", {
         totalGuesses: 10,
         rarityByCountry: { FR: 0.3 },
       }),
-    ).toEqual({ share: 2 / 9, estimated: false });
+    ).toEqual({ share: 0.3, estimated: false });
   });
 
-  it("total ≤ 2 : leave-one-out dégénéré → part brute + estimated", () => {
-    // total = 2 : (count − 1) / 1 ne vaudrait que 0 ou 1 → on garde la brute.
+  it("estimated tant que la case reste sous ESTIMATED_MAX_TOTAL (5)", () => {
     expect(
-      playerLeaveOneOutShare("FR", {
-        totalGuesses: 2,
-        rarityByCountry: { FR: 0.5 },
-      }),
-    ).toEqual({ share: 0.5, estimated: true });
-  });
-
-  it("total = 1 : pas de division par zéro → part brute + estimated", () => {
-    expect(
-      playerLeaveOneOutShare("FR", {
-        totalGuesses: 1,
-        rarityByCountry: { FR: 1 },
-      }),
-    ).toEqual({ share: 1, estimated: true });
-  });
-
-  it("total = 3 : leave-one-out déjà utilisé, mais encore estimated", () => {
-    // FR pris par 1 des 3 joueurs → parmi les autres 0 / 2 = 0 (≠ brute 1/3).
-    expect(
-      playerLeaveOneOutShare("FR", {
+      filledCellShare("FR", {
         totalGuesses: 3,
         rarityByCountry: { FR: 1 / 3 },
       }),
-    ).toEqual({ share: 0, estimated: true });
+    ).toEqual({ share: 1 / 3, estimated: true });
   });
 
-  it("total = 5 : leave-one-out, l'avertissement estimated s'éteint", () => {
-    // FR pris par 2 des 5 joueurs → parmi les autres 1 / 4 = 0,25.
+  it("l'avertissement estimated s'éteint au seuil (total = 5)", () => {
     expect(
-      playerLeaveOneOutShare("FR", {
+      filledCellShare("FR", {
         totalGuesses: 5,
-        rarityByCountry: { FR: 2 / 5 },
+        rarityByCountry: { FR: 0.4 },
       }),
-    ).toEqual({ share: 0.25, estimated: false });
+    ).toEqual({ share: 0.4, estimated: false });
   });
 
   it("null sans donnée pour ce pays / cette case", () => {
     expect(
-      playerLeaveOneOutShare("FR", {
+      filledCellShare("FR", {
         totalGuesses: 10,
         rarityByCountry: { IT: 0.5 },
       }),
     ).toBeNull();
-    expect(playerLeaveOneOutShare("FR", undefined)).toBeNull();
-  });
-});
-
-describe("playerCellTier (tier du joueur, leave-one-out)", () => {
-  it("dérive le tier de la part des AUTRES joueurs", () => {
-    // Toi seul sur FR (count 1 / total 10) → parmi les autres 0 / 9 = 0 → ultra.
-    expect(
-      playerCellTier("FR", { totalGuesses: 10, rarityByCountry: { FR: 0.1 } }),
-    ).toBe("ultra");
+    expect(filledCellShare("FR", undefined)).toBeNull();
   });
 });
