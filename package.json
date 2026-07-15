@@ -65,7 +65,7 @@
     "react-day-picker": "^9.14.0",
     "react-dom": "^18.3.1",
     "react-router": "^7.18.1",
-    "tailwind-merge": "^2.6.1",
+    "tailwind-merge": "^3.6.0",
     "vaul": "^1.1.2"
   },
   "devDependencies": {
