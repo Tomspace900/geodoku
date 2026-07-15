@@ -1,5 +1,10 @@
 import type { Locale } from "@/i18n/types";
-import { LEGACY_SURVEY_DISMISSED_DATE, STORAGE_KEYS } from "@/lib/storage";
+import {
+  LEGACY_SURVEY_DISMISSED_DATE,
+  STORAGE_KEYS,
+  safeGet,
+  safeSet,
+} from "@/lib/storage";
 
 /**
  * Pilotage du lien vers le sondage joueurs (Google Forms).
@@ -22,6 +27,48 @@ export const SURVEY_DONE_KEY = STORAGE_KEYS.surveyDone;
 export type SurveyDoneState =
   | { kind: "clicked" }
   | { kind: "dismissed"; date: string };
+
+const surveyDoneListeners = new Set<() => void>();
+
+function notifySurveyDoneListeners(): void {
+  surveyDoneListeners.forEach((listener) => listener());
+}
+
+export function getSurveyDoneSnapshot(): string | null {
+  return safeGet(SURVEY_DONE_KEY);
+}
+
+export function subscribeSurveyDone(listener: () => void): () => void {
+  surveyDoneListeners.add(listener);
+
+  function handleStorage(event: StorageEvent): void {
+    if (event.key === SURVEY_DONE_KEY) listener();
+  }
+
+  if (typeof window !== "undefined") {
+    window.addEventListener("storage", handleStorage);
+  }
+
+  return () => {
+    surveyDoneListeners.delete(listener);
+    if (typeof window !== "undefined") {
+      window.removeEventListener("storage", handleStorage);
+    }
+  };
+}
+
+function persistSurveyDone(state: SurveyDoneState): void {
+  safeSet(SURVEY_DONE_KEY, serializeSurveyDone(state));
+  notifySurveyDoneListeners();
+}
+
+export function markSurveyClicked(): void {
+  persistSurveyDone({ kind: "clicked" });
+}
+
+export function markSurveyDismissed(date: string): void {
+  persistSurveyDone({ kind: "dismissed", date });
+}
 
 export function serializeSurveyDone(state: SurveyDoneState): string {
   return JSON.stringify(state);

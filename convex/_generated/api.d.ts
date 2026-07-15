@@ -8,18 +8,26 @@
  * @module
  */
 
+import type * as adminGridOperations from "../adminGridOperations.js";
+import type * as adminReadModel from "../adminReadModel.js";
 import type * as auth from "../auth.js";
 import type * as cellKeys from "../cellKeys.js";
 import type * as crons from "../crons.js";
+import type * as gameWriteValidation from "../gameWriteValidation.js";
 import type * as gridData from "../gridData.js";
+import type * as gridGameplay from "../gridGameplay.js";
 import type * as grids from "../grids.js";
 import type * as guesses from "../guesses.js";
 import type * as http from "../http.js";
 import type * as lib_cellMetrics from "../lib/cellMetrics.js";
 import type * as lib_dates from "../lib/dates.js";
 import type * as lib_gridConstants from "../lib/gridConstants.js";
+import type * as lib_gridContentCompatibility from "../lib/gridContentCompatibility.js";
 import type * as lib_gridGenerator from "../lib/gridGenerator.js";
 import type * as lib_gridScheduler from "../lib/gridScheduler.js";
+import type * as lib_poolReconciliation from "../lib/poolReconciliation.js";
+import type * as operationReceipts from "../operationReceipts.js";
+import type * as poolOperations from "../poolOperations.js";
 import type * as rateLimit from "../rateLimit.js";
 import type * as scheduling from "../scheduling.js";
 import type * as seed from "../seed.js";
@@ -32,18 +40,26 @@ import type {
 } from "convex/server";
 
 declare const fullApi: ApiFromModules<{
+  adminGridOperations: typeof adminGridOperations;
+  adminReadModel: typeof adminReadModel;
   auth: typeof auth;
   cellKeys: typeof cellKeys;
   crons: typeof crons;
+  gameWriteValidation: typeof gameWriteValidation;
   gridData: typeof gridData;
+  gridGameplay: typeof gridGameplay;
   grids: typeof grids;
   guesses: typeof guesses;
   http: typeof http;
   "lib/cellMetrics": typeof lib_cellMetrics;
   "lib/dates": typeof lib_dates;
   "lib/gridConstants": typeof lib_gridConstants;
+  "lib/gridContentCompatibility": typeof lib_gridContentCompatibility;
   "lib/gridGenerator": typeof lib_gridGenerator;
   "lib/gridScheduler": typeof lib_gridScheduler;
+  "lib/poolReconciliation": typeof lib_poolReconciliation;
+  operationReceipts: typeof operationReceipts;
+  poolOperations: typeof poolOperations;
   rateLimit: typeof rateLimit;
   scheduling: typeof scheduling;
   seed: typeof seed;

@@ -1,15 +1,16 @@
 import { useLocale } from "@/i18n/LocaleContext";
 import { todayUTC } from "@/lib/dates";
-import { safeGet, safeSet } from "@/lib/storage";
 import {
-  SURVEY_DONE_KEY,
   SURVEY_FLAG,
+  getSurveyDoneSnapshot,
   isSurveyDone,
-  serializeSurveyDone,
+  markSurveyClicked,
+  markSurveyDismissed,
+  subscribeSurveyDone,
   surveyUrl,
 } from "@/lib/survey";
 import { useFeatureFlagEnabled, usePostHog } from "@posthog/react";
-import { useState } from "react";
+import { useSyncExternalStore } from "react";
 
 export type SurveySource = "result_screen" | "solution_screen" | "footer";
 
@@ -23,22 +24,20 @@ export function useSurveyCta(source: SurveySource) {
   const { locale } = useLocale();
   const posthog = usePostHog();
   const active = useFeatureFlagEnabled(SURVEY_FLAG);
-  const [done, setDone] = useState(() =>
-    isSurveyDone(safeGet(SURVEY_DONE_KEY), todayUTC()),
+  const rawDone = useSyncExternalStore(
+    subscribeSurveyDone,
+    getSurveyDoneSnapshot,
+    () => null,
   );
+  const done = isSurveyDone(rawDone, todayUTC());
 
   function onClick() {
-    safeSet(SURVEY_DONE_KEY, serializeSurveyDone({ kind: "clicked" }));
-    setDone(true);
+    markSurveyClicked();
     posthog?.capture("survey_link_clicked", { source, locale });
   }
 
   function onDismiss() {
-    safeSet(
-      SURVEY_DONE_KEY,
-      serializeSurveyDone({ kind: "dismissed", date: todayUTC() }),
-    );
-    setDone(true);
+    markSurveyDismissed(todayUTC());
     posthog?.capture("survey_dismissed", { source, locale });
   }
 

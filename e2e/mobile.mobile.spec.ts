@@ -15,9 +15,7 @@ let grid: TodayGrid;
 test.beforeAll(async () => {
   const result = await fetchTodayGrid();
   if (!result)
-    throw new Error(
-      "No grid for today — run `pnpm wipe:db && pnpm seed:grids` first.",
-    );
+    throw new Error("No grid for today on the configured E2E backend.");
   grid = result;
 });
 
@@ -46,7 +44,7 @@ test("tapping a cell opens the GuessModal drawer from the bottom", async ({
   page,
 }) => {
   await page
-    .getByRole("button", { name: "Select cell row 1 column 1", exact: true })
+    .getByRole("button", { name: /^Select cell row 1 column 1:/ })
     .tap();
 
   // The search input should appear (drawer opened)
@@ -70,10 +68,10 @@ test("tapping a cell opens the GuessModal drawer from the bottom", async ({
 test("country search works with touch keyboard input", async ({ page }) => {
   const usedCodes = new Set<string>();
   const pick = pickCountry(grid.validAnswers, "0,0", usedCodes);
-  if (!pick) test.skip(true, "No valid answer for cell 0,0");
+  if (!pick) throw new Error("Invariant violated: cell 0,0 has no answer");
 
   await page
-    .getByRole("button", { name: "Select cell row 1 column 1", exact: true })
+    .getByRole("button", { name: /^Select cell row 1 column 1:/ })
     .tap();
 
   const input = page.getByPlaceholder("Search for a country…");
@@ -91,17 +89,51 @@ test("country search works with touch keyboard input", async ({ page }) => {
 
 test("drawer can be dismissed by swiping down", async ({ page }) => {
   await page
-    .getByRole("button", { name: "Select cell row 1 column 1", exact: true })
+    .getByRole("button", { name: /^Select cell row 1 column 1:/ })
     .tap();
 
   const input = page.getByPlaceholder("Search for a country…");
   await input.waitFor({ state: "visible" });
 
-  // Close drawer via Escape (simulates swipe-down dismiss in test environment)
-  await page.keyboard.press("Escape");
+  const drawer = page.locator("[data-vaul-drawer]").first();
+  await drawer.evaluate(async (element) => {
+    await Promise.all(
+      element
+        .getAnimations()
+        .map((animation) => animation.finished.catch(() => undefined)),
+    );
+  });
+  const box = await drawer.boundingBox();
+  if (!box) throw new Error("Drawer bounds unavailable");
+  await drawer.dispatchEvent("pointerdown", {
+    pointerId: 1,
+    pointerType: "touch",
+    isPrimary: true,
+    clientX: box.x + box.width / 2,
+    clientY: box.y + 32,
+    buttons: 1,
+  });
+  for (const offset of [80, 160, 260, 380]) {
+    await drawer.dispatchEvent("pointermove", {
+      pointerId: 1,
+      pointerType: "touch",
+      isPrimary: true,
+      clientX: box.x + box.width / 2,
+      clientY: box.y + 32 + offset,
+      buttons: 1,
+    });
+  }
+  await drawer.dispatchEvent("pointerup", {
+    pointerId: 1,
+    pointerType: "touch",
+    isPrimary: true,
+    clientX: box.x + box.width / 2,
+    clientY: box.y + 412,
+    buttons: 0,
+  });
 
   await expect(input).toBeHidden({ timeout: 3_000 });
   // Grid should still be visible after dismiss
-  const cells = page.getByRole("button", { name: /Select cell row/i });
+  const cells = page.getByRole("button", { name: /^Select cell row/i });
   await expect(cells.first()).toBeVisible();
 });

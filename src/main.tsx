@@ -6,6 +6,7 @@ import { SpeedInsights } from "@vercel/speed-insights/react";
 import posthog from "posthog-js";
 import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
+import { BrowserRouter } from "react-router";
 import "@/index.css";
 
 // Renomme les clés localStorage historiques vers le namespace `geodoku:*` et
@@ -25,7 +26,9 @@ posthog.init(import.meta.env.VITE_POSTHOG_PROJECT_TOKEN, {
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
     <PostHogProvider client={posthog}>
-      <App />
+      <BrowserRouter>
+        <App />
+      </BrowserRouter>
       <Analytics />
       <SpeedInsights />
     </PostHogProvider>

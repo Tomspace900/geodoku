@@ -1,9 +1,36 @@
 import { URL, fileURLToPath } from "node:url";
 import react from "@vitejs/plugin-react";
+import type { Plugin } from "vite";
 import { defineConfig } from "vitest/config";
 
+function bundleModuleManifest(): Plugin {
+  return {
+    name: "geodoku-bundle-module-manifest",
+    generateBundle(_options, bundle) {
+      const chunks = Object.values(bundle).flatMap((output) =>
+        output.type === "chunk"
+          ? [
+              {
+                fileName: output.fileName,
+                isEntry: output.isEntry,
+                isDynamicEntry: output.isDynamicEntry,
+                imports: output.imports,
+                modules: Object.keys(output.modules),
+              },
+            ]
+          : [],
+      );
+      this.emitFile({
+        type: "asset",
+        fileName: ".bundle-modules.json",
+        source: JSON.stringify(chunks, null, 2),
+      });
+    },
+  };
+}
+
 export default defineConfig({
-  plugins: [react()],
+  plugins: [react(), bundleModuleManifest()],
   resolve: {
     alias: {
       "@": fileURLToPath(new URL("./src", import.meta.url)),

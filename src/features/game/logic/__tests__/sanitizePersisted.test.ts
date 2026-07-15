@@ -32,7 +32,7 @@ function emptyCells(): Record<CellKey, Cell> {
 
 function basePersisted(overrides: Partial<PersistedGame> = {}): PersistedGame {
   return {
-    version: 1,
+    version: 2,
     date: "2026-04-15",
     cells: { ...emptyCells() },
     remainingLives: 3,
@@ -53,6 +53,31 @@ describe("sanitizePersistedForGrid", () => {
     expect(out).not.toBeNull();
     expect(out?.status).toBe("playing");
     expect(out?.remainingLives).toBe(3);
+  });
+
+  it("canonise une sauvegarde v3 minimale", () => {
+    const persisted: PersistedGame = {
+      version: 3,
+      date: "2026-04-15",
+      cells: emptyCells(),
+      remainingLives: 3,
+    };
+    const out = sanitizePersistedForGrid(persisted, validAnswers);
+
+    expect(out?.status).toBe("playing");
+    expect(out).not.toHaveProperty("usedCountries");
+    expect(out).not.toHaveProperty("startedAt");
+    expect(out).not.toHaveProperty("finishedAt");
+  });
+
+  it("rejette sans lever une sauvegarde v3 structurellement incomplète", () => {
+    const persisted = {
+      version: 3,
+      date: "2026-04-15",
+      remainingLives: 3,
+    } as PersistedGame;
+
+    expect(sanitizePersistedForGrid(persisted, validAnswers)).toBeNull();
   });
 
   it("rejette un pays non présent dans validAnswers pour la case", () => {
@@ -135,7 +160,7 @@ describe("sanitizePersistedForGrid", () => {
     expect(out?.cells["0,0"]).toEqual({ status: "filled", countryCode: "FRA" });
   });
 
-  it("accepte une partie gagnée cohérente et fixe finishedAt si absent", () => {
+  it("accepte une partie gagnée cohérente sans conserver les champs legacy", () => {
     const codes = [
       "FRA",
       "DEU",
@@ -162,13 +187,39 @@ describe("sanitizePersistedForGrid", () => {
     });
     const out = sanitizePersistedForGrid(p, validAnswers);
     expect(out?.status).toBe("won");
-    expect(out?.finishedAt).toBe(p.startedAt);
-    expect(out?.usedCountries).toHaveLength(9);
+    expect(out).not.toHaveProperty("finishedAt");
+    expect(out).not.toHaveProperty("usedCountries");
   });
 
-  it("rejette startedAt non numérique", () => {
+  it("rejette une partie gagnée avec 0 vie", () => {
+    const codes = [
+      "FRA",
+      "DEU",
+      "ESP",
+      "ITA",
+      "PRT",
+      "NLD",
+      "BEL",
+      "AUT",
+      "CHE",
+    ];
+    const cells = { ...emptyCells() };
+    CELL_KEYS.forEach((key, index) => {
+      cells[key] = { status: "filled", countryCode: codes[index] };
+    });
+    const persisted = basePersisted({
+      cells,
+      usedCountries: codes,
+      status: "won",
+      remainingLives: 0,
+    });
+
+    expect(sanitizePersistedForGrid(persisted, validAnswers)).toBeNull();
+  });
+
+  it("ignore un startedAt legacy non numérique", () => {
     const p = basePersisted({ startedAt: Number.NaN });
-    expect(sanitizePersistedForGrid(p, validAnswers)).toBeNull();
+    expect(sanitizePersistedForGrid(p, validAnswers)).not.toBeNull();
   });
 
   it("marque les cellules bloquées et reste en playing si des cases empty restent", () => {
@@ -195,7 +246,6 @@ describe("sanitizePersistedForGrid", () => {
     expect(out?.status).toBe("playing");
     expect(out?.cells["0,2"].status).toBe("blocked");
     expect(out?.remainingLives).toBe(3);
-    expect(out?.finishedAt).toBeNull();
   });
 
   it("canonise une partie incompletable en lost tout en conservant les vies", () => {
@@ -228,7 +278,6 @@ describe("sanitizePersistedForGrid", () => {
     const out = sanitizePersistedForGrid(p, trapAnswers);
     expect(out?.status).toBe("lost");
     expect(out?.remainingLives).toBe(3);
-    expect(out?.finishedAt).toBe(p.startedAt);
   });
 
   it("accepte une cellule blocked sérialisée cohérente", () => {

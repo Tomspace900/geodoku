@@ -3,8 +3,24 @@ import {
   CONSTRAINTS,
 } from "@/features/game/logic/constraints";
 import { describe, expect, it } from "vitest";
-import { translate } from "../index";
+import { createTranslator, translate } from "../index";
+import { en } from "../locales/en";
+import { fr } from "../locales/fr";
 import type { TKey } from "../types";
+
+function flattenStrings(value: unknown, prefix = ""): Record<string, string> {
+  if (typeof value === "string") return { [prefix]: value };
+  if (!value || typeof value !== "object") return {};
+  return Object.fromEntries(
+    Object.entries(value).flatMap(([key, child]) =>
+      Object.entries(flattenStrings(child, prefix ? `${prefix}.${key}` : key)),
+    ),
+  );
+}
+
+function placeholders(value: string): string[] {
+  return [...value.matchAll(/\{(\w+)\}/g)].map((match) => match[1]).sort();
+}
 
 describe("translate", () => {
   it("returns the French string for a valid key in FR locale", () => {
@@ -29,12 +45,13 @@ describe("translate", () => {
     expect(fr).not.toBe(en);
   });
 
-  it("falls back to EN when key is missing in FR locale (returns EN value)", () => {
-    // This tests the fallback mechanism by using a valid key
-    // The fallback would be exercised if FR were incomplete
-    const result = translate("fr", "ui.share");
-    expect(typeof result).toBe("string");
-    expect(result.length).toBeGreaterThan(0);
+  it("falls back to EN when the requested locale is missing a key", () => {
+    const isolatedTranslate = createTranslator({
+      en: { ui: { label: "English label" } },
+      fr: { ui: {} },
+    });
+
+    expect(isolatedTranslate("fr", "ui.label")).toBe("English label");
   });
 
   it("returns the raw key when key does not exist in EN locale", () => {
@@ -77,5 +94,23 @@ describe("translate", () => {
       expect(frResult).not.toBe(key);
       expect(enResult).not.toBe(key);
     }
+  });
+
+  it("keeps the complete FR and EN catalogs in structural parity", () => {
+    expect(Object.keys(flattenStrings(fr)).sort()).toEqual(
+      Object.keys(flattenStrings(en)).sort(),
+    );
+  });
+
+  it("keeps interpolation placeholders aligned between FR and EN", () => {
+    const flatFr = flattenStrings(fr);
+    const flatEn = flattenStrings(en);
+    const mismatches = Object.keys(flatEn).filter(
+      (key) =>
+        JSON.stringify(placeholders(flatFr[key] ?? "")) !==
+        JSON.stringify(placeholders(flatEn[key])),
+    );
+
+    expect(mismatches).toEqual([]);
   });
 });

@@ -1,4 +1,5 @@
 import { Component, type ErrorInfo, type ReactNode } from "react";
+import { isUnauthorizedError } from "../logic/errors";
 
 type Props = {
   onUnauthorized: () => void;
@@ -16,12 +17,12 @@ export class AdminAuthBoundary extends Component<Props, State> {
   state: State = { unauthorized: false };
 
   static getDerivedStateFromError(error: unknown): State | null {
-    if (isUnauthorized(error)) return { unauthorized: true };
+    if (isUnauthorizedError(error)) return { unauthorized: true };
     return null;
   }
 
   componentDidCatch(error: Error, _info: ErrorInfo) {
-    if (isUnauthorized(error)) {
+    if (isUnauthorizedError(error)) {
       this.props.onUnauthorized();
       return;
     }
@@ -32,9 +33,4 @@ export class AdminAuthBoundary extends Component<Props, State> {
     if (this.state.unauthorized) return null;
     return this.props.children;
   }
-}
-
-function isUnauthorized(error: unknown): boolean {
-  if (!(error instanceof Error)) return false;
-  return error.message.includes("Unauthorized");
 }

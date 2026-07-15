@@ -46,21 +46,26 @@ export function Header({ remainingLives, date, gridNumber }: Props) {
         accentBar={eyebrow !== undefined}
       />
 
-      <div className="flex items-center gap-0.5">
-        {Array.from({ length: STARTING_LIVES }, (_, i) => {
-          const index = STARTING_LIVES - 1 - i;
-          return (
-            <Heart
-              key={`heart-${index + 1}`}
-              size={18}
-              className={
-                index < remainingLives
-                  ? "text-rarity-ultra fill-rarity-ultra"
-                  : "text-on-surface-variant"
-              }
-            />
-          );
-        })}
+      <div>
+        <output aria-live="polite" aria-atomic="true" className="sr-only">
+          {t("ui.remainingLives", { count: remainingLives })}
+        </output>
+        <span className="flex items-center gap-0.5" aria-hidden="true">
+          {Array.from({ length: STARTING_LIVES }, (_, i) => {
+            const index = STARTING_LIVES - 1 - i;
+            return (
+              <Heart
+                key={`heart-${index + 1}`}
+                size={18}
+                className={
+                  index < remainingLives
+                    ? "text-error fill-error"
+                    : "text-on-surface-variant"
+                }
+              />
+            );
+          })}
+        </span>
       </div>
     </header>
   );

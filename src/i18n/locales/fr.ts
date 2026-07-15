@@ -1,6 +1,12 @@
+import type { Translations } from "../types";
+
 export const fr = {
   ui: {
     appName: "Geodoku",
+    loading: "Chargement…",
+    loadingGrid: "Chargement de la grille du jour…",
+    gameGridAriaLabel: "Grille géographique du jour",
+    solutionGridAriaLabel: "Solutions de la grille géographique du jour",
     howToPlay: "Comment jouer\u00A0?",
     searchPlaceholder: "Chercher un pays…",
     typeAtLeast: "Saisis au moins\u00A03 caractères",
@@ -8,6 +14,8 @@ export const fr = {
     errorUnknown: "Erreur inconnue.",
     rarityEvolvesHint: "Les raretés évoluent au fil des parties du jour.",
     feedbackQuestion: "Comment as-tu trouvé la grille\u00A0?",
+    feedbackError: "La note n'a pas pu être enregistrée.",
+    feedbackRetry: "Réessayer",
     feedbackTooEasy: "Trop facile",
     feedbackBalanced: "Bien/modérée",
     feedbackTooHard: "Trop difficile",
@@ -16,13 +24,21 @@ export const fr = {
     shareCopied: "Copié\u00A0! ✓",
     shareShared: "Partagé\u00A0! ✓",
     comeBackTomorrowGrid: "Reviens demain pour une nouvelle grille\u00A0!",
-    cellAriaLabel: "Sélectionner case ligne {row} colonne {col}",
-    cellBlockedAriaLabel: "Case bloquée",
+    cellAriaLabel:
+      "Sélectionner case ligne {row} colonne {col} : {rowConstraint} × {colConstraint}",
+    cellFilledAriaLabel:
+      "Case ligne {row} colonne {col} : {rowConstraint} × {colConstraint}, remplie avec {country}",
+    cellBlockedAriaLabel:
+      "Case bloquée ligne {row} colonne {col} : {rowConstraint} × {colConstraint}",
+    remainingLives: "{count} vies restantes",
     possibleAnswersCount: "{count}\u00A0réponses possibles pour cette case",
     possibleAnswersPartial: "{remaining}\u00A0réponses possibles sur {total}",
     viewAnswers: "Voir les réponses",
     viewMyResult: "Voir mon résultat",
     closeResult: "Fermer",
+    closeDialog: "Fermer la fenêtre",
+    resultDialogDescription:
+      "Résultat de la partie, détail du score et actions de fin de partie.",
     searchResultUsed: "Déjà utilisé",
     surveyPrompt: "Pssst, j'ai besoin de ton avis (5 min)",
   },
@@ -46,25 +62,25 @@ export const fr = {
       " aide à couvrir les frais techniques (serveur, nom de domaine). Et c'est surtout une énorme motivation pour continuer à développer de nouvelles fonctionnalités\u00A0!",
   },
   privacy: {
-    eyebrow: "Derni\u00E8re mise \u00E0 jour · Juin 2026",
+    eyebrow: "Derni\u00E8re mise \u00E0 jour · Juillet 2026",
     title: "Confidentialit\u00E9",
     lead: "Geodoku est un jeu que je d\u00E9veloppe seul. Pas besoin de compte\u00A0: je ne collecte que le strict minimum, juste de quoi faire tourner le jeu et voir comment se portent les grilles.",
     backToGame: "Retour au jeu",
-    essenceTitle: "Aucun compte, aucun pistage",
+    essenceTitle: "Sans compte ni publicit\u00E9",
     essenceBody:
-      "Pas d'inscription, pas de connexion, pas de publicit\u00E9. Je ne vends ni ne partage aucune donn\u00E9e, et il n'y a aucun traceur publicitaire sur le site.",
+      "Pas d'inscription, pas de connexion, pas de publicit\u00E9. Je ne vends aucune donn\u00E9e et ne les utilise pas \u00E0 des fins publicitaires. Il n'y a aucun traceur publicitaire sur le site.",
     deviceTitle: "Sur ton appareil",
     deviceBody:
-      "Ton navigateur garde quelques r\u00E9glages en stockage local\u00A0: ta langue, la progression de la grille du jour et un identifiant al\u00E9atoire qui sert seulement \u00E0 freiner le spam. Rien de tout \u00E7a n'est un cookie publicitaire ou traceur. Effacer les donn\u00E9es du site les supprime.",
+      "Ton navigateur garde quelques r\u00E9glages en stockage local\u00A0: ta langue, la progression de la grille du jour, un identifiant al\u00E9atoire anti-spam et de courtes cl\u00E9s techniques pour d\u00E9dupliquer les envois. Rien de tout \u00E7a n'est un cookie publicitaire. Effacer les donn\u00E9es du site les supprime.",
     serverTitle: "Ce qui m'est envoy\u00E9",
     serverBody:
-      "Quand tu joues, j'enregistre des statistiques anonymes et agr\u00E9g\u00E9es (les pays choisis par case, le ressenti de difficult\u00E9). Elles ne sont rattach\u00E9es \u00E0 aucune identit\u00E9\u00A0: impossible de savoir qui a propos\u00E9 quoi.",
+      "Quand tu joues, j'enregistre les choix agr\u00E9g\u00E9s par case, les fins de partie et le ressenti de difficult\u00E9. Pour fiabiliser un nouvel envoi, le serveur conserve pendant sept jours un re\u00E7u technique de l'action (par exemple case et pays) avec une cl\u00E9 opaque, sans identifiant stable reliant tes actions. Des \u00E9v\u00E9nements d'usage pseudonymes m'aident aussi \u00E0 comprendre le parcours. Rien de cela ne contient de nom, d'e-mail ou de compte.",
     thirdPartyTitle: "Services tiers",
     thirdPartyBody:
-      "Geodoku s'appuie sur Vercel (h\u00E9bergement et mesure d'audience anonyme, sans cookie), Convex (la base de donn\u00E9es des statistiques de jeu), PostHog (statistiques d'usage anonymes et sans cookie, pour comprendre comment le jeu est utilis\u00E9) et Google Fonts (les polices, qui expose ton adresse IP \u00E0 Google au chargement).",
+      "Geodoku s'appuie sur Vercel (h\u00E9bergement et mesure d'audience sans cookie publicitaire), Convex (base des statistiques de jeu) et PostHog (mesure d'\u00E9v\u00E9nements d'usage pseudonymes avec un identifiant enregistr\u00E9 localement, sans publicit\u00E9). Google Fonts re\u00E7oit aussi ton adresse IP au chargement des polices.",
     rightsTitle: "Tes droits",
     rightsBody:
-      "Comme aucune donn\u00E9e ne permet de t'identifier, il n'y a pas de compte \u00E0 consulter ni \u00E0 supprimer. Tu gardes le contr\u00F4le depuis ton navigateur\u00A0: effacer les donn\u00E9es du site pour Geodoku efface tout.",
+      "Il n'y a aucun compte \u00E0 consulter. Effacer les donn\u00E9es Geodoku de ton navigateur supprime les r\u00E9glages et identifiants locaux. Pour toute question sur les donn\u00E9es pseudonymes envoy\u00E9es aux services tiers, tu peux me contacter ci-dessous.",
     contactTitle: "Contact",
     contactBodyPre: "Une question\u00A0? \u00C9cris-moi \u00E0",
   },
@@ -160,6 +176,12 @@ export const fr = {
   error: {
     already_used: "Ce pays a déjà été utilisé dans une autre cellule.",
     invalid_country: "Pays invalide.",
+    wrong_row: "Ce pays ne respecte pas la contrainte {constraint}.",
+    wrong_col: "Ce pays ne respecte pas la contrainte {constraint}.",
+    wrong_constraints:
+      "Ce pays ne respecte ni {rowConstraint}, ni {colConstraint}.",
+    unavailable:
+      "Impossible de vérifier ce pays pour le moment. Réessaie dans un instant.",
     unknown: "Erreur inconnue.",
   },
   errorScreen: {
@@ -328,4 +350,4 @@ export const fr = {
     population_lt_1M: "Population inférieure à 1\u00A0million",
     population_lt_2_5M: "Population inférieure à 2,5\u00A0millions",
   },
-} as const;
+} as const satisfies Translations;

@@ -1,20 +1,12 @@
-import { LocaleSwitcher } from "@/features/game/components/LocaleSwitcher";
+import { KOFI_URL, METRODOKU_URL, SUPPORT_EMAIL } from "@/app/links";
 import { isChangelogNewBadgeVisible } from "@/features/legal/logic/changelog";
 import { useLocale, useT } from "@/i18n/LocaleContext";
-import { safeSet } from "@/lib/storage";
-import {
-  SURVEY_DONE_KEY,
-  SURVEY_FLAG,
-  serializeSurveyDone,
-  surveyUrl,
-} from "@/lib/survey";
+import { LocaleSwitcher } from "@/i18n/components/LocaleSwitcher";
+import { SURVEY_FLAG, markSurveyClicked, surveyUrl } from "@/lib/survey";
 import { cn } from "@/lib/utils";
 import { useFeatureFlagEnabled, usePostHog } from "@posthog/react";
 import { Coffee, Mail, MessageSquareText } from "lucide-react";
-
-const SUPPORT_EMAIL = "support.geodoku@gmail.com";
-const METRODOKU_URL = "https://metrodoku.fr";
-const KOFI_URL = "https://ko-fi.com/geodoku/tip";
+import { Link } from "react-router";
 
 type FooterLink = "metrodoku" | "support" | "contact" | "privacy" | "changelog";
 
@@ -40,7 +32,7 @@ export default function AppFooter({ className }: { className?: string }) {
   function trackSurveyLink() {
     // Un clic vaut réponse/décision prise : masque le CTA banderole partout,
     // comme un clic depuis la banderole elle-même (cf. useSurveyCta).
-    safeSet(SURVEY_DONE_KEY, serializeSurveyDone({ kind: "clicked" }));
+    markSurveyClicked();
     posthog?.capture("survey_link_clicked", { source: "footer", locale });
   }
 
@@ -94,13 +86,13 @@ export default function AppFooter({ className }: { className?: string }) {
             {t("footer.contact")}
           </a>
           <Middot />
-          <a
-            href="/privacy"
+          <Link
+            to="/privacy"
             className={linkClass}
             onClick={() => trackFooterLink("privacy")}
           >
             {t("footer.privacy")}
-          </a>
+          </Link>
           <Middot />
           <span className="inline-flex items-center gap-1">
             {showChangelogNewBadge ? (
@@ -108,13 +100,13 @@ export default function AppFooter({ className }: { className?: string }) {
                 {t("footer.changelogNew")}
               </span>
             ) : null}
-            <a
-              href="/changelog"
+            <Link
+              to="/changelog"
               className={linkClass}
               onClick={() => trackFooterLink("changelog")}
             >
               {t("footer.changelog")}
-            </a>
+            </Link>
           </span>
           {surveyActive === true ? (
             <>

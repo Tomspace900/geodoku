@@ -20,6 +20,5 @@
       "@/*": ["./src/*"]
     }
   },
-  "include": ["src", "scripts"],
-  "exclude": ["scripts/dev"]
+  "include": ["src"]
 }

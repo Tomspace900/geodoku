@@ -1,14 +1,20 @@
-/** Clés des 9 cases de la grille 3×3, en row-major. */
-export const CELL_KEYS = [
-  "0,0",
-  "0,1",
-  "0,2",
-  "1,0",
-  "1,1",
-  "1,2",
-  "2,0",
-  "2,1",
-  "2,2",
-] as const;
+import { v } from "convex/values";
+import {
+  CELL_KEYS,
+  type CellKey,
+} from "../src/features/game/logic/gridTopology";
 
-export type CellKey = (typeof CELL_KEYS)[number];
+export { CELL_KEYS, type CellKey };
+
+/** Validateur Convex fermé : aucune coordonnée hors grille n'atteint le handler. */
+export const cellKeyValidator = v.union(
+  v.literal("0,0"),
+  v.literal("0,1"),
+  v.literal("0,2"),
+  v.literal("1,0"),
+  v.literal("1,1"),
+  v.literal("1,2"),
+  v.literal("2,0"),
+  v.literal("2,1"),
+  v.literal("2,2"),
+);

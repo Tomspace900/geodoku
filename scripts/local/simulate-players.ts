@@ -1,34 +1,40 @@
 /**
- * Simule N joueurs sur la grille du jour via Convex HTTP (sans navigateur).
- * Soumet de vrais guesses + recordGameEnd — cas d'usage normal : cloud dev
- * perso (`convex dev`) ou preview develop. Refus si `CONVEX_DEPLOYMENT` vaut
- * `prod:*` ou est absente (cible non vérifiable), sauf `--force`.
+ * Prépare N simulations sur la grille du jour via Convex HTTP (sans navigateur).
+ * Le mode par défaut est un dry-run. `--execute` soumet de vrais guesses et
+ * recordGameEnd — uniquement vers un cloud dev perso (`convex dev`) ou une
+ * preview. Refus si la cible est prod ou non vérifiable, sauf `--force`.
  *
  * Usage:
- *   pnpm simulate:players --count 10
- *   pnpm simulate:players --count 1 --lives 5 --filled 9
- *   pnpm simulate:players --count 1 --lives 0 --filled 3
- *   pnpm simulate:players --count 5 --end blocked
+ *   pnpm simulate:players --count 10                    # dry-run
+ *   pnpm simulate:players --execute --count 1 --lives 5 --filled 9
+ *   pnpm simulate:players --execute --count 1 --lives 0 --filled 3
+ *   pnpm simulate:players --execute --count 5 --end blocked
  *   pnpm simulate:players --count 10 --seed 42
  *   pnpm simulate:players --dry-run --count 3
  *
  * `VITE_CONVEX_URL` lu depuis `.env.local` (`tsx --env-file=.env.local`).
  */
-import { randomUUID } from "node:crypto";
 import { ConvexHttpClient } from "convex/browser";
 import { api } from "../../convex/_generated/api";
-import { STARTING_LIVES } from "../../src/features/game/logic/constants";
 import type { ConstraintId } from "../../src/features/game/logic/constraints";
 import {
   type PlayerTarget,
   type SimAction,
-  type SimEndReason,
   type SimulationContext,
   buildBlockedPlan,
   buildPlayerPlan,
   buildRandomPlayerBatch,
   simulatePlanLocally,
-} from "../../src/features/game/logic/simulation";
+} from "../../src/features/game/testing/simulation";
+import {
+  type SimulationCliArgs,
+  inferSimulationTarget,
+  parseSimulationArgs,
+} from "./simulate-players-cli";
+import {
+  type SimulationWriter,
+  persistSimulationPlan,
+} from "./simulate-players-execution";
 
 // ─── Args ─────────────────────────────────────────────────────────────────────
 
@@ -39,13 +45,14 @@ Usage:
   pnpm simulate:players [options]
 
 Options:
-  --count=N       Nombre de joueurs (1–100, défaut 1)
-  --lives=N       Vies restantes en fin de partie (profil explicite)
-  --filled=N      Cases remplies en fin de partie (profil explicite)
-  --end=REASON    Cause de fin : win | lives | blocked
-  --seed=N        Graine aléatoire reproductible
-  --dry-run       Affiche les plans sans appeler Convex
-  --force         Autoriser même si CONVEX_DEPLOYMENT=prod:* ou absente
+  --count N       Nombre de joueurs (1–100, défaut 1 ; accepte aussi --count=N)
+  --lives N       Vies restantes en fin de partie (profil explicite)
+  --filled N      Cases remplies en fin de partie (profil explicite)
+  --end REASON    Cause de fin : win | lives | blocked
+  --seed N        Graine aléatoire reproductible
+  --dry-run       Alias explicite du mode par défaut : aucune écriture Convex
+  --execute       Exécute réellement les plans et écrit dans Convex
+  --force         Avec --execute, autorise une cible prod ou non vérifiable
   -h, --help      Afficher cette aide
 
 Profils explicites (exemples):
@@ -59,65 +66,12 @@ Mode aléatoire (défaut, sans --lives/--filled/--end):
 
 Environnement:
   VITE_CONVEX_URL     URL Convex (lu depuis .env.local)
-  CONVEX_DEPLOYMENT   Refus si prod:* ou absente (sauf --force)
+  CONVEX_DEPLOYMENT   Cible vérifiée avant toute écriture avec --execute
 
 Exemples:
   pnpm simulate:players --count 20
-  pnpm simulate:players --count 10 --seed 42 --dry-run
+  pnpm simulate:players --execute --count 10 --seed 42
 `);
-}
-
-type CliArgs = {
-  count: number;
-  lives: number | null;
-  filled: number | null;
-  end: SimEndReason | null;
-  seed: number | null;
-  dryRun: boolean;
-  force: boolean;
-};
-
-function parseArgs(argv: string[]): CliArgs {
-  if (argv.includes("-h") || argv.includes("--help")) {
-    printHelp();
-    process.exit(0);
-  }
-
-  const args: CliArgs = {
-    count: 1,
-    lives: null,
-    filled: null,
-    end: null,
-    seed: null,
-    dryRun: false,
-    force: false,
-  };
-
-  for (const raw of argv) {
-    if (raw === "--dry-run") args.dryRun = true;
-    else if (raw === "--force") args.force = true;
-    else if (raw.startsWith("--count=")) {
-      args.count = Number.parseInt(raw.slice("--count=".length), 10);
-    } else if (raw.startsWith("--lives=")) {
-      args.lives = Number.parseInt(raw.slice("--lives=".length), 10);
-    } else if (raw.startsWith("--filled=")) {
-      args.filled = Number.parseInt(raw.slice("--filled=".length), 10);
-    } else if (raw.startsWith("--end=")) {
-      const value = raw.slice("--end=".length) as SimEndReason;
-      if (value !== "win" && value !== "lives" && value !== "blocked") {
-        throw new Error(`--end invalide : ${value} (win | lives | blocked)`);
-      }
-      args.end = value;
-    } else if (raw.startsWith("--seed=")) {
-      args.seed = Number.parseInt(raw.slice("--seed=".length), 10);
-    }
-  }
-
-  if (!Number.isInteger(args.count) || args.count < 1 || args.count > 100) {
-    throw new Error("--count doit être un entier entre 1 et 100");
-  }
-
-  return args;
 }
 
 function mulberry32(seed: number): () => number {
@@ -128,36 +82,6 @@ function mulberry32(seed: number): () => number {
     r ^= r + Math.imul(r ^ (r >>> 7), r | 61);
     return ((r ^ (r >>> 14)) >>> 0) / 4_294_967_296;
   };
-}
-
-function inferTarget(args: CliArgs): PlayerTarget | null {
-  if (args.end === "win" || (args.filled === 9 && (args.lives ?? 1) >= 1)) {
-    const livesLeft = args.lives ?? 5;
-    return { endReason: "win", filledCells: 9, livesLeft };
-  }
-  if (args.end === "lives" || args.lives === 0) {
-    return {
-      endReason: "lives",
-      filledCells: args.filled ?? 0,
-      livesLeft: 0,
-    };
-  }
-  if (args.end === "blocked") {
-    if (args.filled !== null && args.lives !== null) {
-      return {
-        endReason: "blocked",
-        filledCells: args.filled,
-        livesLeft: args.lives,
-      };
-    }
-    return { endReason: "blocked", filledCells: -1, livesLeft: -1 };
-  }
-  if (args.lives !== null || args.filled !== null) {
-    throw new Error(
-      "Profil ambigu — préciser --end=win|lives|blocked ou utiliser --filled=9 / --lives=0",
-    );
-  }
-  return null;
 }
 
 /** Prod Convex uniquement — le cloud dev perso (`dev:*`) et les previews passent. */
@@ -179,41 +103,6 @@ function unsafeConvexTargetReason(): string | null {
 
 // ─── Exécution ────────────────────────────────────────────────────────────────
 
-async function executePlan(
-  client: ConvexHttpClient,
-  date: string,
-  clientId: string,
-  actions: SimAction[],
-  target: PlayerTarget,
-): Promise<void> {
-  for (const action of actions) {
-    if (action.type === "submit") {
-      await client.mutation(api.guesses.submitGuess, {
-        date,
-        cellKey: action.cellKey,
-        countryCode: action.countryCode,
-        clientId,
-      });
-    } else {
-      await client.mutation(api.guesses.recordFailedGuess, {
-        date,
-        cellKey: action.cellKey,
-        clientId,
-      });
-    }
-  }
-
-  const failedGuesses = STARTING_LIVES - target.livesLeft;
-  await client.mutation(api.grids.recordGameEnd, {
-    date,
-    endReason: target.endReason,
-    livesLeft: target.livesLeft,
-    filledCells: target.filledCells,
-    guessesSubmitted: target.filledCells + failedGuesses,
-    clientId,
-  });
-}
-
 function describePlayer(
   index: number,
   target: PlayerTarget,
@@ -232,15 +121,32 @@ function describePlayer(
 
 // ─── Main ─────────────────────────────────────────────────────────────────────
 
-const cli = parseArgs(process.argv.slice(2));
+let cli: SimulationCliArgs;
+let explicitTarget: PlayerTarget | null;
+try {
+  cli = parseSimulationArgs(process.argv.slice(2));
+  if (cli.help) {
+    printHelp();
+    process.exit(0);
+  }
+  explicitTarget = inferSimulationTarget(cli);
+} catch (error) {
+  const message = error instanceof Error ? error.message : String(error);
+  console.error(`Arguments invalides : ${message}`);
+  console.error("Utiliser `pnpm simulate:players --help` pour l'aide.");
+  process.exit(1);
+}
 const convexUrl = process.env.VITE_CONVEX_URL?.trim().replace(/\/$/, "");
+console.log(
+  `Configuration : mode=${cli.dryRun ? "dry-run" : "EXECUTION"}, joueurs=${cli.count}, seed=${cli.seed ?? "aléatoire"}, profil=${explicitTarget?.endReason ?? "aléatoire"}`,
+);
 if (!convexUrl) {
   console.error("VITE_CONVEX_URL manquante — définir dans .env.local");
   process.exit(1);
 }
 
 const unsafeReason = unsafeConvexTargetReason();
-if (unsafeReason && !cli.force) {
+if (!cli.dryRun && unsafeReason && !cli.force) {
   console.error(
     `Refus de simuler : ${unsafeReason}.`,
     "Utiliser `convex dev`, preview develop, ou passer --force en connaissance de cause.",
@@ -249,6 +155,17 @@ if (unsafeReason && !cli.force) {
 }
 
 const client = new ConvexHttpClient(convexUrl);
+const writer: SimulationWriter = {
+  submitGuess: async (args) => {
+    await client.mutation(api.guesses.submitTodayGuess, args);
+  },
+  recordFailedGuess: async (args) => {
+    await client.mutation(api.guesses.recordTodayFailedGuess, args);
+  },
+  recordGameEnd: async (args) => {
+    await client.mutation(api.grids.recordTodayGameEnd, args);
+  },
+};
 const grid = await client.query(api.grids.getTodayGrid);
 if (!grid) {
   console.error("Pas de grille pour aujourd'hui — seed ou attendre le cron.");
@@ -261,7 +178,6 @@ const ctx: SimulationContext = {
   cols: grid.cols as ConstraintId[],
 };
 
-const explicitTarget = inferTarget(cli);
 const rng = cli.seed !== null ? mulberry32(cli.seed) : Math.random;
 
 const randomBatch = explicitTarget
@@ -354,19 +270,23 @@ for (let i = 0; i < cli.count; i++) {
     continue;
   }
 
-  if (!cli.dryRun) {
-    const clientId = `sim-${randomUUID()}`;
-    try {
-      await executePlan(client, grid.date, clientId, actions, target);
+  const clientId = `sim-${crypto.randomUUID()}`;
+  try {
+    const written = await persistSimulationPlan({
+      execute: !cli.dryRun,
+      writer,
+      clientId,
+      actions,
+      target,
+    });
+    if (written) {
       console.log(`  ✓ enregistré (clientId=${clientId.slice(0, 18)}…)`);
-      ok++;
-    } catch (error) {
-      const msg = error instanceof Error ? error.message : String(error);
-      console.error(`  ✗ échec Convex : ${msg}`);
-      skipped++;
     }
-  } else {
     ok++;
+  } catch (error) {
+    const msg = error instanceof Error ? error.message : String(error);
+    console.error(`  ✗ échec Convex : ${msg}`);
+    skipped++;
   }
 }
 

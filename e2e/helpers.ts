@@ -4,10 +4,9 @@ import { ConvexHttpClient } from "convex/browser";
 import { api } from "../convex/_generated/api";
 import {
   CELL_KEYS,
-  findBlockingPlan as findBlockingPlanCore,
   pickCountry as pickCountryCode,
   solveGrid as solveGridCore,
-} from "../src/features/game/logic/simulation";
+} from "../src/features/game/testing/simulation";
 
 const require = createRequire(import.meta.url);
 
@@ -46,6 +45,13 @@ export async function fetchTodayGrid(): Promise<TodayGrid | null> {
 }
 
 export { CELL_KEYS };
+
+/** Cible la modale de résultat sans confondre le Drawer en fin de fermeture. */
+export function getResultDialog(page: Page) {
+  return page.getByRole("dialog").filter({
+    has: page.getByRole("button", { name: "Share my result" }),
+  });
+}
 
 export function solveGrid(
   validAnswers: Record<string, string[]>,
@@ -106,7 +112,7 @@ export async function prepareSession(page: Page) {
 /** Wait until the game grid cells are visible (grid loaded from Convex). */
 export async function waitForGrid(page: Page) {
   await page
-    .getByRole("button", { name: /Select cell row/i })
+    .getByRole("button", { name: /^Select cell row/i })
     .first()
     .waitFor({ state: "visible", timeout: 15_000 });
 }
@@ -122,8 +128,7 @@ export async function fillCell(
   countryName: string,
 ) {
   const cellButton = page.getByRole("button", {
-    name: `Select cell row ${row} column ${col}`,
-    exact: true,
+    name: new RegExp(`^Select cell row ${row} column ${col}:`),
   });
   const input = page.getByPlaceholder("Search for a country…");
 
@@ -164,31 +169,14 @@ export async function playToDefeat(page: Page, grid: TodayGrid) {
   const wrong = pickWrongCountry(grid.validAnswers, "0,0");
   if (!wrong) throw new Error("Could not find a wrong country for this grid");
   await page
-    .getByRole("button", { name: "Select cell row 1 column 1", exact: true })
+    .getByRole("button", { name: /^Select cell row 1 column 1:/ })
     .click();
   const input = page.getByPlaceholder("Search for a country…");
   for (let i = 0; i < 5; i++) {
     await submitCountryInOpenModal(page, wrong.name);
     if (i < 4) await input.waitFor({ state: "visible" });
   }
-  await page
-    .locator("dialog[open]")
-    .waitFor({ state: "visible", timeout: 5_000 });
-}
-
-export function findBlockingPlan(validAnswers: Record<string, string[]>): {
-  blockedCell: string;
-  fills: Array<{ cell: string; code: string; name: string }>;
-} | null {
-  const plan = findBlockingPlanCore(validAnswers);
-  if (!plan) return null;
-  return {
-    blockedCell: plan.blockedCell,
-    fills: plan.fills.map((f) => ({
-      ...f,
-      name: getCountryName(f.code),
-    })),
-  };
+  await getResultDialog(page).waitFor({ state: "visible", timeout: 5_000 });
 }
 
 /**

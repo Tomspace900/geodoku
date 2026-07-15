@@ -2,6 +2,7 @@ import * as React from "react"
 import * as DialogPrimitive from "@radix-ui/react-dialog"
 import { X } from "lucide-react"
 
+import { focusWithoutVisibleRing } from "@/lib/focus"
 import { cn } from "@/lib/utils"
 
 const Dialog = DialogPrimitive.Root
@@ -19,7 +20,7 @@ const DialogOverlay = React.forwardRef<
   <DialogPrimitive.Overlay
     ref={ref}
     className={cn(
-      "fixed inset-0 z-50 bg-on-surface/40 backdrop-blur-sm data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0",
+      "fixed inset-0 z-50 bg-on-surface/40 backdrop-blur-sm data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 motion-reduce:animate-none",
       className
     )}
     {...props}
@@ -27,28 +28,88 @@ const DialogOverlay = React.forwardRef<
 ))
 DialogOverlay.displayName = DialogPrimitive.Overlay.displayName
 
+type DialogContentProps = React.ComponentPropsWithoutRef<
+  typeof DialogPrimitive.Content
+> & {
+  closeLabel: string
+  placement?: "center" | "bottom-sheet"
+}
+
 const DialogContent = React.forwardRef<
   React.ElementRef<typeof DialogPrimitive.Content>,
-  React.ComponentPropsWithoutRef<typeof DialogPrimitive.Content>
->(({ className, children, ...props }, ref) => (
-  <DialogPortal>
-    <DialogOverlay />
-    <DialogPrimitive.Content
-      ref={ref}
-      className={cn(
-        "fixed left-[50%] top-[50%] z-50 grid w-full max-w-lg translate-x-[-50%] translate-y-[-50%] gap-4 rounded-xl border-none bg-surface-lowest p-6 shadow-editorial duration-200 data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 data-[state=closed]:slide-out-to-left-1/2 data-[state=closed]:slide-out-to-top-[48%] data-[state=open]:slide-in-from-left-1/2 data-[state=open]:slide-in-from-top-[48%]",
-        className
-      )}
-      {...props}
-    >
-      {children}
-      <DialogPrimitive.Close className="absolute right-4 top-4 rounded-md p-1.5 text-on-surface-variant ring-offset-surface-lowest transition-colors hover:bg-surface-low hover:text-on-surface focus:outline-none focus:ring-2 focus:ring-on-surface/20 focus:ring-offset-2 disabled:pointer-events-none">
-        <X className="h-4 w-4" />
-        <span className="sr-only">Close</span>
-      </DialogPrimitive.Close>
-    </DialogPrimitive.Content>
-  </DialogPortal>
-))
+  DialogContentProps
+>(
+  (
+    {
+      className,
+      children,
+      closeLabel,
+      placement = "center",
+      onCloseAutoFocus,
+      onOpenAutoFocus,
+      ...props
+    },
+    ref
+  ) => {
+    const contentRef = React.useRef<
+      React.ElementRef<typeof DialogPrimitive.Content> | null
+    >(null)
+    const previouslyFocusedRef = React.useRef<HTMLElement | null>(null)
+    const setRefs = React.useCallback(
+      (node: React.ElementRef<typeof DialogPrimitive.Content> | null) => {
+        contentRef.current = node
+        if (typeof ref === "function") ref(node)
+        else if (ref) {
+          const mutableRef = ref as React.MutableRefObject<
+            React.ElementRef<typeof DialogPrimitive.Content> | null
+          >
+          mutableRef.current = node
+        }
+      },
+      [ref]
+    )
+
+    return (
+      <DialogPortal>
+        <DialogOverlay />
+        <DialogPrimitive.Content
+          ref={setRefs}
+          className={cn(
+            "fixed z-50 grid w-full gap-4 border-none bg-surface-lowest p-6 shadow-editorial duration-200 focus:outline-none data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 motion-reduce:animate-none",
+            placement === "center"
+              ? "left-[50%] top-[50%] max-w-lg translate-x-[-50%] translate-y-[-50%] rounded-xl data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 data-[state=closed]:slide-out-to-left-1/2 data-[state=closed]:slide-out-to-top-[48%] data-[state=open]:slide-in-from-left-1/2 data-[state=open]:slide-in-from-top-[48%]"
+              : "bottom-0 left-0 max-w-none translate-x-0 translate-y-0 rounded-t-2xl data-[state=closed]:slide-out-to-bottom-4 data-[state=open]:slide-in-from-bottom-4 sm:bottom-auto sm:left-[50%] sm:top-[50%] sm:max-w-lg sm:translate-x-[-50%] sm:translate-y-[-50%] sm:rounded-xl sm:data-[state=closed]:slide-out-to-bottom-0 sm:data-[state=open]:slide-in-from-bottom-0 sm:data-[state=closed]:zoom-out-95 sm:data-[state=open]:zoom-in-95",
+            className
+          )}
+          {...props}
+          tabIndex={-1}
+          onOpenAutoFocus={(event) => {
+            previouslyFocusedRef.current =
+              document.activeElement instanceof HTMLElement
+                ? document.activeElement
+                : null
+            onOpenAutoFocus?.(event)
+            if (event.defaultPrevented) return
+            event.preventDefault()
+            focusWithoutVisibleRing(contentRef.current)
+          }}
+          onCloseAutoFocus={(event) => {
+            onCloseAutoFocus?.(event)
+            if (event.defaultPrevented) return
+            event.preventDefault()
+            focusWithoutVisibleRing(previouslyFocusedRef.current)
+          }}
+        >
+          {children}
+          <DialogPrimitive.Close className="absolute right-4 top-4 rounded-md p-1.5 text-on-surface-variant ring-offset-surface-lowest transition-colors hover:bg-surface-low hover:text-on-surface focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-on-surface/20 focus-visible:ring-offset-2 disabled:pointer-events-none">
+            <X className="h-4 w-4" />
+            <span className="sr-only">{closeLabel}</span>
+          </DialogPrimitive.Close>
+        </DialogPrimitive.Content>
+      </DialogPortal>
+    )
+  }
+)
 DialogContent.displayName = DialogPrimitive.Content.displayName
 
 const DialogHeader = ({

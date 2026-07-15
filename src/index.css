@@ -63,6 +63,14 @@ body {
   @apply bg-surface text-on-surface font-sans antialiased;
 }
 
+/* Une restauration programmatique garde la continuité clavier sans simuler un
+   déplacement Tab. L'attribut est retiré au premier blur (focus.ts). */
+[data-silent-focus="true"]:focus {
+  outline: none !important;
+  --tw-ring-offset-shadow: 0 0 #0000 !important;
+  --tw-ring-shadow: 0 0 #0000 !important;
+}
+
 /* Durées synchronisées avec UI_ANIMATION_MS (constants.ts). */
 @keyframes flag-bounce {
   0%,
@@ -124,5 +132,19 @@ body {
   .animate-heart-shake {
     animation: heart-shake 0.45s ease-in-out;
     transform-origin: center;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .animate-flag-bounce,
+    .animate-lives-tick,
+    .animate-heart-shake {
+      animation: none;
+    }
+
+    [data-vaul-drawer],
+    [data-vaul-overlay] {
+      animation-duration: 0.01ms !important;
+      transition-duration: 0.01ms !important;
+    }
   }
 }

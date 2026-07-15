@@ -14,12 +14,16 @@ export const STORAGE_KEYS = {
   clientId: "geodoku:client-id",
   /** Partie du jour sérialisée (JSON versionné). localStorage. */
   game: "geodoku:game",
+  /** Partie canonique minimale v3. La clé `game` reste le shadow de rollback v2. */
+  gameV3: "geodoku:game-v3",
   /** Affichage du panneau « Comment jouer ». localStorage. */
   howToPlay: "geodoku:how-to-play",
   /** Langue choisie (`fr`/`en`). localStorage. */
   locale: "geodoku:locale",
   /** CTA sondage déjà cliqué/fermé. localStorage. */
   surveyDone: "geodoku:survey-done",
+  /** Clés opaques des opérations Convex en attente d'acquittement. localStorage. */
+  pendingOperations: "geodoku:pending-operations",
   /** Token admin — éphémère, sessionStorage. */
   adminToken: "geodoku:admin-token",
 } as const;
@@ -50,11 +54,15 @@ export function safeSet(
   key: string,
   value: string,
   kind: StorageArea = "local",
-): void {
+): boolean {
   try {
-    area(kind)?.setItem(key, value);
+    const storage = area(kind);
+    if (!storage) return false;
+    storage.setItem(key, value);
+    return true;
   } catch {
     // Quota plein ou storage désactivé → no-op, l'app continue sans persistance.
+    return false;
   }
 }
 

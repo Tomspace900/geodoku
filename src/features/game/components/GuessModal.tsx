@@ -12,12 +12,10 @@ import {
   DrawerHeader,
   DrawerTitle,
 } from "@/components/ui/drawer";
-import { searchCountries } from "@/features/countries/lib/search";
-import {
-  RARITY_STYLES,
-  UI_ANIMATION_MS,
-} from "@/features/game/logic/constants";
+import { searchCountries } from "@/features/countries/logic/search";
+import { UI_ANIMATION_MS } from "@/features/game/logic/constants";
 import { CONSTRAINT_BY_ID } from "@/features/game/logic/constraints";
+import { getUsedCountryCodes } from "@/features/game/logic/usedCountries";
 import {
   type ConstraintFailureReason,
   isConstraintFailureReason,
@@ -25,6 +23,7 @@ import {
 import type { CellPosition, GameState } from "@/features/game/types";
 import { useLocale, useT } from "@/i18n/LocaleContext";
 import type { TKey } from "@/i18n/types";
+import { focusWithoutVisibleRing } from "@/lib/focus";
 import { cn } from "@/lib/utils";
 import { usePostHog } from "@posthog/react";
 import { Heart } from "lucide-react";
@@ -33,16 +32,16 @@ import { useEffect, useRef, useState } from "react";
 const ERROR_KEY_MAP: Record<string, TKey> = {
   already_used: "error.already_used",
   invalid_country: "error.invalid_country",
+  unavailable: "error.unavailable",
 };
 
-const FAILED_CONSTRAINT_CLASS = cn(
-  RARITY_STYLES.ultra,
-  "rounded-md px-1.5 py-0.5",
-);
+const FAILED_CONSTRAINT_CLASS =
+  "rounded-md bg-error/10 px-1.5 py-0.5 text-error";
 
 type SubmitResult =
-  | { ok: true }
-  | { ok: false; reason: string; gameOver?: boolean };
+  | { kind: "accepted" }
+  | { kind: "domain_rejected"; reason: string; gameOver: boolean }
+  | { kind: "unavailable" };
 
 type LifeFlash = {
   key: number;
@@ -56,6 +55,7 @@ type LivesIndicatorProps = {
 };
 
 function LivesIndicator({ lives, lifeFlash }: LivesIndicatorProps) {
+  const t = useT();
   const displayLives = lifeFlash
     ? lifeFlash.phase === "shake"
       ? lifeFlash.from
@@ -64,35 +64,38 @@ function LivesIndicator({ lives, lifeFlash }: LivesIndicatorProps) {
   const heartFilled = lifeFlash ? lifeFlash.phase === "shake" : lives > 0;
 
   return (
-    <div
-      key={lifeFlash?.key ?? "lives-idle"}
-      className={cn(
-        "mt-0.5 flex shrink-0 items-center gap-1 origin-center",
-        lifeFlash?.phase === "shake" && "animate-heart-shake",
-      )}
-      aria-hidden
-    >
-      <span
-        key={
-          lifeFlash?.phase === "empty"
-            ? `lives-down-${lifeFlash.key}`
-            : "lives-steady"
-        }
+    <div className="mt-0.5 shrink-0">
+      <output aria-live="assertive" aria-atomic="true" className="sr-only">
+        {t("ui.remainingLives", { count: lives })}
+      </output>
+      <div
+        key={lifeFlash?.key ?? "lives-idle"}
         className={cn(
-          "text-sm font-semibold tabular-nums text-on-surface",
-          lifeFlash?.phase === "empty" && "animate-lives-tick",
+          "flex origin-center items-center gap-1",
+          lifeFlash?.phase === "shake" && "animate-heart-shake",
         )}
+        aria-hidden="true"
       >
-        {displayLives}
-      </span>
-      <Heart
-        size={18}
-        className={
-          heartFilled
-            ? "text-rarity-ultra fill-rarity-ultra"
-            : "text-on-surface-variant"
-        }
-      />
+        <span
+          key={
+            lifeFlash?.phase === "empty"
+              ? `lives-down-${lifeFlash.key}`
+              : "lives-steady"
+          }
+          className={cn(
+            "text-sm font-semibold tabular-nums text-on-surface",
+            lifeFlash?.phase === "empty" && "animate-lives-tick",
+          )}
+        >
+          {displayLives}
+        </span>
+        <Heart
+          size={18}
+          className={
+            heartFilled ? "text-error fill-error" : "text-on-surface-variant"
+          }
+        />
+      </div>
     </div>
   );
 }
@@ -126,6 +129,11 @@ export function GuessModal({
   const [submitting, setSubmitting] = useState(false);
   const errorTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const lifeFlashTimersRef = useRef<ReturnType<typeof setTimeout>[]>([]);
+  const openerRef = useRef<HTMLElement | null>(
+    document.activeElement instanceof HTMLElement
+      ? document.activeElement
+      : null,
+  );
   const { locale } = useLocale();
   const t = useT();
 
@@ -181,18 +189,27 @@ export function GuessModal({
   }
 
   async function handleSelect(countryCode: string) {
-    if (submitting || state.usedCountries.has(countryCode)) return;
+    if (submitting || usedCountryCodes.has(countryCode)) return;
     const livesBeforeSubmit = state.remainingLives;
     setSubmitting(true);
     const result = await onSubmit(cell, countryCode);
     setSubmitting(false);
-    if (result?.ok || result?.gameOver) {
+    if (!result) return;
+    if (result.kind === "accepted") {
       handleClose("submitted");
-    } else if (result) {
-      setQuery("");
-      showError(result.reason);
-      triggerLifeLoss(livesBeforeSubmit);
+      return;
     }
+    if (result.kind === "unavailable") {
+      showError("unavailable");
+      return;
+    }
+    if (result.gameOver) {
+      handleClose("submitted");
+      return;
+    }
+    setQuery("");
+    showError(result.reason);
+    triggerLifeLoss(livesBeforeSubmit);
   }
 
   const rowConstraint = CONSTRAINT_BY_ID.get(state.rows[cell.row]);
@@ -205,19 +222,31 @@ export function GuessModal({
     : state.cols[cell.col];
 
   const cellKey = `${cell.row},${cell.col}`;
+  const usedCountryCodes = getUsedCountryCodes(state.cells);
   const codesForCell = validAnswers[cellKey] ?? [];
   const totalPossible = codesForCell.length;
   const remainingPossible = codesForCell.filter(
-    (code) => !state.usedCountries.has(code),
+    (code) => !usedCountryCodes.has(code),
   ).length;
 
   const hasMinSearchLength = query.length >= 3;
-  const results = hasMinSearchLength ? searchCountries(query, locale, 12) : [];
+  const results = hasMinSearchLength ? searchCountries(query, 12) : [];
 
   const rowFailed =
     errorReason === "wrong_row" || errorReason === "wrong_constraints";
   const colFailed =
     errorReason === "wrong_col" || errorReason === "wrong_constraints";
+  const constraintErrorMessage =
+    errorReason === "wrong_row"
+      ? t("error.wrong_row", { constraint: rowLabel })
+      : errorReason === "wrong_col"
+        ? t("error.wrong_col", { constraint: colLabel })
+        : errorReason === "wrong_constraints"
+          ? t("error.wrong_constraints", {
+              rowConstraint: rowLabel,
+              colConstraint: colLabel,
+            })
+          : null;
 
   return (
     <Drawer
@@ -226,7 +255,13 @@ export function GuessModal({
         if (!v) handleClose("dismissed");
       }}
     >
-      <DrawerContent className="mt-10 max-h-[94svh] w-full overflow-x-hidden pb-[env(safe-area-inset-bottom)] sm:mx-auto sm:mt-24 sm:max-w-xl">
+      <DrawerContent
+        className="mt-10 max-h-[94svh] w-full overflow-x-hidden pb-[env(safe-area-inset-bottom)] sm:mx-auto sm:mt-24 sm:max-w-xl"
+        onCloseAutoFocus={(event) => {
+          event.preventDefault();
+          focusWithoutVisibleRing(openerRef.current);
+        }}
+      >
         <DrawerHeader className="text-left px-4 pb-2 pt-3 sm:pt-4">
           <div className="flex items-start justify-between gap-3">
             <DrawerTitle className="min-w-0 font-serif text-lg font-medium text-on-surface leading-snug">
@@ -255,8 +290,17 @@ export function GuessModal({
           )}
         </DrawerHeader>
 
+        {constraintErrorMessage && (
+          <p role="alert" className="sr-only">
+            {constraintErrorMessage}
+          </p>
+        )}
+
         {errorMsg && (
-          <div className="mx-4 mb-2 px-3 py-2 bg-error/10 text-error text-sm rounded-lg">
+          <div
+            role="alert"
+            className="mx-4 mb-2 rounded-lg bg-error/10 px-3 py-2 text-sm text-error"
+          >
             {errorMsg}
           </div>
         )}
@@ -295,7 +339,7 @@ export function GuessModal({
               </CommandEmpty>
             ) : (
               results.map((country) => {
-                const alreadyUsed = state.usedCountries.has(country.iso3);
+                const alreadyUsed = usedCountryCodes.has(country.iso3);
                 return (
                   <CommandItem
                     key={country.iso3}

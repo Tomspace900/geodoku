@@ -33,7 +33,7 @@ import {
 import countriesJson from "../../src/features/countries/data/countries.json" with {
   type: "json",
 };
-import { topKPopularity } from "../../src/features/countries/lib/popularity";
+import { topKPopularity } from "../../src/features/countries/logic/popularity";
 import type { Country } from "../../src/features/countries/types";
 import { CONSTRAINTS } from "../../src/features/game/logic/constraints";
 import { translate } from "../../src/i18n/index";

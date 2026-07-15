@@ -5,7 +5,9 @@ import {
 } from "./blockedDetection";
 import { STARTING_LIVES } from "./constants";
 import type { ConstraintId } from "./constraints";
-import type { PersistedGame } from "./persistence";
+import { CELL_KEYS, toCellKey } from "./gridTopology";
+import type { SanitizedPersistedGame } from "./sanitizePersisted";
+import { getUsedCountryCodes } from "./usedCountries";
 
 export type GameAction =
   | { type: "init"; date: string; rows: ConstraintId[]; cols: ConstraintId[] }
@@ -21,7 +23,7 @@ export type GameAction =
   | { type: "setRated"; date: string }
   | {
       type: "rehydrate";
-      persisted: PersistedGame;
+      persisted: SanitizedPersistedGame;
       rows: ConstraintId[];
       cols: ConstraintId[];
       validAnswers: Record<string, string[]>;
@@ -32,10 +34,9 @@ export function createInitialState(
   rows: ConstraintId[],
   cols: ConstraintId[],
 ): GameState {
-  const cells = {} as Record<CellKey, Cell>;
-  for (let i = 0 as 0 | 1 | 2; i <= 2; i++)
-    for (let j = 0 as 0 | 1 | 2; j <= 2; j++)
-      cells[`${i},${j}` as CellKey] = { status: "empty" };
+  const cells = Object.fromEntries(
+    CELL_KEYS.map((cellKey) => [cellKey, { status: "empty" as const }]),
+  ) as Record<CellKey, Cell>;
   return {
     date,
     rows,
@@ -43,10 +44,7 @@ export function createInitialState(
     cells,
     remainingLives: STARTING_LIVES,
     selectedCell: null,
-    usedCountries: new Set(),
     status: "playing",
-    startedAt: Date.now(),
-    finishedAt: null,
     endRecorded: false,
     rated: false,
   };
@@ -81,8 +79,8 @@ export function gameReducer(state: GameState, action: GameAction): GameState {
 
     case "guessSuccess": {
       if (state.status !== "playing") return state;
-      const key = `${action.cell.row},${action.cell.col}` as CellKey;
-      const used = new Set(state.usedCountries);
+      const key = toCellKey(action.cell);
+      const used = getUsedCountryCodes(state.cells);
       used.add(action.countryCode);
       const newCells = cellsAfterSuccessfulGuess(
         state.cells,
@@ -92,26 +90,21 @@ export function gameReducer(state: GameState, action: GameAction): GameState {
         used,
       );
       const status = resolveStatusAfterPlacement(newCells);
-      const finished = status !== "playing";
       return {
         ...state,
         cells: newCells,
-        usedCountries: used,
         selectedCell: null,
         status,
-        finishedAt: finished ? Date.now() : null,
       };
     }
 
     case "guessFailure": {
       if (state.status !== "playing") return state;
       const lives = state.remainingLives - 1;
-      const lost = lives <= 0;
       return {
         ...state,
         remainingLives: lives,
-        status: lost ? "lost" : "playing",
-        finishedAt: lost ? Date.now() : state.finishedAt,
+        status: lives <= 0 ? "lost" : "playing",
       };
     }
 
@@ -129,7 +122,7 @@ export function gameReducer(state: GameState, action: GameAction): GameState {
         : { ...state, rated: true };
 
     case "rehydrate": {
-      const usedCountries = new Set(action.persisted.usedCountries);
+      const usedCountries = getUsedCountryCodes(action.persisted.cells);
       let cells = { ...action.persisted.cells };
       cells = markBlockedCells(cells, action.validAnswers, usedCountries);
 
@@ -138,11 +131,6 @@ export function gameReducer(state: GameState, action: GameAction): GameState {
         status = resolveStatusAfterPlacement(cells);
       }
 
-      const finishedAt =
-        status === "playing"
-          ? null
-          : (action.persisted.finishedAt ?? action.persisted.startedAt);
-
       return {
         date: action.persisted.date,
         rows: action.rows,
@@ -150,10 +138,7 @@ export function gameReducer(state: GameState, action: GameAction): GameState {
         cells,
         remainingLives: action.persisted.remainingLives,
         selectedCell: null,
-        usedCountries,
         status,
-        startedAt: action.persisted.startedAt,
-        finishedAt,
         endRecorded: action.persisted.endRecorded ?? false,
         rated: action.persisted.rated ?? false,
       };
