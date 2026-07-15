@@ -20,7 +20,7 @@
  */
 import { ConvexHttpClient } from "convex/browser";
 import { api } from "../../convex/_generated/api";
-import { countryPopularity } from "../../src/features/countries/lib/popularity";
+import { countryPopularity } from "../../src/features/countries/logic/popularity";
 import { offsetUTC, todayUTC } from "../../src/lib/dates";
 
 // ─── Constantes ───────────────────────────────────────────────────────────────

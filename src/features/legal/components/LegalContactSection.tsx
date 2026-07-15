@@ -1,8 +1,9 @@
+import { SUPPORT_EMAIL } from "@/app/links";
 import { useT } from "@/i18n/LocaleContext";
 import type { TKey } from "@/i18n/types";
 import { LegalParagraph } from "./LegalParagraph";
 import { LegalSection } from "./LegalSection";
-import { SUPPORT_EMAIL, inlineLinkClass } from "./constants";
+import { inlineLinkClass } from "./constants";
 
 type Props = {
   title: TKey;

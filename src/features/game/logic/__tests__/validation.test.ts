@@ -3,7 +3,7 @@ import countriesJson from "@/features/countries/data/countries.json" with {
 };
 import type { Country } from "@/features/countries/types";
 import { describe, expect, it } from "vitest";
-import { validateGuess } from "../validation";
+import { validateGuess, validatePublishedGuess } from "../validation";
 
 const countries = countriesJson as Country[];
 
@@ -74,5 +74,43 @@ describe("validateGuess", () => {
       usedCountries: new Set(),
     });
     expect(result).toEqual({ valid: true });
+  });
+});
+
+describe("validatePublishedGuess", () => {
+  it("accepts the published snapshot even when live predicates changed", () => {
+    expect(
+      validatePublishedGuess({
+        rowConstraintId: "continent_europe",
+        colConstraintId: "water_landlocked",
+        country: france,
+        usedCountries: new Set(),
+        validCountryCodes: ["FRA"],
+      }),
+    ).toEqual({ valid: true });
+  });
+
+  it("rejects a country absent from the published snapshot", () => {
+    expect(
+      validatePublishedGuess({
+        rowConstraintId: "continent_europe",
+        colConstraintId: "water_landlocked",
+        country: austria,
+        usedCountries: new Set(),
+        validCountryCodes: [],
+      }),
+    ).toEqual({ valid: false, reason: "wrong_constraints" });
+  });
+
+  it("still rejects a duplicate country present in the snapshot", () => {
+    expect(
+      validatePublishedGuess({
+        rowConstraintId: "continent_europe",
+        colConstraintId: "water_landlocked",
+        country: austria,
+        usedCountries: new Set(["AUT"]),
+        validCountryCodes: ["AUT"],
+      }),
+    ).toEqual({ valid: false, reason: "already_used" });
   });
 });

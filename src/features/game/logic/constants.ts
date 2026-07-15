@@ -1,6 +1,6 @@
 import type { RarityTier } from "@/features/game/types";
 
-export const STARTING_LIVES = 5;
+export { STARTING_LIVES } from "./gridTopology";
 
 /** Durées JS alignées sur les `animate-*` de `src/index.css`. */
 export const UI_ANIMATION_MS = {
@@ -29,7 +29,7 @@ export const RARITY_TIERS = {
  * Seuil d'avertissement : tant qu'une case remplie reste sous ce total de
  * soumissions, sa part brute est encore trop mince → rareté signalée provisoire
  * (marqueur « ≈ » + message « ça s'affinera »). Le score est live (`useQuery`
- * réactif) : il monte au fil de la journée à mesure que la cohorte se remplit,
+ * réactif) : il évolue au fil de la journée à mesure que la cohorte se remplit,
  * et le drapeau s'éteint dès que la case atteint ce seuil.
  */
 export const ESTIMATED_MAX_TOTAL = 5;

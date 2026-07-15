@@ -1,6 +1,10 @@
 export const en = {
   ui: {
     appName: "Geodoku",
+    loading: "Loading…",
+    loadingGrid: "Loading today's grid…",
+    gameGridAriaLabel: "Today's geography grid",
+    solutionGridAriaLabel: "Solutions for today's geography grid",
     howToPlay: "How to play?",
     searchPlaceholder: "Search for a country…",
     typeAtLeast: "Type at least\u00A03 characters",
@@ -8,6 +12,8 @@ export const en = {
     errorUnknown: "Unknown error.",
     rarityEvolvesHint: "Rarities keep shifting as more people play today.",
     feedbackQuestion: "How did you find this grid?",
+    feedbackError: "We couldn't save your rating.",
+    feedbackRetry: "Try again",
     feedbackTooEasy: "Too easy",
     feedbackBalanced: "Just right",
     feedbackTooHard: "Too hard",
@@ -16,13 +22,21 @@ export const en = {
     shareCopied: "Copied!\u00A0✓",
     shareShared: "Shared!\u00A0✓",
     comeBackTomorrowGrid: "Come back tomorrow for a new grid!",
-    cellAriaLabel: "Select cell row {row} column {col}",
-    cellBlockedAriaLabel: "Blocked cell",
+    cellAriaLabel:
+      "Select cell row {row} column {col}: {rowConstraint} × {colConstraint}",
+    cellFilledAriaLabel:
+      "Cell row {row} column {col}: {rowConstraint} × {colConstraint}, filled with {country}",
+    cellBlockedAriaLabel:
+      "Blocked cell row {row} column {col}: {rowConstraint} × {colConstraint}",
+    remainingLives: "{count} lives remaining",
     possibleAnswersCount: "{count}\u00A0possible answers for this cell",
     possibleAnswersPartial: "{remaining}\u00A0possible answers out of {total}",
     viewAnswers: "View answers",
     viewMyResult: "View my result",
     closeResult: "Close",
+    closeDialog: "Close dialog",
+    resultDialogDescription:
+      "Game result, score breakdown, and end-of-game actions.",
     searchResultUsed: "Already used",
     surveyPrompt: "Pssst, I need your feedback (5 min)",
   },
@@ -46,25 +60,25 @@ export const en = {
       " helps cover the technical costs (server, domain). And above all, it's a huge motivation to keep building new features!",
   },
   privacy: {
-    eyebrow: "Last updated · June 2026",
+    eyebrow: "Last updated · July 2026",
     title: "Privacy",
     lead: "Geodoku is a game I build on my own. No account needed: I only collect the bare minimum, just enough to run the game and see how the grids are doing.",
     backToGame: "Back to the game",
-    essenceTitle: "No account, no tracking",
+    essenceTitle: "No account or advertising",
     essenceBody:
-      "No sign-up, no login, no ads. I don't sell or share any data, and there are no advertising trackers on the site.",
+      "No sign-up, no login, no ads. I don't sell data or use it for advertising. There are no advertising trackers on the site.",
     deviceTitle: "On your device",
     deviceBody:
-      "Your browser keeps a few settings in local storage: your language, the progress of the current day's grid, and a random identifier used only to curb spam. None of it is an advertising or tracking cookie. Clearing the site data removes it.",
+      "Your browser keeps a few settings in local storage: your language, the current grid progress, a random anti-spam identifier, and short-lived technical keys used to deduplicate submissions. None of it is an advertising cookie. Clearing the site data removes it.",
     serverTitle: "What gets sent to me",
     serverBody:
-      "While you play, I record anonymous, aggregated statistics (the countries picked per cell, the difficulty feedback). They aren't linked to any identity: there's no way to tell who guessed what.",
+      "While you play, I record aggregated picks per cell, game outcomes, and difficulty feedback. To make retries reliable, the server keeps a technical receipt of the action (for example its cell and country) with an opaque key for seven days, without a stable identifier linking your actions. Pseudonymous usage events also help me understand the journey. None of this contains a name, email, or account.",
     thirdPartyTitle: "Third-party services",
     thirdPartyBody:
-      "Geodoku relies on Vercel (hosting and anonymous, cookieless audience metrics), Convex (the database holding the game statistics), PostHog (anonymous, cookieless usage statistics, to understand how the game is played) and Google Fonts (typefaces, which exposes your IP address to Google when they load).",
+      "Geodoku relies on Vercel (hosting and audience metrics without advertising cookies), Convex (the game statistics database), and PostHog (pseudonymous usage-event measurement with an identifier stored locally, without advertising). Google Fonts also receives your IP address when fonts load.",
     rightsTitle: "Your rights",
     rightsBody:
-      "Since no data can identify you, there's no account to access or delete. You stay in control from your browser: clearing the site data for Geodoku erases everything.",
+      "There is no account to access. Clearing Geodoku site data removes local settings and identifiers. For questions about pseudonymous data sent to third-party services, contact me below.",
     contactTitle: "Contact",
     contactBodyPre: "A question? Write to me at",
   },
@@ -156,6 +170,12 @@ export const en = {
   error: {
     already_used: "This country has already been used in another cell.",
     invalid_country: "Invalid country.",
+    wrong_row: "This country does not match the {constraint} constraint.",
+    wrong_col: "This country does not match the {constraint} constraint.",
+    wrong_constraints:
+      "This country matches neither {rowConstraint} nor {colConstraint}.",
+    unavailable:
+      "We couldn't check this country right now. Please try again in a moment.",
     unknown: "Unknown error.",
   },
   errorScreen: {

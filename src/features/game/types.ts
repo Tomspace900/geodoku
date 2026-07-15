@@ -1,7 +1,7 @@
 import type { ConstraintId } from "./logic/constraints";
+import type { CellKey, CellPosition } from "./logic/gridTopology";
 
-export type CellPosition = { row: 0 | 1 | 2; col: 0 | 1 | 2 };
-export type CellKey = `${0 | 1 | 2},${0 | 1 | 2}`;
+export type { CellKey, CellPosition } from "./logic/gridTopology";
 
 export type RarityTier = "common" | "uncommon" | "rare" | "ultra";
 
@@ -10,7 +10,7 @@ export type FilledCell = {
   countryCode: string;
 };
 
-/** Distribution d'une case (Convex `getGuessDistributionForDate`) : total des tentatives + part (0..1) par pays. */
+/** Distribution d'une case (Convex `getTodayGuessDistribution`) : total des tentatives + part (0..1) par pays. */
 export type CellGuessDistribution = {
   totalGuesses: number;
   rarityByCountry: Record<string, number>;
@@ -29,11 +29,8 @@ export type GameState = {
   cells: Record<CellKey, Cell>;
   remainingLives: number;
   selectedCell: CellPosition | null;
-  usedCountries: Set<string>;
   status: GameStatus;
-  startedAt: number;
-  finishedAt: number | null;
-  /** Fin de partie déjà notifiée au serveur (dédup `recordGameEnd`). */
+  /** Fin de partie déjà notifiée au serveur (dédup `recordTodayGameEnd`). */
   endRecorded: boolean;
   /** Difficulté déjà notée par le joueur pour cette grille. */
   rated: boolean;

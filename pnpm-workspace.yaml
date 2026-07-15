@@ -8,6 +8,4 @@ allowBuilds:
   esbuild: true
   rolldown: true
 
-minimumReleaseAgeExclude:
-  - postcss@8.5.15
-  - tsx@4.22.3
+minimumReleaseAge: 1440

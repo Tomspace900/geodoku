@@ -1,4 +1,4 @@
-import { getCountryByIso3 } from "@/features/countries/lib/search";
+import { getCountryByIso3 } from "@/features/countries/logic/search";
 import { usePostHog } from "@posthog/react";
 import { useMutation, useQuery } from "convex/react";
 import { useCallback, useEffect, useReducer, useRef } from "react";
@@ -6,8 +6,14 @@ import { api } from "../../../../convex/_generated/api";
 import { getOrCreateClientId } from "../logic/clientId";
 import { STARTING_LIVES } from "../logic/constants";
 import type { ConstraintId } from "../logic/constraints";
+import { toCellKey } from "../logic/gridTopology";
+import { submitValidatedGuess } from "../logic/guessCommand";
 import {
-  type PersistedGame,
+  clearPendingOperationId,
+  createOperationId,
+  getOrCreatePendingOperationId,
+} from "../logic/operationIds";
+import {
   clearPersistedGame,
   isPersistedForToday,
   loadPersistedGame,
@@ -15,16 +21,20 @@ import {
 } from "../logic/persistence";
 import { rarityToTier } from "../logic/rarity";
 import { createInitialState, gameReducer } from "../logic/reducer";
-import { sanitizePersistedForGrid } from "../logic/sanitizePersisted";
+import {
+  type SanitizedPersistedGame,
+  sanitizePersistedForGrid,
+} from "../logic/sanitizePersisted";
+import { getUsedCountryCodes } from "../logic/usedCountries";
 import {
   type GuessFailureReason,
   isConstraintFailureReason,
-  validateGuess,
+  validatePublishedGuess,
 } from "../logic/validation";
 import type { CellPosition, GameState } from "../types";
 
 type GuessSubmitFailure = {
-  ok: false;
+  kind: "domain_rejected";
   reason: GuessFailureReason | "invalid_country" | "wrong_constraints";
   gameOver: boolean;
 };
@@ -32,9 +42,9 @@ type GuessSubmitFailure = {
 export function useGameState() {
   const posthog = usePostHog();
   const todayGrid = useQuery(api.grids.getTodayGrid);
-  const submit = useMutation(api.guesses.submitGuess);
-  const recordFailedGuess = useMutation(api.guesses.recordFailedGuess);
-  const recordGameEnd = useMutation(api.grids.recordGameEnd);
+  const submit = useMutation(api.guesses.submitTodayGuess);
+  const recordFailedGuess = useMutation(api.guesses.recordTodayFailedGuess);
+  const recordGameEnd = useMutation(api.grids.recordTodayGameEnd);
 
   const [state, dispatch] = useReducer(
     gameReducer,
@@ -53,7 +63,7 @@ export function useGameState() {
     if (!todayGrid || todayGrid.date === state.date) return;
 
     const persisted = loadPersistedGame();
-    let rehydratePayload: PersistedGame | null = null;
+    let rehydratePayload: SanitizedPersistedGame | null = null;
 
     if (persisted && isPersistedForToday(persisted, todayGrid.date)) {
       rehydratePayload = sanitizePersistedForGrid(
@@ -125,7 +135,11 @@ export function useGameState() {
     // Rareté et score de fin non inclus ici (dynamiques, dépendent de la
     // distribution) : captés par `result_screen_viewed`. `filled_cells` +
     // `lives_left` suffisent à reconstituer la performance de grille.
+    const operationSlot = `game-end:${state.date}`;
+    const operationId = getOrCreatePendingOperationId(operationSlot);
+
     posthog?.capture("game_completed", {
+      $insert_id: operationId,
       outcome: state.status,
       end_reason: endReason,
       grid_date: state.date,
@@ -134,7 +148,7 @@ export function useGameState() {
     });
 
     recordGameEnd({
-      date: state.date,
+      operationId,
       endReason,
       livesLeft: state.remainingLives,
       filledCells,
@@ -142,6 +156,7 @@ export function useGameState() {
       clientId: getOrCreateClientId(),
     })
       .then(() => {
+        clearPendingOperationId(operationSlot, operationId);
         // Persiste l'idempotence : plus jamais ré-émis, même après reload.
         dispatch({ type: "setEndRecorded", date: state.date });
       })
@@ -179,26 +194,30 @@ export function useGameState() {
         countryCode?: string,
       ): GuessSubmitFailure {
         const gameOver = state.remainingLives === 1;
+        const operationId = createOperationId();
         dispatch({ type: "guessFailure" });
         posthog?.capture("guess_failed", {
+          $insert_id: operationId,
           reason,
           grid_date: state.date,
           cell: `${cell.row},${cell.col}`,
           lives_remaining: state.remainingLives - 1,
           ...(countryCode ? { country_code: countryCode } : {}),
         });
-        return { ok: false, reason, gameOver };
+        return { kind: "domain_rejected", reason, gameOver };
       }
 
       const country = getCountryByIso3(countryCode);
       if (!country) {
         return failGuess("invalid_country", countryCode);
       }
-      const local = validateGuess({
+      const cellKey = toCellKey(cell);
+      const local = validatePublishedGuess({
         rowConstraintId: state.rows[cell.row],
         colConstraintId: state.cols[cell.col],
         country,
-        usedCountries: state.usedCountries,
+        usedCountries: getUsedCountryCodes(state.cells),
+        validCountryCodes: todayGrid.validAnswers[cellKey] ?? [],
       });
       if (!local.valid) {
         // Log la tentative infructueuse côté serveur (fire-and-forget) : un
@@ -206,36 +225,43 @@ export function useGameState() {
         // ignore `already_used` (pas un échec de croisement) et les non-pays.
         if (isConstraintFailureReason(local.reason)) {
           recordFailedGuess({
-            date: state.date,
-            cellKey: `${cell.row},${cell.col}`,
+            operationId: createOperationId(),
+            cellKey,
+            countryCode,
             clientId: getOrCreateClientId(),
           }).catch(() => {});
         }
         return failGuess(local.reason, countryCode);
       }
-      try {
-        const result = await submit({
-          date: state.date,
-          cellKey: `${cell.row},${cell.col}`,
+      // Un retry du même pays conserve sa clé ; choisir un autre pays démarre
+      // une nouvelle opération et ne réutilise jamais un reçu au payload distinct.
+      const operationSlot = `guess:${state.date}:${cellKey}:${countryCode}`;
+      const operationId = getOrCreatePendingOperationId(operationSlot);
+      const result = await submitValidatedGuess(() =>
+        submit({
+          operationId,
+          cellKey,
           countryCode,
           clientId: getOrCreateClientId(),
-        });
-        dispatch({
-          type: "guessSuccess",
-          cell,
-          countryCode,
-          validAnswers: todayGrid.validAnswers,
-        });
-        posthog?.capture("guess_submitted", {
-          grid_date: state.date,
-          cell: `${cell.row},${cell.col}`,
-          country_code: countryCode,
-          rarity_tier: rarityToTier(result.rarity),
-        });
-        return { ok: true as const };
-      } catch {
-        return failGuess("wrong_constraints", countryCode);
-      }
+        }),
+      );
+      if (result.kind === "unavailable") return result;
+
+      clearPendingOperationId(operationSlot, operationId);
+      dispatch({
+        type: "guessSuccess",
+        cell,
+        countryCode,
+        validAnswers: todayGrid.validAnswers,
+      });
+      posthog?.capture("guess_submitted", {
+        $insert_id: operationId,
+        grid_date: state.date,
+        cell: cellKey,
+        country_code: countryCode,
+        rarity_tier: rarityToTier(result.rarity),
+      });
+      return { kind: "accepted" } as const;
     },
     [state, todayGrid, submit, recordFailedGuess],
   );

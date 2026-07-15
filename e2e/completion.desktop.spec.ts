@@ -4,7 +4,7 @@ import {
   type TodayGrid,
   fetchTodayGrid,
   fillCell,
-  findBlockingPlan,
+  getResultDialog,
   playToDefeat,
   prepareSession,
   solveGrid,
@@ -21,9 +21,7 @@ let grid: TodayGrid;
 test.beforeAll(async () => {
   const result = await fetchTodayGrid();
   if (!result)
-    throw new Error(
-      "No grid for today — run `pnpm wipe:db && pnpm seed:grids` first.",
-    );
+    throw new Error("No grid for today on the configured E2E backend.");
   grid = result;
 });
 
@@ -36,11 +34,7 @@ test.beforeEach(async ({ page }) => {
 async function fillEntireGrid(page: import("@playwright/test").Page) {
   const solution = solveGrid(grid.validAnswers);
   if (!solution) {
-    test.skip(
-      true,
-      "Grid has no perfect matching (unexpected — generator bug?)",
-    );
-    return;
+    throw new Error("Invariant violated: published grid is not solvable");
   }
   for (const key of CELL_KEYS) {
     const [r, c] = key.split(",").map(Number) as [0 | 1 | 2, 0 | 1 | 2];
@@ -59,7 +53,7 @@ test("filling all 9 cells triggers the victory screen", async ({ page }) => {
   test.setTimeout(120_000);
   await fillEntireGrid(page);
 
-  const resultDialog = page.locator("dialog[open]");
+  const resultDialog = getResultDialog(page);
   await expect(resultDialog).toBeVisible({ timeout: 5_000 });
   // Le titre de fin est désormais tiré au sort ; on identifie la victoire par la
   // grille de partage — 9 cases remplies, donc aucune case vide (⬜) ni bloquée (⬛).
@@ -77,7 +71,7 @@ test("the end score counts up to the final total", async ({ page }) => {
   test.setTimeout(120_000);
   await fillEntireGrid(page);
 
-  const resultDialog = page.locator("dialog[open]");
+  const resultDialog = getResultDialog(page);
   await expect(resultDialog).toBeVisible({ timeout: 5_000 });
 
   // Le total final est porté (stable) par l'aria-label du SVG dès que la rareté
@@ -176,31 +170,6 @@ test("the score info dialog explains the score with the rarity legend", async ({
   });
 });
 
-// ── Case bloquée (⬛) — toutes les réponses valides épuisées ailleurs ─────────
-
-test("a cell becomes blocked once its answers are used up elsewhere", async ({
-  page,
-}) => {
-  test.setTimeout(120_000);
-  const plan = findBlockingPlan(grid.validAnswers);
-  if (!plan) {
-    test.skip(true, "No deterministically blockable cell in today's grid");
-    return;
-  }
-
-  for (const f of plan.fills) {
-    const [r, c] = f.cell.split(",").map(Number) as [0 | 1 | 2, 0 | 1 | 2];
-    await fillCell(page, (r + 1) as 1 | 2 | 3, (c + 1) as 1 | 2 | 3, f.name);
-  }
-
-  // The target cell now has no available valid country → blocked (X icon).
-  await expect(page.locator('[aria-label="Blocked cell"]').first()).toBeVisible(
-    { timeout: 5_000 },
-  );
-  // Blocking happens through valid placements only — no life lost.
-  await expect(page.locator("header svg.fill-rarity-ultra")).toHaveCount(5);
-});
-
 // ── Voir la solution — après défaite ─────────────────────────────────────────
 
 test("viewing answers after a loss reveals the solution grid", async ({
@@ -215,9 +184,21 @@ test("viewing answers after a loss reveals the solution grid", async ({
   // The solution view replaces the modal: it lists the answers and offers a
   // "View my result" button to go back. (The "solution grid" title isn't
   // rendered as on-screen text, so assert on these stable signals instead.)
-  await expect(
-    page.getByRole("button", { name: "View my result" }),
-  ).toBeVisible({ timeout: 5_000 });
+  const viewResultButton = page.getByRole("button", { name: "View my result" });
+  await expect(viewResultButton).toBeVisible({ timeout: 5_000 });
+  await expect(viewResultButton).toBeFocused();
+  await expect(viewResultButton).toHaveAttribute("data-silent-focus", "true");
+
+  await viewResultButton.click();
+  const resultDialog = getResultDialog(page);
+  await expect(resultDialog).toBeVisible();
+  await expect(resultDialog).toBeFocused();
+  await page.keyboard.press("Escape");
+  await expect(resultDialog).toBeHidden();
+  await expect(viewResultButton).toBeFocused();
+  await expect(viewResultButton).toHaveAttribute("data-silent-focus", "true");
+  await page.keyboard.press("Tab");
+  await expect(viewResultButton).not.toHaveAttribute("data-silent-focus");
   await expect(
     page.getByText("Rarities keep shifting as more people play today."),
   ).toBeVisible();

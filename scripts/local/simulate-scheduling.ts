@@ -3,7 +3,7 @@
  * Generates a full pool then simulates 30 days of scheduling,
  * printing a Pool Report + Scheduling Simulation table.
  *
- * Usage: pnpm simulate:scheduling
+ * Usage: pnpm simulate:scheduling [--seed=N]
  */
 import {
   type FinalizedPoolGrid,
@@ -40,12 +40,28 @@ const CHECK_THRESHOLDS = {
 
 // Scheduling horizon simulated below.
 const SIM_DAYS = 30;
+const UINT32_RANGE = 4_294_967_296;
+
+function parseSeed(argv: string[]): number | undefined {
+  const raw = argv.find((arg) => arg.startsWith("--seed="));
+  if (!raw) return undefined;
+  const value = Number(raw.slice("--seed=".length));
+  if (!Number.isInteger(value) || value < 0 || value >= UINT32_RANGE) {
+    throw new Error(
+      `--seed doit être un entier entre 0 et ${UINT32_RANGE - 1}`,
+    );
+  }
+  return value;
+}
 
 // ─── Pool generation ──────────────────────────────────────────────────────────
 
 console.log("Generating pool...\n");
 const start = Date.now();
-const { grids: pool, report } = generateDiversePool();
+const requestedSeed = parseSeed(process.argv.slice(2));
+const { grids: pool, report } = generateDiversePool([], {
+  seed: requestedSeed,
+});
 const genMs = Date.now() - start;
 
 // ─── Pool Report ──────────────────────────────────────────────────────────────
@@ -54,6 +70,7 @@ console.log("══════════════════════�
 console.log("  POOL REPORT");
 console.log("═══════════════════════════════════════════════════════");
 console.log(`  Total grids       : ${report.totalGenerated}`);
+console.log(`  Seed              : ${report.seed}`);
 console.log(`  Duration          : ${genMs}ms`);
 console.log(
   `  Constraint cover  : ${(report.constraintCoverage * 100).toFixed(1)}%`,
@@ -642,3 +659,9 @@ const passCount = checks.filter((c) => c.pass).length;
 console.log(
   `\n  Result: ${passCount}/${checks.length} checks passed${passCount === checks.length ? " — ALL GOOD ✓" : " — INVESTIGATE ✗"}`,
 );
+if (passCount !== checks.length) {
+  console.error(
+    `  Replay with: pnpm simulate:scheduling --seed=${report.seed}`,
+  );
+  process.exitCode = 1;
+}

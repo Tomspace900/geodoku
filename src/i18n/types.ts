@@ -1,6 +1,13 @@
 import type { en } from "./locales/en";
 
-export type Translations = typeof en | typeof en;
+type TranslationShape<T> = {
+  readonly [K in keyof T]: T[K] extends string
+    ? string
+    : TranslationShape<T[K]>;
+};
+
+/** Même arborescence que le catalogue canonique, sans figer ses textes. */
+export type Translations = TranslationShape<typeof en>;
 export type Locale = "fr" | "en";
 
 // Recursively generates all "dot-path" keys from the translations object.

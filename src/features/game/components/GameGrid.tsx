@@ -9,6 +9,7 @@ import type {
 import { useT } from "@/i18n/LocaleContext";
 import { cn } from "@/lib/utils";
 import { CellComponent } from "./Cell";
+import { GridMatrix } from "./GridMatrix";
 
 type Props = {
   state: GameState;
@@ -16,66 +17,54 @@ type Props = {
   onCellClick: (cell: CellPosition) => void;
 };
 
-const ROWS = [0, 1, 2] as const;
-const COLS = [0, 1, 2] as const;
-
 const headerClass =
   "flex items-center justify-center text-center text-[10px] font-medium text-on-surface-variant bg-surface-low rounded-xl p-2 leading-tight min-h-[52px]";
 
 export function GameGrid({ state, distribution, onCellClick }: Props) {
   const t = useT();
   const isPlaying = state.status === "playing";
+  const rowLabels = state.rows.map((constraintId) => {
+    const constraint = CONSTRAINT_BY_ID.get(constraintId);
+    return constraint ? t(constraint.labelKey) : constraintId;
+  });
+  const colLabels = state.cols.map((constraintId) => {
+    const constraint = CONSTRAINT_BY_ID.get(constraintId);
+    return constraint ? t(constraint.labelKey) : constraintId;
+  });
 
   return (
-    <div
-      className="grid gap-1.5"
-      style={{ gridTemplateColumns: "minmax(0,1fr) repeat(3, minmax(0,1fr))" }}
-    >
-      <div />
-
-      {COLS.map((col) => {
-        const constraint = CONSTRAINT_BY_ID.get(state.cols[col]);
-        const label = constraint ? t(constraint.labelKey) : state.cols[col];
+    <GridMatrix
+      ariaLabel={t("ui.gameGridAriaLabel")}
+      rowLabels={rowLabels}
+      colLabels={colLabels}
+      renderColumnHeader={(label) => (
+        <div className={cn(headerClass, "p-1.5")}>{label}</div>
+      )}
+      renderRowHeader={(label) => (
+        <div className={cn(headerClass, "p-1.5")}>{label}</div>
+      )}
+      renderCell={({ row, col, rowLabel, colLabel }) => {
+        const key = `${row},${col}` as CellKey;
+        const cell = state.cells[key];
+        const isPlayable = isPlaying && cell.status === "empty";
+        const tier =
+          cell.status === "filled"
+            ? filledCellTier(cell.countryCode, distribution?.[key])
+            : null;
         return (
-          <div key={`col-${col}`} className={cn(headerClass, "p-1.5")}>
-            {label}
-          </div>
+          <CellComponent
+            cell={cell}
+            position={{ row, col }}
+            rowLabel={rowLabel}
+            colLabel={colLabel}
+            isDisabled={!isPlayable}
+            tier={tier}
+            onClick={() => {
+              if (isPlayable) onCellClick({ row, col });
+            }}
+          />
         );
-      })}
-
-      {ROWS.map((row) => {
-        const rowConstraint = CONSTRAINT_BY_ID.get(state.rows[row]);
-        const rowLabel = rowConstraint
-          ? t(rowConstraint.labelKey)
-          : state.rows[row];
-        return [
-          <div key={`row-${row}`} className={cn(headerClass, "p-1.5")}>
-            {rowLabel}
-          </div>,
-
-          ...COLS.map((col) => {
-            const key = `${row},${col}` as CellKey;
-            const cell = state.cells[key];
-            const isPlayable = isPlaying && cell.status === "empty";
-            const tier =
-              cell.status === "filled"
-                ? filledCellTier(cell.countryCode, distribution?.[key])
-                : null;
-            return (
-              <CellComponent
-                key={key}
-                cell={cell}
-                position={{ row, col }}
-                isDisabled={!isPlayable}
-                tier={tier}
-                onClick={() => {
-                  if (isPlayable) onCellClick({ row, col });
-                }}
-              />
-            );
-          }),
-        ];
-      })}
-    </div>
+      }}
+    />
   );
 }

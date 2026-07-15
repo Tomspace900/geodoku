@@ -7,6 +7,9 @@ dist/
 dist-ssr/
 
 # Environment variables
+.env
+.env.*
+!.env.example
 .env.local
 .env.*.local
 
@@ -22,13 +25,22 @@ dist-ssr/
 *.sln
 *.sw?
 
-# Agents and Claude files
+# Local agent files
 .agents/
 .cursor/
 .claude/
+.codex/
+.design-sync/
+.ds-sync/
+/ds-bundle/
 
-# Docs
-docs/
+# Generated/private reports
+/docs/reports/
+/docs/survey-plan.md
+/docs/survey-results.md
+/analytics-*.md
+/*-dump.zip
+/coverage/
 
 # Scratch perso (gitignored) — ne pas y mettre d'outillage partagé (→ scripts/local/)
 scripts/dev/*

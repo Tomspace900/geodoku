@@ -2,7 +2,7 @@
  * Bundle d'analytics au format Markdown, pensé pour être collé tel quel dans
  * un prompt IA (Claude, GPT…). Lit Convex via `ConvexHttpClient` avec
  * `VITE_CONVEX_URL` + `ADMIN_TOKEN`, agrège les `N` derniers jours et écrit
- * un fichier `analytics-<YYYY-MM-DD>.md`.
+ * un fichier `docs/reports/analytics-<YYYY-MM-DD>.md`.
  *
  * Usage:
  *   pnpm export:analytics          # 30 derniers jours
@@ -23,9 +23,16 @@
  * parce que peu de gens l'atteignent, pas parce qu'elle est dure). On le garde
  * comme signal d'abandon, jamais comme mesure de difficulté.
  */
-import { writeFileSync } from "node:fs";
+import { mkdirSync, writeFileSync } from "node:fs";
+import { dirname } from "node:path";
 import { ConvexHttpClient } from "convex/browser";
 import { api } from "../../convex/_generated/api";
+import {
+  FAILED_ATTEMPTS_SINCE,
+  STRUGGLE_MIN_ATTEMPTS,
+  hasStruggleData,
+  struggleRate,
+} from "../../src/features/admin/logic/observedMetrics";
 import COUNTRIES_JSON from "../../src/features/countries/data/countries.json" with {
   type: "json",
 };
@@ -34,19 +41,8 @@ import { CONSTRAINTS } from "../../src/features/game/logic/constraints";
 
 // ─── Constantes ───────────────────────────────────────────────────────────────
 
-/**
- * Date de déploiement en prod de `recordFailedGuess` / `dailyStats.failedAttempts`
- * (Phase 0). AVANT cette date : l'absence d'échecs = absence de tracking, PAS
- * « facile ». Les colonnes failed/struggle affichent `—` pour ces jours.
- * Mettre à jour si l'instrumentation est (re)déployée à une autre date.
- */
-const FAILED_ATTEMPTS_SINCE = "2026-05-30";
-
 /** En-deçà, la concentration top-1 n'est que du bruit d'échantillon (tout à 100 %). */
 const CONCENTRATION_MIN_ENGAGED = 15;
-
-/** Nb minimal de tentatives (succès+échecs) pour qu'un `struggle` par case compte. */
-const STRUGGLE_MIN_ATTEMPTS = 3;
 
 // ─── Args / env ───────────────────────────────────────────────────────────────
 
@@ -170,11 +166,6 @@ function cellPosition(i: number): { row: number; col: number } {
   return { row: Math.floor(i / 3), col: i % 3 };
 }
 
-/** Données `failedAttempts` disponibles pour cette date (post-déploiement) ? */
-function hasStruggleData(date: string): boolean {
-  return date >= FAILED_ATTEMPTS_SINCE;
-}
-
 function gridEngagement(m: CellMetricsResult): GridEngagement {
   const gamesFinished = m.gamesFinished ?? m.gamesPlayed ?? m.wins + m.losses;
   const playersEngaged =
@@ -185,13 +176,6 @@ function gridEngagement(m: CellMetricsResult): GridEngagement {
     playersEngaged,
     abandonGap: Math.max(0, playersEngaged - gamesFinished),
   };
-}
-
-/** Part des tentatives sur la case qui ont échoué. `null` si jamais tentée. */
-function struggleRate(cell: CellMetric): number | null {
-  const attempts = cell.totalGuesses + cell.failedAttempts;
-  if (attempts === 0) return null;
-  return cell.failedAttempts / attempts;
 }
 
 // ─── Fetch ────────────────────────────────────────────────────────────────────
@@ -791,7 +775,8 @@ async function main() {
   const md = sections.join("\n");
 
   const today = new Date().toISOString().slice(0, 10);
-  const outPath = OUT_ARG ?? `analytics-${today}.md`;
+  const outPath = OUT_ARG ?? `docs/reports/analytics-${today}.md`;
+  mkdirSync(dirname(outPath), { recursive: true });
   writeFileSync(outPath, md, "utf8");
   console.error(`Wrote ${outPath} (${(md.length / 1024).toFixed(1)} KB)`);
 }

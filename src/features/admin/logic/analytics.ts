@@ -8,39 +8,14 @@
  * donnée » (`null` → `—`) de « zéro », et on gate le bruit d'échantillon.
  */
 
-import { popularityScore100 } from "@/features/countries/lib/popularity";
+import { popularityScore100 } from "@/features/countries/logic/popularity";
 
-// ─── Constantes (mirroir scripts/local/export-analytics.ts) ────────────────────
-
-/**
- * Date de déploiement de `failedAttempts` (instrumentation struggle). AVANT
- * cette date, l'absence d'échecs = absence de tracking, PAS « facile ».
- * Garder aligné avec `FAILED_ATTEMPTS_SINCE` dans scripts/local/export-analytics.ts.
- */
-export const FAILED_ATTEMPTS_SINCE = "2026-05-30";
-
-/** Nb minimal de tentatives (succès + échecs) pour qu'un `struggle` par case compte. */
-export const STRUGGLE_MIN_ATTEMPTS = 3;
-
-// ─── Struggle (difficulté intrinsèque par case) ────────────────────────────────
-
-/** Données `failedAttempts` disponibles pour cette date (post-déploiement) ? */
-export function hasStruggleData(date: string): boolean {
-  return date >= FAILED_ATTEMPTS_SINCE;
-}
-
-/**
- * Part des tentatives sur la case qui ont échoué = difficulté ressentie une
- * fois la case atteinte. `null` si la case n'a jamais été tentée.
- */
-export function struggleRate(cell: {
-  failedAttempts: number;
-  totalGuesses: number;
-}): number | null {
-  const attempts = cell.failedAttempts + cell.totalGuesses;
-  if (attempts === 0) return null;
-  return cell.failedAttempts / attempts;
-}
+export {
+  FAILED_ATTEMPTS_SINCE,
+  STRUGGLE_MIN_ATTEMPTS,
+  hasStruggleData,
+  struggleRate,
+} from "./observedMetrics";
 
 // ─── Écart prédiction vs observé ────────────────────────────────────────────────
 

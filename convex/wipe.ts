@@ -16,17 +16,21 @@ type WipeTable =
   | "grids"
   | "gridCandidates"
   | "gridAnswers"
+  | "poolState"
   | "guesses"
   | "dailyStats"
-  | "gridFeedback";
+  | "gridFeedback"
+  | "operationReceipts";
 
 const WIPE_TABLES: WipeTable[] = [
   "grids",
   "gridCandidates",
   "gridAnswers",
+  "poolState",
   "guesses",
   "dailyStats",
   "gridFeedback",
+  "operationReceipts",
 ];
 
 export const deleteBatch = internalMutation({
@@ -35,9 +39,11 @@ export const deleteBatch = internalMutation({
       v.literal("grids"),
       v.literal("gridCandidates"),
       v.literal("gridAnswers"),
+      v.literal("poolState"),
       v.literal("guesses"),
       v.literal("dailyStats"),
       v.literal("gridFeedback"),
+      v.literal("operationReceipts"),
     ),
     limit: v.number(),
   },
@@ -51,8 +57,13 @@ export const deleteBatch = internalMutation({
 });
 
 export const wipeAllData = internalAction({
-  args: {},
+  args: { confirmation: v.literal("WIPE_DEV_DATA") },
   handler: async (ctx) => {
+    if (process.env.ALLOW_DESTRUCTIVE_DEV_COMMANDS !== "true") {
+      throw new Error(
+        "Wipe interdit : ALLOW_DESTRUCTIVE_DEV_COMMANDS=true doit être configurée explicitement sur ce déploiement dev.",
+      );
+    }
     const summary: Record<string, number> = {};
     for (const table of WIPE_TABLES) {
       let totalDeleted = 0;

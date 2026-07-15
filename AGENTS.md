@@ -22,7 +22,7 @@ Geodoku est un mini-jeu web quotidien inspiré de Wordle et du Sudoku, sur le th
 - **Rareté** : cumulée, `Σ` sur les cases remplies, `50 ×` la fraction de rareté de chaque part — **plein dès qu'un pick est ultra** (part ≤ 0,1), puis décroissance linéaire jusqu'à 0 à `RARITY_ZERO_SHARE` (0,6) ; une case vide = 0, un pays très commun (≥ 0,6) = 0. Max 450 (grille tout-ultra).
 - **Vies** : `20 × vies restantes` (max 100).
 
-Barème tranché sur données réelles. La rareté d'une case s'appuie sur la **part brute du jour** (cohorte, coup du joueur inclus — `count/total`, [`rarity.ts`](src/features/game/logic/rarity.ts) `filledCellShare`/`filledCellTier`). **Une seule base de rareté partout** : score, couleur des cases en jeu, emojis de partage ET grille solution — un pays affiche donc le même tier sur tous les écrans (pas de leave-one-out : il inflait le score des premiers joueurs, qui redescendait ensuite, et désaccordait emojis ↔ grille solution). Sous `ESTIMATED_MAX_TOTAL` (5, `constants.ts`) soumissions, la part est encore mince → rareté signalée provisoire (marqueur « ≈ », `ScoreBreakdown.estimated`) ; le score étant live (`useQuery` réactif), il **monte** au fil de la journée à mesure que la cohorte se remplit. Affichage : anneau (grille) + couronne à **2 arcs** (rareté, couleur du tier moyen ; vies, rouge comme les cœurs, masqué à 0 vie), total au centre — [`ScoreDisplay.tsx`](src/features/game/components/ScoreDisplay.tsx). **La couleur de l'arc rareté (`averageRarityTier`) dérive de la fraction de rareté moyenne — la grandeur que l'arc mesure — pas de la moyenne des parts brutes**, pour que couleur et nombre affiché restent cohérents (à points par case égaux, couleur égale ; une seule case très commune ne fait plus basculer la couronne). Explication in-situ : `ScoreInfoDialog` (icône Info sur `ResultScreen`) + `RarityLegend` (aussi dans How-to-play).
+Barème tranché sur données réelles. La rareté d'une case s'appuie sur la **part brute du jour** (cohorte, coup du joueur inclus — `count/total`, [`rarity.ts`](src/features/game/logic/rarity.ts) `filledCellShare`/`filledCellTier`). **Une seule base de rareté partout** : score, couleur des cases en jeu, emojis de partage ET grille solution — un pays affiche donc le même tier sur tous les écrans (pas de leave-one-out : il inflait le score des premiers joueurs, qui redescendait ensuite, et désaccordait emojis ↔ grille solution). Sous `ESTIMATED_MAX_TOTAL` (5, `constants.ts`) soumissions, la part est encore mince → rareté signalée provisoire (marqueur « ≈ », `ScoreBreakdown.estimated`) ; le score étant live (`useQuery` réactif), il **évolue et s'affine** au fil de la journée à mesure que la cohorte se remplit. Affichage : anneau (grille) + couronne à **2 arcs** (rareté, couleur du tier moyen ; vies, rouge comme les cœurs, masqué à 0 vie), total au centre — [`ScoreDisplay.tsx`](src/features/game/components/ScoreDisplay.tsx). **La couleur de l'arc rareté (`averageRarityTier`) dérive de la fraction de rareté moyenne — la grandeur que l'arc mesure — pas de la moyenne des parts brutes**, pour que couleur et nombre affiché restent cohérents (à points par case égaux, couleur égale ; une seule case très commune ne fait plus basculer la couronne). Explication in-situ : `ScoreInfoDialog` (icône Info sur `ResultScreen`) + `RarityLegend` (aussi dans How-to-play).
 
 **L'enjeu communautaire.** À la fin, le joueur partage sa grille sous forme d'emojis colorés (🟪🟦🟨🟥⬜⬛) avec `<total> pts`, à la manière de Wordle. `⬛` = cases bloquées ; `⬜` = cases non remplies en défaite. Le partage ([`share.ts`](src/features/game/logic/share.ts)) ouvre la **feuille native** (Web Share API) **uniquement sur appareil tactile** (`canUseNativeShare` = `navigator.share` **et** pointeur principal `coarse` / `maxTouchPoints > 0`) et retombe sur le **presse-papiers** sur desktop. **Ne pas** élargir vers « feuille native dès que `navigator.share` existe » — Safari/Chrome desktop l'exposent aussi. `share_method` (`native`/`clipboard`) part dans l'event PostHog `result_shared`.
 
@@ -30,7 +30,7 @@ Barème tranché sur données réelles. La rareté d'une case s'appuie sur la **
 
 ## 2. Stack technique
 
-- **Frontend** : Vite + React + TypeScript (strict mode)
+- **Frontend** : Vite + React + React Router (mode déclaratif) + TypeScript (strict mode)
 - **Styling** : Tailwind CSS + shadcn/ui (install manuelle par composant) + Lucide React
 - **Backend** : Convex (cloud remote, pas local) — DB, mutations, queries, crons ; rate limiting via `@convex-dev/rate-limiter` ([`convex/rateLimit.ts`](convex/rateLimit.ts), [`convex/convex.config.ts`](convex/convex.config.ts))
 - **Observabilité front** : `@vercel/analytics` + `@vercel/speed-insights` + **PostHog** — voir §10 ([`src/main.tsx`](src/main.tsx))
@@ -42,13 +42,14 @@ Barème tranché sur données réelles. La rareté d'une case s'appuie sur la **
 - **Recherche fuzzy** : match-sorter (normalisation NFD côté requête)
 - **Fonts** : Newsreader (serif) + Inter (sans-serif)
 
-**Choix assumés et non négociables.** Pas de state manager externe : `useReducer` + `Context`. Pas de TanStack Query. Pas de Zod. Pas de date-fns : dates en `YYYY-MM-DD` ([`src/lib/dates.ts`](src/lib/dates.ts)). Pas de react-router en V1 : toggle sur `window.location.pathname` pour `/`, `/admin`, `/privacy`, `/changelog` ([`src/App.tsx`](src/App.tsx)).
+**Choix assumés et non négociables.** Pas de state manager externe : `useReducer` + `Context`. Pas de TanStack Query. Pas de Zod. Pas de date-fns : dates en `YYYY-MM-DD` ([`src/lib/dates.ts`](src/lib/dates.ts)). Routage déclaratif minimal avec React Router pour `/`, `/admin`, `/privacy` et `/changelog` ([`src/App.tsx`](src/App.tsx)) : jeu et pages éditoriales eager, admin seul chargé en lazy.
 
 ## 3. Architecture
 
 ```
 src/features/<feature>/   # game, countries, admin, legal, errors
   logic/                  # pur, testé, zéro React/Convex
+  testing/                # simulation partagée par Vitest/E2E/scripts
   hooks/                  # glue logique + Convex + React
   components/             # consomment l'état, dispatchent des actions
 convex/                   # schema, grids, guesses, scheduling, seed, crons
@@ -72,16 +73,16 @@ e2e/                      # Playwright — helpers.ts + *.shared|desktop|mobile.
 **Contenu (pays, contraintes, pool).** Règles critiques :
 
 - **Archiver, jamais supprimer** une contrainte (`ARCHIVED_CONSTRAINTS` + `CONSTRAINT_BY_ID` pour replay).
-- Changement de contrainte → `pnpm simulate:scheduling` puis reseed si OK.
+- Changement de contrainte → `pnpm simulate:scheduling` puis régénération du pool via `/admin` si OK.
 - Drapeaux → [`scripts/countries/flagData.json`](scripts/countries/flagData.json) curé, pas d'heuristique.
 
-Détail complet : [`docs/content-pipeline.md`](docs/content-pipeline.md) (gitignored localement — copie de travail agent).
+Détail complet : [`docs/content-pipeline.md`](docs/content-pipeline.md).
 
 ## 4. Conventions de code
 
 **TypeScript.** `strict: true`. Pas de `any`. Préférer `type` aux `interface`. Unions discriminées plutôt qu'optionals. Pas de `// @ts-ignore`.
 
-**React.** Fonctions pures > `useMemo`/`useCallback` par défaut. Un composant = un fichier = un export default. Pas de classes.
+**React.** Fonctions pures > `useMemo`/`useCallback` par défaut. Un module React public principal par fichier, avec exports nommés ; helpers privés colocalisés. Pas de classes, sauf Error Boundaries imposées par l'API React.
 
 **Style.** `forEach`/`flatMap` plutôt que `for...of` sauf `break`/`await`. Fonctions nommées pour les exports de logique. Commentaires en français (business), anglais (algos). Pas de magic numbers.
 
@@ -95,7 +96,7 @@ Détail complet : [`docs/content-pipeline.md`](docs/content-pipeline.md) (gitign
 - Priorité logique pure. Peu de tests composants visuels. Pas de tests hooks Convex.
 - Un test = une assertion fonctionnelle.
 
-**Tests e2e (Playwright).** Dans [`e2e/`](e2e) : vraie app (Vite) contre Convex, grille du jour via `ConvexHttpClient` — **jamais de réponses devinées**. Routage par suffixe (`*.shared` = tous moteurs · `*.desktop` = Chromium seul · `*.mobile` = profils tactiles). `workers: 1` (grille Convex partagée). Helpers clés ([`e2e/helpers.ts`](e2e/helpers.ts)) : `solveGrid`, `findBlockingPlan`, `fillCell`.
+**Tests e2e (Playwright).** Dans [`e2e/`](e2e) : vraie app (Vite) contre Convex, grille du jour via `ConvexHttpClient` — **jamais de réponses devinées**. Routage par suffixe (`*.shared` = tous moteurs · `*.desktop` = Chromium seul · `*.mobile` = profils tactiles). `workers: 1` (grille Convex partagée). Helpers clés ([`e2e/helpers.ts`](e2e/helpers.ts)) : `solveGrid`, `pickCountry`, `fillCell`. Les propriétés qui ne sont pas garanties par chaque grille publiée, comme l'existence d'un plan de blocage, restent couvertes par des tests Vitest déterministes plutôt que par des E2E conditionnels.
 
 **Documentation.** Après chaque feature, se demander si `README`, `AGENTS.md`, `/changelog` ou une docstring méritent une mise à jour — **pas systématiquement**. Mettre à jour quand la feature change une convention, commande, structure, contrat d'API, flux ou décision documentée.
 
@@ -107,23 +108,27 @@ Philosophie **Editorial Intellectual** (NYT Games) : spacieux, typographique, to
 
 **Règles dures (résumé).** Pas de bordures pour sectionner. Pas de `#000` / `bg-black/*`. Shadow : `shadow-editorial` par défaut. Toujours `<Button variant="...">` sauf `Cell.tsx` et fermeture modale `ResultScreen`. `brand` (accent violet) réservé aux CTA/accents ponctuels ; `brand` ≠ `rarity.*`.
 
-**Référence complète** (palette, variants, `rounded-*`, typo) : [`docs/DESIGN_SYSTEM.md`](docs/DESIGN_SYSTEM.md) (gitignored localement — copie de travail agent).
+**Référence complète** (palette, variants, `rounded-*`, typo) : [`docs/DESIGN_SYSTEM.md`](docs/DESIGN_SYSTEM.md).
 
-**Audit automatique.** Skill [`/verify-design-system`](.claude/skills/verify-design-system/SKILL.md) — à lancer après toute feature visuelle (voir §11).
+**Audit automatique.** `pnpm check:design-system` est la règle versionnée — à lancer après toute feature visuelle (voir §11). Le skill local `/verify-design-system` reste un confort optionnel.
 
 ## 6. Backend Convex
 
 **Architecture en pool.** Pool de grilles candidates (`available`) + **scheduler greedy** (`selectNextGrid`) qui maximise diversité vs les 15 dernières grilles. Pipeline : `generateDiversePool` → finalize → `selectNextGrid` avec garde cold-start (`MAX_NEW_CONSTRAINTS_PER_GRID`). Détail : [`convex/lib/gridGenerator.ts`](convex/lib/gridGenerator.ts), [`gridScheduler.ts`](convex/lib/gridScheduler.ts).
 
-**Tables.** `gridCandidates`, `grids`, `gridAnswers` (satellite `validAnswers`), `guesses`, `dailyStats`, `gridFeedback`.
+**Migration du pool legacy.** Tant qu'un stock legacy non vide existe sans `activeGenerationId`, le refill automatique retourne `legacy_migration_required` et ne le remplace pas. La première bascule vers un pool générationnel doit être déclenchée explicitement par « Regénérer le pool » dans `/admin`, après `pnpm simulate:scheduling`. Un stock legacy vide reste auto-réparable.
 
-**Crons** ([`convex/crons.ts`](convex/crons.ts)) : `ensureDailyGrids` (horaire) ; `autoRefillPool` (03:00 UTC si stock bas).
+**Tables.** `gridCandidates`, `grids`, `gridAnswers` (snapshot satellite `validAnswers`), `guesses`, `dailyStats`, `gridFeedback`, `poolState` (génération active + lease) et `operationReceipts` (déduplication, rétention 7 jours).
 
-**Endpoints jeu** ([`convex/grids.ts`](convex/grids.ts), [`guesses.ts`](convex/guesses.ts)) : `getTodayGrid`, `submitGuess`, `recordFailedGuess`, `getGuessDistributionForDate`, `recordGameEnd`, `submitGridFeedback`.
+**Crons** ([`convex/crons.ts`](convex/crons.ts)) : `ensureDailyGrids` (horaire) ; `reconcilePoolAndSchedule` (03:00 UTC si stock bas, hors migration legacy explicite).
 
-**Endpoints admin** (token `ADMIN_TOKEN`) : `getScheduledGrids`, `getGridCellMetrics`, `getPoolStats`, `refreshPool`, `runEnsureTomorrow`, etc.
+**Endpoints jeu** ([`convex/grids.ts`](convex/grids.ts), [`guesses.ts`](convex/guesses.ts)) : `getTodayGrid`, `submitTodayGuess`, `recordTodayFailedGuess`, `getTodayGuessDistribution`, `recordTodayGameEnd`, `submitTodayGridFeedback`. Chaque écriture reçoit un `operationId` idempotent ; les anciennes interfaces restent transitoirement disponibles pendant le rollout.
+
+**Endpoints admin** (token `ADMIN_TOKEN`) : `getScheduledGrids`, `getGridCellMetrics`, `getPoolStats`, `refreshPool`, `retryPoolFinalization`, `runEnsureTomorrow`, etc. Après activation, `refreshPool` retourne d'éventuels warnings de finalisation ; leur retry ne doit jamais relancer une génération.
 
 **Rate limiting** ([`convex/rateLimit.ts`](convex/rateLimit.ts)) : clé `clientId` (localStorage), buckets `guess` + `feedback`.
+
+**Rollout en cours.** La persistence minimale v3 est dual-write avec un shadow v2 pendant la fenêtre de rollback. Ne retirer ni ce shadow ni les endpoints legacy avant la fin de l'observation. Procédure complète : [`docs/rollout-write-integrity.md`](docs/rollout-write-integrity.md).
 
 **Admin UI** ([`src/features/admin/AdminPage.tsx`](src/features/admin/AdminPage.tsx)) : `PoolOverviewPanel` (santé pool), `GameCalendar` + `GridDayDetail` (métriques par jour, facilité via `topKPopularity`, struggle observé), `GameHealthPanel` (win rate ~30 j). Pas de panneau de tuning : ajuster `gridConstants.ts` + simuler.
 
@@ -142,11 +147,11 @@ pnpm typecheck
 pnpm test                         # Vitest (e2e/ exclu)
 pnpm format
 
-# E2E Playwright — nécessite grille du jour (wipe + seed si env vide)
+# E2E Playwright — nécessite une grille du jour
 pnpm check:e2e-convex-url         # ping VITE_CONVEX_URL avant e2e (CI + local)
 pnpm test:e2e
 pnpm test:e2e:ui
-pnpm test:e2e:reset               # wipe:db + seed:grids + e2e
+pnpm test:e2e:reset               # environnement dev perso jetable uniquement
 pnpm sync:e2e-convex-url          # met à jour vars.VITE_CONVEX_URL (gh) après recreate develop
 
 # Build
@@ -156,23 +161,23 @@ pnpm build
 pnpm build:countries
 pnpm analyze:pool
 pnpm simulate:scheduling          # validateur changement contraintes
-pnpm simulate:players             # simuler N joueurs sur la grille du jour (Convex HTTP, develop/dev)
+pnpm simulate:players             # dry-run par défaut ; --execute pour écrire (develop/dev)
 pnpm analyze:observed
-pnpm export:analytics
+pnpm export:analytics             # écrit par défaut dans docs/reports/ (gitignored)
 
 # Reproduire / observer prod (ou develop) en local — LE workflow par défaut
 pnpm dump:prod                    # copie l'état prod → cloud dev local
 pnpm dump:develop                 # copie l'état develop → cloud dev local
-pnpm dump:prod-to-develop         # ops : aligner develop sur prod
+pnpm dump:prod-to-develop         # ops : aligner develop sur prod (confirmation interactive)
 # … puis re-générer le pool via l'UI /admin (refreshPool). JAMAIS wipe+seed pour ça.
 
 # Dev local VIDE / nouvel environnement UNIQUEMENT (ne reproduit PAS prod)
 pnpm seed:grids
-pnpm wipe:db
+pnpm wipe:db                      # dev:* uniquement + ALLOW_DESTRUCTIVE_DEV_COMMANDS=true côté Convex
 pnpm exec convex env set ADMIN_TOKEN "xxx"
 ```
 
-> **⚠️ Reproduire prod/develop en local = `pnpm dump:[env]` puis reseed via l'UI
+> **⚠️ Reproduire prod/develop en local = `pnpm dump:[env]` puis régénérer le pool via l'UI
 > `/admin` (`refreshPool`) — jamais `wipe:db` + `seed:grids`.** Ces deux dernières
 > n'initialisent qu'un dev local vide ou un nouvel env ; elles ne reproduisent PAS
 > l'état ni le comportement de prod (pool et grilles servies différents). Prod et
@@ -185,7 +190,7 @@ pnpm exec convex env set ADMIN_TOKEN "xxx"
 
 **GitHub Actions** ([`.github/workflows/ci.yml`](.github/workflows/ci.yml)) :
 
-- `quality` (sans secret) — `pnpm lint` + `pnpm test`. Push `main`/`develop` + PR vers `main`.
+- `quality` (sans secret) — lint, typechecks, Vitest, design system et bundle. Push `main`/`develop` + PR vers `main`/`develop`.
 - `e2e` — `pnpm check:e2e-convex-url` puis Playwright (étape dédiée en CI, fail-fast avant install navigateurs) ; `vars.VITE_CONVEX_URL` = deploy `preview/develop` (si URL invalide : `pnpm sync:e2e-convex-url` en local). Pas de deploy key ni seed (develop déjà seedé, cron horaire). **Sérialisé** (`concurrency: e2e-develop`). ⚠️ soumet de vrais guesses → bruite les stats develop (staging assumé).
 
 **Mapping branche → environnement :**
@@ -204,6 +209,11 @@ pnpm exec convex deploy --preview-run seed:autoSeedIfEmpty --cmd 'vite build' --
 ```
 
 `--preview-run` seed uniquement en preview, jamais en prod. Clé : `CONVEX_DEPLOY_KEY` par environnement.
+
+Le CLI Convex exécute d'abord `--cmd 'vite build'`, puis pousse les fonctions,
+index et schéma. Vercel n'expose toutefois le bundle qu'après le succès de la
+commande complète : le push Convex précède donc toujours l'exposition du nouveau
+frontend aux joueurs, et un échec du push fait échouer le déploiement Vercel.
 
 **`convex/_generated/` est versionné** — régénérer avec `pnpm convex:dev` ou `pnpm exec convex codegen` après changement schéma/API et commiter le diff.
 
@@ -246,9 +256,9 @@ Source de vérité détaillée : grep `posthog?.capture` dans le code.
 | Changement | Vérification |
 | ---------- | ------------ |
 | Logique pure (`logic/`, `convex/lib/*`) | tests unitaires ciblés + `pnpm test` |
-| UI / styles | skill `/verify-design-system` |
-| Parcours jeu (grille, modale, résultat, persistance) | `pnpm test:e2e` (min. `*.shared.spec.ts`) ; premier run local : `pnpm wipe:db && pnpm seed:grids` |
-| Contraintes / pool / scheduler | `pnpm simulate:scheduling` ; pour observer sur données réalistes : `pnpm dump:prod` puis reseed via `/admin` (`refreshPool`) — **pas** `wipe`+`seed` |
+| UI / styles | `pnpm check:design-system` (skill local `/verify-design-system` optionnel) |
+| Parcours jeu (grille, modale, résultat, persistance) | `pnpm test:e2e` contre un backend avec grille du jour ; `wipe` + `seed` uniquement sur un dev perso jetable |
+| Contraintes / pool / scheduler | `pnpm simulate:scheduling` ; pour observer sur données réalistes : `pnpm dump:prod` puis régénération via `/admin` (`refreshPool`) — **pas** `wipe`+`seed` |
 | Schéma ou API Convex | `pnpm convex:dev` / codegen + commiter `convex/_generated/` |
 | Texte utilisateur | clés `fr` + `en` via `translate()` |
 | Nouvel event analytics | grep catalogue §10 / code existant |

@@ -1,5 +1,28 @@
 import { cronJobs } from "convex/server";
 import { internal } from "./_generated/api";
+import { internalMutation } from "./_generated/server";
+
+const RECEIPT_DELETE_BATCH_SIZE = 512;
+
+/** Purge batchée ; se reprogramme jusqu'à avoir vidé tout le retard. */
+export const deleteExpiredOperationReceipts = internalMutation({
+  args: {},
+  handler: async (ctx): Promise<number> => {
+    const expired = await ctx.db
+      .query("operationReceipts")
+      .withIndex("by_expires_at", (q) => q.lt("expiresAt", Date.now()))
+      .take(RECEIPT_DELETE_BATCH_SIZE);
+    await Promise.all(expired.map((receipt) => ctx.db.delete(receipt._id)));
+    if (expired.length === RECEIPT_DELETE_BATCH_SIZE) {
+      await ctx.scheduler.runAfter(
+        0,
+        internal.crons.deleteExpiredOperationReceipts,
+        {},
+      );
+    }
+    return expired.length;
+  },
+});
 
 const crons = cronJobs();
 
@@ -12,7 +35,21 @@ crons.interval(
   {},
 );
 
-// Daily at 03:00 UTC — refill the pool if it falls below threshold.
-crons.cron("auto refill pool", "0 3 * * *", internal.grids.autoRefillPool, {});
+// Daily at 03:00 UTC — replace the active pool if it falls below threshold,
+// then immediately re-run today/tomorrow scheduling after activation.
+crons.cron(
+  "reconcile pool and schedule",
+  "0 3 * * *",
+  internal.grids.reconcilePoolAndSchedule,
+  {},
+);
+
+// Daily at 03:30 UTC — operation receipts expire seven days after creation.
+crons.cron(
+  "delete expired operation receipts",
+  "30 3 * * *",
+  internal.crons.deleteExpiredOperationReceipts,
+  {},
+);
 
 export default crons;

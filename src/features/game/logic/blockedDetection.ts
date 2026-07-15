@@ -1,16 +1,5 @@
 import type { Cell, CellKey } from "../types";
-
-const CELL_KEYS: CellKey[] = [
-  "0,0",
-  "0,1",
-  "0,2",
-  "1,0",
-  "1,1",
-  "1,2",
-  "2,0",
-  "2,1",
-  "2,2",
-];
+import { CELL_KEYS } from "./gridTopology";
 
 function isEmptyCellBlocked(
   key: CellKey,

@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
 import type { CellKey, GameState } from "../../types";
-import type { PersistedGame } from "../persistence";
 import { createInitialState, gameReducer } from "../reducer";
+import type { SanitizedPersistedGame } from "../sanitizePersisted";
 
 function freshState(): GameState {
   return createInitialState(
@@ -41,10 +41,9 @@ describe("createInitialState", () => {
     expect(freshState().status).toBe("playing");
   });
 
-  it("starts with no selected cell and no used countries", () => {
+  it("starts with no selected cell", () => {
     const state = freshState();
     expect(state.selectedCell).toBeNull();
-    expect(state.usedCountries.size).toBe(0);
   });
 });
 
@@ -68,7 +67,7 @@ describe("gameReducer — selectCell", () => {
 });
 
 describe("gameReducer — guessSuccess", () => {
-  it("fills the cell and adds to usedCountries", () => {
+  it("fills the cell", () => {
     const state = gameReducer(freshState(), {
       type: "guessSuccess",
       cell: { row: 0, col: 0 },
@@ -76,7 +75,6 @@ describe("gameReducer — guessSuccess", () => {
       validAnswers: emptyValidAnswers,
     });
     expect(state.cells["0,0"].status).toBe("filled");
-    expect(state.usedCountries.has("FRA")).toBe(true);
   });
 
   it("resets selectedCell to null after success", () => {
@@ -137,7 +135,6 @@ describe("gameReducer — guessSuccess", () => {
       });
     }
     expect(state.status).toBe("won");
-    expect(state.finishedAt).not.toBeNull();
   });
 
   it("is ignored when state is won", () => {
@@ -211,7 +208,6 @@ describe("gameReducer — guessSuccess", () => {
     expect(state.status).toBe("playing");
     expect(state.cells["0,2"].status).toBe("blocked");
     expect(state.remainingLives).toBe(5);
-    expect(state.finishedAt).toBeNull();
   });
 
   it("transitions to lost when all remaining empty cells become blocked", () => {
@@ -240,7 +236,6 @@ describe("gameReducer — guessSuccess", () => {
     });
     expect(state.status).toBe("lost");
     expect(state.remainingLives).toBe(5);
-    expect(state.finishedAt).not.toBeNull();
     expect(
       Object.values(state.cells).filter((c) => c.status === "blocked"),
     ).toHaveLength(7);
@@ -265,7 +260,6 @@ describe("gameReducer — guessSuccess", () => {
       validAnswers,
     });
     expect(state.status).toBe("playing");
-    expect(state.finishedAt).toBeNull();
   });
 
   it("is ignored when state is lost", () => {
@@ -301,12 +295,11 @@ describe("gameReducer — guessFailure", () => {
     state = gameReducer(state, { type: "guessFailure" });
     state = gameReducer(state, { type: "guessFailure" });
     expect(state.status).toBe("lost");
-    expect(state.finishedAt).not.toBeNull();
   });
 });
 
 describe("gameReducer — rehydrate", () => {
-  function makePersistedGame(): PersistedGame {
+  function makePersistedGame(): SanitizedPersistedGame {
     return {
       version: 1,
       date: "2026-04-15",
@@ -325,10 +318,7 @@ describe("gameReducer — rehydrate", () => {
         "2,2": { status: "empty" },
       },
       remainingLives: 2,
-      usedCountries: ["FRA"],
       status: "playing",
-      startedAt: 1713139200000,
-      finishedAt: null,
     };
   }
 
@@ -356,22 +346,6 @@ describe("gameReducer — rehydrate", () => {
     expect(state.status).toBe("playing");
     expect(state.cells["0,0"].status).toBe("filled");
     expect(state.selectedCell).toBeNull();
-    expect(state.startedAt).toBe(1713139200000);
-    expect(state.finishedAt).toBeNull();
-  });
-
-  it("deserialises usedCountries as a Set", () => {
-    const persisted = makePersistedGame();
-    const state = gameReducer(freshState(), {
-      type: "rehydrate",
-      persisted,
-      rows: ["borders_china", "borders_brazil", "borders_russia"],
-      cols: ["population_more_canada", "area_larger_france", "flag_has_star"],
-      validAnswers: emptyValidAnswers,
-    });
-    expect(state.usedCountries).toBeInstanceOf(Set);
-    expect(state.usedCountries.has("FRA")).toBe(true);
-    expect(state.usedCountries.size).toBe(1);
   });
 
   it("rehydrates blocked cells and stays playing when empty cells remain", () => {
@@ -380,7 +354,6 @@ describe("gameReducer — rehydrate", () => {
       status: "filled",
       countryCode: "DEU",
     };
-    persisted.usedCountries = ["FRA", "DEU"];
     const validAnswers = {
       ...emptyValidAnswers,
       "0,2": ["FRA", "DEU"],
@@ -395,7 +368,6 @@ describe("gameReducer — rehydrate", () => {
     expect(state.status).toBe("playing");
     expect(state.cells["0,2"].status).toBe("blocked");
     expect(state.remainingLives).toBe(2);
-    expect(state.finishedAt).toBeNull();
   });
 
   it("rehydrates to lost when no empty cells remain after marking blocked", () => {
@@ -404,7 +376,6 @@ describe("gameReducer — rehydrate", () => {
       status: "filled",
       countryCode: "DEU",
     };
-    persisted.usedCountries = ["FRA", "DEU"];
     const validAnswers = {
       "0,0": ["FRA"],
       "0,1": ["DEU"],
@@ -425,7 +396,6 @@ describe("gameReducer — rehydrate", () => {
     });
     expect(state.status).toBe("lost");
     expect(state.remainingLives).toBe(2);
-    expect(state.finishedAt).toBe(persisted.startedAt);
   });
 
   it("carries endRecorded / rated from persisted data", () => {

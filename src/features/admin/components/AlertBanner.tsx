@@ -2,10 +2,10 @@ import { cn } from "@/lib/utils";
 import { AlertTriangle, CheckCircle } from "lucide-react";
 import type { ReactNode } from "react";
 
-type Tone = "brand" | "warning" | "error";
+type Tone = "success" | "warning" | "error";
 
 const TONE: Record<Tone, string> = {
-  brand: "bg-brand/10 text-brand",
+  success: "bg-success/10 text-success",
   warning: "bg-warning/10 text-warning",
   error: "bg-error/10 text-error",
 };
@@ -24,7 +24,7 @@ export function AlertBanner({
   action?: ReactNode;
   children: ReactNode;
 }) {
-  const Icon = tone === "brand" ? CheckCircle : AlertTriangle;
+  const Icon = tone === "success" ? CheckCircle : AlertTriangle;
   return (
     <div
       className={cn(

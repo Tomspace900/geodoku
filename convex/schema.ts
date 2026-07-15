@@ -24,11 +24,24 @@ export default defineSchema({
       cellDifficulties: v.optional(v.array(v.number())),
     }),
     status: v.union(v.literal("available"), v.literal("used")),
+    // Génération de pool. Optionnel pendant la migration : sans pointeur actif,
+    // seules les candidates legacy (champ absent) constituent le pool actif.
+    generationId: v.optional(v.string()),
     usedAt: v.optional(v.number()),
     usedForDate: v.optional(v.string()),
   })
     .index("by_status", ["status"])
+    .index("by_generation_id_and_status", ["generationId", "status"])
     .index("by_status_and_seed", ["status", "metadata.seedConstraint"]),
+
+  // Singleton opérationnel du pool. Les champs optionnels permettent le
+  // cold-start et le fallback legacy sans backfill ni coupure de service.
+  poolState: defineTable({
+    key: v.literal("singleton"),
+    activeGenerationId: v.optional(v.string()),
+    jobId: v.optional(v.string()),
+    leaseUntil: v.optional(v.number()),
+  }).index("by_key", ["key"]),
 
   grids: defineTable({
     date: v.string(), // "YYYY-MM-DD"
@@ -40,7 +53,9 @@ export default defineSchema({
     // Legacy — difficulté prédite supprimée (2026-06), docs antérieurs uniquement
     difficulty: v.optional(v.number()),
     candidateId: v.id("gridCandidates"),
-  }).index("by_date", ["date"]),
+  })
+    .index("by_date", ["date"])
+    .index("by_candidate_id", ["candidateId"]),
 
   // Satellite : validAnswers extraits de gridCandidates pour alléger les
   // lectures en masse (scheduler, admin stats). 1-to-1 avec gridCandidates.
@@ -90,4 +105,35 @@ export default defineSchema({
     totalFilledCells: v.number(),
     totalGuessesSubmitted: v.number(),
   }).index("by_date", ["date"]),
+
+  // Reçus d'idempotence des écritures publiques du jeu. L'identifiant est
+  // opaque et propre à une seule opération : aucune clé joueur stable n'est
+  // stockée, afin de ne pas relier les choix entre cases ou entre jours.
+  operationReceipts: defineTable({
+    operationId: v.string(),
+    operationType: v.union(
+      v.literal("submit_guess"),
+      v.literal("failed_guess"),
+      v.literal("game_end"),
+      v.literal("grid_feedback"),
+    ),
+    date: v.string(),
+    canonicalPayload: v.string(),
+    result: v.union(
+      v.object({
+        kind: v.literal("accepted"),
+        count: v.number(),
+        total: v.number(),
+        rarity: v.number(),
+      }),
+      v.object({
+        kind: v.literal("domain_rejected"),
+        reason: v.literal("invalid_guess"),
+      }),
+      v.object({ kind: v.literal("recorded") }),
+    ),
+    expiresAt: v.number(),
+  })
+    .index("by_operation_id", ["operationId"])
+    .index("by_expires_at", ["expiresAt"]),
 });

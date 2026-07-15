@@ -157,7 +157,7 @@ export function ScoreDisplay({ breakdown }: Props) {
               fill="none"
               strokeWidth="5"
               strokeLinecap="round"
-              className="stroke-rarity-ultra"
+              className="stroke-error"
               strokeDasharray={`${livesDrawn} ${bonusPerimeter}`}
               strokeDashoffset={-(rarityLength + ARC_GAP)}
             />
@@ -232,11 +232,7 @@ export function ScoreDisplay({ breakdown }: Props) {
                 livesProgress > 0 ? "opacity-100" : "opacity-40",
               )}
             >
-              <Heart
-                size={12}
-                className="text-rarity-ultra fill-rarity-ultra"
-                aria-hidden
-              />
+              <Heart size={12} className="text-error fill-error" aria-hidden />
               {`+${shownLives}`}
             </span>
           )}

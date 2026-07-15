@@ -27,7 +27,14 @@
       "convex/_generated",
       "src/components/ui",
       "scripts/dev",
-      ".pnpm-store"
+      ".pnpm-store",
+      "playwright-report",
+      "test-results",
+      "blob-report",
+      "coverage",
+      ".design-sync",
+      ".ds-sync",
+      "ds-bundle"
     ]
   }
 }

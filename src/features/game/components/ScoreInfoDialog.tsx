@@ -66,7 +66,7 @@ export function ScoreInfoDialog() {
         <Info size={16} strokeWidth={1.75} />
       </Button>
 
-      <DialogContent className="max-w-sm">
+      <DialogContent closeLabel={t("ui.closeDialog")} className="max-w-sm">
         <DialogHeader className="items-start space-y-0 text-left sm:text-left">
           <DialogTitle className="font-serif text-2xl font-medium italic tracking-normal text-on-surface leading-none">
             {t("scoring.title")}

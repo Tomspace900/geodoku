@@ -1,8 +1,18 @@
-import { DisplayHeader } from "@/components/editorial/DisplayHeader";
+import { AccentBar } from "@/components/editorial/AccentBar";
 import { Eyebrow } from "@/components/editorial/Eyebrow";
 import { Button } from "@/components/ui/button";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogTitle,
+} from "@/components/ui/dialog";
 import { SurveyCta } from "@/features/game/components/SurveyCta";
 import { getOrCreateClientId } from "@/features/game/logic/clientId";
+import {
+  clearPendingOperationId,
+  getOrCreatePendingOperationId,
+} from "@/features/game/logic/operationIds";
 import {
   type ResultOutcome,
   resultTitleKeys,
@@ -25,7 +35,7 @@ import { useT } from "@/i18n/LocaleContext";
 import { cn } from "@/lib/utils";
 import { usePostHog } from "@posthog/react";
 import { useMutation } from "convex/react";
-import { Copy, Share2, X } from "lucide-react";
+import { Copy, Share2 } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import { api } from "../../../../convex/_generated/api";
 import { ScoreDisplay } from "./ScoreDisplay";
@@ -34,6 +44,12 @@ const ROWS = [0, 1, 2] as const;
 const COLS = [0, 1, 2] as const;
 
 type DifficultyRating = "too_easy" | "balanced" | "too_hard";
+
+type RatingSubmissionState =
+  | { status: "idle" }
+  | { status: "pending"; rating: DifficultyRating }
+  | { status: "error"; rating: DifficultyRating }
+  | { status: "success"; rating: DifficultyRating };
 
 const DIFFICULTY_RATINGS: ReadonlyArray<{
   rating: DifficultyRating;
@@ -73,8 +89,8 @@ export function ResultScreen({
   // Snapshot à l'ouverture : si la grille était déjà notée (partie reprise),
   // on affiche directement « voir les réponses » plutôt que les boutons.
   const [hadFeedbackBeforeOpen] = useState(() => state.rated);
-  const [feedbackThanksVisible, setFeedbackThanksVisible] = useState(false);
-  const [ratingPending, setRatingPending] = useState(false);
+  const [ratingSubmission, setRatingSubmission] =
+    useState<RatingSubmissionState>({ status: "idle" });
   const scoreBreakdown = computeScoreBreakdown(state, distribution);
   const score = computeScore(scoreBreakdown);
   const scoreReady = scoreBreakdown.shares !== null;
@@ -106,8 +122,9 @@ export function ResultScreen({
     resultTitleKeysForOutcome[
       Math.floor(titleRoll * resultTitleKeysForOutcome.length)
     ];
-  const hasRated = hadFeedbackBeforeOpen || feedbackThanksVisible;
-  const submitGridFeedback = useMutation(api.grids.submitGridFeedback);
+  const hasRated =
+    hadFeedbackBeforeOpen || ratingSubmission.status === "success";
+  const submitGridFeedback = useMutation(api.grids.submitTodayGridFeedback);
 
   const viewedTrackedRef = useRef(false);
   // biome-ignore lint/correctness/useExhaustiveDependencies: une seule fois, dès que la rareté dynamique est résolue (sinon elle manquerait en analytics)
@@ -152,14 +169,6 @@ export function ResultScreen({
   }
 
   useEffect(() => {
-    function onEscape(e: KeyboardEvent) {
-      if (e.key === "Escape") onDismiss();
-    }
-    window.addEventListener("keydown", onEscape);
-    return () => window.removeEventListener("keydown", onEscape);
-  }, [onDismiss]);
-
-  useEffect(() => {
     return () => {
       if (shareFeedbackTimeoutRef.current) {
         clearTimeout(shareFeedbackTimeoutRef.current);
@@ -168,69 +177,61 @@ export function ResultScreen({
   }, []);
 
   async function handleRateDifficulty(rating: DifficultyRating) {
-    if (hadFeedbackBeforeOpen || feedbackThanksVisible || ratingPending) {
+    if (
+      hadFeedbackBeforeOpen ||
+      ratingSubmission.status === "pending" ||
+      ratingSubmission.status === "success"
+    ) {
       return;
     }
 
-    setRatingPending(true);
+    const operationSlot = `grid-feedback:${state.date}`;
+    const operationId = getOrCreatePendingOperationId(operationSlot);
+    setRatingSubmission({ status: "pending", rating });
     try {
       await submitGridFeedback({
-        date: state.date,
+        operationId,
         rating,
         clientId: getOrCreateClientId(),
       });
+      clearPendingOperationId(operationSlot, operationId);
       onRated();
-      setFeedbackThanksVisible(true);
+      setRatingSubmission({ status: "success", rating });
       posthog?.capture("difficulty_rated", {
+        $insert_id: operationId,
         rating,
         grid_date: state.date,
         outcome: state.status,
       });
-    } finally {
-      setRatingPending(false);
+    } catch {
+      setRatingSubmission({ status: "error", rating });
     }
   }
 
   return (
-    <dialog
+    <Dialog
       open
-      aria-labelledby="result-screen-title"
-      className={cn(
-        "fixed inset-0 z-50 m-0 flex h-full max-h-none w-full max-w-none flex-col items-center justify-end bg-transparent p-0 border-0 outline-none",
-        "focus:outline-none focus-visible:outline-none",
-        "sm:justify-center",
-      )}
+      onOpenChange={(open) => {
+        if (!open) onDismiss();
+      }}
     >
-      {/* biome-ignore lint/a11y/useKeyWithClickEvents: fermeture au clic sur le voile (Escape géré par useEffect) */}
-      <div
-        className="absolute inset-0 bg-on-surface/40 backdrop-blur-sm"
-        onClick={onDismiss}
-        aria-hidden
-      />
-      <div
+      <DialogContent
+        placement="bottom-sheet"
+        closeLabel={t("ui.closeResult")}
         className={cn(
-          "relative z-10 bg-surface-lowest w-full max-w-[500px] shadow-editorial",
-          "rounded-t-2xl sm:rounded-xl",
-          "p-6 flex flex-col gap-5",
-          "max-h-[90dvh] overflow-y-auto",
-          "animate-in slide-in-from-bottom-4 sm:zoom-in-95 duration-300",
+          "max-h-[90dvh] overflow-y-auto sm:max-w-[500px]",
+          "flex flex-col gap-5",
         )}
       >
-        <button
-          type="button"
-          onClick={onDismiss}
-          className="absolute right-4 top-4 z-20 rounded-md p-1.5 text-on-surface-variant hover:bg-surface-low hover:text-on-surface"
-          aria-label={t("ui.closeResult")}
-        >
-          <X size={20} strokeWidth={1.75} />
-        </button>
-
-        <DisplayHeader
-          as="h2"
-          size="lg"
-          centered
-          title={<span id="result-screen-title">{t(resultTitleKey)}</span>}
-        />
+        <div className="flex flex-col items-center text-center">
+          <DialogTitle className="font-serif text-3xl font-medium italic leading-none tracking-normal text-on-surface">
+            {t(resultTitleKey)}
+          </DialogTitle>
+          <AccentBar className="mt-1" />
+          <DialogDescription className="sr-only">
+            {t("ui.resultDialogDescription")}
+          </DialogDescription>
+        </div>
 
         <div className="flex justify-center">
           <ScoreDisplay breakdown={scoreBreakdown} />
@@ -283,7 +284,7 @@ export function ResultScreen({
                     type="button"
                     variant="secondary"
                     size="sm"
-                    disabled={ratingPending}
+                    disabled={ratingSubmission.status !== "idle"}
                     className="h-auto min-h-9 whitespace-normal px-2 py-2 text-xs leading-tight"
                     onClick={() => handleRateDifficulty(rating)}
                   >
@@ -291,6 +292,25 @@ export function ResultScreen({
                   </Button>
                 ))}
               </div>
+              {ratingSubmission.status === "error" && (
+                <div
+                  role="alert"
+                  className="rounded-lg bg-error/10 px-3 py-2 text-center text-xs text-error"
+                >
+                  <p>{t("ui.feedbackError")}</p>
+                  <Button
+                    type="button"
+                    variant="link"
+                    size="sm"
+                    className="mt-1 text-error"
+                    onClick={() =>
+                      handleRateDifficulty(ratingSubmission.rating)
+                    }
+                  >
+                    {t("ui.feedbackRetry")}
+                  </Button>
+                </div>
+              )}
               <Button
                 type="button"
                 variant="link"
@@ -322,7 +342,7 @@ export function ResultScreen({
         <p className="text-center text-xs text-on-surface-variant italic">
           {t("ui.comeBackTomorrowGrid")}
         </p>
-      </div>
-    </dialog>
+      </DialogContent>
+    </Dialog>
   );
 }

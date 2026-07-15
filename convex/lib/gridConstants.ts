@@ -112,6 +112,8 @@ export const KNOWN_CONSTRAINT_WINDOW = HISTORY_WINDOW * 4;
 
 // Auto-refill thresholds
 export const POOL_LOW_THRESHOLD = 50;
+export const POOL_GENERATION_LEASE_MS = 10 * 60 * 1000;
+export const POOL_CLEANUP_BATCH_SIZE = 100;
 
 export type PoolGridMetadata = {
   seedConstraint: string;
@@ -130,6 +132,7 @@ export type FinalizedPoolGrid = {
 };
 
 export type GenerationReport = {
+  seed: number;
   totalGenerated: number;
   seedResults: Array<{
     constraintId: string;

@@ -1,5 +1,5 @@
 import { Button } from "@/components/ui/button";
-import { gridEaseScore100 } from "@/features/countries/lib/popularity";
+import { gridEaseScore100 } from "@/features/countries/logic/popularity";
 import { useAction, useQuery } from "convex/react";
 import { CalendarCheck, Trash2, Undo2 } from "lucide-react";
 import { useState } from "react";
@@ -14,6 +14,7 @@ import {
 } from "../logic/analytics";
 import { formatGridDateHeadingFr } from "../logic/display";
 import { isUnauthorizedError } from "../logic/errors";
+import { AlertBanner } from "./AlertBanner";
 import { ConfirmDialog } from "./ConfirmDialog";
 import { GridHeaderStatDelta, GridHeaderStatKind } from "./GridHeaderStat";
 import { GridPreview, type ObservedCell } from "./GridPreview";
@@ -98,7 +99,7 @@ function ObservedDetail({
               </StatusPill>
             }
           />
-          <p className="mt-2 animate-pulse text-sm text-on-surface-variant">
+          <p className="mt-2 animate-pulse text-sm text-on-surface-variant motion-reduce:animate-none">
             Chargement des métriques…
           </p>
         </div>
@@ -265,7 +266,7 @@ function FutureDetail({
 
         <div className="mx-auto w-full max-w-[860px]">
           {detail === undefined && (
-            <p className="animate-pulse text-sm text-on-surface-variant">
+            <p className="animate-pulse text-sm text-on-surface-variant motion-reduce:animate-none">
               Chargement de la grille…
             </p>
           )}
@@ -292,6 +293,11 @@ function FutureDetail({
 // ─── Actions sur une grille future ──────────────────────────────────────────────
 
 type PendingAction = "schedule" | "unschedule" | "delete";
+type FutureActionStatus =
+  | { kind: "idle" }
+  | { kind: "pending"; action: PendingAction }
+  | { kind: "error"; action: PendingAction }
+  | { kind: "success"; action: PendingAction };
 
 const DIALOG_COPY: Record<
   PendingAction,
@@ -336,40 +342,58 @@ function FutureGridActions({
   const deletePoolCandidate = useAction(api.grids.deletePoolCandidate);
 
   const [pending, setPending] = useState<PendingAction | null>(null);
-  const [busy, setBusy] = useState(false);
+  const [status, setStatus] = useState<FutureActionStatus>({ kind: "idle" });
 
   const isScheduled = view.status === "scheduled";
 
-  async function run(action: () => Promise<unknown>) {
-    setBusy(true);
+  function openConfirmation(action: PendingAction) {
+    setStatus({ kind: "idle" });
+    setPending(action);
+  }
+
+  async function run(
+    actionType: PendingAction,
+    action: () => Promise<unknown>,
+  ) {
+    setStatus({ kind: "pending", action: actionType });
     try {
       await action();
       setPending(null);
+      setStatus({ kind: "success", action: actionType });
     } catch (err) {
-      if (isUnauthorizedError(err)) clearToken();
-    } finally {
-      setBusy(false);
+      if (isUnauthorizedError(err)) {
+        clearToken();
+      } else {
+        setPending(null);
+        setStatus({ kind: "error", action: actionType });
+      }
     }
   }
 
   function confirmPending() {
     if (pending === "schedule" && view.candidateId) {
       const candidateId = view.candidateId;
-      run(() =>
+      run("schedule", () =>
         scheduleCandidate({ adminToken: token, date: view.date, candidateId }),
       );
       return;
     }
     if (pending === "unschedule") {
-      run(() => unscheduleGrid({ adminToken: token, date: view.date }));
+      run("unschedule", () =>
+        unscheduleGrid({ adminToken: token, date: view.date }),
+      );
       return;
     }
     if (pending === "delete") {
       if (isScheduled) {
-        run(() => deleteScheduledGrid({ adminToken: token, date: view.date }));
+        run("delete", () =>
+          deleteScheduledGrid({ adminToken: token, date: view.date }),
+        );
       } else if (view.candidateId) {
         const candidateId = view.candidateId;
-        run(() => deletePoolCandidate({ adminToken: token, candidateId }));
+        run("delete", () =>
+          deletePoolCandidate({ adminToken: token, candidateId }),
+        );
       }
     }
   }
@@ -377,48 +401,70 @@ function FutureGridActions({
   const copy = pending ? DIALOG_COPY[pending](isScheduled) : null;
 
   return (
-    <div className="flex flex-wrap items-center justify-end gap-2 pt-1">
-      {isScheduled ? (
-        <Button
-          type="button"
-          variant="secondary"
-          size="sm"
-          onClick={() => setPending("unschedule")}
+    <div className="flex flex-col gap-2 pt-1">
+      {status.kind === "error" && (
+        <AlertBanner
+          tone="error"
+          action={
+            <Button
+              type="button"
+              variant="secondary"
+              size="sm"
+              onClick={() => setPending(status.action)}
+            >
+              Réessayer
+            </Button>
+          }
         >
-          <Undo2 />
-          Déprogrammer
-        </Button>
-      ) : (
-        <Button
-          type="button"
-          variant="secondary"
-          size="sm"
-          onClick={() => setPending("schedule")}
-        >
-          <CalendarCheck />
-          Planifier
-        </Button>
+          L'action n'a pas pu aboutir.
+        </AlertBanner>
       )}
-      <Button
-        type="button"
-        variant="ghost"
-        size="sm"
-        onClick={() => setPending("delete")}
-      >
-        <Trash2 />
-        Supprimer du pool
-      </Button>
+      {status.kind === "success" && (
+        <AlertBanner tone="success">Action terminée.</AlertBanner>
+      )}
+      <div className="flex flex-wrap items-center justify-end gap-2">
+        {isScheduled ? (
+          <Button
+            type="button"
+            variant="secondary"
+            size="sm"
+            onClick={() => openConfirmation("unschedule")}
+          >
+            <Undo2 />
+            Déprogrammer
+          </Button>
+        ) : (
+          <Button
+            type="button"
+            variant="secondary"
+            size="sm"
+            onClick={() => openConfirmation("schedule")}
+          >
+            <CalendarCheck />
+            Planifier
+          </Button>
+        )}
+        <Button
+          type="button"
+          variant="ghost"
+          size="sm"
+          onClick={() => openConfirmation("delete")}
+        >
+          <Trash2 />
+          Supprimer du pool
+        </Button>
 
-      <ConfirmDialog
-        open={pending !== null}
-        onOpenChange={(open) => {
-          if (!open) setPending(null);
-        }}
-        title={copy?.title ?? ""}
-        description={copy?.description ?? ""}
-        busy={busy}
-        onConfirm={confirmPending}
-      />
+        <ConfirmDialog
+          open={pending !== null}
+          onOpenChange={(open) => {
+            if (!open) setPending(null);
+          }}
+          title={copy?.title ?? ""}
+          description={copy?.description ?? ""}
+          busy={status.kind === "pending"}
+          onConfirm={confirmPending}
+        />
+      </div>
     </div>
   );
 }

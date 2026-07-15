@@ -1,19 +1,15 @@
 import type { Cell, CellKey, GameStatus } from "../types";
 import { hasEmptyCell, markBlockedCells } from "./blockedDetection";
 import { STARTING_LIVES } from "./constants";
+import { CELL_KEYS, GRID_CELL_COUNT } from "./gridTopology";
 import type { PersistedGame } from "./persistence";
 
-const CELL_KEYS: CellKey[] = [
-  "0,0",
-  "0,1",
-  "0,2",
-  "1,0",
-  "1,1",
-  "1,2",
-  "2,0",
-  "2,1",
-  "2,2",
-];
+export type SanitizedPersistedGame = Omit<
+  PersistedGame,
+  "usedCountries" | "status" | "startedAt" | "finishedAt"
+> & {
+  status: GameStatus;
+};
 
 function clampInt(n: number, min: number, max: number): number {
   return Math.min(max, Math.max(min, n));
@@ -52,7 +48,7 @@ function canonicalStatus(
   lives: number,
   cells: Record<CellKey, Cell>,
 ): GameStatus {
-  if (filledCount === 9) return "won";
+  if (filledCount === GRID_CELL_COUNT) return "won";
   if (lives <= 0) return "lost";
   if (!hasEmptyCell(cells)) return "lost";
   return "playing";
@@ -68,7 +64,7 @@ function persistedStatusMatchesCanonical(
   if (canonical === "won") {
     if (persisted === "lost") return false;
     if (persisted === "won") return true;
-    return persisted === "playing" && filledCount === 9;
+    return persisted === "playing" && filledCount === GRID_CELL_COUNT;
   }
   if (canonical === "lost") {
     if (persisted === "won") return false;
@@ -87,16 +83,16 @@ function persistedStatusMatchesCanonical(
 export function sanitizePersistedForGrid(
   persisted: PersistedGame,
   validAnswers: Record<string, string[]>,
-): PersistedGame | null {
+): SanitizedPersistedGame | null {
   if (typeof persisted.date !== "string" || persisted.date.length === 0)
     return null;
-  if (!Number.isFinite(persisted.startedAt)) return null;
-
-  const rawFinishedAt =
-    persisted.finishedAt != null && Number.isFinite(persisted.finishedAt)
-      ? persisted.finishedAt
-      : null;
-
+  if (
+    !persisted.cells ||
+    typeof persisted.cells !== "object" ||
+    Array.isArray(persisted.cells)
+  ) {
+    return null;
+  }
   const cells = {} as Record<CellKey, Cell>;
   const usedCodes: string[] = [];
 
@@ -135,6 +131,7 @@ export function sanitizePersistedForGrid(
     0,
     STARTING_LIVES,
   );
+  if (filledCount === CELL_KEYS.length && lives === 0) return null;
 
   const usedSet = new Set(usedCodes);
 
@@ -150,6 +147,7 @@ export function sanitizePersistedForGrid(
   const canonical = canonicalStatus(filledCount, lives, canonicalCells);
 
   if (
+    persisted.status !== undefined &&
     !persistedStatusMatchesCanonical(
       persisted.status,
       canonical,
@@ -161,23 +159,16 @@ export function sanitizePersistedForGrid(
     return null;
   }
 
-  let finishedAt: number | null = rawFinishedAt;
-  if (canonical === "playing") {
-    if (finishedAt !== null) return null;
-  } else if (finishedAt === null) {
-    finishedAt = persisted.startedAt;
-  }
-
   return {
     version: persisted.version,
     date: persisted.date,
     cells: canonicalCells,
     remainingLives: lives,
-    usedCountries: [...new Set(usedCodes)],
     status: canonical,
-    startedAt: persisted.startedAt,
-    finishedAt,
-    endRecorded: persisted.endRecorded ?? false,
-    rated: persisted.rated ?? false,
+    endRecorded:
+      typeof persisted.endRecorded === "boolean"
+        ? persisted.endRecorded
+        : false,
+    rated: typeof persisted.rated === "boolean" ? persisted.rated : false,
   };
 }

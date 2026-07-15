@@ -1,6 +1,6 @@
 /**
  * Ping Convex avant la suite e2e : VITE_CONVEX_URL définie, format valide,
- * déploiement joignable (getTodayGrid répond, null ou grille OK).
+ * déploiement joignable et grille du jour présente.
  */
 import { ConvexHttpClient } from "convex/browser";
 import { api } from "../../convex/_generated/api";
@@ -32,12 +32,11 @@ try {
   const grid = await new ConvexHttpClient(url).query(api.grids.getTodayGrid);
   console.log(`✓ Convex joignable : ${url}`);
   if (grid === null) {
-    console.warn(
-      "⚠ Pas de grille pour aujourd'hui sur ce déploiement — les e2e échoueront ensuite.",
+    fail(
+      "Pas de grille pour aujourd'hui sur ce déploiement — les e2e ne peuvent pas démarrer.",
     );
-  } else {
-    console.log(`  Grille du jour : ${grid.date}`);
   }
+  console.log(`  Grille du jour : ${grid.date}`);
 } catch (error) {
   const detail = error instanceof Error ? error.message : String(error);
   fail(

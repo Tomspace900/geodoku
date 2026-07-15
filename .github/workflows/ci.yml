@@ -4,7 +4,7 @@ on:
   push:
     branches: [main, develop]
   pull_request:
-    branches: [main]
+    branches: [main, develop]
 
 # Many pushes a day → keep only the latest run per branch/PR; cancel the rest.
 concurrency:
@@ -12,26 +12,27 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  # Fast, no-secrets gate: same checks as the local pre-commit hook, repo-wide.
-  # Runs on every push to main/develop and on every PR into main.
+  # No-secrets gate: pre-commit checks plus design-system and bundle budgets.
+  # Runs on every push to main/develop and on every PR into main/develop.
   quality:
-    name: Lint, typecheck & unit tests
+    name: Quality gates
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v7
       - uses: pnpm/action-setup@v6
         with:
-          # Pinned: the floating `11` now resolves to 11.12.0, whose
-          # self-installer crashes on CI ("Cannot use 'in' operator to
-          # search for 'integrity' in undefined"). Bump when a later patch fixes it.
+          # Keep aligned with package.json#packageManager.
           version: 11.7.0
       - uses: actions/setup-node@v6
         with:
-          node-version: 22
+          node-version: 22.19.0
           cache: pnpm
       - run: pnpm install --frozen-lockfile
       - run: pnpm lint # biome check + tsc --noEmit
       - run: pnpm test # vitest
+      - run: pnpm check:design-system
+      - run: pnpm check:bundle
+      - run: pnpm simulate:scheduling --seed=20260714
 
   # End-to-end suite, run against the existing "develop" Convex deployment (its
   # URL, exposed in the client bundle anyway, lives in the repo variable
@@ -39,8 +40,8 @@ jobs:
   # its hourly cron keeps today's grid current. NB: e2e submits real guesses, so
   # it adds noise to develop's stats/rarity — intended, it's the staging env.
   #
-  # Runs on every push to develop and main, and on every PR into main (where it
-  # is a required check). The workflow-level concurrency cancels superseded runs
+  # Runs on every push to develop and main, and on every PR into main/develop.
+  # The workflow-level concurrency cancels superseded runs
   # so rapid develop pushes don't pile up.
   # Requires repo variable VITE_CONVEX_URL = <develop Convex URL>.
   e2e:
@@ -57,13 +58,11 @@ jobs:
       - uses: actions/checkout@v7
       - uses: pnpm/action-setup@v6
         with:
-          # Pinned: the floating `11` now resolves to 11.12.0, whose
-          # self-installer crashes on CI ("Cannot use 'in' operator to
-          # search for 'integrity' in undefined"). Bump when a later patch fixes it.
+          # Keep aligned with package.json#packageManager.
           version: 11.7.0
       - uses: actions/setup-node@v6
         with:
-          node-version: 22
+          node-version: 22.19.0
           cache: pnpm
       - run: pnpm install --frozen-lockfile
       - run: pnpm check:e2e-convex-url

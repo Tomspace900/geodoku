@@ -912,8 +912,21 @@ async function main(): Promise<void> {
 
   // 8. Write
   const outPath = resolve(root, "src/features/countries/data/countries.json");
+  const codesOutPath = resolve(
+    root,
+    "src/features/countries/data/countryCodes.json",
+  );
   log("Output", "Writing countries.json…");
   writeFileSync(outPath, `${JSON.stringify(result, null, 2)}\n`, "utf-8");
+  writeFileSync(
+    codesOutPath,
+    `${JSON.stringify(
+      result.map((country) => country.iso3),
+      null,
+      2,
+    )}\n`,
+    "utf-8",
+  );
   log(
     "Output",
     `Done in ${formatDuration(Date.now() - startedAt)} — ${result.length} countries written`,

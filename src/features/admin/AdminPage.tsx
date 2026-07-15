@@ -8,6 +8,7 @@ import { todayUTC, tomorrowUTC } from "@/lib/dates";
 import { useQuery } from "convex/react";
 import { ArrowLeft } from "lucide-react";
 import { useState } from "react";
+import { Link } from "react-router";
 import { api } from "../../../convex/_generated/api";
 import { AdminAuthBoundary } from "./components/AdminAuthBoundary";
 import { GameCalendar } from "./components/GameCalendar";
@@ -30,10 +31,10 @@ function AdminHeader({ onLogout }: { onLogout: () => void }) {
   return (
     <header className="flex flex-col gap-5">
       <div className="flex items-center justify-between">
-        <a href="/" className={backLinkClassName}>
+        <Link to="/" className={backLinkClassName}>
           <ArrowLeft className="size-3.5" aria-hidden="true" />
           Retour au jeu
-        </a>
+        </Link>
 
         <Button
           type="button"
@@ -61,89 +62,6 @@ function AdminHeader({ onLogout }: { onLogout: () => void }) {
 export function AdminPage() {
   const [token, setToken, clearToken] = useAdminToken();
   const [tokenInput, setTokenInput] = useState("");
-  const [selectedDate, setSelectedDate] = useState<string | null>(todayUTC());
-
-  const scheduledGrids = useQuery(
-    api.grids.getScheduledGrids,
-    token ? { adminToken: token } : "skip",
-  );
-
-  const feedbackStats = useQuery(
-    api.grids.getGridFeedbackStats,
-    token ? { adminToken: token, limit: 60 } : "skip",
-  );
-
-  const upcoming = useQuery(
-    api.grids.getUpcomingScheduledPreview,
-    token ? { adminToken: token, days: UPCOMING_DAYS } : "skip",
-  );
-
-  const today = todayUTC();
-  const tomorrowStr = tomorrowUTC();
-
-  const scheduledByDate = new Map(
-    (scheduledGrids ?? []).map((g) => [g.date, g]),
-  );
-  const upcomingByDate = new Map((upcoming ?? []).map((d) => [d.date, d]));
-
-  const winRateByDate = new Map(
-    (feedbackStats ?? []).map((f) => [f.date, f.winRate]),
-  );
-
-  const markers = buildCalendarMarkers({
-    today,
-    scheduled: (scheduledGrids ?? []).map((g) => ({
-      date: g.date,
-      gridPopTop3: g.gridPopTop3,
-    })),
-    winRateByDate,
-    upcoming: (upcoming ?? []).map((d) => ({
-      date: d.date,
-      kind: d.kind,
-      gridPopTop3: d.kind === "missing" ? undefined : d.gridPopTop3,
-    })),
-  });
-
-  const selectedView = computeDayView();
-
-  function computeDayView(): DayView | null {
-    if (!selectedDate) return null;
-
-    const grid = scheduledByDate.get(selectedDate);
-    if (grid) {
-      if (selectedDate <= today) {
-        return {
-          kind: "observed",
-          date: selectedDate,
-          status: selectedDate === today ? "active" : "past",
-        };
-      }
-      return {
-        kind: "future",
-        status: "scheduled",
-        date: selectedDate,
-        candidateId: null,
-      };
-    }
-
-    const day = upcomingByDate.get(selectedDate);
-    if (day && day.kind !== "missing") {
-      return {
-        kind: "future",
-        status: day.kind === "predicted" ? "predicted" : "scheduled",
-        date: selectedDate,
-        candidateId: day.kind === "predicted" ? day.candidateId : null,
-      };
-    }
-    if (day && day.kind === "missing") {
-      return { kind: "missing", date: selectedDate };
-    }
-
-    return null;
-  }
-
-  const hasTomorrowGrid =
-    scheduledGrids === undefined ? undefined : scheduledByDate.has(tomorrowStr);
 
   // ── Écran de connexion ──────────────────────────────────────────────────────
 
@@ -152,10 +70,10 @@ export function AdminPage() {
       <div className="flex min-h-svh flex-col items-center bg-surface px-4 py-6">
         <div className="flex w-full max-w-[460px] flex-1 flex-col gap-8">
           <header className="flex flex-col gap-5">
-            <a href="/" className={backLinkClassName}>
+            <Link to="/" className={backLinkClassName}>
               <ArrowLeft className="size-3.5" aria-hidden="true" />
               Retour au jeu
-            </a>
+            </Link>
 
             <DisplayHeader
               as="h1"
@@ -199,41 +117,134 @@ export function AdminPage() {
 
   return (
     <AdminAuthBoundary onUnauthorized={clearToken}>
-      <div className="flex min-h-svh flex-col items-center bg-surface px-4 py-6">
-        <div className="flex w-full max-w-6xl flex-1 flex-col gap-8">
-          <AdminHeader onLogout={clearToken} />
-
-          <PoolOverviewPanel
-            token={token}
-            clearToken={clearToken}
-            hasTomorrowGrid={hasTomorrowGrid}
-          />
-
-          <PanelCard>
-            <PanelHeader title="Planification" />
-            <div className="grid grid-cols-1 items-stretch gap-4 md:grid-cols-5">
-              <div className="col-span-1 h-full md:col-span-2">
-                <GameCalendar
-                  markers={markers}
-                  selectedDate={selectedDate}
-                  onSelectDate={setSelectedDate}
-                />
-              </div>
-              <div className="col-span-1 h-full md:col-span-3">
-                <GridDayDetail
-                  token={token}
-                  clearToken={clearToken}
-                  selectedDate={selectedDate}
-                  view={selectedView}
-                />
-              </div>
-            </div>
-          </PanelCard>
-
-          <GameHealthPanel feedbackStats={feedbackStats} />
-        </div>
-        <AppFooter className="mt-auto w-full shrink-0" />
-      </div>
+      <AuthenticatedAdminDashboard token={token} clearToken={clearToken} />
     </AdminAuthBoundary>
+  );
+}
+
+type AuthenticatedAdminDashboardProps = {
+  token: string;
+  clearToken: () => void;
+};
+
+/**
+ * Toutes les queries protégées vivent sous `AdminAuthBoundary`. Une erreur
+ * d'authentification peut ainsi vider le token sans tomber sur l'écran de crash.
+ */
+function AuthenticatedAdminDashboard({
+  token,
+  clearToken,
+}: AuthenticatedAdminDashboardProps) {
+  const [selectedDate, setSelectedDate] = useState<string | null>(todayUTC());
+  const scheduledGrids = useQuery(api.grids.getScheduledGrids, {
+    adminToken: token,
+  });
+  const feedbackStats = useQuery(api.grids.getGridFeedbackStats, {
+    adminToken: token,
+    limit: 60,
+  });
+  const upcoming = useQuery(api.grids.getUpcomingScheduledPreview, {
+    adminToken: token,
+    days: UPCOMING_DAYS,
+  });
+
+  const today = todayUTC();
+  const tomorrowStr = tomorrowUTC();
+  const scheduledByDate = new Map(
+    (scheduledGrids ?? []).map((grid) => [grid.date, grid]),
+  );
+  const upcomingByDate = new Map(
+    (upcoming ?? []).map((day) => [day.date, day]),
+  );
+  const winRateByDate = new Map(
+    (feedbackStats ?? []).map((feedback) => [feedback.date, feedback.winRate]),
+  );
+  const markers = buildCalendarMarkers({
+    today,
+    scheduled: (scheduledGrids ?? []).map((grid) => ({
+      date: grid.date,
+      gridPopTop3: grid.gridPopTop3,
+    })),
+    winRateByDate,
+    upcoming: (upcoming ?? []).map((day) => ({
+      date: day.date,
+      kind: day.kind,
+      gridPopTop3: day.kind === "missing" ? undefined : day.gridPopTop3,
+    })),
+  });
+
+  function computeDayView(): DayView | null {
+    if (!selectedDate) return null;
+
+    const grid = scheduledByDate.get(selectedDate);
+    if (grid) {
+      if (selectedDate <= today) {
+        return {
+          kind: "observed",
+          date: selectedDate,
+          status: selectedDate === today ? "active" : "past",
+        };
+      }
+      return {
+        kind: "future",
+        status: "scheduled",
+        date: selectedDate,
+        candidateId: null,
+      };
+    }
+
+    const day = upcomingByDate.get(selectedDate);
+    if (day && day.kind !== "missing") {
+      return {
+        kind: "future",
+        status: day.kind === "predicted" ? "predicted" : "scheduled",
+        date: selectedDate,
+        candidateId: day.kind === "predicted" ? day.candidateId : null,
+      };
+    }
+    if (day?.kind === "missing") return { kind: "missing", date: selectedDate };
+    return null;
+  }
+
+  const selectedView = computeDayView();
+  const hasTomorrowGrid =
+    scheduledGrids === undefined ? undefined : scheduledByDate.has(tomorrowStr);
+
+  return (
+    <div className="flex min-h-svh flex-col items-center bg-surface px-4 py-6">
+      <main className="flex w-full max-w-6xl flex-1 flex-col gap-8">
+        <AdminHeader onLogout={clearToken} />
+
+        <PoolOverviewPanel
+          token={token}
+          clearToken={clearToken}
+          hasTomorrowGrid={hasTomorrowGrid}
+        />
+
+        <PanelCard>
+          <PanelHeader title="Planification" />
+          <div className="grid grid-cols-1 items-stretch gap-4 md:grid-cols-5">
+            <div className="col-span-1 h-full md:col-span-2">
+              <GameCalendar
+                markers={markers}
+                selectedDate={selectedDate}
+                onSelectDate={setSelectedDate}
+              />
+            </div>
+            <div className="col-span-1 h-full md:col-span-3">
+              <GridDayDetail
+                token={token}
+                clearToken={clearToken}
+                selectedDate={selectedDate}
+                view={selectedView}
+              />
+            </div>
+          </div>
+        </PanelCard>
+
+        <GameHealthPanel feedbackStats={feedbackStats} />
+      </main>
+      <AppFooter className="mt-auto w-full shrink-0" />
+    </div>
   );
 }

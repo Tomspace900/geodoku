@@ -7,6 +7,7 @@ import countriesJson from "../../src/features/countries/data/countries.json" wit
 };
 import type { Country } from "../../src/features/countries/types";
 import { CONSTRAINTS } from "../../src/features/game/logic/constraints";
+import { solveGrid } from "../../src/features/game/logic/gridSolver";
 import {
   type FinalizedPoolGrid,
   type GenerationReport,
@@ -23,6 +24,7 @@ import {
 } from "./gridConstants";
 
 const COUNTRIES: Country[] = countriesJson as Country[];
+const UINT32_RANGE = 4_294_967_296;
 
 // Constraint → category lookup, built once at module load.
 const CATEGORY_BY_ID: Record<string, string> = (() => {
@@ -95,10 +97,10 @@ export function overlapCoefficient(
 
 // ─── Backtracking (seed-first) ────────────────────────────────────────────────
 
-function shuffle<T>(arr: T[]): T[] {
+function shuffle<T>(arr: T[], rng: () => number): T[] {
   const result = [...arr];
   for (let i = result.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1));
+    const j = Math.floor(rng() * (i + 1));
     [result[i], result[j]] = [result[j], result[i]];
   }
   return result;
@@ -125,11 +127,12 @@ function fillSlots(
   cols: string[],
   remaining: string[],
   matches: Record<string, Set<string>>,
+  rng: () => number,
 ): { rows: string[]; cols: string[] } | null {
   if (rows.length === 3 && cols.length === 3) return { rows, cols };
 
   const fillingRows = rows.length < 3;
-  const candidates = shuffle([...remaining]);
+  const candidates = shuffle(remaining, rng);
 
   for (const id of candidates) {
     // Category saturation: reject if this category is already at MAX_SAME_CATEGORY
@@ -165,6 +168,7 @@ function fillSlots(
       fillingRows ? cols : [...cols, id],
       newRemaining,
       matches,
+      rng,
     );
     if (result) return result;
   }
@@ -180,6 +184,7 @@ export function tryBuildGridWithSeed(
   seedId: string,
   seedPosition: "row" | "col",
   matches: Record<string, Set<string>>,
+  rng: () => number = Math.random,
 ): { rows: string[]; cols: string[] } | null {
   const remaining = CONSTRAINTS.map((c) => c.id as string).filter(
     (id) => id !== seedId,
@@ -188,9 +193,9 @@ export function tryBuildGridWithSeed(
   // "row": start with rows=[seed], fill rows[1..2] then cols[0..2]
   // "col": start with cols=[seed], fill rows[0..2] then cols[1..2]
   if (seedPosition === "row") {
-    return fillSlots([seedId], [], remaining, matches);
+    return fillSlots([seedId], [], remaining, matches, rng);
   }
-  return fillSlots([], [seedId], remaining, matches);
+  return fillSlots([], [seedId], remaining, matches, rng);
 }
 
 // ─── Finalization ─────────────────────────────────────────────────────────────
@@ -229,6 +234,8 @@ export function finalizeGrid(
       for (const code of solutions) countryPoolSet.add(code);
     }
   }
+
+  if (!solveGrid(validAnswers)) return null;
 
   const allIds = [...rows, ...cols];
 
@@ -291,8 +298,14 @@ export function finalizeGrid(
  */
 export function generateDiversePool(
   existingPool: Array<{ constraintIds: string[] }> = [],
+  options: { seed?: number } = {},
 ): { grids: FinalizedPoolGrid[]; report: GenerationReport } {
   const startMs = Date.now();
+  const seed = normalizeSeed(
+    options.seed ?? Math.floor(Math.random() * UINT32_RANGE),
+  );
+  console.log(`[generateDiversePool] Generation seed: ${seed}`);
+  const rng = mulberry32(seed);
   const matches = buildConstraintMatches();
 
   const pool: FinalizedPoolGrid[] = [];
@@ -314,7 +327,12 @@ export function generateDiversePool(
     ) {
       attempted++;
 
-      const gridResult = tryBuildGridWithSeed(seedId, seedPosition, matches);
+      const gridResult = tryBuildGridWithSeed(
+        seedId,
+        seedPosition,
+        matches,
+        rng,
+      );
       if (!gridResult) continue;
 
       const finalized = finalizeGrid(
@@ -367,6 +385,7 @@ export function generateDiversePool(
   return {
     grids: pool,
     report: {
+      seed,
       totalGenerated: pool.length,
       seedResults,
       constraintCoverage:
@@ -374,5 +393,24 @@ export function generateDiversePool(
       countryCoverage: countrySet.size,
       durationMs: Date.now() - startMs,
     },
+  };
+}
+
+function normalizeSeed(seed: number): number {
+  if (!Number.isInteger(seed) || seed < 0 || seed >= UINT32_RANGE) {
+    throw new RangeError(
+      `Generation seed must be an integer in [0, ${UINT32_RANGE})`,
+    );
+  }
+  return seed;
+}
+
+function mulberry32(seed: number): () => number {
+  let state = seed;
+  return () => {
+    state += 0x6d2b79f5;
+    let value = Math.imul(state ^ (state >>> 15), state | 1);
+    value ^= value + Math.imul(value ^ (value >>> 7), value | 61);
+    return ((value ^ (value >>> 14)) >>> 0) / UINT32_RANGE;
   };
 }
