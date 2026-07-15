@@ -23,7 +23,7 @@ jobs:
         with:
           # Keep aligned with package.json#packageManager.
           version: 11.7.0
-      - uses: actions/setup-node@v6
+      - uses: actions/setup-node@v7
         with:
           node-version: 22.19.0
           cache: pnpm
@@ -60,7 +60,7 @@ jobs:
         with:
           # Keep aligned with package.json#packageManager.
           version: 11.7.0
-      - uses: actions/setup-node@v6
+      - uses: actions/setup-node@v7
         with:
           node-version: 22.19.0
           cache: pnpm
