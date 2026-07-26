@@ -1,13 +1,13 @@
-import { getCountryByIso3 } from "@/features/countries/logic/search";
 import { usePostHog } from "@posthog/react";
 import { useMutation, useQuery } from "convex/react";
 import { useCallback, useEffect, useReducer, useRef } from "react";
 import { api } from "../../../../convex/_generated/api";
 import { getOrCreateClientId } from "../logic/clientId";
-import { STARTING_LIVES } from "../logic/constants";
 import type { ConstraintId } from "../logic/constraints";
 import { toCellKey } from "../logic/gridTopology";
 import { submitValidatedGuess } from "../logic/guessCommand";
+import { evaluateGuess } from "../logic/guessEvaluation";
+import { failedAttemptCount, livesRemaining } from "../logic/lives";
 import {
   clearPendingOperationId,
   createOperationId,
@@ -25,11 +25,9 @@ import {
   type SanitizedPersistedGame,
   sanitizePersistedForGrid,
 } from "../logic/sanitizePersisted";
-import { getUsedCountryCodes } from "../logic/usedCountries";
 import {
   type GuessFailureReason,
   isConstraintFailureReason,
-  validatePublishedGuess,
 } from "../logic/validation";
 import type { CellPosition, GameState } from "../types";
 
@@ -49,7 +47,7 @@ export function useGameState() {
   const [state, dispatch] = useReducer(
     gameReducer,
     null as unknown as GameState,
-    () => createInitialState("", [], []),
+    () => createInitialState("daily", "", [], []),
   );
 
   // Garde-fou anti-doublon intra-session : la date dont la fin est en cours
@@ -89,7 +87,7 @@ export function useGameState() {
       posthog?.capture("session_resumed", {
         grid_date: todayGrid.date,
         filled_cells: filledCells,
-        lives_left: rehydratePayload.remainingLives,
+        lives_left: livesRemaining(rehydratePayload.lives),
       });
     } else {
       dispatch({
@@ -121,14 +119,16 @@ export function useGameState() {
     const filledCells = Object.values(state.cells).filter(
       (cell) => cell.status === "filled",
     ).length;
-    const failedGuesses = STARTING_LIVES - state.remainingLives;
+    const failedGuesses = failedAttemptCount(state.lives);
+    // Le hook ne sert que la grille du jour : le régime est toujours limité.
+    const remainingLives = livesRemaining(state.lives) ?? 0;
 
-    // Cause de fin : gagné, sinon vies épuisées (remainingLives ≤ 0) ou bloqué
-    // (perdu alors qu'il restait des vies → plus aucune case remplissable).
+    // Cause de fin : gagné, sinon vies épuisées ou bloqué (perdu alors qu'il
+    // restait des vies → plus aucune case remplissable).
     const endReason =
       state.status === "won"
         ? "win"
-        : state.remainingLives <= 0
+        : remainingLives <= 0
           ? "lives"
           : "blocked";
 
@@ -144,13 +144,13 @@ export function useGameState() {
       end_reason: endReason,
       grid_date: state.date,
       filled_cells: filledCells,
-      lives_left: state.remainingLives,
+      lives_left: remainingLives,
     });
 
     recordGameEnd({
       operationId,
       endReason,
-      livesLeft: state.remainingLives,
+      livesLeft: remainingLives,
       filledCells,
       guessesSubmitted: filledCells + failedGuesses,
       clientId: getOrCreateClientId(),
@@ -172,7 +172,7 @@ export function useGameState() {
     state.status,
     state.endRecorded,
     state.cells,
-    state.remainingLives,
+    state.lives,
     recordGameEnd,
   ]);
 
@@ -193,7 +193,8 @@ export function useGameState() {
         reason: GuessSubmitFailure["reason"],
         countryCode?: string,
       ): GuessSubmitFailure {
-        const gameOver = state.remainingLives === 1;
+        const remaining = livesRemaining(state.lives) ?? 0;
+        const gameOver = remaining === 1;
         const operationId = createOperationId();
         dispatch({ type: "guessFailure" });
         posthog?.capture("guess_failed", {
@@ -201,25 +202,20 @@ export function useGameState() {
           reason,
           grid_date: state.date,
           cell: `${cell.row},${cell.col}`,
-          lives_remaining: state.remainingLives - 1,
+          lives_remaining: remaining - 1,
           ...(countryCode ? { country_code: countryCode } : {}),
         });
         return { kind: "domain_rejected", reason, gameOver };
       }
 
-      const country = getCountryByIso3(countryCode);
-      if (!country) {
-        return failGuess("invalid_country", countryCode);
-      }
       const cellKey = toCellKey(cell);
-      const local = validatePublishedGuess({
-        rowConstraintId: state.rows[cell.row],
-        colConstraintId: state.cols[cell.col],
-        country,
-        usedCountries: getUsedCountryCodes(state.cells),
-        validCountryCodes: todayGrid.validAnswers[cellKey] ?? [],
-      });
-      if (!local.valid) {
+      const local = evaluateGuess(
+        state,
+        cell,
+        countryCode,
+        todayGrid.validAnswers,
+      );
+      if (local.kind === "rejected") {
         // Log la tentative infructueuse côté serveur (fire-and-forget) : un
         // vrai pays qui rate le croisement est un signal de difficulté. On
         // ignore `already_used` (pas un échec de croisement) et les non-pays.

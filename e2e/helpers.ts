@@ -34,14 +34,57 @@ export type TodayGrid = {
 
 /** Fetch today's grid via Convex HTTP client (requires VITE_CONVEX_URL in env). */
 export async function fetchTodayGrid(): Promise<TodayGrid | null> {
+  return convexClient().query(
+    api.grids.getTodayGrid,
+  ) as Promise<TodayGrid | null>;
+}
+
+function convexClient(): ConvexHttpClient {
   const convexUrl = process.env.VITE_CONVEX_URL;
   if (!convexUrl) {
     throw new Error(
       "VITE_CONVEX_URL is required for E2E tests. Add it to .env.local or set it in your environment.",
     );
   }
-  const client = new ConvexHttpClient(convexUrl);
-  return client.query(api.grids.getTodayGrid) as Promise<TodayGrid | null>;
+  return new ConvexHttpClient(convexUrl);
+}
+
+export type ReplayableGrid = { date: string; rows: string[]; cols: string[] };
+
+/** Archive du mode entraînement telle que le serveur la publie (J-1 → J-7). */
+export async function fetchReplayableGrids(): Promise<ReplayableGrid[]> {
+  return convexClient().query(api.grids.getReplayableGrids) as Promise<
+    ReplayableGrid[]
+  >;
+}
+
+export async function fetchReplayGrid(date: string): Promise<TodayGrid | null> {
+  return convexClient().query(api.grids.getReplayGrid, {
+    date,
+  }) as Promise<TodayGrid | null>;
+}
+
+/** Appel direct du garde serveur, sans passer par l'UI. */
+export function queryReplayGridRaw(date: string): Promise<unknown> {
+  return convexClient().query(api.grids.getReplayGrid, { date });
+}
+
+/**
+ * Partie du jour terminée, sérialisée pour injection dans localStorage : c'est
+ * ce que lit le garde d'accès à l'archive. `endRecorded: true` évite toute
+ * écriture Convex depuis cette partie fabriquée (les stats resteraient sinon
+ * polluées par les runs E2E).
+ */
+export function makeFinishedDailyGameJSON(): string {
+  return JSON.stringify({
+    version: 3,
+    date: new Date().toISOString().slice(0, 10),
+    cells: Object.fromEntries(CELL_KEYS.map((k) => [k, { status: "empty" }])),
+    remainingLives: 0,
+    persistenceRevision: 1,
+    endRecorded: true,
+    rated: true,
+  });
 }
 
 export { CELL_KEYS };
@@ -49,7 +92,7 @@ export { CELL_KEYS };
 /** Cible la modale de résultat sans confondre le Drawer en fin de fermeture. */
 export function getResultDialog(page: Page) {
   return page.getByRole("dialog").filter({
-    has: page.getByRole("button", { name: "Share my result" }),
+    has: page.getByRole("button", { name: "Share my score" }),
   });
 }
 

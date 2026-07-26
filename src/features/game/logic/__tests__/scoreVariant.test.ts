@@ -5,6 +5,7 @@ import type {
   GameState,
   RarityTier,
 } from "../../types";
+import { STARTING_LIVES } from "../constants";
 import { createInitialState } from "../reducer";
 import {
   type ScoreBreakdown,
@@ -19,7 +20,13 @@ function breakdown(
   lives: number,
   estimated = false,
 ): ScoreBreakdown {
-  return { shares, estimated, filledCount, lives };
+  return {
+    shares,
+    estimated,
+    filledCount,
+    lives,
+    livesCapacity: STARTING_LIVES,
+  };
 }
 
 const fill = (share: number, n: number): number[] =>
@@ -120,14 +127,23 @@ describe("computeScore — barème tranché (grille 50 · rareté 50 · vies 20,
 });
 
 function makeState(overrides: Partial<GameState> = {}): GameState {
-  return { ...createInitialState("2024-01-01", [], []), ...overrides };
+  return { ...createInitialState("daily", "2024-01-01", [], []), ...overrides };
 }
 
 describe("computeScoreBreakdown — part brute + estimation", () => {
   it("grille vide : shares [], non estimé, sans distribution", () => {
     expect(
-      computeScoreBreakdown(makeState({ remainingLives: 4 }), undefined),
-    ).toEqual({ shares: [], estimated: false, filledCount: 0, lives: 4 });
+      computeScoreBreakdown(
+        makeState({ lives: { kind: "limited", remaining: 4 } }),
+        undefined,
+      ),
+    ).toEqual({
+      shares: [],
+      estimated: false,
+      filledCount: 0,
+      lives: 4,
+      livesCapacity: STARTING_LIVES,
+    });
   });
 
   it("part brute du jour, non estimé quand la case a assez de soumissions", () => {
@@ -150,6 +166,22 @@ describe("computeScoreBreakdown — part brute + estimation", () => {
     const b = computeScoreBreakdown(state, dist);
     expect(b.shares).toEqual([1 / 3]);
     expect(b.estimated).toBe(true);
+  });
+
+  it("mode entraînement : part vies neutralisée, échelle sur 900", () => {
+    const state = makeState({
+      mode: "training",
+      lives: { kind: "unlimited", failedAttempts: 12 },
+    });
+    const b = computeScoreBreakdown(state, undefined);
+    expect(b.lives).toBe(0);
+    expect(b.livesCapacity).toBe(0);
+
+    // Grille pleine tout-ultra : 450 + 450 + 0 = 900, et pas de max vies affiché.
+    const full = computeScore({ ...b, shares: fill(0, 9), filledCount: 9 });
+    expect(full.livesMax).toBe(0);
+    expect(full.livesValue).toBe(0);
+    expect(full.total).toBe(900);
   });
 
   it("shares null tant qu'une case remplie n'a pas de donnée", () => {

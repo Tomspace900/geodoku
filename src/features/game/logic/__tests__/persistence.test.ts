@@ -78,6 +78,7 @@ function saveLikePreviousBundle(game: PreviousBundleGame): void {
 describe("savePersistedGame / loadPersistedGame", () => {
   it("keeps today's progress readable after rolling back to the previous bundle", () => {
     let state = createInitialState(
+      "daily",
       "2026-04-15",
       [...TEST_ROWS],
       [...TEST_COLS],
@@ -113,6 +114,7 @@ describe("savePersistedGame / loadPersistedGame", () => {
 
   it("recovers progress made by the previous bundle when rolling forward again", () => {
     const state = createInitialState(
+      "daily",
       "2026-04-15",
       [...TEST_ROWS],
       [...TEST_COLS],
@@ -132,6 +134,7 @@ describe("savePersistedGame / loadPersistedGame", () => {
 
   it("loads the newer rollback shadow when the v3 write fails", () => {
     let state = createInitialState(
+      "daily",
       "2026-04-15",
       [...TEST_ROWS],
       [...TEST_COLS],
@@ -164,6 +167,7 @@ describe("savePersistedGame / loadPersistedGame", () => {
 
   it("does not commit v3 when the rollback shadow cannot be written", () => {
     const state = createInitialState(
+      "daily",
       "2026-04-15",
       [...TEST_ROWS],
       [...TEST_COLS],
@@ -186,6 +190,7 @@ describe("savePersistedGame / loadPersistedGame", () => {
 
   it("writes the minimal version 3 payload", () => {
     const state = createInitialState(
+      "daily",
       "2026-04-15",
       [...TEST_ROWS],
       [...TEST_COLS],
@@ -208,6 +213,7 @@ describe("savePersistedGame / loadPersistedGame", () => {
 
   it("round-trips the endRecorded / rated flags", () => {
     let state = createInitialState(
+      "daily",
       "2026-04-15",
       [...TEST_ROWS],
       [...TEST_COLS],
@@ -222,6 +228,7 @@ describe("savePersistedGame / loadPersistedGame", () => {
 
   it("persists filled cells without a duplicate used-countries cache", () => {
     let state = createInitialState(
+      "daily",
       "2026-04-15",
       [...TEST_ROWS],
       [...TEST_COLS],
@@ -260,6 +267,7 @@ describe("savePersistedGame / loadPersistedGame", () => {
 
   it("serialises blocked cells and deserialises them", () => {
     const state = createInitialState(
+      "daily",
       "2026-04-15",
       [...TEST_ROWS],
       [...TEST_COLS],
@@ -284,6 +292,7 @@ describe("loadPersistedGame", () => {
 
   it("returns null when neither persisted representation has a supported version", () => {
     const state = createInitialState(
+      "daily",
       "2026-04-15",
       [...TEST_ROWS],
       [...TEST_COLS],
@@ -320,6 +329,7 @@ describe("loadPersistedGame", () => {
 
   it("promotes a version 2 game to minimal v3 without losing progress", () => {
     const legacyState = createInitialState(
+      "daily",
       "2026-04-15",
       [...TEST_ROWS],
       [...TEST_COLS],
@@ -369,6 +379,7 @@ describe("loadPersistedGame", () => {
 describe("clearPersistedGame", () => {
   it("removes the entry from storage", () => {
     const state = createInitialState(
+      "daily",
       "2026-04-15",
       [...TEST_ROWS],
       [...TEST_COLS],
@@ -383,6 +394,7 @@ describe("clearPersistedGame", () => {
 describe("isPersistedForToday", () => {
   it("returns true when dates match", () => {
     const state = createInitialState(
+      "daily",
       "2026-04-15",
       [...TEST_ROWS],
       [...TEST_COLS],
@@ -394,6 +406,7 @@ describe("isPersistedForToday", () => {
 
   it("returns false when dates differ", () => {
     const state = createInitialState(
+      "daily",
       "2026-04-14",
       [...TEST_ROWS],
       [...TEST_COLS],
@@ -412,6 +425,7 @@ describe("savePersistedGame — resilience", () => {
         throw new Error("QuotaExceededError");
       });
     const state = createInitialState(
+      "daily",
       "2026-04-15",
       [...TEST_ROWS],
       [...TEST_COLS],

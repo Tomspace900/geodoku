@@ -20,13 +20,17 @@ import {
   type ConstraintFailureReason,
   isConstraintFailureReason,
 } from "@/features/game/logic/validation";
-import type { CellPosition, GameState } from "@/features/game/types";
+import type {
+  CellPosition,
+  GameState,
+  LivesState,
+} from "@/features/game/types";
 import { useLocale, useT } from "@/i18n/LocaleContext";
 import type { TKey } from "@/i18n/types";
 import { focusWithoutVisibleRing } from "@/lib/focus";
 import { cn } from "@/lib/utils";
 import { usePostHog } from "@posthog/react";
-import { Heart } from "lucide-react";
+import { Heart, X } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 
 const ERROR_KEY_MAP: Record<string, TKey> = {
@@ -45,28 +49,39 @@ type SubmitResult =
 
 type LifeFlash = {
   key: number;
+  /** Valeur du compteur avant le coup raté (vies restantes, ou essais ratés). */
   from: number;
   phase: "shake" | "empty";
 };
 
 type LivesIndicatorProps = {
-  lives: number;
+  lives: LivesState;
   lifeFlash: LifeFlash | null;
 };
 
+/**
+ * Compteur de la modale de saisie, avec sa séquence d'animation (sursaut puis
+ * bascule du chiffre). Le régime limité décompte vers le bas et vide un cœur ;
+ * l'entraînement compte vers le haut, sur une croix rouge.
+ */
 function LivesIndicator({ lives, lifeFlash }: LivesIndicatorProps) {
   const t = useT();
-  const displayLives = lifeFlash
+  const unlimited = lives.kind === "unlimited";
+  const settled = unlimited ? lives.failedAttempts : lives.remaining;
+  // Pendant le sursaut on montre encore la valeur d'avant ; à la bascule, celle d'après.
+  const displayed = lifeFlash
     ? lifeFlash.phase === "shake"
       ? lifeFlash.from
-      : lifeFlash.from - 1
-    : lives;
-  const heartFilled = lifeFlash ? lifeFlash.phase === "shake" : lives > 0;
+      : lifeFlash.from + (unlimited ? 1 : -1)
+    : settled;
+  const heartFilled = lifeFlash ? lifeFlash.phase === "shake" : settled > 0;
 
   return (
     <div className="mt-0.5 shrink-0">
       <output aria-live="assertive" aria-atomic="true" className="sr-only">
-        {t("ui.remainingLives", { count: lives })}
+        {unlimited
+          ? t("training.attempts", { count: settled })
+          : t("ui.remainingLives", { count: settled })}
       </output>
       <div
         key={lifeFlash?.key ?? "lives-idle"}
@@ -87,14 +102,18 @@ function LivesIndicator({ lives, lifeFlash }: LivesIndicatorProps) {
             lifeFlash?.phase === "empty" && "animate-lives-tick",
           )}
         >
-          {displayLives}
+          {displayed}
         </span>
-        <Heart
-          size={18}
-          className={
-            heartFilled ? "text-error fill-error" : "text-on-surface-variant"
-          }
-        />
+        {unlimited ? (
+          <X size={18} className="text-error" />
+        ) : (
+          <Heart
+            size={18}
+            className={
+              heartFilled ? "text-error fill-error" : "text-on-surface-variant"
+            }
+          />
+        )}
       </div>
     </div>
   );
@@ -190,7 +209,10 @@ export function GuessModal({
 
   async function handleSelect(countryCode: string) {
     if (submitting || usedCountryCodes.has(countryCode)) return;
-    const livesBeforeSubmit = state.remainingLives;
+    const counterBeforeSubmit =
+      state.lives.kind === "unlimited"
+        ? state.lives.failedAttempts
+        : state.lives.remaining;
     setSubmitting(true);
     const result = await onSubmit(cell, countryCode);
     setSubmitting(false);
@@ -209,7 +231,7 @@ export function GuessModal({
     }
     setQuery("");
     showError(result.reason);
-    triggerLifeLoss(livesBeforeSubmit);
+    triggerLifeLoss(counterBeforeSubmit);
   }
 
   const rowConstraint = CONSTRAINT_BY_ID.get(state.rows[cell.row]);
@@ -273,10 +295,7 @@ export function GuessModal({
                 {colLabel}
               </span>
             </DrawerTitle>
-            <LivesIndicator
-              lives={state.remainingLives}
-              lifeFlash={lifeFlash}
-            />
+            <LivesIndicator lives={state.lives} lifeFlash={lifeFlash} />
           </div>
           {totalPossible > 0 && (
             <p className="text-xs text-on-surface-variant mt-2">

@@ -26,7 +26,9 @@ Barème tranché sur données réelles. La rareté d'une case s'appuie sur la **
 
 **L'enjeu communautaire.** À la fin, le joueur partage sa grille sous forme d'emojis colorés (🟪🟦🟨🟥⬜⬛) avec `<total> pts`, à la manière de Wordle. `⬛` = cases bloquées ; `⬜` = cases non remplies en défaite. Le partage ([`share.ts`](src/features/game/logic/share.ts)) ouvre la **feuille native** (Web Share API) **uniquement sur appareil tactile** (`canUseNativeShare` = `navigator.share` **et** pointeur principal `coarse` / `maxTouchPoints > 0`) et retombe sur le **presse-papiers** sur desktop. **Ne pas** élargir vers « feuille native dès que `navigator.share` existe » — Safari/Chrome desktop l'exposent aussi. `share_method` (`native`/`clipboard`) part dans l'event PostHog `result_shared`.
 
-**Ce que Geodoku n'est PAS.** Pas de compte, pas de login, pas de leaderboard, pas de streak inter-jours, pas de stats globales, pas d'ads, pas de mobile app. Un site web minimaliste, une partie par jour, un partage. Point.
+**Mode entraînement (`/archive`).** Les grilles des **7 derniers jours** (J-1 → J-7) sont rejouables une fois la partie du jour terminée — sinon la route **redirige vers `/`** (garde d'expérience, pas de sécurité : l'endpoint est public et sans identité). Essais **illimités** : on compte les essais ratés au lieu de décompter des vies, donc une partie ne se perd que par **blocage**. Les cases se colorent normalement, sur la **cohorte figée** du jour concerné (complète → score exact et stable, sans marqueur « ≈ »). Score sur **900** : grille + rareté, part vies neutralisée, avec le nombre d'essais affiché à part ([`TrainingResultScreen`](src/features/archive/components/TrainingResultScreen.tsx)). Titres de fin réutilisés du quotidien (paliers calibrés sur /1000, donc le haut du barème sort plus rarement — assumé). **Pas de partage** (les emojis n'ont de sens comparés que le même jour), pas de notation de difficulté, et surtout **aucune écriture Convex** : les cohortes passées restent pures et le seam `guesses.isReplay` reste dormant. Une date future (ou aujourd'hui) est refusée **côté serveur et côté client** — `classifyReplayDate` ([`replayWindow.ts`](src/features/game/logic/replayWindow.ts)) est le module pur partagé par les deux ; un petit malin qui bricole l'URL tombe sur `ErrorScreen variant="time-traveller"`.
+
+**Ce que Geodoku n'est PAS.** Pas de compte, pas de login, pas de leaderboard, pas de streak inter-jours, pas de stats globales, pas d'ads, pas de mobile app. Un site web minimaliste, une partie par jour (plus l'entraînement sur les 7 dernières), un partage. Point.
 
 ## 2. Stack technique
 
@@ -47,7 +49,7 @@ Barème tranché sur données réelles. La rareté d'une case s'appuie sur la **
 ## 3. Architecture
 
 ```
-src/features/<feature>/   # game, countries, admin, legal, errors
+src/features/<feature>/   # game, archive, countries, admin, legal, errors
   logic/                  # pur, testé, zéro React/Convex
   testing/                # simulation partagée par Vitest/E2E/scripts
   hooks/                  # glue logique + Convex + React
@@ -69,6 +71,8 @@ e2e/                      # Playwright — helpers.ts + *.shared|desktop|mobile.
 - Hooks → seule couche logique + Convex + React.
 - Composants → pas de calcul significatif ; reducer + dispatch.
 - Pas de copie `src/` ↔ `convex/lib/` sauf [`convex/lib/dates.ts`](convex/lib/dates.ts) qui réexporte [`src/lib/dates.ts`](src/lib/dates.ts). `gridGenerator`, `gridScheduler`, `gridConstants` importent depuis `src/`.
+- **Vies = union discriminée** `LivesState` ([`types.ts`](src/features/game/types.ts)), jamais un compteur nu : `{kind:"limited",remaining}` en daily, `{kind:"unlimited",failedAttempts}` en entraînement. Toute lecture passe par [`logic/lives.ts`](src/features/game/logic/lives.ts) — le reducer, le score et la persistance n'ont donc **aucune branche de mode**. Le format persisté du daily garde en revanche un `remainingLives` numérique (compatibilité du shadow v2).
+- `archive` dépend de `game` (reducer, validation, composants de grille), jamais l'inverse. Les sanitizers d'entraînement vivent dans `game/logic/sanitizePersisted.ts` et prennent des **primitives**, pour que le domaine du jeu ignore la feature `archive`.
 
 **Contenu (pays, contraintes, pool).** Règles critiques :
 
@@ -123,6 +127,8 @@ Philosophie **Editorial Intellectual** (NYT Games) : spacieux, typographique, to
 **Crons** ([`convex/crons.ts`](convex/crons.ts)) : `ensureDailyGrids` (horaire) ; `reconcilePoolAndSchedule` (03:00 UTC si stock bas, hors migration legacy explicite).
 
 **Endpoints jeu** ([`convex/grids.ts`](convex/grids.ts), [`guesses.ts`](convex/guesses.ts)) : `getTodayGrid`, `submitTodayGuess`, `recordTodayFailedGuess`, `getTodayGuessDistribution`, `recordTodayGameEnd`, `submitTodayGridFeedback`. Chaque écriture reçoit un `operationId` idempotent ; les anciennes interfaces restent transitoirement disponibles pendant le rollout.
+
+**Endpoints archive** (mode entraînement, **lecture seule**) : `getReplayableGrids` (J-1 → J-7, **sans `validAnswers`** — la liste ne doit rien révéler) et `getReplayGrid({date})` (grille + réponses). Ce dernier est gardé par `assertReplayableDate` ([`gameWriteValidation.ts`](convex/gameWriteValidation.ts)) : **le refus des dates `>= todayUTC()` est le point critique** — sans lui, `/archive/<demain>` livrerait la grille du lendemain avec ses réponses. Une date hors fenêtre **lève** ; une grille absente renvoie `null` (trou de données, pas une demande illégitime). La rareté figée est lue via `guesses.getGuessDistributionForDate` — promu de « legacy à supprimer » à endpoint du parcours joueur. Aucune mutation, donc aucun rate-limit ni `operationId` sur ce chemin.
 
 **Endpoints admin** (token `ADMIN_TOKEN`) : `getScheduledGrids`, `getGridCellMetrics`, `getPoolStats`, `refreshPool`, `retryPoolFinalization`, `runEnsureTomorrow`, etc. Après activation, `refreshPool` retourne d'éventuels warnings de finalisation ; leur retry ne doit jamais relancer une génération.
 
@@ -240,6 +246,7 @@ Complémentaire à Convex (`gridFeedback`/`dailyStats` = santé grilles ; PostHo
 | Saisie | `guess_modal_closed` |
 | Résultat | `result_screen_viewed`, `result_shared` (portent `score_total`/`score_grid`/`score_rarity`/`score_lives` — les anciens `originality_*`/`grid_score_percent` sont **retirés**, groupements dashboards à recréer), `difficulty_rated`, `solution_viewed`, `scoring_info_opened` (prop `source`: `result_screen`) |
 | UI | `how_to_play_*`, `locale_changed`, `footer_link_clicked`, `survey_link_clicked` / `survey_dismissed` (prop `source`: `result_screen`/`solution_screen`/`footer` ; banderole sondage post-partie via `SurveyCta` — écran de résultat sous le partage + écran de solution — gated par feature flag PostHog `survey_active` ; `geodoku:survey-done` dissocie clic (masquage définitif, cf. `isSurveyDone`) et fermeture (masquage jour courant seulement, réapparaît le lendemain) ; lien permanent et discret dans `AppFooter` (même flag, toujours affiché quel que soit `geodoku:survey-done`, mais un clic dessus masque aussi la banderole) pour rester accessible aux joueurs qui changent d'avis après avoir fermé la banderole) |
+| Entraînement | `archive_opened`, `training_started` (`grid_date`, `resumed`, `restart`), `training_completed` (`grid_date`, `outcome`, `filled_cells`, `failed_attempts`), `training_result_viewed` (`grid_date`, `outcome`, `score_total`/`score_grid`/`score_rarity` sur 900, `failed_attempts`) — **noms distincts des events daily** pour ne pas corrompre les groupements existants. Corollaire : le mode entraînement n'émet **aucun** event daily, `cell_opened` compris (il alimente le tunnel du quotidien) ; `game_started`/`game_completed`/`result_screen_viewed`/`cell_opened` restent daily-only. Seul `scoring_info_opened` est partagé, distingué par `source: training_result_screen`. |
 | Légal | `legal_page_viewed`, `legal_page_left` |
 | Fiabilité | `backend_timeout_shown`, `$exception` |
 
@@ -258,6 +265,7 @@ Source de vérité détaillée : grep `posthog?.capture` dans le code.
 | Logique pure (`logic/`, `convex/lib/*`) | tests unitaires ciblés + `pnpm test` |
 | UI / styles | `pnpm check:design-system` (skill local `/verify-design-system` optionnel) |
 | Parcours jeu (grille, modale, résultat, persistance) | `pnpm test:e2e` contre un backend avec grille du jour ; `wipe` + `seed` uniquement sur un dev perso jetable |
+| Mode entraînement / fenêtre de rejeu | tests `replayWindow` + `trainingPersistence` + `dailyGate` ; `e2e/archive.shared.spec.ts` (inclut le refus serveur des dates futures) |
 | Contraintes / pool / scheduler | `pnpm simulate:scheduling` ; pour observer sur données réalistes : `pnpm dump:prod` puis régénération via `/admin` (`refreshPool`) — **pas** `wipe`+`seed` |
 | Schéma ou API Convex | `pnpm convex:dev` / codegen + commiter `convex/_generated/` |
 | Texte utilisateur | clés `fr` + `en` via `translate()` |

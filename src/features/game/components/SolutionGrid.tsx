@@ -10,6 +10,7 @@ import type {
   Cell,
   CellGuessDistribution,
   CellKey,
+  GameModeId,
   RarityTier,
 } from "@/features/game/types";
 import { useLocale } from "@/i18n/LocaleContext";
@@ -36,6 +37,7 @@ type Props = {
   validAnswers: Record<string, string[]>;
   distribution: Record<string, CellGuessDistribution> | undefined;
   cells: Record<CellKey, Cell>;
+  mode?: GameModeId;
 };
 
 export function SolutionGrid({
@@ -44,6 +46,7 @@ export function SolutionGrid({
   validAnswers,
   distribution,
   cells,
+  mode = "daily",
 }: Props) {
   const { locale, t } = useLocale();
   const rowLabels = rows.map((constraintId) => {
@@ -57,7 +60,11 @@ export function SolutionGrid({
 
   return (
     <GridMatrix
-      ariaLabel={t("ui.solutionGridAriaLabel")}
+      ariaLabel={t(
+        mode === "training"
+          ? "training.solutionGridAriaLabel"
+          : "ui.solutionGridAriaLabel",
+      )}
       rowLabels={rowLabels}
       colLabels={colLabels}
       renderColumnHeader={(label) => (

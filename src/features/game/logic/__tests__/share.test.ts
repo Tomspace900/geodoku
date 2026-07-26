@@ -14,7 +14,7 @@ import {
 } from "../share";
 
 function makeState(overrides: Partial<GameState> = {}): GameState {
-  return { ...createInitialState("2024-01-01", [], []), ...overrides };
+  return { ...createInitialState("daily", "2024-01-01", [], []), ...overrides };
 }
 
 // Parts brutes du jour choisies pour tomber directement dans chaque tier
@@ -56,14 +56,20 @@ describe("formatShareString", () => {
   });
 
   it("shows hearts matching remainingLives for a won state", () => {
-    const state = makeState({ status: "won", remainingLives: 2 });
+    const state = makeState({
+      status: "won",
+      lives: { kind: "limited", remaining: 2 },
+    });
     const result = formatShareString(state, 42, undefined);
     expect(result).toContain("Geodoku #42");
     expect(result).toContain("❤️❤️🤍🤍🤍"); // 2 hearts + 3 white
   });
 
   it("shows skull for a lost state", () => {
-    const state = makeState({ status: "lost", remainingLives: 0 });
+    const state = makeState({
+      status: "lost",
+      lives: { kind: "limited", remaining: 0 },
+    });
     const result = formatShareString(state, 7, undefined);
     expect(result).toContain("💀");
     expect(result).not.toContain("❤️");
@@ -71,7 +77,7 @@ describe("formatShareString", () => {
 
   it("uses correct emoji per rarity tier", () => {
     const { state, distribution } = applyFills(
-      makeState({ status: "won", remainingLives: 3 }),
+      makeState({ status: "won", lives: { kind: "limited", remaining: 3 } }),
       [
         { key: "0,0", tier: "common" },
         { key: "0,1", tier: "uncommon" },
@@ -113,7 +119,10 @@ describe("formatShareString", () => {
 
 describe("buildSharePayload", () => {
   it("splits title, text and url for native share", () => {
-    const state = makeState({ status: "won", remainingLives: 3 });
+    const state = makeState({
+      status: "won",
+      lives: { kind: "limited", remaining: 3 },
+    });
     const payload = buildSharePayload(state, 5, undefined);
     expect(payload.title).toBe("Geodoku #5 ❤️❤️❤️🤍🤍");
     expect(payload.text).toContain("60 pts"); // 3 vies × 20, grille/rareté 0
@@ -123,7 +132,10 @@ describe("buildSharePayload", () => {
   });
 
   it("reconstructs clipboard text from payload", () => {
-    const state = makeState({ status: "won", remainingLives: 3 });
+    const state = makeState({
+      status: "won",
+      lives: { kind: "limited", remaining: 3 },
+    });
     const payload = buildSharePayload(state, 5, undefined);
     expect(`${payload.text}\n\n${payload.url}`).toBe(
       formatShareString(state, 5, undefined),

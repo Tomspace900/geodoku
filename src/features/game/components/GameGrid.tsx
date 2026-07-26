@@ -34,7 +34,11 @@ export function GameGrid({ state, distribution, onCellClick }: Props) {
 
   return (
     <GridMatrix
-      ariaLabel={t("ui.gameGridAriaLabel")}
+      ariaLabel={t(
+        state.mode === "training"
+          ? "training.gridAriaLabel"
+          : "ui.gameGridAriaLabel",
+      )}
       rowLabels={rowLabels}
       colLabels={colLabels}
       renderColumnHeader={(label) => (

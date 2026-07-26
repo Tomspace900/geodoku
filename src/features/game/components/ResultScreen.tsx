@@ -9,6 +9,7 @@ import {
 } from "@/components/ui/dialog";
 import { SurveyCta } from "@/features/game/components/SurveyCta";
 import { getOrCreateClientId } from "@/features/game/logic/clientId";
+import { isOutOfLives } from "@/features/game/logic/lives";
 import {
   clearPendingOperationId,
   getOrCreatePendingOperationId,
@@ -23,14 +24,9 @@ import {
 } from "@/features/game/logic/scoreVariant";
 import {
   canUseNativeShare,
-  cellShareEmoji,
   shareGameResult,
 } from "@/features/game/logic/share";
-import type {
-  CellGuessDistribution,
-  CellKey,
-  GameState,
-} from "@/features/game/types";
+import type { CellGuessDistribution, GameState } from "@/features/game/types";
 import { useT } from "@/i18n/LocaleContext";
 import { cn } from "@/lib/utils";
 import { usePostHog } from "@posthog/react";
@@ -39,9 +35,7 @@ import { Copy, Share2 } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import { api } from "../../../../convex/_generated/api";
 import { ScoreDisplay } from "./ScoreDisplay";
-
-const ROWS = [0, 1, 2] as const;
-const COLS = [0, 1, 2] as const;
+import { ShareEmojiGrid } from "./ShareEmojiGrid";
 
 type DifficultyRating = "too_easy" | "balanced" | "too_hard";
 
@@ -114,9 +108,9 @@ export function ResultScreen({
         status: "won",
         total: titleTotal ?? score.gridValue + score.livesValue,
       }
-    : state.remainingLives > 0
-      ? { status: "lostByBlock" }
-      : { status: "lostByLives" };
+    : isOutOfLives(state.lives)
+      ? { status: "lostByLives" }
+      : { status: "lostByBlock" };
   const resultTitleKeysForOutcome = resultTitleKeys(resultOutcome);
   const resultTitleKey =
     resultTitleKeysForOutcome[
@@ -237,30 +231,11 @@ export function ResultScreen({
           <ScoreDisplay breakdown={scoreBreakdown} />
         </div>
 
-        <div className="flex flex-col items-center gap-1">
-          {ROWS.map((row) => (
-            <div key={row} className="flex gap-1">
-              {COLS.map((col) => {
-                const key = `${row},${col}` as CellKey;
-                const emoji = cellShareEmoji(
-                  state.cells[key],
-                  distribution?.[key],
-                );
-                return (
-                  <span
-                    key={col}
-                    className="text-2xl leading-none w-9 h-9 flex items-center justify-center"
-                  >
-                    {emoji}
-                  </span>
-                );
-              })}
-            </div>
-          ))}
-          <p className="text-xs text-on-surface-variant mt-1">
-            {`#GEODOKU${gridNumber !== null ? ` #${gridNumber}` : ""}`}
-          </p>
-        </div>
+        <ShareEmojiGrid
+          cells={state.cells}
+          distribution={distribution}
+          caption={`#GEODOKU${gridNumber !== null ? ` #${gridNumber}` : ""}`}
+        />
 
         <div className="flex flex-col gap-3">
           {hasRated ? (
@@ -273,7 +248,10 @@ export function ResultScreen({
               {t("ui.viewAnswers")}
             </Button>
           ) : (
-            <>
+            /* Bloc de notation soudé à son échappatoire : le lien « Passer »
+               appartient à ce groupe, il n'est pas un tertiaire flottant entre
+               deux blocs. L'espacement interne serré le dit à l'œil. */
+            <div className="flex flex-col gap-2">
               <Eyebrow className="text-center">
                 {t("ui.feedbackQuestion")}
               </Eyebrow>
@@ -319,7 +297,7 @@ export function ResultScreen({
               >
                 {t("ui.skipFeedback")}
               </Button>
-            </>
+            </div>
           )}
 
           <Button
@@ -339,6 +317,9 @@ export function ResultScreen({
           <SurveyCta source="result_screen" />
         </div>
 
+        {/* Pas de renvoi vers l'archive ici : la modale sert le résultat du jour
+            et son partage. L'accès aux grilles passées est proposé juste
+            derrière, sur la vue solution, où le joueur atterrit en fermant. */}
         <p className="text-center text-xs text-on-surface-variant italic">
           {t("ui.comeBackTomorrowGrid")}
         </p>

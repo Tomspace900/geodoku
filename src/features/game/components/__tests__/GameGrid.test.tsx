@@ -9,6 +9,7 @@ describe("GameGrid", () => {
   it("names a blocked cell for assistive technologies", () => {
     safeSet(STORAGE_KEYS.locale, "en");
     const state = createInitialState(
+      "daily",
       "2026-07-15",
       ["continent_europe", "continent_asia", "continent_africa"],
       ["water_landlocked", "water_island", "borders_min_5"],

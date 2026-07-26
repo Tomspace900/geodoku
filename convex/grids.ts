@@ -33,6 +33,9 @@ import {
   upcomingScheduledPreviewArgs,
 } from "./adminGridOperations";
 import {
+  getReplayGridArgs,
+  getReplayGridHandler,
+  getReplayableGridsHandler,
   getTodayGridHandler,
   recordGameEndArgs,
   recordGameEndHandler,
@@ -81,6 +84,21 @@ export const autoRefillPool = internalAction({
 export const getTodayGrid = query({
   args: {},
   handler: getTodayGridHandler,
+});
+
+/** Archive du mode entraînement : les grilles de J-1 à J-7, sans leurs réponses. */
+export const getReplayableGrids = query({
+  args: {},
+  handler: getReplayableGridsHandler,
+});
+
+/**
+ * Grille passée rejouable, avec ses réponses. Bornée à J-1..J-7 côté serveur :
+ * c'est ce garde, et non le frontend, qui empêche de lire une grille future.
+ */
+export const getReplayGrid = query({
+  args: getReplayGridArgs,
+  handler: getReplayGridHandler,
 });
 
 /** Écriture legacy conservée temporairement pendant le rollout. */

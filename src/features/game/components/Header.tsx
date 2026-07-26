@@ -1,30 +1,21 @@
 import { AppMark } from "@/components/AppMark";
 import { DisplayHeader } from "@/components/editorial/DisplayHeader";
+import { formatGridDateLabel } from "@/features/game/logic/gridDateLabel";
+import type { LivesState } from "@/features/game/types";
 import { useLocale, useT } from "@/i18n/LocaleContext";
-import { Heart } from "lucide-react";
-import { STARTING_LIVES } from "../logic/constants";
+import { LivesMeter } from "./LivesMeter";
 
 type Props = {
-  remainingLives: number;
+  lives: LivesState;
   date: string; // "YYYY-MM-DD"
   gridNumber: number | null;
 };
 
-export function Header({ remainingLives, date, gridNumber }: Props) {
+export function Header({ lives, date, gridNumber }: Props) {
   const { locale } = useLocale();
   const t = useT();
 
-  const localeTag = locale === "fr" ? "fr-FR" : "en-US";
-  const dateLabel = date
-    ? new Intl.DateTimeFormat(localeTag, {
-        weekday: "long",
-        day: "numeric",
-        month: "long",
-      })
-        .format(new Date(`${date}T12:00:00`))
-        .toUpperCase()
-        .replace(/,\s*/g, " ")
-    : "";
+  const dateLabel = formatGridDateLabel(date, locale);
 
   const eyebrow = dateLabel ? (
     <>
@@ -46,27 +37,7 @@ export function Header({ remainingLives, date, gridNumber }: Props) {
         accentBar={eyebrow !== undefined}
       />
 
-      <div>
-        <output aria-live="polite" aria-atomic="true" className="sr-only">
-          {t("ui.remainingLives", { count: remainingLives })}
-        </output>
-        <span className="flex items-center gap-0.5" aria-hidden="true">
-          {Array.from({ length: STARTING_LIVES }, (_, i) => {
-            const index = STARTING_LIVES - 1 - i;
-            return (
-              <Heart
-                key={`heart-${index + 1}`}
-                size={18}
-                className={
-                  index < remainingLives
-                    ? "text-error fill-error"
-                    : "text-on-surface-variant"
-                }
-              />
-            );
-          })}
-        </span>
-      </div>
+      <LivesMeter lives={lives} />
     </header>
   );
 }
