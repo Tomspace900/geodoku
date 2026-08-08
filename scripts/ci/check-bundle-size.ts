@@ -5,8 +5,10 @@ import { gzipSync } from "node:zlib";
 const ASSETS_DIRECTORY = "dist/assets";
 const MODULE_MANIFEST = "dist/.bundle-modules.json";
 // Baseline 2026-07-15 : jeu, résultat et pages éditoriales eager ; admin lazy.
-// React Router rend les navigations publiques instantanées, au prix assumé d'un
-// entry plus gros. Les chunks non initiaux gardent leur budget anti-monolithe.
+// Depuis le 2026-08-09, l'archive et l'entraînement sont lazy eux aussi (cf.
+// `LAZY_ROUTE_MODULES`). React Router rend les navigations publiques
+// instantanées, au prix assumé d'un entry plus gros. Les chunks non initiaux
+// gardent leur budget anti-monolithe.
 const MAX_NON_INITIAL_CHUNK_GZIP_BYTES = 150 * 1024;
 const MAX_PLAYER_INITIAL_GZIP_BYTES = 250 * 1024;
 
@@ -90,17 +92,47 @@ if (oversizedNonInitial.length > 0) {
   );
 }
 
+// Routes volontairement chargées en lazy : l'admin (hors parcours joueur), plus
+// l'archive et l'entraînement (inatteignables tant que la grille du jour n'est
+// pas terminée). Les sortir du chemin critique ne coûte donc rien au quotidien.
+// La liste est **exhaustive** dans les deux sens : un `lazy()` retiré comme un
+// `lazy()` ajouté par inadvertance fait échouer la vérification.
+const LAZY_ROUTE_MODULES = [
+  "/src/features/admin/AdminPage.tsx",
+  "/src/features/archive/ArchivePage.tsx",
+  "/src/features/archive/TrainingPage.tsx",
+];
+
 const dynamicEntries = moduleChunks.filter((chunk) => chunk.isDynamicEntry);
-const adminEntry = dynamicEntries.find((chunk) =>
-  chunk.modules.some((moduleId) =>
-    moduleId.endsWith("/src/features/admin/AdminPage.tsx"),
-  ),
+const dynamicEntryByModule = new Map(
+  LAZY_ROUTE_MODULES.map((moduleSuffix) => [
+    moduleSuffix,
+    dynamicEntries.find((chunk) =>
+      chunk.modules.some((moduleId) => moduleId.endsWith(moduleSuffix)),
+    ),
+  ]),
 );
-if (!adminEntry || dynamicEntries.length !== 1) {
+
+const missingLazyRoutes = LAZY_ROUTE_MODULES.filter(
+  (moduleSuffix) => !dynamicEntryByModule.get(moduleSuffix),
+);
+if (missingLazyRoutes.length > 0) {
   throw new Error(
-    "L'admin doit être l'unique entrée dynamique du bundle JavaScript",
+    `Ces routes doivent rester en chargement lazy : ${missingLazyRoutes.join(", ")}`,
   );
 }
+if (dynamicEntries.length !== LAZY_ROUTE_MODULES.length) {
+  throw new Error(
+    `Entrée dynamique inattendue : le bundle doit en compter exactement ${LAZY_ROUTE_MODULES.length}, trouvé ${dynamicEntries
+      .map((chunk) => chunk.fileName)
+      .join(", ")}`,
+  );
+}
+
+const adminEntry = dynamicEntryByModule.get(
+  "/src/features/admin/AdminPage.tsx",
+);
+if (!adminEntry) throw new Error("Chunk admin introuvable");
 const adminFiles = collectStaticGraph(adminEntry.fileName);
 
 const eagerModules = [
