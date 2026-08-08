@@ -1,5 +1,5 @@
 import { CONSTRAINT_BY_ID } from "@/features/game/logic/constraints";
-import { filledCellTier } from "@/features/game/logic/rarity";
+import { filledCellTier, isCohortComplete } from "@/features/game/logic/rarity";
 import type {
   CellGuessDistribution,
   CellKey,
@@ -53,7 +53,11 @@ export function GameGrid({ state, distribution, onCellClick }: Props) {
         const isPlayable = isPlaying && cell.status === "empty";
         const tier =
           cell.status === "filled"
-            ? filledCellTier(cell.countryCode, distribution?.[key])
+            ? filledCellTier(
+                cell.countryCode,
+                distribution?.[key],
+                isCohortComplete(state.mode),
+              )
             : null;
         return (
           <CellComponent

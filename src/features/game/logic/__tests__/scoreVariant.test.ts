@@ -184,6 +184,23 @@ describe("computeScoreBreakdown — part brute + estimation", () => {
     expect(full.total).toBe(900);
   });
 
+  // En entraînement la cohorte est close : un pays que personne n'a choisi vaut
+  // 0, sinon le total resterait `null` et l'écran de fin afficherait « … » à vie.
+  it("entraînement : un pays jamais choisi ce jour-là résout le score au lieu de le bloquer", () => {
+    const state = makeState({
+      mode: "training",
+      lives: { kind: "unlimited", failedAttempts: 0 },
+    });
+    state.cells["0,0" as CellKey] = { status: "filled", countryCode: "NRU" };
+    const dist: Record<string, CellGuessDistribution> = {
+      "0,0": { totalGuesses: 10, rarityByCountry: { MCO: 0.8 } },
+    };
+    const b = computeScoreBreakdown(state, dist);
+    expect(b.shares).toEqual([0]);
+    expect(b.estimated).toBe(false);
+    expect(computeScore(b).total).not.toBeNull();
+  });
+
   it("shares null tant qu'une case remplie n'a pas de donnée", () => {
     const state = makeState();
     state.cells["0,0" as CellKey] = { status: "filled", countryCode: "FR" };

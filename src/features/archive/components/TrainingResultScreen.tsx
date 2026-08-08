@@ -141,6 +141,7 @@ export function TrainingResultScreen({
           cells={state.cells}
           distribution={distribution}
           caption={gridNumber !== null ? `#${gridNumber}` : undefined}
+          mode="training"
         />
 
         {/* Un seul primaire, et c'est « Recommencer » : refaire la grille pour

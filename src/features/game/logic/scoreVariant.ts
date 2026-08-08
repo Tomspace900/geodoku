@@ -7,7 +7,7 @@ import type {
 } from "../types";
 import { RARITY_TIERS } from "./constants";
 import { livesCapacity, scoreLives } from "./lives";
-import { filledCellShare } from "./rarity";
+import { filledCellShare, isCohortComplete } from "./rarity";
 
 // Score de fin de partie — additif, en points. Trois parts :
 //   grille (cases remplies) + rareté (cumulée, cases vides = 0) + vies restantes.
@@ -65,6 +65,7 @@ export function computeScoreBreakdown(
   state: GameState,
   distribution: Record<string, CellGuessDistribution> | undefined,
 ): ScoreBreakdown {
+  const cohortComplete = isCohortComplete(state.mode);
   const shares: number[] = [];
   let filledCount = 0;
   let pending = false;
@@ -72,7 +73,11 @@ export function computeScoreBreakdown(
   for (const [key, cell] of Object.entries(state.cells) as [CellKey, Cell][]) {
     if (cell.status !== "filled") continue;
     filledCount++;
-    const resolved = filledCellShare(cell.countryCode, distribution?.[key]);
+    const resolved = filledCellShare(
+      cell.countryCode,
+      distribution?.[key],
+      cohortComplete,
+    );
     if (resolved === null) {
       pending = true;
       continue;

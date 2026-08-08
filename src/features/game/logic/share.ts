@@ -8,9 +8,12 @@ import { computeScore, computeScoreBreakdown } from "./scoreVariant";
 export function cellShareEmoji(
   cell: Cell,
   cellDist: CellGuessDistribution | undefined,
+  cohortComplete = false,
 ): string {
   if (cell.status === "filled") {
-    return SHARE_EMOJIS[filledCellTier(cell.countryCode, cellDist) ?? "common"];
+    return SHARE_EMOJIS[
+      filledCellTier(cell.countryCode, cellDist, cohortComplete) ?? "common"
+    ];
   }
   if (cell.status === "blocked") return SHARE_EMOJIS.blocked;
   return SHARE_EMOJIS.failed;

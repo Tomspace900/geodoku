@@ -1,8 +1,10 @@
+import { isCohortComplete } from "@/features/game/logic/rarity";
 import { cellShareEmoji } from "@/features/game/logic/share";
 import type {
   Cell,
   CellGuessDistribution,
   CellKey,
+  GameModeId,
 } from "@/features/game/types";
 import { GRID_INDICES } from "./GridMatrix";
 
@@ -11,6 +13,7 @@ type Props = {
   distribution: Record<string, CellGuessDistribution> | undefined;
   /** Légende sous la grille (`#GEODOKU #53`, date d'une grille passée…). */
   caption?: string;
+  mode?: GameModeId;
 };
 
 /**
@@ -18,7 +21,13 @@ type Props = {
  * résultat. Le texte réellement copié est produit par `logic/share.ts` : les
  * deux s'appuient sur le même `cellShareEmoji`, donc restent d'accord.
  */
-export function ShareEmojiGrid({ cells, distribution, caption }: Props) {
+export function ShareEmojiGrid({
+  cells,
+  distribution,
+  caption,
+  mode = "daily",
+}: Props) {
+  const cohortComplete = isCohortComplete(mode);
   return (
     <div className="flex flex-col items-center gap-1">
       {GRID_INDICES.map((row) => (
@@ -30,7 +39,11 @@ export function ShareEmojiGrid({ cells, distribution, caption }: Props) {
                 key={col}
                 className="text-2xl leading-none w-9 h-9 flex items-center justify-center"
               >
-                {cellShareEmoji(cells[key], distribution?.[key])}
+                {cellShareEmoji(
+                  cells[key],
+                  distribution?.[key],
+                  cohortComplete,
+                )}
               </span>
             );
           })}
