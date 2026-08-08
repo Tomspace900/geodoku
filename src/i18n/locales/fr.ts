@@ -63,7 +63,7 @@ export const fr = {
       " aide à couvrir les frais techniques (serveur, nom de domaine). Et c'est surtout une énorme motivation pour continuer à développer de nouvelles fonctionnalités\u00A0!",
   },
   privacy: {
-    eyebrow: "Derni\u00E8re mise \u00E0 jour · Juillet 2026",
+    eyebrow: "Derni\u00E8re mise \u00E0 jour · Ao\u00FBt 2026",
     title: "Confidentialit\u00E9",
     lead: "Geodoku est un jeu que je d\u00E9veloppe seul. Pas besoin de compte\u00A0: je ne collecte que le strict minimum, juste de quoi faire tourner le jeu et voir comment se portent les grilles.",
     backToGame: "Retour au jeu",
@@ -86,14 +86,14 @@ export const fr = {
     contactBodyPre: "Une question\u00A0? \u00C9cris-moi \u00E0",
   },
   changelog: {
-    eyebrow: "Derni\u00E8re mise \u00E0 jour · Juillet 2026",
+    eyebrow: "Derni\u00E8re mise \u00E0 jour · Ao\u00FBt 2026",
     title: "Changelog",
     backToGame: "Retour au jeu",
     entries: {
-      archiveDate: "25 juillet 2026",
-      archiveTitle: "Rejoue les grilles de la semaine",
+      archiveDate: "9 ao\u00FBt 2026",
+      archiveTitle: "Rejouer les grilles passées",
       archiveBody:
-        "Une fois la grille du jour terminée, une nouvelle page « Grilles passées » te permet de rejouer les 7 derniers jours pour t'entraîner. Les essais y sont illimités : pas de vies, et rien ne compte dans ton résultat quotidien. Tes pays restent colorés selon leur rareté (sur les chiffres définitifs du jour concerné, donc le score est exact), et tu peux recommencer une grille autant de fois que tu veux.",
+        "Enfin ! Les archives sont là ! Tu peux désormais rejouer les grilles des jours passés, sans limite de vies. Les raretés dépendent des réponses du jour concerné, et tu peux recommencer une grille autant de fois que tu veux. Pour l'instant les sept derniers jours sont disponibles\u00A0, j'\u00E9largirai peut-\u00EAtre la fen\u00EAtre selon vos retours.",
       scoreClarityDate: "13 juillet 2026",
       scoreClarityTitle: "Enfin un score compréhensible",
       scoreClarityBody:

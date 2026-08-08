@@ -61,7 +61,7 @@ export const en = {
       " helps cover the technical costs (server, domain). And above all, it's a huge motivation to keep building new features!",
   },
   privacy: {
-    eyebrow: "Last updated · July 2026",
+    eyebrow: "Last updated · August 2026",
     title: "Privacy",
     lead: "Geodoku is a game I build on my own. No account needed: I only collect the bare minimum, just enough to run the game and see how the grids are doing.",
     backToGame: "Back to the game",
@@ -84,14 +84,14 @@ export const en = {
     contactBodyPre: "A question? Write to me at",
   },
   changelog: {
-    eyebrow: "Last updated · July 2026",
+    eyebrow: "Last updated · August 2026",
     title: "Changelog",
     backToGame: "Back to the game",
     entries: {
-      archiveDate: "July 25, 2026",
-      archiveTitle: "Replay the past week's grids",
+      archiveDate: "August 9, 2026",
+      archiveTitle: "Replay past grids",
       archiveBody:
-        "Once you're done with today's grid, a new \"Past grids\" page lets you replay the last 7 days to practise. Attempts are unlimited there — no lives, and nothing counts towards your daily result. Your countries are still coloured by rarity (using that day's final numbers, so the score is exact), and you can restart a grid as many times as you like.",
+        "Finally! The archive is here! You can now replay past grids, without limits. Rarities depend on the answers of the day in question, and you can restart a grid as many times as you like. For now, the last seven days are available, I may widen the window depending on your feedback.",
       scoreClarityDate: "July 13, 2026",
       scoreClarityTitle: "A score that finally makes sense",
       scoreClarityBody:
