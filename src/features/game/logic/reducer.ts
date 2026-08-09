@@ -1,11 +1,17 @@
-import type { Cell, CellKey, CellPosition, GameState } from "../types";
+import type {
+  Cell,
+  CellKey,
+  CellPosition,
+  GameModeId,
+  GameState,
+} from "../types";
 import {
   markBlockedCells,
   resolveStatusAfterPlacement,
 } from "./blockedDetection";
-import { STARTING_LIVES } from "./constants";
 import type { ConstraintId } from "./constraints";
 import { CELL_KEYS, toCellKey } from "./gridTopology";
+import { afterFailedAttempt, initialLives, isOutOfLives } from "./lives";
 import type { SanitizedPersistedGame } from "./sanitizePersisted";
 import { getUsedCountryCodes } from "./usedCountries";
 
@@ -30,6 +36,7 @@ export type GameAction =
     };
 
 export function createInitialState(
+  mode: GameModeId,
   date: string,
   rows: ConstraintId[],
   cols: ConstraintId[],
@@ -38,11 +45,12 @@ export function createInitialState(
     CELL_KEYS.map((cellKey) => [cellKey, { status: "empty" as const }]),
   ) as Record<CellKey, Cell>;
   return {
+    mode,
     date,
     rows,
     cols,
     cells,
-    remainingLives: STARTING_LIVES,
+    lives: initialLives(mode),
     selectedCell: null,
     status: "playing",
     endRecorded: false,
@@ -70,7 +78,12 @@ function cellsAfterSuccessfulGuess(
 export function gameReducer(state: GameState, action: GameAction): GameState {
   switch (action.type) {
     case "init":
-      return createInitialState(action.date, action.rows, action.cols);
+      return createInitialState(
+        state.mode,
+        action.date,
+        action.rows,
+        action.cols,
+      );
 
     case "selectCell":
       return state.status === "playing"
@@ -98,13 +111,15 @@ export function gameReducer(state: GameState, action: GameAction): GameState {
       };
     }
 
+    // Mode-agnostique : `afterFailedAttempt` décrémente une vie ou incrémente un
+    // compteur d'essais, et seul le régime limité peut atteindre `isOutOfLives`.
     case "guessFailure": {
       if (state.status !== "playing") return state;
-      const lives = state.remainingLives - 1;
+      const lives = afterFailedAttempt(state.lives);
       return {
         ...state,
-        remainingLives: lives,
-        status: lives <= 0 ? "lost" : "playing",
+        lives,
+        status: isOutOfLives(lives) ? "lost" : "playing",
       };
     }
 
@@ -132,15 +147,16 @@ export function gameReducer(state: GameState, action: GameAction): GameState {
       }
 
       return {
+        mode: state.mode,
         date: action.persisted.date,
         rows: action.rows,
         cols: action.cols,
         cells,
-        remainingLives: action.persisted.remainingLives,
+        lives: action.persisted.lives,
         selectedCell: null,
         status,
-        endRecorded: action.persisted.endRecorded ?? false,
-        rated: action.persisted.rated ?? false,
+        endRecorded: action.persisted.endRecorded,
+        rated: action.persisted.rated,
       };
     }
   }

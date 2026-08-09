@@ -13,6 +13,20 @@ const AdminPage = lazy(() =>
   })),
 );
 
+// Archive et entraînement : chargés en lazy, dans un chunk commun. Ils ne sont
+// atteignables qu'une fois la grille du jour terminée, donc les garder hors du
+// chemin critique ne coûte rien au joueur du quotidien.
+const ArchivePage = lazy(() =>
+  import("@/features/archive/ArchivePage").then((module) => ({
+    default: module.ArchivePage,
+  })),
+);
+const TrainingPage = lazy(() =>
+  import("@/features/archive/TrainingPage").then((module) => ({
+    default: module.TrainingPage,
+  })),
+);
+
 function normalizePath(pathname: string): string {
   if (pathname === "/") return pathname;
   return pathname.replace(/\/+$/, "") || "/";
@@ -48,7 +62,9 @@ function RouteAnnouncer({ pathname }: { pathname: string }) {
         ? t("footer.changelog")
         : pathname === "/admin"
           ? "Administration"
-          : t("ui.appName");
+          : pathname.startsWith("/archive")
+            ? t("archive.title")
+            : t("ui.appName");
 
   return (
     <output
@@ -87,6 +103,22 @@ function AppRoutes() {
         <Route path="/" element={<GamePage />} />
         <Route path="/privacy" element={<PrivacyPage />} />
         <Route path="/changelog" element={<ChangelogPage />} />
+        <Route
+          path="/archive"
+          element={
+            <Suspense fallback={<RouteLoading />}>
+              <ArchivePage />
+            </Suspense>
+          }
+        />
+        <Route
+          path="/archive/:date"
+          element={
+            <Suspense fallback={<RouteLoading />}>
+              <TrainingPage />
+            </Suspense>
+          }
+        />
         <Route
           path="/admin"
           element={

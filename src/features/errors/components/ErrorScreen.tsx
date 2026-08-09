@@ -6,7 +6,10 @@ import type { TKey } from "@/i18n/types";
 export type ErrorScreenProps =
   | { variant: "backend-down"; onRetry?: () => void }
   | { variant: "no-grid-today" }
-  | { variant: "crashed"; onReset?: () => void };
+  | { variant: "crashed"; onReset?: () => void }
+  // Date future demandée dans l'URL d'une grille rejouée. `onBack` est requis :
+  // le retour est une navigation applicative, sans repli par rechargement.
+  | { variant: "time-traveller"; onBack: () => void };
 
 type Content = {
   title: TKey;
@@ -51,6 +54,15 @@ function getContent(variant: ErrorScreenProps["variant"]): Content {
         bodyPost: "errorScreen.crashedBodyPost",
         cta: "errorScreen.crashedCta",
       };
+    case "time-traveller":
+      return {
+        title: "errorScreen.timeTravellerTitle",
+        eyebrow: "errorScreen.timeTravellerEyebrow",
+        bodyPre: "errorScreen.timeTravellerBodyPre",
+        bodyAccent: "errorScreen.timeTravellerBodyAccent",
+        bodyPost: "errorScreen.timeTravellerBodyPost",
+        cta: "errorScreen.timeTravellerCta",
+      };
   }
 }
 
@@ -65,6 +77,8 @@ export function ErrorScreen(props: ErrorScreenProps) {
     } else if (props.variant === "crashed") {
       if (props.onReset) props.onReset();
       else window.location.reload();
+    } else if (props.variant === "time-traveller") {
+      props.onBack();
     }
   }
 

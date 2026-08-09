@@ -6,6 +6,7 @@ import {
   GRID_CELL_COUNT,
   STARTING_LIVES,
 } from "../src/features/game/logic/gridTopology";
+import { classifyReplayDate } from "../src/features/game/logic/replayWindow";
 import type { Doc } from "./_generated/dataModel";
 import type { MutationCtx, QueryCtx } from "./_generated/server";
 import { getGridAnswers } from "./gridData";
@@ -70,6 +71,24 @@ export function assertTodayDate(date: string): void {
   assertCanonicalDate(date);
   if (date !== todayUTC()) {
     throw new ConvexError("Only today's grid accepts writes");
+  }
+}
+
+/**
+ * Garde des lectures d'archive (mode entraînement). L'endpoint étant public, ce
+ * garde est la **seule** garantie réelle : le frontend classe déjà la date avant
+ * d'émettre la requête, mais on ne lui fait pas confiance.
+ *
+ * Le refus des dates `>= todayUTC()` est le point critique — sans lui, un simple
+ * `?date=demain` livrerait la grille du lendemain avec ses réponses valides.
+ */
+export function assertReplayableDate(date: string): void {
+  const verdict = classifyReplayDate(date, todayUTC());
+  if (verdict === "malformed") {
+    throw new ConvexError("Invalid date");
+  }
+  if (verdict !== "ok") {
+    throw new ConvexError("Date is not replayable");
   }
 }
 

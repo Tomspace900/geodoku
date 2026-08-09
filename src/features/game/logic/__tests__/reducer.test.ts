@@ -5,6 +5,7 @@ import type { SanitizedPersistedGame } from "../sanitizePersisted";
 
 function freshState(): GameState {
   return createInitialState(
+    "daily",
     "2024-01-01",
     ["continent_europe", "continent_asia", "continent_africa"],
     ["water_landlocked", "water_island", "borders_min_5"],
@@ -34,7 +35,7 @@ describe("createInitialState", () => {
   });
 
   it("starts with 5 lives", () => {
-    expect(freshState().remainingLives).toBe(5);
+    expect(freshState().lives).toEqual({ kind: "limited", remaining: 5 });
   });
 
   it("starts with status playing", () => {
@@ -98,7 +99,7 @@ describe("gameReducer — guessSuccess", () => {
       countryCode: "FRA",
       validAnswers: emptyValidAnswers,
     });
-    expect(state.remainingLives).toBe(5);
+    expect(state.lives).toEqual({ kind: "limited", remaining: 5 });
   });
 
   it("transitions to won when all 9 cells are filled", () => {
@@ -207,7 +208,7 @@ describe("gameReducer — guessSuccess", () => {
     });
     expect(state.status).toBe("playing");
     expect(state.cells["0,2"].status).toBe("blocked");
-    expect(state.remainingLives).toBe(5);
+    expect(state.lives).toEqual({ kind: "limited", remaining: 5 });
   });
 
   it("transitions to lost when all remaining empty cells become blocked", () => {
@@ -235,7 +236,7 @@ describe("gameReducer — guessSuccess", () => {
       validAnswers,
     });
     expect(state.status).toBe("lost");
-    expect(state.remainingLives).toBe(5);
+    expect(state.lives).toEqual({ kind: "limited", remaining: 5 });
     expect(
       Object.values(state.cells).filter((c) => c.status === "blocked"),
     ).toHaveLength(7);
@@ -284,7 +285,7 @@ describe("gameReducer — guessSuccess", () => {
 describe("gameReducer — guessFailure", () => {
   it("decrements remainingLives", () => {
     const state = gameReducer(freshState(), { type: "guessFailure" });
-    expect(state.remainingLives).toBe(4);
+    expect(state.lives).toEqual({ kind: "limited", remaining: 4 });
   });
 
   it("transitions to lost after 5 consecutive failures", () => {
@@ -298,10 +299,97 @@ describe("gameReducer — guessFailure", () => {
   });
 });
 
+describe("gameReducer — mode entraînement", () => {
+  function trainingState(): GameState {
+    return createInitialState(
+      "training",
+      "2024-01-01",
+      ["continent_europe", "continent_asia", "continent_africa"],
+      ["water_landlocked", "water_island", "borders_min_5"],
+    );
+  }
+
+  it("compte les essais ratés sans jamais retirer de vie", () => {
+    let state = trainingState();
+    state = gameReducer(state, { type: "guessFailure" });
+    state = gameReducer(state, { type: "guessFailure" });
+    expect(state.lives).toEqual({ kind: "unlimited", failedAttempts: 2 });
+  });
+
+  it("ne se perd jamais par les essais, même bien au-delà de 5 échecs", () => {
+    let state = trainingState();
+    for (let i = 0; i < 20; i++) {
+      state = gameReducer(state, { type: "guessFailure" });
+    }
+    expect(state.status).toBe("playing");
+  });
+
+  // Seule sortie perdante en entraînement : plus aucune case remplissable.
+  it("se perd par blocage : le seul pays valide restant est déjà placé ailleurs", () => {
+    const validAnswers: Record<string, string[]> = {
+      "0,0": ["FRA"],
+      "0,1": ["FRA"],
+      "0,2": ["FRA"],
+      "1,0": ["FRA"],
+      "1,1": ["FRA"],
+      "1,2": ["FRA"],
+      "2,0": ["FRA"],
+      "2,1": ["FRA"],
+      "2,2": ["FRA"],
+    };
+    const state = gameReducer(trainingState(), {
+      type: "guessSuccess",
+      cell: { row: 0, col: 0 },
+      countryCode: "FRA",
+      validAnswers,
+    });
+    expect(state.status).toBe("lost");
+  });
+
+  it("gagne en remplissant les 9 cases", () => {
+    let state = trainingState();
+    const codes: [CellKey, string][] = [
+      ["0,0", "FRA"],
+      ["0,1", "DEU"],
+      ["0,2", "ESP"],
+      ["1,0", "ITA"],
+      ["1,1", "PRT"],
+      ["1,2", "NLD"],
+      ["2,0", "BEL"],
+      ["2,1", "AUT"],
+      ["2,2", "CHE"],
+    ];
+    const validAnswers = Object.fromEntries(
+      codes.map(([key, code]) => [key, [code]]),
+    );
+    for (const [key, code] of codes) {
+      const [row, col] = key.split(",").map(Number) as [0 | 1 | 2, 0 | 1 | 2];
+      state = gameReducer(state, {
+        type: "guessSuccess",
+        cell: { row, col },
+        countryCode: code,
+        validAnswers,
+      });
+    }
+    expect(state.status).toBe("won");
+    expect(state.lives).toEqual({ kind: "unlimited", failedAttempts: 0 });
+  });
+
+  it("conserve le mode à travers un init (bascule de grille)", () => {
+    const state = gameReducer(trainingState(), {
+      type: "init",
+      date: "2024-02-02",
+      rows: ["continent_europe", "continent_asia", "continent_africa"],
+      cols: ["water_landlocked", "water_island", "borders_min_5"],
+    });
+    expect(state.mode).toBe("training");
+    expect(state.lives).toEqual({ kind: "unlimited", failedAttempts: 0 });
+  });
+});
+
 describe("gameReducer — rehydrate", () => {
   function makePersistedGame(): SanitizedPersistedGame {
     return {
-      version: 1,
       date: "2026-04-15",
       cells: {
         "0,0": {
@@ -317,8 +405,10 @@ describe("gameReducer — rehydrate", () => {
         "2,1": { status: "empty" },
         "2,2": { status: "empty" },
       },
-      remainingLives: 2,
+      lives: { kind: "limited", remaining: 2 },
       status: "playing",
+      endRecorded: false,
+      rated: false,
     };
   }
 
@@ -342,7 +432,7 @@ describe("gameReducer — rehydrate", () => {
       "area_larger_france",
       "flag_has_star",
     ]);
-    expect(state.remainingLives).toBe(2);
+    expect(state.lives).toEqual({ kind: "limited", remaining: 2 });
     expect(state.status).toBe("playing");
     expect(state.cells["0,0"].status).toBe("filled");
     expect(state.selectedCell).toBeNull();
@@ -367,7 +457,7 @@ describe("gameReducer — rehydrate", () => {
     });
     expect(state.status).toBe("playing");
     expect(state.cells["0,2"].status).toBe("blocked");
-    expect(state.remainingLives).toBe(2);
+    expect(state.lives).toEqual({ kind: "limited", remaining: 2 });
   });
 
   it("rehydrates to lost when no empty cells remain after marking blocked", () => {
@@ -395,7 +485,7 @@ describe("gameReducer — rehydrate", () => {
       validAnswers,
     });
     expect(state.status).toBe("lost");
-    expect(state.remainingLives).toBe(2);
+    expect(state.lives).toEqual({ kind: "limited", remaining: 2 });
   });
 
   it("carries endRecorded / rated from persisted data", () => {

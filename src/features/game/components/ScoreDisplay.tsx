@@ -12,7 +12,7 @@ import { useT } from "@/i18n/LocaleContext";
 import { cn } from "@/lib/utils";
 import { Heart } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
-import { ScoreInfoDialog } from "./ScoreInfoDialog";
+import { ScoreInfoDialog, type ScoreScale } from "./ScoreInfoDialog";
 
 // Score de fin : anneau central = grille (cases) ; couronne en 2 arcs, rareté
 // (couleur du tier moyen) puis vies (rouge, comme les cœurs de vie). La
@@ -43,6 +43,8 @@ const RARITY_STROKE: Record<RarityTier, string> = {
 
 type Props = {
   breakdown: ScoreBreakdown;
+  /** Barème expliqué par la popup d'info : /1000 en daily, /900 à l'entraînement. */
+  scale?: ScoreScale;
 };
 
 const R_GRID = 46;
@@ -50,7 +52,7 @@ const R_BONUS = 58;
 /** Écart entre l'arc rareté et l'arc vies, en unités de tracé. */
 const ARC_GAP = 6;
 
-export function ScoreDisplay({ breakdown }: Props) {
+export function ScoreDisplay({ breakdown, scale = "daily" }: Props) {
   const t = useT();
   const { gridMax, gridValue, rarityMax, rarityValue, livesMax, livesValue } =
     computeScore(breakdown);
@@ -237,7 +239,7 @@ export function ScoreDisplay({ breakdown }: Props) {
             </span>
           )}
         </Eyebrow>
-        <ScoreInfoDialog />
+        <ScoreInfoDialog scale={scale} />
       </div>
 
       {estimated && (

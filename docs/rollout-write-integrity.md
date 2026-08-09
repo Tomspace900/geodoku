@@ -83,10 +83,12 @@ frontend n'est encore envisagé.
 
 ### Après la fenêtre de rollback
 
-- [ ] Retirer les endpoints publics legacy :
-  `guesses.getGuessDistributionForDate`, `guesses.submitGuess`,
+- [ ] Retirer les endpoints publics legacy : `guesses.submitGuess`,
   `guesses.recordFailedGuess`, `grids.recordGameEnd` et
   `grids.submitGridFeedback`.
+  > `guesses.getGuessDistributionForDate` **n'est plus à retirer** : le mode
+  > entraînement (`/archive`) s'en sert pour lire la rareté figée d'une grille
+  > passée. Il est passé de legacy à endpoint du parcours joueur.
 - [ ] Retirer leurs validators, handlers, imports et tests devenus inutiles,
   notamment `recordGameEndArgs`, `recordGameEndHandler`,
   `submitGridFeedbackArgs`, `submitGridFeedbackHandler` et

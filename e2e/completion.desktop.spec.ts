@@ -123,7 +123,7 @@ test("share button copies to clipboard on desktop even when navigator.share exis
   // itself is covered by the victory test above.
   await playToDefeat(page, grid);
 
-  const shareButton = page.getByRole("button", { name: "Share my result" });
+  const shareButton = page.getByRole("button", { name: "Share my score" });
   await shareButton.waitFor({ state: "visible", timeout: 5_000 });
   await shareButton.click();
 
@@ -182,9 +182,9 @@ test("viewing answers after a loss reveals the solution grid", async ({
   await page.getByRole("button", { name: "Skip and view answers" }).click();
 
   // The solution view replaces the modal: it lists the answers and offers a
-  // "View my result" button to go back. (The "solution grid" title isn't
+  // "View my score" button to go back. (The "solution grid" title isn't
   // rendered as on-screen text, so assert on these stable signals instead.)
-  const viewResultButton = page.getByRole("button", { name: "View my result" });
+  const viewResultButton = page.getByRole("button", { name: "View my score" });
   await expect(viewResultButton).toBeVisible({ timeout: 5_000 });
   await expect(viewResultButton).toBeFocused();
   await expect(viewResultButton).toHaveAttribute("data-silent-focus", "true");

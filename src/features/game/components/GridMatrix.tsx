@@ -2,7 +2,7 @@ import type { GridIndex } from "@/features/game/logic/gridTopology";
 import { cn } from "@/lib/utils";
 import type { ReactNode } from "react";
 
-const GRID_INDICES = [0, 1, 2] as const satisfies readonly GridIndex[];
+export const GRID_INDICES = [0, 1, 2] as const satisfies readonly GridIndex[];
 
 type GridMatrixProps = {
   ariaLabel: string;

@@ -52,7 +52,7 @@ describe("sanitizePersistedForGrid", () => {
     const out = sanitizePersistedForGrid(p, validAnswers);
     expect(out).not.toBeNull();
     expect(out?.status).toBe("playing");
-    expect(out?.remainingLives).toBe(3);
+    expect(out?.lives).toEqual({ kind: "limited", remaining: 3 });
   });
 
   it("canonise une sauvegarde v3 minimale", () => {
@@ -96,7 +96,7 @@ describe("sanitizePersistedForGrid", () => {
   it("borne remainingLives au maximum autorisé", () => {
     const p = basePersisted({ remainingLives: 99 });
     const out = sanitizePersistedForGrid(p, validAnswers);
-    expect(out?.remainingLives).toBe(5);
+    expect(out?.lives).toEqual({ kind: "limited", remaining: 5 });
   });
 
   it("rejette deux fois le même pays sur deux cases", () => {
@@ -245,7 +245,7 @@ describe("sanitizePersistedForGrid", () => {
     const out = sanitizePersistedForGrid(p, blockedAnswers);
     expect(out?.status).toBe("playing");
     expect(out?.cells["0,2"].status).toBe("blocked");
-    expect(out?.remainingLives).toBe(3);
+    expect(out?.lives).toEqual({ kind: "limited", remaining: 3 });
   });
 
   it("canonise une partie incompletable en lost tout en conservant les vies", () => {
@@ -277,7 +277,7 @@ describe("sanitizePersistedForGrid", () => {
     });
     const out = sanitizePersistedForGrid(p, trapAnswers);
     expect(out?.status).toBe("lost");
-    expect(out?.remainingLives).toBe(3);
+    expect(out?.lives).toEqual({ kind: "limited", remaining: 3 });
   });
 
   it("accepte une cellule blocked sérialisée cohérente", () => {

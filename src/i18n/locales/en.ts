@@ -18,7 +18,7 @@ export const en = {
     feedbackBalanced: "Just right",
     feedbackTooHard: "Too hard",
     skipFeedback: "Skip and view answers",
-    share: "Share my result",
+    share: "Share my score",
     shareCopied: "Copied!\u00A0✓",
     shareShared: "Shared!\u00A0✓",
     comeBackTomorrowGrid: "Come back tomorrow for a new grid!",
@@ -32,7 +32,8 @@ export const en = {
     possibleAnswersCount: "{count}\u00A0possible answers for this cell",
     possibleAnswersPartial: "{remaining}\u00A0possible answers out of {total}",
     viewAnswers: "View answers",
-    viewMyResult: "View my result",
+    viewMyResult: "View my score",
+    replayPastGrids: "Archive",
     closeResult: "Close",
     closeDialog: "Close dialog",
     resultDialogDescription:
@@ -60,7 +61,7 @@ export const en = {
       " helps cover the technical costs (server, domain). And above all, it's a huge motivation to keep building new features!",
   },
   privacy: {
-    eyebrow: "Last updated · July 2026",
+    eyebrow: "Last updated · August 2026",
     title: "Privacy",
     lead: "Geodoku is a game I build on my own. No account needed: I only collect the bare minimum, just enough to run the game and see how the grids are doing.",
     backToGame: "Back to the game",
@@ -69,7 +70,7 @@ export const en = {
       "No sign-up, no login, no ads. I don't sell data or use it for advertising. There are no advertising trackers on the site.",
     deviceTitle: "On your device",
     deviceBody:
-      "Your browser keeps a few settings in local storage: your language, the current grid progress, a random anti-spam identifier, and short-lived technical keys used to deduplicate submissions. None of it is an advertising cookie. Clearing the site data removes it.",
+      "Your browser keeps a few settings in local storage: your language, the current grid progress, your training games on past grids, a random anti-spam identifier, and short-lived technical keys used to deduplicate submissions. None of it is an advertising cookie. Clearing the site data removes it.",
     serverTitle: "What gets sent to me",
     serverBody:
       "While you play, I record aggregated picks per cell, game outcomes, and difficulty feedback. To make retries reliable, the server keeps a technical receipt of the action (for example its cell and country) with an opaque key for seven days, without a stable identifier linking your actions. Pseudonymous usage events also help me understand the journey. None of this contains a name, email, or account.",
@@ -83,10 +84,14 @@ export const en = {
     contactBodyPre: "A question? Write to me at",
   },
   changelog: {
-    eyebrow: "Last updated · July 2026",
+    eyebrow: "Last updated · August 2026",
     title: "Changelog",
     backToGame: "Back to the game",
     entries: {
+      archiveDate: "August 9, 2026",
+      archiveTitle: "Replay past grids",
+      archiveBody:
+        "Finally! The archive is here! You can now replay past grids, without limits. Rarities depend on the answers of the day in question, and you can restart a grid as many times as you like. For now, the last seven days are available, I may widen the window depending on your feedback.",
       scoreClarityDate: "July 13, 2026",
       scoreClarityTitle: "A score that finally makes sense",
       scoreClarityBody:
@@ -197,6 +202,13 @@ export const en = {
     crashedBodyAccent: "track",
     crashedBodyPost: ".",
     crashedCta: "Reload the app",
+    timeTravellerTitle: "Nice try",
+    timeTravellerEyebrow: "Time traveller",
+    timeTravellerBodyPre:
+      "Editing the date in the URL was a fine idea, but you'll have to wait for",
+    timeTravellerBodyAccent: "the big day",
+    timeTravellerBodyPost: ".",
+    timeTravellerCta: "Back to the archive",
   },
   rarity: {
     common: "Common",
@@ -227,6 +239,31 @@ export const en = {
     grid: "Grid",
     rarity: "Rarity",
     points: "pts",
+    trainingIntro: "In training, the score adds up two bonuses, out of {max}.",
+    trainingIntroMax: "900 points",
+    trainingNoLives:
+      "No lives in training, so no life bonus — only the grid and rarity count.",
+  },
+  archive: {
+    eyebrow: "Training · Unlimited lives",
+    title: "Archive",
+    backToGame: "Back to the game",
+    empty: "No past grid available yet.",
+    completed: "{attempts} attempts",
+    notPlayed: "Never played",
+    play: "Play",
+  },
+  training: {
+    eyebrow: "Training",
+    gridAriaLabel: "Past geography grid, training mode",
+    solutionGridAriaLabel: "Solutions of the past geography grid",
+    attempts: "{count} attempts",
+    unlimitedLives: "Unlimited lives",
+    restart: "Restart",
+    backToList: "Back to the archive",
+    resultDialogDescription:
+      "Your training result: filled cells, rarity bonus and number of attempts.",
+    noResult: "This grid is no longer available.",
   },
   // Titre de victoire pioché selon le palier de score (cf. logic/resultTitle).
   result: {

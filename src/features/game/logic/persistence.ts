@@ -1,5 +1,7 @@
 import { STORAGE_KEYS, safeGet, safeRemove, safeSet } from "@/lib/storage";
 import type { Cell, CellKey, GameState, GameStatus } from "../types";
+import { STARTING_LIVES } from "./constants";
+import { livesRemaining } from "./lives";
 import { getUsedCountryCodes } from "./usedCountries";
 
 /** Payload minimal lu par le bundle courant. */
@@ -107,6 +109,12 @@ function readPreviousTimestamps(date: string): {
   };
 }
 
+/**
+ * Partie du jour uniquement. Le format sérialisé garde un `remainingLives`
+ * numérique — inchangé depuis la v2 — pour ne pas casser la compatibilité du
+ * shadow de rollback ; l'union `LivesState` reste une notion d'exécution.
+ * Les parties d'entraînement ont leur propre stockage (feature `archive`).
+ */
 export function savePersistedGame(state: GameState): void {
   const current = parsePersisted(safeGet(PERSISTENCE_STORAGE_KEY));
   const previous = parsePersisted(safeGet(PERSISTENCE_V2_STORAGE_KEY));
@@ -115,11 +123,12 @@ export function savePersistedGame(state: GameState): void {
       getPersistenceRevision(current),
       getPersistenceRevision(previous),
     ) + 1;
+  const remainingLives = livesRemaining(state.lives) ?? STARTING_LIVES;
   const data: PersistedGame = {
     version: STORAGE_VERSION,
     date: state.date,
     cells: state.cells,
-    remainingLives: state.remainingLives,
+    remainingLives,
     persistenceRevision,
     endRecorded: state.endRecorded,
     rated: state.rated,
@@ -130,7 +139,7 @@ export function savePersistedGame(state: GameState): void {
     version: PREVIOUS_STORAGE_VERSION,
     date: state.date,
     cells: state.cells,
-    remainingLives: state.remainingLives,
+    remainingLives,
     persistenceRevision,
     usedCountries: [...getUsedCountryCodes(state.cells)],
     status: state.status,

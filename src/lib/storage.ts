@@ -16,6 +16,8 @@ export const STORAGE_KEYS = {
   game: "geodoku:game",
   /** Partie canonique minimale v3. La clé `game` reste le shadow de rollback v2. */
   gameV3: "geodoku:game-v3",
+  /** Parties d'entraînement (grilles passées), une entrée par date. localStorage. */
+  training: "geodoku:training-v1",
   /** Affichage du panneau « Comment jouer ». localStorage. */
   howToPlay: "geodoku:how-to-play",
   /** Langue choisie (`fr`/`en`). localStorage. */

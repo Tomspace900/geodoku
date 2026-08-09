@@ -5,8 +5,9 @@ import type {
   GameState,
   RarityTier,
 } from "../types";
-import { RARITY_TIERS, STARTING_LIVES } from "./constants";
-import { filledCellShare } from "./rarity";
+import { RARITY_TIERS } from "./constants";
+import { livesCapacity, scoreLives } from "./lives";
+import { filledCellShare, isCohortComplete } from "./rarity";
 
 // Score de fin de partie — additif, en points. Trois parts :
 //   grille (cases remplies) + rareté (cumulée, cases vides = 0) + vies restantes.
@@ -52,12 +53,19 @@ export type ScoreBreakdown = {
   estimated: boolean;
   filledCount: number;
   lives: number;
+  /**
+   * Vies maximales du mode : `STARTING_LIVES` en daily, **0 en entraînement**
+   * (essais illimités → la part vies n'existe pas). Une seule formule, deux
+   * échelles : le total plafonne à 1000 en daily et à 900 en entraînement.
+   */
+  livesCapacity: number;
 };
 
 export function computeScoreBreakdown(
   state: GameState,
   distribution: Record<string, CellGuessDistribution> | undefined,
 ): ScoreBreakdown {
+  const cohortComplete = isCohortComplete(state.mode);
   const shares: number[] = [];
   let filledCount = 0;
   let pending = false;
@@ -65,7 +73,11 @@ export function computeScoreBreakdown(
   for (const [key, cell] of Object.entries(state.cells) as [CellKey, Cell][]) {
     if (cell.status !== "filled") continue;
     filledCount++;
-    const resolved = filledCellShare(cell.countryCode, distribution?.[key]);
+    const resolved = filledCellShare(
+      cell.countryCode,
+      distribution?.[key],
+      cohortComplete,
+    );
     if (resolved === null) {
       pending = true;
       continue;
@@ -77,7 +89,8 @@ export function computeScoreBreakdown(
     shares: pending ? null : shares,
     estimated,
     filledCount,
-    lives: state.remainingLives,
+    lives: scoreLives(state.lives),
+    livesCapacity: livesCapacity(state.lives),
   };
 }
 
@@ -128,6 +141,7 @@ export function computeScore({
   shares,
   filledCount,
   lives,
+  livesCapacity,
 }: ScoreBreakdown): ScoreResult {
   // Cumulée : chaque case remplie rapporte sa rareté, une case vide vaut 0.
   // Arrondi une seule fois, sur la somme, pour ne pas perdre de résolution.
@@ -149,6 +163,6 @@ export function computeScore({
     rarityValue,
     rarityMax: RARITY_PER_CELL * 9,
     livesValue,
-    livesMax: LIVES_PER_LIFE * STARTING_LIVES,
+    livesMax: LIVES_PER_LIFE * livesCapacity,
   };
 }

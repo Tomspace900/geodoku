@@ -20,7 +20,7 @@ export const fr = {
     feedbackBalanced: "Bien/modérée",
     feedbackTooHard: "Trop difficile",
     skipFeedback: "Passer et voir les réponses",
-    share: "Partager mon résultat",
+    share: "Partager mon score",
     shareCopied: "Copié\u00A0! ✓",
     shareShared: "Partagé\u00A0! ✓",
     comeBackTomorrowGrid: "Reviens demain pour une nouvelle grille\u00A0!",
@@ -34,7 +34,8 @@ export const fr = {
     possibleAnswersCount: "{count}\u00A0réponses possibles pour cette case",
     possibleAnswersPartial: "{remaining}\u00A0réponses possibles sur {total}",
     viewAnswers: "Voir les réponses",
-    viewMyResult: "Voir mon résultat",
+    viewMyResult: "Voir mon score",
+    replayPastGrids: "Archives",
     closeResult: "Fermer",
     closeDialog: "Fermer la fenêtre",
     resultDialogDescription:
@@ -62,7 +63,7 @@ export const fr = {
       " aide à couvrir les frais techniques (serveur, nom de domaine). Et c'est surtout une énorme motivation pour continuer à développer de nouvelles fonctionnalités\u00A0!",
   },
   privacy: {
-    eyebrow: "Derni\u00E8re mise \u00E0 jour · Juillet 2026",
+    eyebrow: "Derni\u00E8re mise \u00E0 jour · Ao\u00FBt 2026",
     title: "Confidentialit\u00E9",
     lead: "Geodoku est un jeu que je d\u00E9veloppe seul. Pas besoin de compte\u00A0: je ne collecte que le strict minimum, juste de quoi faire tourner le jeu et voir comment se portent les grilles.",
     backToGame: "Retour au jeu",
@@ -71,7 +72,7 @@ export const fr = {
       "Pas d'inscription, pas de connexion, pas de publicit\u00E9. Je ne vends aucune donn\u00E9e et ne les utilise pas \u00E0 des fins publicitaires. Il n'y a aucun traceur publicitaire sur le site.",
     deviceTitle: "Sur ton appareil",
     deviceBody:
-      "Ton navigateur garde quelques r\u00E9glages en stockage local\u00A0: ta langue, la progression de la grille du jour, un identifiant al\u00E9atoire anti-spam et de courtes cl\u00E9s techniques pour d\u00E9dupliquer les envois. Rien de tout \u00E7a n'est un cookie publicitaire. Effacer les donn\u00E9es du site les supprime.",
+      "Ton navigateur garde quelques r\u00E9glages en stockage local\u00A0: ta langue, la progression de la grille du jour, tes parties d'entra\u00EEnement sur les grilles pass\u00E9es, un identifiant al\u00E9atoire anti-spam et de courtes cl\u00E9s techniques pour d\u00E9dupliquer les envois. Rien de tout \u00E7a n'est un cookie publicitaire. Effacer les donn\u00E9es du site les supprime.",
     serverTitle: "Ce qui m'est envoy\u00E9",
     serverBody:
       "Quand tu joues, j'enregistre les choix agr\u00E9g\u00E9s par case, les fins de partie et le ressenti de difficult\u00E9. Pour fiabiliser un nouvel envoi, le serveur conserve pendant sept jours un re\u00E7u technique de l'action (par exemple case et pays) avec une cl\u00E9 opaque, sans identifiant stable reliant tes actions. Des \u00E9v\u00E9nements d'usage pseudonymes m'aident aussi \u00E0 comprendre le parcours. Rien de cela ne contient de nom, d'e-mail ou de compte.",
@@ -85,10 +86,14 @@ export const fr = {
     contactBodyPre: "Une question\u00A0? \u00C9cris-moi \u00E0",
   },
   changelog: {
-    eyebrow: "Derni\u00E8re mise \u00E0 jour · Juillet 2026",
+    eyebrow: "Derni\u00E8re mise \u00E0 jour · Ao\u00FBt 2026",
     title: "Changelog",
     backToGame: "Retour au jeu",
     entries: {
+      archiveDate: "9 ao\u00FBt 2026",
+      archiveTitle: "Rejouer les grilles passées",
+      archiveBody:
+        "Enfin ! Les archives sont là ! Tu peux désormais rejouer les grilles des jours passés, sans limite de vies. Les raretés dépendent des réponses du jour concerné, et tu peux recommencer une grille autant de fois que tu veux. Pour l'instant les sept derniers jours sont disponibles\u00A0, j'\u00E9largirai peut-\u00EAtre la fen\u00EAtre selon vos retours.",
       scoreClarityDate: "13 juillet 2026",
       scoreClarityTitle: "Enfin un score compréhensible",
       scoreClarityBody:
@@ -204,6 +209,13 @@ export const fr = {
     crashedBodyAccent: "pied",
     crashedBodyPost: ".",
     crashedCta: "Recharger l'application",
+    timeTravellerTitle: "Bien tenté",
+    timeTravellerEyebrow: "Voyageur temporel",
+    timeTravellerBodyPre:
+      "Changer la date dans l'URL, l'idée était bonne, mais il va falloir attendre",
+    timeTravellerBodyAccent: "le jour J",
+    timeTravellerBodyPost: ".",
+    timeTravellerCta: "Retour aux archives",
   },
   rarity: {
     common: "Commun",
@@ -234,6 +246,32 @@ export const fr = {
     grid: "Grille",
     rarity: "Rareté",
     points: "pts",
+    trainingIntro:
+      "À l'entraînement, le score additionne deux bonus, sur {max}.",
+    trainingIntroMax: "900 points",
+    trainingNoLives:
+      "Pas de vies à l'entraînement, donc pas de bonus de vies : seules la grille et la rareté comptent.",
+  },
+  archive: {
+    eyebrow: "Entraînement · Vies illimitées",
+    title: "Archives",
+    backToGame: "Retour au jeu",
+    empty: "Aucune grille passée disponible pour le moment.",
+    completed: "{attempts} essais",
+    notPlayed: "Jamais jouée",
+    play: "Jouer",
+  },
+  training: {
+    eyebrow: "Entraînement",
+    gridAriaLabel: "Grille géographique passée, mode entraînement",
+    solutionGridAriaLabel: "Solutions de la grille géographique passée",
+    attempts: "{count} essais",
+    unlimitedLives: "Vies illimitées",
+    restart: "Recommencer",
+    backToList: "Retour aux archives",
+    resultDialogDescription:
+      "Ton résultat d'entraînement : cases remplies, bonus de rareté et nombre d'essais.",
+    noResult: "Cette grille n'est plus disponible.",
   },
   // Titre de victoire pioché selon le palier de score (cf. logic/resultTitle).
   result: {

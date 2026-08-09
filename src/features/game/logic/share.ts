@@ -1,5 +1,6 @@
 import type { Cell, CellGuessDistribution, CellKey, GameState } from "../types";
 import { SHARE_EMOJIS, STARTING_LIVES } from "./constants";
+import { livesRemaining } from "./lives";
 import { filledCellTier } from "./rarity";
 import { computeScore, computeScoreBreakdown } from "./scoreVariant";
 
@@ -7,9 +8,12 @@ import { computeScore, computeScoreBreakdown } from "./scoreVariant";
 export function cellShareEmoji(
   cell: Cell,
   cellDist: CellGuessDistribution | undefined,
+  cohortComplete = false,
 ): string {
   if (cell.status === "filled") {
-    return SHARE_EMOJIS[filledCellTier(cell.countryCode, cellDist) ?? "common"];
+    return SHARE_EMOJIS[
+      filledCellTier(cell.countryCode, cellDist, cohortComplete) ?? "common"
+    ];
   }
   if (cell.status === "blocked") return SHARE_EMOJIS.blocked;
   return SHARE_EMOJIS.failed;
@@ -19,6 +23,10 @@ export function cellShareEmoji(
  * Chaîne copiée « partage » : format volontairement international, sans texte
  * localisable. Marque (Geodoku), numéro d’issue si post-lancement (`gridNumber`),
  * total en points, URL et emojis — pas d’i18n ici (`pts` est universel).
+ *
+ * Réservé à la grille du jour : le partage n'a de sens que quand tout le monde a
+ * la même grille. Une partie d'entraînement (vies illimitées) n'affiche donc pas
+ * de ligne de cœurs.
  */
 export function formatShareString(
   state: GameState,
@@ -30,12 +38,14 @@ export function formatShareString(
     computeScoreBreakdown(state, distribution),
   );
   const points = total ?? gridValue + livesValue;
+  const remaining = livesRemaining(state.lives);
   const hearts =
-    "❤️".repeat(state.remainingLives) +
-    "🤍".repeat(STARTING_LIVES - state.remainingLives);
+    remaining === null
+      ? ""
+      : "❤️".repeat(remaining) + "🤍".repeat(STARTING_LIVES - remaining);
 
   let titleLine = gridNumber !== null ? `Geodoku #${gridNumber}` : "Geodoku";
-  if (state.status === "won") titleLine += ` ${hearts}`;
+  if (state.status === "won" && hearts) titleLine += ` ${hearts}`;
   else if (state.status === "lost") titleLine += " 💀";
   const scoreLine = `${points} pts`;
   const header = `${titleLine}\n${scoreLine}`;
