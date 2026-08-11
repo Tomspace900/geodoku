@@ -197,16 +197,21 @@ pnpm exec convex env set ADMIN_TOKEN "xxx"
 **GitHub Actions** ([`.github/workflows/ci.yml`](.github/workflows/ci.yml)) :
 
 - `quality` (sans secret) — lint, typechecks, Vitest, design system et bundle. Push `main`/`develop` + PR vers `main`/`develop`.
-- `e2e` — `pnpm check:e2e-convex-url` puis Playwright (étape dédiée en CI, fail-fast avant install navigateurs) ; `vars.VITE_CONVEX_URL` = deploy `preview/develop` (si URL invalide : `pnpm sync:e2e-convex-url` en local). Pas de deploy key ni seed (develop déjà seedé, cron horaire). **Sérialisé** (`concurrency: e2e-develop`). ⚠️ soumet de vrais guesses → bruite les stats develop (staging assumé).
+- `e2e` — `pnpm check:e2e-convex-url` puis Playwright (étape dédiée en CI, fail-fast avant install navigateurs) ; `vars.VITE_CONVEX_URL` = deploy `preview/develop` (si URL invalide : `pnpm sync:e2e-convex-url` en local). Pas de deploy key ni seed (develop déjà seedé, cron horaire). **Sérialisé** (`concurrency: e2e-develop`). ⚠️ soumet de vrais guesses → bruite les stats develop (staging assumé). **Sauté sur les PR Dependabot** (`github.actor`) pour cette raison précise : un bump de dépendance ne vaut pas de polluer les stats de staging. Le build reste couvert, `quality` lançant `check:bundle` (qui fait un `vite build`), et la suite complète tourne au merge dans `develop`.
 
 **Mapping branche → environnement :**
 
-| Contexte          | Front             | Backend Convex                 | Données                    |
-| ----------------- | ----------------- | ------------------------------ | -------------------------- |
-| `main`            | Vercel Production | prod                           | persistantes               |
-| `develop`         | Vercel Preview    | `preview/develop`              | persistantes               |
-| autre branche WIP | Vercel Preview    | `preview/<branch>`             | seedées auto au 1er deploy |
-| local             | `pnpm dev`        | cloud dev perso (`convex dev`) | gérées manuellement        |
+| Contexte           | Front             | Backend Convex                 | Données                    |
+| ------------------ | ----------------- | ------------------------------ | -------------------------- |
+| `main`             | Vercel Production | prod                           | persistantes               |
+| `develop`          | Vercel Preview    | `preview/develop`              | persistantes               |
+| autre branche WIP  | Vercel Preview    | `preview/<branch>`             | seedées auto au 1er deploy |
+| `dependabot/*`     | aucun déploiement | aucun                          | —                          |
+| local              | `pnpm dev`        | cloud dev perso (`convex dev`) | gérées manuellement        |
+
+L'`ignoreCommand` de [`vercel.json`](vercel.json) coupe le déploiement des branches `dependabot/*` : sans lui, chaque bump de patch créait un preview Vercel **et** un déploiement Convex preview jetables.
+
+**Dependabot** ([`.github/dependabot.yml`](.github/dependabot.yml)) — cible `develop` (le flux est `develop → main`, une PR sur `main` serait inmergeable), cadence mensuelle, **un seul groupe prod+dev** : des groupes séparés bloquent les bumps couplés (`convex-test` exige un `convex` récent). Les **majeures npm sont ignorées** — elles demandent du code à adapter et se font délibérément, pas en cliquant une PR.
 
 **Build Vercel :**
 
