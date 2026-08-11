@@ -2,7 +2,6 @@ import { describe, expect, it } from "vitest";
 import type { ConstraintId } from "../../logic/constraints";
 import {
   BATCH_WIN_RATE,
-  type SimulationContext,
   batchComposition,
   buildLivesDefeatPlan,
   buildRandomPlayerBatch,
@@ -10,6 +9,7 @@ import {
   isTargetValid,
   pickCountryAttempt,
   randomPlayerTarget,
+  type SimulationContext,
   simulatePlanLocally,
   solveGrid,
 } from "../simulation";

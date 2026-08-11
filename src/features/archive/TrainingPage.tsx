@@ -1,3 +1,7 @@
+import { useQuery } from "convex/react";
+import { RotateCcw } from "lucide-react";
+import { type ReactNode, useEffect, useState } from "react";
+import { Navigate, useNavigate, useParams } from "react-router";
 import AppFooter from "@/app/AppFooter";
 import { BackLink } from "@/components/editorial/BackLink";
 import { Button } from "@/components/ui/button";
@@ -13,10 +17,6 @@ import { classifyReplayDate } from "@/features/game/logic/replayWindow";
 import { useT } from "@/i18n/LocaleContext";
 import { todayUTC } from "@/lib/dates";
 import { cn } from "@/lib/utils";
-import { useQuery } from "convex/react";
-import { RotateCcw } from "lucide-react";
-import { type ReactNode, useEffect, useState } from "react";
-import { Navigate, useNavigate, useParams } from "react-router";
 import { api } from "../../../convex/_generated/api";
 import { TrainingResultScreen } from "./components/TrainingResultScreen";
 import { useTrainingGame } from "./hooks/useTrainingGame";

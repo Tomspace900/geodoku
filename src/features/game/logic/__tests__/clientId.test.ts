@@ -1,5 +1,5 @@
-import { STORAGE_KEYS } from "@/lib/storage";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
+import { STORAGE_KEYS } from "@/lib/storage";
 
 beforeEach(() => {
   localStorage.clear();

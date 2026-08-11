@@ -1,8 +1,8 @@
 import { beforeEach, describe, expect, it } from "vitest";
 import {
   LEGACY_SURVEY_DISMISSED_DATE,
-  STORAGE_KEYS,
   migrateLegacyStorage,
+  STORAGE_KEYS,
   safeGet,
   safeRemove,
   safeSet,

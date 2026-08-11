@@ -1,16 +1,16 @@
+import { useFeatureFlagEnabled, usePostHog } from "@posthog/react";
+import { useSyncExternalStore } from "react";
 import { useLocale } from "@/i18n/LocaleContext";
 import { todayUTC } from "@/lib/dates";
 import {
-  SURVEY_FLAG,
   getSurveyDoneSnapshot,
   isSurveyDone,
   markSurveyClicked,
   markSurveyDismissed,
+  SURVEY_FLAG,
   subscribeSurveyDone,
   surveyUrl,
 } from "@/lib/survey";
-import { useFeatureFlagEnabled, usePostHog } from "@posthog/react";
-import { useSyncExternalStore } from "react";
 
 export type SurveySource = "result_screen" | "solution_screen" | "footer";
 

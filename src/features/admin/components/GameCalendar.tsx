@@ -1,7 +1,7 @@
+import type { DayButton } from "react-day-picker";
 import { Calendar, CalendarDayButton } from "@/components/ui/calendar";
 import { todayUTC } from "@/lib/dates";
 import { cn } from "@/lib/utils";
-import type { DayButton } from "react-day-picker";
 import type { CalendarMarker } from "../logic/analytics";
 import { difficultyPillClass, popularityPillClass } from "../logic/display";
 import { dateToStr, strToCalendarDate } from "../logic/scheduling";

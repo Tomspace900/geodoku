@@ -1,3 +1,8 @@
+import { usePostHog } from "@posthog/react";
+import { useQuery } from "convex/react";
+import { Check, ChevronRight } from "lucide-react";
+import { useEffect, useState } from "react";
+import { Link, Navigate } from "react-router";
 import AppFooter from "@/app/AppFooter";
 import { AppMark } from "@/components/AppMark";
 import { BackLink } from "@/components/editorial/BackLink";
@@ -14,16 +19,11 @@ import { loadPersistedGame } from "@/features/game/logic/persistence";
 import { useLocale, useT } from "@/i18n/LocaleContext";
 import { todayUTC } from "@/lib/dates";
 import { cn } from "@/lib/utils";
-import { usePostHog } from "@posthog/react";
-import { useQuery } from "convex/react";
-import { Check, ChevronRight } from "lucide-react";
-import { useEffect, useState } from "react";
-import { Link, Navigate } from "react-router";
 import { api } from "../../../convex/_generated/api";
 import { isDailyGameFinished } from "./logic/dailyGate";
 import {
-  type PersistedTrainingGame,
   loadTrainingGames,
+  type PersistedTrainingGame,
 } from "./logic/trainingPersistence";
 
 /**

@@ -129,6 +129,7 @@ export const scheduleCandidateForDate = internalMutation({
 
     const candidate = await ctx.db.get(args.candidateId);
     if (
+      // biome-ignore lint/complexity/useOptionalChain: le `!candidate` narrow le type pour isCandidateInActivePool juste en dessous
       !candidate ||
       candidate.status !== "available" ||
       !(await isCandidateInActivePool(ctx, candidate))

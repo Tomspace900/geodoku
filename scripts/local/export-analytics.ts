@@ -29,8 +29,8 @@ import { ConvexHttpClient } from "convex/browser";
 import { api } from "../../convex/_generated/api";
 import {
   FAILED_ATTEMPTS_SINCE,
-  STRUGGLE_MIN_ATTEMPTS,
   hasStruggleData,
+  STRUGGLE_MIN_ATTEMPTS,
   struggleRate,
 } from "../../src/features/admin/logic/observedMetrics";
 import COUNTRIES_JSON from "../../src/features/countries/data/countries.json" with {

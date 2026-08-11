@@ -12,8 +12,8 @@ import { popularityScore100 } from "@/features/countries/logic/popularity";
 
 export {
   FAILED_ATTEMPTS_SINCE,
-  STRUGGLE_MIN_ATTEMPTS,
   hasStruggleData,
+  STRUGGLE_MIN_ATTEMPTS,
   struggleRate,
 } from "./observedMetrics";
 

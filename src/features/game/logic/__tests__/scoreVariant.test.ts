@@ -8,10 +8,10 @@ import type {
 import { STARTING_LIVES } from "../constants";
 import { createInitialState } from "../reducer";
 import {
-  type ScoreBreakdown,
   averageRarityTier,
   computeScore,
   computeScoreBreakdown,
+  type ScoreBreakdown,
 } from "../scoreVariant";
 
 function breakdown(

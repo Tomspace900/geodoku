@@ -1,3 +1,8 @@
+import { usePostHog } from "@posthog/react";
+import type { LucideIcon } from "lucide-react";
+import { Gem, Grid3x3, Heart, Info } from "lucide-react";
+import type { ComponentType } from "react";
+import { useState } from "react";
 import { AccentBar } from "@/components/editorial/AccentBar";
 import { Button } from "@/components/ui/button";
 import {
@@ -8,11 +13,6 @@ import {
 } from "@/components/ui/dialog";
 import { useT } from "@/i18n/LocaleContext";
 import type { TKey } from "@/i18n/types";
-import { usePostHog } from "@posthog/react";
-import { Gem, Grid3x3, Heart, Info } from "lucide-react";
-import type { LucideIcon } from "lucide-react";
-import type { ComponentType } from "react";
-import { useState } from "react";
 import { RarityLegend } from "./RarityLegend";
 
 type ScorePart = {

@@ -1,11 +1,11 @@
+import { lazy, Suspense, useLayoutEffect } from "react";
+import { Navigate, Route, Routes, useLocation } from "react-router";
 import { Providers } from "@/app/providers";
 import { useFreshBundle } from "@/app/useFreshBundle";
 import { GamePage } from "@/features/game/GamePage";
 import { ChangelogPage } from "@/features/legal/ChangelogPage";
 import { PrivacyPage } from "@/features/legal/PrivacyPage";
 import { useT } from "@/i18n/LocaleContext";
-import { Suspense, lazy, useLayoutEffect } from "react";
-import { Navigate, Route, Routes, useLocation } from "react-router";
 
 const AdminPage = lazy(() =>
   import("@/features/admin/AdminPage").then((module) => ({

@@ -1,6 +1,6 @@
+import type { ReactNode } from "react";
 import type { GridIndex } from "@/features/game/logic/gridTopology";
 import { cn } from "@/lib/utils";
-import type { ReactNode } from "react";
 
 export const GRID_INDICES = [0, 1, 2] as const satisfies readonly GridIndex[];
 
@@ -42,6 +42,10 @@ export function GridMatrix({
     >
       <thead>
         <tr>
+          {/* Coin haut-gauche décoratif : un <th> n'est pas focusable (pas de
+              tabindex), donc aria-hidden y est valide et évite d'annoncer un
+              en-tête de colonne vide. La règle le signale à tort. */}
+          {/* biome-ignore lint/a11y/noAriaHiddenOnFocusable: <th> sans tabindex n'est pas focusable */}
           <th aria-hidden="true" className="p-0" />
           {GRID_INDICES.map((col) => (
             <th

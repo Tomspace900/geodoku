@@ -1,10 +1,10 @@
 import { describe, expect, it } from "vitest";
 import {
-  type FeedbackRow,
   averageObservedSuccess100,
   buildCalendarMarkers,
   buildSummary,
   buildTrend,
+  type FeedbackRow,
   hasStruggleData,
   predictionDelta,
   struggleRate,

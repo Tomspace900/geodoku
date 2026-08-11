@@ -1,40 +1,61 @@
 {
-  "$schema": "https://biomejs.dev/schemas/1.9.4/schema.json",
+  "$schema": "https://biomejs.dev/schemas/2.5.7/schema.json",
   "formatter": {
     "enabled": true,
     "indentStyle": "space",
     "indentWidth": 2
   },
-  "organizeImports": {
-    "enabled": true
+  "assist": { "actions": { "source": { "organizeImports": "on" } } },
+  "css": {
+    "parser": {
+      "tailwindDirectives": true
+    }
   },
   "linter": {
     "enabled": true,
     "rules": {
-      "recommended": true,
+      "preset": "recommended",
       "complexity": {
-        "noForEach": "off"
+        "noForEach": "off",
+        "noImportantStyles": "off"
       },
       "style": {
         "noNonNullAssertion": "off"
+      },
+      "suspicious": {
+        "noUnknownAtRules": "off"
       }
     }
   },
+  "overrides": [
+    {
+      "includes": ["public/**"],
+      "linter": {
+        "rules": {
+          "a11y": {
+            "noSvgWithoutTitle": "off"
+          }
+        }
+      }
+    }
+  ],
   "files": {
-    "ignore": [
-      "node_modules",
-      "dist",
-      "convex/_generated",
-      "src/components/ui",
-      "scripts/dev",
-      ".pnpm-store",
-      "playwright-report",
-      "test-results",
-      "blob-report",
-      "coverage",
-      ".design-sync",
-      ".ds-sync",
-      "ds-bundle"
+    "includes": [
+      "**",
+      "!**/node_modules",
+      "!**/dist",
+      "!**/.claude",
+      "!**/convex/_generated",
+      "!**/src/components/ui",
+      "!**/scripts/dev",
+      "!**/.pnpm-store",
+      "!**/playwright-report",
+      "!**/test-results",
+      "!**/blob-report",
+      "!**/coverage",
+      "!**/.design-sync",
+      "!**/.ds-sync",
+      "!**/ds-bundle"
     ]
   }
 }

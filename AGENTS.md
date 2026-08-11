@@ -37,7 +37,7 @@ Barème tranché sur données réelles. La rareté d'une case s'appuie sur la **
 - **Backend** : Convex (cloud remote, pas local) — DB, mutations, queries, crons ; rate limiting via `@convex-dev/rate-limiter` ([`convex/rateLimit.ts`](convex/rateLimit.ts), [`convex/convex.config.ts`](convex/convex.config.ts))
 - **Observabilité front** : `@vercel/analytics` + `@vercel/speed-insights` + **PostHog** — voir §10 ([`src/main.tsx`](src/main.tsx))
 - **Package manager** : pnpm (Node **≥ 22.12**, Volta 22.19)
-- **Lint/format** : Biome (pas ESLint, pas Prettier)
+- **Lint/format** : Biome **2.x** (pas ESLint, pas Prettier) — Biome 2 lint aussi le CSS, d'où `css.parser.tailwindDirectives: true` (sans quoi `@apply` ne parse pas) et `noUnknownAtRules: "off"` (`@tailwind` n'est pas standard). `noImportantStyles` est off : le `!important` est un outil délibéré face aux utilitaires Tailwind. `.claude/` est exclu — les worktrees y sont des checkouts d'autres branches, avec leur propre config.
 - **Tests unitaires** : Vitest + @testing-library/react (`e2e/**` exclu dans [`vite.config.ts`](vite.config.ts))
 - **Tests e2e** : Playwright ([`playwright.config.ts`](playwright.config.ts), [`e2e/`](e2e/))
 - **Hooks / CI** : Git hook `pre-commit` (lint-staged) ; GitHub Actions — voir §8

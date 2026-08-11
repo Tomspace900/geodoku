@@ -1,8 +1,8 @@
+import { matchSorter, rankings } from "match-sorter";
 import countriesJson from "@/features/countries/data/countries.json" with {
   type: "json",
 };
 import type { Country } from "@/features/countries/types";
-import { matchSorter, rankings } from "match-sorter";
 
 const TYPED = countriesJson as Country[];
 

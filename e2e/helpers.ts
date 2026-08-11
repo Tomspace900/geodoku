@@ -1,5 +1,5 @@
 import { createRequire } from "node:module";
-import { type Page, expect } from "@playwright/test";
+import { expect, type Page } from "@playwright/test";
 import { ConvexHttpClient } from "convex/browser";
 import { api } from "../convex/_generated/api";
 import {

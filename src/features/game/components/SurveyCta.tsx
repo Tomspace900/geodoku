@@ -1,10 +1,10 @@
+import { MessageSquareText, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
   type SurveySource,
   useSurveyCta,
 } from "@/features/game/hooks/useSurveyCta";
 import { useT } from "@/i18n/LocaleContext";
-import { MessageSquareText, X } from "lucide-react";
 
 type Props = {
   source: SurveySource;

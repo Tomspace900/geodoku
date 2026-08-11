@@ -31,7 +31,9 @@ export type SurveyDoneState =
 const surveyDoneListeners = new Set<() => void>();
 
 function notifySurveyDoneListeners(): void {
-  surveyDoneListeners.forEach((listener) => listener());
+  surveyDoneListeners.forEach((listener) => {
+    listener();
+  });
 }
 
 export function getSurveyDoneSnapshot(): string | null {

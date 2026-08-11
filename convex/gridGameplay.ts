@@ -2,12 +2,12 @@ import { ConvexError, type ObjectType, v } from "convex/values";
 import { REPLAY_WINDOW_DAYS } from "../src/features/game/logic/replayWindow";
 import type { MutationCtx, QueryCtx } from "./_generated/server";
 import {
-  type GameEndInput,
   assertClientId,
   assertOperationId,
   assertReplayableDate,
   assertTodayDate,
   assertValidGameEnd,
+  type GameEndInput,
   requireGridForDate,
 } from "./gameWriteValidation";
 import { getGridAnswers } from "./gridData";

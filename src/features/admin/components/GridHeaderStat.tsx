@@ -1,13 +1,13 @@
+import type { LucideIcon } from "lucide-react";
+import type { ReactNode } from "react";
 import { predictionDelta } from "@/features/admin/logic/analytics";
 import { deltaSeverityTextClass } from "@/features/admin/logic/display";
 import { cn } from "@/lib/utils";
-import type { LucideIcon } from "lucide-react";
-import type { ReactNode } from "react";
 import {
-  STAT_DELTA_TITLE,
-  type StatKind,
   deltaStatKind,
   getStatGlyph,
+  STAT_DELTA_TITLE,
+  type StatKind,
 } from "./StatGlyph";
 
 type Props = {

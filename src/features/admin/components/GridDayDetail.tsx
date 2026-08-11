@@ -1,15 +1,15 @@
-import { Button } from "@/components/ui/button";
-import { gridEaseScore100 } from "@/features/countries/logic/popularity";
 import { useAction, useQuery } from "convex/react";
 import { CalendarCheck, Trash2, Undo2 } from "lucide-react";
 import { useState } from "react";
+import { Button } from "@/components/ui/button";
+import { gridEaseScore100 } from "@/features/countries/logic/popularity";
 import { api } from "../../../../convex/_generated/api";
 import type { Id } from "../../../../convex/_generated/dataModel";
 import {
-  FAILED_ATTEMPTS_SINCE,
-  STRUGGLE_MIN_ATTEMPTS,
   averageObservedSuccess100,
+  FAILED_ATTEMPTS_SINCE,
   hasStruggleData,
+  STRUGGLE_MIN_ATTEMPTS,
   struggleRate,
 } from "../logic/analytics";
 import { formatGridDateHeadingFr } from "../logic/display";

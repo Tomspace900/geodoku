@@ -1,8 +1,8 @@
 import { describe, expect, test } from "vitest";
 import type { SimAction } from "../../../src/features/game/testing/simulation";
 import {
-  type SimulationWriter,
   persistSimulationPlan,
+  type SimulationWriter,
 } from "../simulate-players-execution";
 
 function createWriter(calls: string[]): SimulationWriter {

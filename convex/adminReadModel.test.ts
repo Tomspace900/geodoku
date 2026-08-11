@@ -1,7 +1,7 @@
 // @vitest-environment edge-runtime
 /// <reference types="vite/client" />
 
-import { type TestConvex, convexTest } from "convex-test";
+import { convexTest, type TestConvex } from "convex-test";
 import { describe, expect, it } from "vitest";
 import { CONSTRAINTS } from "../src/features/game/logic/constraints";
 import { readGridCellMetrics, readPoolStats } from "./adminReadModel";

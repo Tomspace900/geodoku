@@ -18,22 +18,22 @@ import { ConvexHttpClient } from "convex/browser";
 import { api } from "../../convex/_generated/api";
 import type { ConstraintId } from "../../src/features/game/logic/constraints";
 import {
-  type PlayerTarget,
-  type SimAction,
-  type SimulationContext,
   buildBlockedPlan,
   buildPlayerPlan,
   buildRandomPlayerBatch,
+  type PlayerTarget,
+  type SimAction,
+  type SimulationContext,
   simulatePlanLocally,
 } from "../../src/features/game/testing/simulation";
 import {
-  type SimulationCliArgs,
   inferSimulationTarget,
   parseSimulationArgs,
+  type SimulationCliArgs,
 } from "./simulate-players-cli";
 import {
-  type SimulationWriter,
   persistSimulationPlan,
+  type SimulationWriter,
 } from "./simulate-players-execution";
 
 // ─── Args ─────────────────────────────────────────────────────────────────────

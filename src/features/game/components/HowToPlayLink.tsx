@@ -1,3 +1,8 @@
+import { usePostHog } from "@posthog/react";
+import type { LucideIcon } from "lucide-react";
+import { Ban, Gem, Grid3x3, Heart, HelpCircle } from "lucide-react";
+import type { ComponentType } from "react";
+import { useEffect, useRef, useState } from "react";
 import { AccentBar } from "@/components/editorial/AccentBar";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
@@ -10,11 +15,6 @@ import {
 import { useT } from "@/i18n/LocaleContext";
 import type { TKey } from "@/i18n/types";
 import { STORAGE_KEYS, safeGet, safeSet } from "@/lib/storage";
-import { usePostHog } from "@posthog/react";
-import { Ban, Gem, Grid3x3, Heart, HelpCircle } from "lucide-react";
-import type { LucideIcon } from "lucide-react";
-import type { ComponentType } from "react";
-import { useEffect, useRef, useState } from "react";
 import { RarityLegend } from "./RarityLegend";
 
 const RULES: {

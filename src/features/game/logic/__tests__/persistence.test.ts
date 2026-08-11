@@ -1,10 +1,10 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import {
-  PERSISTENCE_STORAGE_KEY,
-  PERSISTENCE_V2_STORAGE_KEY,
   clearPersistedGame,
   isPersistedForToday,
   loadPersistedGame,
+  PERSISTENCE_STORAGE_KEY,
+  PERSISTENCE_V2_STORAGE_KEY,
   savePersistedGame,
 } from "../persistence";
 import { createInitialState, gameReducer } from "../reducer";

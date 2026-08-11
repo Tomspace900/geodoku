@@ -1,6 +1,3 @@
-import { predictionDelta } from "@/features/admin/logic/analytics";
-import { deltaSeverityTextClass } from "@/features/admin/logic/display";
-import { cn } from "@/lib/utils";
 import {
   ArrowDown,
   ArrowUp,
@@ -18,6 +15,9 @@ import {
   X,
 } from "lucide-react";
 import type { ReactNode } from "react";
+import { predictionDelta } from "@/features/admin/logic/analytics";
+import { deltaSeverityTextClass } from "@/features/admin/logic/display";
+import { cn } from "@/lib/utils";
 
 /**
  * Vocabulaire d'icônes partagé des métriques admin (style « KDA »). Une seule

@@ -1,7 +1,7 @@
+import { describe, expect, it } from "vitest";
 import { CELL_KEYS } from "@/features/game/logic/gridTopology";
 import type { PersistedGame } from "@/features/game/logic/persistence";
 import type { Cell, CellKey } from "@/features/game/types";
-import { describe, expect, it } from "vitest";
 import { isDailyGameFinished } from "../dailyGate";
 
 const TODAY = "2026-07-25";

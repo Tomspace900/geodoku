@@ -1,8 +1,8 @@
+import { usePostHog } from "@posthog/react";
 import { Button } from "@/components/ui/button";
 import { useLocale } from "@/i18n/LocaleContext";
 import type { Locale } from "@/i18n/types";
 import { cn } from "@/lib/utils";
-import { usePostHog } from "@posthog/react";
 
 const LOCALES: Locale[] = ["fr", "en"];
 

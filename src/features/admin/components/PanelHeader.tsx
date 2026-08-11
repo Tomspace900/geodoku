@@ -1,6 +1,6 @@
+import type { ReactNode } from "react";
 import { Eyebrow } from "@/components/editorial/Eyebrow";
 import { cn } from "@/lib/utils";
-import type { ReactNode } from "react";
 
 type Props = {
   title: string;

@@ -1,3 +1,7 @@
+import { usePostHog } from "@posthog/react";
+import { useMutation } from "convex/react";
+import { Copy, Share2 } from "lucide-react";
+import { useEffect, useRef, useState } from "react";
 import { AccentBar } from "@/components/editorial/AccentBar";
 import { Eyebrow } from "@/components/editorial/Eyebrow";
 import { Button } from "@/components/ui/button";
@@ -29,10 +33,6 @@ import {
 import type { CellGuessDistribution, GameState } from "@/features/game/types";
 import { useT } from "@/i18n/LocaleContext";
 import { cn } from "@/lib/utils";
-import { usePostHog } from "@posthog/react";
-import { useMutation } from "convex/react";
-import { Copy, Share2 } from "lucide-react";
-import { useEffect, useRef, useState } from "react";
 import { api } from "../../../../convex/_generated/api";
 import { ScoreDisplay } from "./ScoreDisplay";
 import { ShareEmojiGrid } from "./ShareEmojiGrid";

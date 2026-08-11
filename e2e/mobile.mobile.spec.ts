@@ -1,9 +1,9 @@
 import { expect, test } from "@playwright/test";
 import {
-  type TodayGrid,
   fetchTodayGrid,
   pickCountry,
   prepareSession,
+  type TodayGrid,
   waitForGrid,
 } from "./helpers";
 

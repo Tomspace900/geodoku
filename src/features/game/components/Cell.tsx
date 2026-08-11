@@ -1,11 +1,11 @@
+import { Plus, X } from "lucide-react";
+import { useEffect, useRef, useState } from "react";
 import { getCountryByIso3 } from "@/features/countries/logic/search";
 import { UI_ANIMATION_MS } from "@/features/game/logic/constants";
 import { toCellKey } from "@/features/game/logic/gridTopology";
 import type { Cell, CellPosition, RarityTier } from "@/features/game/types";
 import { useLocale } from "@/i18n/LocaleContext";
 import { cn } from "@/lib/utils";
-import { Plus, X } from "lucide-react";
-import { useEffect, useRef, useState } from "react";
 import { RarityBadge } from "./RarityBadge";
 
 type Props = {

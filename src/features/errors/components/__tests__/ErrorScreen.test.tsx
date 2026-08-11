@@ -1,7 +1,7 @@
-import { LocaleProvider } from "@/i18n/LocaleContext";
 import { fireEvent, render, screen } from "@testing-library/react";
 import type { ReactElement } from "react";
 import { describe, expect, it, vi } from "vitest";
+import { LocaleProvider } from "@/i18n/LocaleContext";
 import { ErrorScreen } from "../ErrorScreen";
 
 function renderWithLocale(ui: ReactElement) {
