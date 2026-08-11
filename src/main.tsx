@@ -6,13 +6,7 @@ import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
 import { BrowserRouter } from "react-router";
 import App from "@/App";
-import { migrateLegacyStorage } from "@/lib/storage";
 import "@/index.css";
-
-// Renomme les clés localStorage historiques vers le namespace `geodoku:*` et
-// purge les flags par-date. Doit précéder tout rendu : la locale et la partie
-// sont lues dès le premier render synchrone.
-migrateLegacyStorage();
 
 posthog.init(import.meta.env.VITE_POSTHOG_PROJECT_TOKEN, {
   api_host: import.meta.env.VITE_POSTHOG_HOST,
