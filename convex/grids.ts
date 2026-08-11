@@ -39,9 +39,13 @@ import {
   getTodayGridHandler,
   recordTodayGameEndArgs,
   recordTodayGameEndHandler,
+  replayableGridsReturns,
+  replayGridReturns,
   submitTodayGridFeedbackArgs,
   submitTodayGridFeedbackHandler,
+  todayGridReturns,
 } from "./gridGameplay";
+import { recordedResult } from "./operationResults";
 import {
   reconcileFutureGridContentHandler,
   reconcilePoolAndScheduleArgs,
@@ -72,12 +76,14 @@ export const reconcilePoolAndSchedule = internalAction({
 
 export const getTodayGrid = query({
   args: {},
+  returns: todayGridReturns,
   handler: getTodayGridHandler,
 });
 
 /** Archive du mode entraînement : les grilles de J-1 à J-7, sans leurs réponses. */
 export const getReplayableGrids = query({
   args: {},
+  returns: replayableGridsReturns,
   handler: getReplayableGridsHandler,
 });
 
@@ -87,16 +93,19 @@ export const getReplayableGrids = query({
  */
 export const getReplayGrid = query({
   args: getReplayGridArgs,
+  returns: replayGridReturns,
   handler: getReplayGridHandler,
 });
 
 export const recordTodayGameEnd = mutation({
   args: recordTodayGameEndArgs,
+  returns: recordedResult,
   handler: recordTodayGameEndHandler,
 });
 
 export const submitTodayGridFeedback = mutation({
   args: submitTodayGridFeedbackArgs,
+  returns: recordedResult,
   handler: submitTodayGridFeedbackHandler,
 });
 

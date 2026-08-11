@@ -1,7 +1,12 @@
 import { ConvexError, v } from "convex/values";
 import type { MutationCtx, QueryCtx } from "./_generated/server";
 import { mutation, query } from "./_generated/server";
-import { CELL_KEYS, type CellKey, cellKeyValidator } from "./cellKeys";
+import {
+  CELL_KEYS,
+  type CellKey,
+  cellKeyedObject,
+  cellKeyValidator,
+} from "./cellKeys";
 import {
   assertCanonicalDate,
   assertClientId,
@@ -15,10 +20,19 @@ import {
   readOperationReceipt,
   writeOperationReceipt,
 } from "./operationReceipts";
+import { recordedResult, submitGuessResult } from "./operationResults";
 import { rateLimiter } from "./rateLimit";
 
 // 9 cases × ~200 pays × cohortes live/replay, sous la limite Convex de 4096.
 const MAX_GUESS_ROWS_PER_DATE = 4096;
+
+/** Distribution par case : total de la cohorte + part par pays. */
+const guessDistributionValidator = cellKeyedObject(
+  v.object({
+    totalGuesses: v.number(),
+    rarityByCountry: v.record(v.string(), v.number()),
+  }),
+);
 
 type AcceptedGuess = {
   kind: "accepted";
@@ -154,6 +168,7 @@ async function incrementFailedGuess(
 /** Distribution live de la grille du jour. */
 export const getTodayGuessDistribution = query({
   args: {},
+  returns: guessDistributionValidator,
   handler: async (ctx) => {
     const date = todayUTC();
     await requireGridForDate(ctx, date);
@@ -169,6 +184,7 @@ export const getTodayGuessDistribution = query({
  */
 export const getGuessDistributionForDate = query({
   args: { date: v.string() },
+  returns: guessDistributionValidator,
   handler: async (ctx, args) => {
     assertCanonicalDate(args.date);
     await requireGridForDate(ctx, args.date);
@@ -188,6 +204,7 @@ export const submitTodayGuess = mutation({
     countryCode: v.string(),
     clientId: v.string(),
   },
+  returns: submitGuessResult,
   handler: async (ctx, args): Promise<GuessResult> => {
     assertOperationId(args.operationId);
     assertClientId(args.clientId);
@@ -245,6 +262,7 @@ export const recordTodayFailedGuess = mutation({
     countryCode: v.string(),
     clientId: v.string(),
   },
+  returns: recordedResult,
   handler: async (ctx, args) => {
     assertOperationId(args.operationId);
     assertClientId(args.clientId);

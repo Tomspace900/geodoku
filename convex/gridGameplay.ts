@@ -73,6 +73,46 @@ export async function getTodayGridHandler(ctx: QueryCtx) {
   };
 }
 
+const validAnswersValidator = v.record(v.string(), v.array(v.string()));
+
+/** Grille du jour servie au joueur, réponses figées comprises. */
+export const todayGridReturns = v.union(
+  v.null(),
+  v.object({
+    _id: v.id("grids"),
+    _creationTime: v.number(),
+    date: v.string(),
+    rows: v.array(v.string()),
+    cols: v.array(v.string()),
+    candidateId: v.id("gridCandidates"),
+    validAnswers: validAnswersValidator,
+  }),
+);
+
+/**
+ * Liste de l'archive. **Sans `validAnswers`** : ce validateur est ce qui rend
+ * l'invariant mécanique — ajouter le champ au handler ferait désormais échouer
+ * la fonction à l'exécution au lieu de livrer silencieusement les réponses.
+ */
+export const replayableGridsReturns = v.array(
+  v.object({
+    date: v.string(),
+    rows: v.array(v.string()),
+    cols: v.array(v.string()),
+  }),
+);
+
+/** Grille passée rejouable : réduite à ce que le joueur consomme. */
+export const replayGridReturns = v.union(
+  v.null(),
+  v.object({
+    date: v.string(),
+    rows: v.array(v.string()),
+    cols: v.array(v.string()),
+    validAnswers: validAnswersValidator,
+  }),
+);
+
 export const getReplayGridArgs = { date: v.string() };
 type GetReplayGridArgs = ObjectType<typeof getReplayGridArgs>;
 
