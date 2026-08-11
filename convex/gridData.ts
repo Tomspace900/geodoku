@@ -98,6 +98,7 @@ export async function isCandidateInActivePool(
 /** True if at least one published grid exists (idempotence guard for seed). */
 export const hasAnyGrid = internalQuery({
   args: {},
+  returns: v.boolean(),
   handler: async (ctx) => {
     return (await ctx.db.query("grids").first()) !== null;
   },
@@ -119,6 +120,7 @@ export const getAvailablePoolGrids = internalQuery({
 /** True if a grid already exists for the given date. */
 export const hasGridForDate = internalQuery({
   args: { date: v.string() },
+  returns: v.boolean(),
   handler: async (ctx, args) => {
     const existing = await ctx.db
       .query("grids")
@@ -279,6 +281,7 @@ export const claimPoolGeneration = internalMutation({
 /** Bascule atomiquement le pointeur une fois la génération complète. */
 export const activatePoolGeneration = internalMutation({
   args: { jobId: v.string(), expectedCount: v.number() },
+  returns: v.null(),
   handler: async (ctx, args): Promise<void> => {
     const state = await getPoolState(ctx);
     if (!state || state.jobId !== args.jobId) {
@@ -320,6 +323,7 @@ export const activatePoolGeneration = internalMutation({
 /** Libère uniquement le lease encore détenu par ce job. */
 export const releasePoolGeneration = internalMutation({
   args: { jobId: v.string() },
+  returns: v.boolean(),
   handler: async (ctx, args) => {
     const state = await getPoolState(ctx);
     if (!state || state.jobId !== args.jobId) return false;
@@ -338,6 +342,7 @@ export const releasePoolGeneration = internalMutation({
  */
 export const deleteInactiveGenerationBatch = internalMutation({
   args: { generationId: v.union(v.string(), v.null()) },
+  returns: v.number(),
   handler: async (ctx, args): Promise<number> => {
     const state = await getPoolState(ctx);
     if ((state?.activeGenerationId ?? null) === args.generationId) return 0;

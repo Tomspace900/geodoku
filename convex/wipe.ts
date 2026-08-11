@@ -47,6 +47,7 @@ export const deleteBatch = internalMutation({
     ),
     limit: v.number(),
   },
+  returns: v.number(),
   handler: async (ctx, { table, limit }) => {
     const docs = await ctx.db.query(table).take(limit);
     for (const doc of docs) {
@@ -58,6 +59,7 @@ export const deleteBatch = internalMutation({
 
 export const wipeAllData = internalAction({
   args: { confirmation: v.literal("WIPE_DEV_DATA") },
+  returns: v.record(v.string(), v.number()),
   handler: async (ctx) => {
     if (process.env.ALLOW_DESTRUCTIVE_DEV_COMMANDS !== "true") {
       throw new Error(

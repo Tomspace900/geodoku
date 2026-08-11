@@ -80,6 +80,7 @@ async function assignForDate(ctx: MutationCtx, date: string): Promise<boolean> {
 /** Cron target : aujourd'hui + demain. Idempotent et léger. */
 export const ensureDailyGrids = internalMutation({
   args: {},
+  returns: v.null(),
   handler: async (ctx) => {
     const todayAssigned = await assignForDate(ctx, todayUTC());
     const tomorrowAssigned = await assignForDate(ctx, tomorrowUTC());
@@ -96,6 +97,7 @@ export const ensureDailyGrids = internalMutation({
 /** Assigne une date précise (override admin / seed). */
 export const assignGridForDate = internalMutation({
   args: { date: v.string() },
+  returns: v.union(v.null(), v.object({ date: v.string() })),
   handler: async (ctx, args) => {
     const ok = await assignForDate(ctx, args.date);
     if (!ok) {
@@ -190,6 +192,10 @@ export const replaceFutureGridCandidate = internalMutation({
     date: v.string(),
     expectedCandidateId: v.id("gridCandidates"),
   },
+  returns: v.union(
+    v.object({ kind: v.literal("changed") }),
+    v.object({ kind: v.literal("replaced") }),
+  ),
   handler: async (ctx, args) => {
     if (args.date <= todayUTC()) {
       throw new ConvexError("Cannot replace a past or active grid");
@@ -219,6 +225,7 @@ export const replaceFutureGridCandidate = internalMutation({
  */
 export const unscheduleGridForDate = internalMutation({
   args: { date: v.string() },
+  returns: v.union(v.null(), v.object({ date: v.string() })),
   handler: async (ctx, args) => {
     if (args.date <= todayUTC()) {
       throw new ConvexError("Cannot unschedule a past or active grid");
@@ -250,6 +257,7 @@ export const unscheduleGridForDate = internalMutation({
  */
 export const deleteScheduledGridForDate = internalMutation({
   args: { date: v.string() },
+  returns: v.union(v.null(), v.object({ date: v.string() })),
   handler: async (ctx, args) => {
     if (args.date <= todayUTC()) {
       throw new ConvexError("Cannot delete a past or active grid");
@@ -272,6 +280,7 @@ export const deleteScheduledGridForDate = internalMutation({
  */
 export const deletePoolCandidate = internalMutation({
   args: { candidateId: v.id("gridCandidates") },
+  returns: v.union(v.null(), v.object({ candidateId: v.id("gridCandidates") })),
   handler: async (ctx, args) => {
     const candidate = await ctx.db.get(args.candidateId);
     if (!candidate) return null;

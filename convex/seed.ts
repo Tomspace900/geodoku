@@ -4,7 +4,7 @@
  * - autoSeedIfEmpty    : no-op si déjà peuplé, seed sinon (appelé au deploy preview via --run)
  * Invoked manually: `pnpm seed:grids` → `npx convex run --internal seed:seedHistoricalGrids`
  */
-import { ConvexError } from "convex/values";
+import { ConvexError, v } from "convex/values";
 import { internal } from "./_generated/api";
 import type { ActionCtx } from "./_generated/server";
 import { internalAction } from "./_generated/server";
@@ -25,6 +25,12 @@ function datesFromPastToToday(today: string): string[] {
   }
   return out;
 }
+
+const seedHistoricalResult = v.object({
+  seeded: v.number(),
+  dates: v.array(v.string()),
+  steps: v.array(v.object({ date: v.string() })),
+});
 
 type SeedHistoricalResult = {
   seeded: number;
@@ -84,6 +90,7 @@ async function seedHistoricalGridsImpl(
 /** Thin wrapper exposé pour le script CLI `pnpm seed:grids`. */
 export const seedHistoricalGrids = internalAction({
   args: {},
+  returns: seedHistoricalResult,
   handler: async (ctx): Promise<SeedHistoricalResult> =>
     seedHistoricalGridsImpl(ctx),
 });
@@ -95,6 +102,10 @@ export const seedHistoricalGrids = internalAction({
  */
 export const autoSeedIfEmpty = internalAction({
   args: {},
+  returns: v.union(
+    v.object({ skipped: v.literal(true) }),
+    seedHistoricalResult,
+  ),
   handler: async (ctx): Promise<AutoSeedResult> => {
     if (await ctx.runQuery(internal.gridData.hasAnyGrid)) {
       console.log("[autoSeedIfEmpty] grids déjà peuplées — seed ignoré");
