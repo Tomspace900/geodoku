@@ -12,9 +12,13 @@
 export const STORAGE_KEYS = {
   /** Identifiant anonyme par navigateur (clé de rate-limit). localStorage. */
   clientId: "geodoku:client-id",
-  /** Partie du jour sérialisée (JSON versionné). localStorage. */
+  /**
+   * Ancienne clé v2, retirée du parcours à la sortie du rollout v3. Conservée
+   * uniquement pour la purger (`clearPersistedGame`) et pour la migration des
+   * clés historiques : plus rien n'y écrit ni n'y lit de partie.
+   */
   game: "geodoku:game",
-  /** Partie canonique minimale v3. La clé `game` reste le shadow de rollback v2. */
+  /** Partie canonique minimale v3 : seul format écrit et lu. */
   gameV3: "geodoku:game-v3",
   /** Parties d'entraînement (grilles passées), une entrée par date. localStorage. */
   training: "geodoku:training-v1",

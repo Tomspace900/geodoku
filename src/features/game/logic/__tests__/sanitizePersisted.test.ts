@@ -32,14 +32,10 @@ function emptyCells(): Record<CellKey, Cell> {
 
 function basePersisted(overrides: Partial<PersistedGame> = {}): PersistedGame {
   return {
-    version: 2,
+    version: 3,
     date: "2026-04-15",
     cells: { ...emptyCells() },
     remainingLives: 3,
-    usedCountries: [],
-    status: "playing",
-    startedAt: 1_700_000_000_000,
-    finishedAt: null,
     ...overrides,
   };
 }
@@ -88,7 +84,6 @@ describe("sanitizePersistedForGrid", () => {
     };
     const p = basePersisted({
       cells,
-      usedCountries: ["USA"],
     });
     expect(sanitizePersistedForGrid(p, validAnswers)).toBeNull();
   });
@@ -111,7 +106,6 @@ describe("sanitizePersistedForGrid", () => {
     };
     const p = basePersisted({
       cells,
-      usedCountries: ["FRA", "FRA"],
       remainingLives: 2,
     });
     const va = {
@@ -119,25 +113,6 @@ describe("sanitizePersistedForGrid", () => {
       "0,1": ["FRA"],
     };
     expect(sanitizePersistedForGrid(p, va)).toBeNull();
-  });
-
-  it("rejette status won sans 9 cases remplies", () => {
-    const cells = { ...emptyCells() };
-    cells["0,0"] = {
-      status: "filled",
-      countryCode: "FRA",
-    };
-    const p = basePersisted({
-      cells,
-      status: "won",
-      usedCountries: ["FRA"],
-    });
-    expect(sanitizePersistedForGrid(p, validAnswers)).toBeNull();
-  });
-
-  it("rejette status lost avec des vies restantes", () => {
-    const p = basePersisted({ status: "lost", remainingLives: 2 });
-    expect(sanitizePersistedForGrid(p, validAnswers)).toBeNull();
   });
 
   it("accepte une ancienne sauvegarde contenant encore rarity/rarityTier (ignorés)", () => {
@@ -152,7 +127,6 @@ describe("sanitizePersistedForGrid", () => {
     cells["0,0"] = legacyCell as unknown as Cell;
     const p = basePersisted({
       cells,
-      usedCountries: ["FRA"],
       remainingLives: 3,
     });
     const out = sanitizePersistedForGrid(p, validAnswers);
@@ -181,9 +155,6 @@ describe("sanitizePersistedForGrid", () => {
     });
     const p = basePersisted({
       cells,
-      usedCountries: codes,
-      status: "won",
-      finishedAt: null,
     });
     const out = sanitizePersistedForGrid(p, validAnswers);
     expect(out?.status).toBe("won");
@@ -209,17 +180,10 @@ describe("sanitizePersistedForGrid", () => {
     });
     const persisted = basePersisted({
       cells,
-      usedCountries: codes,
-      status: "won",
       remainingLives: 0,
     });
 
     expect(sanitizePersistedForGrid(persisted, validAnswers)).toBeNull();
-  });
-
-  it("ignore un startedAt legacy non numérique", () => {
-    const p = basePersisted({ startedAt: Number.NaN });
-    expect(sanitizePersistedForGrid(p, validAnswers)).not.toBeNull();
   });
 
   it("marque les cellules bloquées et reste en playing si des cases empty restent", () => {
@@ -238,9 +202,7 @@ describe("sanitizePersistedForGrid", () => {
     };
     const p = basePersisted({
       cells,
-      usedCountries: ["FRA", "DEU"],
       remainingLives: 3,
-      status: "playing",
     });
     const out = sanitizePersistedForGrid(p, blockedAnswers);
     expect(out?.status).toBe("playing");
@@ -271,9 +233,7 @@ describe("sanitizePersistedForGrid", () => {
     };
     const p = basePersisted({
       cells,
-      usedCountries: ["FRA", "DEU"],
       remainingLives: 3,
-      status: "playing",
     });
     const out = sanitizePersistedForGrid(p, trapAnswers);
     expect(out?.status).toBe("lost");
@@ -290,9 +250,7 @@ describe("sanitizePersistedForGrid", () => {
     const va = { ...validAnswers, "0,2": ["FRA"] };
     const p = basePersisted({
       cells,
-      usedCountries: ["FRA"],
       remainingLives: 3,
-      status: "playing",
     });
     const out = sanitizePersistedForGrid(p, va);
     expect(out?.cells["0,2"].status).toBe("blocked");

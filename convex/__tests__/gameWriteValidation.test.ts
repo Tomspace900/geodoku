@@ -4,7 +4,6 @@ import {
   assertClientId,
   assertCountryCode,
   assertOperationId,
-  assertTodayDate,
   assertValidGameEnd,
 } from "../gameWriteValidation";
 import { todayUTC } from "../lib/dates";
@@ -46,10 +45,6 @@ describe("game write validation", () => {
 
   it("rejects an impossible calendar date", () => {
     expect(() => assertCanonicalDate("2026-02-30")).toThrow("Invalid date");
-  });
-
-  it("accepts only today's date for legacy writes", () => {
-    expect(() => assertTodayDate(todayUTC())).not.toThrow();
   });
 
   it("accepts a consistent win", () => {

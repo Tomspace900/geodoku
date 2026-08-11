@@ -5,7 +5,6 @@ import {
   assertClientId,
   assertOperationId,
   assertReplayableDate,
-  assertTodayDate,
   assertValidGameEnd,
   type GameEndInput,
   requireGridForDate,
@@ -30,21 +29,6 @@ export const ratingValidator = v.union(
   v.literal("too_hard"),
 );
 
-export const recordGameEndArgs = {
-  date: v.string(),
-  endReason: endReasonValidator,
-  livesLeft: v.number(),
-  filledCells: v.number(),
-  guessesSubmitted: v.number(),
-  clientId: v.string(),
-};
-
-export const submitGridFeedbackArgs = {
-  date: v.string(),
-  rating: ratingValidator,
-  clientId: v.string(),
-};
-
 export const recordTodayGameEndArgs = {
   operationId: v.string(),
   endReason: endReasonValidator,
@@ -60,9 +44,7 @@ export const submitTodayGridFeedbackArgs = {
   clientId: v.string(),
 };
 
-type Rating = ObjectType<typeof submitGridFeedbackArgs>["rating"];
-type RecordGameEndArgs = ObjectType<typeof recordGameEndArgs>;
-type SubmitGridFeedbackArgs = ObjectType<typeof submitGridFeedbackArgs>;
+type Rating = ObjectType<typeof submitTodayGridFeedbackArgs>["rating"];
 type RecordTodayGameEndArgs = ObjectType<typeof recordTodayGameEndArgs>;
 type SubmitTodayGridFeedbackArgs = ObjectType<
   typeof submitTodayGridFeedbackArgs
@@ -228,37 +210,6 @@ async function incrementGridFeedback(
     totalFilledCells: 0,
     totalGuessesSubmitted: 0,
   });
-}
-
-/** Écriture legacy conservée temporairement pendant le rollout. */
-export async function recordGameEndHandler(
-  ctx: MutationCtx,
-  args: RecordGameEndArgs,
-): Promise<void> {
-  assertTodayDate(args.date);
-  assertClientId(args.clientId);
-  assertValidGameEnd(args);
-  await rateLimiter.limit(ctx, "feedback", {
-    key: args.clientId,
-    throws: true,
-  });
-  await requireGridForDate(ctx, args.date);
-  await incrementGameEnd(ctx, args.date, args);
-}
-
-/** Écriture legacy conservée temporairement pendant le rollout. */
-export async function submitGridFeedbackHandler(
-  ctx: MutationCtx,
-  args: SubmitGridFeedbackArgs,
-): Promise<void> {
-  assertTodayDate(args.date);
-  assertClientId(args.clientId);
-  await rateLimiter.limit(ctx, "feedback", {
-    key: args.clientId,
-    throws: true,
-  });
-  await requireGridForDate(ctx, args.date);
-  await incrementGridFeedback(ctx, args.date, args.rating);
 }
 
 /** Fin de partie idempotente de la grille du jour. */

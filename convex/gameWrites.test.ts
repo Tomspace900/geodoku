@@ -479,19 +479,6 @@ describe("write availability and retention", () => {
     ).rejects.toThrow("Grid answers unavailable");
   });
 
-  it("rejects a legacy write for a past date", async () => {
-    const backend = createBackend();
-
-    await expect(
-      backend.mutation(api.guesses.submitGuess, {
-        date: offsetUTC(-1),
-        cellKey: "0,0",
-        countryCode: "FRA",
-        clientId: CLIENT_ID,
-      }),
-    ).rejects.toThrow("Only today's grid accepts writes");
-  });
-
   it("purges only expired operation receipts", async () => {
     const backend = createBackend();
     await backend.run(async (ctx) => {

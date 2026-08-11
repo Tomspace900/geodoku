@@ -225,26 +225,22 @@ export async function playToDefeat(page: Page, grid: TodayGrid) {
 /**
  * Build a serialized PersistedGame for localStorage injection.
  */
-export function makeStaleGameJSON(
-  daysAgo: number,
-  status: "playing" | "won" = "playing",
-): string {
+/**
+ * Partie d'un jour passé, au format v3. Le payload minimal ne porte plus ni
+ * statut ni horodatage : le statut se redérive des cases et des vies, et c'est
+ * la garde de date qui écarte la partie, quel que soit son état.
+ */
+export function makeStaleGameJSON(daysAgo: number): string {
   const d = new Date();
   d.setUTCDate(d.getUTCDate() - daysAgo);
-  const date = d.toISOString().slice(0, 10);
-  const startedAt = Date.now() - daysAgo * 86_400_000;
   return JSON.stringify({
-    version: 2,
-    date,
+    version: 3,
+    date: d.toISOString().slice(0, 10),
     cells: Object.fromEntries(
       ["0,0", "0,1", "0,2", "1,0", "1,1", "1,2", "2,0", "2,1", "2,2"].map(
         (k) => [k, { status: "empty" }],
       ),
     ),
     remainingLives: 5,
-    usedCountries: [],
-    status,
-    startedAt,
-    finishedAt: status === "won" ? startedAt + 60_000 : null,
   });
 }

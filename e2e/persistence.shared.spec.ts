@@ -10,7 +10,7 @@ import {
   waitForGrid,
 } from "./helpers";
 
-const STORAGE_KEY = "geodoku:game";
+const STORAGE_KEY = "geodoku:game-v3";
 
 let grid: TodayGrid;
 
@@ -79,7 +79,7 @@ test("corrupted localStorage JSON starts a fresh game without crashing", async (
 test("stale game from 3 days ago is discarded and a fresh game starts", async ({
   page,
 }) => {
-  const staleJson = makeStaleGameJSON(3, "playing");
+  const staleJson = makeStaleGameJSON(3);
 
   await page.addInitScript(
     ({ key, value }) => {
@@ -111,7 +111,7 @@ test("stale game from 3 days ago is discarded and a fresh game starts", async ({
 test("won game from yesterday does not show old result screen", async ({
   page,
 }) => {
-  const wonYesterday = makeStaleGameJSON(1, "won");
+  const wonYesterday = makeStaleGameJSON(1);
 
   await page.addInitScript(
     ({ key, value }) => {

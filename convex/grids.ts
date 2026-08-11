@@ -37,17 +37,12 @@ import {
   getReplayGridArgs,
   getReplayGridHandler,
   getTodayGridHandler,
-  recordGameEndArgs,
-  recordGameEndHandler,
   recordTodayGameEndArgs,
   recordTodayGameEndHandler,
-  submitGridFeedbackArgs,
-  submitGridFeedbackHandler,
   submitTodayGridFeedbackArgs,
   submitTodayGridFeedbackHandler,
 } from "./gridGameplay";
 import {
-  autoRefillPoolHandler,
   reconcileFutureGridContentHandler,
   reconcilePoolAndScheduleArgs,
   reconcilePoolAndScheduleHandler,
@@ -73,12 +68,6 @@ export const reconcilePoolAndSchedule = internalAction({
   handler: reconcilePoolAndScheduleHandler,
 });
 
-/** Alias conservé pour les références internes existantes. */
-export const autoRefillPool = internalAction({
-  args: {},
-  handler: autoRefillPoolHandler,
-});
-
 // ─── Parcours joueur ─────────────────────────────────────────────────────────
 
 export const getTodayGrid = query({
@@ -99,18 +88,6 @@ export const getReplayableGrids = query({
 export const getReplayGrid = query({
   args: getReplayGridArgs,
   handler: getReplayGridHandler,
-});
-
-/** Écriture legacy conservée temporairement pendant le rollout. */
-export const recordGameEnd = mutation({
-  args: recordGameEndArgs,
-  handler: recordGameEndHandler,
-});
-
-/** Écriture legacy conservée temporairement pendant le rollout. */
-export const submitGridFeedback = mutation({
-  args: submitGridFeedbackArgs,
-  handler: submitGridFeedbackHandler,
 });
 
 export const recordTodayGameEnd = mutation({
