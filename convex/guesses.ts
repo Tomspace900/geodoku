@@ -1,12 +1,7 @@
 import { ConvexError, v } from "convex/values";
 import type { MutationCtx, QueryCtx } from "./_generated/server";
 import { mutation, query } from "./_generated/server";
-import {
-  CELL_KEYS,
-  type CellKey,
-  cellKeyedObject,
-  cellKeyValidator,
-} from "./cellKeys";
+import { CELL_KEYS, type CellKey, cellKeyValidator } from "./cellKeys";
 import {
   assertCanonicalDate,
   assertClientId,
@@ -26,8 +21,16 @@ import { rateLimiter } from "./rateLimit";
 // 9 cases × ~200 pays × cohortes live/replay, sous la limite Convex de 4096.
 const MAX_GUESS_ROWS_PER_DATE = 4096;
 
-/** Distribution par case : total de la cohorte + part par pays. */
-const guessDistributionValidator = cellKeyedObject(
+/**
+ * Distribution par case : total de la cohorte + part par pays.
+ *
+ * `v.record` et non `v.object` indexé par `CELL_KEYS` : Convex **refuse à la
+ * publication** un validateur d'objet dont les clés ne sont pas des
+ * identifiants valides, et « 0,0 » n'en est pas un. On perd la garantie des
+ * neuf clés exactes — `cellKeyValidator` la tient déjà côté entrée.
+ */
+const guessDistributionValidator = v.record(
+  v.string(),
   v.object({
     totalGuesses: v.number(),
     rarityByCountry: v.record(v.string(), v.number()),
