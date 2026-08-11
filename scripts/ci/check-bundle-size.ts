@@ -10,7 +10,13 @@ const MODULE_MANIFEST = "dist/.bundle-modules.json";
 // instantanées, au prix assumé d'un entry plus gros. Les chunks non initiaux
 // gardent leur budget anti-monolithe.
 const MAX_NON_INITIAL_CHUNK_GZIP_BYTES = 150 * 1024;
-const MAX_PLAYER_INITIAL_GZIP_BYTES = 250 * 1024;
+// Relevé de 250 à 280 KiB le 2026-08-11. posthog-js pèse à lui seul ~12 KiB de
+// plus entre 1.386 et 1.415, et il est `init()` de façon synchrone avant le
+// premier render : il est dans le chemin critique tant qu'on ne le charge pas en
+// différé. 280 laisse ~24 KiB de marge au-dessus de l'état actuel — assez pour
+// absorber les bumps d'analytics, assez serré pour rattraper une vraie dérive.
+// Le garde-fou reste **bloquant** : un budget qui warn ne se lit jamais.
+const MAX_PLAYER_INITIAL_GZIP_BYTES = 280 * 1024;
 
 const chunks = readdirSync(ASSETS_DIRECTORY)
   .filter((file) => file.endsWith(".js"))
