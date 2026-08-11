@@ -23,7 +23,7 @@ jobs:
         with:
           # Keep aligned with package.json#packageManager.
           version: 11.7.0
-      - uses: actions/setup-node@v6
+      - uses: actions/setup-node@v7
         with:
           node-version: 22.19.0
           cache: pnpm
@@ -44,9 +44,15 @@ jobs:
   # The workflow-level concurrency cancels superseded runs
   # so rapid develop pushes don't pile up.
   # Requires repo variable VITE_CONVEX_URL = <develop Convex URL>.
+  #
+  # Skipped on Dependabot PRs: the suite writes real guesses into develop's
+  # Convex env, so a dependency bump would bruit the staging stats for nothing.
+  # The build itself stays covered — `quality` runs check:bundle, which builds.
+  # The full suite runs anyway as soon as the bump is merged into develop.
   e2e:
     name: Playwright e2e
     needs: quality
+    if: github.actor != 'dependabot[bot]'
     runs-on: ubuntu-latest
     # The e2e suite shares the develop Convex env, so never run two at once.
     concurrency:
@@ -60,7 +66,7 @@ jobs:
         with:
           # Keep aligned with package.json#packageManager.
           version: 11.7.0
-      - uses: actions/setup-node@v6
+      - uses: actions/setup-node@v7
         with:
           node-version: 22.19.0
           cache: pnpm
