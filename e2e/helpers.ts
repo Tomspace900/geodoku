@@ -223,9 +223,6 @@ export async function playToDefeat(page: Page, grid: TodayGrid) {
 }
 
 /**
- * Build a serialized PersistedGame for localStorage injection.
- */
-/**
  * Partie d'un jour passé, au format v3. Le payload minimal ne porte plus ni
  * statut ni horodatage : le statut se redérive des cases et des vies, et c'est
  * la garde de date qui écarte la partie, quel que soit son état.

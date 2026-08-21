@@ -106,18 +106,18 @@ test("stale game from 3 days ago is discarded and a fresh game starts", async ({
   }
 });
 
-// ── 4. Partie gagnée hier → partie fraîche aujourd'hui ───────────────────────
+// ── 4. Partie d'hier → partie fraîche aujourd'hui ────────────────────────────
 
-test("won game from yesterday does not show old result screen", async ({
+test("stale game from yesterday does not show old result screen", async ({
   page,
 }) => {
-  const wonYesterday = makeStaleGameJSON(1);
+  const staleYesterday = makeStaleGameJSON(1);
 
   await page.addInitScript(
     ({ key, value }) => {
       localStorage.setItem(key, value);
     },
-    { key: STORAGE_KEY, value: wonYesterday },
+    { key: STORAGE_KEY, value: staleYesterday },
   );
 
   await page.goto("/");
