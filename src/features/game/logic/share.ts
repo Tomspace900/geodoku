@@ -20,9 +20,10 @@ export function cellShareEmoji(
 }
 
 /**
- * Chaîne copiée « partage » : format volontairement international, sans texte
- * localisable. Marque (Geodoku), numéro d’issue si post-lancement (`gridNumber`),
- * total en points, URL et emojis — pas d’i18n ici (`pts` est universel).
+ * Chaîne de partage **unique** — feuille native comme presse-papiers envoient
+ * exactement celle-ci (cf. `shareGameResult`). Format volontairement international,
+ * sans texte localisable. Marque (Geodoku), numéro d’issue si post-lancement
+ * (`gridNumber`), total en points, emojis et URL — pas d’i18n ici (`pts` est universel).
  *
  * Réservé à la grille du jour : le partage n'a de sens que quand tout le monde a
  * la même grille. Une partie d'entraînement (vies illimitées) n'affiche donc pas
@@ -71,32 +72,6 @@ async function copyShareToClipboard(text: string): Promise<boolean> {
   }
 }
 
-type SharePayload = {
-  title: string;
-  text: string;
-  url: string;
-};
-
-function clipboardShareText(payload: SharePayload): string {
-  return `${payload.text}\n\n${payload.url}`;
-}
-
-/** Données pour `navigator.share` (texte sans URL dupliquée en fin de corps). */
-export function buildSharePayload(
-  state: GameState,
-  gridNumber: number | null,
-  distribution: Record<string, CellGuessDistribution> | undefined,
-  siteUrl = "https://geodoku.app",
-): SharePayload {
-  const fullText = formatShareString(state, gridNumber, distribution, siteUrl);
-  const lines = fullText.split("\n");
-  return {
-    title: lines[0] ?? "Geodoku",
-    text: lines.slice(0, -2).join("\n"),
-    url: lines.at(-1) ?? siteUrl,
-  };
-}
-
 /**
  * Vrai uniquement sur un appareil au pointeur principal tactile (mobile/tablette).
  * Desktop Safari et Chrome exposent pourtant `navigator.share`, mais y ouvrir une
@@ -125,25 +100,19 @@ export function canUseNativeShare(): boolean {
   );
 }
 
-function isNativeShareAvailable(data: ShareData): boolean {
-  if (!canUseNativeShare()) {
-    return false;
-  }
-  if (typeof navigator.canShare === "function") {
-    try {
-      return navigator.canShare(data);
-    } catch {
-      return false;
-    }
-  }
-  return true;
-}
-
 export type ShareOutcome = "shared" | "copied" | "cancelled" | "failed";
 
 /**
- * Ouvre la feuille de partage native (iOS/Android) si disponible,
- * sinon copie le texte dans le presse-papiers.
+ * Ouvre la feuille de partage native (iOS/Android) si disponible, sinon copie
+ * dans le presse-papiers — **la même chaîne dans les deux cas**.
+ *
+ * ⚠️ Un seul champ `text` (URL comprise, en fin de corps), jamais
+ * `{title, text, url}` : la feuille iOS transmet chaque champ comme un item
+ * distinct et l’app réceptrice ne garde souvent que celui qu’elle sait traiter.
+ * Avec une `url` séparée, Messages/WhatsApp/Mail n’envoyaient que le lien — score
+ * et grille d’emojis passaient à la trappe, de façon variable selon l’app cible
+ * (d’où l’impression que « ça dépend du navigateur »). Ne pas « enrichir » ce
+ * payload : l’aperçu de lien qu’on y gagnerait ne vaut pas le contenu perdu.
  */
 export async function shareGameResult(
   state: GameState,
@@ -151,16 +120,11 @@ export async function shareGameResult(
   distribution: Record<string, CellGuessDistribution> | undefined,
   siteUrl = "https://geodoku.app",
 ): Promise<ShareOutcome> {
-  const payload = buildSharePayload(state, gridNumber, distribution, siteUrl);
-  const shareData: ShareData = {
-    title: payload.title,
-    text: payload.text,
-    url: payload.url,
-  };
+  const text = formatShareString(state, gridNumber, distribution, siteUrl);
 
-  if (isNativeShareAvailable(shareData)) {
+  if (canUseNativeShare()) {
     try {
-      await navigator.share(shareData);
+      await navigator.share({ text });
       return "shared";
     } catch (err) {
       if (err instanceof DOMException && err.name === "AbortError") {
@@ -169,6 +133,6 @@ export async function shareGameResult(
     }
   }
 
-  const ok = await copyShareToClipboard(clipboardShareText(payload));
+  const ok = await copyShareToClipboard(text);
   return ok ? "copied" : "failed";
 }

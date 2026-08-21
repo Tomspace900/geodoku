@@ -73,7 +73,7 @@ export function ResultScreen({
 }: Props) {
   const posthog = usePostHog();
   const [shareFeedback, setShareFeedback] = useState<
-    "shared" | "copied" | null
+    "shared" | "copied" | "failed" | null
   >(null);
   const shareFeedbackTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(
     null,
@@ -140,7 +140,8 @@ export function ResultScreen({
   async function handleShare() {
     if (!scoreReady) return;
     const outcome = await shareGameResult(state, gridNumber, distribution);
-    if (outcome === "cancelled" || outcome === "failed") return;
+    // Une annulation est un choix du joueur : ni retour visuel, ni event.
+    if (outcome === "cancelled") return;
 
     setShareFeedback(outcome);
     if (shareFeedbackTimeoutRef.current) {
@@ -150,6 +151,9 @@ export function ResultScreen({
       setShareFeedback(null);
       shareFeedbackTimeoutRef.current = null;
     }, 2000);
+    // Un échec presse-papiers (permission refusée, webview exotique) n'a rien
+    // partagé : il se dit à l'écran, mais ne compte pas comme un partage.
+    if (outcome === "failed") return;
     posthog?.capture("result_shared", {
       grid_date: state.date,
       grid_number: gridNumber,
@@ -311,7 +315,9 @@ export function ResultScreen({
               ? t("ui.shareShared")
               : shareFeedback === "copied"
                 ? t("ui.shareCopied")
-                : t("ui.share")}
+                : shareFeedback === "failed"
+                  ? t("ui.shareFailed")
+                  : t("ui.share")}
           </Button>
 
           <SurveyCta source="result_screen" />
