@@ -3,6 +3,11 @@
   "compilerOptions": {
     "types": ["node", "vite/client"]
   },
-  "include": ["scripts/**/*.ts", "vite.config.ts", "tailwind.config.ts"],
+  "include": [
+    "scripts/**/*.ts",
+    "content/**/*.ts",
+    "vite.config.ts",
+    "tailwind.config.ts"
+  ],
   "exclude": ["scripts/dev"]
 }
