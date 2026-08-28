@@ -1,0 +1,32 @@
+// @generated par pnpm build:answers — ne pas éditer à la main.
+import { defineAnswerSet } from "../defineAnswerSet";
+
+export default defineAnswerSet("physical_peak_over_5000m", [
+  "AFG",
+  "ARG",
+  "BOL",
+  "BTN",
+  "CAN",
+  "CHL",
+  "CHN",
+  "COD",
+  "COL",
+  "ECU",
+  "GEO",
+  "IND",
+  "IRN",
+  "KAZ",
+  "KEN",
+  "KGZ",
+  "MEX",
+  "MMR",
+  "NPL",
+  "PAK",
+  "PER",
+  "RUS",
+  "TJK",
+  "TUR",
+  "TZA",
+  "UGA",
+  "USA",
+]);

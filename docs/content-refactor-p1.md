@@ -331,3 +331,54 @@ inchangé) ; `simulate:scheduling` sans changement de comportement ;
 
 > À remplir par l'exécutant : sortie du harnais de parité (étape 3), écarts
 > vs v2 et leur arbitrage, décisions d'ambiguïté, mesure du bundle final.
+
+### Décisions d'ambiguïté
+
+- **En-tête `@generated`** : ajouté aux 4 fichiers snapshot (`countryCodes.ts`,
+  `catalog.ts`, `facts.ts`, `popularity.ts`), pas seulement à `facts.ts`. Le
+  modèle §1 traite tout le bloc SNAPSHOT comme généré ; la regen (étape 6)
+  réécrira les quatre.
+- **`popularity.ts` seedé** : `percentile = popularityIndex` du `countries.json`
+  actuel (reproduit à l'identique `POPULARITY_BY_CODE` de `logic/popularity.ts`),
+  `rawPageviews = wikipediaMonthlyViews` (présent pour les 197), `fallback: null`.
+  Meta du snapshot (`measurementPeriod`, `algorithmVersion`) posée en
+  placeholder honnête (`legacy-countries-json-pivot`), la regen mettra les
+  vraies valeurs.
+- **`CountryFacts.borders`** : `readonly string[]` et non `CountryCode[]` — les
+  frontières contiennent des territoires hors catalogue (ESH, HKG, MAC).
+- **`ActiveConstraintId`** : ajouté à `content/constraints/index.ts` ;
+  `derivations.ts` l'importe en **type-only** (élidé par tsx) pour que le
+  registre `DERIVATIONS satisfies Record<ActiveConstraintId, …>` vérifie la
+  bijection sans créer de cycle de valeurs ni alourdir le bundle.
+- **`tsconfig.tooling.json`** : `content/**/*.ts` ajouté explicitement à
+  `include` (piège §5 — couverture typecheck garantie hors graphe d'imports).
+
+### Étape 3 — harnais de parité
+
+```
+─── vs develop ───
+0 écart — parité iso-fonctionnelle vérifiée sur les 60 contraintes actives.
+
+─── vs v2 (écarts) ───
+⚠ INATTENDU  water_island — -[AUS]
+⚠ INATTENDU  population_more_canada — -[AFG,YEM]
+· attendu    latitude_south_hemisphere — +[COD]
+⚠ INATTENDU  physical_crosses_equator — -[GNQ]
+⚠ INATTENDU  density_more_netherlands — -[IND]
+⚠ INATTENDU  density_less_canada — +[BWA] -[GUY]
+```
+
+**Arbitrage des écarts vs v2** : les listes générées correspondent **exactement**
+aux prédicats de `develop` sur le `countries.json` actuel (0 écart vs develop).
+Les 5 écarts « inattendus » vs v2 sont de la **dérive de données** du
+`countries.json` entre le commit v2 (août) et aujourd'hui — `develop` gagne
+(règle §3.1), les listes générées sont donc conformes :
+
+- `water_island -AUS` : `sourceCorrectionsByIso3` classe l'Australie `coastal`
+  (mainland) et non `island` — la v2 la comptait île.
+- `population_more_canada -AFG,-YEM`, `density_more_netherlands -IND`,
+  `density_less_canada ±BWA/GUY` : populations/densités proches d'un seuil-repère,
+  passées de l'autre côté depuis août.
+- `physical_crosses_equator -GNQ` : la Guinée équatoriale n'est plus taguée
+  `equator_crosser` dans les listes curées de `develop`.
+- `latitude_south_hemisphere +COD` : attendu (fix RDC `ebbea1f`).

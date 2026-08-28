@@ -1,0 +1,32 @@
+// @generated par pnpm build:answers — ne pas éditer à la main.
+import { defineAnswerSet } from "../defineAnswerSet";
+
+export default defineAnswerSet("density_more_japan", [
+  "BDI",
+  "BEL",
+  "BGD",
+  "BHR",
+  "BRB",
+  "COM",
+  "GRD",
+  "HTI",
+  "IND",
+  "ISR",
+  "KOR",
+  "LBN",
+  "LKA",
+  "MCO",
+  "MDV",
+  "MLT",
+  "MUS",
+  "NLD",
+  "NRU",
+  "PHL",
+  "PSE",
+  "RWA",
+  "SGP",
+  "SMR",
+  "TUV",
+  "TWN",
+  "VAT",
+]);

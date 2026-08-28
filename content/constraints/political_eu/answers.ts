@@ -1,0 +1,32 @@
+// @generated par pnpm build:answers — ne pas éditer à la main.
+import { defineAnswerSet } from "../defineAnswerSet";
+
+export default defineAnswerSet("political_eu", [
+  "AUT",
+  "BEL",
+  "BGR",
+  "CYP",
+  "CZE",
+  "DEU",
+  "DNK",
+  "ESP",
+  "EST",
+  "FIN",
+  "FRA",
+  "GRC",
+  "HRV",
+  "HUN",
+  "IRL",
+  "ITA",
+  "LTU",
+  "LUX",
+  "LVA",
+  "MLT",
+  "NLD",
+  "POL",
+  "PRT",
+  "ROU",
+  "SVK",
+  "SVN",
+  "SWE",
+]);

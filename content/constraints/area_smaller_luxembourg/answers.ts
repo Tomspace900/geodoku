@@ -1,0 +1,32 @@
+// @generated par pnpm build:answers — ne pas éditer à la main.
+import { defineAnswerSet } from "../defineAnswerSet";
+
+export default defineAnswerSet("area_smaller_luxembourg", [
+  "AND",
+  "ATG",
+  "BHR",
+  "BRB",
+  "COM",
+  "DMA",
+  "FSM",
+  "GRD",
+  "KIR",
+  "KNA",
+  "LCA",
+  "LIE",
+  "MCO",
+  "MDV",
+  "MHL",
+  "MLT",
+  "MUS",
+  "NRU",
+  "PLW",
+  "SGP",
+  "SMR",
+  "STP",
+  "SYC",
+  "TON",
+  "TUV",
+  "VAT",
+  "VCT",
+]);
