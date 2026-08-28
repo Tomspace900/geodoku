@@ -34,6 +34,7 @@ for (const c of countries) {
 const ALLOWED_SOURCE_CORRECTION_KEYS = new Set<keyof SourceCorrection>([
   "borders",
   "waterAccess",
+  "latitude",
 ]);
 
 function assertAllCountryCodes(label: string, list: string[]): void {
@@ -114,7 +115,7 @@ describe("countryPatches ↔ countries.json", () => {
     }
   });
 
-  it("limits source corrections to borders and waterAccess only", () => {
+  it("limits source corrections to borders, waterAccess and latitude only", () => {
     for (const [iso3, correction] of Object.entries(
       countryPatches.sourceCorrectionsByIso3,
     )) {

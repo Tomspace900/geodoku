@@ -18,6 +18,12 @@ import type {
 export type SourceCorrection = {
   borders?: string[];
   waterAccess?: WaterAccess;
+  /**
+   * Latitude « intention de jeu », pour les pays à cheval sur l'équateur dont le
+   * point représentatif de world-countries (arrondi au degré) tranche mal.
+   * Règle : majorité de la superficie terrestre — cf. countryPatches.
+   */
+  latitude?: number;
 };
 
 /** Curated constraint tag lists (events, geo, physical features, regime). */
@@ -334,6 +340,7 @@ export function applySourceCorrections(
   if (correction.waterAccess !== undefined) {
     country.waterAccess = correction.waterAccess;
   }
+  if (correction.latitude !== undefined) country.latitude = correction.latitude;
 }
 
 export function gameplayArraysForCode(

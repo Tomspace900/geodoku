@@ -17,7 +17,7 @@ import type {
 /** ISO 3166-1 alpha-3 — playable country (196 UN + inclusions) or addition like XKX. */
 export type Iso3 = string;
 
-// ─── Source corrections (borders, waterAccess only) ───────────────────────────
+// ─── Source corrections (borders, waterAccess, latitude) ──────────────────────
 
 export const sourceCorrectionsByIso3: Record<Iso3, SourceCorrection> = {
   /** Tasmania-only border count would mark AUS as island; gameplay = coastal mainland. */
@@ -49,6 +49,20 @@ export const sourceCorrectionsByIso3: Record<Iso3, SourceCorrection> = {
     ],
   },
   SUR: { borders: ["BRA", "FRA", "GUY"] },
+  /**
+   * Hémisphère d'un pays à cheval sur l'équateur : on tranche sur la MAJORITÉ DE
+   * LA SUPERFICIE TERRESTRE (pas la capitale — Libreville est au nord alors que
+   * les deux tiers du Gabon sont au sud).
+   *
+   * world-countries donne à la RDC un point représentatif arrondi à `0`, seul
+   * pays du catalogue exactement sur l'équateur : le `latitude < 0` de
+   * `latitude_south_hemisphere` la classait donc au nord par accident d'arrondi.
+   * Elle s'étend de 5,4°N à 13,5°S, sa capitale est à -4,32° et son centroïde à
+   * -2,88° : sud à l'unanimité des trois lectures.
+   *
+   * Les 12 autres `equatorCrosser` tombent déjà du bon côté sans patch.
+   */
+  COD: { latitude: -2.88 },
   FRA: {
     borders: [
       "AND",

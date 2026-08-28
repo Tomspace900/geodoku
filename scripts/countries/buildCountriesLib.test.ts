@@ -154,6 +154,8 @@ describe("applySourceCorrections", () => {
     expect(country.waterAccess).toBe("coastal");
     applySourceCorrections(country, { borders: ["NZL"] });
     expect(country.borders).toEqual(["NZL"]);
+    applySourceCorrections(country, { latitude: -2.88 });
+    expect(country.latitude).toBe(-2.88);
   });
 });
 
