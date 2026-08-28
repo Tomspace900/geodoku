@@ -369,18 +369,27 @@ inchangé) ; `simulate:scheduling` sans changement de comportement ;
 ```
 
 **Arbitrage des écarts vs v2** : les listes générées correspondent **exactement**
-aux prédicats de `develop` sur le `countries.json` actuel (0 écart vs develop).
-Les 5 écarts « inattendus » vs v2 sont de la **dérive de données** du
-`countries.json` entre le commit v2 (août) et aujourd'hui — `develop` gagne
-(règle §3.1), les listes générées sont donc conformes :
+aux prédicats de `develop` sur le `countries.json` actuel (0 écart vs develop) —
+`develop` gagne (règle §3.1), les listes générées sont donc conformes.
 
-- `water_island -AUS` : `sourceCorrectionsByIso3` classe l'Australie `coastal`
-  (mainland) et non `island` — la v2 la comptait île.
+**Nature des 5 écarts « inattendus »** (corrigé en revue) : ce n'est **pas** de
+la dérive de `countries.json` depuis août — entre le commit v2 et aujourd'hui,
+ce fichier n'a changé que d'une ligne (latitude COD, fix `ebbea1f`). Ces 5
+écarts sont des **jugements de la curation manuelle v2** (revue de juillet sur
+sources fraîches — WDI 2024, etc.) qui divergeaient déjà des prédicats à
+l'époque. Écartés en P1 au nom de la parité, ils sont les **premiers candidats
+de révision en P2 / à la première regen** :
+
+- `water_island -AUS` : la v2 comptait l'Australie « île » ; develop la classe
+  `coastal` (mainland) via `sourceCorrectionsByIso3`. Décision de convention à
+  trancher en P2.
 - `population_more_canada -AFG,-YEM`, `density_more_netherlands -IND`,
-  `density_less_canada ±BWA/GUY` : populations/densités proches d'un seuil-repère,
-  passées de l'autre côté depuis août.
-- `physical_crosses_equator -GNQ` : la Guinée équatoriale n'est plus taguée
-  `equator_crosser` dans les listes curées de `develop`.
+  `density_less_canada ±BWA/GUY` : cas au bord d'un seuil-repère où la v2 avait
+  relevé des données plus fraîches que le `countries.json` actuel (dernière
+  regen ancienne). La première regen re-tranchera sur données à jour.
+- `physical_crosses_equator -GNQ` : la v2 comptait la Guinée équatoriale
+  (l'île d'Annobón est au sud de l'équateur, le continent au nord) — cas
+  limite de convention territoire vs continent, à documenter en P2.
 - `latitude_south_hemisphere +COD` : attendu (fix RDC `ebbea1f`).
 
 ### Étapes 4–7 — portage, garde, regen, nettoyage
