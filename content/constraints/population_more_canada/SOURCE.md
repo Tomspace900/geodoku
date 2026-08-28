@@ -1,7 +1,7 @@
 ---
 constraint_id: population_more_canada
 status: active
-checked_at: 2026-07-21
+checked_at: 2026-08-28
 review_after: 2027-01-21
 ---
 
@@ -22,7 +22,7 @@ Pays dont la population est supérieure à celle du Canada.
 
 ## Cas limites
 
-Un pays très proche du seuil bascule selon le millésime de la source. La dérivation tranche sur la donnée figée du snapshot (`FACTS_SNAPSHOT.date`) ; une regen sur données fraîches peut faire basculer un cas limite.
+Un pays très proche du seuil bascule selon le millésime de la source. La dérivation tranche sur la donnée figée du snapshot (`FACTS_SNAPSHOT.date`) ; une regen sur données fraîches peut faire basculer un cas limite. Regen du 2026-08-28 : l'**Afghanistan** entre (population WPP 2024 ≈ 43,8 M > Canada).
 
 ## Révision
 

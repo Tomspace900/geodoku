@@ -8,7 +8,6 @@ export default defineAnswerSet("density_more_japan", [
   "BHR",
   "BRB",
   "COM",
-  "GRD",
   "HTI",
   "IND",
   "ISR",

@@ -7,6 +7,7 @@ export default defineAnswerSet("density_more_netherlands", [
   "BHR",
   "BRB",
   "COM",
+  "IND",
   "ISR",
   "KOR",
   "LBN",

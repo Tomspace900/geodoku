@@ -1,4 +1,4 @@
-// @generated par scripts/content/seed-from-legacy.ts — ne pas éditer à la main.
+// @generated par pnpm build:countries — ne pas éditer à la main.
 import type { CountryCatalog } from "./type";
 
 export const COUNTRY_CATALOG: CountryCatalog = [

@@ -20,8 +20,8 @@ export type Iso3 = string;
 // ─── Source corrections (borders, waterAccess, latitude) ──────────────────────
 
 export const sourceCorrectionsByIso3: Record<Iso3, SourceCorrection> = {
-  /** Tasmania-only border count would mark AUS as island; gameplay = coastal mainland. */
-  AUS: { waterAccess: "coastal" as const },
+  /** Continent-État entouré d'eau, sans frontière terrestre : jouée comme insulaire (convention Geodoku, révision P2). */
+  AUS: { waterAccess: "island" as const },
   /** Island nation; world-countries lists a land border with India. */
   LKA: { waterAccess: "island" as const, borders: [] },
   /** Kosovo recognition: REST uses UNK, gameplay uses XKX. */

@@ -1,7 +1,7 @@
 ---
 constraint_id: density_more_netherlands
 status: active
-checked_at: 2026-07-21
+checked_at: 2026-08-28
 review_after: 2027-01-21
 ---
 
@@ -22,7 +22,7 @@ Pays dont la densité de population est supérieure à celle des Pays-Bas.
 
 ## Cas limites
 
-La densité brute ignore les zones inhabitables : un pays majoritairement désertique ou montagneux peut surprendre. Un pays très proche du seuil bascule selon le millésime de la source. La dérivation tranche sur la donnée figée du snapshot (`FACTS_SNAPSHOT.date`) ; une regen sur données fraîches peut faire basculer un cas limite.
+La densité brute ignore les zones inhabitables : un pays majoritairement désertique ou montagneux peut surprendre. Un pays très proche du seuil bascule selon le millésime de la source. La dérivation tranche sur la donnée figée du snapshot (`FACTS_SNAPSHOT.date`) ; une regen sur données fraîches peut faire basculer un cas limite. Regen du 2026-08-28 : l'**Inde** entre (densité ≈ 435 hab/km² > Pays-Bas ≈ 434).
 
 ## Révision
 

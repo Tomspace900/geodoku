@@ -1,4 +1,4 @@
-// @generated par scripts/content/seed-from-legacy.ts — ne pas éditer à la main.
+// @generated par pnpm build:countries — ne pas éditer à la main.
 
 export const COUNTRY_CODES = [
   "AFG",

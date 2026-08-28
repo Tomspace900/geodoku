@@ -1,7 +1,7 @@
 ---
 constraint_id: water_island
 status: active
-checked_at: 2026-07-21
+checked_at: 2026-08-28
 review_after: 2027-01-21
 ---
 
@@ -22,7 +22,7 @@ Pays insulaires : le territoire principal est entouré d'eau et ne partage aucun
 
 ## Cas limites
 
-Deux arbitrages Geodoku, pas des données sources : l'Australie est jouée comme **continentale**, le Sri Lanka comme **insulaire** malgré la frontière listée en amont.
+Deux arbitrages Geodoku, pas des données sources : l'**Australie** est jouée comme **insulaire** (continent-État entouré d'eau, sans frontière terrestre — révision P2, 2026-08-28 ; auparavant classée continentale), le **Sri Lanka** comme **insulaire** malgré la frontière listée en amont. Les deux sont posés dans `scripts/countries/countryPatches.ts` (`sourceCorrectionsByIso3`).
 
 ## Révision
 

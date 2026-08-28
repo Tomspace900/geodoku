@@ -3,6 +3,7 @@ import { defineAnswerSet } from "../defineAnswerSet";
 
 export default defineAnswerSet("water_island", [
   "ATG",
+  "AUS",
   "BHR",
   "BHS",
   "BRB",

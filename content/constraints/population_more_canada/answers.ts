@@ -2,6 +2,7 @@
 import { defineAnswerSet } from "../defineAnswerSet";
 
 export default defineAnswerSet("population_more_canada", [
+  "AFG",
   "ARG",
   "BGD",
   "BRA",
