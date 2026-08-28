@@ -1,9 +1,6 @@
-// Imports relatifs (pas d'alias @/) : ce module est aussi bundlé par Convex
+// Import relatif (pas d'alias @/) : ce module est aussi bundlé par Convex
 // (grids.ts) et par les scripts tsx, qui ne résolvent pas les tsconfig paths.
-import countriesJson from "../data/countries.json" with { type: "json" };
-import type { Country } from "../types";
-
-const COUNTRIES = countriesJson as unknown as Country[];
+import { COUNTRY_POPULARITY } from "../../../../content/countries/popularity";
 
 /** Fallback médiane — pays sans pageviews obtenues au build. */
 const POPULARITY_FALLBACK = 0.5;
@@ -16,9 +13,12 @@ const POPULARITY_FALLBACK = 0.5;
  */
 const POPULARITY_TOP_K = 3;
 
-/** ISO3 → percentile de notoriété [0..1] (popularityIndex de countries.json). */
+/** ISO3 → percentile de notoriété [0..1] du snapshot Wikipédia versionné. */
 const POPULARITY_BY_CODE: ReadonlyMap<string, number> = new Map(
-  COUNTRIES.map((c) => [c.iso3, c.popularityIndex ?? POPULARITY_FALLBACK]),
+  Object.entries(COUNTRY_POPULARITY.entries).map(([iso3, entry]) => [
+    iso3,
+    entry?.percentile ?? POPULARITY_FALLBACK,
+  ]),
 );
 
 export function countryPopularity(code: string): number {

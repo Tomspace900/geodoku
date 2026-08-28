@@ -26,6 +26,7 @@
 import { mkdirSync, writeFileSync } from "node:fs";
 import { dirname } from "node:path";
 import { ConvexHttpClient } from "convex/browser";
+import { COUNTRY_CATALOG } from "../../content/countries/catalog";
 import { api } from "../../convex/_generated/api";
 import {
   FAILED_ATTEMPTS_SINCE,
@@ -33,10 +34,7 @@ import {
   STRUGGLE_MIN_ATTEMPTS,
   struggleRate,
 } from "../../src/features/admin/logic/observedMetrics";
-import COUNTRIES_JSON from "../../src/features/countries/data/countries.json" with {
-  type: "json",
-};
-import type { Country } from "../../src/features/countries/types";
+import { countryPopularity } from "../../src/features/countries/logic/popularity";
 import { CONSTRAINTS } from "../../src/features/game/logic/constraints";
 
 // ─── Constantes ───────────────────────────────────────────────────────────────
@@ -75,8 +73,8 @@ if (!ADMIN_TOKEN) {
 }
 
 const client = new ConvexHttpClient(CONVEX_URL);
-const COUNTRIES = COUNTRIES_JSON as unknown as Country[];
-const COUNTRY_BY_CODE = new Map(COUNTRIES.map((c) => [c.iso3, c]));
+const COUNTRY_BY_CODE: ReadonlyMap<string, (typeof COUNTRY_CATALOG)[number]> =
+  new Map(COUNTRY_CATALOG.map((country) => [country.iso3, country]));
 const CONSTRAINT_BY_ID = new Map(CONSTRAINTS.map((c) => [c.id, c]));
 
 // ─── Types issus des queries Convex ───────────────────────────────────────────
@@ -647,7 +645,7 @@ function renderDeadCountries(
       return {
         ...s,
         name: country?.names.en ?? s.code,
-        popularityIndex: country?.popularityIndex ?? null,
+        popularityIndex: country ? countryPopularity(s.code) : null,
       };
     })
     .sort((a, b) => b.missingAppearances - a.missingAppearances);

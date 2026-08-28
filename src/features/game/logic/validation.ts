@@ -1,5 +1,5 @@
 import type { Country } from "@/features/countries/types";
-import { CONSTRAINT_BY_ID, type ConstraintId } from "./constraints";
+import { type ConstraintId, matchesConstraint } from "./constraints";
 
 export type ValidationContext = {
   rowConstraintId: ConstraintId;
@@ -39,11 +39,8 @@ export function isConstraintFailureReason(
 export function validateGuess(ctx: ValidationContext): ValidationResult {
   if (ctx.usedCountries.has(ctx.country.iso3))
     return { valid: false, reason: "already_used" };
-  const rowC = CONSTRAINT_BY_ID.get(ctx.rowConstraintId);
-  const colC = CONSTRAINT_BY_ID.get(ctx.colConstraintId);
-  if (!rowC || !colC) throw new Error("Unknown constraint id");
-  const rowOk = rowC.predicate(ctx.country);
-  const colOk = colC.predicate(ctx.country);
+  const rowOk = matchesConstraint(ctx.rowConstraintId, ctx.country.iso3);
+  const colOk = matchesConstraint(ctx.colConstraintId, ctx.country.iso3);
   if (!rowOk && !colOk) return { valid: false, reason: "wrong_constraints" };
   if (!rowOk) return { valid: false, reason: "wrong_row" };
   if (!colOk) return { valid: false, reason: "wrong_col" };

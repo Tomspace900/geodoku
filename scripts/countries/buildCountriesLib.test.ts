@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import type { Country } from "../../src/features/countries/types.ts";
+import type { CountryRecord } from "../../src/features/countries/types.ts";
 import {
   applySourceCorrections,
   assignPopularity,
@@ -20,7 +20,7 @@ import {
   toWikipediaTitle,
 } from "./buildCountriesLib.ts";
 
-function minimalCountry(code: string): Country {
+function minimalCountry(code: string): CountryRecord {
   return {
     iso3: code,
     iso2: code.slice(0, 2),

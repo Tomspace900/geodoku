@@ -7,7 +7,7 @@
  * - gameplayClassifications: constraint tag lists (events, geo, physical features, regime)
  * - manualCountryAdditions: countries absent from world-countries (Kosovo XKX → 196 + 1 = 197 playable)
  */
-import type { Country } from "../../src/features/countries/types.ts";
+import type { CountryRecord } from "../../src/features/countries/types.ts";
 import type {
   CountryPatchesConfig,
   GameplayClassifications,
@@ -573,7 +573,7 @@ export const gameplayClassifications: GameplayClassifications = {
 
 // ─── Manual country additions ─────────────────────────────────────────────────
 
-export const manualCountryAdditions: Country[] = [
+export const manualCountryAdditions: CountryRecord[] = [
   {
     iso3: "XKX",
     iso2: "XK",

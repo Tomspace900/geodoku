@@ -79,12 +79,12 @@ export type CapitalRole =
   | "legislative"
   | "primary";
 
-export type CountryCapital = Readonly<{
+export type CountryCapital = {
   name: string;
   latitude: number;
   longitude: number;
-  roles: readonly CapitalRole[];
-}>;
+  roles: CapitalRole[];
+};
 
 /** Political regime type. Only two values to keep the axis simple and extensible. */
 export type Regime = "monarchy" | "republic";
@@ -143,6 +143,42 @@ export type CountryFactsSnapshot = Readonly<{
   date: string;
   note: string;
 }>;
+
+/**
+ * Enregistrement pays complet et **mutable** — identité + faits + métriques de
+ * popularité. Forme historique du `countries.json`, désormais produite en
+ * mémoire par le pipeline de régénération offline (`scripts/countries/`) puis
+ * éclatée en `catalog.ts` / `facts.ts` / `popularity.ts`. Aucun code runtime ne
+ * la consomme.
+ */
+export type CountryRecord = {
+  /** ISO3 « libre » : le pipeline manipule des chaînes brutes avant validation. */
+  iso3: string;
+  iso2: string;
+  names: LocalizedString;
+  aliases: string[];
+  flagEmoji: string;
+  continent: Continent;
+  waterAccess: WaterAccess;
+  borders: string[];
+  areaKm2: number;
+  population: number;
+  officialLanguages: string[];
+  wikipediaMonthlyViews?: number;
+  popularityIndex?: number;
+  latitude: number;
+  subregion: string;
+  flagColors: FlagColor[];
+  flagSymbols: FlagSymbol[];
+  flagLayout: FlagLayout[];
+  events: CountryEvent[];
+  memberships: PoliticalGroup[];
+  capitals: CountryCapital[];
+  drivingSide: DrivingSide;
+  geoTags: string[];
+  regime: Regime;
+  physicalFeatures: PhysicalFeature[];
+};
 
 // ─── Snapshot de popularité ─────────────────────────────────────────────────
 

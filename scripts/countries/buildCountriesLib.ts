@@ -2,8 +2,8 @@
  * Pure helpers for build-countries (unit-tested). See build-countries.ts.
  */
 import type {
-  Country,
   CountryCapital,
+  CountryRecord,
   DrivingSide,
   FlagColor,
   FlagLayout,
@@ -49,7 +49,7 @@ export type CountryPatchesConfig = {
   searchAliasesByIso3: Record<string, string[]>;
   wikipediaTitlesByIso3: Record<string, string>;
   gameplayClassifications: GameplayClassifications;
-  manualCountryAdditions: Country[];
+  manualCountryAdditions: CountryRecord[];
 };
 
 /**
@@ -228,7 +228,7 @@ const ISO639_3_TO_1: Readonly<Record<string, string | null>> = {
 export function deriveContinent(
   region: string,
   subregion: string,
-): Country["continent"] {
+): CountryRecord["continent"] {
   switch (region) {
     case "Africa":
       return "africa";
@@ -317,7 +317,7 @@ export function toWikipediaTitle(name: string): string {
 export function flagFieldsForCode(
   code: string,
   flagData: FlagData,
-): Pick<Country, "flagColors" | "flagSymbols" | "flagLayout"> {
+): Pick<CountryRecord, "flagColors" | "flagSymbols" | "flagLayout"> {
   const entry = flagData[code];
   if (!entry) {
     throw new Error(
@@ -332,7 +332,7 @@ export function flagFieldsForCode(
 }
 
 export function applySourceCorrections(
-  country: Country,
+  country: CountryRecord,
   correction?: SourceCorrection,
 ): void {
   if (!correction) return;
@@ -347,8 +347,8 @@ export function gameplayArraysForCode(
   code: string,
   classifications: GameplayClassifications,
   rc: RcEnrichment,
-): Pick<Country, "events" | "geoTags"> {
-  const events: Country["events"] = [];
+): Pick<CountryRecord, "events" | "geoTags"> {
+  const events: CountryRecord["events"] = [];
   if (classifications.eventFifaWcHost.includes(code))
     events.push("fifa_wc_host");
   if (classifications.eventSummerOlympicsHost.includes(code))
@@ -402,7 +402,7 @@ const POPULARITY_MEDIAN_FALLBACK = 0.5;
  * Tie ranks use the average index. Countries without pageviews in the map receive the median fallback.
  */
 export function assignPopularity(
-  countries: Country[],
+  countries: CountryRecord[],
   pageviewsByCode: Map<string, number>,
 ): void {
   for (const country of countries) {

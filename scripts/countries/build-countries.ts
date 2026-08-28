@@ -21,8 +21,8 @@ import { resolve } from "node:path";
 import rawWorldCountries from "world-countries";
 import type {
   CapitalRole,
-  Country,
   CountryCapital,
+  CountryRecord,
   DrivingSide,
   PoliticalGroup,
 } from "../../src/features/countries/types.ts";
@@ -540,7 +540,7 @@ async function fetchCountryPageviews(
 }
 
 async function fetchPageviewsByCountryCode(
-  countries: Country[],
+  countries: CountryRecord[],
   wikiTitles: Record<string, string>,
 ): Promise<{
   pageviews: Map<string, number>;
@@ -690,9 +690,9 @@ async function main(): Promise<void> {
     }
   }
 
-  // 3. Transform to Country, merge REST Countries + gameplay fields, then corrections
+  // 3. Transform to CountryRecord, merge REST Countries + gameplay fields, then corrections
   log("Build records", "Building from world-countries and manual additions…");
-  const fromWC: Country[] = filtered.map((c) => {
+  const fromWC: CountryRecord[] = filtered.map((c) => {
     const rc = requireRestEnrichment(c.cca3, rcByCca3);
     const pop = rc.population;
     const { flagColors, flagSymbols, flagLayout } = flagFieldsForCode(
@@ -711,7 +711,7 @@ async function main(): Promise<void> {
       ...(searchAliases ?? []),
     ]);
 
-    const country: Country = {
+    const country: CountryRecord = {
       iso3: c.cca3,
       iso2: rc.iso2,
       names: { fr: nameFr, en: nameEn },
@@ -749,9 +749,9 @@ async function main(): Promise<void> {
   });
 
   // 4. Merge manual additions (e.g. Kosovo, absent from world-countries).
-  const additions: Country[] = countryPatches.manualCountryAdditions.map(
+  const additions: CountryRecord[] = countryPatches.manualCountryAdditions.map(
     (add) => {
-      const merged: Country = { ...add };
+      const merged: CountryRecord = { ...add };
       const rc = rcByCca3.get(merged.iso3);
       if (rc) {
         if (merged.population <= 0) merged.population = rc.population;
@@ -779,7 +779,7 @@ async function main(): Promise<void> {
     },
   );
 
-  const result: Country[] = [...fromWC, ...additions];
+  const result: CountryRecord[] = [...fromWC, ...additions];
   log("Build records", `${result.length} countries ready`);
 
   // 5. Enrich with Wikipedia pageviews-based popularity index

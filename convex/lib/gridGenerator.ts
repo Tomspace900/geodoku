@@ -2,11 +2,10 @@
  * Pure TypeScript grid generation — no Convex runtime dependencies.
  * Safe to import in Convex actions and in Vitest tests alike.
  */
-import countriesJson from "../../src/features/countries/data/countries.json" with {
-  type: "json",
-};
-import type { Country } from "../../src/features/countries/types";
-import { CONSTRAINTS } from "../../src/features/game/logic/constraints";
+import {
+  CONSTRAINTS,
+  constraintAnswers,
+} from "../../src/features/game/logic/constraints";
 import { solveGrid } from "../../src/features/game/logic/gridSolver";
 import {
   type FinalizedPoolGrid,
@@ -23,7 +22,6 @@ import {
   TARGET_GRIDS_PER_SEED,
 } from "./gridConstants";
 
-const COUNTRIES: Country[] = countriesJson as Country[];
 const UINT32_RANGE = 4_294_967_296;
 
 // Constraint → category lookup, built once at module load.
@@ -36,21 +34,13 @@ const CATEGORY_BY_ID: Record<string, string> = (() => {
 // ─── Core: constraint matching ────────────────────────────────────────────────
 
 /**
- * For each constraint, compute the set of ISO3 codes that satisfy it.
- * Called once per generation run.
+ * Generatable constraints only, as mutable Sets the generation run owns.
+ * Archived constraints are excluded: they are replayed, never generated.
  */
 export function buildConstraintMatches(): Record<string, Set<string>> {
-  const result: Record<string, Set<string>> = {};
-  for (const constraint of CONSTRAINTS) {
-    const matching = new Set<string>();
-    for (const country of COUNTRIES) {
-      if (constraint.predicate(country)) {
-        matching.add(country.iso3);
-      }
-    }
-    result[constraint.id] = matching;
-  }
-  return result;
+  return Object.fromEntries(
+    CONSTRAINTS.map(({ id }) => [id, new Set(constraintAnswers(id))]),
+  );
 }
 
 /**

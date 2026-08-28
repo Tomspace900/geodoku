@@ -1,7 +1,5 @@
-import countriesJson from "@/features/countries/data/countries.json" with {
-  type: "json",
-};
 import { getCountryByIso3 } from "@/features/countries/logic/search";
+import { COUNTRY_CODES } from "../../../../content/countries/countryCodes";
 import {
   hasEmptyCell,
   markBlockedCells,
@@ -18,9 +16,7 @@ export { CELL_KEYS, solveGrid } from "../logic/gridSolver";
 /** Probabilité qu'un tirage vise un pays valide pour la case (sinon erreur). */
 export const GOOD_COUNTRY_PICK_RATE = 0.55;
 
-const ALL_COUNTRY_CODES = (countriesJson as { iso3: string }[]).map(
-  (c) => c.iso3,
-);
+const ALL_COUNTRY_CODES: readonly string[] = COUNTRY_CODES;
 
 function shuffleArray<T>(items: T[], rng: () => number): T[] {
   const out = [...items];

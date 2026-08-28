@@ -1,10 +1,8 @@
 import { matchSorter, rankings } from "match-sorter";
-import countriesJson from "@/features/countries/data/countries.json" with {
-  type: "json",
-};
 import type { Country } from "@/features/countries/types";
+import { COUNTRY_CATALOG } from "../../../../content/countries/catalog";
 
-const TYPED = countriesJson as Country[];
+const TYPED: readonly Country[] = COUNTRY_CATALOG;
 
 // Normalise: lowercase + strip accents (NFD + remove combining marks) + hyphens as spaces
 function normalize(s: string): string {

@@ -20,6 +20,7 @@
  * Run: pnpm analyze:pool [--runs=3]
  */
 
+import { COUNTRY_CATALOG } from "../../content/countries/catalog";
 import type { FinalizedPoolGrid } from "../../convex/lib/gridConstants";
 import {
   MAX_CONSTRAINT_OVERLAP,
@@ -31,11 +32,7 @@ import {
   generateDiversePool,
   overlapCoefficient,
 } from "../../convex/lib/gridGenerator";
-import countriesJson from "../../src/features/countries/data/countries.json" with {
-  type: "json",
-};
 import { topKPopularity } from "../../src/features/countries/logic/popularity";
-import type { Country } from "../../src/features/countries/types";
 import { CONSTRAINTS } from "../../src/features/game/logic/constraints";
 import { translate } from "../../src/i18n/index";
 
@@ -50,11 +47,10 @@ const TRIVIAL_CELL_POP = 0.85; // top-K notoriety above which exits are "obvious
 const TRIVIAL_CELL_MAX_SIZE = MIN_CELL_SIZE + 1; // small cell that also reads as trivial
 
 // ─── Lookups (human-readable labels & country names, offline) ─────────────────
-const COUNTRIES = countriesJson as Country[];
 const LABEL_BY_ID: Record<string, string> = {};
 for (const c of CONSTRAINTS) LABEL_BY_ID[c.id] = translate("en", c.labelKey);
 const NAME_BY_CODE: Record<string, string> = {};
-for (const c of COUNTRIES) NAME_BY_CODE[c.iso3] = c.names.en;
+for (const c of COUNTRY_CATALOG) NAME_BY_CODE[c.iso3] = c.names.en;
 
 const labelFor = (id: string): string => LABEL_BY_ID[id] ?? id;
 const nameFor = (code: string): string => NAME_BY_CODE[code] ?? code;

@@ -2,7 +2,7 @@ import { readFileSync } from "node:fs";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 import { describe, expect, it } from "vitest";
-import type { Country } from "../../src/features/countries/types.ts";
+import type { CountryRecord } from "../../src/features/countries/types.ts";
 import type { FlagData, SourceCorrection } from "./buildCountriesLib.ts";
 import { countryPatches } from "./countryPatches.ts";
 
@@ -10,12 +10,12 @@ const _dir = dirname(fileURLToPath(import.meta.url));
 const flagData: FlagData = JSON.parse(
   readFileSync(join(_dir, "flagData.json"), "utf-8"),
 ) as FlagData;
-const countries: Country[] = JSON.parse(
+const countries: CountryRecord[] = JSON.parse(
   readFileSync(
     join(_dir, "../../src/features/countries/data/countries.json"),
     "utf-8",
   ),
-) as Country[];
+) as CountryRecord[];
 
 const { gameplayClassifications } = countryPatches;
 const codes = new Set(countries.map((c) => c.iso3));

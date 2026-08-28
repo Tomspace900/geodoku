@@ -1,13 +1,11 @@
-import countryCodesJson from "../../src/features/countries/data/countryCodes.json" with {
-  type: "json",
-};
+import { COUNTRY_CODES } from "../../content/countries/countryCodes";
 import { CONSTRAINTS } from "../../src/features/game/logic/constraints";
 import { solveGrid } from "../../src/features/game/logic/gridSolver";
 
 const ACTIVE_CONSTRAINT_IDS = new Set(
   CONSTRAINTS.map((constraint) => constraint.id as string),
 );
-const PLAYABLE_COUNTRY_CODES = new Set(countryCodesJson as string[]);
+const PLAYABLE_COUNTRY_CODES: ReadonlySet<string> = new Set(COUNTRY_CODES);
 
 export type GridContentSnapshot = {
   rows: string[];
@@ -20,7 +18,7 @@ export type GridContentIssue = "constraint" | "country" | "matching";
 /**
  * Vérifie qu'une grille future reste jouable avec le contenu actuellement
  * publié. `CONSTRAINTS` exclut volontairement les contraintes archivées tandis
- * que `countryCodes.json` est le catalogue compact accepté par les écritures.
+ * que `COUNTRY_CODES` est le catalogue compact accepté par les écritures.
  */
 export function getGridContentIssue(
   grid: GridContentSnapshot,
