@@ -1,5 +1,7 @@
 /**
- * Generates src/features/countries/data/countries.json
+ * Régénère le snapshot `content/countries/` (catalog + countryCodes + facts +
+ * popularity), puis enchaîne `pnpm build:answers` pour re-dériver les listes de
+ * contraintes actives.
  *
  * Sources:
  * - world-countries npm (v5): name.common (EN), translations.fra.common (FR), cca2
@@ -16,7 +18,8 @@
  *
  * Run: pnpm build:countries (requires network for population fetch)
  */
-import { readFileSync, writeFileSync } from "node:fs";
+import { execFileSync } from "node:child_process";
+import { readFileSync } from "node:fs";
 import { resolve } from "node:path";
 import rawWorldCountries from "world-countries";
 import type {
@@ -26,6 +29,7 @@ import type {
   DrivingSide,
   PoliticalGroup,
 } from "../../src/features/countries/types.ts";
+import { writeCountrySnapshot } from "../content/emitCountrySnapshot.ts";
 import {
   applySourceCorrections,
   assignPopularity,
@@ -910,23 +914,26 @@ async function main(): Promise<void> {
   // 7. Sort alphabetically by code (stable output across runs)
   result.sort((a, b) => a.iso3.localeCompare(b.iso3));
 
-  // 8. Write
-  const outPath = resolve(root, "src/features/countries/data/countries.json");
-  const codesOutPath = resolve(
+  // 8. Écrire le snapshot content/ (identité + faits + popularité)
+  const snapshotDate = new Date().toISOString().slice(0, 10);
+  log("Output", "Writing content/countries/…");
+  writeCountrySnapshot(result, {
     root,
-    "src/features/countries/data/countryCodes.json",
-  );
-  log("Output", "Writing countries.json…");
-  writeFileSync(outPath, `${JSON.stringify(result, null, 2)}\n`, "utf-8");
-  writeFileSync(
-    codesOutPath,
-    `${JSON.stringify(
-      result.map((country) => country.iso3),
-      null,
-      2,
-    )}\n`,
-    "utf-8",
-  );
+    snapshotDate,
+    snapshotNote: "régénéré par pnpm build:countries",
+    generatedBy: "pnpm build:countries",
+    popularity: {
+      snapshotId: `wikipedia-pageviews-${snapshotDate}`,
+      measurementPeriod: { startMonth: snapshotDate, endMonth: snapshotDate },
+      collectedAt: snapshotDate,
+      algorithmVersion: "assignPopularity",
+    },
+  });
+
+  // 9. Re-dériver les listes de réponses des contraintes actives.
+  log("Output", "Running pnpm build:answers…");
+  execFileSync("pnpm", ["build:answers"], { cwd: root, stdio: "inherit" });
+
   log(
     "Output",
     `Done in ${formatDuration(Date.now() - startedAt)} — ${result.length} countries written`,
@@ -934,6 +941,10 @@ async function main(): Promise<void> {
   log(
     "Output",
     `Pageviews: ${pageviewsByCode.size} fetched, ${pageviewFailures.length} fallback`,
+  );
+  log(
+    "Output",
+    "Relire le diff de content/ (catalog, facts, popularity, constraints/*/answers.ts).",
   );
 }
 

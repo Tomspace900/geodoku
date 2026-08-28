@@ -2,7 +2,8 @@ import { readFileSync } from "node:fs";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 import { describe, expect, it } from "vitest";
-import type { CountryRecord } from "../../src/features/countries/types.ts";
+import { COUNTRY_CODES } from "../../content/countries/countryCodes.ts";
+import { COUNTRY_FACTS } from "../../content/countries/facts.ts";
 import type { FlagData, SourceCorrection } from "./buildCountriesLib.ts";
 import { countryPatches } from "./countryPatches.ts";
 
@@ -10,23 +11,17 @@ const _dir = dirname(fileURLToPath(import.meta.url));
 const flagData: FlagData = JSON.parse(
   readFileSync(join(_dir, "flagData.json"), "utf-8"),
 ) as FlagData;
-const countries: CountryRecord[] = JSON.parse(
-  readFileSync(
-    join(_dir, "../../src/features/countries/data/countries.json"),
-    "utf-8",
-  ),
-) as CountryRecord[];
 
 const { gameplayClassifications } = countryPatches;
-const codes = new Set(countries.map((c) => c.iso3));
+const codes = new Set<string>(COUNTRY_CODES);
 const additionCodes = new Set(
   countryPatches.manualCountryAdditions.map((a) => a.iso3),
 );
 
 /** Codes that may appear on a border edge (playable countries + graph edges like XKX). */
 const validBorderTargets = new Set<string>(codes);
-for (const c of countries) {
-  for (const b of c.borders) {
+for (const iso3 of COUNTRY_CODES) {
+  for (const b of COUNTRY_FACTS[iso3].borders) {
     validBorderTargets.add(b);
   }
 }
@@ -62,7 +57,7 @@ function noDupes<T>(arr: T[], key: (x: T) => string): void {
   }
 }
 
-describe("countryPatches ↔ countries.json", () => {
+describe("countryPatches ↔ catalogue content/", () => {
   it("has every gameplay list entry reference an existing country code", () => {
     assertAllCountryCodes("middleEast", gameplayClassifications.middleEast);
     assertAllCountryCodes(
@@ -157,11 +152,11 @@ describe("countryPatches structural invariants", () => {
   });
 });
 
-describe("flagData.json ↔ countries.json", () => {
+describe("flagData.json ↔ catalogue content/", () => {
   it("covers every world-country code (additions carry flags inline)", () => {
-    for (const c of countries) {
-      if (additionCodes.has(c.iso3)) continue;
-      expect(flagData[c.iso3], `flagData missing: ${c.iso3}`).toBeDefined();
+    for (const iso3 of COUNTRY_CODES) {
+      if (additionCodes.has(iso3)) continue;
+      expect(flagData[iso3], `flagData missing: ${iso3}`).toBeDefined();
     }
   });
 
