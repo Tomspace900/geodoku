@@ -7,7 +7,6 @@ import type {
 } from "../../types";
 import { createInitialState } from "../reducer";
 import {
-  buildSharePayload,
   canUseNativeShare,
   formatShareString,
   shareGameResult,
@@ -117,32 +116,6 @@ describe("formatShareString", () => {
   });
 });
 
-describe("buildSharePayload", () => {
-  it("splits title, text and url for native share", () => {
-    const state = makeState({
-      status: "won",
-      lives: { kind: "limited", remaining: 3 },
-    });
-    const payload = buildSharePayload(state, 5, undefined);
-    expect(payload.title).toBe("Geodoku #5 ❤️❤️❤️🤍🤍");
-    expect(payload.text).toContain("60 pts"); // 3 vies × 20, grille/rareté 0
-
-    expect(payload.text).not.toContain("https://geodoku.app");
-    expect(payload.url).toBe("https://geodoku.app");
-  });
-
-  it("reconstructs clipboard text from payload", () => {
-    const state = makeState({
-      status: "won",
-      lives: { kind: "limited", remaining: 3 },
-    });
-    const payload = buildSharePayload(state, 5, undefined);
-    expect(`${payload.text}\n\n${payload.url}`).toBe(
-      formatShareString(state, 5, undefined),
-    );
-  });
-});
-
 describe("canUseNativeShare", () => {
   it("returns false when navigator.share is missing", () => {
     vi.stubGlobal("navigator", {
@@ -181,6 +154,64 @@ describe("shareGameResult", () => {
     const outcome = await shareGameResult(makeState(), 1, undefined);
     expect(outcome).toBe("shared");
     expect(share).toHaveBeenCalledOnce();
+
+    vi.unstubAllGlobals();
+  });
+
+  // Régression : un payload éclaté `{title, text, url}` laissait l'app réceptrice
+  // (Messages, WhatsApp, Mail…) n'emporter que le lien — score et emojis perdus.
+  // Un seul item ⇒ plus rien à jeter.
+  it("shares a single text field, never a separate title or url", async () => {
+    const share = vi.fn().mockResolvedValue(undefined);
+    vi.stubGlobal("navigator", {
+      share,
+      maxTouchPoints: 5,
+      clipboard: { writeText: vi.fn() },
+    });
+
+    const state = makeState({
+      status: "won",
+      lives: { kind: "limited", remaining: 3 },
+    });
+    await shareGameResult(state, 5, undefined);
+
+    const shared = share.mock.calls[0][0];
+    expect(Object.keys(shared)).toEqual(["text"]);
+    expect(shared.text).toBe(formatShareString(state, 5, undefined));
+    expect(shared.text).toContain("https://geodoku.app");
+    expect(shared.text).toContain("60 pts"); // 3 vies × 20, grille/rareté 0
+
+    vi.unstubAllGlobals();
+  });
+
+  it("shares and copies the exact same string", async () => {
+    const state = makeState({
+      status: "won",
+      lives: { kind: "limited", remaining: 3 },
+    });
+    const expected = formatShareString(state, 5, undefined);
+
+    const share = vi.fn().mockResolvedValue(undefined);
+    vi.stubGlobal("navigator", { share, maxTouchPoints: 5 });
+    await shareGameResult(state, 5, undefined);
+    vi.unstubAllGlobals();
+
+    const writeText = vi.fn().mockResolvedValue(undefined);
+    vi.stubGlobal("navigator", { maxTouchPoints: 0, clipboard: { writeText } });
+    await shareGameResult(state, 5, undefined);
+    vi.unstubAllGlobals();
+
+    expect(share.mock.calls[0][0].text).toBe(expected);
+    expect(writeText).toHaveBeenCalledWith(expected);
+  });
+
+  it("reports failure when the clipboard is unavailable", async () => {
+    vi.stubGlobal("navigator", {
+      maxTouchPoints: 0,
+      clipboard: { writeText: vi.fn().mockRejectedValue(new Error("denied")) },
+    });
+
+    expect(await shareGameResult(makeState(), 1, undefined)).toBe("failed");
 
     vi.unstubAllGlobals();
   });

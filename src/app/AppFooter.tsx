@@ -1,12 +1,12 @@
-import { KOFI_URL, METRODOKU_URL, SUPPORT_EMAIL } from "@/app/links";
-import { isChangelogNewBadgeVisible } from "@/features/legal/logic/changelog";
-import { useLocale, useT } from "@/i18n/LocaleContext";
-import { LocaleSwitcher } from "@/i18n/components/LocaleSwitcher";
-import { SURVEY_FLAG, markSurveyClicked, surveyUrl } from "@/lib/survey";
-import { cn } from "@/lib/utils";
 import { useFeatureFlagEnabled, usePostHog } from "@posthog/react";
 import { Coffee, Mail, MessageSquareText } from "lucide-react";
 import { Link } from "react-router";
+import { KOFI_URL, METRODOKU_URL, SUPPORT_EMAIL } from "@/app/links";
+import { isChangelogNewBadgeVisible } from "@/features/legal/logic/changelog";
+import { LocaleSwitcher } from "@/i18n/components/LocaleSwitcher";
+import { useLocale, useT } from "@/i18n/LocaleContext";
+import { markSurveyClicked, SURVEY_FLAG, surveyUrl } from "@/lib/survey";
+import { cn } from "@/lib/utils";
 
 type FooterLink = "metrodoku" | "support" | "contact" | "privacy" | "changelog";
 

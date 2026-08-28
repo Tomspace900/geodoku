@@ -1,11 +1,11 @@
 import { Eyebrow } from "@/components/editorial/Eyebrow";
 import { GRID_LAUNCH_DATE_ISO } from "@/features/game/logic/gridIssue";
 import {
+  buildSummary,
+  buildTrend,
   type FeedbackRow,
   type Summary,
   type TrendRow,
-  buildSummary,
-  buildTrend,
 } from "../logic/analytics";
 import { DifficultyPill } from "./DifficultyPill";
 import { PanelCard } from "./PanelCard";

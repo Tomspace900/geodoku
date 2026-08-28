@@ -23,6 +23,7 @@ export const fr = {
     share: "Partager mon score",
     shareCopied: "Copié\u00A0! ✓",
     shareShared: "Partagé\u00A0! ✓",
+    shareFailed: "Copie impossible",
     comeBackTomorrowGrid: "Reviens demain pour une nouvelle grille\u00A0!",
     cellAriaLabel:
       "Sélectionner case ligne {row} colonne {col} : {rowConstraint} × {colConstraint}",

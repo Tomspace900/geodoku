@@ -1,10 +1,10 @@
+import type { ReactNode } from "react";
 import {
   type DifficultyTier,
   difficultyTierFromScore,
   difficultyTierSurfaceClass,
 } from "@/features/admin/logic/display";
 import { cn } from "@/lib/utils";
-import type { ReactNode } from "react";
 
 type Props = {
   value?: number;

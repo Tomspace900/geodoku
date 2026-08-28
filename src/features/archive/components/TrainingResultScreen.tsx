@@ -1,3 +1,6 @@
+import { usePostHog } from "@posthog/react";
+import { RotateCcw } from "lucide-react";
+import { useEffect, useRef, useState } from "react";
 import { AccentBar } from "@/components/editorial/AccentBar";
 import { Eyebrow } from "@/components/editorial/Eyebrow";
 import { Button } from "@/components/ui/button";
@@ -21,9 +24,6 @@ import {
 import type { CellGuessDistribution, GameState } from "@/features/game/types";
 import { useT } from "@/i18n/LocaleContext";
 import { cn } from "@/lib/utils";
-import { usePostHog } from "@posthog/react";
-import { RotateCcw } from "lucide-react";
-import { useEffect, useRef, useState } from "react";
 
 type Props = {
   state: GameState;

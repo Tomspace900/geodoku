@@ -26,28 +26,27 @@ import {
   runEnsureTomorrowHandler,
   scheduleCandidateForDateArgs,
   scheduleCandidateForDateHandler,
+  scheduledGridPreviewDetailArgs,
   scheduleGridForDateArgs,
   scheduleGridForDateHandler,
-  scheduledGridPreviewDetailArgs,
   unscheduleGridHandler,
   upcomingScheduledPreviewArgs,
 } from "./adminGridOperations";
 import {
+  getReplayableGridsHandler,
   getReplayGridArgs,
   getReplayGridHandler,
-  getReplayableGridsHandler,
   getTodayGridHandler,
-  recordGameEndArgs,
-  recordGameEndHandler,
   recordTodayGameEndArgs,
   recordTodayGameEndHandler,
-  submitGridFeedbackArgs,
-  submitGridFeedbackHandler,
+  replayableGridsReturns,
+  replayGridReturns,
   submitTodayGridFeedbackArgs,
   submitTodayGridFeedbackHandler,
+  todayGridReturns,
 } from "./gridGameplay";
+import { recordedResult } from "./operationResults";
 import {
-  autoRefillPoolHandler,
   reconcileFutureGridContentHandler,
   reconcilePoolAndScheduleArgs,
   reconcilePoolAndScheduleHandler,
@@ -73,22 +72,18 @@ export const reconcilePoolAndSchedule = internalAction({
   handler: reconcilePoolAndScheduleHandler,
 });
 
-/** Alias conservé pour les références internes existantes. */
-export const autoRefillPool = internalAction({
-  args: {},
-  handler: autoRefillPoolHandler,
-});
-
 // ─── Parcours joueur ─────────────────────────────────────────────────────────
 
 export const getTodayGrid = query({
   args: {},
+  returns: todayGridReturns,
   handler: getTodayGridHandler,
 });
 
 /** Archive du mode entraînement : les grilles de J-1 à J-7, sans leurs réponses. */
 export const getReplayableGrids = query({
   args: {},
+  returns: replayableGridsReturns,
   handler: getReplayableGridsHandler,
 });
 
@@ -98,28 +93,19 @@ export const getReplayableGrids = query({
  */
 export const getReplayGrid = query({
   args: getReplayGridArgs,
+  returns: replayGridReturns,
   handler: getReplayGridHandler,
-});
-
-/** Écriture legacy conservée temporairement pendant le rollout. */
-export const recordGameEnd = mutation({
-  args: recordGameEndArgs,
-  handler: recordGameEndHandler,
-});
-
-/** Écriture legacy conservée temporairement pendant le rollout. */
-export const submitGridFeedback = mutation({
-  args: submitGridFeedbackArgs,
-  handler: submitGridFeedbackHandler,
 });
 
 export const recordTodayGameEnd = mutation({
   args: recordTodayGameEndArgs,
+  returns: recordedResult,
   handler: recordTodayGameEndHandler,
 });
 
 export const submitTodayGridFeedback = mutation({
   args: submitTodayGridFeedbackArgs,
+  returns: recordedResult,
   handler: submitTodayGridFeedbackHandler,
 });
 

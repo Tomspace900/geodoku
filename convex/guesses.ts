@@ -7,7 +7,6 @@ import {
   assertClientId,
   assertCountryCode,
   assertOperationId,
-  assertTodayDate,
   requireGridForDate,
   requireGridSnapshot,
 } from "./gameWriteValidation";
@@ -16,10 +15,27 @@ import {
   readOperationReceipt,
   writeOperationReceipt,
 } from "./operationReceipts";
+import { recordedResult, submitGuessResult } from "./operationResults";
 import { rateLimiter } from "./rateLimit";
 
 // 9 cases × ~200 pays × cohortes live/replay, sous la limite Convex de 4096.
 const MAX_GUESS_ROWS_PER_DATE = 4096;
+
+/**
+ * Distribution par case : total de la cohorte + part par pays.
+ *
+ * `v.record` et non `v.object` indexé par `CELL_KEYS` : Convex **refuse à la
+ * publication** un validateur d'objet dont les clés ne sont pas des
+ * identifiants valides, et « 0,0 » n'en est pas un. On perd la garantie des
+ * neuf clés exactes — `cellKeyValidator` la tient déjà côté entrée.
+ */
+const guessDistributionValidator = v.record(
+  v.string(),
+  v.object({
+    totalGuesses: v.number(),
+    rarityByCountry: v.record(v.string(), v.number()),
+  }),
+);
 
 type AcceptedGuess = {
   kind: "accepted";
@@ -155,6 +171,7 @@ async function incrementFailedGuess(
 /** Distribution live de la grille du jour. */
 export const getTodayGuessDistribution = query({
   args: {},
+  returns: guessDistributionValidator,
   handler: async (ctx) => {
     const date = todayUTC();
     await requireGridForDate(ctx, date);
@@ -163,12 +180,14 @@ export const getTodayGuessDistribution = query({
 });
 
 /**
- * Interface legacy conservée pendant la transition frontend. La lecture
- * historique reste permise, mais uniquement pour une vraie grille et une date
- * canonique afin de borner les abus.
+ * Rareté figée d'une grille passée : le mode entraînement (`/archive`) s'en sert
+ * pour colorer les cases sur la cohorte close du jour concerné. Anciennement
+ * legacy, cet endpoint fait désormais partie du parcours joueur. La lecture
+ * historique reste bornée à une vraie grille et une date canonique.
  */
 export const getGuessDistributionForDate = query({
   args: { date: v.string() },
+  returns: guessDistributionValidator,
   handler: async (ctx, args) => {
     assertCanonicalDate(args.date);
     await requireGridForDate(ctx, args.date);
@@ -188,6 +207,7 @@ export const submitTodayGuess = mutation({
     countryCode: v.string(),
     clientId: v.string(),
   },
+  returns: submitGuessResult,
   handler: async (ctx, args): Promise<GuessResult> => {
     assertOperationId(args.operationId);
     assertClientId(args.clientId);
@@ -237,37 +257,6 @@ export const submitTodayGuess = mutation({
   },
 });
 
-/** Interface legacy : même retour qu'avant, mais écriture limitée à today. */
-export const submitGuess = mutation({
-  args: {
-    date: v.string(),
-    cellKey: cellKeyValidator,
-    countryCode: v.string(),
-    clientId: v.string(),
-  },
-  handler: async (ctx, args) => {
-    assertTodayDate(args.date);
-    assertClientId(args.clientId);
-    assertCountryCode(args.countryCode);
-    await rateLimiter.limit(ctx, "guess", {
-      key: args.clientId,
-      throws: true,
-    });
-
-    const { validAnswers } = await requireGridSnapshot(ctx, args.date);
-    if (!validAnswers[args.cellKey]?.includes(args.countryCode)) {
-      throw new ConvexError("Invalid guess");
-    }
-    const { kind: _kind, ...legacyResult } = await incrementAcceptedGuess(
-      ctx,
-      args.date,
-      args.cellKey,
-      args.countryCode,
-    );
-    return legacyResult;
-  },
-});
-
 /** Enregistre un vrai pays qui ne satisfait pas le snapshot de la case. */
 export const recordTodayFailedGuess = mutation({
   args: {
@@ -276,6 +265,7 @@ export const recordTodayFailedGuess = mutation({
     countryCode: v.string(),
     clientId: v.string(),
   },
+  returns: recordedResult,
   handler: async (ctx, args) => {
     assertOperationId(args.operationId);
     assertClientId(args.clientId);
@@ -310,27 +300,5 @@ export const recordTodayFailedGuess = mutation({
     const result = { kind: "recorded" as const };
     await writeOperationReceipt(ctx, identity, result);
     return result;
-  },
-});
-
-/**
- * Interface legacy sans countryCode : conservée seulement le temps du rollout.
- * Elle valide désormais la date, la case, le client et l'existence de la grille.
- */
-export const recordFailedGuess = mutation({
-  args: {
-    date: v.string(),
-    cellKey: cellKeyValidator,
-    clientId: v.string(),
-  },
-  handler: async (ctx, args) => {
-    assertTodayDate(args.date);
-    assertClientId(args.clientId);
-    await rateLimiter.limit(ctx, "guess", {
-      key: args.clientId,
-      throws: true,
-    });
-    await requireGridForDate(ctx, args.date);
-    await incrementFailedGuess(ctx, args.date, args.cellKey);
   },
 });

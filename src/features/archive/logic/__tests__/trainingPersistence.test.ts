@@ -1,8 +1,8 @@
+import { beforeEach, describe, expect, it } from "vitest";
 import { CELL_KEYS } from "@/features/game/logic/gridTopology";
 import { createInitialState } from "@/features/game/logic/reducer";
 import type { GameState } from "@/features/game/types";
 import { STORAGE_KEYS } from "@/lib/storage";
-import { beforeEach, describe, expect, it } from "vitest";
 import {
   clearTrainingGame,
   loadTrainingGame,

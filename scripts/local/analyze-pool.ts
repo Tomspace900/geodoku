@@ -19,12 +19,13 @@
  *
  * Run: pnpm analyze:pool [--runs=3]
  */
+
+import type { FinalizedPoolGrid } from "../../convex/lib/gridConstants";
 import {
   MAX_CONSTRAINT_OVERLAP,
   MIN_CELL_SIZE,
   TARGET_GRIDS_PER_SEED,
 } from "../../convex/lib/gridConstants";
-import type { FinalizedPoolGrid } from "../../convex/lib/gridConstants";
 import {
   buildConstraintMatches,
   generateDiversePool,

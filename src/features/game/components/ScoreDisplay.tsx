@@ -1,17 +1,17 @@
+import { Heart } from "lucide-react";
+import { useEffect, useRef, useState } from "react";
 import { Eyebrow } from "@/components/editorial/Eyebrow";
 import { useScoreAnimation } from "@/features/game/hooks/useScoreAnimation";
 import { UI_ANIMATION_MS } from "@/features/game/logic/constants";
 import { countAt } from "@/features/game/logic/scoreAnimation";
 import {
-  type ScoreBreakdown,
   averageRarityTier,
   computeScore,
+  type ScoreBreakdown,
 } from "@/features/game/logic/scoreVariant";
 import type { RarityTier } from "@/features/game/types";
 import { useT } from "@/i18n/LocaleContext";
 import { cn } from "@/lib/utils";
-import { Heart } from "lucide-react";
-import { useEffect, useRef, useState } from "react";
 import { ScoreInfoDialog, type ScoreScale } from "./ScoreInfoDialog";
 
 // Score de fin : anneau central = grille (cases) ; couronne en 2 arcs, rareté

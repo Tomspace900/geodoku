@@ -67,13 +67,6 @@ export function assertCanonicalDate(date: string): void {
   }
 }
 
-export function assertTodayDate(date: string): void {
-  assertCanonicalDate(date);
-  if (date !== todayUTC()) {
-    throw new ConvexError("Only today's grid accepts writes");
-  }
-}
-
 /**
  * Garde des lectures d'archive (mode entraînement). L'endpoint étant public, ce
  * garde est la **seule** garantie réelle : le frontend classe déjà la date avant

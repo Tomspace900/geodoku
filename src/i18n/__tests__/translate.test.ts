@@ -1,8 +1,8 @@
+import { describe, expect, it } from "vitest";
 import {
   ARCHIVED_CONSTRAINTS,
   CONSTRAINTS,
 } from "@/features/game/logic/constraints";
-import { describe, expect, it } from "vitest";
 import { createTranslator, translate } from "../index";
 import { en } from "../locales/en";
 import { fr } from "../locales/fr";

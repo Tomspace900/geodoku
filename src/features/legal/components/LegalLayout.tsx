@@ -1,3 +1,4 @@
+import type { ReactNode } from "react";
 import AppFooter from "@/app/AppFooter";
 import { AppMark } from "@/components/AppMark";
 import { BackLink } from "@/components/editorial/BackLink";
@@ -6,7 +7,6 @@ import {
   type LegalAnalyticsPage,
   useLegalPageAnalytics,
 } from "@/features/legal/hooks/useLegalPageAnalytics";
-import type { ReactNode } from "react";
 
 type Props = {
   title: string;

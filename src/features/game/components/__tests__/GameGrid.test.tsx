@@ -1,7 +1,7 @@
-import { LocaleProvider } from "@/i18n/LocaleContext";
-import { STORAGE_KEYS, safeSet } from "@/lib/storage";
 import { render, screen } from "@testing-library/react";
 import { describe, expect, it } from "vitest";
+import { LocaleProvider } from "@/i18n/LocaleContext";
+import { STORAGE_KEYS, safeSet } from "@/lib/storage";
 import { createInitialState } from "../../logic/reducer";
 import { GameGrid } from "../GameGrid";
 

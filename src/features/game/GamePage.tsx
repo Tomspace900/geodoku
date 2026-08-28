@@ -1,3 +1,8 @@
+import { usePostHog } from "@posthog/react";
+import { useQuery } from "convex/react";
+import { History } from "lucide-react";
+import { useEffect, useRef, useState } from "react";
+import { Link } from "react-router";
 import AppFooter from "@/app/AppFooter";
 import { Button } from "@/components/ui/button";
 import { ErrorScreen } from "@/features/errors/components/ErrorScreen";
@@ -10,11 +15,6 @@ import {
 import { useT } from "@/i18n/LocaleContext";
 import { focusWithoutVisibleRing } from "@/lib/focus";
 import { cn } from "@/lib/utils";
-import { usePostHog } from "@posthog/react";
-import { useQuery } from "convex/react";
-import { History } from "lucide-react";
-import { useEffect, useRef, useState } from "react";
-import { Link } from "react-router";
 import { api } from "../../../convex/_generated/api";
 import { GameGrid } from "./components/GameGrid";
 import { GridSkeleton } from "./components/GridSkeleton";

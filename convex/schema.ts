@@ -1,5 +1,6 @@
 import { defineSchema, defineTable } from "convex/server";
 import { v } from "convex/values";
+import { operationResultValidator } from "./operationResults";
 
 export default defineSchema({
   gridCandidates: defineTable({
@@ -119,19 +120,7 @@ export default defineSchema({
     ),
     date: v.string(),
     canonicalPayload: v.string(),
-    result: v.union(
-      v.object({
-        kind: v.literal("accepted"),
-        count: v.number(),
-        total: v.number(),
-        rarity: v.number(),
-      }),
-      v.object({
-        kind: v.literal("domain_rejected"),
-        reason: v.literal("invalid_guess"),
-      }),
-      v.object({ kind: v.literal("recorded") }),
-    ),
+    result: operationResultValidator,
     expiresAt: v.number(),
   })
     .index("by_operation_id", ["operationId"])

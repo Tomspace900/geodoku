@@ -1,22 +1,41 @@
 version: 2
 updates:
+  # Projet solo : on veut UNE PR de maintenance par mois, sur la branche
+  # d'intégration, et zéro majeure automatique.
+  #
+  # - target-branch: develop → le flux est develop → main ; des PR ouvertes sur
+  #   main seraient inmergeables sans casser ce flux.
+  # - un seul groupe prod+dev → les bumps couplés (convex / convex-test) doivent
+  #   atterrir dans la même PR, sinon aucune des deux ne peut passer la CI.
+  # - majeures ignorées → react-router 8, lucide 1.x et consorts demandent du
+  #   code à adapter : ce sont des décisions à prendre, pas des PR à cliquer.
+  # - rebase-strategy: disabled → develop bouge souvent ; sans ça Dependabot
+  #   rebase en boucle et relance CI + déploiements à chaque fois.
   - package-ecosystem: npm
     directory: /
+    target-branch: develop
     schedule:
-      interval: weekly
+      interval: monthly
       day: monday
       time: "06:00"
       timezone: Europe/Paris
-    open-pull-requests-limit: 5
+    open-pull-requests-limit: 2
+    rebase-strategy: disabled
     groups:
-      production-minor-patch:
-        dependency-type: production
+      all-minor-patch:
+        patterns: ["*"]
         update-types: [minor, patch]
-      development-minor-patch:
-        dependency-type: development
-        update-types: [minor, patch]
+    ignore:
+      - dependency-name: "*"
+        update-types: [version-update:semver-major]
+
   - package-ecosystem: github-actions
     directory: /
+    target-branch: develop
     schedule:
       interval: monthly
-    open-pull-requests-limit: 3
+    open-pull-requests-limit: 1
+    rebase-strategy: disabled
+    groups:
+      actions:
+        patterns: ["*"]

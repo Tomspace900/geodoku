@@ -1,11 +1,11 @@
+import { describe, expect, it } from "vitest";
 import { en } from "@/i18n/locales/en";
 import { fr } from "@/i18n/locales/fr";
-import { describe, expect, it } from "vitest";
 import {
   BLOCKED_TITLE_KEYS,
   LIVES_DEFEAT_KEYS,
-  WIN_TITLE_KEYS,
   resultTitleKeys,
+  WIN_TITLE_KEYS,
   winTitleBand,
 } from "../resultTitle";
 

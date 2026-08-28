@@ -1,3 +1,6 @@
+import { usePostHog } from "@posthog/react";
+import { useQuery } from "convex/react";
+import { useCallback, useEffect, useReducer, useRef } from "react";
 import type { ConstraintId } from "@/features/game/logic/constraints";
 import { evaluateGuess } from "@/features/game/logic/guessEvaluation";
 import { failedAttemptCount } from "@/features/game/logic/lives";
@@ -8,9 +11,6 @@ import {
 } from "@/features/game/logic/sanitizePersisted";
 import type { CellPosition, GameState } from "@/features/game/types";
 import { todayUTC } from "@/lib/dates";
-import { usePostHog } from "@posthog/react";
-import { useQuery } from "convex/react";
-import { useCallback, useEffect, useReducer, useRef } from "react";
 import { api } from "../../../../convex/_generated/api";
 import {
   clearTrainingGame,

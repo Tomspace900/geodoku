@@ -1,6 +1,5 @@
 import { expect, test } from "@playwright/test";
 import {
-  type TodayGrid,
   fetchTodayGrid,
   fillCell,
   getResultDialog,
@@ -9,6 +8,7 @@ import {
   playToDefeat,
   prepareSession,
   submitCountryInOpenModal,
+  type TodayGrid,
   waitForGrid,
 } from "./helpers";
 

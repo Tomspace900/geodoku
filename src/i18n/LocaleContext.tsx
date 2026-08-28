@@ -1,13 +1,13 @@
-import { STORAGE_KEYS, safeGet, safeSet } from "@/lib/storage";
 import posthog from "posthog-js";
 import {
-  type ReactNode,
   createContext,
+  type ReactNode,
   useCallback,
   useContext,
   useEffect,
   useState,
 } from "react";
+import { STORAGE_KEYS, safeGet, safeSet } from "@/lib/storage";
 import { translate } from "./index";
 import type { Locale, TKey } from "./types";
 

@@ -1,3 +1,6 @@
+import { usePostHog } from "@posthog/react";
+import { Heart, X } from "lucide-react";
+import { useEffect, useRef, useState } from "react";
 import { Eyebrow } from "@/components/editorial/Eyebrow";
 import {
   Command,
@@ -29,9 +32,6 @@ import { useLocale, useT } from "@/i18n/LocaleContext";
 import type { TKey } from "@/i18n/types";
 import { focusWithoutVisibleRing } from "@/lib/focus";
 import { cn } from "@/lib/utils";
-import { usePostHog } from "@posthog/react";
-import { Heart, X } from "lucide-react";
-import { useEffect, useRef, useState } from "react";
 
 const ERROR_KEY_MAP: Record<string, TKey> = {
   already_used: "error.already_used",

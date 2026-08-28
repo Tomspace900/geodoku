@@ -1,6 +1,6 @@
-import { cn } from "@/lib/utils";
 import { ArrowLeft } from "lucide-react";
 import { Link } from "react-router";
+import { cn } from "@/lib/utils";
 
 type Props = {
   to: string;

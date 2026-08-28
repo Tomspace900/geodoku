@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
 import {
-  LATEST_CHANGELOG_UPDATE_DATE,
   isChangelogNewBadgeVisible,
+  LATEST_CHANGELOG_UPDATE_DATE,
 } from "../changelog";
 
 // Dérivé de la constante plutôt qu'en dur : la fenêtre de 72 h est la règle

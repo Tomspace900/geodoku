@@ -27,6 +27,7 @@ import type * as lib_gridGenerator from "../lib/gridGenerator.js";
 import type * as lib_gridScheduler from "../lib/gridScheduler.js";
 import type * as lib_poolReconciliation from "../lib/poolReconciliation.js";
 import type * as operationReceipts from "../operationReceipts.js";
+import type * as operationResults from "../operationResults.js";
 import type * as poolOperations from "../poolOperations.js";
 import type * as rateLimit from "../rateLimit.js";
 import type * as scheduling from "../scheduling.js";
@@ -59,6 +60,7 @@ declare const fullApi: ApiFromModules<{
   "lib/gridScheduler": typeof lib_gridScheduler;
   "lib/poolReconciliation": typeof lib_poolReconciliation;
   operationReceipts: typeof operationReceipts;
+  operationResults: typeof operationResults;
   poolOperations: typeof poolOperations;
   rateLimit: typeof rateLimit;
   scheduling: typeof scheduling;

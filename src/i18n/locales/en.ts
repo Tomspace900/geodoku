@@ -21,6 +21,7 @@ export const en = {
     share: "Share my score",
     shareCopied: "Copied!\u00A0✓",
     shareShared: "Shared!\u00A0✓",
+    shareFailed: "Copy failed",
     comeBackTomorrowGrid: "Come back tomorrow for a new grid!",
     cellAriaLabel:
       "Select cell row {row} column {col}: {rowConstraint} × {colConstraint}",

@@ -12,9 +12,13 @@
 export const STORAGE_KEYS = {
   /** Identifiant anonyme par navigateur (clé de rate-limit). localStorage. */
   clientId: "geodoku:client-id",
-  /** Partie du jour sérialisée (JSON versionné). localStorage. */
+  /**
+   * Ancienne clé v2, retirée du parcours à la sortie du rollout v3. Conservée
+   * uniquement pour la purger (`clearPersistedGame`) : plus rien n'y écrit ni
+   * n'y lit de partie.
+   */
   game: "geodoku:game",
-  /** Partie canonique minimale v3. La clé `game` reste le shadow de rollback v2. */
+  /** Partie canonique minimale v3 : seul format écrit et lu. */
   gameV3: "geodoku:game-v3",
   /** Parties d'entraînement (grilles passées), une entrée par date. localStorage. */
   training: "geodoku:training-v1",
@@ -76,104 +80,14 @@ export function safeRemove(key: string, kind: StorageArea = "local"): void {
   }
 }
 
-/** Anciennes clés → nouvelles, pour la migration one-shot au boot (localStorage). */
-const LEGACY_RENAMES: ReadonlyArray<[string, string]> = [
-  ["geodoku.clientId", STORAGE_KEYS.clientId],
-  ["geodoku.showHowToPlay", STORAGE_KEYS.howToPlay],
-  ["geodoku.locale", STORAGE_KEYS.locale],
-  ["geodoku:surveyDone", STORAGE_KEYS.surveyDone],
-];
-
-const LEGACY_GAME_KEY = "geodoku.currentGame";
-const LEGACY_ENDED_PREFIX = "geodoku:ended:";
-const LEGACY_RATED_PREFIX = "geodoku:rated:";
-export const LEGACY_SURVEY_DISMISSED_DATE = "2026-07-03";
-const LEGACY_SURVEY_DONE_VALUE = "1";
-const LEGACY_SURVEY_DISMISSED_VALUE = JSON.stringify({
-  kind: "dismissed",
-  date: LEGACY_SURVEY_DISMISSED_DATE,
-});
-
-/**
- * Migre la partie persistée de l'ancien format (clé `geodoku.currentGame`,
- * `version: 1`) vers le nouveau (clé `geodoku:game`, `version: 2`) en repliant
- * les flags par-date `geodoku:ended:<date>` / `geodoku:rated:<date>` dans
- * l'objet. Sans ce repli, une partie terminée verrait `recordGameEnd`
- * ré-émis après déploiement (double comptage).
- */
-function migrateGame(ls: Storage): void {
-  const legacy = ls.getItem(LEGACY_GAME_KEY);
-  if (legacy === null) return;
-  try {
-    const parsed = JSON.parse(legacy);
-    if (parsed?.version === 1 && typeof parsed.date === "string") {
-      parsed.endRecorded =
-        ls.getItem(`${LEGACY_ENDED_PREFIX}${parsed.date}`) === "1";
-      parsed.rated = ls.getItem(`${LEGACY_RATED_PREFIX}${parsed.date}`) === "1";
-      parsed.version = 2;
-      ls.setItem(STORAGE_KEYS.game, JSON.stringify(parsed));
-    }
-    // Autres versions : on déplace tel quel ; loadPersistedGame tranchera.
-    else if (ls.getItem(STORAGE_KEYS.game) === null) {
-      ls.setItem(STORAGE_KEYS.game, legacy);
-    }
-  } catch {
-    // JSON corrompu → on abandonne la migration de cette partie (sera ignorée).
-  }
-  ls.removeItem(LEGACY_GAME_KEY);
-}
-
-function migrateSurveyDone(ls: Storage): void {
-  if (ls.getItem(STORAGE_KEYS.surveyDone) === LEGACY_SURVEY_DONE_VALUE) {
-    ls.setItem(STORAGE_KEYS.surveyDone, LEGACY_SURVEY_DISMISSED_VALUE);
-  }
-}
-
-/**
- * Migration one-shot exécutée une fois au démarrage, avant tout rendu React :
- * renomme les clés historiques vers le namespace `geodoku:*` et purge les flags
- * par-date désormais repliés dans la partie persistée. Idempotente : ne fait
- * rien si les anciennes clés sont absentes.
- */
-export function migrateLegacyStorage(): void {
-  try {
-    const ls = window.localStorage;
-
-    LEGACY_RENAMES.forEach(([oldKey, newKey]) => {
-      const val = ls.getItem(oldKey);
-      if (val === null) return;
-      if (ls.getItem(newKey) === null) ls.setItem(newKey, val);
-      ls.removeItem(oldKey);
-    });
-
-    migrateSurveyDone(ls);
-    migrateGame(ls);
-
-    // Purge des flags par-date (repliés dans `geodoku:game`) — croissance non bornée.
-    // Snapshot des clés avant suppression pour ne pas muter en cours d'itération.
-    Object.keys(ls).forEach((k) => {
-      if (
-        k.startsWith(LEGACY_ENDED_PREFIX) ||
-        k.startsWith(LEGACY_RATED_PREFIX)
-      ) {
-        ls.removeItem(k);
-      }
-    });
-  } catch {
-    // Storage indisponible → rien à migrer.
-  }
-
-  // Token admin (sessionStorage) : renommage séparé.
-  try {
-    const ss = window.sessionStorage;
-    const legacyToken = ss.getItem("geodoku_admin_token");
-    if (legacyToken !== null) {
-      if (ss.getItem(STORAGE_KEYS.adminToken) === null) {
-        ss.setItem(STORAGE_KEYS.adminToken, legacyToken);
-      }
-      ss.removeItem("geodoku_admin_token");
-    }
-  } catch {
-    // idem
-  }
-}
+// La migration one-shot des clés historiques (namespace `geodoku.*` → `geodoku:*`,
+// repli des flags par-date, renommage du token admin) a été retirée le
+// 2026-08-11, cinq semaines après son déploiement. Un navigateur qui n'a pas
+// rouvert le site depuis repart donc sur les valeurs par défaut : langue et
+// « ne plus afficher » à re-choisir une fois, `clientId` régénéré (simple
+// nouveau seau de rate-limit). La partie, elle, n'était de toute façon plus
+// récupérable — la garde de date écarte tout ce qui n'est pas du jour.
+//
+// Seul reliquat assumé : `isSurveyDone` sait encore lire le flag brut « 1 »
+// (cf. `survey.ts`), ce qui ne coûte qu'une ligne et évite d'afficher le CTA à
+// un joueur qui l'avait déjà écarté.

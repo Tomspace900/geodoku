@@ -1,8 +1,8 @@
 import { KOFI_URL } from "@/app/links";
 import { useT } from "@/i18n/LocaleContext";
+import { inlineLinkClass } from "./constants";
 import { LegalParagraph } from "./LegalParagraph";
 import { LegalSection } from "./LegalSection";
-import { inlineLinkClass } from "./constants";
 
 /** Section « soutenir le projet » (Ko-fi), identique sur toutes les pages légales. */
 export function LegalSupportSection() {

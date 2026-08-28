@@ -1,10 +1,13 @@
 import type { Locale } from "@/i18n/types";
-import {
-  LEGACY_SURVEY_DISMISSED_DATE,
-  STORAGE_KEYS,
-  safeGet,
-  safeSet,
-} from "@/lib/storage";
+import { STORAGE_KEYS, safeGet, safeSet } from "@/lib/storage";
+
+/**
+ * Jour où le sondage a été déployé avec l'ancien flag brut « 1 », qui ne
+ * distinguait pas le clic de la fermeture. La migration one-shot qui réécrivait
+ * ce flag a été retirée : ce fallback de lecture est désormais le seul à le
+ * traiter, et il l'interprète comme une fermeture ce jour-là.
+ */
+const LEGACY_SURVEY_DISMISSED_DATE = "2026-07-03";
 
 /**
  * Pilotage du lien vers le sondage joueurs (Google Forms).
@@ -31,7 +34,9 @@ export type SurveyDoneState =
 const surveyDoneListeners = new Set<() => void>();
 
 function notifySurveyDoneListeners(): void {
-  surveyDoneListeners.forEach((listener) => listener());
+  surveyDoneListeners.forEach((listener) => {
+    listener();
+  });
 }
 
 export function getSurveyDoneSnapshot(): string | null {
@@ -80,9 +85,8 @@ export function serializeSurveyDone(state: SurveyDoneState): string {
  */
 export function isSurveyDone(raw: string | null, today: string): boolean {
   if (raw === null) return false;
-  // Ancien format (avant dissociation clic/dismiss) : simple flag "1". La
-  // migration le réécrit au boot ; ce fallback garde le même comportement si la
-  // valeur brute arrive malgré tout jusqu'ici.
+  // Ancien format (avant dissociation clic/dismiss) : simple flag "1". Plus
+  // aucune migration ne le réécrit, ce fallback est le seul à le comprendre.
   if (raw === "1") return today === LEGACY_SURVEY_DISMISSED_DATE;
   try {
     const parsed = JSON.parse(raw) as Partial<SurveyDoneState>;

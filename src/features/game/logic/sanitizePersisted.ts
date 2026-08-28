@@ -109,27 +109,6 @@ export function canonicalStatus(
   return "playing";
 }
 
-function persistedStatusMatchesCanonical(
-  persisted: GameStatus,
-  canonical: GameStatus,
-  filledCount: number,
-  lives: LivesState,
-  cells: Record<CellKey, Cell>,
-): boolean {
-  if (canonical === "won") {
-    if (persisted === "lost") return false;
-    if (persisted === "won") return true;
-    return persisted === "playing" && filledCount === GRID_CELL_COUNT;
-  }
-  if (canonical === "lost") {
-    if (persisted === "won") return false;
-    if (persisted === "lost") return true;
-    if (persisted !== "playing") return false;
-    return isOutOfLives(lives) || !hasEmptyCell(cells);
-  }
-  return persisted === "playing" && !isOutOfLives(lives) && hasEmptyCell(cells);
-}
-
 /**
  * Vérifie la cohérence d'une partie du jour rechargée depuis localStorage avec
  * la grille du jour (validAnswers serveur). Retourne null si triche / corruption
@@ -163,20 +142,9 @@ export function sanitizePersistedForGrid(
     validAnswers,
     new Set(usedCodes),
   );
+  // Le statut n'est plus persisté depuis la v3 : il se redérive intégralement
+  // des cases et des vies, donc il n'y a plus rien à recouper.
   const canonical = canonicalStatus(filledCount, lives, canonicalCells);
-
-  if (
-    persisted.status !== undefined &&
-    !persistedStatusMatchesCanonical(
-      persisted.status,
-      canonical,
-      filledCount,
-      lives,
-      canonicalCells,
-    )
-  ) {
-    return null;
-  }
 
   return {
     date: persisted.date,

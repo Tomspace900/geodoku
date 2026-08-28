@@ -1,6 +1,6 @@
+import { Heart, X } from "lucide-react";
 import type { LivesState } from "@/features/game/types";
 import { useT } from "@/i18n/LocaleContext";
-import { Heart, X } from "lucide-react";
 import { STARTING_LIVES } from "../logic/constants";
 
 type Props = {

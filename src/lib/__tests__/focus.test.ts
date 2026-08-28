@@ -1,5 +1,5 @@
-import { focusWithoutVisibleRing } from "@/lib/focus";
 import { afterEach, describe, expect, it } from "vitest";
+import { focusWithoutVisibleRing } from "@/lib/focus";
 
 describe("focusWithoutVisibleRing", () => {
   afterEach(() => document.body.replaceChildren());

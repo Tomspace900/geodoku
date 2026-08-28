@@ -2,12 +2,11 @@ import { ConvexError, type ObjectType, v } from "convex/values";
 import { REPLAY_WINDOW_DAYS } from "../src/features/game/logic/replayWindow";
 import type { MutationCtx, QueryCtx } from "./_generated/server";
 import {
-  type GameEndInput,
   assertClientId,
   assertOperationId,
   assertReplayableDate,
-  assertTodayDate,
   assertValidGameEnd,
+  type GameEndInput,
   requireGridForDate,
 } from "./gameWriteValidation";
 import { getGridAnswers } from "./gridData";
@@ -30,21 +29,6 @@ export const ratingValidator = v.union(
   v.literal("too_hard"),
 );
 
-export const recordGameEndArgs = {
-  date: v.string(),
-  endReason: endReasonValidator,
-  livesLeft: v.number(),
-  filledCells: v.number(),
-  guessesSubmitted: v.number(),
-  clientId: v.string(),
-};
-
-export const submitGridFeedbackArgs = {
-  date: v.string(),
-  rating: ratingValidator,
-  clientId: v.string(),
-};
-
 export const recordTodayGameEndArgs = {
   operationId: v.string(),
   endReason: endReasonValidator,
@@ -60,9 +44,7 @@ export const submitTodayGridFeedbackArgs = {
   clientId: v.string(),
 };
 
-type Rating = ObjectType<typeof submitGridFeedbackArgs>["rating"];
-type RecordGameEndArgs = ObjectType<typeof recordGameEndArgs>;
-type SubmitGridFeedbackArgs = ObjectType<typeof submitGridFeedbackArgs>;
+type Rating = ObjectType<typeof submitTodayGridFeedbackArgs>["rating"];
 type RecordTodayGameEndArgs = ObjectType<typeof recordTodayGameEndArgs>;
 type SubmitTodayGridFeedbackArgs = ObjectType<
   typeof submitTodayGridFeedbackArgs
@@ -90,6 +72,46 @@ export async function getTodayGridHandler(ctx: QueryCtx) {
     validAnswers,
   };
 }
+
+const validAnswersValidator = v.record(v.string(), v.array(v.string()));
+
+/** Grille du jour servie au joueur, réponses figées comprises. */
+export const todayGridReturns = v.union(
+  v.null(),
+  v.object({
+    _id: v.id("grids"),
+    _creationTime: v.number(),
+    date: v.string(),
+    rows: v.array(v.string()),
+    cols: v.array(v.string()),
+    candidateId: v.id("gridCandidates"),
+    validAnswers: validAnswersValidator,
+  }),
+);
+
+/**
+ * Liste de l'archive. **Sans `validAnswers`** : ce validateur est ce qui rend
+ * l'invariant mécanique — ajouter le champ au handler ferait désormais échouer
+ * la fonction à l'exécution au lieu de livrer silencieusement les réponses.
+ */
+export const replayableGridsReturns = v.array(
+  v.object({
+    date: v.string(),
+    rows: v.array(v.string()),
+    cols: v.array(v.string()),
+  }),
+);
+
+/** Grille passée rejouable : réduite à ce que le joueur consomme. */
+export const replayGridReturns = v.union(
+  v.null(),
+  v.object({
+    date: v.string(),
+    rows: v.array(v.string()),
+    cols: v.array(v.string()),
+    validAnswers: validAnswersValidator,
+  }),
+);
 
 export const getReplayGridArgs = { date: v.string() };
 type GetReplayGridArgs = ObjectType<typeof getReplayGridArgs>;
@@ -228,37 +250,6 @@ async function incrementGridFeedback(
     totalFilledCells: 0,
     totalGuessesSubmitted: 0,
   });
-}
-
-/** Écriture legacy conservée temporairement pendant le rollout. */
-export async function recordGameEndHandler(
-  ctx: MutationCtx,
-  args: RecordGameEndArgs,
-): Promise<void> {
-  assertTodayDate(args.date);
-  assertClientId(args.clientId);
-  assertValidGameEnd(args);
-  await rateLimiter.limit(ctx, "feedback", {
-    key: args.clientId,
-    throws: true,
-  });
-  await requireGridForDate(ctx, args.date);
-  await incrementGameEnd(ctx, args.date, args);
-}
-
-/** Écriture legacy conservée temporairement pendant le rollout. */
-export async function submitGridFeedbackHandler(
-  ctx: MutationCtx,
-  args: SubmitGridFeedbackArgs,
-): Promise<void> {
-  assertTodayDate(args.date);
-  assertClientId(args.clientId);
-  await rateLimiter.limit(ctx, "feedback", {
-    key: args.clientId,
-    throws: true,
-  });
-  await requireGridForDate(ctx, args.date);
-  await incrementGridFeedback(ctx, args.date, args.rating);
 }
 
 /** Fin de partie idempotente de la grille du jour. */
