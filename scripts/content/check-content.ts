@@ -130,14 +130,16 @@ function checkAnswerSets(errors: string[]): void {
   }
 
   const constraintRoot = resolve("content", "constraints");
-  const directories = readdirSync(constraintRoot)
+  const answerDirs = readdirSync(constraintRoot)
     .filter((name) => {
       const full = resolve(constraintRoot, name);
-      return existsSync(full) && statSync(full).isDirectory();
+      return (
+        statSync(full).isDirectory() && existsSync(resolve(full, "answers.ts"))
+      );
     })
     .sort();
-  if (!sameValues(directories, [...expectedIds].sort())) {
-    errors.push("contraintes: dossiers absents ou orphelins");
+  if (!sameValues(answerDirs, [...expectedIds].sort())) {
+    errors.push("contraintes: dossiers answers.ts absents ou orphelins");
   }
 }
 

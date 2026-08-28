@@ -382,3 +382,48 @@ Les 5 écarts « inattendus » vs v2 sont de la **dérive de données** du
 - `physical_crosses_equator -GNQ` : la Guinée équatoriale n'est plus taguée
   `equator_crosser` dans les listes curées de `develop`.
 - `latitude_south_hemisphere +COD` : attendu (fix RDC `ebbea1f`).
+
+### Étapes 4–7 — portage, garde, regen, nettoyage
+
+- **Découpage identité / faits du modèle pays** : `content/countries/type.ts`
+  expose `Country` (identité, réexporté par `src/features/countries/types.ts`)
+  **et** `CountryRecord` (forme complète mutable, `iso3: string`) pour le
+  pipeline de régénération. `CountryCapital` reste mutable (le pipeline en
+  construit).
+- **`validateCountryCatalog.ts`** scindé : `validateCountryCatalog(catalog)`
+  (identité, version v2) + `validateCountryFacts(facts, codes)` (les invariants
+  gameplay de l'ancien validateur complet, re-hébergés sur `facts.ts`). Les deux
+  sont appelés par `check:content` et testés.
+- **`check-content.ts`** : version v2 **sans** le contrôle `SOURCE.md`
+  (hors périmètre P1), **plus** le contrôle d'obsolescence (re-dérive les 60
+  actives, compare aux `answers.ts` committés). Le scan de dossiers ne retient
+  que ceux contenant `answers.ts` (ignore `__tests__/`).
+- **Regen (`build-countries.ts`)** : émet le snapshot `content/` via le
+  sérialiseur partagé `scripts/content/emitCountrySnapshot.ts` et enchaîne
+  `pnpm build:answers`. **Non exécutée** (réseau) — première vraie regen = acte
+  délibéré post-merge.
+- **Supprimés** : `src/features/countries/data/{countries,countryCodes}.json`,
+  `scripts/content/{seed-from-legacy,parity-check}.ts` (one-shots).
+- **Conservés** : `scripts/countries/flagData.json`, `countryPatches.ts`
+  (entrées de curation).
+- **Tests** : `constraints.test.ts` / `validation.test.ts` portés (v2 + RDC
+  equator-crossers sur les listes) ; `content/constraints/__tests__/derivations.test.ts`
+  ajouté (bascules de seuil : `borders_solo`, `latitude_polar`,
+  `density_more_japan`, `area_larger_france`).
+- **AGENTS.md** : mise à jour minimale (§3 arborescence `content/` + règle
+  imports relatifs ; §7 `check:content` / `build:answers`). Refonte éditoriale
+  → P2.
+
+### Étape 8 — checklist finale
+
+| Vérif | Résultat |
+| --- | --- |
+| `pnpm lint` | ✓ (biome + tsc, 0 erreur ; 2 warnings `noUnusedImports` **préexistants** sur `convex/*.test.ts`) |
+| `pnpm test` | ✓ 508 tests / 57 fichiers |
+| `pnpm check:content` | ✓ 60 actives, 11 archivées, 197 pays |
+| `pnpm build` | ✓ `typecheck:app` + `vite build` OK |
+| `pnpm check:bundle` | ✓ **244.3 KiB** gzip chargement joueur (budget 280) — **−12.6 KiB** vs `develop` (256.9). Le chiffre « ~227 » du plan datait de la v2 (avant posthog-js) ; direction et ampleur conformes (les faits ne partent plus au navigateur). |
+| `pnpm simulate:scheduling --seed=20260714` | ✓ **14/14** checks — comportement identique (197 pays, coverage 100 %, overlap max 0.846 < 0.85) |
+| `pnpm check:e2e-convex-url` | ✓ Convex joignable, grille du jour 2026-08-28 |
+| `pnpm test:e2e` | ✓ **121 passed** (2.9 min) contre `calculating-salamander-183` (staging) — tous moteurs, tous specs (game / archive / persistence / mobile) |
+| `convex/_generated/` | ✓ aucun diff (pas de changement de schéma/API) |

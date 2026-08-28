@@ -49,6 +49,9 @@ Barème tranché sur données réelles. La rareté d'une case s'appuie sur la **
 ## 3. Architecture
 
 ```
+content/                  # snapshot de contenu versionné, TERMINAL (n'importe rien de src/convex)
+  countries/              # catalog (identité) + countryCodes + facts + popularity — générés, datés
+  constraints/            # index (registre typé) + derivations (prédicats) + <id>/answers.ts (listes ISO3)
 src/features/<feature>/   # game, archive, countries, admin, legal, errors
   logic/                  # pur, testé, zéro React/Convex
   testing/                # simulation partagée par Vitest/E2E/scripts
@@ -56,6 +59,7 @@ src/features/<feature>/   # game, archive, countries, admin, legal, errors
   components/             # consomment l'état, dispatchent des actions
 convex/                   # schema, grids, guesses, scheduling, seed, crons
 convex/lib/               # gridGenerator, gridScheduler, gridConstants (purs)
+scripts/content/            # seed/regen du snapshot content/ (check-content, build-answers, emit)
 scripts/ci/                 # exécutés en CI (check-e2e-convex-url)
 scripts/countries/          # pipeline contenu pays (build-countries, flagData, patches)
 scripts/local/              # outillage local versionné (analytics, simulate, sync gh…)
@@ -71,13 +75,17 @@ e2e/                      # Playwright — helpers.ts + *.shared|desktop|mobile.
 - Hooks → seule couche logique + Convex + React.
 - Composants → pas de calcul significatif ; reducer + dispatch.
 - Pas de copie `src/` ↔ `convex/lib/` sauf [`convex/lib/dates.ts`](convex/lib/dates.ts) qui réexporte [`src/lib/dates.ts`](src/lib/dates.ts). `gridGenerator`, `gridScheduler`, `gridConstants` importent depuis `src/`.
+- `content/` est **terminal** (n'importe rien de `src/`, `convex/`, features). Les imports **vers** `content/` sont toujours **relatifs** (`../../content/…`), jamais l'alias `@/` : Convex et `tsx` ne résolvent pas les `paths` du tsconfig. `src/features/countries/types.ts` réexporte `Country` (identité) + les énums depuis `content/countries/type` pour garder l'import familier `@/features/countries/types`.
 - **Vies = union discriminée** `LivesState` ([`types.ts`](src/features/game/types.ts)), jamais un compteur nu : `{kind:"limited",remaining}` en daily, `{kind:"unlimited",failedAttempts}` en entraînement. Toute lecture passe par [`logic/lives.ts`](src/features/game/logic/lives.ts) — le reducer, le score et la persistance n'ont donc **aucune branche de mode**. Le format persisté du daily garde en revanche un `remainingLives` numérique (compatibilité du shadow v2).
 - `archive` dépend de `game` (reducer, validation, composants de grille), jamais l'inverse. Les sanitizers d'entraînement vivent dans `game/logic/sanitizePersisted.ts` et prennent des **primitives**, pour que le domaine du jeu ignore la feature `archive`.
 
 **Contenu (pays, contraintes, pool).** Règles critiques :
 
 - **Archiver, jamais supprimer** une contrainte (`ARCHIVED_CONSTRAINTS` + `CONSTRAINT_BY_ID` pour replay).
-- Changement de contrainte → `pnpm simulate:scheduling` puis régénération du pool via `/admin` si OK.
+- Une contrainte **active** n'a pas de prédicat runtime : sa liste ISO3 est **dérivée** de [`content/constraints/derivations.ts`](content/constraints/derivations.ts) sur le snapshot de faits, **générée** par `pnpm build:answers` dans `content/constraints/<id>/answers.ts`, **committée** et relue en diff. `matchesConstraint(id, iso3)` lit cette liste. `pnpm check:content` (job `quality`) échoue si un `answers.ts` est obsolète.
+- Les 11 listes **archivées** sont figées à la main (pas d'en-tête `@generated`), hors dérivation.
+- Changement de contrainte → éditer `derivations.ts` + `CONSTRAINTS` → `pnpm build:answers` → `pnpm simulate:scheduling` → régénération du pool via `/admin` si OK.
+- Le snapshot `content/countries/` (identité, faits, popularité) est régénéré par `pnpm build:countries` (réseau), qui enchaîne `build:answers`.
 - Drapeaux → [`scripts/countries/flagData.json`](scripts/countries/flagData.json) curé, pas d'heuristique.
 
 Détail complet : [`docs/content-pipeline.md`](docs/content-pipeline.md).
@@ -164,7 +172,9 @@ pnpm sync:e2e-convex-url          # met à jour vars.VITE_CONVEX_URL (gh) après
 pnpm build
 
 # Contenu & pool
-pnpm build:countries
+pnpm build:countries             # regen réseau du snapshot content/ (+ enchaîne build:answers)
+pnpm build:answers               # re-dérive content/constraints/<id>/answers.ts (hors-ligne)
+pnpm check:content               # garde de cohérence content/ (job quality) + contrôle d'obsolescence
 pnpm analyze:pool
 pnpm simulate:scheduling          # validateur changement contraintes
 pnpm simulate:players             # dry-run par défaut ; --execute pour écrire (develop/dev)
