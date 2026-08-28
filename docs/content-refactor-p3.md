@@ -60,23 +60,26 @@ ENTRÉE DE CURATION (nouvelle, versionnée)          NOUVEAU CHAMP CountryFacts
 Chaque lot = une branche locale `content-p3-lot<N>` depuis `develop`, mergée
 après le gate. Ordre choisi du moins risqué au plus riche.
 
-### Lot 1 — Extensions du modèle existant (9 contraintes, aucun nouveau dataset)
+### Lot 1 — Extensions du modèle existant (8 contraintes, aucun nouveau dataset)
 
 | Contrainte | Dérivation | Catégorie |
 | --- | --- | --- |
 | `political_arab_league`, `political_asean`, `political_brics`, `political_eurozone`, `political_g7`, `political_opec`, `political_schengen` | `memberships` contient le groupe — **les champs existent déjà** dans le snapshot (REST Countries) | `political` |
 | `event_winter_olympics_host` | `events` contient `winter_olympics_host` — nouvelle valeur de `CountryEvent` + curation des hôtes dans `countryPatches.ts` (source : dataset v1 `hosted-events`) | `event` |
-| `ocean_multiple_basins` | ≥ 2 parmi les façades `physicalFeatures` (`atlantic_coast`, `pacific_coast`, `indian_ocean_coast`) — champs existants | `ocean` |
 
 Contre-épreuve critique : dériver, puis comparer aux listes v1
 (`git show 221b42d:content/constraints/<id>/answers.ts`). Attendu : quasi-égalité
-pour les 7 politiques (memberships REST vs curation v1 — tout écart au dossier) ;
-pour `ocean_multiple_basins`, la convention v1 (18 pays, « bassins ») peut
-différer de la lecture « façades » — si l'écart est significatif, proposer dans
-le dossier soit un champ curé dédié `oceanBasins`, soit l'alignement des
-`physicalFeatures`, avec recommandation.
+pour les 7 politiques (memberships REST vs curation v1 — tout écart au dossier).
 
-### Lot 2 — Temps et géographie physique (6 contraintes)
+> **`ocean_multiple_basins` déplacé au Lot 2** (arbitrage utilisateur, 2026-08-28).
+> Notre snapshot n'a pas de façade `arctic_coast` et sépare
+> `mediterranean_coast` / `caribbean_coast` de `atlantic_coast` : la lecture
+> « ≥ 2 façades » naïve divergerait de ~40 % de la liste v1 (18 pays). La
+> correction propre — repli des mers marginales dans les bassins **+ nouvelle
+> façade `arctic_coast` curée** — touche `PhysicalFeature` et relève du lot
+> « géographie physique ».
+
+### Lot 2 — Temps et géographie physique (7 contraintes)
 
 | Contrainte | Nouveau champ facts | Dataset v1 |
 | --- | --- | --- |
@@ -85,9 +88,11 @@ le dossier soit un champ curé dédié `oceanBasins`, soit l'alignement des
 | `nature_mountain_area_majority` | `mountainAreaShare: number \| null` | `mountain-area` |
 | `forest_cover_majority` | `forestCoverShare: number \| null` | à reconstituer depuis la liste v1 + FAO (la v1 n'a pas de dataset dédié — le créer, 197 valeurs FAO, en documentant le millésime) | — |
 | `urban_centres_min_3_over_1m` | `urbanCentresOver1M: number` | `urban-centres` |
+| `ocean_multiple_basins` | nouvelle façade `arctic_coast` dans `PhysicalFeature` (curée `countryPatches.ts`) ; dérivation : ≥ 2 bassins parmi Atlantique / Pacifique / Indien / Arctique, avec `mediterranean_coast` + `caribbean_coast` repliées sur l'Atlantique | `ocean` |
 
 Catégories : `nature` (volcan, montagne, forêt) ; nouvelles `time_zones` et
-rattachement de `urban_centres…` à `society` (pas de catégorie mono-contrainte).
+rattachement de `urban_centres…` à `society` (pas de catégorie mono-contrainte) ;
+`ocean` (déjà existante).
 
 ### Lot 3 — Production et énergie (7 contraintes)
 
@@ -129,8 +134,9 @@ soigné : cas graduels, définition « événement de souveraineté » du SOURCE
    labels **fr + en** moissonnés de la v1
    (`git show 221b42d:src/i18n/locales/{fr,en}.ts`), `pnpm build:answers`.
 4. **Contre-épreuve** : listes dérivées vs listes v1, écart par écart.
-5. **Gardes** : `EXPECTED_ACTIVE_COUNT` dans `check-content.ts` (60 → 69 → 75 →
-   82 → 85), test `translate`, bascules de seuil dans `derivations.test.ts`
+5. **Gardes** : `EXPECTED_ACTIVE_COUNT` dans `check-content.ts` (60 → 68 → 75 →
+   82 → 85 ; `ocean_multiple_basins` glissé du Lot 1 au Lot 2), test `translate`,
+   bascules de seuil dans `derivations.test.ts`
    (au moins une par nouveau champ), `pnpm lint && pnpm test && pnpm
    check:content`.
 6. **Pool** : `pnpm simulate:scheduling` — doit rester PASS. Si la couverture
@@ -175,3 +181,44 @@ soigné : cas graduels, définition « événement de souveraineté » du SOURCE
 
 > À remplir par lot : sortie de la contre-épreuve vs v1, dossier de gate et
 > décisions utilisateur, résultat simulate/checklist, date de merge.
+
+### Lot 1 — branche `content-p3-lot1` (2026-08-28)
+
+**Périmètre livré : 8 contraintes** (7 politiques + `event_winter_olympics_host`).
+`ocean_multiple_basins` déplacé au Lot 2 (arbitrage utilisateur — cf. §2, encart
+Lot 1). `EXPECTED_ACTIVE_COUNT` 60 → 68.
+
+**Snapshot.** `pnpm build:countries` (réseau, 12 min) + `pnpm biome check --write
+content/`. Diff `content/countries/` : **uniquement** `facts.ts`, +13 tableaux
+`events` recevant `winter_olympics_host` (= le bucket curé). Zéro dérive
+population/superficie/densité ; `catalog.ts`, `popularity.ts` et les 60
+`answers.ts` existants **inchangés**. `build:answers` : 68 contraintes actives,
+1784 entrées ISO3.
+
+**Contre-épreuve vs v1 (`221b42d`).** 5/8 identiques
+(`political_arab_league` 22, `political_eurozone` 21, `political_g7` 7,
+`political_schengen` 29, `event_winter_olympics_host` 13). 3 écarts, tous =
+REST Countries v5 en retard sur un changement 2025-2026 daté :
+
+| id | dérivé | v1 | écart | cause |
+| --- | --- | --- | --- | --- |
+| `political_asean` | 10 | 11 | −TLS | Timor-Leste admis oct. 2025, pas encore dans REST v5 |
+| `political_brics` | 9 | 10 | −IDN | Indonésie membre plein depuis jan. 2025, pas encore dans REST v5 |
+| `political_opec` | 12 | 11 | +ARE | Émirats sortis de l'OPEP mai 2026, encore listés dans REST v5 |
+
+Aucune couche de curation `memberships` n'existe aujourd'hui : la dérivation
+reflète fidèlement la source. Recommandation portée au gate : **ship tel quel**,
+documenter les 3 retards dans les `SOURCE.md`, revoir quand REST v5 se met à
+jour ; un seam `membershipPatches` reste un candidat de suivi si la précision
+est jugée nécessaire.
+
+**Checklist.** `pnpm lint` ✓ (2 warnings préexistants hors périmètre dans
+`convex/gameWrites.test.ts`) · `pnpm test` 514/514 ✓ · `pnpm check:content`
+« 68 actives, 11 archivées, 197 pays » ✓ · `pnpm check:bundle` 244.9 KiB gzip
+(budget 280) ✓ · `pnpm simulate:scheduling` **14/14 PASS**, `constraint
+coverage 100 %`, `failed seeds 0/68`, overlap générateur max 0.846 < 0.85
+(les groupes politiques tendent l'overlap vers le plafond sans le franchir).
+
+**Gate utilisateur.** _(en attente)_
+
+**Merge.** _(en attente du feu vert)_

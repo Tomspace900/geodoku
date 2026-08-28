@@ -78,18 +78,30 @@ d'une convention éditoriale explicite.
 - G20 : [membres officiels](https://g20.org/about-g20/).
 - OTAN : [pays membres](https://www.nato.int/cps/en/natohq/topics_52044.htm).
 - Commonwealth : [pays membres](https://thecommonwealth.org/our-member-countries).
+- Ligue arabe : [États membres](https://www.leagueofarabstates.net/).
+- ASEAN : [États membres](https://asean.org/member-states/).
+- BRICS : [présentation officielle](https://brics2025.org.br/en/about-the-brics/).
+- Zone euro : [pays de la zone euro](https://www.consilium.europa.eu/fr/policies/the-euro/).
+- G7 : [présentation du groupe](https://www.consilium.europa.eu/fr/international-summit/g7-summit/).
+- OPEP : [pays membres](https://www.opec.org/opec_web/en/about_us/25.htm).
+- Espace Schengen : [pays de l'espace Schengen](https://www.consilium.europa.eu/fr/policies/schengen-area/).
 
 Seuls les États membres retenus par la convention Geodoku sont jouables ; les
-observateurs, invités et organisations supranationales sont exclus.
+observateurs, invités, partenaires et organisations supranationales sont exclus.
+Une adhésion ou un retrait récent (Timor-Leste à l'ASEAN, retrait émirati de
+l'OPEP, statut saoudien aux BRICS) suit le millésime du snapshot REST Countries
+et se tranche à la révision, jamais par édition manuelle de `answers.ts`.
 
 ## Événements sportifs
 
 - Coupe du monde de football : [éditions et hôtes FIFA](https://www.fifa.com/fifaplus/en/tournaments/mens/worldcup).
-- Jeux olympiques d'été : [éditions et villes hôtes CIO](https://www.olympics.com/ioc/olympic-games).
+- Jeux olympiques d'été et d'hiver : [éditions et villes hôtes CIO](https://www.olympics.com/ioc/olympic-games)
+  et [CIO, *Olympic Hosts 1896–2034*](https://library.olympics.com/).
 
-Le pays retenu est l'entité politique hôte au moment de l'édition. Une
-co-organisation compte pour chaque pays hôte ; une édition future déjà
-attribuée ne compte pas tant qu'elle n'a pas eu lieu.
+Le pays retenu est l'entité politique qui contient aujourd'hui le territoire
+hôte de l'édition (Sarajevo 1984 → Bosnie-Herzégovine). Une co-organisation
+compte pour chaque pays hôte ; une édition future déjà attribuée ne compte pas
+tant qu'elle n'a pas eu lieu.
 
 ## Nature et relief
 

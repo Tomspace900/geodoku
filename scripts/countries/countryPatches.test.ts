@@ -68,6 +68,10 @@ describe("countryPatches ↔ catalogue content/", () => {
       "eventSummerOlympicsHost",
       gameplayClassifications.eventSummerOlympicsHost,
     );
+    assertAllCountryCodes(
+      "eventWinterOlympicsHost",
+      gameplayClassifications.eventWinterOlympicsHost,
+    );
     assertAllCountryCodes("monarchy", gameplayClassifications.monarchy);
     assertAllCountryCodes(
       "equatorCrosser",
@@ -91,6 +95,7 @@ describe("countryPatches ↔ catalogue content/", () => {
     noDupes(gameplayClassifications.middleEast, (x) => x);
     noDupes(gameplayClassifications.eventFifaWcHost, (x) => x);
     noDupes(gameplayClassifications.eventSummerOlympicsHost, (x) => x);
+    noDupes(gameplayClassifications.eventWinterOlympicsHost, (x) => x);
     noDupes(gameplayClassifications.monarchy, (x) => x);
     noDupes(gameplayClassifications.equatorCrosser, (x) => x);
     noDupes(gameplayClassifications.mediterraneanCoast, (x) => x);

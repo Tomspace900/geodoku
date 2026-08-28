@@ -38,7 +38,7 @@ import {
 } from "../countries/validateCountryCatalog";
 
 const EXPECTED_COUNTRY_COUNT = 197;
-const EXPECTED_ACTIVE_COUNT = 60;
+const EXPECTED_ACTIVE_COUNT = 68;
 const EXPECTED_ARCHIVED_COUNT = 11;
 
 function sameValues(a: readonly string[], b: readonly string[]): boolean {

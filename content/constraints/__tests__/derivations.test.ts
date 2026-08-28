@@ -54,4 +54,36 @@ describe("DERIVATIONS — bascules de seuil", () => {
       spain: derive("area_larger_france", "ESP"),
     }).toEqual({ india: true, germany: false, spain: false });
   });
+
+  it("political_g7 : appartenance au groupe (memberships)", () => {
+    expect({
+      germany: derive("political_g7", "DEU"),
+      japan: derive("political_g7", "JPN"),
+      spain: derive("political_g7", "ESP"),
+      brazil: derive("political_g7", "BRA"),
+    }).toEqual({ germany: true, japan: true, spain: false, brazil: false });
+  });
+
+  it("political_opec : appartenance au groupe (memberships)", () => {
+    expect({
+      saudi_arabia: derive("political_opec", "SAU"),
+      nigeria: derive("political_opec", "NGA"),
+      united_states: derive("political_opec", "USA"),
+    }).toEqual({ saudi_arabia: true, nigeria: true, united_states: false });
+  });
+
+  it("event_winter_olympics_host : a accueilli les JO d'hiver", () => {
+    expect({
+      france: derive("event_winter_olympics_host", "FRA"),
+      austria: derive("event_winter_olympics_host", "AUT"),
+      bosnia: derive("event_winter_olympics_host", "BIH"),
+      // Royaume-Uni : hôte des JO d'été, jamais d'hiver.
+      united_kingdom: derive("event_winter_olympics_host", "GBR"),
+    }).toEqual({
+      france: true,
+      austria: true,
+      bosnia: true,
+      united_kingdom: false,
+    });
+  });
 });

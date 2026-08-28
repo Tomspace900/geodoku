@@ -36,6 +36,7 @@ import density_more_japan from "./density_more_japan/answers";
 import density_more_netherlands from "./density_more_netherlands/answers";
 import event_fifa_wc_host from "./event_fifa_wc_host/answers";
 import event_summer_olympics_host from "./event_summer_olympics_host/answers";
+import event_winter_olympics_host from "./event_winter_olympics_host/answers";
 import flag_has_animal from "./flag_has_animal/answers";
 import flag_has_crescent from "./flag_has_crescent/answers";
 import flag_has_cross from "./flag_has_cross/answers";
@@ -59,10 +60,17 @@ import physical_caribbean_coast from "./physical_caribbean_coast/answers";
 import physical_crosses_equator from "./physical_crosses_equator/answers";
 import physical_mediterranean_coast from "./physical_mediterranean_coast/answers";
 import physical_peak_over_5000m from "./physical_peak_over_5000m/answers";
+import political_arab_league from "./political_arab_league/answers";
+import political_asean from "./political_asean/answers";
+import political_brics from "./political_brics/answers";
 import political_commonwealth from "./political_commonwealth/answers";
 import political_eu from "./political_eu/answers";
+import political_eurozone from "./political_eurozone/answers";
+import political_g7 from "./political_g7/answers";
 import political_g20 from "./political_g20/answers";
 import political_nato from "./political_nato/answers";
+import political_opec from "./political_opec/answers";
+import political_schengen from "./political_schengen/answers";
 import population_gt_30M from "./population_gt_30M/answers";
 import population_gt_100M from "./population_gt_100M/answers";
 import population_less_iceland from "./population_less_iceland/answers";
@@ -122,10 +130,18 @@ export const CONSTRAINT_IDS = [
   "subregion_southeast_asia",
   "event_fifa_wc_host",
   "event_summer_olympics_host",
+  "event_winter_olympics_host",
   "political_eu",
   "political_g20",
   "political_nato",
   "political_commonwealth",
+  "political_arab_league",
+  "political_asean",
+  "political_brics",
+  "political_eurozone",
+  "political_g7",
+  "political_opec",
+  "political_schengen",
   "regime_monarchy",
   "physical_crosses_equator",
   "physical_mediterranean_coast",
@@ -210,10 +226,18 @@ const ANSWER_SETS = {
   subregion_southeast_asia,
   event_fifa_wc_host,
   event_summer_olympics_host,
+  event_winter_olympics_host,
   political_eu,
   political_g20,
   political_nato,
   political_commonwealth,
+  political_arab_league,
+  political_asean,
+  political_brics,
+  political_eurozone,
+  political_g7,
+  political_opec,
+  political_schengen,
   regime_monarchy,
   physical_crosses_equator,
   physical_mediterranean_coast,

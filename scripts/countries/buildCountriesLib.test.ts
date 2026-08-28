@@ -164,6 +164,7 @@ describe("gameplayArraysForCode", () => {
     middleEast: ["SYR"],
     eventFifaWcHost: ["FRA"],
     eventSummerOlympicsHost: ["FRA", "GRC"],
+    eventWinterOlympicsHost: ["FRA"],
     monarchy: [],
     equatorCrosser: [],
     mediterraneanCoast: [],
@@ -187,7 +188,11 @@ describe("gameplayArraysForCode", () => {
 
   it("stacks all matching tags for one code", () => {
     const g = gameplayArraysForCode("FRA", classifications, rc);
-    expect(g.events).toEqual(["fifa_wc_host", "summer_olympics_host"]);
+    expect(g.events).toEqual([
+      "fifa_wc_host",
+      "summer_olympics_host",
+      "winter_olympics_host",
+    ]);
   });
 
   it("adds middle_east geo tag when listed", () => {
@@ -213,6 +218,7 @@ describe("regimeForCode", () => {
     middleEast: [],
     eventFifaWcHost: [],
     eventSummerOlympicsHost: [],
+    eventWinterOlympicsHost: [],
     monarchy: ["GBR", "JPN"],
     equatorCrosser: [],
     mediterraneanCoast: [],
@@ -242,6 +248,7 @@ describe("physicalFeaturesForCode", () => {
     middleEast: [],
     eventFifaWcHost: [],
     eventSummerOlympicsHost: [],
+    eventWinterOlympicsHost: [],
     monarchy: [],
     equatorCrosser: ["ECU", "BRA"],
     mediterraneanCoast: ["FRA", "ITA"],

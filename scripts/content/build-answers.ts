@@ -3,7 +3,7 @@
  *
  * Applique chaque dérivation de `content/constraints/derivations.ts` aux 197
  * pays du snapshot et (ré)écrit `content/constraints/<id>/answers.ts` pour les
- * 60 contraintes actives. Les 11 listes archivées sont figées à la main et ne
+ * 68 contraintes actives. Les 11 listes archivées sont figées à la main et ne
  * sont jamais touchées ici.
  *
  * Sortie déterministe : listes ISO3 triées, formatage Biome. Relire le diff.

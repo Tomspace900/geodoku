@@ -121,12 +121,20 @@ export const DERIVATIONS = {
   // ── Événements ─────────────────────────────────────────────────────────────
   event_fifa_wc_host: (f) => f.events.includes("fifa_wc_host"),
   event_summer_olympics_host: (f) => f.events.includes("summer_olympics_host"),
+  event_winter_olympics_host: (f) => f.events.includes("winter_olympics_host"),
 
   // ── Politique / memberships ────────────────────────────────────────────────
   political_eu: (f) => f.memberships.includes("eu"),
   political_g20: (f) => f.memberships.includes("g20"),
   political_nato: (f) => f.memberships.includes("nato"),
   political_commonwealth: (f) => f.memberships.includes("commonwealth"),
+  political_arab_league: (f) => f.memberships.includes("arab_league"),
+  political_asean: (f) => f.memberships.includes("asean"),
+  political_brics: (f) => f.memberships.includes("brics"),
+  political_eurozone: (f) => f.memberships.includes("eurozone"),
+  political_g7: (f) => f.memberships.includes("g7"),
+  political_opec: (f) => f.memberships.includes("opec"),
+  political_schengen: (f) => f.memberships.includes("schengen"),
 
   // ── Régime ─────────────────────────────────────────────────────────────────
   regime_monarchy: (f) => f.regime === "monarchy",

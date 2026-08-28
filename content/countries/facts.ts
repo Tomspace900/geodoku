@@ -269,7 +269,7 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     flagColors: ["red", "white"],
     flagSymbols: [],
     flagLayout: ["horizontal_stripes"],
-    events: [],
+    events: ["winter_olympics_host"],
     memberships: ["eu", "eurozone", "oecd", "schengen"],
     capitals: [
       {
@@ -539,7 +539,7 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     flagColors: ["blue", "yellow", "white"],
     flagSymbols: ["star", "triangle"],
     flagLayout: [],
-    events: [],
+    events: ["winter_olympics_host"],
     memberships: [],
     capitals: [
       {
@@ -826,7 +826,7 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     flagColors: ["red", "white"],
     flagSymbols: ["plant"],
     flagLayout: ["vertical_stripes"],
-    events: ["fifa_wc_host", "summer_olympics_host"],
+    events: ["fifa_wc_host", "summer_olympics_host", "winter_olympics_host"],
     memberships: ["commonwealth", "g20", "g7", "nato", "oecd"],
     capitals: [
       {
@@ -853,7 +853,7 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     flagColors: ["red", "white"],
     flagSymbols: ["cross"],
     flagLayout: [],
-    events: ["fifa_wc_host"],
+    events: ["fifa_wc_host", "winter_olympics_host"],
     memberships: ["oecd", "schengen"],
     capitals: [
       {
@@ -924,7 +924,7 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     flagColors: ["red", "yellow"],
     flagSymbols: ["star"],
     flagLayout: [],
-    events: ["summer_olympics_host"],
+    events: ["summer_olympics_host", "winter_olympics_host"],
     memberships: ["brics", "g20"],
     capitals: [
       {
@@ -1259,7 +1259,7 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     flagColors: ["red", "yellow", "black"],
     flagSymbols: [],
     flagLayout: ["horizontal_stripes"],
-    events: ["fifa_wc_host", "summer_olympics_host"],
+    events: ["fifa_wc_host", "summer_olympics_host", "winter_olympics_host"],
     memberships: ["eu", "eurozone", "g20", "g7", "nato", "oecd", "schengen"],
     capitals: [
       {
@@ -1657,7 +1657,7 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     flagColors: ["red", "blue", "white"],
     flagSymbols: [],
     flagLayout: ["vertical_stripes"],
-    events: ["fifa_wc_host", "summer_olympics_host"],
+    events: ["fifa_wc_host", "summer_olympics_host", "winter_olympics_host"],
     memberships: ["eu", "eurozone", "g20", "g7", "nato", "oecd", "schengen"],
     capitals: [
       {
@@ -2346,7 +2346,7 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     flagColors: ["red", "green", "white"],
     flagSymbols: [],
     flagLayout: ["vertical_stripes"],
-    events: ["fifa_wc_host", "summer_olympics_host"],
+    events: ["fifa_wc_host", "summer_olympics_host", "winter_olympics_host"],
     memberships: ["eu", "eurozone", "g20", "g7", "nato", "oecd", "schengen"],
     capitals: [
       {
@@ -2427,7 +2427,7 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     flagColors: ["red", "white"],
     flagSymbols: ["circle"],
     flagLayout: [],
-    events: ["fifa_wc_host", "summer_olympics_host"],
+    events: ["fifa_wc_host", "summer_olympics_host", "winter_olympics_host"],
     memberships: ["g20", "g7", "oecd"],
     capitals: [
       {
@@ -2620,7 +2620,7 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     flagColors: ["red", "blue", "white", "black"],
     flagSymbols: ["circle"],
     flagLayout: [],
-    events: ["fifa_wc_host", "summer_olympics_host"],
+    events: ["fifa_wc_host", "summer_olympics_host", "winter_olympics_host"],
     memberships: ["g20", "oecd"],
     capitals: [
       {
@@ -3608,7 +3608,7 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     flagColors: ["red", "blue", "white"],
     flagSymbols: ["cross"],
     flagLayout: [],
-    events: [],
+    events: ["winter_olympics_host"],
     memberships: ["nato", "oecd", "schengen"],
     capitals: [
       {
@@ -4120,7 +4120,7 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     flagColors: ["red", "blue", "white"],
     flagSymbols: [],
     flagLayout: ["horizontal_stripes"],
-    events: ["fifa_wc_host", "summer_olympics_host"],
+    events: ["fifa_wc_host", "summer_olympics_host", "winter_olympics_host"],
     memberships: ["brics", "g20"],
     capitals: [
       {
@@ -5125,7 +5125,7 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     flagColors: ["red", "blue", "white"],
     flagSymbols: ["star"],
     flagLayout: ["horizontal_stripes"],
-    events: ["fifa_wc_host", "summer_olympics_host"],
+    events: ["fifa_wc_host", "summer_olympics_host", "winter_olympics_host"],
     memberships: ["g20", "g7", "nato", "oecd"],
     capitals: [
       {

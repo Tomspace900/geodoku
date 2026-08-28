@@ -52,7 +52,10 @@ export type FlagSymbol =
 /** Layout normalisé pour les contraintes de drapeau (dataset). */
 export type FlagLayout = "vertical_stripes" | "horizontal_stripes";
 
-export type CountryEvent = "fifa_wc_host" | "summer_olympics_host";
+export type CountryEvent =
+  | "fifa_wc_host"
+  | "summer_olympics_host"
+  | "winter_olympics_host";
 
 export type PoliticalGroup =
   | "arab_league"

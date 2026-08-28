@@ -259,6 +259,11 @@ export const CONSTRAINTS: Constraint[] = [
     labelKey: "constraint.event_summer_olympics_host",
     category: "event",
   },
+  {
+    id: "event_winter_olympics_host",
+    labelKey: "constraint.event_winter_olympics_host",
+    category: "event",
+  },
 
   // ── Politique / memberships ────────────────────────────────────────────────
   {
@@ -279,6 +284,41 @@ export const CONSTRAINTS: Constraint[] = [
   {
     id: "political_commonwealth",
     labelKey: "constraint.political_commonwealth",
+    category: "political",
+  },
+  {
+    id: "political_arab_league",
+    labelKey: "constraint.political_arab_league",
+    category: "political",
+  },
+  {
+    id: "political_asean",
+    labelKey: "constraint.political_asean",
+    category: "political",
+  },
+  {
+    id: "political_brics",
+    labelKey: "constraint.political_brics",
+    category: "political",
+  },
+  {
+    id: "political_eurozone",
+    labelKey: "constraint.political_eurozone",
+    category: "political",
+  },
+  {
+    id: "political_g7",
+    labelKey: "constraint.political_g7",
+    category: "political",
+  },
+  {
+    id: "political_opec",
+    labelKey: "constraint.political_opec",
+    category: "political",
+  },
+  {
+    id: "political_schengen",
+    labelKey: "constraint.political_schengen",
     category: "political",
   },
 

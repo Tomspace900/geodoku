@@ -31,6 +31,7 @@ export type GameplayClassifications = {
   middleEast: string[];
   eventFifaWcHost: string[];
   eventSummerOlympicsHost: string[];
+  eventWinterOlympicsHost: string[];
   monarchy: string[];
   equatorCrosser: string[];
   mediterraneanCoast: string[];
@@ -353,6 +354,8 @@ export function gameplayArraysForCode(
     events.push("fifa_wc_host");
   if (classifications.eventSummerOlympicsHost.includes(code))
     events.push("summer_olympics_host");
+  if (classifications.eventWinterOlympicsHost.includes(code))
+    events.push("winter_olympics_host");
   const geoTags: string[] = [];
   if (classifications.middleEast.includes(code)) geoTags.push("middle_east");
   if (rc.drivingSide === "left") {

@@ -44,8 +44,8 @@ Documenté **par famille de champs** de `CountryFacts` (voir
 | `latitude` | world-countries `latlng[0]` (centroïde) | importé |
 | `subregion` | world-countries `subregion` (sous-région ONU) | importé |
 | `flagColors` / `flagSymbols` / `flagLayout` | `scripts/countries/flagData.json` (table curée, pas d'heuristique) | curé |
-| `events` (`fifa_wc_host`, `summer_olympics_host`) | compilation éditoriale édition par édition (`countryPatches.ts`) | curé |
-| `memberships` (`eu`, `g20`, `nato`, `commonwealth`, …) | REST Countries v5 + compléments `countryPatches.ts` (OTAN, Commonwealth, monarchies) | importé + curé |
+| `events` (`fifa_wc_host`, `summer_olympics_host`, `winter_olympics_host`) | compilation éditoriale édition par édition (`countryPatches.ts`) | curé |
+| `memberships` (`eu`, `g20`, `nato`, `commonwealth`, `arab_league`, `asean`, `brics`, `eurozone`, `g7`, `opec`, `schengen`, …) | REST Countries v5 + compléments `countryPatches.ts` (OTAN, Commonwealth, monarchies) | importé + curé |
 | `capitals` (`name`, `latitude`, `longitude`, `roles`) | REST Countries v5 | importé |
 | `drivingSide` (`left` / `right`) | REST Countries v5 `car.side` | importé |
 | `geoTags` (`middle_east`, `drives_on_left`, `capital_not_largest`, …) | classification éditoriale (`countryPatches.ts`) | curé |
