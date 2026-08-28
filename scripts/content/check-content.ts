@@ -6,11 +6,13 @@
  *   - couverture / tri / unicité des listes de réponses ;
  *   - **obsolescence** : re-dérive les 60 listes actives depuis `COUNTRY_FACTS`
  *     et échoue si un `answers.ts` committé ne correspond plus (facts modifiés
- *     sans regen, ou liste éditée à la main).
+ *     sans regen, ou liste éditée à la main) ;
+ *   - **provenance** : présence et frontmatter cohérent des `SOURCE.md`
+ *     (un par contrainte) et des trois documents de socle.
  *
  *   pnpm check:content
  */
-import { existsSync, readdirSync, statSync } from "node:fs";
+import { existsSync, readdirSync, readFileSync, statSync } from "node:fs";
 import { resolve } from "node:path";
 import {
   ARCHIVED_CONSTRAINT_IDS,
@@ -165,12 +167,64 @@ function checkDerivationFreshness(errors: string[]): void {
   }
 }
 
+const ISO_DATE = /^\d{4}-\d{2}-\d{2}$/;
+
+/**
+ * Provenance : chaque contrainte (active ou archivée) doit porter un `SOURCE.md`
+ * au frontmatter cohérent, et les trois documents de socle doivent exister. On
+ * ne police **pas** l'expiration de `review_after` (dates indicatives).
+ */
+function checkConstraintSources(errors: string[]): void {
+  ["README.md", "countries/SOURCE.md", "constraints/SOURCES.md"].forEach(
+    (rel) => {
+      if (!existsSync(resolve("content", rel))) {
+        errors.push(`socle: content/${rel} manquant`);
+      }
+    },
+  );
+
+  const archived: ReadonlySet<string> = new Set(ARCHIVED_CONSTRAINT_IDS);
+  [...CONSTRAINT_IDS, ...ARCHIVED_CONSTRAINT_IDS].forEach((id) => {
+    const path = resolve("content", "constraints", id, "SOURCE.md");
+    if (!existsSync(path)) {
+      errors.push(`${id}: SOURCE.md manquant`);
+      return;
+    }
+    const raw = readFileSync(path, "utf8");
+    const frontmatter = raw.match(/^---\n([\s\S]*?)\n---/);
+    if (!frontmatter) {
+      errors.push(`${id}: SOURCE.md sans frontmatter`);
+      return;
+    }
+    const fields = new Map<string, string>();
+    frontmatter[1].split("\n").forEach((line) => {
+      const pair = line.match(/^(\w+):\s*(.+?)\s*$/);
+      if (pair) fields.set(pair[1], pair[2]);
+    });
+
+    if (fields.get("constraint_id") !== id) {
+      errors.push(`${id}: SOURCE.md constraint_id ≠ nom du dossier`);
+    }
+    const expectedStatus = archived.has(id) ? "archived" : "active";
+    if (fields.get("status") !== expectedStatus) {
+      errors.push(`${id}: SOURCE.md status attendu « ${expectedStatus} »`);
+    }
+    (["checked_at", "review_after"] as const).forEach((key) => {
+      const value = fields.get(key);
+      if (!value || !ISO_DATE.test(value)) {
+        errors.push(`${id}: SOURCE.md ${key} absent ou hors format YYYY-MM-DD`);
+      }
+    });
+  });
+}
+
 function main(): void {
   const errors: string[] = [];
   checkCountries(errors);
   checkConstraintCatalogs(errors);
   checkAnswerSets(errors);
   checkDerivationFreshness(errors);
+  checkConstraintSources(errors);
 
   if (errors.length > 0) {
     throw new Error(`Contenu invalide:\n- ${errors.join("\n- ")}`);
