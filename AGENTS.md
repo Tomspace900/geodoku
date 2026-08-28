@@ -50,8 +50,9 @@ Barème tranché sur données réelles. La rareté d'une case s'appuie sur la **
 
 ```
 content/                  # snapshot de contenu versionné, TERMINAL (n'importe rien de src/convex)
-  countries/              # catalog (identité) + countryCodes + facts + popularity — générés, datés
-  constraints/            # index (registre typé) + derivations (prédicats) + <id>/answers.ts (listes ISO3)
+  README.md               # carte du dossier + modèle facts → dérivation → listes
+  countries/              # catalog (identité) + countryCodes + facts + popularity (générés, datés) + SOURCE.md
+  constraints/            # index (registre typé) + derivations (prédicats) + SOURCES.md + <id>/{answers.ts, SOURCE.md}
 src/features/<feature>/   # game, archive, countries, admin, legal, errors
   logic/                  # pur, testé, zéro React/Convex
   testing/                # simulation partagée par Vitest/E2E/scripts
@@ -59,7 +60,7 @@ src/features/<feature>/   # game, archive, countries, admin, legal, errors
   components/             # consomment l'état, dispatchent des actions
 convex/                   # schema, grids, guesses, scheduling, seed, crons
 convex/lib/               # gridGenerator, gridScheduler, gridConstants (purs)
-scripts/content/            # seed/regen du snapshot content/ (check-content, build-answers, emit)
+scripts/content/            # dérivation & garde du snapshot content/ (check-content, build-answers, emit)
 scripts/ci/                 # exécutés en CI (check-e2e-convex-url)
 scripts/countries/          # pipeline contenu pays (build-countries, flagData, patches)
 scripts/local/              # outillage local versionné (analytics, simulate, sync gh…)
@@ -84,7 +85,9 @@ e2e/                      # Playwright — helpers.ts + *.shared|desktop|mobile.
 - **Archiver, jamais supprimer** une contrainte (`ARCHIVED_CONSTRAINTS` + `CONSTRAINT_BY_ID` pour replay).
 - Une contrainte **active** n'a pas de prédicat runtime : sa liste ISO3 est **dérivée** de [`content/constraints/derivations.ts`](content/constraints/derivations.ts) sur le snapshot de faits, **générée** par `pnpm build:answers` dans `content/constraints/<id>/answers.ts`, **committée** et relue en diff. `matchesConstraint(id, iso3)` lit cette liste. `pnpm check:content` (job `quality`) échoue si un `answers.ts` est obsolète.
 - Les 11 listes **archivées** sont figées à la main (pas d'en-tête `@generated`), hors dérivation.
-- Changement de contrainte → éditer `derivations.ts` + `CONSTRAINTS` → `pnpm build:answers` → `pnpm simulate:scheduling` → régénération du pool via `/admin` si OK.
+- Chaque contrainte porte un `SOURCE.md` (définition, dérivation, cas limites) ; le socle (`constraints/SOURCES.md`, `content/README.md`, `content/countries/SOURCE.md`) porte le principe et la provenance par famille de champs. `check:content` vérifie présence et frontmatter.
+- Deux leviers pour réviser une contrainte active : la **définition** change → `derivations.ts` (+ `CONSTRAINTS`) ; une **donnée** est fausse → curation (`countryPatches.ts`, `flagData.json`) ou `pnpm build:countries`. Jamais `answers.ts` à la main.
+- Après un levier : `pnpm build:answers` → relire le diff ISO3 → `pnpm simulate:scheduling` → régénération du pool via `/admin` si OK.
 - Le snapshot `content/countries/` (identité, faits, popularité) est régénéré par `pnpm build:countries` (réseau), qui enchaîne `build:answers`.
 - Drapeaux → [`scripts/countries/flagData.json`](scripts/countries/flagData.json) curé, pas d'heuristique.
 
@@ -144,7 +147,7 @@ Philosophie **Editorial Intellectual** (NYT Games) : spacieux, typographique, to
 
 **Rollout en cours.** La persistence minimale v3 est dual-write avec un shadow v2 pendant la fenêtre de rollback. Ne retirer ni ce shadow ni les endpoints legacy avant la fin de l'observation. Procédure complète : [`docs/rollout-write-integrity.md`](docs/rollout-write-integrity.md).
 
-**Admin UI** ([`src/features/admin/AdminPage.tsx`](src/features/admin/AdminPage.tsx)) : `PoolOverviewPanel` (santé pool), `GameCalendar` + `GridDayDetail` (métriques par jour, facilité via `topKPopularity`, struggle observé), `GameHealthPanel` (win rate ~30 j). Pas de panneau de tuning : ajuster `gridConstants.ts` + simuler.
+**Admin UI** ([`src/features/admin/AdminPage.tsx`](src/features/admin/AdminPage.tsx)) : `PoolOverviewPanel` (santé pool), `GameCalendar` + `GridDayDetail` (métriques par jour, facilité via `topKPopularity`, struggle observé), `GameHealthPanel` (win rate ~30 j), `ConstraintExplorerPanel` (intersection des listes ISO3 + chevauchement générateur, analyse 100 % client). Pas de panneau de tuning : ajuster `gridConstants.ts` + simuler.
 
 **Règles Convex.** Pas de `.filter()` sur queries — index `by_<field>_and_<field>`. `gridGenerator`/`gridScheduler`/`gridConstants` restent **purs** (importables depuis Vitest et scripts).
 
@@ -160,6 +163,8 @@ pnpm lint                         # biome check + tsc
 pnpm typecheck
 pnpm test                         # Vitest (e2e/ exclu)
 pnpm format
+pnpm check:design-system          # audit tokens/DS sur src/**/*.tsx (job quality)
+pnpm check:bundle                 # vite build + budget bundle joueur 280 KiB (job quality)
 
 # E2E Playwright — nécessite une grille du jour
 pnpm check:e2e-convex-url         # ping VITE_CONVEX_URL avant e2e (CI + local)
@@ -174,7 +179,7 @@ pnpm build
 # Contenu & pool
 pnpm build:countries             # regen réseau du snapshot content/ (+ enchaîne build:answers)
 pnpm build:answers               # re-dérive content/constraints/<id>/answers.ts (hors-ligne)
-pnpm check:content               # garde de cohérence content/ (job quality) + contrôle d'obsolescence
+pnpm check:content               # cohérence content/ (job quality) : obsolescence des listes + provenance SOURCE.md
 pnpm analyze:pool
 pnpm simulate:scheduling          # validateur changement contraintes
 pnpm simulate:players             # dry-run par défaut ; --execute pour écrire (develop/dev)
