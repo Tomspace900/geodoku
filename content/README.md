@@ -10,6 +10,7 @@ jamais l'alias `@/`.
 ENTRÉES DE CURATION (éditées à la main)
   scripts/countries/countryPatches.ts    # corrections, alias, classifications
   scripts/countries/flagData.json        # table de vérité drapeaux
+  scripts/countries/data/*.ts            # datasets de faits quantitatifs datés
         │  pnpm build:countries  (réseau — world-countries + REST Countries + Wikimedia)
         ▼
 SNAPSHOT (content/countries/ — généré, committé, daté par FACTS_SNAPSHOT.date)
@@ -17,7 +18,7 @@ SNAPSHOT (content/countries/ — généré, committé, daté par FACTS_SNAPSHOT.
         │  pnpm build:answers  (dérivation PURE, hors-ligne)
         ▼
 LISTES DÉRIVÉES (content/constraints/<id>/answers.ts)
-  60 actives générées + 11 archivées figées
+  actives générées + 11 archivées figées
         │  imports relatifs
         ▼
 RUNTIME + OUTILLAGE   matchesConstraint(id, iso3)
@@ -42,13 +43,17 @@ enchaîne `pnpm build:answers`. Provenance par famille de champs :
 
 Chaque dossier de `constraints/` contient :
 
-- `answers.ts` — la liste ISO3 acceptée par le jeu. Pour les **60 actives**,
-  fichier **`@generated`** : la vérité est `derivations.ts` appliqué au snapshot
+- `answers.ts` — la liste ISO3 acceptée par le jeu. Pour les contraintes
+  **actives**, fichier **`@generated`** : la vérité est `derivations.ts` appliqué au snapshot
   de faits, `answers.ts` en est la matérialisation, régénérée par
   `pnpm build:answers` et **relue en diff**. Pour les **11 archivées**, liste
   **figée à la main** (pas d'en-tête `@generated`), conservée pour le replay.
 - `SOURCE.md` — définition jouable, dérivation (champ + seuil/pivot) et cas
   limites propres à cette contrainte.
+
+Les faits quantitatifs (fuseaux, volcans, relief, forêt, centres urbains) sont
+des datasets datés dans `scripts/countries/data/`, fusionnés en scalaires par
+`build:countries` — mêmes règles de curation que `countryPatches.ts`.
 
 `constraints/derivations.ts` — un prédicat pur par contrainte active, porté des
 prédicats runtime historiques. `constraints/SOURCES.md` porte le principe, la

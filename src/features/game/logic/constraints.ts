@@ -17,6 +17,7 @@ export type ConstraintCategory =
   | "flag"
   | "latitude"
   | "subregion"
+  | "time_zones"
   | "event"
   | "political"
   | "regime"
@@ -248,6 +249,18 @@ export const CONSTRAINTS: Constraint[] = [
     category: "subregion",
   },
 
+  // ── Fuseaux horaires ──────────────────────────────────────────────────────
+  {
+    id: "time_zones_multiple",
+    labelKey: "constraint.time_zones_multiple",
+    category: "time_zones",
+  },
+  {
+    id: "time_zones_min_3",
+    labelKey: "constraint.time_zones_min_3",
+    category: "time_zones",
+  },
+
   // ── Événements ─────────────────────────────────────────────────────────────
   {
     id: "event_fifa_wc_host",
@@ -384,6 +397,21 @@ export const CONSTRAINTS: Constraint[] = [
     labelKey: "constraint.nature_rainforest",
     category: "nature",
   },
+  {
+    id: "nature_holocene_volcano",
+    labelKey: "constraint.nature_holocene_volcano",
+    category: "nature",
+  },
+  {
+    id: "nature_mountain_area_majority",
+    labelKey: "constraint.nature_mountain_area_majority",
+    category: "nature",
+  },
+  {
+    id: "forest_cover_majority",
+    labelKey: "constraint.forest_cover_majority",
+    category: "nature",
+  },
 
   // ── Océans — façade maritime ───────────────────────────────────────────────
   {
@@ -401,6 +429,11 @@ export const CONSTRAINTS: Constraint[] = [
     labelKey: "constraint.ocean_indian",
     category: "ocean",
   },
+  {
+    id: "ocean_multiple_basins",
+    labelKey: "constraint.ocean_multiple_basins",
+    category: "ocean",
+  },
 
   // ── Société ────────────────────────────────────────────────────────────────
   {
@@ -411,6 +444,11 @@ export const CONSTRAINTS: Constraint[] = [
   {
     id: "society_capital_not_largest",
     labelKey: "constraint.society_capital_not_largest",
+    category: "society",
+  },
+  {
+    id: "urban_centres_min_3_over_1m",
+    labelKey: "constraint.urban_centres_min_3_over_1m",
     category: "society",
   },
 ];

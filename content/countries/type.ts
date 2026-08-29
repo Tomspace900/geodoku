@@ -102,7 +102,8 @@ export type PhysicalFeature =
   | "rainforest"
   | "atlantic_coast"
   | "pacific_coast"
-  | "indian_ocean_coast";
+  | "indian_ocean_coast"
+  | "arctic_coast";
 
 // ─── Faits gameplay ─────────────────────────────────────────────────────────
 
@@ -135,6 +136,28 @@ export type CountryFacts = Readonly<{
   geoTags: readonly string[];
   regime: Regime;
   physicalFeatures: readonly PhysicalFeature[];
+  /**
+   * Nombre de décalages UTC civils **distincts** observés simultanément dans le
+   * pays (IANA Time Zone Database). Toujours ≥ 1.
+   */
+  utcOffsetCount: number;
+  /** Le pays compte au moins un volcan actif à l'Holocène (Smithsonian GVP). */
+  hasHoloceneVolcano: boolean;
+  /**
+   * Part de territoire montagneux, fraction 0–1 (ODD 15.4.2, méthode
+   * FAO/UNEP-WCMC). `null` quand la source ne couvre pas le pays — jamais 0.
+   */
+  mountainAreaShare: number | null;
+  /**
+   * Part de superficie forestière, fraction 0–1 (FAO FRA). `null` si non
+   * couvert par la source — jamais 0.
+   */
+  forestCoverShare: number | null;
+  /**
+   * Nombre de centres urbains du pays dépassant strictement 1 M d'habitants
+   * (GHSL Urban Centre Database). 0 quand aucun.
+   */
+  urbanCentresOver1M: number;
 }>;
 
 /**
@@ -181,6 +204,11 @@ export type CountryRecord = {
   geoTags: string[];
   regime: Regime;
   physicalFeatures: PhysicalFeature[];
+  utcOffsetCount: number;
+  hasHoloceneVolcano: boolean;
+  mountainAreaShare: number | null;
+  forestCoverShare: number | null;
+  urbanCentresOver1M: number;
 };
 
 // ─── Snapshot de popularité ─────────────────────────────────────────────────

@@ -245,3 +245,70 @@ liste** (`check:content` re-dérive les 68 sans mouvement hors asean/brics/opec)
 
 **Merge.** _(prêt — merge `content-p3-lot1` → `develop` puis `refreshPool` via
 `/admin` après push)_
+
+### Lot 2 — branche `content-p3-lot2` (2026-08-29)
+
+**Périmètre livré : 7 contraintes** (`time_zones_multiple`, `time_zones_min_3`,
+`nature_holocene_volcano`, `nature_mountain_area_majority`, `forest_cover_majority`,
+`urban_centres_min_3_over_1m`, `ocean_multiple_basins`). `EXPECTED_ACTIVE_COUNT`
+68 → 75. Nouvelle catégorie `time_zones` ; `urban_centres…` rattaché à `society`.
+
+**Datasets (`scripts/countries/data/`, nouveau dossier).** 5 fichiers + `types.ts` :
+`civilTimeOffsets`, `holoceneVolcanoes`, `mountainArea`, `urbanCentres` portés
+verbatim des snapshots `constraint-explorer` (221b42d) ; `forestCover` reconstitué
+à partir du champ `forestCoverPercent` de `country-core` v1 (197 valeurs FAO,
+millésime 2023, couverture complète). `build-countries` les réduit à 5 scalaires
+par pays (`quantitativeFactsForCode`, testé) : `utcOffsetCount`,
+`hasHoloceneVolcano`, `mountainAreaShare`/`forestCoverShare` (fractions 0–1, `null`
+si non couvert), `urbanCentresOver1M`. Nouvelle façade `PhysicalFeature`
+`arctic_coast`, curée dans `countryPatches.ts` (CAN, NOR, RUS, USA — repris du
+champ `oceanBasins` de country-core v1).
+
+**`ocean_multiple_basins`.** Dérivation = ≥ 2 bassins parmi Atlantique / Pacifique
+/ Indien / Arctique, avec `mediterranean_coast` + `caribbean_coast` repliés sur
+l'Atlantique et `arctic_coast` lu. `oceanBasinCount()` dans `derivations.ts`.
+
+**Snapshot.** `pnpm build:countries` (réseau, 3 min, 197/197 pageviews, 0 échec)
++ `pnpm biome check --write content/`. Diff `content/countries/` : **uniquement**
+`facts.ts` (+5 champs × 197, +`arctic_coast` sur 4 pays) et `type.ts`. Zéro dérive
+population / superficie / latitude / memberships ; millésime inchangé (08-29 =
+regen #2 du lot 1) ; `catalog.ts`, `popularity.ts` et les **68 `answers.ts`
+existants inchangés**. `build:answers` : 75 contraintes actives, 2023 entrées ISO3.
+
+**Contre-épreuve vs v1 (`221b42d`).** **7/7 listes byte-identiques** — aucun écart.
+
+| id | dérivé | v1 | statut |
+| --- | --- | --- | --- |
+| `time_zones_multiple` | 19 | 19 | identique |
+| `time_zones_min_3` | 8 | 8 | identique (v1 la classait `archived` — réactivée ici, cf. plan §2) |
+| `nature_holocene_volcano` | 76 | 76 | identique |
+| `nature_mountain_area_majority` | 34 | 34 | identique |
+| `forest_cover_majority` | 47 | 47 | identique |
+| `urban_centres_min_3_over_1m` | 36 | 36 | identique |
+| `ocean_multiple_basins` | 18 | 18 | identique (le repli Méditerranée/Caraïbes + `arctic_coast` reproduit exactement la liste v1) |
+
+**Cas limites relevés (dossier de gate).**
+
+- `nature_mountain_area_majority` : la source (ODD 15.4.2) ne couvre pas 8 pays
+  (ARG, CAN, DEU, ISR, NOR, TUR, TWN, XKX) → `null`, hors liste. La **Norvège**
+  est le seul cas discutable (relief marqué). v1 faisait le même choix.
+  Juste sous le seuil : PER 49,4 %, ETH/HTI 49,9 % ; juste au-dessus : NZL/DJI 50,7 %.
+- `forest_cover_majority` : **Russie 49,8 %** rate le seuil d'un cheveu (hors liste,
+  comme en v1) ; TZA 50,1 % passe. AUT 47,2 %, PRK 49,6 % dessous.
+- `time_zones_min_3` : liste étroite (8) — se mariera rarement à l'intersection
+  (`MIN_CELL_SIZE`), attendu.
+- `ocean_multiple_basins` : `arctic_coast` restreint à 4 États ; donne son 2ᵉ bassin
+  à la Norvège (Atl+Arctique) et à la Russie (Pac+Arctique). France multi-bassins
+  par l'outre-mer (Guyane / Réunion / Polynésie).
+
+**Checklist.** `pnpm lint` ✓ (2 warnings préexistants hors périmètre —
+`convex/**/*.test.ts`) · `pnpm test` 527/527 ✓ · `pnpm check:content` « 75 actives,
+11 archivées, 197 pays » ✓ · `pnpm check:bundle` 245,6 KiB gzip (budget 280) ✓ ·
+`pnpm simulate:scheduling` **14/14 PASS**, couverture 100 %, failed seeds 0/75,
+overlap max 0,846 < 0,85, cold-start 19/19 wovin ≤ 1 newcomer/grille.
+
+**Gate utilisateur.** _(en attente — 7/7 identiques v1, aucun arbitrage bloquant ;
+recommandation : inclure les 7)_
+
+**Merge.** _(à faire après gate — merge `content-p3-lot2` → `develop` puis
+`refreshPool` via `/admin` après push)_

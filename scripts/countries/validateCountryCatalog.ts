@@ -106,6 +106,36 @@ export function validateCountryFacts(
     if (facts.regime !== "monarchy" && facts.regime !== "republic") {
       errors.push(`${code}: régime invalide`);
     }
+
+    if (
+      !Number.isInteger(facts.utcOffsetCount) ||
+      facts.utcOffsetCount < 1 ||
+      facts.utcOffsetCount > 12
+    ) {
+      errors.push(`${code}: utcOffsetCount invalide (${facts.utcOffsetCount})`);
+    }
+    if (typeof facts.hasHoloceneVolcano !== "boolean") {
+      errors.push(`${code}: hasHoloceneVolcano invalide`);
+    }
+    (
+      [
+        ["mountainAreaShare", facts.mountainAreaShare],
+        ["forestCoverShare", facts.forestCoverShare],
+      ] as const
+    ).forEach(([field, value]) => {
+      if (value === null) return;
+      if (!Number.isFinite(value) || value < 0 || value > 1) {
+        errors.push(`${code}: ${field} hors [0, 1] (${value})`);
+      }
+    });
+    if (
+      !Number.isInteger(facts.urbanCentresOver1M) ||
+      facts.urbanCentresOver1M < 0
+    ) {
+      errors.push(
+        `${code}: urbanCentresOver1M invalide (${facts.urbanCentresOver1M})`,
+      );
+    }
     facts.capitals.forEach((capital) => {
       if (
         !capital.name ||
@@ -129,6 +159,44 @@ export function validateCountryFacts(
         errors.push(`${code}: frontière inconnue ${border}`);
       }
     });
+  });
+
+  // Couverture attendue des datasets quantitatifs : un branchement cassé se
+  // traduirait par un champ uniformément vide. Bornes larges, pas des comptes exacts.
+  const allFacts = Object.values(factsByCode);
+  const coverage: Array<[string, number, number]> = [
+    [
+      "hasHoloceneVolcano",
+      allFacts.filter((f) => f.hasHoloceneVolcano).length,
+      40,
+    ],
+    [
+      "mountainAreaShare",
+      allFacts.filter((f) => f.mountainAreaShare !== null).length,
+      150,
+    ],
+    [
+      "forestCoverShare",
+      allFacts.filter((f) => f.forestCoverShare !== null).length,
+      150,
+    ],
+    [
+      "utcOffsetCount>=2",
+      allFacts.filter((f) => f.utcOffsetCount >= 2).length,
+      10,
+    ],
+    [
+      "urbanCentresOver1M>=3",
+      allFacts.filter((f) => f.urbanCentresOver1M >= 3).length,
+      15,
+    ],
+  ];
+  coverage.forEach(([field, count, min]) => {
+    if (count < min) {
+      errors.push(
+        `facts: couverture ${field} anormalement basse (${count} < ${min})`,
+      );
+    }
   });
 
   return errors;

@@ -42,6 +42,7 @@ import flag_has_crescent from "./flag_has_crescent/answers";
 import flag_has_cross from "./flag_has_cross/answers";
 import flag_has_star from "./flag_has_star/answers";
 import flag_two_colors from "./flag_two_colors/answers";
+import forest_cover_majority from "./forest_cover_majority/answers";
 import language_arabic from "./language_arabic/answers";
 import language_english from "./language_english/answers";
 import language_french from "./language_french/answers";
@@ -52,9 +53,12 @@ import language_spanish from "./language_spanish/answers";
 import latitude_polar from "./latitude_polar/answers";
 import latitude_south_hemisphere from "./latitude_south_hemisphere/answers";
 import nature_desert from "./nature_desert/answers";
+import nature_holocene_volcano from "./nature_holocene_volcano/answers";
+import nature_mountain_area_majority from "./nature_mountain_area_majority/answers";
 import nature_rainforest from "./nature_rainforest/answers";
 import ocean_atlantic from "./ocean_atlantic/answers";
 import ocean_indian from "./ocean_indian/answers";
+import ocean_multiple_basins from "./ocean_multiple_basins/answers";
 import ocean_pacific from "./ocean_pacific/answers";
 import physical_caribbean_coast from "./physical_caribbean_coast/answers";
 import physical_crosses_equator from "./physical_crosses_equator/answers";
@@ -84,7 +88,10 @@ import society_drives_on_left from "./society_drives_on_left/answers";
 import subregion_caribbean from "./subregion_caribbean/answers";
 import subregion_middle_east from "./subregion_middle_east/answers";
 import subregion_southeast_asia from "./subregion_southeast_asia/answers";
+import time_zones_min_3 from "./time_zones_min_3/answers";
+import time_zones_multiple from "./time_zones_multiple/answers";
 import type { ConstraintAnswerSet } from "./type";
+import urban_centres_min_3_over_1m from "./urban_centres_min_3_over_1m/answers";
 import water_island from "./water_island/answers";
 import water_landlocked from "./water_landlocked/answers";
 
@@ -128,6 +135,8 @@ export const CONSTRAINT_IDS = [
   "subregion_middle_east",
   "subregion_caribbean",
   "subregion_southeast_asia",
+  "time_zones_multiple",
+  "time_zones_min_3",
   "event_fifa_wc_host",
   "event_summer_olympics_host",
   "event_winter_olympics_host",
@@ -153,11 +162,16 @@ export const CONSTRAINT_IDS = [
   "density_less_canada",
   "nature_desert",
   "nature_rainforest",
+  "nature_holocene_volcano",
+  "nature_mountain_area_majority",
+  "forest_cover_majority",
   "ocean_atlantic",
   "ocean_pacific",
   "ocean_indian",
+  "ocean_multiple_basins",
   "society_drives_on_left",
   "society_capital_not_largest",
+  "urban_centres_min_3_over_1m",
 ] as const;
 
 /** Contraintes hors génération, conservées pour rejouer les anciennes grilles. */
@@ -224,6 +238,8 @@ const ANSWER_SETS = {
   subregion_middle_east,
   subregion_caribbean,
   subregion_southeast_asia,
+  time_zones_multiple,
+  time_zones_min_3,
   event_fifa_wc_host,
   event_summer_olympics_host,
   event_winter_olympics_host,
@@ -249,11 +265,16 @@ const ANSWER_SETS = {
   density_less_canada,
   nature_desert,
   nature_rainforest,
+  nature_holocene_volcano,
+  nature_mountain_area_majority,
+  forest_cover_majority,
   ocean_atlantic,
   ocean_pacific,
   ocean_indian,
+  ocean_multiple_basins,
   society_drives_on_left,
   society_capital_not_largest,
+  urban_centres_min_3_over_1m,
   flag_two_colors,
   area_gt_2M,
   area_gt_500k,

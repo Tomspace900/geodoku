@@ -72,6 +72,91 @@ describe("DERIVATIONS — bascules de seuil", () => {
     }).toEqual({ saudi_arabia: true, nigeria: true, united_states: false });
   });
 
+  it("time_zones_multiple : au moins 2 décalages civils simultanés", () => {
+    expect({
+      russia: derive("time_zones_multiple", "RUS"),
+      spain: derive("time_zones_multiple", "ESP"), // péninsule + Canaries
+      germany: derive("time_zones_multiple", "DEU"), // un seul
+      iceland: derive("time_zones_multiple", "ISL"),
+    }).toEqual({ russia: true, spain: true, germany: false, iceland: false });
+  });
+
+  it("time_zones_min_3 : au moins 3 décalages civils simultanés", () => {
+    expect({
+      russia: derive("time_zones_min_3", "RUS"),
+      canada: derive("time_zones_min_3", "CAN"),
+      france: derive("time_zones_min_3", "FRA"), // 2 seulement
+      germany: derive("time_zones_min_3", "DEU"),
+    }).toEqual({ russia: true, canada: true, france: false, germany: false });
+  });
+
+  it("nature_holocene_volcano : présence au registre GVP", () => {
+    expect({
+      iceland: derive("nature_holocene_volcano", "ISL"),
+      indonesia: derive("nature_holocene_volcano", "IDN"),
+      poland: derive("nature_holocene_volcano", "POL"),
+      egypt: derive("nature_holocene_volcano", "EGY"),
+    }).toEqual({
+      iceland: true,
+      indonesia: true,
+      poland: false,
+      egypt: false,
+    });
+  });
+
+  it("nature_mountain_area_majority : part montagneuse > 50 %", () => {
+    expect({
+      nepal: derive("nature_mountain_area_majority", "NPL"),
+      switzerland: derive("nature_mountain_area_majority", "CHE"),
+      france: derive("nature_mountain_area_majority", "FRA"),
+      netherlands: derive("nature_mountain_area_majority", "NLD"),
+    }).toEqual({
+      nepal: true,
+      switzerland: true,
+      france: false,
+      netherlands: false,
+    });
+  });
+
+  it("forest_cover_majority : couvert forestier > 50 %", () => {
+    expect({
+      finland: derive("forest_cover_majority", "FIN"),
+      gabon: derive("forest_cover_majority", "GAB"),
+      egypt: derive("forest_cover_majority", "EGY"),
+      australia: derive("forest_cover_majority", "AUS"),
+    }).toEqual({
+      finland: true,
+      gabon: true,
+      egypt: false,
+      australia: false,
+    });
+  });
+
+  it("urban_centres_min_3_over_1m : au moins 3 centres > 1 M", () => {
+    expect({
+      china: derive("urban_centres_min_3_over_1m", "CHN"),
+      usa: derive("urban_centres_min_3_over_1m", "USA"),
+      portugal: derive("urban_centres_min_3_over_1m", "PRT"), // 2
+      iceland: derive("urban_centres_min_3_over_1m", "ISL"),
+    }).toEqual({ china: true, usa: true, portugal: false, iceland: false });
+  });
+
+  it("ocean_multiple_basins : au moins 2 bassins (Méditerranée/Caraïbes → Atlantique)", () => {
+    expect({
+      usa: derive("ocean_multiple_basins", "USA"),
+      egypt: derive("ocean_multiple_basins", "EGY"), // Méditerranée + mer Rouge
+      norway: derive("ocean_multiple_basins", "NOR"), // Atlantique + Arctique
+      germany: derive("ocean_multiple_basins", "DEU"), // Atlantique seul
+      chile: derive("ocean_multiple_basins", "CHL"), // Pacifique seul
+    }).toEqual({
+      usa: true,
+      egypt: true,
+      norway: true,
+      germany: false,
+      chile: false,
+    });
+  });
+
   it("event_winter_olympics_host : a accueilli les JO d'hiver", () => {
     expect({
       france: derive("event_winter_olympics_host", "FRA"),

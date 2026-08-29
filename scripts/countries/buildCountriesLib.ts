@@ -13,6 +13,13 @@ import type {
   Regime,
   WaterAccess,
 } from "../../src/features/countries/types.ts";
+import type {
+  CivilTimeOffsetsSnapshot,
+  ForestCoverSnapshot,
+  HoloceneVolcanoSnapshot,
+  MountainAreaSnapshot,
+  UrbanCentresSnapshot,
+} from "./data/types.ts";
 
 /** Explicit source fixes — only fields where world-countries / REST need gameplay correction. */
 export type SourceCorrection = {
@@ -51,6 +58,7 @@ export type GameplayClassifications = {
   atlanticCoast: string[];
   pacificCoast: string[];
   indianOceanCoast: string[];
+  arcticCoast: string[];
 };
 
 export type CountryPatchesConfig = {
@@ -411,7 +419,48 @@ export function physicalFeaturesForCode(
     features.push("pacific_coast");
   if (classifications.indianOceanCoast.includes(code))
     features.push("indian_ocean_coast");
+  if (classifications.arcticCoast.includes(code)) features.push("arctic_coast");
   return features;
+}
+
+/** Datasets de faits quantitatifs curés (`scripts/countries/data/`). */
+export type QuantitativeDatasets = {
+  civilTimeOffsets: CivilTimeOffsetsSnapshot;
+  holoceneVolcanoes: HoloceneVolcanoSnapshot;
+  mountainArea: MountainAreaSnapshot;
+  forestCover: ForestCoverSnapshot;
+  urbanCentres: UrbanCentresSnapshot;
+};
+
+type QuantitativeFacts = Pick<
+  CountryRecord,
+  | "utcOffsetCount"
+  | "hasHoloceneVolcano"
+  | "mountainAreaShare"
+  | "forestCoverShare"
+  | "urbanCentresOver1M"
+>;
+
+/**
+ * Fusionne les datasets quantitatifs curés en scalaires dérivés par pays.
+ * Les parts sont ramenées en fraction 0–1 ; une source qui ne couvre pas le
+ * pays donne `null` (jamais 0). `utcOffsetCount` retombe à 1 si absent : tout
+ * pays observe au moins un décalage.
+ */
+export function quantitativeFactsForCode(
+  code: string,
+  datasets: QuantitativeDatasets,
+): QuantitativeFacts {
+  const offsets = datasets.civilTimeOffsets[code]?.value;
+  const mountain = datasets.mountainArea[code]?.value;
+  const forest = datasets.forestCover.countries[code];
+  return {
+    utcOffsetCount: offsets && offsets.length > 0 ? offsets.length : 1,
+    hasHoloceneVolcano: Object.hasOwn(datasets.holoceneVolcanoes, code),
+    mountainAreaShare: typeof mountain === "number" ? mountain / 100 : null,
+    forestCoverShare: typeof forest === "number" ? forest / 100 : null,
+    urbanCentresOver1M: datasets.urbanCentres.countries[code]?.length ?? 0,
+  };
 }
 
 /** Fallback when Wikipedia pageviews are missing (`assignPopularity` only). Matches median in percentile ranking. */

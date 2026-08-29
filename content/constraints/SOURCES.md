@@ -108,9 +108,30 @@ tant qu'elle n'a pas eu lieu.
 - Équateur et côtes : [Natural Earth 5.1.2](https://github.com/nvkelso/natural-earth-vector/tree/v5.1.2/geojson).
 - Déserts et forêts tropicales : [NASA MODIS MCD12Q1](https://doi.org/10.5067/MODIS/MCD12Q1.061),
   complété par une revue éditoriale des biomes nommés.
+- Volcans actifs à l'Holocène : [Smithsonian Global Volcanism Program](https://volcano.si.edu/).
+- Part de territoire montagneux : indicateur [ODD 15.4.2](https://unstats.un.org/sdgs/metadata/?Text=&Goal=15&Target=15.4)
+  (méthode FAO/UNEP-WCMC).
+- Part de superficie forestière : FAO Forest Resources Assessment (World Bank
+  `AG.LND.FRST.ZS`).
+
+Une part quantitative absente de la source vaut `null`, jamais 0 : le pays est
+alors hors liste sans être compté comme « 0 % ».
+
+## Temps et centres urbains
+
+- Décalages horaires civils : [IANA Time Zone Database](https://www.iana.org/time-zones)
+  — décalages **civils simultanés** à une date de référence, pas les zones IANA
+  ni les changements saisonniers.
+- Centres urbains de plus d'un million d'habitants :
+  [GHSL Urban Centre Database](https://human-settlement.emergency.copernicus.eu/ghs_ucdb_2024.php)
+  — agglomération bâtie, pas la commune administrative.
 
 ## Océans
 
 La convention Geodoku part de l'[IHO S-23](https://iho.int/uploads/user/pubs/standards/s-23/S-23_Ed3_1953_EN.pdf).
-La Méditerranée et la mer des Caraïbes sont rattachées à l'Atlantique. Les
-dépendances ne sont pas automatiquement repliées sur leur État souverain.
+La Méditerranée et la mer des Caraïbes sont rattachées à l'Atlantique. La façade
+arctique (`arctic_coast`) est une convention curée, restreinte aux quatre États à
+côte arctique continue (Canada, Norvège, Russie, États-Unis) ; elle ne sert
+qu'à `ocean_multiple_basins`. Les dépendances ne sont pas automatiquement
+repliées sur leur État souverain — mais les territoires ultramarins d'un État
+jouable comptent pour lui.

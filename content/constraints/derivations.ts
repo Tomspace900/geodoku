@@ -30,6 +30,12 @@ const BORDERS_SOLO = 1;
 const BORDERS_MIN_5 = 5;
 const BORDERS_MIN_7 = 7;
 
+const TIME_ZONES_MULTIPLE = 2;
+const TIME_ZONES_MIN_3 = 3;
+const URBAN_CENTRES_MIN = 3;
+/** « Majorité du territoire » : part strictement supérieure à la moitié. */
+const MAJORITY_SHARE = 0.5;
+
 /** |lat| > POLAR_ABS_LAT → au-delà du 55ᵉ parallèle (Scandinavie, Canada, Russie). */
 const POLAR_ABS_LAT = 55;
 
@@ -118,6 +124,10 @@ export const DERIVATIONS = {
   subregion_caribbean: (f) => f.subregion === "Caribbean",
   subregion_southeast_asia: (f) => f.subregion === "South-Eastern Asia",
 
+  // ── Fuseaux horaires ──────────────────────────────────────────────────────
+  time_zones_multiple: (f) => f.utcOffsetCount >= TIME_ZONES_MULTIPLE,
+  time_zones_min_3: (f) => f.utcOffsetCount >= TIME_ZONES_MIN_3,
+
   // ── Événements ─────────────────────────────────────────────────────────────
   event_fifa_wc_host: (f) => f.events.includes("fifa_wc_host"),
   event_summer_olympics_host: (f) => f.events.includes("summer_olympics_host"),
@@ -159,13 +169,41 @@ export const DERIVATIONS = {
   // ── Nature — biomes ────────────────────────────────────────────────────────
   nature_desert: (f) => f.physicalFeatures.includes("has_desert"),
   nature_rainforest: (f) => f.physicalFeatures.includes("rainforest"),
+  nature_holocene_volcano: (f) => f.hasHoloceneVolcano,
+  nature_mountain_area_majority: (f) =>
+    f.mountainAreaShare !== null && f.mountainAreaShare > MAJORITY_SHARE,
+  forest_cover_majority: (f) =>
+    f.forestCoverShare !== null && f.forestCoverShare > MAJORITY_SHARE,
 
   // ── Océans — façade maritime ───────────────────────────────────────────────
   ocean_atlantic: (f) => f.physicalFeatures.includes("atlantic_coast"),
   ocean_pacific: (f) => f.physicalFeatures.includes("pacific_coast"),
   ocean_indian: (f) => f.physicalFeatures.includes("indian_ocean_coast"),
+  ocean_multiple_basins: (f) => oceanBasinCount(f) >= 2,
 
   // ── Société ────────────────────────────────────────────────────────────────
   society_drives_on_left: (f) => f.geoTags.includes("drives_on_left"),
   society_capital_not_largest: (f) => f.geoTags.includes("capital_not_largest"),
+  urban_centres_min_3_over_1m: (f) => f.urbanCentresOver1M >= URBAN_CENTRES_MIN,
 } satisfies Record<ActiveConstraintId, Derivation>;
+
+/**
+ * Nombre de bassins océaniques distincts bordant le pays, convention Geodoku
+ * (IHO S-23) : Méditerranée et mer des Caraïbes repliées sur l'Atlantique ;
+ * façade arctique curée (`arcticCoast`). Sert à `ocean_multiple_basins`.
+ */
+function oceanBasinCount(facts: CountryFacts): number {
+  const f = facts.physicalFeatures;
+  let count = 0;
+  if (
+    f.includes("atlantic_coast") ||
+    f.includes("mediterranean_coast") ||
+    f.includes("caribbean_coast")
+  ) {
+    count += 1;
+  }
+  if (f.includes("pacific_coast")) count += 1;
+  if (f.includes("indian_ocean_coast")) count += 1;
+  if (f.includes("arctic_coast")) count += 1;
+  return count;
+}

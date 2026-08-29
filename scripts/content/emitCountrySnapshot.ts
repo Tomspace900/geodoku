@@ -50,6 +50,11 @@ const FACT_KEYS = [
   "geoTags",
   "regime",
   "physicalFeatures",
+  "utcOffsetCount",
+  "hasHoloceneVolcano",
+  "mountainAreaShare",
+  "forestCoverShare",
+  "urbanCentresOver1M",
 ] as const;
 
 function sortByIso3(records: readonly CountryRecord[]): CountryRecord[] {

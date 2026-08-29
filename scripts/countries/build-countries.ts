@@ -41,6 +41,8 @@ import {
   gameplayArraysForCode,
   mapLanguages,
   physicalFeaturesForCode,
+  type QuantitativeDatasets,
+  quantitativeFactsForCode,
   type RcEnrichment,
   type RcEnrichRow,
   rcEnrichmentMapFromRows,
@@ -48,6 +50,19 @@ import {
   toWikipediaTitle,
 } from "./buildCountriesLib.ts";
 import { countryPatches } from "./countryPatches.ts";
+import { CIVIL_TIME_OFFSETS } from "./data/civilTimeOffsets.ts";
+import { FOREST_COVER } from "./data/forestCover.ts";
+import { HOLOCENE_VOLCANOES } from "./data/holoceneVolcanoes.ts";
+import { MOUNTAIN_AREAS } from "./data/mountainArea.ts";
+import { URBAN_CENTRES } from "./data/urbanCentres.ts";
+
+const QUANTITATIVE_DATASETS: QuantitativeDatasets = {
+  civilTimeOffsets: CIVIL_TIME_OFFSETS,
+  holoceneVolcanoes: HOLOCENE_VOLCANOES,
+  mountainArea: MOUNTAIN_AREAS,
+  forestCover: FOREST_COVER,
+  urbanCentres: URBAN_CENTRES,
+};
 
 // ─── World-countries shape (fields we consume) ────────────────────────────────
 
@@ -742,6 +757,7 @@ async function main(): Promise<void> {
         c.cca3,
         gameplayClassifications,
       ),
+      ...quantitativeFactsForCode(c.cca3, QUANTITATIVE_DATASETS),
     };
 
     applySourceCorrections(
@@ -778,6 +794,10 @@ async function main(): Promise<void> {
       merged.physicalFeatures = physicalFeaturesForCode(
         merged.iso3,
         gameplayClassifications,
+      );
+      Object.assign(
+        merged,
+        quantitativeFactsForCode(merged.iso3, QUANTITATIVE_DATASETS),
       );
       return merged;
     },

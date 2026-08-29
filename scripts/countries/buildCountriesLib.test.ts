@@ -13,6 +13,8 @@ import {
   gameplayArraysForCode,
   mapLanguages,
   physicalFeaturesForCode,
+  type QuantitativeDatasets,
+  quantitativeFactsForCode,
   type RcEnrichment,
   type RcEnrichRow,
   rcEnrichmentMapFromRows,
@@ -45,6 +47,11 @@ function minimalCountry(code: string): CountryRecord {
     geoTags: [],
     regime: "republic",
     physicalFeatures: [],
+    utcOffsetCount: 1,
+    hasHoloceneVolcano: false,
+    mountainAreaShare: null,
+    forestCoverShare: null,
+    urbanCentresOver1M: 0,
   };
 }
 
@@ -209,6 +216,7 @@ describe("gameplayArraysForCode", () => {
     atlanticCoast: [],
     pacificCoast: [],
     indianOceanCoast: [],
+    arcticCoast: [],
   };
   const rc: RcEnrichment = {
     iso2: "FR",
@@ -263,6 +271,7 @@ describe("regimeForCode", () => {
     atlanticCoast: [],
     pacificCoast: [],
     indianOceanCoast: [],
+    arcticCoast: [],
   };
 
   it("returns monarchy when code is listed", () => {
@@ -293,6 +302,7 @@ describe("physicalFeaturesForCode", () => {
     atlanticCoast: ["PRT"],
     pacificCoast: ["CHL", "JPN"],
     indianOceanCoast: ["KEN", "IND"],
+    arcticCoast: ["NOR"],
   };
 
   it("stacks all matching physical features", () => {
@@ -321,10 +331,77 @@ describe("physicalFeaturesForCode", () => {
     expect(physicalFeaturesForCode("KEN", classifications)).toEqual([
       "indian_ocean_coast",
     ]);
+    expect(physicalFeaturesForCode("NOR", classifications)).toEqual([
+      "arctic_coast",
+    ]);
   });
 
   it("returns empty when no features listed", () => {
     expect(physicalFeaturesForCode("POL", classifications)).toEqual([]);
+  });
+});
+
+describe("quantitativeFactsForCode", () => {
+  const datasets: QuantitativeDatasets = {
+    civilTimeOffsets: {
+      RUS: {
+        value: ["UTC+02:00", "UTC+03:00", "UTC+12:00"],
+        year: 2026,
+        referenceDate: "2026-01-15",
+      },
+      DEU: {
+        value: ["UTC+01:00"],
+        year: 2026,
+        referenceDate: "2026-01-15",
+      },
+    },
+    holoceneVolcanoes: {
+      ISL: { names: ["Hekla"], databaseVersion: "x" },
+    },
+    mountainArea: { CHE: { value: 65.4, year: 2021 } },
+    forestCover: {
+      source: "x",
+      referenceYear: 2023,
+      countries: { FIN: 73.7 },
+    },
+    urbanCentres: {
+      sourceVersion: "x",
+      referenceYear: 2025,
+      populationThreshold: 1_000_000,
+      countries: {
+        CHN: [
+          { name: "a", population: 2_000_000, referenceYear: 2025 },
+          { name: "b", population: 1_500_000, referenceYear: 2025 },
+          { name: "c", population: 1_100_000, referenceYear: 2025 },
+        ],
+      },
+    },
+  };
+
+  it("reduces datasets to per-country scalars, shares as 0–1 fractions", () => {
+    expect(quantitativeFactsForCode("RUS", datasets)).toEqual({
+      utcOffsetCount: 3,
+      hasHoloceneVolcano: false,
+      mountainAreaShare: null,
+      forestCoverShare: null,
+      urbanCentresOver1M: 0,
+    });
+    expect(quantitativeFactsForCode("CHE", datasets).mountainAreaShare).toBe(
+      0.654,
+    );
+    expect(quantitativeFactsForCode("FIN", datasets).forestCoverShare).toBe(
+      0.737,
+    );
+    expect(quantitativeFactsForCode("ISL", datasets).hasHoloceneVolcano).toBe(
+      true,
+    );
+    expect(quantitativeFactsForCode("CHN", datasets).urbanCentresOver1M).toBe(
+      3,
+    );
+  });
+
+  it("defaults utcOffsetCount to 1 when the country is absent", () => {
+    expect(quantitativeFactsForCode("ZZZ", datasets).utcOffsetCount).toBe(1);
   });
 });
 

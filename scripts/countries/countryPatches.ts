@@ -595,6 +595,14 @@ export const gameplayClassifications: GameplayClassifications = {
     "AUS",
     "FRA",
   ],
+  /**
+   * Façade sur l'océan Arctique. Convention Geodoku restreinte aux quatre États
+   * riverains d'une côte arctique continue et substantielle (reprise du champ
+   * `oceanBasins` du snapshot country-core v1). Sert uniquement à
+   * `ocean_multiple_basins` : la Norvège n'a sinon qu'une façade (Atlantique),
+   * la Russie que Pacifique + Arctique.
+   */
+  arcticCoast: ["CAN", "NOR", "RUS", "USA"],
 };
 
 // ─── Manual country additions ─────────────────────────────────────────────────
@@ -631,6 +639,13 @@ export const manualCountryAdditions: CountryRecord[] = [
     geoTags: [],
     regime: "republic",
     physicalFeatures: [],
+    // Faits quantitatifs : placeholders, recalculés par build-countries via
+    // quantitativeFactsForCode (datasets scripts/countries/data/).
+    utcOffsetCount: 1,
+    hasHoloceneVolcano: false,
+    mountainAreaShare: null,
+    forestCoverShare: null,
+    urbanCentresOver1M: 0,
   },
 ];
 

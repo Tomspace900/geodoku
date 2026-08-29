@@ -4,7 +4,7 @@
  * Vérifie ce qu'aucun type ne peut exprimer :
  *   - synchronisation catalogue ↔ codes ↔ popularité ↔ faits ;
  *   - couverture / tri / unicité des listes de réponses ;
- *   - **obsolescence** : re-dérive les 60 listes actives depuis `COUNTRY_FACTS`
+ *   - **obsolescence** : re-dérive les listes actives depuis `COUNTRY_FACTS`
  *     et échoue si un `answers.ts` committé ne correspond plus (facts modifiés
  *     sans regen, ou liste éditée à la main) ;
  *   - **provenance** : présence et frontmatter cohérent des `SOURCE.md`
@@ -38,7 +38,7 @@ import {
 } from "../countries/validateCountryCatalog";
 
 const EXPECTED_COUNTRY_COUNT = 197;
-const EXPECTED_ACTIVE_COUNT = 68;
+const EXPECTED_ACTIVE_COUNT = 75;
 const EXPECTED_ARCHIVED_COUNT = 11;
 
 function sameValues(a: readonly string[], b: readonly string[]): boolean {
@@ -146,7 +146,7 @@ function checkAnswerSets(errors: string[]): void {
 }
 
 /**
- * Contrôle d'obsolescence : les `answers.ts` des 60 contraintes **actives**
+ * Contrôle d'obsolescence : les `answers.ts` des contraintes **actives**
  * doivent être exactement ce que `DERIVATIONS` produit sur `COUNTRY_FACTS`. Les
  * 11 archivées sont figées à la main, hors de ce contrôle.
  */

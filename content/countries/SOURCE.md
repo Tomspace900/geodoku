@@ -50,12 +50,22 @@ Documenté **par famille de champs** de `CountryFacts` (voir
 | `drivingSide` (`left` / `right`) | REST Countries v5 `car.side` | importé |
 | `geoTags` (`middle_east`, `drives_on_left`, `capital_not_largest`, …) | classification éditoriale (`countryPatches.ts`) | curé |
 | `regime` (`monarchy` / `republic`) | classification binaire éditoriale, réf. [CIA World Factbook — government type](https://www.cia.gov/the-world-factbook/field/government-type/) | curé |
-| `physicalFeatures` (`equator_crosser`, `mediterranean_coast`, `caribbean_coast`, `peak_over_5000m`, `has_desert`, `rainforest`, `atlantic_coast`, `pacific_coast`, `indian_ocean_coast`) | revue éditoriale cartographique / biomes nommés (`countryPatches.ts`) | curé |
+| `physicalFeatures` (`equator_crosser`, `mediterranean_coast`, `caribbean_coast`, `peak_over_5000m`, `has_desert`, `rainforest`, `atlantic_coast`, `pacific_coast`, `indian_ocean_coast`, `arctic_coast`) | revue éditoriale cartographique / biomes nommés (`countryPatches.ts`) | curé |
+| `utcOffsetCount`, `hasHoloceneVolcano`, `mountainAreaShare`, `forestCoverShare`, `urbanCentresOver1M` | datasets datés+sourcés de `scripts/countries/data/`, fusionnés en scalaires par `build-countries` (`quantitativeFactsForCode`) — IANA tz, Smithsonian GVP, ODD 15.4.2 (FAO/UNEP-WCMC), FAO FRA, GHSL UCDB | curé |
 
 Plusieurs dérivations lisent un `geoTags` curé plutôt que le champ dédié
 (`society_drives_on_left` lit `geoTags`, pas `drivingSide` ; `subregion_middle_east`
 lit `geoTags`, pas `subregion`) — c'est voulu : le tag encode la convention
 jouable, le champ importé encode la donnée brute.
+
+Les **faits quantitatifs dérivés** (`utcOffsetCount`, `hasHoloceneVolcano`,
+`mountainAreaShare`, `forestCoverShare`, `urbanCentresOver1M`) proviennent des
+datasets de `scripts/countries/data/` : des snapshots datés et sourcés, révisés à
+la main selon leur en-tête, au même titre que `flagData.json`. `build-countries`
+les réduit à un scalaire par pays (`quantitativeFactsForCode`) : les parts sont
+ramenées en fraction 0–1, et une source qui ne couvre pas un pays donne `null` —
+**jamais 0** (`SOURCES.md`). La fusion est déterministe et hors-ligne ; seul le
+rafraîchissement population/popularité de `build-countries` demande le réseau.
 
 ## Popularité (`popularity.ts`)
 
