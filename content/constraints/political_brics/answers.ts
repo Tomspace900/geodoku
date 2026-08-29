@@ -7,6 +7,7 @@ export default defineAnswerSet("political_brics", [
   "CHN",
   "EGY",
   "ETH",
+  "IDN",
   "IND",
   "IRN",
   "RUS",

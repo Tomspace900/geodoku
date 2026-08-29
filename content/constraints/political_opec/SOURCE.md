@@ -22,7 +22,7 @@ review_after: 2027-02-28
 
 ## Cas limites
 
-Les Émirats arabes unis ont quitté l'OPEP en mai 2026 : leur présence dans la liste dérivée dépend du millésime du snapshot REST Countries et est tranchée à la révision. Les anciens membres (Équateur, Indonésie, Qatar) et les pays de la coalition « OPEP+ » non membres sont exclus. Une adhésion suspendue est arbitrée explicitement.
+Les Émirats arabes unis ont quitté l'OPEP au 1ᵉʳ mai 2026 (retrait confirmé). REST Countries v5 les liste encore : un delta `membershipsRemove: ["opec"]` sur `ARE` dans `countryPatches.ts` les retire, à retirer quand la source rattrape. Les anciens membres (Équateur, Indonésie, Qatar) et les pays de la coalition « OPEP+ » non membres sont exclus. Une adhésion suspendue est arbitrée explicitement.
 
 ## Révision
 

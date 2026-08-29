@@ -24,6 +24,14 @@ export type SourceCorrection = {
    * Règle : majorité de la superficie terrestre — cf. countryPatches.
    */
   latitude?: number;
+  /**
+   * Deltas d'adhésion politique appliqués **après** la lecture REST Countries v5,
+   * pour rattraper un changement officiel daté que la source n'a pas encore
+   * intégré. Idempotents : `membershipsAdd` ignore un groupe déjà présent,
+   * `membershipsRemove` un groupe absent. À retirer dès que REST v5 rattrape.
+   */
+  membershipsAdd?: PoliticalGroup[];
+  membershipsRemove?: PoliticalGroup[];
 };
 
 /** Curated constraint tag lists (events, geo, physical features, regime). */
@@ -342,6 +350,15 @@ export function applySourceCorrections(
     country.waterAccess = correction.waterAccess;
   }
   if (correction.latitude !== undefined) country.latitude = correction.latitude;
+  if (correction.membershipsAdd || correction.membershipsRemove) {
+    const remove = new Set<PoliticalGroup>(correction.membershipsRemove ?? []);
+    country.memberships = [
+      ...new Set<PoliticalGroup>([
+        ...country.memberships,
+        ...(correction.membershipsAdd ?? []),
+      ]),
+    ].filter((group) => !remove.has(group));
+  }
 }
 
 export function gameplayArraysForCode(

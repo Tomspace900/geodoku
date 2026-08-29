@@ -22,7 +22,7 @@ review_after: 2027-02-28
 
 ## Cas limites
 
-Le noyau historique (Brésil, Russie, Inde, Chine, Afrique du Sud) est complété par les adhésions de 2024-2025 (Égypte, Éthiopie, Iran, Émirats arabes unis, Indonésie). L'Arabie saoudite, invitée mais dont l'adhésion n'a pas été formellement confirmée, est tranchée explicitement à la révision selon ce que porte le snapshot REST Countries. Les pays « partenaires » (statut distinct de membre) sont exclus.
+Le noyau historique (Brésil, Russie, Inde, Chine, Afrique du Sud) est complété par les adhésions de 2024-2025 (Égypte, Éthiopie, Iran, Émirats arabes unis, Indonésie). L'Indonésie est membre plein depuis le 6 janvier 2025 ; REST Countries v5 ne l'a pas encore intégrée : un delta `membershipsAdd: ["brics"]` sur `IDN` dans `countryPatches.ts` la rétablit, à retirer quand la source rattrape. L'Arabie saoudite, invitée mais dont l'adhésion n'a pas été formellement confirmée, reste **exclue**. Les pays « partenaires » (statut distinct de membre) sont exclus.
 
 ## Révision
 

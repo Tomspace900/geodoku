@@ -22,7 +22,7 @@ review_after: 2027-02-28
 
 ## Cas limites
 
-Le Timor oriental est le onzième membre (adhésion actée en octobre 2025) : sa présence dans la liste dérivée dépend du millésime du snapshot REST Countries et est confirmée à la révision. La Papouasie–Nouvelle-Guinée (observateur) est exclue. Les territoires non jouables ne sont pas ajoutés séparément.
+Le Timor oriental est le onzième membre (adhésion actée le 26 octobre 2025). REST Countries v5 ne l'a pas encore intégré : un delta `membershipsAdd: ["asean"]` sur `TLS` dans `countryPatches.ts` le rétablit, à retirer quand la source rattrape. La Papouasie–Nouvelle-Guinée (observateur) est exclue. Les territoires non jouables ne sont pas ajoutés séparément.
 
 ## Révision
 

@@ -11,5 +11,6 @@ export default defineAnswerSet("political_asean", [
   "PHL",
   "SGP",
   "THA",
+  "TLS",
   "VNM",
 ]);

@@ -3,12 +3,12 @@ import type { CountryPopularitySnapshot } from "./type";
 
 export const COUNTRY_POPULARITY: CountryPopularitySnapshot = {
   schemaVersion: 1,
-  snapshotId: "wikipedia-pageviews-2026-08-28",
+  snapshotId: "wikipedia-pageviews-2026-08-29",
   measurementPeriod: {
-    startMonth: "2026-08-28",
-    endMonth: "2026-08-28",
+    startMonth: "2026-08-29",
+    endMonth: "2026-08-29",
   },
-  collectedAt: "2026-08-28",
+  collectedAt: "2026-08-29",
   metric: "average_monthly_pageviews_all_access_user",
   algorithmVersion: "assignPopularity",
   fallbackPercentile: 0.5,

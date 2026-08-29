@@ -4,7 +4,7 @@ import type { CountryCode } from "./countryCodes";
 import type { CountryFacts, CountryFactsSnapshot } from "./type";
 
 export const FACTS_SNAPSHOT: CountryFactsSnapshot = {
-  date: "2026-08-28",
+  date: "2026-08-29",
   note: "régénéré par pnpm build:countries",
 };
 
@@ -130,7 +130,7 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     flagSymbols: [],
     flagLayout: ["horizontal_stripes"],
     events: [],
-    memberships: ["arab_league", "brics", "opec"],
+    memberships: ["arab_league", "brics"],
     capitals: [
       {
         name: "Abu Dhabi",
@@ -289,7 +289,7 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     waterAccess: "landlocked",
     borders: ["ARM", "GEO", "IRN", "RUS", "TUR"],
     areaKm2: 86600,
-    population: 10266627,
+    population: 10273450,
     officialLanguages: ["az", "ru"],
     latitude: 40.5,
     subregion: "Western Asia",
@@ -2148,7 +2148,7 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     flagSymbols: [],
     flagLayout: ["horizontal_stripes"],
     events: [],
-    memberships: ["asean", "g20"],
+    memberships: ["asean", "g20", "brics"],
     capitals: [
       {
         name: "Jakarta",
@@ -2420,7 +2420,7 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     waterAccess: "island",
     borders: [],
     areaKm2: 377930,
-    population: 122930000,
+    population: 122680000,
     officialLanguages: ["ja"],
     latitude: 36,
     subregion: "Eastern Asia",
@@ -2964,7 +2964,7 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     waterAccess: "coastal",
     borders: ["DZA", "ESH", "ESP"],
     areaKm2: 446550,
-    population: 36828330,
+    population: 37254695,
     officialLanguages: ["ar", "ber"],
     latitude: 32,
     subregion: "Northern Africa",
@@ -3099,7 +3099,7 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     waterAccess: "coastal",
     borders: ["BLZ", "GTM", "USA"],
     areaKm2: 1964375,
-    population: 131150866,
+    population: 131231919,
     officialLanguages: ["es"],
     latitude: 23,
     subregion: "North America",
@@ -3186,7 +3186,7 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     waterAccess: "landlocked",
     borders: ["DZA", "BFA", "GIN", "CIV", "MRT", "NER", "SEN"],
     areaKm2: 1240192,
-    population: 23143000,
+    population: 23929000,
     officialLanguages: ["fr"],
     latitude: 17,
     subregion: "Western Africa",
@@ -3903,7 +3903,7 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     waterAccess: "coastal",
     borders: ["BLR", "CZE", "DEU", "LTU", "RUS", "SVK", "UKR"],
     areaKm2: 312679,
-    population: 37256000,
+    population: 37243000,
     officialLanguages: ["pl"],
     latitude: 52,
     subregion: "Central Europe",
@@ -4071,7 +4071,7 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     waterAccess: "coastal",
     borders: ["BGR", "HUN", "MDA", "SRB", "UKR"],
     areaKm2: 238391,
-    population: 19036031,
+    population: 19041322,
     officialLanguages: ["ro"],
     latitude: 46,
     subregion: "Southeast Europe",
@@ -4829,7 +4829,7 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     flagSymbols: ["star", "triangle"],
     flagLayout: [],
     events: [],
-    memberships: [],
+    memberships: ["asean"],
     capitals: [
       {
         name: "Dili",
@@ -4902,7 +4902,7 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     waterAccess: "coastal",
     borders: ["DZA", "LBY"],
     areaKm2: 163610,
-    population: 11972169,
+    population: 11992843,
     officialLanguages: ["ar"],
     latitude: 34,
     subregion: "Northern Africa",

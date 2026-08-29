@@ -17,7 +17,7 @@ import type {
 /** ISO 3166-1 alpha-3 — playable country (196 UN + inclusions) or addition like XKX. */
 export type Iso3 = string;
 
-// ─── Source corrections (borders, waterAccess, latitude) ──────────────────────
+// ─── Source corrections (borders, waterAccess, latitude, memberships) ─────────
 
 export const sourceCorrectionsByIso3: Record<Iso3, SourceCorrection> = {
   /** Continent-État entouré d'eau, sans frontière terrestre : jouée comme insulaire (convention Geodoku, révision P2). */
@@ -77,6 +77,17 @@ export const sourceCorrectionsByIso3: Record<Iso3, SourceCorrection> = {
       "CHE",
     ],
   },
+  /**
+   * Deltas d'adhésion : rattrapent un changement officiel daté que REST Countries
+   * v5 n'a pas encore intégré. Idempotents (`applySourceCorrections`), à retirer
+   * dès que la source est à jour.
+   */
+  /** Timor oriental — 11ᵉ membre de l'ASEAN (admission actée le 26 octobre 2025). À retirer quand REST v5 est à jour. */
+  TLS: { membershipsAdd: ["asean"] },
+  /** Indonésie — membre plein des BRICS depuis le 6 janvier 2025. À retirer quand REST v5 est à jour. */
+  IDN: { membershipsAdd: ["brics"] },
+  /** Émirats arabes unis — retrait effectif de l'OPEP au 1ᵉʳ mai 2026 (confirmé). À retirer quand REST v5 est à jour. */
+  ARE: { membershipsRemove: ["opec"] },
 };
 
 // ─── Search aliases (player variants beyond names + REST alternates) ────────────

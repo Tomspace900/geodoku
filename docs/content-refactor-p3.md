@@ -206,19 +206,42 @@ REST Countries v5 en retard sur un changement 2025-2026 daté :
 | `political_brics` | 9 | 10 | −IDN | Indonésie membre plein depuis jan. 2025, pas encore dans REST v5 |
 | `political_opec` | 12 | 11 | +ARE | Émirats sortis de l'OPEP mai 2026, encore listés dans REST v5 |
 
-Aucune couche de curation `memberships` n'existe aujourd'hui : la dérivation
-reflète fidèlement la source. Recommandation portée au gate : **ship tel quel**,
-documenter les 3 retards dans les `SOURCE.md`, revoir quand REST v5 se met à
-jour ; un seam `membershipPatches` reste un candidat de suivi si la précision
-est jugée nécessaire.
+**Gate utilisateur (2026-08-28).** Feu vert sous condition : corriger les 3 listes
+avant merge via un **seam de deltas d'adhésion**, pas un override du tableau.
 
-**Checklist.** `pnpm lint` ✓ (2 warnings préexistants hors périmètre dans
-`convex/gameWrites.test.ts`) · `pnpm test` 514/514 ✓ · `pnpm check:content`
-« 68 actives, 11 archivées, 197 pays » ✓ · `pnpm check:bundle` 244.9 KiB gzip
-(budget 280) ✓ · `pnpm simulate:scheduling` **14/14 PASS**, `constraint
-coverage 100 %`, `failed seeds 0/68`, overlap générateur max 0.846 < 0.85
-(les groupes politiques tendent l'overlap vers le plafond sans le franchir).
+- `SourceCorrection` (`buildCountriesLib.ts`) gagne `membershipsAdd?` /
+  `membershipsRemove?: PoliticalGroup[]`, appliqués dans `applySourceCorrections`
+  **après** la lecture REST, avec déduplication. Idempotents : add d'un groupe
+  présent = no-op, remove d'un groupe absent = no-op. Auto-résorbants quand REST
+  v5 rattrapera.
+- `countryPatches.ts` : `TLS → membershipsAdd ["asean"]` (26 oct. 2025),
+  `IDN → membershipsAdd ["brics"]` (6 jan. 2025), `ARE → membershipsRemove
+  ["opec"]` (1ᵉʳ mai 2026). Chaque delta commenté « à retirer quand REST v5
+  est à jour ».
+- 3 `SOURCE.md` mis à jour (cas limites → le delta), `content/countries/SOURCE.md`
+  ligne `memberships` corrigée (la mention « compléments countryPatches » était
+  fausse, elle devient exacte avec ce seam).
+- Tests : `applySourceCorrections` — add idempotent, remove absent = no-op,
+  memberships intactes sans delta.
 
-**Gate utilisateur.** _(en attente)_
+**Checklist (avant deltas).** `pnpm lint` ✓ (2 warnings préexistants hors
+périmètre dans `convex/gameWrites.test.ts`) · `pnpm test` 514/514 ✓ ·
+`pnpm check:content` « 68 actives, 11 archivées, 197 pays » ✓ · `pnpm
+check:bundle` 244.9 KiB gzip (budget 280) ✓ · `pnpm simulate:scheduling`
+**14/14 PASS**, `constraint coverage 100 %`, `failed seeds 0/68`, overlap
+générateur max 0.846 < 0.85 (les groupes politiques tendent l'overlap vers le
+plafond sans le franchir).
 
-**Merge.** _(en attente du feu vert)_
+**Checklist (après deltas).** Regen #2 (2026-08-29). Diff `facts.ts` : les 3
+deltas d'adhésion (`ARE` −opec, `IDN` +brics, `TLS` +asean) ; **isolé** — le
+millésime a roulé (08-28 → 08-29) et REST a rafraîchi la population de 8 pays
+(AZE, JPN, MAR, MEX, MLI, POL, ROU, TUN, écarts < 3 %), **aucun impact sur une
+liste** (`check:content` re-dérive les 68 sans mouvement hors asean/brics/opec).
+`popularity.ts` : dates seules, tiers identiques. Listes finales :
+`political_asean` 11 (+TLS), `political_brics` 10 (+IDN), `political_opec` 11
+(−ARE) — **alignées sur la v1**. `pnpm lint` ✓ · `pnpm test` 518/518 ✓ ·
+`pnpm check:content` ✓ · `pnpm check:bundle` 244.8 KiB ✓ ·
+`pnpm simulate:scheduling` 14/14 PASS, couverture 100 %.
+
+**Merge.** _(prêt — merge `content-p3-lot1` → `develop` puis `refreshPool` via
+`/admin` après push)_

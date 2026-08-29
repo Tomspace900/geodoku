@@ -2,7 +2,6 @@
 import { defineAnswerSet } from "../defineAnswerSet";
 
 export default defineAnswerSet("political_opec", [
-  "ARE",
   "COG",
   "DZA",
   "GAB",

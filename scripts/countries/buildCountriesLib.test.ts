@@ -157,6 +157,39 @@ describe("applySourceCorrections", () => {
     applySourceCorrections(country, { latitude: -2.88 });
     expect(country.latitude).toBe(-2.88);
   });
+
+  it("applies membership deltas after the REST read", () => {
+    const country = minimalCountry("TLS");
+    country.memberships = ["commonwealth"];
+    applySourceCorrections(country, { membershipsAdd: ["asean"] });
+    expect(country.memberships).toEqual(["commonwealth", "asean"]);
+  });
+
+  it("membershipsAdd is idempotent when the group is already present", () => {
+    const country = minimalCountry("IDN");
+    country.memberships = ["brics", "g20"];
+    applySourceCorrections(country, { membershipsAdd: ["brics"] });
+    expect(country.memberships).toEqual(["brics", "g20"]);
+  });
+
+  it("membershipsRemove drops the group and is a no-op when absent", () => {
+    const withOpec = minimalCountry("ARE");
+    withOpec.memberships = ["arab_league", "opec"];
+    applySourceCorrections(withOpec, { membershipsRemove: ["opec"] });
+    expect(withOpec.memberships).toEqual(["arab_league"]);
+
+    const withoutOpec = minimalCountry("QAT");
+    withoutOpec.memberships = ["arab_league"];
+    applySourceCorrections(withoutOpec, { membershipsRemove: ["opec"] });
+    expect(withoutOpec.memberships).toEqual(["arab_league"]);
+  });
+
+  it("leaves memberships untouched when no delta is given", () => {
+    const country = minimalCountry("FRA");
+    country.memberships = ["eu", "g7"];
+    applySourceCorrections(country, { latitude: 46 });
+    expect(country.memberships).toEqual(["eu", "g7"]);
+  });
 });
 
 describe("gameplayArraysForCode", () => {
