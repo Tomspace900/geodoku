@@ -255,11 +255,6 @@ export const CONSTRAINTS: Constraint[] = [
     labelKey: "constraint.time_zones_multiple",
     category: "time_zones",
   },
-  {
-    id: "time_zones_min_3",
-    labelKey: "constraint.time_zones_min_3",
-    category: "time_zones",
-  },
 
   // ── Événements ─────────────────────────────────────────────────────────────
   {
@@ -305,33 +300,8 @@ export const CONSTRAINTS: Constraint[] = [
     category: "political",
   },
   {
-    id: "political_asean",
-    labelKey: "constraint.political_asean",
-    category: "political",
-  },
-  {
-    id: "political_brics",
-    labelKey: "constraint.political_brics",
-    category: "political",
-  },
-  {
-    id: "political_eurozone",
-    labelKey: "constraint.political_eurozone",
-    category: "political",
-  },
-  {
-    id: "political_g7",
-    labelKey: "constraint.political_g7",
-    category: "political",
-  },
-  {
     id: "political_opec",
     labelKey: "constraint.political_opec",
-    category: "political",
-  },
-  {
-    id: "political_schengen",
-    labelKey: "constraint.political_schengen",
     category: "political",
   },
 

@@ -19,6 +19,7 @@ import {
   answersForConstraint,
   CONSTRAINT_ANSWER_SETS,
   CONSTRAINT_IDS,
+  RESERVE_CONSTRAINT_IDS,
 } from "../../content/constraints";
 import {
   DERIVATIONS,
@@ -38,8 +39,9 @@ import {
 } from "../countries/validateCountryCatalog";
 
 const EXPECTED_COUNTRY_COUNT = 197;
-const EXPECTED_ACTIVE_COUNT = 75;
+const EXPECTED_ACTIVE_COUNT = 69;
 const EXPECTED_ARCHIVED_COUNT = 11;
+const EXPECTED_RESERVE_COUNT = 6;
 
 function sameValues(a: readonly string[], b: readonly string[]): boolean {
   return a.length === b.length && a.every((value, index) => value === b[index]);
@@ -86,6 +88,21 @@ function checkConstraintCatalogs(errors: string[]): void {
   if (ARCHIVED_CONSTRAINT_IDS.length !== EXPECTED_ARCHIVED_COUNT) {
     errors.push(
       `contraintes: ${ARCHIVED_CONSTRAINT_IDS.length} archivées au lieu de ${EXPECTED_ARCHIVED_COUNT}`,
+    );
+  }
+  if (RESERVE_CONSTRAINT_IDS.length !== EXPECTED_RESERVE_COUNT) {
+    errors.push(
+      `contraintes: ${RESERVE_CONSTRAINT_IDS.length} en réserve au lieu de ${EXPECTED_RESERVE_COUNT}`,
+    );
+  }
+  const overlap = RESERVE_CONSTRAINT_IDS.filter(
+    (id) =>
+      (CONSTRAINT_IDS as readonly string[]).includes(id) ||
+      (ARCHIVED_CONSTRAINT_IDS as readonly string[]).includes(id),
+  );
+  if (overlap.length > 0) {
+    errors.push(
+      `contraintes: réserve chevauche actif/archivé (${overlap.join(", ")})`,
     );
   }
   if (
@@ -170,9 +187,11 @@ function checkDerivationFreshness(errors: string[]): void {
 const ISO_DATE = /^\d{4}-\d{2}-\d{2}$/;
 
 /**
- * Provenance : chaque contrainte (active ou archivée) doit porter un `SOURCE.md`
- * au frontmatter cohérent, et les trois documents de socle doivent exister. On
- * ne police **pas** l'expiration de `review_after` (dates indicatives).
+ * Provenance : chaque contrainte (active, archivée ou **en réserve**) doit porter
+ * un `SOURCE.md` au frontmatter cohérent, et les trois documents de socle doivent
+ * exister. Les contraintes en réserve sont `status: archived` **sans** `answers.ts`
+ * (ni générées, ni rejouables — cf. `RESERVE_CONSTRAINT_IDS`). On ne police
+ * **pas** l'expiration de `review_after` (dates indicatives).
  */
 function checkConstraintSources(errors: string[]): void {
   ["README.md", "countries/SOURCE.md", "constraints/SOURCES.md"].forEach(
@@ -183,12 +202,22 @@ function checkConstraintSources(errors: string[]): void {
     },
   );
 
-  const archived: ReadonlySet<string> = new Set(ARCHIVED_CONSTRAINT_IDS);
-  [...CONSTRAINT_IDS, ...ARCHIVED_CONSTRAINT_IDS].forEach((id) => {
-    const path = resolve("content", "constraints", id, "SOURCE.md");
+  const active: ReadonlySet<string> = new Set(CONSTRAINT_IDS);
+  const reserve: ReadonlySet<string> = new Set(RESERVE_CONSTRAINT_IDS);
+  [
+    ...CONSTRAINT_IDS,
+    ...ARCHIVED_CONSTRAINT_IDS,
+    ...RESERVE_CONSTRAINT_IDS,
+  ].forEach((id) => {
+    const dir = resolve("content", "constraints", id);
+    const path = resolve(dir, "SOURCE.md");
     if (!existsSync(path)) {
       errors.push(`${id}: SOURCE.md manquant`);
       return;
+    }
+    // Une contrainte en réserve ne garde que son SOURCE.md.
+    if (reserve.has(id) && existsSync(resolve(dir, "answers.ts"))) {
+      errors.push(`${id}: en réserve mais answers.ts présent`);
     }
     const raw = readFileSync(path, "utf8");
     const frontmatter = raw.match(/^---\n([\s\S]*?)\n---/);
@@ -205,7 +234,7 @@ function checkConstraintSources(errors: string[]): void {
     if (fields.get("constraint_id") !== id) {
       errors.push(`${id}: SOURCE.md constraint_id ≠ nom du dossier`);
     }
-    const expectedStatus = archived.has(id) ? "archived" : "active";
+    const expectedStatus = active.has(id) ? "active" : "archived";
     if (fields.get("status") !== expectedStatus) {
       errors.push(`${id}: SOURCE.md status attendu « ${expectedStatus} »`);
     }
@@ -231,7 +260,7 @@ function main(): void {
   }
 
   console.log(
-    `Contenu valide : ${CONSTRAINT_IDS.length} contraintes actives, ${ARCHIVED_CONSTRAINT_IDS.length} archivées, ${COUNTRY_CATALOG.length} pays.`,
+    `Contenu valide : ${CONSTRAINT_IDS.length} contraintes actives, ${ARCHIVED_CONSTRAINT_IDS.length} archivées, ${RESERVE_CONSTRAINT_IDS.length} en réserve, ${COUNTRY_CATALOG.length} pays.`,
   );
 }
 

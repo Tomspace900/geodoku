@@ -31,7 +31,6 @@ const BORDERS_MIN_5 = 5;
 const BORDERS_MIN_7 = 7;
 
 const TIME_ZONES_MULTIPLE = 2;
-const TIME_ZONES_MIN_3 = 3;
 const URBAN_CENTRES_MIN = 3;
 /** « Majorité du territoire » : part strictement supérieure à la moitié. */
 const MAJORITY_SHARE = 0.5;
@@ -126,7 +125,6 @@ export const DERIVATIONS = {
 
   // ── Fuseaux horaires ──────────────────────────────────────────────────────
   time_zones_multiple: (f) => f.utcOffsetCount >= TIME_ZONES_MULTIPLE,
-  time_zones_min_3: (f) => f.utcOffsetCount >= TIME_ZONES_MIN_3,
 
   // ── Événements ─────────────────────────────────────────────────────────────
   event_fifa_wc_host: (f) => f.events.includes("fifa_wc_host"),
@@ -139,12 +137,7 @@ export const DERIVATIONS = {
   political_nato: (f) => f.memberships.includes("nato"),
   political_commonwealth: (f) => f.memberships.includes("commonwealth"),
   political_arab_league: (f) => f.memberships.includes("arab_league"),
-  political_asean: (f) => f.memberships.includes("asean"),
-  political_brics: (f) => f.memberships.includes("brics"),
-  political_eurozone: (f) => f.memberships.includes("eurozone"),
-  political_g7: (f) => f.memberships.includes("g7"),
   political_opec: (f) => f.memberships.includes("opec"),
-  political_schengen: (f) => f.memberships.includes("schengen"),
 
   // ── Régime ─────────────────────────────────────────────────────────────────
   regime_monarchy: (f) => f.regime === "monarchy",

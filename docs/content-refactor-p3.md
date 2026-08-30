@@ -134,8 +134,9 @@ soigné : cas graduels, définition « événement de souveraineté » du SOURCE
    labels **fr + en** moissonnés de la v1
    (`git show 221b42d:src/i18n/locales/{fr,en}.ts`), `pnpm build:answers`.
 4. **Contre-épreuve** : listes dérivées vs listes v1, écart par écart.
-5. **Gardes** : `EXPECTED_ACTIVE_COUNT` dans `check-content.ts` (60 → 68 → 75 →
-   82 → 85 ; `ocean_multiple_basins` glissé du Lot 1 au Lot 2), test `translate`,
+5. **Gardes** : `EXPECTED_ACTIVE_COUNT` dans `check-content.ts` (60 → 68 → 75
+   puis **69** → **76** → **79** ; lot 2 ajoute 7 nouvelles contraintes mais en
+   met 6 en réserve — arbitrage 2026-08-30, cf. journal), test `translate`,
    bascules de seuil dans `derivations.test.ts`
    (au moins une par nouveau champ), `pnpm lint && pnpm test && pnpm
    check:content`.
@@ -246,12 +247,14 @@ liste** (`check:content` re-dérive les 68 sans mouvement hors asean/brics/opec)
 **Merge.** _(prêt — merge `content-p3-lot1` → `develop` puis `refreshPool` via
 `/admin` après push)_
 
-### Lot 2 — branche `content-p3-lot2` (2026-08-29)
+### Lot 2 — branche `content-p3-lot2` (2026-08-29 → 30)
 
-**Périmètre livré : 7 contraintes** (`time_zones_multiple`, `time_zones_min_3`,
+**Périmètre livré : 7 contraintes dérivées puis 6 mises en réserve → +1 nette au
+jeu actif.** Les 7 : `time_zones_multiple`, `time_zones_min_3`,
 `nature_holocene_volcano`, `nature_mountain_area_majority`, `forest_cover_majority`,
-`urban_centres_min_3_over_1m`, `ocean_multiple_basins`). `EXPECTED_ACTIVE_COUNT`
-68 → 75. Nouvelle catégorie `time_zones` ; `urban_centres…` rattaché à `society`.
+`urban_centres_min_3_over_1m`, `ocean_multiple_basins`. `EXPECTED_ACTIVE_COUNT`
+68 → 75 (dérivation) **puis → 69** (retrait des 6 réserve, cf. gate 2026-08-30).
+Nouvelle catégorie `time_zones` ; `urban_centres…` rattaché à `society`.
 
 **Datasets (`scripts/countries/data/`, nouveau dossier).** 5 fichiers + `types.ts` :
 `civilTimeOffsets`, `holoceneVolcanoes`, `mountainArea`, `urbanCentres` portés
@@ -280,7 +283,7 @@ existants inchangés**. `build:answers` : 75 contraintes actives, 2023 entrées 
 | id | dérivé | v1 | statut |
 | --- | --- | --- | --- |
 | `time_zones_multiple` | 19 | 19 | identique |
-| `time_zones_min_3` | 8 | 8 | identique (v1 la classait `archived` — réactivée ici, cf. plan §2) |
+| `time_zones_min_3` | 8 | 8 | identique — puis **mise en réserve** au gate (v1 la classait déjà `archived`) |
 | `nature_holocene_volcano` | 76 | 76 | identique |
 | `nature_mountain_area_majority` | 34 | 34 | identique |
 | `forest_cover_majority` | 47 | 47 | identique |
@@ -295,20 +298,63 @@ existants inchangés**. `build:answers` : 75 contraintes actives, 2023 entrées 
   Juste sous le seuil : PER 49,4 %, ETH/HTI 49,9 % ; juste au-dessus : NZL/DJI 50,7 %.
 - `forest_cover_majority` : **Russie 49,8 %** rate le seuil d'un cheveu (hors liste,
   comme en v1) ; TZA 50,1 % passe. AUT 47,2 %, PRK 49,6 % dessous.
-- `time_zones_min_3` : liste étroite (8) — se mariera rarement à l'intersection
-  (`MIN_CELL_SIZE`), attendu.
+- `time_zones_min_3` : liste étroite (8), et surtout jugée répétitive → **mise en
+  réserve** au gate (cf. plus bas).
 - `ocean_multiple_basins` : `arctic_coast` restreint à 4 États ; donne son 2ᵉ bassin
   à la Norvège (Atl+Arctique) et à la Russie (Pac+Arctique). France multi-bassins
   par l'outre-mer (Guyane / Réunion / Polynésie).
 
-**Checklist.** `pnpm lint` ✓ (2 warnings préexistants hors périmètre —
-`convex/**/*.test.ts`) · `pnpm test` 527/527 ✓ · `pnpm check:content` « 75 actives,
-11 archivées, 197 pays » ✓ · `pnpm check:bundle` 245,6 KiB gzip (budget 280) ✓ ·
-`pnpm simulate:scheduling` **14/14 PASS**, couverture 100 %, failed seeds 0/75,
-overlap max 0,846 < 0,85, cold-start 19/19 wovin ≤ 1 newcomer/grille.
+**Checklist (dérivation, avant retrait).** `pnpm lint` ✓ · `pnpm test` 527/527 ✓ ·
+`pnpm check:content` « 75 actives » ✓ · `pnpm check:bundle` 245,6 KiB ✓ ·
+`pnpm simulate:scheduling` **14/14 PASS**, couverture 100 %, failed seeds 0/75.
 
-**Gate utilisateur.** _(en attente — 7/7 identiques v1, aucun arbitrage bloquant ;
-recommandation : inclure les 7)_
+**Gate utilisateur (2026-08-30).** Feu vert **sous condition** : les 7 dérivations
+sont correctes (7/7 identiques v1), mais 6 des contraintes concernées sont jugées
+**pas assez fun / trop répétitives** — jugement de gameplay confirmé. Sortent du
+jeu actif avant merge :
 
-**Merge.** _(à faire après gate — merge `content-p3-lot2` → `develop` puis
-`refreshPool` via `/admin` après push)_
+- **5 politiques activées au lot 1** : `political_asean`, `political_brics`,
+  `political_eurozone`, `political_g7`, `political_schengen` (elles étaient
+  `archived` dans la v1 de juillet — statut confirmé) ;
+- **`time_zones_min_3`** du lot 2 (idem, `archived` en v1).
+
+`political_arab_league` et `political_opec` **restent actives** (elles l'étaient
+en v1). `time_zones_multiple` et les 4 autres nouveautés du lot 2 restent actives.
+
+**Mise en réserve (seam `RESERVE_CONSTRAINT_IDS`).** Nouvelle liste dans
+`content/constraints/index.ts`, **hors** de `ConstraintId` — un id de réserve dans
+une grille échoue bruyamment. Retrait de `CONSTRAINTS`, `derivations.ts`, du
+registre `ANSWER_SETS` et des clés i18n fr+en ; `answers.ts` supprimés. Les 6
+dossiers ne gardent que leur `SOURCE.md` (`status: archived` + section « En
+réserve » : motif, date, procédure de réactivation). `check-content.ts` gagne
+`RESERVE_CONSTRAINT_IDS` + `EXPECTED_RESERVE_COUNT` : présence du SOURCE.md,
+`status` archived, **absence** d'`answers.ts`, aucun chevauchement avec
+actif/archivé. `EXPECTED_ACTIVE_COUNT` → **69**.
+
+Les deltas memberships TLS/IDN/ARE de `countryPatches.ts` sont **conservés** : les
+faits restent vrais indépendamment des contraintes qui les lisent (fiches pays P4).
+Aucune regen : le retrait ne touche que dérivations + registre + i18n, pas le
+snapshot.
+
+**Grilles staging.** Au 30/08, aucune grille **servie** n'avait utilisé l'une des
+6 : vérifié sur le dump local (155 grilles, 2026-03-30 → 2026-08-31, 0 occurrence
+de `rows`/`cols` réservée) et confirmé côté develop par l'utilisateur (les 5
+politiques n'étaient mergées sur develop que depuis le 28/08 ; `time_zones_min_3`
+n'a jamais quitté cette branche). Les grilles **futures** du pool qui les
+référencent sont invalidées par `getGridContentIssue` (retour `"constraint"` dès
+qu'un id n'est plus dans `CONSTRAINTS`) et remplacées par le `refreshPool`
+post-push — chemin prévu.
+
+**Checklist (après retrait).** `pnpm lint` ✓ (2 warnings préexistants,
+`convex/**/*.test.ts`) · `pnpm test` **525/525** ✓ (−2 tests de dérivation des
+contraintes réservées) · `pnpm check:content` « **69 actives, 11 archivées,
+6 en réserve, 197 pays** » ✓ · `pnpm check:bundle` **245,3 KiB** gzip (budget 280) ✓ ·
+`pnpm simulate:scheduling` **14/14 PASS**, couverture **100 % sur 69**, failed
+seeds 0/69, overlap max 0,846 < 0,85, cold-start 18/18 tissés ≤ 1 newcomer/grille.
+
+**Contrainte finale au jeu actif : 69** (`time_zones_multiple`,
+`nature_holocene_volcano`, `nature_mountain_area_majority`, `forest_cover_majority`,
+`urban_centres_min_3_over_1m`, `ocean_multiple_basins` + les 63 antérieures).
+
+**Merge.** _(prêt — merge `content-p3-lot2` → `develop` puis `refreshPool` via
+`/admin` après push)_

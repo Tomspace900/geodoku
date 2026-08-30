@@ -48,8 +48,11 @@ Chaque dossier de `constraints/` contient :
   de faits, `answers.ts` en est la matérialisation, régénérée par
   `pnpm build:answers` et **relue en diff**. Pour les **11 archivées**, liste
   **figée à la main** (pas d'en-tête `@generated`), conservée pour le replay.
+  Les contraintes **en réserve** (`RESERVE_CONSTRAINT_IDS`) n'ont **pas** d'`answers.ts` :
+  conçues et sourcées mais écartées du jeu, ni générées ni rejouables.
 - `SOURCE.md` — définition jouable, dérivation (champ + seuil/pivot) et cas
-  limites propres à cette contrainte.
+  limites propres à cette contrainte. Une contrainte en réserve ne garde que ce
+  fichier (`status: archived`, section « En réserve »).
 
 Les faits quantitatifs (fuseaux, volcans, relief, forêt, centres urbains) sont
 des datasets datés dans `scripts/countries/data/`, fusionnés en scalaires par
@@ -59,8 +62,10 @@ des datasets datés dans `scripts/countries/data/`, fusionnés en scalaires par
 prédicats runtime historiques. `constraints/SOURCES.md` porte le principe, la
 procédure de révision et les références partagées.
 
-`constraints/index.ts` expose `ConstraintId`, la séparation actif/archivé
-(`CONSTRAINT_IDS` / `ARCHIVED_CONSTRAINT_IDS`) et l'accès aux listes. Son registre
+`constraints/index.ts` expose `ConstraintId`, la séparation actif / archivé /
+réserve (`CONSTRAINT_IDS` / `ARCHIVED_CONSTRAINT_IDS` / `RESERVE_CONSTRAINT_IDS` —
+la réserve reste **hors** de `ConstraintId`, un id de réserve dans une grille
+doit échouer bruyamment) et l'accès aux listes. Son registre
 `ANSWER_SETS` est typé par `{ [K in ConstraintId]: ConstraintAnswerSet<K> }` :
 une liste manquante, en trop ou branchée sur le mauvais dossier ne compile pas.
 

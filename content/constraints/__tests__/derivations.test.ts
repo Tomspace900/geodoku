@@ -55,15 +55,6 @@ describe("DERIVATIONS — bascules de seuil", () => {
     }).toEqual({ india: true, germany: false, spain: false });
   });
 
-  it("political_g7 : appartenance au groupe (memberships)", () => {
-    expect({
-      germany: derive("political_g7", "DEU"),
-      japan: derive("political_g7", "JPN"),
-      spain: derive("political_g7", "ESP"),
-      brazil: derive("political_g7", "BRA"),
-    }).toEqual({ germany: true, japan: true, spain: false, brazil: false });
-  });
-
   it("political_opec : appartenance au groupe (memberships)", () => {
     expect({
       saudi_arabia: derive("political_opec", "SAU"),
@@ -79,15 +70,6 @@ describe("DERIVATIONS — bascules de seuil", () => {
       germany: derive("time_zones_multiple", "DEU"), // un seul
       iceland: derive("time_zones_multiple", "ISL"),
     }).toEqual({ russia: true, spain: true, germany: false, iceland: false });
-  });
-
-  it("time_zones_min_3 : au moins 3 décalages civils simultanés", () => {
-    expect({
-      russia: derive("time_zones_min_3", "RUS"),
-      canada: derive("time_zones_min_3", "CAN"),
-      france: derive("time_zones_min_3", "FRA"), // 2 seulement
-      germany: derive("time_zones_min_3", "DEU"),
-    }).toEqual({ russia: true, canada: true, france: false, germany: false });
   });
 
   it("nature_holocene_volcano : présence au registre GVP", () => {

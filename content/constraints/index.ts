@@ -65,16 +65,11 @@ import physical_crosses_equator from "./physical_crosses_equator/answers";
 import physical_mediterranean_coast from "./physical_mediterranean_coast/answers";
 import physical_peak_over_5000m from "./physical_peak_over_5000m/answers";
 import political_arab_league from "./political_arab_league/answers";
-import political_asean from "./political_asean/answers";
-import political_brics from "./political_brics/answers";
 import political_commonwealth from "./political_commonwealth/answers";
 import political_eu from "./political_eu/answers";
-import political_eurozone from "./political_eurozone/answers";
-import political_g7 from "./political_g7/answers";
 import political_g20 from "./political_g20/answers";
 import political_nato from "./political_nato/answers";
 import political_opec from "./political_opec/answers";
-import political_schengen from "./political_schengen/answers";
 import population_gt_30M from "./population_gt_30M/answers";
 import population_gt_100M from "./population_gt_100M/answers";
 import population_less_iceland from "./population_less_iceland/answers";
@@ -88,7 +83,6 @@ import society_drives_on_left from "./society_drives_on_left/answers";
 import subregion_caribbean from "./subregion_caribbean/answers";
 import subregion_middle_east from "./subregion_middle_east/answers";
 import subregion_southeast_asia from "./subregion_southeast_asia/answers";
-import time_zones_min_3 from "./time_zones_min_3/answers";
 import time_zones_multiple from "./time_zones_multiple/answers";
 import type { ConstraintAnswerSet } from "./type";
 import urban_centres_min_3_over_1m from "./urban_centres_min_3_over_1m/answers";
@@ -136,7 +130,6 @@ export const CONSTRAINT_IDS = [
   "subregion_caribbean",
   "subregion_southeast_asia",
   "time_zones_multiple",
-  "time_zones_min_3",
   "event_fifa_wc_host",
   "event_summer_olympics_host",
   "event_winter_olympics_host",
@@ -145,12 +138,7 @@ export const CONSTRAINT_IDS = [
   "political_nato",
   "political_commonwealth",
   "political_arab_league",
-  "political_asean",
-  "political_brics",
-  "political_eurozone",
-  "political_g7",
   "political_opec",
-  "political_schengen",
   "regime_monarchy",
   "physical_crosses_equator",
   "physical_mediterranean_coast",
@@ -187,6 +175,24 @@ export const ARCHIVED_CONSTRAINT_IDS = [
   "population_gt_30M",
   "population_lt_1M",
   "population_lt_2_5M",
+] as const;
+
+/**
+ * Contraintes **en réserve** : conçues et sourcées, mais écartées du jeu actif
+ * (arbitrage gameplay « pas assez fun / répétitive »). Elles ne sont **ni**
+ * générables **ni** rejouables : seul leur dossier `SOURCE.md` subsiste, sans
+ * `answers.ts`, `status: archived`. Volontairement hors de `ConstraintId` — un
+ * identifiant de réserve dans une grille est une erreur qui doit rester bruyante.
+ * Réactivation : réintroduire dans `CONSTRAINTS` + `derivations.ts` + i18n, puis
+ * `pnpm build:answers`.
+ */
+export const RESERVE_CONSTRAINT_IDS = [
+  "political_asean",
+  "political_brics",
+  "political_eurozone",
+  "political_g7",
+  "political_schengen",
+  "time_zones_min_3",
 ] as const;
 
 /** Contrainte générable — clé de `DERIVATIONS`. */
@@ -239,7 +245,6 @@ const ANSWER_SETS = {
   subregion_caribbean,
   subregion_southeast_asia,
   time_zones_multiple,
-  time_zones_min_3,
   event_fifa_wc_host,
   event_summer_olympics_host,
   event_winter_olympics_host,
@@ -248,12 +253,7 @@ const ANSWER_SETS = {
   political_nato,
   political_commonwealth,
   political_arab_league,
-  political_asean,
-  political_brics,
-  political_eurozone,
-  political_g7,
   political_opec,
-  political_schengen,
   regime_monarchy,
   physical_crosses_equator,
   physical_mediterranean_coast,
