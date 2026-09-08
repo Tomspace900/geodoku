@@ -214,12 +214,14 @@ describe("DERIVATIONS — bascules de seuil", () => {
     expect({
       india: derive("history_from_united_kingdom", "IND"),
       israel: derive("history_from_united_kingdom", "ISR"), // qualifies=false mais listé v1
-      united_states: derive("history_from_united_kingdom", "USA"), // formerSovereigns vide
+      united_states: derive("history_from_united_kingdom", "USA"), // trou de parsing v1 rattrapé
+      canada: derive("history_from_united_kingdom", "CAN"), // idem (Statute of Westminster)
       senegal: derive("history_from_united_kingdom", "SEN"),
     }).toEqual({
       india: true,
       israel: true,
-      united_states: false,
+      united_states: true,
+      canada: true,
       senegal: false,
     });
   });

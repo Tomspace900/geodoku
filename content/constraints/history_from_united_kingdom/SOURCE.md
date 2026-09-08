@@ -31,9 +31,16 @@ protectorats.
 
 ## Cas limites
 
-- **Les États-Unis n'y sont PAS** : le Factbook dit « from Great Britain » mais
-  `formerSovereigns` du snapshot est `[]` (l'indépendance de 1776 n'est pas rangée
-  sous le slug `united_kingdom`).
+- **Trou de parsing v1 rattrapé (revue 2026-09-09).** L'extracteur qui a produit
+  le snapshot ne reconnaissait pas les formulations « declared independence from
+  Great Britain », « from British India » ni « union of British North American
+  colonies… recognized by UK ». Trois `formerSovereigns` complétés à la main dans
+  `scripts/countries/data/sovereignty.ts` : **USA**, **PAK**, **CAN**. La liste
+  passe de 56 (v1) à **59** — écart volontaire, pas une régression.
+  - Cohérence rétablie : l'Inde (colonie britannique jusqu'en 1947) et le Pakistan
+    (même partition) sont désormais traités pareil ; l'Australie et la
+    Nouvelle-Zélande (« federation of UK colonies ») ont toujours été dans la
+    liste, le Canada (formulation quasi identique) les rejoint.
 - **Israël et Yémen y sont** : `formerSovereigns` contient `united_kingdom` (mandat
   britannique en Palestine ; Sud-Yémen britannique) alors que leur événement porte
   `qualifiesForIndependenceConstraints: false` — et, pour le Yémen, un `kind`

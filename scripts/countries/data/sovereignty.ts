@@ -1447,7 +1447,10 @@ export const SOVEREIGNTY: SovereigntySnapshot = {
       kind: "foundation",
       year: 1867,
       date: "1867-07-01",
-      formerSovereigns: [],
+      // « union of British North American colonies […] recognized by UK per
+      // Statute of Westminster » — complété en revue 2026-09-09 : l'extracteur
+      // v1 ne reconnaissait pas ces formulations.
+      formerSovereigns: ["united_kingdom"],
       qualifiesForIndependenceConstraints: false,
       sourceDescription:
         "1 July 1867 (union of British North American colonies); 11 December 1931 (recognized by UK per Statute of Westminster)",
@@ -1465,7 +1468,9 @@ export const SOVEREIGNTY: SovereigntySnapshot = {
       kind: "independence",
       year: 1776,
       date: "1776-07-04",
-      formerSovereigns: [],
+      // « declared independence from Great Britain » — complété en revue
+      // 2026-09-09 : l'extracteur v1 ne reconnaissait pas ces formulations.
+      formerSovereigns: ["united_kingdom"],
       qualifiesForIndependenceConstraints: true,
       sourceDescription:
         "4 July 1776 (declared independence from Great Britain); 3 September 1783 (recognized by Great Britain)",
@@ -1627,7 +1632,9 @@ export const SOVEREIGNTY: SovereigntySnapshot = {
       kind: "independence",
       year: 1947,
       date: "1947-08-14",
-      formerSovereigns: [],
+      // « from British India » — complété en revue 2026-09-09 : l'extracteur v1
+      // ne reconnaissait pas ces formulations.
+      formerSovereigns: ["united_kingdom"],
       qualifiesForIndependenceConstraints: true,
       sourceDescription: "14 August 1947 (from British India)",
     },
