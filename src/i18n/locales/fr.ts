@@ -94,7 +94,7 @@ export const fr = {
       newConstraintsDate: "9 septembre 2026",
       newConstraintsTitle: "Une salve de nouvelles contraintes",
       newConstraintsBody:
-        "J'ai enrichi le catalogue au fil de l'\u00E9t\u00E9\u00A0: JO d'hiver, fuseaux horaires multiples, volcans actifs, pays majoritairement montagneux ou forestiers, grandes agglom\u00E9rations, fa\u00E7ades sur plusieurs oc\u00E9ans, gros producteurs agricoles et \u00E9nerg\u00E9tiques, et enfin l'histoire\u00A0: souverainet\u00E9 r\u00E9cente, ind\u00E9pendance vis-\u00E0-vis de la France ou du Royaume-Uni. Elles apparaissent progressivement dans les grilles.",
+        "Le catalogue de contraintes passe de 60 \u00E0 79\u00A0: 25 ajout\u00E9es au fil de l'\u00E9t\u00E9, 6 mises de c\u00F4t\u00E9 en r\u00E9serve, soit 19 de plus. Au menu\u00A0: fuseaux horaires multiples, volcans actifs, pays surtout montagneux ou forestiers, grandes agglom\u00E9rations, fa\u00E7ades sur plusieurs oc\u00E9ans, gros producteurs agricoles et \u00E9nerg\u00E9tiques, et l'histoire coloniale\u00A0: souverainet\u00E9 r\u00E9cente, ind\u00E9pendance vis-\u00E0-vis de la France ou du Royaume-Uni. Elles apparaissent progressivement dans les grilles.",
       archiveDate: "9 ao\u00FBt 2026",
       archiveTitle: "Rejouer les grilles passées",
       archiveBody:

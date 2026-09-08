@@ -459,12 +459,14 @@ purement additif** (+3 champs × 197) + `type.ts` + `SOURCE.md`. `catalog.ts` /
 identique au lot 3, 08-29). Les **76 `answers.ts` existants inchangés**.
 `build:answers` : 79 actives.
 
-**Contre-épreuve vs v1 (`221b42d`). 3/3 listes ISO3 byte-identiques**, aucun écart.
+**Contre-épreuve vs v1 (`221b42d`).** Dérivation initiale : 3/3 listes ISO3
+byte-identiques. **Après correction de gate (voir plus bas) : 2/3 + 1 écart
+volontaire documenté.**
 
 | id | dérivé | v1 | statut |
 | --- | --- | --- | --- |
 | `history_from_france` | 27 | 27 | identique (`formerSovereigns.includes("france")`) |
-| `history_from_united_kingdom` | 56 | 56 | identique (`…("united_kingdom")`) |
+| `history_from_united_kingdom` | **59** | 56 | **+CAN +PAK +USA** — trou de parsing v1 rattrapé en curation (gate) |
 | `history_sovereignty_since_1990` | 28 | 28 | identique (`year ≥ 1990 ∧ kind ∈ gained` ⇒ exclut RUS + YEM, exactement les 2 exclusions v1) |
 
 **Cas limites (dossier de gate).**
@@ -489,13 +491,28 @@ identique au lot 3, 08-29). Les **76 `answers.ts` existants inchangés**.
 **14/14 PASS**, couverture **100 % sur 79**, failed seeds 0/79, overlap max
 0,846 < 0,85, cold-start ≤ 1 newcomer/grille.
 
-**Gate utilisateur.** _(en attente — dossier ci-dessus ; recommandation : inclure
-les 3, dérivations exactes v1, thème déjà éditorialisé en v1.)_
+**Gate utilisateur (2026-09-09).** Feu vert **sous condition** : modèle de faits,
+3 dérivations et parité validés ; l'extracteur qui a produit le snapshot v1 ne
+reconnaissait pas trois formulations du champ *Independence* (« declared
+independence from Great Britain », « from British India », « union of British
+North American colonies… recognized by UK »). Correction en **curation**
+(`scripts/countries/data/sovereignty.ts`) : `formerSovereigns` de **USA**, **PAK**,
+**CAN** complété avec `"united_kingdom"`, chaque ajout commenté du texte source.
+`history_from_france` audité entrée par entrée côté utilisateur : propre (Andorre
+= co-principauté, Allemagne = zones d'occupation, pas des indépendances). Regen :
+`facts.ts` bouge sur **3 lignes** (les 3 `formerSovereigns`), **seule**
+`history_from_united_kingdom` change (56 → **59**), les 78 autres listes
+inchangées, aucune dérive de millésime. `pnpm test` 534/534 (le cas
+`united_states: false` du test de dérivation devient `true`), reste de la
+checklist inchangé.
 
-**Merge.** _(en attente du gate)_
+**Merge.** _(en attente — merge `content-p3-lot4` → `develop` `--no-ff`, puis push
++ `refreshPool` via `/admin`)_
 
-**Finalisation P3 (post-merge).** Compteurs `docs/content-pipeline.md` → 79 actives /
-22 catégories (4 spots) ; entrée `/changelog` joueur « Une salve de nouvelles
-contraintes » (couvre tout P3) + `LATEST_CHANGELOG_UPDATE_DATE` 2026-09-09 ;
-`AGENTS.md` ne cite aucun compteur d'actives → inchangé ; tag + suppression de
-`constraint-explorer` (gate distinct).
+**Finalisation P3 (clôture, §4).** Compteurs `docs/content-pipeline.md` → 79
+actives / 22 catégories (fait, commit DOCS) ; `AGENTS.md` §3 : ajout de la ligne
+décrivant le seam **réserve** (concept né au lot 2, jusque-là décrit uniquement
+dans `content-pipeline.md`) ; première entrée `/changelog` joueur du refacto
+(catalogue 60 → 79 actives : 25 ajoutées, 6 en réserve, 19 nettes) +
+`LATEST_CHANGELOG_UPDATE_DATE` 2026-09-09 ; tag `archive/constraint-explorer` puis
+suppression de la branche (entièrement moissonnée par les 4 lots).

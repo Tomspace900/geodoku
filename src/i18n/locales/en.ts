@@ -92,7 +92,7 @@ export const en = {
       newConstraintsDate: "September 9, 2026",
       newConstraintsTitle: "A batch of new constraints",
       newConstraintsBody:
-        "I expanded the catalogue over the summer: winter Olympics hosts, multiple time zones, active volcanoes, mostly mountainous or forested countries, large metro areas, coasts on several oceans, major farm and energy producers, and finally history: recent sovereignty, and independence from France or the United Kingdom. They show up in grids gradually.",
+        "The constraint catalogue grows from 60 to 79: 25 added over the summer, 6 set aside, so 19 more overall. On the menu: multiple time zones, active volcanoes, mostly mountainous or forested countries, large metro areas, coasts on several oceans, major farm and energy producers, and colonial history: recent sovereignty, and independence from France or the United Kingdom. They show up in grids gradually.",
       archiveDate: "August 9, 2026",
       archiveTitle: "Replay past grids",
       archiveBody:
