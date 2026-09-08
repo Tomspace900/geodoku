@@ -506,8 +506,11 @@ inchangées, aucune dérive de millésime. `pnpm test` 534/534 (le cas
 `united_states: false` du test de dérivation devient `true`), reste de la
 checklist inchangé.
 
-**Merge.** _(en attente — merge `content-p3-lot4` → `develop` `--no-ff`, puis push
-+ `refreshPool` via `/admin`)_
+**Merge.** `content-p3-lot4` → `develop` (`--no-ff`, commit `410b30f`), poussé le
+2026-09-09 (avec le `e1ffa21` du lot 3 resté en attente). _Reste : `refreshPool`
+via `/admin` sur develop une fois le déploiement Vercel/Convex passé._
+Branche `constraint-explorer` taguée `archive/constraint-explorer` (local, comme
+les autres tags d'archive) puis supprimée — moisson des 4 lots terminée.
 
 **Finalisation P3 (clôture, §4).** Compteurs `docs/content-pipeline.md` → 79
 actives / 22 catégories (fait, commit DOCS) ; `AGENTS.md` §3 : ajout de la ligne

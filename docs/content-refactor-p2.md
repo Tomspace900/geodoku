@@ -30,7 +30,7 @@ P2 apporte ce qui a été volontairement différé :
 
 Hors périmètre P2 (actés) : les **26 nouvelles contraintes** de la branche
 `constraint-explorer` et leurs datasets `content/facts/` (→ P3) ; les fiches
-pays (→ P4). **Ne pas supprimer la branche `constraint-explorer`** : c'est la
+pays (→ P4). ~~**Ne pas supprimer la branche `constraint-explorer`**~~ (archivée `archive/constraint-explorer` après P3 lot 4, 2026-09-09) : c'était la
 carrière de P3.
 
 ## 1. Cible documentaire
@@ -209,7 +209,7 @@ git branch -D content-refactor    # entièrement moissonnée (P1 : listes ; P2 :
 ```
 
 ⚠️ Avant le drop du stash : vérifier que `stash@{0}` est bien « WIP Refacto
-Codex » (l'index des stashes bouge). **Garder `constraint-explorer`** (carrière
+Codex » (l'index des stashes bouge). ~~**Garder `constraint-explorer`**~~ (archivée après P3 lot 4) (carrière
 de P3 : 26 contraintes, `content/facts/`, i18n). Ne pas toucher aux stashes
 develop 1-7 (ménage séparé, hors périmètre).
 
@@ -330,7 +330,7 @@ Post-décision : patch `countryPatches.ts` + 2ᵉ `pnpm build:countries` ;
   `git tag archive/codex-content-refactor-step-1` (→ `ab6ec62`) + patch de
   secours `.git/geodoku-archive/codex-content-refactor-step-1.patch`. Stash
   retirée de la pile ; les 7 stashes `develop` intactes.
-- `constraint-explorer` **conservée** (carrière P3).
+- `constraint-explorer` archivée `archive/constraint-explorer` puis supprimée (P3 lot 4, 2026-09-09).
 
 ### ConstraintExplorerPanel
 
