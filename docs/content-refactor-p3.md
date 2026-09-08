@@ -409,6 +409,12 @@ agricoles sont de la trivia de classement pure (risque fun, cf. lot 2) ; les 3
 **14/14 PASS**, couverture **100 % sur 76**, failed seeds 0/76, overlap max
 0,846 < 0,85, cold-start ≤ 1 newcomer/grille.
 
-**Gate utilisateur.** _(en attente — dossier ci-dessus ; l'utilisateur tranche
-inclusion / réserve par contrainte, puis merge `content-p3-lot3` → `develop` +
-`refreshPool`)_
+**Gate utilisateur (2026-09-08).** Feu vert **pour les 7** — inclusion sans
+réserve (dossier ci-dessus, 7/7 identiques v1). `EXPECTED_ACTIVE_COUNT` → **76**,
+`RESERVE_CONSTRAINT_IDS` inchangé (6). Contrairement au lot 2, aucune contrainte
+écartée : le thème production/énergie est jugé assez porteur, y compris les 4
+`production_*_top10` agricoles.
+
+**Merge.** `content-p3-lot3` → `develop` (local, `--no-ff`), commits non signés
+(échec pinentry ioctl → `--no-gpg-sign`). _Reste à faire : push + `refreshPool`
+via `/admin`._
