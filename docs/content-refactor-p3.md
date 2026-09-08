@@ -424,3 +424,78 @@ réserve (dossier ci-dessus, 7/7 identiques v1). `EXPECTED_ACTIVE_COUNT` → **7
 **Merge.** `content-p3-lot3` → `develop` (local, `--no-ff`), commits non signés
 (échec pinentry ioctl → `--no-gpg-sign`). _Reste à faire : push + `refreshPool`
 via `/admin`._
+
+### Lot 4 — branche `content-p3-lot4` (2026-09-09)
+
+**Périmètre livré : 3 contraintes** — `history_sovereignty_since_1990`,
+`history_from_france`, `history_from_united_kingdom`, catégorie `history` (nouvelle).
+`EXPECTED_ACTIVE_COUNT` 76 → **79**. **Dernier lot P3.**
+
+**Modèle de faits — arbitrage 2026-09-09 (supersède le tableau §2 « 2 champs »).**
+La v1 n'a **aucune dérivation** pour ces 3 contraintes, seulement 3 listes ISO3
+curées + le snapshot `content/facts/sovereignty/data.ts`. Reconstruction : **3
+nouveaux champs `CountryFacts`, tous factuels** — `formerSovereigns:
+FormerSovereign[]` (slugs, pas des ISO3), `sovereigntyYear: number | null` (année
+**brute**, jamais masquée — fiche pays P4), `sovereigntyKind: SovereigntyKind |
+null`. Aucune donnée dérivée stockée (rejet du booléen d'éligibilité, anti-pattern
+§9) : l'éligibilité de `since_1990` se **re-dérive du `kind`**
+(`{independence, restoration, dissolution_successor}` — audité pur reflet du flag
+v1 `qualifiesForIndependenceConstraints` sur les 193 entrées). Les deux
+`history_from_*` ne lisent **que** l'appartenance à `formerSovereigns`, sans filtre
+de `kind` (le Yémen est dans la liste UK malgré son `kind: unification` de 1990).
+
+**Datasets.** `scripts/countries/data/sovereignty.ts` (nouveau) — `SovereigntyEvent`
+par ISO3 (193 pays), porté verbatim du snapshot `sovereignty` de
+`constraint-explorer` (221b42d), `sourceCommit` conservé. `data/types.ts` ré-exporte
+`FormerSovereign` / `SovereigntyKind` de `content/countries/type.ts` (comme
+`ProductionRankKey`) et définit `SovereigntyEvent` / `SovereigntySnapshot`.
+`quantitativeFactsForCode` réduit l'événement à 3 scalaires repris tels quels
+(`formerSovereigns`, `year`, `kind`).
+
+**Snapshot.** `pnpm build:countries` (réseau, 1 min 10, 197/197, 0 échec) +
+`pnpm biome check --write content/`. Diff `content/countries/` : **`facts.ts`
+purement additif** (+3 champs × 197) + `type.ts` + `SOURCE.md`. `catalog.ts` /
+`popularity.ts` : **aucun mouvement** après normalisation Biome (millésime
+identique au lot 3, 08-29). Les **76 `answers.ts` existants inchangés**.
+`build:answers` : 79 actives.
+
+**Contre-épreuve vs v1 (`221b42d`). 3/3 listes ISO3 byte-identiques**, aucun écart.
+
+| id | dérivé | v1 | statut |
+| --- | --- | --- | --- |
+| `history_from_france` | 27 | 27 | identique (`formerSovereigns.includes("france")`) |
+| `history_from_united_kingdom` | 56 | 56 | identique (`…("united_kingdom")`) |
+| `history_sovereignty_since_1990` | 28 | 28 | identique (`year ≥ 1990 ∧ kind ∈ gained` ⇒ exclut RUS + YEM, exactement les 2 exclusions v1) |
+
+**Cas limites (dossier de gate).**
+
+- `history_from_united_kingdom` : **États-Unis hors liste** (`formerSovereigns`
+  vide malgré « from Great Britain » au Factbook) ; **Israël + Yémen dedans**
+  malgré `qualifiesForIndependenceConstraints: false` (la contrainte ne lit ni ce
+  flag ni le `kind`).
+- `history_sovereignty_since_1990` : Russie (1991, `continuation`) et Yémen (1990,
+  `unification`) **exclus par le `kind`**, pas par une donnée effacée ; Namibie
+  1990 pile sur la borne (incluse) ; Estonie/Lettonie `year` 1991 (le `date` porte
+  parfois 1918, non lu).
+- `history_from_france` : Vanuatu dans les deux listes (condominium).
+- 4 pays sans fait de souveraineté (`[]` / `null`) : `ETH`, `PSE`, `SMR`, `TWN` —
+  absents du snapshot v1 (jamais colonisés / statut contesté / trop ancien),
+  assumé. N'entrent dans aucune liste.
+
+**Checklist.** `pnpm lint` ✓ (2 warnings préexistants `convex/**`) · `pnpm test`
+**534/534** ✓ (+4 : 3 bascules dérivation + 1 `quantitativeFactsForCode`) ·
+`pnpm check:content` « **79 actives, 11 archivées, 6 en réserve, 197 pays** » ✓ ·
+`pnpm check:bundle` **246,5 KiB** gzip (budget 280) ✓ · `pnpm simulate:scheduling`
+**14/14 PASS**, couverture **100 % sur 79**, failed seeds 0/79, overlap max
+0,846 < 0,85, cold-start ≤ 1 newcomer/grille.
+
+**Gate utilisateur.** _(en attente — dossier ci-dessus ; recommandation : inclure
+les 3, dérivations exactes v1, thème déjà éditorialisé en v1.)_
+
+**Merge.** _(en attente du gate)_
+
+**Finalisation P3 (post-merge).** Compteurs `docs/content-pipeline.md` → 79 actives /
+22 catégories (4 spots) ; entrée `/changelog` joueur « Une salve de nouvelles
+contraintes » (couvre tout P3) + `LATEST_CHANGELOG_UPDATE_DATE` 2026-09-09 ;
+`AGENTS.md` ne cite aucun compteur d'actives → inchangé ; tag + suppression de
+`constraint-explorer` (gate distinct).
