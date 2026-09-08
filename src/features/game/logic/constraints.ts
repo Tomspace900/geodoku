@@ -27,7 +27,8 @@ export type ConstraintCategory =
   | "society"
   | "ocean"
   | "production"
-  | "energy";
+  | "energy"
+  | "history";
 
 export type Constraint = {
   id: ConstraintId;
@@ -461,6 +462,23 @@ export const CONSTRAINTS: Constraint[] = [
     id: "energy_coal_electricity_majority",
     labelKey: "constraint.energy_coal_electricity_majority",
     category: "energy",
+  },
+
+  // ── Histoire ──────────────────────────────────────────────────────────────
+  {
+    id: "history_sovereignty_since_1990",
+    labelKey: "constraint.history_sovereignty_since_1990",
+    category: "history",
+  },
+  {
+    id: "history_from_france",
+    labelKey: "constraint.history_from_france",
+    category: "history",
+  },
+  {
+    id: "history_from_united_kingdom",
+    labelKey: "constraint.history_from_united_kingdom",
+    category: "history",
   },
 ];
 

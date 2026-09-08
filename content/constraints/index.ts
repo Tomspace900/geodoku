@@ -44,6 +44,9 @@ import flag_has_cross from "./flag_has_cross/answers";
 import flag_has_star from "./flag_has_star/answers";
 import flag_two_colors from "./flag_two_colors/answers";
 import forest_cover_majority from "./forest_cover_majority/answers";
+import history_from_france from "./history_from_france/answers";
+import history_from_united_kingdom from "./history_from_united_kingdom/answers";
+import history_sovereignty_since_1990 from "./history_sovereignty_since_1990/answers";
 import language_arabic from "./language_arabic/answers";
 import language_english from "./language_english/answers";
 import language_french from "./language_french/answers";
@@ -174,6 +177,9 @@ export const CONSTRAINT_IDS = [
   "production_crude_oil_top15",
   "production_natural_gas_top15",
   "energy_coal_electricity_majority",
+  "history_sovereignty_since_1990",
+  "history_from_france",
+  "history_from_united_kingdom",
 ] as const;
 
 /** Contraintes hors génération, conservées pour rejouer les anciennes grilles. */
@@ -296,6 +302,9 @@ const ANSWER_SETS = {
   production_crude_oil_top15,
   production_natural_gas_top15,
   energy_coal_electricity_majority,
+  history_sovereignty_since_1990,
+  history_from_france,
+  history_from_united_kingdom,
   flag_two_colors,
   area_gt_2M,
   area_gt_500k,

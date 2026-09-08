@@ -1,0 +1,33 @@
+// @generated par pnpm build:answers — ne pas éditer à la main.
+import { defineAnswerSet } from "../defineAnswerSet";
+
+export default defineAnswerSet("history_sovereignty_since_1990", [
+  "ARM",
+  "AZE",
+  "BIH",
+  "BLR",
+  "CZE",
+  "ERI",
+  "EST",
+  "GEO",
+  "HRV",
+  "KAZ",
+  "KGZ",
+  "LTU",
+  "LVA",
+  "MDA",
+  "MKD",
+  "MNE",
+  "NAM",
+  "PLW",
+  "SRB",
+  "SSD",
+  "SVK",
+  "SVN",
+  "TJK",
+  "TKM",
+  "TLS",
+  "UKR",
+  "UZB",
+  "XKX",
+]);

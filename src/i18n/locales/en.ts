@@ -85,10 +85,14 @@ export const en = {
     contactBodyPre: "A question? Write to me at",
   },
   changelog: {
-    eyebrow: "Last updated · August 2026",
+    eyebrow: "Last updated · September 2026",
     title: "Changelog",
     backToGame: "Back to the game",
     entries: {
+      newConstraintsDate: "September 9, 2026",
+      newConstraintsTitle: "A batch of new constraints",
+      newConstraintsBody:
+        "I expanded the catalogue over the summer: winter Olympics hosts, multiple time zones, active volcanoes, mostly mountainous or forested countries, large metro areas, coasts on several oceans, major farm and energy producers, and finally history: recent sovereignty, and independence from France or the United Kingdom. They show up in grids gradually.",
       archiveDate: "August 9, 2026",
       archiveTitle: "Replay past grids",
       archiveBody:
@@ -380,6 +384,9 @@ export const en = {
     production_natural_gas_top15: "World top 15 natural gas producer",
     energy_coal_electricity_majority:
       "More than 50% of electricity generated from coal",
+    history_sovereignty_since_1990: "Became sovereign since 1990",
+    history_from_france: "Gained independence from France",
+    history_from_united_kingdom: "Gained independence from the United Kingdom",
     // Archived — no longer generated, kept so past grids stay replayable.
     area_gt_500k: "Large country (>500,000\u00A0km²)",
     area_lt_1k: "Micro-state (<1,000\u00A0km²)",

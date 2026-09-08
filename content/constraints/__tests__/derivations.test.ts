@@ -195,4 +195,48 @@ describe("DERIVATIONS — bascules de seuil", () => {
       france: false,
     });
   });
+
+  it("history_from_france : appartenance à formerSovereigns, sans filtre de kind", () => {
+    expect({
+      senegal: derive("history_from_france", "SEN"),
+      vanuatu: derive("history_from_france", "VUT"), // condominium franco-britannique
+      india: derive("history_from_france", "IND"),
+      thailand: derive("history_from_france", "THA"), // jamais colonisée
+    }).toEqual({
+      senegal: true,
+      vanuatu: true,
+      india: false,
+      thailand: false,
+    });
+  });
+
+  it("history_from_united_kingdom : formerSovereigns seul, flag d'éligibilité ignoré", () => {
+    expect({
+      india: derive("history_from_united_kingdom", "IND"),
+      israel: derive("history_from_united_kingdom", "ISR"), // qualifies=false mais listé v1
+      united_states: derive("history_from_united_kingdom", "USA"), // formerSovereigns vide
+      senegal: derive("history_from_united_kingdom", "SEN"),
+    }).toEqual({
+      india: true,
+      israel: true,
+      united_states: false,
+      senegal: false,
+    });
+  });
+
+  it("history_sovereignty_since_1990 : année ≥ 1990 ET kind d'acquisition", () => {
+    expect({
+      croatia: derive("history_sovereignty_since_1990", "HRV"), // 1991 independence
+      namibia: derive("history_sovereignty_since_1990", "NAM"), // 1990, pile sur la borne
+      russia: derive("history_sovereignty_since_1990", "RUS"), // 1991 continuation → hors
+      yemen: derive("history_sovereignty_since_1990", "YEM"), // 1990 unification → hors
+      germany: derive("history_sovereignty_since_1990", "DEU"), // 1871
+    }).toEqual({
+      croatia: true,
+      namibia: true,
+      russia: false,
+      yemen: false,
+      germany: false,
+    });
+  });
 });

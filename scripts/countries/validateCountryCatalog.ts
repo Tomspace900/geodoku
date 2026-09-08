@@ -6,6 +6,29 @@ const ISO2_CODE = /^[A-Z]{2}$/;
 // Territoires hors gameplay qui restent des voisins géographiques légitimes.
 const EXTERNAL_BORDER_CODES = new Set(["ESH", "HKG", "MAC"]);
 
+const FORMER_SOVEREIGN_SLUGS = new Set([
+  "belgium",
+  "france",
+  "netherlands",
+  "portugal",
+  "soviet_union",
+  "spain",
+  "united_kingdom",
+  "united_states",
+  "yugoslavia",
+]);
+const SOVEREIGNTY_KINDS = new Set([
+  "independence",
+  "restoration",
+  "separation",
+  "dissolution_successor",
+  "continuation",
+  "foundation",
+  "unification",
+]);
+/** Le plus ancien événement retenu est l'Autriche (1156). Borne large. */
+const SOVEREIGNTY_MIN_YEAR = 1000;
+
 /**
  * Invariants d'**identité** du catalogue (`content/countries/catalog.ts`).
  * Retourne toutes les incohérences afin qu'un run de CI soit actionnable.
@@ -142,6 +165,39 @@ export function validateCountryFacts(
         errors.push(`${code}: productionRanks.${product} invalide (${rank})`);
       }
     });
+    if (!Array.isArray(facts.formerSovereigns)) {
+      errors.push(`${code}: formerSovereigns invalide`);
+    } else {
+      facts.formerSovereigns.forEach((slug) => {
+        if (!FORMER_SOVEREIGN_SLUGS.has(slug)) {
+          errors.push(`${code}: formerSovereigns slug inconnu (${slug})`);
+        }
+      });
+    }
+    if (
+      facts.sovereigntyKind !== null &&
+      !SOVEREIGNTY_KINDS.has(facts.sovereigntyKind)
+    ) {
+      errors.push(
+        `${code}: sovereigntyKind inconnu (${facts.sovereigntyKind})`,
+      );
+    }
+    if (facts.sovereigntyYear !== null) {
+      if (
+        !Number.isInteger(facts.sovereigntyYear) ||
+        facts.sovereigntyYear < SOVEREIGNTY_MIN_YEAR ||
+        facts.sovereigntyYear > new Date().getFullYear()
+      ) {
+        errors.push(
+          `${code}: sovereigntyYear hors bornes (${facts.sovereigntyYear})`,
+        );
+      }
+    }
+    if ((facts.sovereigntyYear === null) !== (facts.sovereigntyKind === null)) {
+      errors.push(
+        `${code}: sovereigntyYear et sovereigntyKind doivent être définis ensemble`,
+      );
+    }
     facts.capitals.forEach((capital) => {
       if (
         !capital.name ||
@@ -205,6 +261,16 @@ export function validateCountryFacts(
       "coalElectricityShare",
       allFacts.filter((f) => f.coalElectricityShare !== null).length,
       150,
+    ],
+    [
+      "sovereigntyYear",
+      allFacts.filter((f) => f.sovereigntyYear !== null).length,
+      150,
+    ],
+    [
+      "formerSovereigns",
+      allFacts.filter((f) => f.formerSovereigns.length > 0).length,
+      90,
     ],
   ];
   coverage.forEach(([field, count, min]) => {

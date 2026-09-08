@@ -648,6 +648,9 @@ export const manualCountryAdditions: CountryRecord[] = [
     urbanCentresOver1M: 0,
     productionRanks: {},
     coalElectricityShare: null,
+    formerSovereigns: [],
+    sovereigntyYear: null,
+    sovereigntyKind: null,
   },
 ];
 

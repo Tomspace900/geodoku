@@ -22,6 +22,7 @@ import type {
   HoloceneVolcanoSnapshot,
   MountainAreaSnapshot,
   ProductionRankKey,
+  SovereigntySnapshot,
   UrbanCentresSnapshot,
 } from "./data/types.ts";
 
@@ -437,6 +438,7 @@ export type QuantitativeDatasets = {
   agriculturalProduction: AgriculturalProductionSnapshot;
   energyProduction: EnergyProductionSnapshot;
   coalElectricity: CoalElectricitySnapshot;
+  sovereignty: SovereigntySnapshot;
 };
 
 type QuantitativeFacts = Pick<
@@ -448,6 +450,9 @@ type QuantitativeFacts = Pick<
   | "urbanCentresOver1M"
   | "productionRanks"
   | "coalElectricityShare"
+  | "formerSovereigns"
+  | "sovereigntyYear"
+  | "sovereigntyKind"
 >;
 
 /**
@@ -504,6 +509,7 @@ export function quantitativeFactsForCode(
   const mountain = datasets.mountainArea[code]?.value;
   const forest = datasets.forestCover.countries[code];
   const coal = datasets.coalElectricity.countries[code];
+  const sovereignty = datasets.sovereignty.countries[code];
   return {
     utcOffsetCount: offsets && offsets.length > 0 ? offsets.length : 1,
     hasHoloceneVolcano: Object.hasOwn(datasets.holoceneVolcanoes, code),
@@ -512,6 +518,9 @@ export function quantitativeFactsForCode(
     urbanCentresOver1M: datasets.urbanCentres.countries[code]?.length ?? 0,
     productionRanks: productionRanksForCode(code, datasets),
     coalElectricityShare: typeof coal === "number" ? coal / 100 : null,
+    formerSovereigns: sovereignty ? [...sovereignty.formerSovereigns] : [],
+    sovereigntyYear: sovereignty?.year ?? null,
+    sovereigntyKind: sovereignty?.kind ?? null,
   };
 }
 

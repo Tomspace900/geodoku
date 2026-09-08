@@ -38,6 +38,20 @@ const MAJORITY_SHARE = 0.5;
 const PRODUCTION_TOP_10 = 10;
 const PRODUCTION_TOP_15 = 15;
 
+const SOVEREIGNTY_SINCE_YEAR = 1990;
+/**
+ * `kind` traduisant une **acquisition** de souveraineté par l'État actuel — par
+ * opposition à une continuité (`continuation`) ou une refondation
+ * (`foundation`, `unification`), qui ne comptent pas pour
+ * `history_sovereignty_since_1990`. Reproduit exactement le flag v1
+ * `qualifiesForIndependenceConstraints`, qui n'est qu'une fonction du `kind`.
+ */
+const SOVEREIGNTY_GAINED: ReadonlySet<string> = new Set([
+  "independence",
+  "restoration",
+  "dissolution_successor",
+]);
+
 /** Rang mondial du pays pour un produit, `+∞` s'il est hors du top retenu. */
 function productionRank(
   facts: CountryFacts,
@@ -206,6 +220,19 @@ export const DERIVATIONS = {
     productionRank(f, "natural_gas") <= PRODUCTION_TOP_15,
   energy_coal_electricity_majority: (f) =>
     f.coalElectricityShare !== null && f.coalElectricityShare > MAJORITY_SHARE,
+
+  // ── Histoire (souveraineté, CIA World Factbook — champ Independence) ───────
+  // `history_from_*` ne lisent QUE l'appartenance à `formerSovereigns` : ni le
+  // `kind`, ni aucune éligibilité. Le Yémen est dans la liste UK (Sud-Yémen
+  // britannique) alors que son événement 1990 est une `unification`.
+  history_sovereignty_since_1990: (f) =>
+    f.sovereigntyYear !== null &&
+    f.sovereigntyYear >= SOVEREIGNTY_SINCE_YEAR &&
+    f.sovereigntyKind !== null &&
+    SOVEREIGNTY_GAINED.has(f.sovereigntyKind),
+  history_from_france: (f) => f.formerSovereigns.includes("france"),
+  history_from_united_kingdom: (f) =>
+    f.formerSovereigns.includes("united_kingdom"),
 } satisfies Record<ActiveConstraintId, Derivation>;
 
 /**

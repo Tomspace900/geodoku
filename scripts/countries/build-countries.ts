@@ -57,6 +57,7 @@ import { ENERGY_PRODUCTION } from "./data/energyProduction.ts";
 import { FOREST_COVER } from "./data/forestCover.ts";
 import { HOLOCENE_VOLCANOES } from "./data/holoceneVolcanoes.ts";
 import { MOUNTAIN_AREAS } from "./data/mountainArea.ts";
+import { SOVEREIGNTY } from "./data/sovereignty.ts";
 import { URBAN_CENTRES } from "./data/urbanCentres.ts";
 
 const QUANTITATIVE_DATASETS: QuantitativeDatasets = {
@@ -68,6 +69,7 @@ const QUANTITATIVE_DATASETS: QuantitativeDatasets = {
   agriculturalProduction: AGRICULTURAL_PRODUCTION,
   energyProduction: ENERGY_PRODUCTION,
   coalElectricity: COAL_ELECTRICITY,
+  sovereignty: SOVEREIGNTY,
 };
 
 // ─── World-countries shape (fields we consume) ────────────────────────────────

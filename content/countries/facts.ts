@@ -42,6 +42,9 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     urbanCentresOver1M: 2,
     productionRanks: {},
     coalElectricityShare: 0.030299999999999997,
+    formerSovereigns: ["united_kingdom"],
+    sovereigntyYear: 1919,
+    sovereigntyKind: "independence",
   },
   AGO: {
     continent: "africa",
@@ -76,6 +79,9 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     urbanCentresOver1M: 4,
     productionRanks: {},
     coalElectricityShare: 0,
+    formerSovereigns: ["portugal"],
+    sovereigntyYear: 1975,
+    sovereigntyKind: "independence",
   },
   ALB: {
     continent: "europe",
@@ -110,6 +116,9 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     urbanCentresOver1M: 0,
     productionRanks: {},
     coalElectricityShare: null,
+    formerSovereigns: [],
+    sovereigntyYear: 1912,
+    sovereigntyKind: "independence",
   },
   AND: {
     continent: "europe",
@@ -144,6 +153,9 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     urbanCentresOver1M: 0,
     productionRanks: {},
     coalElectricityShare: null,
+    formerSovereigns: [],
+    sovereigntyYear: 1278,
+    sovereigntyKind: "foundation",
   },
   ARE: {
     continent: "asia",
@@ -181,6 +193,9 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
       natural_gas: 14,
     },
     coalElectricityShare: 0,
+    formerSovereigns: ["united_kingdom"],
+    sovereigntyYear: 1971,
+    sovereigntyKind: "independence",
   },
   ARG: {
     continent: "south_america",
@@ -215,6 +230,9 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     urbanCentresOver1M: 4,
     productionRanks: {},
     coalElectricityShare: 0.0086,
+    formerSovereigns: ["spain"],
+    sovereigntyYear: 1816,
+    sovereigntyKind: "independence",
   },
   ARM: {
     continent: "asia",
@@ -249,6 +267,9 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     urbanCentresOver1M: 1,
     productionRanks: {},
     coalElectricityShare: 0,
+    formerSovereigns: ["soviet_union"],
+    sovereigntyYear: 1991,
+    sovereigntyKind: "independence",
   },
   ATG: {
     continent: "north_america",
@@ -283,6 +304,9 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     urbanCentresOver1M: 0,
     productionRanks: {},
     coalElectricityShare: 0,
+    formerSovereigns: ["united_kingdom"],
+    sovereigntyYear: 1981,
+    sovereigntyKind: "independence",
   },
   AUS: {
     continent: "oceania",
@@ -325,6 +349,9 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
       natural_gas: 7,
     },
     coalElectricityShare: 0.4521,
+    formerSovereigns: ["united_kingdom"],
+    sovereigntyYear: 1901,
+    sovereigntyKind: "independence",
   },
   AUT: {
     continent: "europe",
@@ -359,6 +386,9 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     urbanCentresOver1M: 1,
     productionRanks: {},
     coalElectricityShare: 0,
+    formerSovereigns: [],
+    sovereigntyYear: 1156,
+    sovereigntyKind: "independence",
   },
   AZE: {
     continent: "asia",
@@ -393,6 +423,9 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     urbanCentresOver1M: 1,
     productionRanks: {},
     coalElectricityShare: 0,
+    formerSovereigns: ["soviet_union"],
+    sovereigntyYear: 1991,
+    sovereigntyKind: "independence",
   },
   BDI: {
     continent: "africa",
@@ -427,6 +460,9 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     urbanCentresOver1M: 1,
     productionRanks: {},
     coalElectricityShare: 0,
+    formerSovereigns: ["belgium"],
+    sovereigntyYear: 1962,
+    sovereigntyKind: "independence",
   },
   BEL: {
     continent: "europe",
@@ -461,6 +497,9 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     urbanCentresOver1M: 1,
     productionRanks: {},
     coalElectricityShare: 0,
+    formerSovereigns: ["netherlands"],
+    sovereigntyYear: 1830,
+    sovereigntyKind: "independence",
   },
   BEN: {
     continent: "africa",
@@ -495,6 +534,9 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     urbanCentresOver1M: 1,
     productionRanks: {},
     coalElectricityShare: 0,
+    formerSovereigns: ["france"],
+    sovereigntyYear: 1960,
+    sovereigntyKind: "independence",
   },
   BFA: {
     continent: "africa",
@@ -529,6 +571,9 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     urbanCentresOver1M: 2,
     productionRanks: {},
     coalElectricityShare: 0,
+    formerSovereigns: ["france"],
+    sovereigntyYear: 1960,
+    sovereigntyKind: "independence",
   },
   BGD: {
     continent: "asia",
@@ -565,6 +610,9 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
       rice: 3,
     },
     coalElectricityShare: 0.19940000000000002,
+    formerSovereigns: [],
+    sovereigntyYear: 1971,
+    sovereigntyKind: "independence",
   },
   BGR: {
     continent: "europe",
@@ -599,6 +647,9 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     urbanCentresOver1M: 1,
     productionRanks: {},
     coalElectricityShare: 0.22870000000000001,
+    formerSovereigns: [],
+    sovereigntyYear: 1878,
+    sovereigntyKind: "independence",
   },
   BHR: {
     continent: "asia",
@@ -633,6 +684,9 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     urbanCentresOver1M: 1,
     productionRanks: {},
     coalElectricityShare: 0,
+    formerSovereigns: ["united_kingdom"],
+    sovereigntyYear: 1971,
+    sovereigntyKind: "independence",
   },
   BHS: {
     continent: "north_america",
@@ -667,6 +721,9 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     urbanCentresOver1M: 0,
     productionRanks: {},
     coalElectricityShare: 0,
+    formerSovereigns: ["united_kingdom"],
+    sovereigntyYear: 1973,
+    sovereigntyKind: "independence",
   },
   BIH: {
     continent: "europe",
@@ -701,6 +758,9 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     urbanCentresOver1M: 0,
     productionRanks: {},
     coalElectricityShare: 0.5882999999999999,
+    formerSovereigns: ["yugoslavia"],
+    sovereigntyYear: 1992,
+    sovereigntyKind: "independence",
   },
   BLR: {
     continent: "europe",
@@ -735,6 +795,9 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     urbanCentresOver1M: 1,
     productionRanks: {},
     coalElectricityShare: 0.0004,
+    formerSovereigns: ["soviet_union"],
+    sovereigntyYear: 1991,
+    sovereigntyKind: "independence",
   },
   BLZ: {
     continent: "north_america",
@@ -769,6 +832,9 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     urbanCentresOver1M: 0,
     productionRanks: {},
     coalElectricityShare: 0,
+    formerSovereigns: ["united_kingdom"],
+    sovereigntyYear: 1981,
+    sovereigntyKind: "independence",
   },
   BOL: {
     continent: "south_america",
@@ -809,6 +875,9 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     urbanCentresOver1M: 3,
     productionRanks: {},
     coalElectricityShare: 0,
+    formerSovereigns: ["spain"],
+    sovereigntyYear: 1825,
+    sovereigntyKind: "independence",
   },
   BRA: {
     continent: "south_america",
@@ -858,6 +927,9 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
       crude_oil: 9,
     },
     coalElectricityShare: 0.0217,
+    formerSovereigns: ["portugal"],
+    sovereigntyYear: 1822,
+    sovereigntyKind: "independence",
   },
   BRB: {
     continent: "north_america",
@@ -892,6 +964,9 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     urbanCentresOver1M: 0,
     productionRanks: {},
     coalElectricityShare: 0,
+    formerSovereigns: ["united_kingdom"],
+    sovereigntyYear: 1966,
+    sovereigntyKind: "independence",
   },
   BRN: {
     continent: "asia",
@@ -926,6 +1001,9 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     urbanCentresOver1M: 0,
     productionRanks: {},
     coalElectricityShare: 0.1978,
+    formerSovereigns: ["united_kingdom"],
+    sovereigntyYear: 1984,
+    sovereigntyKind: "independence",
   },
   BTN: {
     continent: "asia",
@@ -960,6 +1038,9 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     urbanCentresOver1M: 0,
     productionRanks: {},
     coalElectricityShare: 0,
+    formerSovereigns: [],
+    sovereigntyYear: 1907,
+    sovereigntyKind: "independence",
   },
   BWA: {
     continent: "africa",
@@ -994,6 +1075,9 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     urbanCentresOver1M: 0,
     productionRanks: {},
     coalElectricityShare: 0.9825,
+    formerSovereigns: ["united_kingdom"],
+    sovereigntyYear: 1966,
+    sovereigntyKind: "independence",
   },
   CAF: {
     continent: "africa",
@@ -1030,6 +1114,9 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
       coffee: 10,
     },
     coalElectricityShare: null,
+    formerSovereigns: ["france"],
+    sovereigntyYear: 1960,
+    sovereigntyKind: "independence",
   },
   CAN: {
     continent: "north_america",
@@ -1073,6 +1160,9 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
       natural_gas: 5,
     },
     coalElectricityShare: 0.0395,
+    formerSovereigns: [],
+    sovereigntyYear: 1867,
+    sovereigntyKind: "foundation",
   },
   CHE: {
     continent: "europe",
@@ -1107,6 +1197,9 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     urbanCentresOver1M: 0,
     productionRanks: {},
     coalElectricityShare: null,
+    formerSovereigns: [],
+    sovereigntyYear: 1291,
+    sovereigntyKind: "foundation",
   },
   CHL: {
     continent: "south_america",
@@ -1141,6 +1234,9 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     urbanCentresOver1M: 1,
     productionRanks: {},
     coalElectricityShare: 0.153,
+    formerSovereigns: ["spain"],
+    sovereigntyYear: 1810,
+    sovereigntyKind: "independence",
   },
   CHN: {
     continent: "asia",
@@ -1197,6 +1293,9 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
       natural_gas: 4,
     },
     coalElectricityShare: 0.5777,
+    formerSovereigns: [],
+    sovereigntyYear: 1949,
+    sovereigntyKind: "unification",
   },
   CIV: {
     continent: "africa",
@@ -1233,6 +1332,9 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
       cocoa: 1,
     },
     coalElectricityShare: 0,
+    formerSovereigns: ["france"],
+    sovereigntyYear: 1960,
+    sovereigntyKind: "independence",
   },
   CMR: {
     continent: "africa",
@@ -1269,6 +1371,9 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
       cocoa: 6,
     },
     coalElectricityShare: 0,
+    formerSovereigns: ["france"],
+    sovereigntyYear: 1960,
+    sovereigntyKind: "independence",
   },
   COD: {
     continent: "africa",
@@ -1308,6 +1413,9 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     urbanCentresOver1M: 6,
     productionRanks: {},
     coalElectricityShare: 0,
+    formerSovereigns: ["belgium"],
+    sovereigntyYear: 1960,
+    sovereigntyKind: "independence",
   },
   COG: {
     continent: "africa",
@@ -1342,6 +1450,9 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     urbanCentresOver1M: 1,
     productionRanks: {},
     coalElectricityShare: 0,
+    formerSovereigns: ["france"],
+    sovereigntyYear: 1960,
+    sovereigntyKind: "independence",
   },
   COL: {
     continent: "south_america",
@@ -1385,6 +1496,9 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
       coffee: 4,
     },
     coalElectricityShare: 0.1258,
+    formerSovereigns: ["spain"],
+    sovereigntyYear: 1810,
+    sovereigntyKind: "independence",
   },
   COM: {
     continent: "africa",
@@ -1419,6 +1533,9 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     urbanCentresOver1M: 0,
     productionRanks: {},
     coalElectricityShare: null,
+    formerSovereigns: ["france"],
+    sovereigntyYear: 1975,
+    sovereigntyKind: "independence",
   },
   CPV: {
     continent: "africa",
@@ -1453,6 +1570,9 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     urbanCentresOver1M: 0,
     productionRanks: {},
     coalElectricityShare: 0,
+    formerSovereigns: ["portugal"],
+    sovereigntyYear: 1975,
+    sovereigntyKind: "independence",
   },
   CRI: {
     continent: "north_america",
@@ -1487,6 +1607,9 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     urbanCentresOver1M: 1,
     productionRanks: {},
     coalElectricityShare: 0,
+    formerSovereigns: ["spain"],
+    sovereigntyYear: 1821,
+    sovereigntyKind: "independence",
   },
   CUB: {
     continent: "north_america",
@@ -1521,6 +1644,9 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     urbanCentresOver1M: 1,
     productionRanks: {},
     coalElectricityShare: 0,
+    formerSovereigns: ["spain"],
+    sovereigntyYear: 1902,
+    sovereigntyKind: "independence",
   },
   CYP: {
     continent: "europe",
@@ -1555,6 +1681,9 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     urbanCentresOver1M: 0,
     productionRanks: {},
     coalElectricityShare: 0,
+    formerSovereigns: ["united_kingdom"],
+    sovereigntyYear: 1960,
+    sovereigntyKind: "independence",
   },
   CZE: {
     continent: "europe",
@@ -1589,6 +1718,9 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     urbanCentresOver1M: 1,
     productionRanks: {},
     coalElectricityShare: 0.3642,
+    formerSovereigns: [],
+    sovereigntyYear: 1993,
+    sovereigntyKind: "dissolution_successor",
   },
   DEU: {
     continent: "europe",
@@ -1625,6 +1757,9 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
       wheat: 10,
     },
     coalElectricityShare: 0.2144,
+    formerSovereigns: [],
+    sovereigntyYear: 1871,
+    sovereigntyKind: "independence",
   },
   DJI: {
     continent: "africa",
@@ -1659,6 +1794,9 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     urbanCentresOver1M: 0,
     productionRanks: {},
     coalElectricityShare: 0,
+    formerSovereigns: ["france"],
+    sovereigntyYear: 1977,
+    sovereigntyKind: "independence",
   },
   DMA: {
     continent: "north_america",
@@ -1693,6 +1831,9 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     urbanCentresOver1M: 0,
     productionRanks: {},
     coalElectricityShare: null,
+    formerSovereigns: ["united_kingdom"],
+    sovereigntyYear: 1978,
+    sovereigntyKind: "independence",
   },
   DNK: {
     continent: "europe",
@@ -1727,6 +1868,9 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     urbanCentresOver1M: 1,
     productionRanks: {},
     coalElectricityShare: 0.0496,
+    formerSovereigns: [],
+    sovereigntyYear: 1849,
+    sovereigntyKind: "foundation",
   },
   DOM: {
     continent: "north_america",
@@ -1763,6 +1907,9 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
       cocoa: 9,
     },
     coalElectricityShare: 0.29960000000000003,
+    formerSovereigns: [],
+    sovereigntyYear: 1844,
+    sovereigntyKind: "independence",
   },
   DZA: {
     continent: "africa",
@@ -1799,6 +1946,9 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
       natural_gas: 10,
     },
     coalElectricityShare: 0,
+    formerSovereigns: ["france"],
+    sovereigntyYear: 1962,
+    sovereigntyKind: "independence",
   },
   ECU: {
     continent: "south_america",
@@ -1840,6 +1990,9 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
       cocoa: 4,
     },
     coalElectricityShare: 0,
+    formerSovereigns: ["spain"],
+    sovereigntyYear: 1822,
+    sovereigntyKind: "independence",
   },
   EGY: {
     continent: "africa",
@@ -1880,6 +2033,9 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
       natural_gas: 15,
     },
     coalElectricityShare: 0,
+    formerSovereigns: ["united_kingdom"],
+    sovereigntyYear: 1922,
+    sovereigntyKind: "independence",
   },
   ERI: {
     continent: "africa",
@@ -1914,6 +2070,9 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     urbanCentresOver1M: 0,
     productionRanks: {},
     coalElectricityShare: 0,
+    formerSovereigns: [],
+    sovereigntyYear: 1993,
+    sovereigntyKind: "independence",
   },
   ESP: {
     continent: "europe",
@@ -1948,6 +2107,9 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     urbanCentresOver1M: 3,
     productionRanks: {},
     coalElectricityShare: 0.0092,
+    formerSovereigns: [],
+    sovereigntyYear: 1492,
+    sovereigntyKind: "foundation",
   },
   EST: {
     continent: "europe",
@@ -1982,6 +2144,9 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     urbanCentresOver1M: 0,
     productionRanks: {},
     coalElectricityShare: 0,
+    formerSovereigns: ["soviet_union"],
+    sovereigntyYear: 1991,
+    sovereigntyKind: "restoration",
   },
   ETH: {
     continent: "africa",
@@ -2018,6 +2183,9 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
       coffee: 5,
     },
     coalElectricityShare: 0,
+    formerSovereigns: [],
+    sovereigntyYear: null,
+    sovereigntyKind: null,
   },
   FIN: {
     continent: "europe",
@@ -2052,6 +2220,9 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     urbanCentresOver1M: 1,
     productionRanks: {},
     coalElectricityShare: 0.0101,
+    formerSovereigns: [],
+    sovereigntyYear: 1917,
+    sovereigntyKind: "independence",
   },
   FJI: {
     continent: "oceania",
@@ -2086,6 +2257,9 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     urbanCentresOver1M: 0,
     productionRanks: {},
     coalElectricityShare: 0,
+    formerSovereigns: ["united_kingdom"],
+    sovereigntyYear: 1970,
+    sovereigntyKind: "independence",
   },
   FRA: {
     continent: "europe",
@@ -2137,6 +2311,9 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
       wheat: 7,
     },
     coalElectricityShare: 0.0018,
+    formerSovereigns: [],
+    sovereigntyYear: 1789,
+    sovereigntyKind: "independence",
   },
   FSM: {
     continent: "oceania",
@@ -2171,6 +2348,9 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     urbanCentresOver1M: 0,
     productionRanks: {},
     coalElectricityShare: null,
+    formerSovereigns: ["united_states"],
+    sovereigntyYear: 1986,
+    sovereigntyKind: "independence",
   },
   GAB: {
     continent: "africa",
@@ -2205,6 +2385,9 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     urbanCentresOver1M: 0,
     productionRanks: {},
     coalElectricityShare: 0,
+    formerSovereigns: ["france"],
+    sovereigntyYear: 1960,
+    sovereigntyKind: "independence",
   },
   GBR: {
     continent: "europe",
@@ -2239,6 +2422,9 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     urbanCentresOver1M: 5,
     productionRanks: {},
     coalElectricityShare: 0.0067,
+    formerSovereigns: [],
+    sovereigntyYear: 1284,
+    sovereigntyKind: "independence",
   },
   GEO: {
     continent: "asia",
@@ -2273,6 +2459,9 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     urbanCentresOver1M: 0,
     productionRanks: {},
     coalElectricityShare: 0,
+    formerSovereigns: ["soviet_union"],
+    sovereigntyYear: 1991,
+    sovereigntyKind: "independence",
   },
   GHA: {
     continent: "africa",
@@ -2309,6 +2498,9 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
       cocoa: 3,
     },
     coalElectricityShare: 0,
+    formerSovereigns: ["united_kingdom"],
+    sovereigntyYear: 1957,
+    sovereigntyKind: "independence",
   },
   GIN: {
     continent: "africa",
@@ -2343,6 +2535,9 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     urbanCentresOver1M: 1,
     productionRanks: {},
     coalElectricityShare: 0,
+    formerSovereigns: ["france"],
+    sovereigntyYear: 1958,
+    sovereigntyKind: "independence",
   },
   GMB: {
     continent: "africa",
@@ -2377,6 +2572,9 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     urbanCentresOver1M: 1,
     productionRanks: {},
     coalElectricityShare: 0,
+    formerSovereigns: ["united_kingdom"],
+    sovereigntyYear: 1965,
+    sovereigntyKind: "independence",
   },
   GNB: {
     continent: "africa",
@@ -2411,6 +2609,9 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     urbanCentresOver1M: 0,
     productionRanks: {},
     coalElectricityShare: 0,
+    formerSovereigns: ["portugal"],
+    sovereigntyYear: 1973,
+    sovereigntyKind: "independence",
   },
   GNQ: {
     continent: "africa",
@@ -2445,6 +2646,9 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     urbanCentresOver1M: 0,
     productionRanks: {},
     coalElectricityShare: 0,
+    formerSovereigns: ["spain"],
+    sovereigntyYear: 1968,
+    sovereigntyKind: "independence",
   },
   GRC: {
     continent: "europe",
@@ -2479,6 +2683,9 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     urbanCentresOver1M: 1,
     productionRanks: {},
     coalElectricityShare: 0.057300000000000004,
+    formerSovereigns: [],
+    sovereigntyYear: 1830,
+    sovereigntyKind: "independence",
   },
   GRD: {
     continent: "north_america",
@@ -2513,6 +2720,9 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     urbanCentresOver1M: 0,
     productionRanks: {},
     coalElectricityShare: 0,
+    formerSovereigns: ["united_kingdom"],
+    sovereigntyYear: 1974,
+    sovereigntyKind: "independence",
   },
   GTM: {
     continent: "north_america",
@@ -2547,6 +2757,9 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     urbanCentresOver1M: 1,
     productionRanks: {},
     coalElectricityShare: 0.1583,
+    formerSovereigns: ["spain"],
+    sovereigntyYear: 1821,
+    sovereigntyKind: "independence",
   },
   GUY: {
     continent: "south_america",
@@ -2581,6 +2794,9 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     urbanCentresOver1M: 0,
     productionRanks: {},
     coalElectricityShare: 0,
+    formerSovereigns: ["united_kingdom"],
+    sovereigntyYear: 1966,
+    sovereigntyKind: "independence",
   },
   HND: {
     continent: "north_america",
@@ -2617,6 +2833,9 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
       coffee: 9,
     },
     coalElectricityShare: 0.0048,
+    formerSovereigns: ["spain"],
+    sovereigntyYear: 1821,
+    sovereigntyKind: "independence",
   },
   HRV: {
     continent: "europe",
@@ -2651,6 +2870,9 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     urbanCentresOver1M: 0,
     productionRanks: {},
     coalElectricityShare: 0.052300000000000006,
+    formerSovereigns: ["yugoslavia"],
+    sovereigntyYear: 1991,
+    sovereigntyKind: "independence",
   },
   HTI: {
     continent: "north_america",
@@ -2685,6 +2907,9 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     urbanCentresOver1M: 1,
     productionRanks: {},
     coalElectricityShare: 0,
+    formerSovereigns: ["france"],
+    sovereigntyYear: 1804,
+    sovereigntyKind: "independence",
   },
   HUN: {
     continent: "europe",
@@ -2719,6 +2944,9 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     urbanCentresOver1M: 1,
     productionRanks: {},
     coalElectricityShare: 0.0642,
+    formerSovereigns: [],
+    sovereigntyYear: 1918,
+    sovereigntyKind: "foundation",
   },
   IDN: {
     continent: "asia",
@@ -2763,6 +2991,9 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
       natural_gas: 13,
     },
     coalElectricityShare: 0.6148,
+    formerSovereigns: ["netherlands"],
+    sovereigntyYear: 1945,
+    sovereigntyKind: "independence",
   },
   IND: {
     continent: "asia",
@@ -2806,6 +3037,9 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
       wheat: 2,
     },
     coalElectricityShare: 0.7453,
+    formerSovereigns: ["united_kingdom"],
+    sovereigntyYear: 1947,
+    sovereigntyKind: "independence",
   },
   IRL: {
     continent: "europe",
@@ -2840,6 +3074,9 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     urbanCentresOver1M: 1,
     productionRanks: {},
     coalElectricityShare: 0.0203,
+    formerSovereigns: ["united_kingdom"],
+    sovereigntyYear: 1921,
+    sovereigntyKind: "independence",
   },
   IRN: {
     continent: "asia",
@@ -2877,6 +3114,9 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
       natural_gas: 3,
     },
     coalElectricityShare: 0.0018,
+    formerSovereigns: [],
+    sovereigntyYear: 1979,
+    sovereigntyKind: "unification",
   },
   IRQ: {
     continent: "asia",
@@ -2913,6 +3153,9 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
       crude_oil: 5,
     },
     coalElectricityShare: 0,
+    formerSovereigns: ["united_kingdom"],
+    sovereigntyYear: 1932,
+    sovereigntyKind: "independence",
   },
   ISL: {
     continent: "europe",
@@ -2947,6 +3190,9 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     urbanCentresOver1M: 0,
     productionRanks: {},
     coalElectricityShare: 0,
+    formerSovereigns: [],
+    sovereigntyYear: 1918,
+    sovereigntyKind: "independence",
   },
   ISR: {
     continent: "asia",
@@ -2981,6 +3227,9 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     urbanCentresOver1M: 2,
     productionRanks: {},
     coalElectricityShare: 0.14300000000000002,
+    formerSovereigns: ["united_kingdom"],
+    sovereigntyYear: 1948,
+    sovereigntyKind: "foundation",
   },
   ITA: {
     continent: "europe",
@@ -3015,6 +3264,9 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     urbanCentresOver1M: 4,
     productionRanks: {},
     coalElectricityShare: 0.0148,
+    formerSovereigns: [],
+    sovereigntyYear: 1861,
+    sovereigntyKind: "foundation",
   },
   JAM: {
     continent: "north_america",
@@ -3049,6 +3301,9 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     urbanCentresOver1M: 0,
     productionRanks: {},
     coalElectricityShare: 0,
+    formerSovereigns: ["united_kingdom"],
+    sovereigntyYear: 1962,
+    sovereigntyKind: "independence",
   },
   JOR: {
     continent: "asia",
@@ -3083,6 +3338,9 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     urbanCentresOver1M: 1,
     productionRanks: {},
     coalElectricityShare: 0,
+    formerSovereigns: ["united_kingdom"],
+    sovereigntyYear: 1946,
+    sovereigntyKind: "independence",
   },
   JPN: {
     continent: "asia",
@@ -3117,6 +3375,9 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     urbanCentresOver1M: 9,
     productionRanks: {},
     coalElectricityShare: 0.32189999999999996,
+    formerSovereigns: [],
+    sovereigntyYear: 1947,
+    sovereigntyKind: "foundation",
   },
   KAZ: {
     continent: "asia",
@@ -3153,6 +3414,9 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
       crude_oil: 11,
     },
     coalElectricityShare: 0.5403,
+    formerSovereigns: ["soviet_union"],
+    sovereigntyYear: 1991,
+    sovereigntyKind: "independence",
   },
   KEN: {
     continent: "africa",
@@ -3191,6 +3455,9 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     urbanCentresOver1M: 2,
     productionRanks: {},
     coalElectricityShare: 0,
+    formerSovereigns: ["united_kingdom"],
+    sovereigntyYear: 1963,
+    sovereigntyKind: "independence",
   },
   KGZ: {
     continent: "asia",
@@ -3225,6 +3492,9 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     urbanCentresOver1M: 1,
     productionRanks: {},
     coalElectricityShare: 0.09699999999999999,
+    formerSovereigns: ["soviet_union"],
+    sovereigntyYear: 1991,
+    sovereigntyKind: "independence",
   },
   KHM: {
     continent: "asia",
@@ -3261,6 +3531,9 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
       rice: 10,
     },
     coalElectricityShare: 0.6092,
+    formerSovereigns: ["france"],
+    sovereigntyYear: 1953,
+    sovereigntyKind: "independence",
   },
   KIR: {
     continent: "oceania",
@@ -3295,6 +3568,9 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     urbanCentresOver1M: 0,
     productionRanks: {},
     coalElectricityShare: 0,
+    formerSovereigns: ["united_kingdom"],
+    sovereigntyYear: 1979,
+    sovereigntyKind: "independence",
   },
   KNA: {
     continent: "north_america",
@@ -3329,6 +3605,9 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     urbanCentresOver1M: 0,
     productionRanks: {},
     coalElectricityShare: 0,
+    formerSovereigns: ["united_kingdom"],
+    sovereigntyYear: 1983,
+    sovereigntyKind: "independence",
   },
   KOR: {
     continent: "asia",
@@ -3363,6 +3642,9 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     urbanCentresOver1M: 5,
     productionRanks: {},
     coalElectricityShare: 0.30510000000000004,
+    formerSovereigns: [],
+    sovereigntyYear: 1945,
+    sovereigntyKind: "independence",
   },
   KWT: {
     continent: "asia",
@@ -3399,6 +3681,9 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
       crude_oil: 10,
     },
     coalElectricityShare: 0,
+    formerSovereigns: ["united_kingdom"],
+    sovereigntyYear: 1961,
+    sovereigntyKind: "independence",
   },
   LAO: {
     continent: "asia",
@@ -3433,6 +3718,9 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     urbanCentresOver1M: 0,
     productionRanks: {},
     coalElectricityShare: 0.2328,
+    formerSovereigns: ["france"],
+    sovereigntyYear: 1949,
+    sovereigntyKind: "independence",
   },
   LBN: {
     continent: "asia",
@@ -3467,6 +3755,9 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     urbanCentresOver1M: 1,
     productionRanks: {},
     coalElectricityShare: 0,
+    formerSovereigns: ["france"],
+    sovereigntyYear: 1943,
+    sovereigntyKind: "independence",
   },
   LBR: {
     continent: "africa",
@@ -3501,6 +3792,9 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     urbanCentresOver1M: 1,
     productionRanks: {},
     coalElectricityShare: 0,
+    formerSovereigns: [],
+    sovereigntyYear: 1847,
+    sovereigntyKind: "foundation",
   },
   LBY: {
     continent: "africa",
@@ -3537,6 +3831,9 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
       crude_oil: 15,
     },
     coalElectricityShare: 0,
+    formerSovereigns: [],
+    sovereigntyYear: 1951,
+    sovereigntyKind: "independence",
   },
   LCA: {
     continent: "north_america",
@@ -3571,6 +3868,9 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     urbanCentresOver1M: 0,
     productionRanks: {},
     coalElectricityShare: 0,
+    formerSovereigns: ["united_kingdom"],
+    sovereigntyYear: 1979,
+    sovereigntyKind: "independence",
   },
   LIE: {
     continent: "europe",
@@ -3605,6 +3905,9 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     urbanCentresOver1M: 0,
     productionRanks: {},
     coalElectricityShare: null,
+    formerSovereigns: [],
+    sovereigntyYear: 1719,
+    sovereigntyKind: "independence",
   },
   LKA: {
     continent: "asia",
@@ -3639,6 +3942,9 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     urbanCentresOver1M: 1,
     productionRanks: {},
     coalElectricityShare: 0.3259,
+    formerSovereigns: ["united_kingdom"],
+    sovereigntyYear: 1948,
+    sovereigntyKind: "independence",
   },
   LSO: {
     continent: "africa",
@@ -3673,6 +3979,9 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     urbanCentresOver1M: 0,
     productionRanks: {},
     coalElectricityShare: 0,
+    formerSovereigns: ["united_kingdom"],
+    sovereigntyYear: 1966,
+    sovereigntyKind: "independence",
   },
   LTU: {
     continent: "europe",
@@ -3707,6 +4016,9 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     urbanCentresOver1M: 0,
     productionRanks: {},
     coalElectricityShare: 0,
+    formerSovereigns: ["soviet_union"],
+    sovereigntyYear: 1990,
+    sovereigntyKind: "restoration",
   },
   LUX: {
     continent: "europe",
@@ -3741,6 +4053,9 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     urbanCentresOver1M: 0,
     productionRanks: {},
     coalElectricityShare: 0,
+    formerSovereigns: ["netherlands"],
+    sovereigntyYear: 1839,
+    sovereigntyKind: "independence",
   },
   LVA: {
     continent: "europe",
@@ -3775,6 +4090,9 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     urbanCentresOver1M: 0,
     productionRanks: {},
     coalElectricityShare: 0,
+    formerSovereigns: ["soviet_union"],
+    sovereigntyYear: 1991,
+    sovereigntyKind: "restoration",
   },
   MAR: {
     continent: "africa",
@@ -3809,6 +4127,9 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     urbanCentresOver1M: 5,
     productionRanks: {},
     coalElectricityShare: 0.6175,
+    formerSovereigns: ["france"],
+    sovereigntyYear: 1956,
+    sovereigntyKind: "independence",
   },
   MCO: {
     continent: "europe",
@@ -3843,6 +4164,9 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     urbanCentresOver1M: 0,
     productionRanks: {},
     coalElectricityShare: null,
+    formerSovereigns: [],
+    sovereigntyYear: 1419,
+    sovereigntyKind: "foundation",
   },
   MDA: {
     continent: "europe",
@@ -3877,6 +4201,9 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     urbanCentresOver1M: 0,
     productionRanks: {},
     coalElectricityShare: 0,
+    formerSovereigns: ["soviet_union"],
+    sovereigntyYear: 1991,
+    sovereigntyKind: "independence",
   },
   MDG: {
     continent: "africa",
@@ -3911,6 +4238,9 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     urbanCentresOver1M: 1,
     productionRanks: {},
     coalElectricityShare: 0.20579999999999998,
+    formerSovereigns: ["france"],
+    sovereigntyYear: 1960,
+    sovereigntyKind: "independence",
   },
   MDV: {
     continent: "asia",
@@ -3945,6 +4275,9 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     urbanCentresOver1M: 0,
     productionRanks: {},
     coalElectricityShare: 0,
+    formerSovereigns: ["united_kingdom"],
+    sovereigntyYear: 1965,
+    sovereigntyKind: "independence",
   },
   MEX: {
     continent: "north_america",
@@ -3987,6 +4320,9 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
       crude_oil: 13,
     },
     coalElectricityShare: 0.0349,
+    formerSovereigns: ["spain"],
+    sovereigntyYear: 1810,
+    sovereigntyKind: "independence",
   },
   MHL: {
     continent: "oceania",
@@ -4021,6 +4357,9 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     urbanCentresOver1M: 0,
     productionRanks: {},
     coalElectricityShare: null,
+    formerSovereigns: ["united_states"],
+    sovereigntyYear: 1986,
+    sovereigntyKind: "independence",
   },
   MKD: {
     continent: "europe",
@@ -4055,6 +4394,9 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     urbanCentresOver1M: 0,
     productionRanks: {},
     coalElectricityShare: 0.374,
+    formerSovereigns: ["yugoslavia"],
+    sovereigntyYear: 1991,
+    sovereigntyKind: "independence",
   },
   MLI: {
     continent: "africa",
@@ -4089,6 +4431,9 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     urbanCentresOver1M: 1,
     productionRanks: {},
     coalElectricityShare: 0,
+    formerSovereigns: ["france"],
+    sovereigntyYear: 1960,
+    sovereigntyKind: "independence",
   },
   MLT: {
     continent: "europe",
@@ -4123,6 +4468,9 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     urbanCentresOver1M: 0,
     productionRanks: {},
     coalElectricityShare: 0,
+    formerSovereigns: ["united_kingdom"],
+    sovereigntyYear: 1964,
+    sovereigntyKind: "independence",
   },
   MMR: {
     continent: "asia",
@@ -4159,6 +4507,9 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
       rice: 7,
     },
     coalElectricityShare: 0.0553,
+    formerSovereigns: ["united_kingdom"],
+    sovereigntyYear: 1948,
+    sovereigntyKind: "independence",
   },
   MNE: {
     continent: "europe",
@@ -4193,6 +4544,9 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     urbanCentresOver1M: 0,
     productionRanks: {},
     coalElectricityShare: 0.40509999999999996,
+    formerSovereigns: [],
+    sovereigntyYear: 2006,
+    sovereigntyKind: "independence",
   },
   MNG: {
     continent: "asia",
@@ -4227,6 +4581,9 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     urbanCentresOver1M: 1,
     productionRanks: {},
     coalElectricityShare: 0.8469,
+    formerSovereigns: [],
+    sovereigntyYear: 1911,
+    sovereigntyKind: "independence",
   },
   MOZ: {
     continent: "africa",
@@ -4261,6 +4618,9 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     urbanCentresOver1M: 2,
     productionRanks: {},
     coalElectricityShare: 0,
+    formerSovereigns: ["portugal"],
+    sovereigntyYear: 1975,
+    sovereigntyKind: "independence",
   },
   MRT: {
     continent: "africa",
@@ -4295,6 +4655,9 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     urbanCentresOver1M: 1,
     productionRanks: {},
     coalElectricityShare: 0,
+    formerSovereigns: ["france"],
+    sovereigntyYear: 1960,
+    sovereigntyKind: "independence",
   },
   MUS: {
     continent: "africa",
@@ -4329,6 +4692,9 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     urbanCentresOver1M: 0,
     productionRanks: {},
     coalElectricityShare: 0.39299999999999996,
+    formerSovereigns: ["united_kingdom"],
+    sovereigntyYear: 1968,
+    sovereigntyKind: "independence",
   },
   MWI: {
     continent: "africa",
@@ -4363,6 +4729,9 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     urbanCentresOver1M: 1,
     productionRanks: {},
     coalElectricityShare: 0,
+    formerSovereigns: ["united_kingdom"],
+    sovereigntyYear: 1964,
+    sovereigntyKind: "independence",
   },
   MYS: {
     continent: "asia",
@@ -4399,6 +4768,9 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
       natural_gas: 11,
     },
     coalElectricityShare: 0.4305,
+    formerSovereigns: ["united_kingdom"],
+    sovereigntyYear: 1957,
+    sovereigntyKind: "independence",
   },
   NAM: {
     continent: "africa",
@@ -4443,6 +4815,9 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     urbanCentresOver1M: 0,
     productionRanks: {},
     coalElectricityShare: 0.024399999999999998,
+    formerSovereigns: [],
+    sovereigntyYear: 1990,
+    sovereigntyKind: "independence",
   },
   NER: {
     continent: "africa",
@@ -4477,6 +4852,9 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     urbanCentresOver1M: 1,
     productionRanks: {},
     coalElectricityShare: 0.1789,
+    formerSovereigns: ["france"],
+    sovereigntyYear: 1960,
+    sovereigntyKind: "independence",
   },
   NGA: {
     continent: "africa",
@@ -4514,6 +4892,9 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
       crude_oil: 14,
     },
     coalElectricityShare: 0,
+    formerSovereigns: ["united_kingdom"],
+    sovereigntyYear: 1960,
+    sovereigntyKind: "independence",
   },
   NIC: {
     continent: "north_america",
@@ -4548,6 +4929,9 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     urbanCentresOver1M: 1,
     productionRanks: {},
     coalElectricityShare: 0,
+    formerSovereigns: ["spain"],
+    sovereigntyYear: 1821,
+    sovereigntyKind: "independence",
   },
   NLD: {
     continent: "europe",
@@ -4582,6 +4966,9 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     urbanCentresOver1M: 2,
     productionRanks: {},
     coalElectricityShare: 0.0611,
+    formerSovereigns: [],
+    sovereigntyYear: 1581,
+    sovereigntyKind: "foundation",
   },
   NOR: {
     continent: "europe",
@@ -4619,6 +5006,9 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
       natural_gas: 8,
     },
     coalElectricityShare: 0,
+    formerSovereigns: [],
+    sovereigntyYear: 1905,
+    sovereigntyKind: "unification",
   },
   NPL: {
     continent: "asia",
@@ -4653,6 +5043,9 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     urbanCentresOver1M: 1,
     productionRanks: {},
     coalElectricityShare: 0,
+    formerSovereigns: [],
+    sovereigntyYear: 1768,
+    sovereigntyKind: "foundation",
   },
   NRU: {
     continent: "oceania",
@@ -4687,6 +5080,9 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     urbanCentresOver1M: 0,
     productionRanks: {},
     coalElectricityShare: 0,
+    formerSovereigns: [],
+    sovereigntyYear: 1968,
+    sovereigntyKind: "independence",
   },
   NZL: {
     continent: "oceania",
@@ -4721,6 +5117,9 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     urbanCentresOver1M: 1,
     productionRanks: {},
     coalElectricityShare: 0.0273,
+    formerSovereigns: ["united_kingdom"],
+    sovereigntyYear: 1907,
+    sovereigntyKind: "independence",
   },
   OMN: {
     continent: "asia",
@@ -4755,6 +5154,9 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     urbanCentresOver1M: 0,
     productionRanks: {},
     coalElectricityShare: 0,
+    formerSovereigns: [],
+    sovereigntyYear: 1650,
+    sovereigntyKind: "foundation",
   },
   PAK: {
     continent: "asia",
@@ -4792,6 +5194,9 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
       wheat: 8,
     },
     coalElectricityShare: 0.1545,
+    formerSovereigns: [],
+    sovereigntyYear: 1947,
+    sovereigntyKind: "independence",
   },
   PAN: {
     continent: "north_america",
@@ -4826,6 +5231,9 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     urbanCentresOver1M: 1,
     productionRanks: {},
     coalElectricityShare: 0.037200000000000004,
+    formerSovereigns: ["spain"],
+    sovereigntyYear: 1903,
+    sovereigntyKind: "independence",
   },
   PER: {
     continent: "south_america",
@@ -4868,6 +5276,9 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
       coffee: 7,
     },
     coalElectricityShare: 0,
+    formerSovereigns: ["spain"],
+    sovereigntyYear: 1821,
+    sovereigntyKind: "independence",
   },
   PHL: {
     continent: "asia",
@@ -4904,6 +5315,9 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
       rice: 8,
     },
     coalElectricityShare: 0.6391,
+    formerSovereigns: ["united_states"],
+    sovereigntyYear: 1946,
+    sovereigntyKind: "independence",
   },
   PLW: {
     continent: "oceania",
@@ -4938,6 +5352,9 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     urbanCentresOver1M: 0,
     productionRanks: {},
     coalElectricityShare: null,
+    formerSovereigns: ["united_states"],
+    sovereigntyYear: 1994,
+    sovereigntyKind: "independence",
   },
   PNG: {
     continent: "oceania",
@@ -4972,6 +5389,9 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     urbanCentresOver1M: 0,
     productionRanks: {},
     coalElectricityShare: 0,
+    formerSovereigns: [],
+    sovereigntyYear: 1975,
+    sovereigntyKind: "independence",
   },
   POL: {
     continent: "europe",
@@ -5006,6 +5426,9 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     urbanCentresOver1M: 1,
     productionRanks: {},
     coalElectricityShare: 0.5432,
+    formerSovereigns: [],
+    sovereigntyYear: 1918,
+    sovereigntyKind: "foundation",
   },
   PRK: {
     continent: "asia",
@@ -5040,6 +5463,9 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     urbanCentresOver1M: 1,
     productionRanks: {},
     coalElectricityShare: 0.3406,
+    formerSovereigns: [],
+    sovereigntyYear: 1945,
+    sovereigntyKind: "independence",
   },
   PRT: {
     continent: "europe",
@@ -5074,6 +5500,9 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     urbanCentresOver1M: 2,
     productionRanks: {},
     coalElectricityShare: 0,
+    formerSovereigns: [],
+    sovereigntyYear: 1640,
+    sovereigntyKind: "independence",
   },
   PRY: {
     continent: "south_america",
@@ -5108,6 +5537,9 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     urbanCentresOver1M: 1,
     productionRanks: {},
     coalElectricityShare: 0,
+    formerSovereigns: ["spain"],
+    sovereigntyYear: 1811,
+    sovereigntyKind: "independence",
   },
   PSE: {
     continent: "asia",
@@ -5148,6 +5580,9 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     urbanCentresOver1M: 2,
     productionRanks: {},
     coalElectricityShare: 0,
+    formerSovereigns: [],
+    sovereigntyYear: null,
+    sovereigntyKind: null,
   },
   QAT: {
     continent: "asia",
@@ -5184,6 +5619,9 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
       natural_gas: 6,
     },
     coalElectricityShare: 0,
+    formerSovereigns: ["united_kingdom"],
+    sovereigntyYear: 1971,
+    sovereigntyKind: "independence",
   },
   ROU: {
     continent: "europe",
@@ -5218,6 +5656,9 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     urbanCentresOver1M: 1,
     productionRanks: {},
     coalElectricityShare: 0.151,
+    formerSovereigns: [],
+    sovereigntyYear: 1877,
+    sovereigntyKind: "independence",
   },
   RUS: {
     continent: "europe",
@@ -5271,6 +5712,9 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
       natural_gas: 2,
     },
     coalElectricityShare: 0.1779,
+    formerSovereigns: ["soviet_union"],
+    sovereigntyYear: 1991,
+    sovereigntyKind: "continuation",
   },
   RWA: {
     continent: "africa",
@@ -5305,6 +5749,9 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     urbanCentresOver1M: 1,
     productionRanks: {},
     coalElectricityShare: 0.15039999999999998,
+    formerSovereigns: ["belgium"],
+    sovereigntyYear: 1962,
+    sovereigntyKind: "independence",
   },
   SAU: {
     continent: "asia",
@@ -5342,6 +5789,9 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
       natural_gas: 9,
     },
     coalElectricityShare: 0,
+    formerSovereigns: [],
+    sovereigntyYear: 1932,
+    sovereigntyKind: "unification",
   },
   SDN: {
     continent: "africa",
@@ -5376,6 +5826,9 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     urbanCentresOver1M: 2,
     productionRanks: {},
     coalElectricityShare: 0,
+    formerSovereigns: [],
+    sovereigntyYear: 1956,
+    sovereigntyKind: "independence",
   },
   SEN: {
     continent: "africa",
@@ -5410,6 +5863,9 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     urbanCentresOver1M: 2,
     productionRanks: {},
     coalElectricityShare: 0.0131,
+    formerSovereigns: ["france"],
+    sovereigntyYear: 1960,
+    sovereigntyKind: "independence",
   },
   SGP: {
     continent: "asia",
@@ -5444,6 +5900,9 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     urbanCentresOver1M: 1,
     productionRanks: {},
     coalElectricityShare: 0.0096,
+    formerSovereigns: [],
+    sovereigntyYear: 1965,
+    sovereigntyKind: "independence",
   },
   SLB: {
     continent: "oceania",
@@ -5478,6 +5937,9 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     urbanCentresOver1M: 0,
     productionRanks: {},
     coalElectricityShare: 0,
+    formerSovereigns: ["united_kingdom"],
+    sovereigntyYear: 1978,
+    sovereigntyKind: "independence",
   },
   SLE: {
     continent: "africa",
@@ -5512,6 +5974,9 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     urbanCentresOver1M: 1,
     productionRanks: {},
     coalElectricityShare: 0,
+    formerSovereigns: ["united_kingdom"],
+    sovereigntyYear: 1961,
+    sovereigntyKind: "independence",
   },
   SLV: {
     continent: "north_america",
@@ -5546,6 +6011,9 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     urbanCentresOver1M: 1,
     productionRanks: {},
     coalElectricityShare: null,
+    formerSovereigns: ["spain"],
+    sovereigntyYear: 1821,
+    sovereigntyKind: "independence",
   },
   SMR: {
     continent: "europe",
@@ -5580,6 +6048,9 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     urbanCentresOver1M: 0,
     productionRanks: {},
     coalElectricityShare: null,
+    formerSovereigns: [],
+    sovereigntyYear: null,
+    sovereigntyKind: null,
   },
   SOM: {
     continent: "africa",
@@ -5614,6 +6085,9 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     urbanCentresOver1M: 2,
     productionRanks: {},
     coalElectricityShare: 0,
+    formerSovereigns: ["united_kingdom"],
+    sovereigntyYear: 1960,
+    sovereigntyKind: "independence",
   },
   SRB: {
     continent: "europe",
@@ -5648,6 +6122,9 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     urbanCentresOver1M: 1,
     productionRanks: {},
     coalElectricityShare: 0.6293,
+    formerSovereigns: [],
+    sovereigntyYear: 2006,
+    sovereigntyKind: "independence",
   },
   SSD: {
     continent: "africa",
@@ -5682,6 +6159,9 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     urbanCentresOver1M: 0,
     productionRanks: {},
     coalElectricityShare: 0,
+    formerSovereigns: [],
+    sovereigntyYear: 2011,
+    sovereigntyKind: "independence",
   },
   STP: {
     continent: "africa",
@@ -5716,6 +6196,9 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     urbanCentresOver1M: 0,
     productionRanks: {},
     coalElectricityShare: null,
+    formerSovereigns: ["portugal"],
+    sovereigntyYear: 1975,
+    sovereigntyKind: "independence",
   },
   SUR: {
     continent: "south_america",
@@ -5750,6 +6233,9 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     urbanCentresOver1M: 0,
     productionRanks: {},
     coalElectricityShare: 0,
+    formerSovereigns: ["netherlands"],
+    sovereigntyYear: 1975,
+    sovereigntyKind: "independence",
   },
   SVK: {
     continent: "europe",
@@ -5784,6 +6270,9 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     urbanCentresOver1M: 0,
     productionRanks: {},
     coalElectricityShare: 0.0176,
+    formerSovereigns: [],
+    sovereigntyYear: 1993,
+    sovereigntyKind: "dissolution_successor",
   },
   SVN: {
     continent: "europe",
@@ -5818,6 +6307,9 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     urbanCentresOver1M: 0,
     productionRanks: {},
     coalElectricityShare: 0.2095,
+    formerSovereigns: ["yugoslavia"],
+    sovereigntyYear: 1991,
+    sovereigntyKind: "independence",
   },
   SWE: {
     continent: "europe",
@@ -5852,6 +6344,9 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     urbanCentresOver1M: 1,
     productionRanks: {},
     coalElectricityShare: 0,
+    formerSovereigns: [],
+    sovereigntyYear: 1523,
+    sovereigntyKind: "foundation",
   },
   SWZ: {
     continent: "africa",
@@ -5892,6 +6387,9 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     urbanCentresOver1M: 0,
     productionRanks: {},
     coalElectricityShare: 0.032799999999999996,
+    formerSovereigns: ["united_kingdom"],
+    sovereigntyYear: 1968,
+    sovereigntyKind: "independence",
   },
   SYC: {
     continent: "africa",
@@ -5926,6 +6424,9 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     urbanCentresOver1M: 0,
     productionRanks: {},
     coalElectricityShare: 0,
+    formerSovereigns: ["united_kingdom"],
+    sovereigntyYear: 1976,
+    sovereigntyKind: "independence",
   },
   SYR: {
     continent: "asia",
@@ -5960,6 +6461,9 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     urbanCentresOver1M: 2,
     productionRanks: {},
     coalElectricityShare: 0,
+    formerSovereigns: ["france"],
+    sovereigntyYear: 1946,
+    sovereigntyKind: "independence",
   },
   TCD: {
     continent: "africa",
@@ -5994,6 +6498,9 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     urbanCentresOver1M: 1,
     productionRanks: {},
     coalElectricityShare: 0,
+    formerSovereigns: ["france"],
+    sovereigntyYear: 1960,
+    sovereigntyKind: "independence",
   },
   TGO: {
     continent: "africa",
@@ -6028,6 +6535,9 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     urbanCentresOver1M: 1,
     productionRanks: {},
     coalElectricityShare: 0,
+    formerSovereigns: ["france"],
+    sovereigntyYear: 1960,
+    sovereigntyKind: "independence",
   },
   THA: {
     continent: "asia",
@@ -6064,6 +6574,9 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
       rice: 6,
     },
     coalElectricityShare: 0.16670000000000001,
+    formerSovereigns: [],
+    sovereigntyYear: 1238,
+    sovereigntyKind: "foundation",
   },
   TJK: {
     continent: "asia",
@@ -6098,6 +6611,9 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     urbanCentresOver1M: 1,
     productionRanks: {},
     coalElectricityShare: 0.045,
+    formerSovereigns: ["soviet_union"],
+    sovereigntyYear: 1991,
+    sovereigntyKind: "independence",
   },
   TKM: {
     continent: "asia",
@@ -6134,6 +6650,9 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
       natural_gas: 12,
     },
     coalElectricityShare: 0,
+    formerSovereigns: ["soviet_union"],
+    sovereigntyYear: 1991,
+    sovereigntyKind: "independence",
   },
   TLS: {
     continent: "asia",
@@ -6168,6 +6687,9 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     urbanCentresOver1M: 0,
     productionRanks: {},
     coalElectricityShare: 0,
+    formerSovereigns: ["portugal"],
+    sovereigntyYear: 2002,
+    sovereigntyKind: "restoration",
   },
   TON: {
     continent: "oceania",
@@ -6202,6 +6724,9 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     urbanCentresOver1M: 0,
     productionRanks: {},
     coalElectricityShare: 0,
+    formerSovereigns: ["united_kingdom"],
+    sovereigntyYear: 1970,
+    sovereigntyKind: "independence",
   },
   TTO: {
     continent: "north_america",
@@ -6236,6 +6761,9 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     urbanCentresOver1M: 0,
     productionRanks: {},
     coalElectricityShare: 0,
+    formerSovereigns: ["united_kingdom"],
+    sovereigntyYear: 1962,
+    sovereigntyKind: "independence",
   },
   TUN: {
     continent: "africa",
@@ -6270,6 +6798,9 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     urbanCentresOver1M: 1,
     productionRanks: {},
     coalElectricityShare: 0,
+    formerSovereigns: ["france"],
+    sovereigntyYear: 1956,
+    sovereigntyKind: "independence",
   },
   TUR: {
     continent: "asia",
@@ -6304,6 +6835,9 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     urbanCentresOver1M: 8,
     productionRanks: {},
     coalElectricityShare: 0.3555,
+    formerSovereigns: [],
+    sovereigntyYear: 1923,
+    sovereigntyKind: "foundation",
   },
   TUV: {
     continent: "oceania",
@@ -6338,6 +6872,9 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     urbanCentresOver1M: 0,
     productionRanks: {},
     coalElectricityShare: null,
+    formerSovereigns: ["united_kingdom"],
+    sovereigntyYear: 1978,
+    sovereigntyKind: "independence",
   },
   TWN: {
     continent: "asia",
@@ -6372,6 +6909,9 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     urbanCentresOver1M: 4,
     productionRanks: {},
     coalElectricityShare: 0.4007,
+    formerSovereigns: [],
+    sovereigntyYear: null,
+    sovereigntyKind: null,
   },
   TZA: {
     continent: "africa",
@@ -6406,6 +6946,9 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     urbanCentresOver1M: 2,
     productionRanks: {},
     coalElectricityShare: 0,
+    formerSovereigns: ["united_kingdom"],
+    sovereigntyYear: 1964,
+    sovereigntyKind: "independence",
   },
   UGA: {
     continent: "africa",
@@ -6442,6 +6985,9 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
       coffee: 6,
     },
     coalElectricityShare: 0,
+    formerSovereigns: ["united_kingdom"],
+    sovereigntyYear: 1962,
+    sovereigntyKind: "independence",
   },
   UKR: {
     continent: "europe",
@@ -6478,6 +7024,9 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
       wheat: 9,
     },
     coalElectricityShare: null,
+    formerSovereigns: ["soviet_union"],
+    sovereigntyYear: 1991,
+    sovereigntyKind: "independence",
   },
   URY: {
     continent: "south_america",
@@ -6512,6 +7061,9 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     urbanCentresOver1M: 1,
     productionRanks: {},
     coalElectricityShare: 0,
+    formerSovereigns: [],
+    sovereigntyYear: 1825,
+    sovereigntyKind: "independence",
   },
   USA: {
     continent: "north_america",
@@ -6557,6 +7109,9 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
       natural_gas: 1,
     },
     coalElectricityShare: 0.1485,
+    formerSovereigns: [],
+    sovereigntyYear: 1776,
+    sovereigntyKind: "independence",
   },
   UZB: {
     continent: "asia",
@@ -6591,6 +7146,9 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     urbanCentresOver1M: 1,
     productionRanks: {},
     coalElectricityShare: 0.0699,
+    formerSovereigns: ["soviet_union"],
+    sovereigntyYear: 1991,
+    sovereigntyKind: "independence",
   },
   VAT: {
     continent: "europe",
@@ -6625,6 +7183,9 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     urbanCentresOver1M: 0,
     productionRanks: {},
     coalElectricityShare: null,
+    formerSovereigns: [],
+    sovereigntyYear: 1929,
+    sovereigntyKind: "foundation",
   },
   VCT: {
     continent: "north_america",
@@ -6659,6 +7220,9 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     urbanCentresOver1M: 0,
     productionRanks: {},
     coalElectricityShare: 0,
+    formerSovereigns: ["united_kingdom"],
+    sovereigntyYear: 1979,
+    sovereigntyKind: "independence",
   },
   VEN: {
     continent: "south_america",
@@ -6693,6 +7257,9 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     urbanCentresOver1M: 3,
     productionRanks: {},
     coalElectricityShare: 0,
+    formerSovereigns: ["spain"],
+    sovereigntyYear: 1811,
+    sovereigntyKind: "independence",
   },
   VNM: {
     continent: "asia",
@@ -6730,6 +7297,9 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
       rice: 5,
     },
     coalElectricityShare: 0.5032,
+    formerSovereigns: ["france"],
+    sovereigntyYear: 1945,
+    sovereigntyKind: "independence",
   },
   VUT: {
     continent: "oceania",
@@ -6764,6 +7334,9 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     urbanCentresOver1M: 0,
     productionRanks: {},
     coalElectricityShare: null,
+    formerSovereigns: ["france", "united_kingdom"],
+    sovereigntyYear: 1980,
+    sovereigntyKind: "independence",
   },
   WSM: {
     continent: "oceania",
@@ -6798,6 +7371,9 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     urbanCentresOver1M: 0,
     productionRanks: {},
     coalElectricityShare: 0,
+    formerSovereigns: [],
+    sovereigntyYear: 1962,
+    sovereigntyKind: "independence",
   },
   XKX: {
     continent: "europe",
@@ -6832,6 +7408,9 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     urbanCentresOver1M: 0,
     productionRanks: {},
     coalElectricityShare: 0.9126000000000001,
+    formerSovereigns: [],
+    sovereigntyYear: 2008,
+    sovereigntyKind: "independence",
   },
   YEM: {
     continent: "asia",
@@ -6866,6 +7445,9 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     urbanCentresOver1M: 2,
     productionRanks: {},
     coalElectricityShare: 0,
+    formerSovereigns: ["united_kingdom"],
+    sovereigntyYear: 1990,
+    sovereigntyKind: "unification",
   },
   ZAF: {
     continent: "africa",
@@ -6924,6 +7506,9 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     urbanCentresOver1M: 5,
     productionRanks: {},
     coalElectricityShare: 0.8355,
+    formerSovereigns: ["united_kingdom"],
+    sovereigntyYear: 1910,
+    sovereigntyKind: "independence",
   },
   ZMB: {
     continent: "africa",
@@ -6958,6 +7543,9 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     urbanCentresOver1M: 1,
     productionRanks: {},
     coalElectricityShare: 0.10800000000000001,
+    formerSovereigns: ["united_kingdom"],
+    sovereigntyYear: 1964,
+    sovereigntyKind: "independence",
   },
   ZWE: {
     continent: "africa",
@@ -7008,5 +7596,8 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     urbanCentresOver1M: 1,
     productionRanks: {},
     coalElectricityShare: 0.4288,
+    formerSovereigns: ["united_kingdom"],
+    sovereigntyYear: 1980,
+    sovereigntyKind: "independence",
   },
 };

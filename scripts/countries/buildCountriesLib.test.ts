@@ -54,6 +54,9 @@ function minimalCountry(code: string): CountryRecord {
     urbanCentresOver1M: 0,
     productionRanks: {},
     coalElectricityShare: null,
+    formerSovereigns: [],
+    sovereigntyYear: null,
+    sovereigntyKind: null,
   };
 }
 
@@ -407,6 +410,18 @@ describe("quantitativeFactsForCode", () => {
       referenceYear: 2024,
       countries: { CHN: 57.77, FIN: 1.01 },
     },
+    sovereignty: {
+      sourceCommit: "x",
+      countries: {
+        DZA: {
+          kind: "independence",
+          year: 1962,
+          formerSovereigns: ["france"],
+          qualifiesForIndependenceConstraints: true,
+          sourceDescription: "1962 (from France)",
+        },
+      },
+    },
   };
 
   it("reduces datasets to per-country scalars, shares as 0–1 fractions", () => {
@@ -418,6 +433,9 @@ describe("quantitativeFactsForCode", () => {
       urbanCentresOver1M: 0,
       productionRanks: { crude_oil: 2 },
       coalElectricityShare: null,
+      formerSovereigns: [],
+      sovereigntyYear: null,
+      sovereigntyKind: null,
     });
     expect(quantitativeFactsForCode("CHE", datasets).mountainAreaShare).toBe(
       0.654,
@@ -457,6 +475,17 @@ describe("quantitativeFactsForCode", () => {
 
   it("defaults utcOffsetCount to 1 when the country is absent", () => {
     expect(quantitativeFactsForCode("ZZZ", datasets).utcOffsetCount).toBe(1);
+  });
+
+  it("copies the sovereignty event verbatim, [] / null when uncovered", () => {
+    const dza = quantitativeFactsForCode("DZA", datasets);
+    expect(dza.formerSovereigns).toEqual(["france"]);
+    expect(dza.sovereigntyYear).toBe(1962);
+    expect(dza.sovereigntyKind).toBe("independence");
+    const zzz = quantitativeFactsForCode("ZZZ", datasets);
+    expect(zzz.formerSovereigns).toEqual([]);
+    expect(zzz.sovereigntyYear).toBe(null);
+    expect(zzz.sovereigntyKind).toBe(null);
   });
 });
 

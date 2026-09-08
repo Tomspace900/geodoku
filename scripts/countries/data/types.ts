@@ -11,9 +11,13 @@
  * quantitatifs dérivés ») et les `SOURCE.md` des contraintes concernées.
  */
 
-import type { ProductionRankKey } from "../../../content/countries/type.ts";
+import type {
+  FormerSovereign,
+  ProductionRankKey,
+  SovereigntyKind,
+} from "../../../content/countries/type.ts";
 
-export type { ProductionRankKey };
+export type { FormerSovereign, ProductionRankKey, SovereigntyKind };
 
 /** Décalages UTC civils distincts observés simultanément à `referenceDate`. */
 export type CivilTimeOffsetsSnapshot = Record<
@@ -94,3 +98,24 @@ export type CoalElectricitySnapshot = {
   /** Pourcentage 0–100 par ISO3 ; un pays absent de la source reste absent (jamais 0). */
   countries: Record<string, number>;
 };
+
+/**
+ * Événement de souveraineté retenu pour un pays (CIA World Factbook, champ
+ * *Independence*). `qualifiesForIndependenceConstraints` est conservé du snapshot
+ * v1 mais **non lu en aval** : l'éligibilité de `history_sovereignty_since_1990`
+ * se re-dérive du `kind` (`independence` / `restoration` / `dissolution_successor`).
+ */
+export type SovereigntyEvent = Readonly<{
+  kind: SovereigntyKind;
+  year: number;
+  date?: string;
+  formerSovereigns: readonly FormerSovereign[];
+  qualifiesForIndependenceConstraints: boolean;
+  sourceDescription: string;
+}>;
+
+/** Snapshot des événements de souveraineté par ISO3 (couverture partielle assumée). */
+export type SovereigntySnapshot = Readonly<{
+  sourceCommit: string;
+  countries: Readonly<Record<string, SovereigntyEvent>>;
+}>;

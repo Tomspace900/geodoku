@@ -87,10 +87,14 @@ export const fr = {
     contactBodyPre: "Une question\u00A0? \u00C9cris-moi \u00E0",
   },
   changelog: {
-    eyebrow: "Derni\u00E8re mise \u00E0 jour · Ao\u00FBt 2026",
+    eyebrow: "Derni\u00E8re mise \u00E0 jour · Septembre 2026",
     title: "Changelog",
     backToGame: "Retour au jeu",
     entries: {
+      newConstraintsDate: "9 septembre 2026",
+      newConstraintsTitle: "Une salve de nouvelles contraintes",
+      newConstraintsBody:
+        "J'ai enrichi le catalogue au fil de l'\u00E9t\u00E9\u00A0: JO d'hiver, fuseaux horaires multiples, volcans actifs, pays majoritairement montagneux ou forestiers, grandes agglom\u00E9rations, fa\u00E7ades sur plusieurs oc\u00E9ans, gros producteurs agricoles et \u00E9nerg\u00E9tiques, et enfin l'histoire\u00A0: souverainet\u00E9 r\u00E9cente, ind\u00E9pendance vis-\u00E0-vis de la France ou du Royaume-Uni. Elles apparaissent progressivement dans les grilles.",
       archiveDate: "9 ao\u00FBt 2026",
       archiveTitle: "Rejouer les grilles passées",
       archiveBody:
@@ -396,6 +400,9 @@ export const fr = {
       "Top 15 mondial des producteurs de gaz naturel",
     energy_coal_electricity_majority:
       "Plus de 50 % de l'électricité produite au charbon",
+    history_sovereignty_since_1990: "Devenu souverain depuis 1990",
+    history_from_france: "Indépendance obtenue de la France",
+    history_from_united_kingdom: "Indépendance obtenue du Royaume-Uni",
     // Archivées — non générées, conservées pour rejouer d'anciennes grilles.
     area_gt_500k: "Grand pays (>500\u00A0000\u00A0km²)",
     area_lt_1k: "Micro-État (<1\u00A0000\u00A0km²)",

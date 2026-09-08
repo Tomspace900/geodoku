@@ -51,7 +51,7 @@ Documenté **par famille de champs** de `CountryFacts` (voir
 | `geoTags` (`middle_east`, `drives_on_left`, `capital_not_largest`, …) | classification éditoriale (`countryPatches.ts`) | curé |
 | `regime` (`monarchy` / `republic`) | classification binaire éditoriale, réf. [CIA World Factbook — government type](https://www.cia.gov/the-world-factbook/field/government-type/) | curé |
 | `physicalFeatures` (`equator_crosser`, `mediterranean_coast`, `caribbean_coast`, `peak_over_5000m`, `has_desert`, `rainforest`, `atlantic_coast`, `pacific_coast`, `indian_ocean_coast`, `arctic_coast`) | revue éditoriale cartographique / biomes nommés (`countryPatches.ts`) | curé |
-| `utcOffsetCount`, `hasHoloceneVolcano`, `mountainAreaShare`, `forestCoverShare`, `urbanCentresOver1M`, `productionRanks`, `coalElectricityShare` | datasets datés+sourcés de `scripts/countries/data/`, fusionnés en scalaires par `build-countries` (`quantitativeFactsForCode`) — IANA tz, Smithsonian GVP, ODD 15.4.2 (FAO/UNEP-WCMC), FAO FRA, GHSL UCDB, FAOSTAT, U.S. EIA, Ember | curé |
+| `utcOffsetCount`, `hasHoloceneVolcano`, `mountainAreaShare`, `forestCoverShare`, `urbanCentresOver1M`, `productionRanks`, `coalElectricityShare`, `formerSovereigns`, `sovereigntyYear`, `sovereigntyKind` | datasets datés+sourcés de `scripts/countries/data/`, fusionnés en scalaires par `build-countries` (`quantitativeFactsForCode`) — IANA tz, Smithsonian GVP, ODD 15.4.2 (FAO/UNEP-WCMC), FAO FRA, GHSL UCDB, FAOSTAT, U.S. EIA, Ember, CIA World Factbook (*Independence*) | curé |
 
 Plusieurs dérivations lisent un `geoTags` curé plutôt que le champ dédié
 (`society_drives_on_left` lit `geoTags`, pas `drivingSide` ; `subregion_middle_east`
@@ -68,6 +68,14 @@ titre que `flagData.json`. `build-countries` les réduit à un scalaire par pays
 pays donne `null` (ou une clé absente) — **jamais 0** (`SOURCES.md`). La fusion
 est déterministe et hors-ligne ; seul le rafraîchissement population/popularité de
 `build-countries` demande le réseau.
+
+Les **faits de souveraineté** (`formerSovereigns`, `sovereigntyYear`,
+`sovereigntyKind`) sont issus du même dataset (`scripts/countries/data/sovereignty.ts`,
+CIA World Factbook — champ *Independence*) mais **repris tels quels** de
+l'événement retenu, sans transformation : `formerSovereigns` est une liste de
+slugs (`"france"`, `"soviet_union"`, … — pas des ISO3), `sovereigntyYear` l'année
+brute, `sovereigntyKind` la nature de l'événement. Un pays non couvert donne
+`[]` / `null` (`SOURCES.md`).
 
 ## Popularité (`popularity.ts`)
 

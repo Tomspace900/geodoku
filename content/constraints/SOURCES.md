@@ -151,3 +151,30 @@ côte arctique continue (Canada, Norvège, Russie, États-Unis) ; elle ne sert
 qu'à `ocean_multiple_basins`. Les dépendances ne sont pas automatiquement
 repliées sur leur État souverain — mais les territoires ultramarins d'un État
 jouable comptent pour lui.
+
+## Histoire et souveraineté
+
+- [CIA World Factbook — champ *Independence*](https://www.cia.gov/the-world-factbook/field/independence/),
+  via le miroir figé `factbook.json` (commit `8662a8b`).
+- Dataset curé : `scripts/countries/data/sovereignty.ts` — un « événement de
+  souveraineté retenu » par pays (nature, année, ancienne puissance), porté du
+  snapshot `sovereignty` de `constraint-explorer` (221b42d).
+
+L'**événement retenu** est celui qui marque l'accès à la souveraineté de l'État
+actuel : indépendance, restauration de l'indépendance, séparation, succession
+après dissolution, continuité d'État, fondation ou unification. `build-countries`
+en garde trois scalaires par pays — `formerSovereigns` (slugs des anciennes
+puissances, jamais des ISO3), `sovereigntyYear`, `sovereigntyKind` — **tels
+quels**, sans masquage.
+
+- `history_from_france` / `history_from_united_kingdom` lisent **uniquement**
+  l'appartenance à `formerSovereigns` : ni le `kind`, ni aucune éligibilité. Le
+  Yémen est ainsi dans la liste britannique (Sud-Yémen britannique) bien que son
+  événement de 1990 soit une `unification`.
+- `history_sovereignty_since_1990` lit `sovereigntyYear >= 1990` **et**
+  `sovereigntyKind ∈ { independence, restoration, dissolution_successor }` : les
+  continuités d'État (Russie 1991) et unifications (Yémen 1990) sont écartées par
+  le `kind`, pas par une donnée effacée.
+
+Un pays non couvert par la source vaut `[]` / `null`, jamais 0. Les territoires et
+dépendances non jouables n'entrent dans aucune liste.

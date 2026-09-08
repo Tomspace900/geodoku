@@ -39,7 +39,7 @@ import {
 } from "../countries/validateCountryCatalog";
 
 const EXPECTED_COUNTRY_COUNT = 197;
-const EXPECTED_ACTIVE_COUNT = 76;
+const EXPECTED_ACTIVE_COUNT = 79;
 const EXPECTED_ARCHIVED_COUNT = 11;
 const EXPECTED_RESERVE_COUNT = 6;
 

@@ -105,6 +105,37 @@ export type ProductionRankKey =
   | "crude_oil"
   | "natural_gas";
 
+/**
+ * Anciennes puissances souveraines tracées pour les contraintes d'histoire
+ * (CIA World Factbook, champ *Independence*). Ce sont des **slugs, pas des
+ * ISO3** : l'URSS et la Yougoslavie n'ont pas d'ISO3 vivant, et une puissance
+ * historique n'est de toute façon pas un pays jouable.
+ */
+export type FormerSovereign =
+  | "belgium"
+  | "france"
+  | "netherlands"
+  | "portugal"
+  | "soviet_union"
+  | "spain"
+  | "united_kingdom"
+  | "united_states"
+  | "yugoslavia";
+
+/**
+ * Nature de l'événement de souveraineté retenu pour un pays (CIA World Factbook).
+ * `separation` fait partie du vocabulaire source mais n'est portée par aucun pays
+ * du snapshot actuel.
+ */
+export type SovereigntyKind =
+  | "independence"
+  | "restoration"
+  | "separation"
+  | "dissolution_successor"
+  | "continuation"
+  | "foundation"
+  | "unification";
+
 /** Notable physical-geography features used as gameplay constraints. */
 export type PhysicalFeature =
   | "equator_crosser"
@@ -182,6 +213,21 @@ export type CountryFacts = Readonly<{
    * (Ember). `null` quand la source ne couvre pas le pays — jamais 0.
    */
   coalElectricityShare: number | null;
+  /**
+   * Slugs des anciennes puissances de l'événement de souveraineté retenu
+   * (CIA World Factbook). `[]` si aucune ou si la source ne couvre pas le pays.
+   */
+  formerSovereigns: readonly FormerSovereign[];
+  /**
+   * Année de l'événement de souveraineté retenu (CIA World Factbook). Donnée
+   * brute, jamais masquée. `null` quand la source ne couvre pas le pays — jamais 0.
+   */
+  sovereigntyYear: number | null;
+  /**
+   * Nature de cet événement. `null` quand la source ne couvre pas le pays.
+   * Toujours défini si et seulement si `sovereigntyYear` l'est.
+   */
+  sovereigntyKind: SovereigntyKind | null;
 }>;
 
 /**
@@ -235,6 +281,9 @@ export type CountryRecord = {
   urbanCentresOver1M: number;
   productionRanks: Partial<Record<ProductionRankKey, number>>;
   coalElectricityShare: number | null;
+  formerSovereigns: FormerSovereign[];
+  sovereigntyYear: number | null;
+  sovereigntyKind: SovereigntyKind | null;
 };
 
 // ─── Snapshot de popularité ─────────────────────────────────────────────────
