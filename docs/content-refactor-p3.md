@@ -177,6 +177,12 @@ soigné : cas graduels, définition « événement de souveraineté » du SOURCE
   (dernier gate utilisateur). Mettre à jour `AGENTS.md` §1/§3 si le nombre de
   contraintes y est cité, et le `/changelog` joueur (les nouvelles contraintes
   sont un changement visible — première entrée changelog du refacto).
+- **Compteurs cités dans la doc** : `docs/content-pipeline.md` cite le nombre
+  d'actives et de catégories à **quatre** endroits (schéma, §Contraintes,
+  §Contrôles ×2). Ils ont dérivé silencieusement pendant les lots 1-3 (corrigé
+  en revue le 2026-09-09 : 76 actives / 21 catégories / 6 en réserve). Les
+  remettre à jour à la fin du lot 4 (**79 actives**), en même temps
+  qu'`AGENTS.md`.
 
 ## 5. Journal d'exécution
 
