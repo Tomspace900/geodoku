@@ -372,6 +372,14 @@ export const en = {
     society_capital_not_largest: "Capital is not the largest city",
     urban_centres_min_3_over_1m:
       "At least 3 cities over one million inhabitants",
+    production_cocoa_top10: "World top 10 cocoa bean producer",
+    production_coffee_top10: "World top 10 coffee producer",
+    production_rice_top10: "World top 10 rice producer",
+    production_wheat_top10: "World top 10 wheat producer",
+    production_crude_oil_top15: "World top 15 oil producer",
+    production_natural_gas_top15: "World top 15 natural gas producer",
+    energy_coal_electricity_majority:
+      "More than 50% of electricity generated from coal",
     // Archived — no longer generated, kept so past grids stay replayable.
     area_gt_500k: "Large country (>500,000\u00A0km²)",
     area_lt_1k: "Micro-state (<1,000\u00A0km²)",

@@ -153,4 +153,46 @@ describe("DERIVATIONS — bascules de seuil", () => {
       united_kingdom: false,
     });
   });
+
+  it("production_wheat_top10 : rang FAOSTAT ≤ 10", () => {
+    expect({
+      germany: derive("production_wheat_top10", "DEU"), // rang 10
+      ukraine: derive("production_wheat_top10", "UKR"), // rang 9
+      kazakhstan: derive("production_wheat_top10", "KAZ"), // hors top 10
+      japan: derive("production_wheat_top10", "JPN"),
+    }).toEqual({
+      germany: true,
+      ukraine: true,
+      kazakhstan: false,
+      japan: false,
+    });
+  });
+
+  it("production_crude_oil_top15 : rang EIA ≤ 15", () => {
+    expect({
+      libya: derive("production_crude_oil_top15", "LBY"), // rang 15
+      qatar: derive("production_crude_oil_top15", "QAT"), // rang 16
+      norway: derive("production_crude_oil_top15", "NOR"), // rang 12
+      france: derive("production_crude_oil_top15", "FRA"),
+    }).toEqual({
+      libya: true,
+      qatar: false,
+      norway: true,
+      france: false,
+    });
+  });
+
+  it("energy_coal_electricity_majority : part charbon > 50 %", () => {
+    expect({
+      vietnam: derive("energy_coal_electricity_majority", "VNM"), // 50,32 %
+      australia: derive("energy_coal_electricity_majority", "AUS"), // 45,21 %
+      poland: derive("energy_coal_electricity_majority", "POL"), // 54,32 %
+      france: derive("energy_coal_electricity_majority", "FRA"),
+    }).toEqual({
+      vietnam: true,
+      australia: false,
+      poland: true,
+      france: false,
+    });
+  });
 });

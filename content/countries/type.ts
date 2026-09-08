@@ -92,6 +92,19 @@ export type CountryCapital = {
 /** Political regime type. Only two values to keep the axis simple and extensible. */
 export type Regime = "monarchy" | "republic";
 
+/**
+ * Clé produit stable côté jeu pour les contraintes de production/énergie
+ * (`production_*`, `energy_*`). Découple l'identifiant jouable des libellés bruts
+ * des sources (`coffee_green` FAOSTAT, `dry_natural_gas` EIA, …).
+ */
+export type ProductionRankKey =
+  | "cocoa"
+  | "coffee"
+  | "rice"
+  | "wheat"
+  | "crude_oil"
+  | "natural_gas";
+
 /** Notable physical-geography features used as gameplay constraints. */
 export type PhysicalFeature =
   | "equator_crosser"
@@ -158,6 +171,17 @@ export type CountryFacts = Readonly<{
    * (GHSL Urban Centre Database). 0 quand aucun.
    */
   urbanCentresOver1M: number;
+  /**
+   * Rang mondial de production du pays par produit, quand il figure dans le
+   * haut du classement (FAOSTAT pour l'agricole, U.S. EIA pour l'énergie). Une
+   * clé absente = hors du top retenu à la curation (≤ 15). `rank` commence à 1.
+   */
+  productionRanks: Partial<Record<ProductionRankKey, number>>;
+  /**
+   * Part de l'électricité nationale produite à partir de charbon, fraction 0–1
+   * (Ember). `null` quand la source ne couvre pas le pays — jamais 0.
+   */
+  coalElectricityShare: number | null;
 }>;
 
 /**
@@ -209,6 +233,8 @@ export type CountryRecord = {
   mountainAreaShare: number | null;
   forestCoverShare: number | null;
   urbanCentresOver1M: number;
+  productionRanks: Partial<Record<ProductionRankKey, number>>;
+  coalElectricityShare: number | null;
 };
 
 // ─── Snapshot de popularité ─────────────────────────────────────────────────

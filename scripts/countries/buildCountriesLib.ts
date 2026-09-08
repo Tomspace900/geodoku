@@ -14,10 +14,14 @@ import type {
   WaterAccess,
 } from "../../src/features/countries/types.ts";
 import type {
+  AgriculturalProductionSnapshot,
   CivilTimeOffsetsSnapshot,
+  CoalElectricitySnapshot,
+  EnergyProductionSnapshot,
   ForestCoverSnapshot,
   HoloceneVolcanoSnapshot,
   MountainAreaSnapshot,
+  ProductionRankKey,
   UrbanCentresSnapshot,
 } from "./data/types.ts";
 
@@ -430,6 +434,9 @@ export type QuantitativeDatasets = {
   mountainArea: MountainAreaSnapshot;
   forestCover: ForestCoverSnapshot;
   urbanCentres: UrbanCentresSnapshot;
+  agriculturalProduction: AgriculturalProductionSnapshot;
+  energyProduction: EnergyProductionSnapshot;
+  coalElectricity: CoalElectricitySnapshot;
 };
 
 type QuantitativeFacts = Pick<
@@ -439,7 +446,49 @@ type QuantitativeFacts = Pick<
   | "mountainAreaShare"
   | "forestCoverShare"
   | "urbanCentresOver1M"
+  | "productionRanks"
+  | "coalElectricityShare"
 >;
+
+/**
+ * Libellé produit d'une source → clé produit jouable. `build:answers` dérive les
+ * contraintes `production_*` / `energy_*` de `productionRanks`.
+ */
+const PRODUCTION_KEY_BY_SOURCE: Record<string, ProductionRankKey> = {
+  cocoa_beans: "cocoa",
+  coffee_green: "coffee",
+  rice_paddy: "rice",
+  wheat: "wheat",
+  crude_oil: "crude_oil",
+  dry_natural_gas: "natural_gas",
+};
+
+/** Rang au-delà duquel un classement de production n'intéresse plus aucune contrainte. */
+const PRODUCTION_RANK_CAP = 15;
+
+function productionRanksForCode(
+  code: string,
+  datasets: QuantitativeDatasets,
+): Partial<Record<ProductionRankKey, number>> {
+  const ranks: Partial<Record<ProductionRankKey, number>> = {};
+  const rows = [
+    ...Object.entries(datasets.agriculturalProduction.products).flatMap(
+      ([product, list]) => list.map((row) => [product, row] as const),
+    ),
+    ...Object.entries(datasets.energyProduction.products).flatMap(
+      ([product, block]) =>
+        block.rankings.map((row) => [product, row] as const),
+    ),
+  ];
+  for (const [product, row] of rows) {
+    const key = PRODUCTION_KEY_BY_SOURCE[product];
+    if (!key || row.countryCode !== code || row.rank > PRODUCTION_RANK_CAP) {
+      continue;
+    }
+    ranks[key] = row.rank;
+  }
+  return ranks;
+}
 
 /**
  * Fusionne les datasets quantitatifs curés en scalaires dérivés par pays.
@@ -454,12 +503,15 @@ export function quantitativeFactsForCode(
   const offsets = datasets.civilTimeOffsets[code]?.value;
   const mountain = datasets.mountainArea[code]?.value;
   const forest = datasets.forestCover.countries[code];
+  const coal = datasets.coalElectricity.countries[code];
   return {
     utcOffsetCount: offsets && offsets.length > 0 ? offsets.length : 1,
     hasHoloceneVolcano: Object.hasOwn(datasets.holoceneVolcanoes, code),
     mountainAreaShare: typeof mountain === "number" ? mountain / 100 : null,
     forestCoverShare: typeof forest === "number" ? forest / 100 : null,
     urbanCentresOver1M: datasets.urbanCentres.countries[code]?.length ?? 0,
+    productionRanks: productionRanksForCode(code, datasets),
+    coalElectricityShare: typeof coal === "number" ? coal / 100 : null,
   };
 }
 

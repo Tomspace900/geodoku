@@ -358,3 +358,57 @@ seeds 0/69, overlap max 0,846 < 0,85, cold-start 18/18 tissés ≤ 1 newcomer/gr
 
 **Merge.** _(prêt — merge `content-p3-lot2` → `develop` puis `refreshPool` via
 `/admin` après push)_
+
+### Lot 3 — branche `content-p3-lot3` (2026-09-08)
+
+**Périmètre dérivé : 7 contraintes** — `production_{cocoa,coffee,rice,wheat}_top10`
+(catégorie `production`), `production_{crude_oil,natural_gas}_top15` +
+`energy_coal_electricity_majority` (catégorie `energy`). Deux nouvelles catégories
+`ConstraintCategory`. `EXPECTED_ACTIVE_COUNT` 69 → **76** (sous réserve du gate).
+
+**Champs de faits.** `CountryFacts` gagne `productionRanks:
+Partial<Record<ProductionRankKey, number>>` (rang mondial du pays par produit,
+conservé si ≤ 15) et `coalElectricityShare: number | null` (fraction 0–1, `null`
+si Ember ne couvre pas le pays). Fusionnés par `quantitativeFactsForCode`
+(`buildCountriesLib.ts`) depuis 3 datasets curés (`scripts/countries/data/` :
+`agriculturalProduction.ts` FAOSTAT top 10, `energyProduction.ts` EIA top 18
+trimé de la longue traîne, `coalElectricity.ts` Ember). `ProductionRankKey` vit
+dans `content/countries/type.ts` (terminal), réexporté par `data/types.ts`.
+
+**Snapshot.** `pnpm build:countries` (réseau, 18 min, 197/197 pageviews, 0 échec)
++ `pnpm biome check --write`. Diff `content/countries/` : `facts.ts` (+2 champs ×
+197, `type.ts`), `SOURCE.md`. **Dérive de millésime isolée** (regen 08-29 →
+09-08) : `facts.ts` rafraîchit 10 populations (< 1,5 %), `popularity.ts`
+re-télécharge les pageviews (percentiles bougent de ~1-2 pts, aucun tier
+franchi). `catalog.ts` inchangé. `check:content` re-dérive les **76** sans
+mouvement hors des 7 nouvelles → **aucune liste existante déplacée**.
+`build:answers` : 76 actives, 2022 entrées ISO3.
+
+**Contre-épreuve vs v1 (`221b42d`). 7/7 listes byte-identiques**, aucun écart.
+
+| id | dérivé | v1 | statut |
+| --- | --- | --- | --- |
+| `production_cocoa_top10` | 10 | 10 | identique |
+| `production_coffee_top10` | 10 | 10 | identique |
+| `production_rice_top10` | 10 | 10 | identique |
+| `production_wheat_top10` | 10 | 10 | identique |
+| `production_crude_oil_top15` | 15 | 15 | identique |
+| `production_natural_gas_top15` | 15 | 15 | identique |
+| `energy_coal_electricity_majority` | 15 | 15 | identique |
+
+**Cas limite relevé (dossier de gate).** `energy_coal_electricity_majority` :
+**Vietnam 50,32 %** passe le seuil strict d'un cheveu (0,5032 > 0,5) — comme en
+v1 ; Australie 45,21 % et Allemagne 21,44 % dessous. Les 4 `production_*_top10`
+agricoles sont de la trivia de classement pure (risque fun, cf. lot 2) ; les 3
+`energy` sont plus grand public.
+
+**Checklist.** `pnpm lint` ✓ (2 warnings préexistants `convex/gameWrites.test.ts`)
+· `pnpm test` **530/530** ✓ (+5 : 3 bascules de seuil + 2 `quantitativeFactsForCode`)
+· `pnpm check:content` « **76 actives, 11 archivées, 6 en réserve, 197 pays** » ✓
+· `pnpm check:bundle` **245,8 KiB** gzip (budget 280) ✓ · `pnpm simulate:scheduling`
+**14/14 PASS**, couverture **100 % sur 76**, failed seeds 0/76, overlap max
+0,846 < 0,85, cold-start ≤ 1 newcomer/grille.
+
+**Gate utilisateur.** _(en attente — dossier ci-dessus ; l'utilisateur tranche
+inclusion / réserve par contrainte, puis merge `content-p3-lot3` → `develop` +
+`refreshPool`)_

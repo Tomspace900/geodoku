@@ -4,7 +4,7 @@ import type { CountryCode } from "./countryCodes";
 import type { CountryFacts, CountryFactsSnapshot } from "./type";
 
 export const FACTS_SNAPSHOT: CountryFactsSnapshot = {
-  date: "2026-08-29",
+  date: "2026-09-08",
   note: "régénéré par pnpm build:countries",
 };
 
@@ -40,6 +40,8 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     mountainAreaShare: 0.612582984529997,
     forestCoverShare: 0.0185278199408184,
     urbanCentresOver1M: 2,
+    productionRanks: {},
+    coalElectricityShare: 0.030299999999999997,
   },
   AGO: {
     continent: "africa",
@@ -72,6 +74,8 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     mountainAreaShare: 0.12831074035453596,
     forestCoverShare: 0.520912696719339,
     urbanCentresOver1M: 4,
+    productionRanks: {},
+    coalElectricityShare: 0,
   },
   ALB: {
     continent: "europe",
@@ -104,13 +108,15 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     mountainAreaShare: 0.5821970224015584,
     forestCoverShare: 0.287919708029197,
     urbanCentresOver1M: 0,
+    productionRanks: {},
+    coalElectricityShare: null,
   },
   AND: {
     continent: "europe",
     waterAccess: "landlocked",
     borders: ["FRA", "ESP"],
     areaKm2: 468,
-    population: 89752,
+    population: 90021,
     officialLanguages: ["ca"],
     latitude: 42.5,
     subregion: "Southern Europe",
@@ -136,6 +142,8 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     mountainAreaShare: 0.9914529914529915,
     forestCoverShare: 0.34042553191489394,
     urbanCentresOver1M: 0,
+    productionRanks: {},
+    coalElectricityShare: null,
   },
   ARE: {
     continent: "asia",
@@ -168,6 +176,11 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     mountainAreaShare: 0.030311004784688997,
     forestCoverShare: 0.0446775556181357,
     urbanCentresOver1M: 1,
+    productionRanks: {
+      crude_oil: 8,
+      natural_gas: 14,
+    },
+    coalElectricityShare: 0,
   },
   ARG: {
     continent: "south_america",
@@ -200,6 +213,8 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     mountainAreaShare: null,
     forestCoverShare: 0.103212951412107,
     urbanCentresOver1M: 4,
+    productionRanks: {},
+    coalElectricityShare: 0.0086,
   },
   ARM: {
     continent: "asia",
@@ -232,6 +247,8 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     mountainAreaShare: 0.8254379181656187,
     forestCoverShare: 0.116183158247114,
     urbanCentresOver1M: 1,
+    productionRanks: {},
+    coalElectricityShare: 0,
   },
   ATG: {
     continent: "north_america",
@@ -264,6 +281,8 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     mountainAreaShare: 0,
     forestCoverShare: 0.180134090909091,
     urbanCentresOver1M: 0,
+    productionRanks: {},
+    coalElectricityShare: 0,
   },
   AUS: {
     continent: "oceania",
@@ -301,6 +320,11 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     mountainAreaShare: 0.030629779626272616,
     forestCoverShare: 0.174213145571644,
     urbanCentresOver1M: 4,
+    productionRanks: {
+      wheat: 6,
+      natural_gas: 7,
+    },
+    coalElectricityShare: 0.4521,
   },
   AUT: {
     continent: "europe",
@@ -333,6 +357,8 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     mountainAreaShare: 0.7086478043662291,
     forestCoverShare: 0.472402653902084,
     urbanCentresOver1M: 1,
+    productionRanks: {},
+    coalElectricityShare: 0,
   },
   AZE: {
     continent: "asia",
@@ -365,6 +391,8 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     mountainAreaShare: 0.4811893764434181,
     forestCoverShare: 0.14111954022988502,
     urbanCentresOver1M: 1,
+    productionRanks: {},
+    coalElectricityShare: 0,
   },
   BDI: {
     continent: "africa",
@@ -397,13 +425,15 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     mountainAreaShare: 0.5299274268879788,
     forestCoverShare: 0.10889408099688501,
     urbanCentresOver1M: 1,
+    productionRanks: {},
+    coalElectricityShare: 0,
   },
   BEL: {
     continent: "europe",
     waterAccess: "coastal",
     borders: ["FRA", "DEU", "LUX", "NLD"],
     areaKm2: 30528,
-    population: 11936546,
+    population: 11942772,
     officialLanguages: ["de", "fr", "nl"],
     latitude: 50.83333333,
     subregion: "Western Europe",
@@ -429,6 +459,8 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     mountainAreaShare: 0.0266312893081761,
     forestCoverShare: 0.22604446776415,
     urbanCentresOver1M: 1,
+    productionRanks: {},
+    coalElectricityShare: 0,
   },
   BEN: {
     continent: "africa",
@@ -461,6 +493,8 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     mountainAreaShare: 0.00570048480758644,
     forestCoverShare: 0.264734835047889,
     urbanCentresOver1M: 1,
+    productionRanks: {},
+    coalElectricityShare: 0,
   },
   BFA: {
     continent: "africa",
@@ -493,6 +527,8 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     mountainAreaShare: 0.000835265801360604,
     forestCoverShare: 0.22172514619883,
     urbanCentresOver1M: 2,
+    productionRanks: {},
+    coalElectricityShare: 0,
   },
   BGD: {
     continent: "asia",
@@ -525,6 +561,10 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     mountainAreaShare: 0.0094802466626008,
     forestCoverShare: 0.144899215263887,
     urbanCentresOver1M: 7,
+    productionRanks: {
+      rice: 3,
+    },
+    coalElectricityShare: 0.19940000000000002,
   },
   BGR: {
     continent: "europe",
@@ -557,6 +597,8 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     mountainAreaShare: 0.39174234976866673,
     forestCoverShare: 0.362196020633751,
     urbanCentresOver1M: 1,
+    productionRanks: {},
+    coalElectricityShare: 0.22870000000000001,
   },
   BHR: {
     continent: "asia",
@@ -589,6 +631,8 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     mountainAreaShare: 0,
     forestCoverShare: 0.0095,
     urbanCentresOver1M: 1,
+    productionRanks: {},
+    coalElectricityShare: 0,
   },
   BHS: {
     continent: "north_america",
@@ -621,6 +665,8 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     mountainAreaShare: 0,
     forestCoverShare: 0.509350649350649,
     urbanCentresOver1M: 0,
+    productionRanks: {},
+    coalElectricityShare: 0,
   },
   BIH: {
     continent: "europe",
@@ -653,6 +699,8 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     mountainAreaShare: 0.6906403171317542,
     forestCoverShare: 0.427326171875,
     urbanCentresOver1M: 0,
+    productionRanks: {},
+    coalElectricityShare: 0.5882999999999999,
   },
   BLR: {
     continent: "europe",
@@ -685,6 +733,8 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     mountainAreaShare: 0,
     forestCoverShare: 0.43408068655995796,
     urbanCentresOver1M: 1,
+    productionRanks: {},
+    coalElectricityShare: 0.0004,
   },
   BLZ: {
     continent: "north_america",
@@ -717,6 +767,8 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     mountainAreaShare: 0.1531394234956022,
     forestCoverShare: 0.545186321788689,
     urbanCentresOver1M: 0,
+    productionRanks: {},
+    coalElectricityShare: 0,
   },
   BOL: {
     continent: "south_america",
@@ -755,6 +807,8 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     mountainAreaShare: 0.3668623433319892,
     forestCoverShare: 0.463457431920982,
     urbanCentresOver1M: 3,
+    productionRanks: {},
+    coalElectricityShare: 0,
   },
   BRA: {
     continent: "south_america",
@@ -772,7 +826,7 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
       "VEN",
     ],
     areaKm2: 8515767,
-    population: 213421037,
+    population: 214211951,
     officialLanguages: ["pt"],
     latitude: -10,
     subregion: "South America",
@@ -798,6 +852,12 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     mountainAreaShare: 0.058455920646959925,
     forestCoverShare: 0.589818729765235,
     urbanCentresOver1M: 20,
+    productionRanks: {
+      cocoa: 7,
+      coffee: 1,
+      crude_oil: 9,
+    },
+    coalElectricityShare: 0.0217,
   },
   BRB: {
     continent: "north_america",
@@ -830,6 +890,8 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     mountainAreaShare: 0.013953488372093023,
     forestCoverShare: 0.146511627906977,
     urbanCentresOver1M: 0,
+    productionRanks: {},
+    coalElectricityShare: 0,
   },
   BRN: {
     continent: "asia",
@@ -862,6 +924,8 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     mountainAreaShare: 0.08482220294882914,
     forestCoverShare: 0.721062618595825,
     urbanCentresOver1M: 0,
+    productionRanks: {},
+    coalElectricityShare: 0.1978,
   },
   BTN: {
     continent: "asia",
@@ -894,6 +958,8 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     mountainAreaShare: 0.9963275511798719,
     forestCoverShare: 0.7160513896172,
     urbanCentresOver1M: 0,
+    productionRanks: {},
+    coalElectricityShare: 0,
   },
   BWA: {
     continent: "africa",
@@ -926,6 +992,8 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     mountainAreaShare: 0.007415807560137457,
     forestCoverShare: 0.26290826319411403,
     urbanCentresOver1M: 0,
+    productionRanks: {},
+    coalElectricityShare: 0.9825,
   },
   CAF: {
     continent: "africa",
@@ -958,6 +1026,10 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     mountainAreaShare: 0.010313266472333158,
     forestCoverShare: 0.356560403223217,
     urbanCentresOver1M: 1,
+    productionRanks: {
+      coffee: 10,
+    },
+    coalElectricityShare: null,
   },
   CAN: {
     continent: "north_america",
@@ -995,13 +1067,19 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     mountainAreaShare: null,
     forestCoverShare: 0.394617117321106,
     urbanCentresOver1M: 5,
+    productionRanks: {
+      wheat: 5,
+      crude_oil: 4,
+      natural_gas: 5,
+    },
+    coalElectricityShare: 0.0395,
   },
   CHE: {
     continent: "europe",
     waterAccess: "landlocked",
     borders: ["AUT", "FRA", "ITA", "LIE", "DEU"],
     areaKm2: 41284,
-    population: 9139676,
+    population: 9154896,
     officialLanguages: ["fr", "gsw", "it", "rm"],
     latitude: 47,
     subregion: "Western Europe",
@@ -1027,6 +1105,8 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     mountainAreaShare: 0.8577657203759326,
     forestCoverShare: 0.323827380818297,
     urbanCentresOver1M: 0,
+    productionRanks: {},
+    coalElectricityShare: null,
   },
   CHL: {
     continent: "south_america",
@@ -1059,6 +1139,8 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     mountainAreaShare: 0.6359948789978072,
     forestCoverShare: 0.250116461113584,
     urbanCentresOver1M: 1,
+    productionRanks: {},
+    coalElectricityShare: 0.153,
   },
   CHN: {
     continent: "asia",
@@ -1108,6 +1190,13 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     mountainAreaShare: 0.521696646355126,
     forestCoverShare: 0.24031938995825597,
     urbanCentresOver1M: 83,
+    productionRanks: {
+      rice: 1,
+      wheat: 1,
+      crude_oil: 6,
+      natural_gas: 4,
+    },
+    coalElectricityShare: 0.5777,
   },
   CIV: {
     continent: "africa",
@@ -1140,6 +1229,10 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     mountainAreaShare: 0.03471406021776142,
     forestCoverShare: 0.07855516037735849,
     urbanCentresOver1M: 1,
+    productionRanks: {
+      cocoa: 1,
+    },
+    coalElectricityShare: 0,
   },
   CMR: {
     continent: "africa",
@@ -1172,6 +1265,10 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     mountainAreaShare: 0.20185217124275937,
     forestCoverShare: 0.426741130925938,
     urbanCentresOver1M: 2,
+    productionRanks: {
+      cocoa: 6,
+    },
+    coalElectricityShare: 0,
   },
   COD: {
     continent: "africa",
@@ -1209,6 +1306,8 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     mountainAreaShare: 0.10379647722804536,
     forestCoverShare: 0.541898572594341,
     urbanCentresOver1M: 6,
+    productionRanks: {},
+    coalElectricityShare: 0,
   },
   COG: {
     continent: "africa",
@@ -1241,6 +1340,8 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     mountainAreaShare: 0.025596491228070176,
     forestCoverShare: 0.641317715959004,
     urbanCentresOver1M: 1,
+    productionRanks: {},
+    coalElectricityShare: 0,
   },
   COL: {
     continent: "south_america",
@@ -1279,6 +1380,11 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     mountainAreaShare: 0.2662995687314539,
     forestCoverShare: 0.527661596214511,
     urbanCentresOver1M: 4,
+    productionRanks: {
+      cocoa: 10,
+      coffee: 4,
+    },
+    coalElectricityShare: 0.1258,
   },
   COM: {
     continent: "africa",
@@ -1311,6 +1417,8 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     mountainAreaShare: 0.485499462943072,
     forestCoverShare: 0.16980118216012902,
     urbanCentresOver1M: 0,
+    productionRanks: {},
+    coalElectricityShare: null,
   },
   CPV: {
     continent: "africa",
@@ -1343,6 +1451,8 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     mountainAreaShare: 0.40317381601785274,
     forestCoverShare: 0.115682382133995,
     urbanCentresOver1M: 0,
+    productionRanks: {},
+    coalElectricityShare: 0,
   },
   CRI: {
     continent: "north_america",
@@ -1375,6 +1485,8 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     mountainAreaShare: 0.4676712328767123,
     forestCoverShare: 0.603991382687035,
     urbanCentresOver1M: 1,
+    productionRanks: {},
+    coalElectricityShare: 0,
   },
   CUB: {
     continent: "north_america",
@@ -1407,6 +1519,8 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     mountainAreaShare: 0.07543409413563394,
     forestCoverShare: 0.31233140655106,
     urbanCentresOver1M: 1,
+    productionRanks: {},
+    coalElectricityShare: 0,
   },
   CYP: {
     continent: "europe",
@@ -1439,6 +1553,8 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     mountainAreaShare: 0.3349908118041293,
     forestCoverShare: 0.18665584415584402,
     urbanCentresOver1M: 0,
+    productionRanks: {},
+    coalElectricityShare: 0,
   },
   CZE: {
     continent: "europe",
@@ -1471,6 +1587,8 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     mountainAreaShare: 0.25040258669878906,
     forestCoverShare: 0.34762388374040804,
     urbanCentresOver1M: 1,
+    productionRanks: {},
+    coalElectricityShare: 0.3642,
   },
   DEU: {
     continent: "europe",
@@ -1503,6 +1621,10 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     mountainAreaShare: null,
     forestCoverShare: 0.32678934264373405,
     urbanCentresOver1M: 5,
+    productionRanks: {
+      wheat: 10,
+    },
+    coalElectricityShare: 0.2144,
   },
   DJI: {
     continent: "africa",
@@ -1535,6 +1657,8 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     mountainAreaShare: 0.5068103448275862,
     forestCoverShare: 0.00260724762726488,
     urbanCentresOver1M: 0,
+    productionRanks: {},
+    coalElectricityShare: 0,
   },
   DMA: {
     continent: "north_america",
@@ -1567,6 +1691,8 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     mountainAreaShare: 0,
     forestCoverShare: 0.638266666666667,
     urbanCentresOver1M: 0,
+    productionRanks: {},
+    coalElectricityShare: null,
   },
   DNK: {
     continent: "europe",
@@ -1599,6 +1725,8 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     mountainAreaShare: 0,
     forestCoverShare: 0.15781499999999998,
     urbanCentresOver1M: 1,
+    productionRanks: {},
+    coalElectricityShare: 0.0496,
   },
   DOM: {
     continent: "north_america",
@@ -1631,6 +1759,10 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     mountainAreaShare: 0.36987117585420476,
     forestCoverShare: 0.449887775472934,
     urbanCentresOver1M: 1,
+    productionRanks: {
+      cocoa: 9,
+    },
+    coalElectricityShare: 0.29960000000000003,
   },
   DZA: {
     continent: "africa",
@@ -1663,13 +1795,17 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     mountainAreaShare: 0.11498899334562405,
     forestCoverShare: 0.00830314224054683,
     urbanCentresOver1M: 2,
+    productionRanks: {
+      natural_gas: 10,
+    },
+    coalElectricityShare: 0,
   },
   ECU: {
     continent: "south_america",
     waterAccess: "coastal",
     borders: ["COL", "PER"],
     areaKm2: 276841,
-    population: 18103660,
+    population: 18135478,
     officialLanguages: ["es"],
     latitude: -2,
     subregion: "South America",
@@ -1700,6 +1836,10 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     mountainAreaShare: 0.4101704588554441,
     forestCoverShare: 0.495450958286359,
     urbanCentresOver1M: 2,
+    productionRanks: {
+      cocoa: 4,
+    },
+    coalElectricityShare: 0,
   },
   EGY: {
     continent: "africa",
@@ -1736,6 +1876,10 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     mountainAreaShare: 0.08421966182852011,
     forestCoverShare: 0.000451855944547692,
     urbanCentresOver1M: 9,
+    productionRanks: {
+      natural_gas: 15,
+    },
+    coalElectricityShare: 0,
   },
   ERI: {
     continent: "africa",
@@ -1768,6 +1912,8 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     mountainAreaShare: 0.6076360544217687,
     forestCoverShare: 0.08630100133522371,
     urbanCentresOver1M: 0,
+    productionRanks: {},
+    coalElectricityShare: 0,
   },
   ESP: {
     continent: "europe",
@@ -1800,6 +1946,8 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     mountainAreaShare: 0.46216343341396704,
     forestCoverShare: 0.371925889548355,
     urbanCentresOver1M: 3,
+    productionRanks: {},
+    coalElectricityShare: 0.0092,
   },
   EST: {
     continent: "europe",
@@ -1832,6 +1980,8 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     mountainAreaShare: 0,
     forestCoverShare: 0.570652937046572,
     urbanCentresOver1M: 0,
+    productionRanks: {},
+    coalElectricityShare: 0,
   },
   ETH: {
     continent: "africa",
@@ -1864,6 +2014,10 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     mountainAreaShare: 0.49928370913700987,
     forestCoverShare: 0.149308975782695,
     urbanCentresOver1M: 1,
+    productionRanks: {
+      coffee: 5,
+    },
+    coalElectricityShare: 0,
   },
   FIN: {
     continent: "europe",
@@ -1896,6 +2050,8 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     mountainAreaShare: 0.008371155709996927,
     forestCoverShare: 0.737235162521384,
     urbanCentresOver1M: 1,
+    productionRanks: {},
+    coalElectricityShare: 0.0101,
   },
   FJI: {
     continent: "oceania",
@@ -1928,6 +2084,8 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     mountainAreaShare: 0.20742119089316988,
     forestCoverShare: 0.634953475643131,
     urbanCentresOver1M: 0,
+    productionRanks: {},
+    coalElectricityShare: 0,
   },
   FRA: {
     continent: "europe",
@@ -1975,6 +2133,10 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     mountainAreaShare: 0.21357996719201733,
     forestCoverShare: 0.324764820484275,
     urbanCentresOver1M: 2,
+    productionRanks: {
+      wheat: 7,
+    },
+    coalElectricityShare: 0.0018,
   },
   FSM: {
     continent: "oceania",
@@ -2007,6 +2169,8 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     mountainAreaShare: 0.12393162393162394,
     forestCoverShare: 0.921571428571429,
     urbanCentresOver1M: 0,
+    productionRanks: {},
+    coalElectricityShare: null,
   },
   GAB: {
     continent: "africa",
@@ -2039,6 +2203,8 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     mountainAreaShare: 0.03428127381681785,
     forestCoverShare: 0.9118236504055579,
     urbanCentresOver1M: 0,
+    productionRanks: {},
+    coalElectricityShare: 0,
   },
   GBR: {
     continent: "europe",
@@ -2071,6 +2237,8 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     mountainAreaShare: 0.11579250720461096,
     forestCoverShare: 0.132907130161617,
     urbanCentresOver1M: 5,
+    productionRanks: {},
+    coalElectricityShare: 0.0067,
   },
   GEO: {
     continent: "asia",
@@ -2103,6 +2271,8 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     mountainAreaShare: 0.8019368723098995,
     forestCoverShare: 0.40615915959130805,
     urbanCentresOver1M: 0,
+    productionRanks: {},
+    coalElectricityShare: 0,
   },
   GHA: {
     continent: "africa",
@@ -2135,6 +2305,10 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     mountainAreaShare: 0.02207241765290337,
     forestCoverShare: 0.351921958573042,
     urbanCentresOver1M: 3,
+    productionRanks: {
+      cocoa: 3,
+    },
+    coalElectricityShare: 0,
   },
   GIN: {
     continent: "africa",
@@ -2167,6 +2341,8 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     mountainAreaShare: 0.22816108550905606,
     forestCoverShare: 0.24698844212925303,
     urbanCentresOver1M: 1,
+    productionRanks: {},
+    coalElectricityShare: 0,
   },
   GMB: {
     continent: "africa",
@@ -2199,6 +2375,8 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     mountainAreaShare: 0,
     forestCoverShare: 0.222792391304348,
     urbanCentresOver1M: 1,
+    productionRanks: {},
+    coalElectricityShare: 0,
   },
   GNB: {
     continent: "africa",
@@ -2231,6 +2409,8 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     mountainAreaShare: 0,
     forestCoverShare: 0.695124466571835,
     urbanCentresOver1M: 0,
+    productionRanks: {},
+    coalElectricityShare: 0,
   },
   GNQ: {
     continent: "africa",
@@ -2263,6 +2443,8 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     mountainAreaShare: 0.13051228120209618,
     forestCoverShare: 0.863935828877005,
     urbanCentresOver1M: 0,
+    productionRanks: {},
+    coalElectricityShare: 0,
   },
   GRC: {
     continent: "europe",
@@ -2295,6 +2477,8 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     mountainAreaShare: 0.4850594742025911,
     forestCoverShare: 0.302699767261443,
     urbanCentresOver1M: 1,
+    productionRanks: {},
+    coalElectricityShare: 0.057300000000000004,
   },
   GRD: {
     continent: "north_america",
@@ -2327,6 +2511,8 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     mountainAreaShare: 0.23837209302325582,
     forestCoverShare: 0.520588235294118,
     urbanCentresOver1M: 0,
+    productionRanks: {},
+    coalElectricityShare: 0,
   },
   GTM: {
     continent: "north_america",
@@ -2359,6 +2545,8 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     mountainAreaShare: 0.4708189073276456,
     forestCoverShare: 0.325961179544606,
     urbanCentresOver1M: 1,
+    productionRanks: {},
+    coalElectricityShare: 0.1583,
   },
   GUY: {
     continent: "south_america",
@@ -2391,6 +2579,8 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     mountainAreaShare: 0.09285059706283232,
     forestCoverShare: 0.8708783698020269,
     urbanCentresOver1M: 0,
+    productionRanks: {},
+    coalElectricityShare: 0,
   },
   HND: {
     continent: "north_america",
@@ -2423,6 +2613,10 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     mountainAreaShare: 0.6751413433844184,
     forestCoverShare: 0.562732147645008,
     urbanCentresOver1M: 2,
+    productionRanks: {
+      coffee: 9,
+    },
+    coalElectricityShare: 0.0048,
   },
   HRV: {
     continent: "europe",
@@ -2455,6 +2649,8 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     mountainAreaShare: 0.2674135067321624,
     forestCoverShare: 0.34785739814153,
     urbanCentresOver1M: 0,
+    productionRanks: {},
+    coalElectricityShare: 0.052300000000000006,
   },
   HTI: {
     continent: "north_america",
@@ -2487,6 +2683,8 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     mountainAreaShare: 0.4985585585585586,
     forestCoverShare: 0.122630624092888,
     urbanCentresOver1M: 1,
+    productionRanks: {},
+    coalElectricityShare: 0,
   },
   HUN: {
     continent: "europe",
@@ -2519,6 +2717,8 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     mountainAreaShare: 0.031549640968310616,
     forestCoverShare: 0.224484341442034,
     urbanCentresOver1M: 1,
+    productionRanks: {},
+    coalElectricityShare: 0.0642,
   },
   IDN: {
     continent: "asia",
@@ -2556,6 +2756,13 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     mountainAreaShare: 0.2983446648559333,
     forestCoverShare: 0.477220336902463,
     urbanCentresOver1M: 23,
+    productionRanks: {
+      cocoa: 2,
+      coffee: 3,
+      rice: 4,
+      natural_gas: 13,
+    },
+    coalElectricityShare: 0.6148,
   },
   IND: {
     continent: "asia",
@@ -2593,13 +2800,19 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     mountainAreaShare: 0.13657481620275033,
     forestCoverShare: 0.24539030468957598,
     urbanCentresOver1M: 77,
+    productionRanks: {
+      coffee: 8,
+      rice: 2,
+      wheat: 2,
+    },
+    coalElectricityShare: 0.7453,
   },
   IRL: {
     continent: "europe",
     waterAccess: "coastal",
     borders: ["GBR"],
     areaKm2: 70273,
-    population: 5458600,
+    population: 5525600,
     officialLanguages: ["en", "ga"],
     latitude: 53,
     subregion: "Northern Europe",
@@ -2625,6 +2838,8 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     mountainAreaShare: 0.039560001707625976,
     forestCoverShare: 0.115259108724053,
     urbanCentresOver1M: 1,
+    productionRanks: {},
+    coalElectricityShare: 0.0203,
   },
   IRN: {
     continent: "asia",
@@ -2657,6 +2872,11 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     mountainAreaShare: 0.5650654200504188,
     forestCoverShare: 0.0664923611710324,
     urbanCentresOver1M: 7,
+    productionRanks: {
+      crude_oil: 7,
+      natural_gas: 3,
+    },
+    coalElectricityShare: 0.0018,
   },
   IRQ: {
     continent: "asia",
@@ -2689,6 +2909,10 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     mountainAreaShare: 0.0877104926343263,
     forestCoverShare: 0.0190035242899592,
     urbanCentresOver1M: 9,
+    productionRanks: {
+      crude_oil: 5,
+    },
+    coalElectricityShare: 0,
   },
   ISL: {
     continent: "europe",
@@ -2721,6 +2945,8 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     mountainAreaShare: 0.43533009708737863,
     forestCoverShare: 0.00528744421303184,
     urbanCentresOver1M: 0,
+    productionRanks: {},
+    coalElectricityShare: 0,
   },
   ISR: {
     continent: "asia",
@@ -2753,6 +2979,8 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     mountainAreaShare: null,
     forestCoverShare: 0.06469500924214419,
     urbanCentresOver1M: 2,
+    productionRanks: {},
+    coalElectricityShare: 0.14300000000000002,
   },
   ITA: {
     continent: "europe",
@@ -2785,6 +3013,8 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     mountainAreaShare: 0.47405553933151034,
     forestCoverShare: 0.328944947923712,
     urbanCentresOver1M: 4,
+    productionRanks: {},
+    coalElectricityShare: 0.0148,
   },
   JAM: {
     continent: "north_america",
@@ -2817,6 +3047,8 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     mountainAreaShare: 0.45027749977254117,
     forestCoverShare: 0.56190757156048,
     urbanCentresOver1M: 0,
+    productionRanks: {},
+    coalElectricityShare: 0,
   },
   JOR: {
     continent: "asia",
@@ -2849,6 +3081,8 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     mountainAreaShare: 0.16696514517248326,
     forestCoverShare: 0.010980471653490101,
     urbanCentresOver1M: 1,
+    productionRanks: {},
+    coalElectricityShare: 0,
   },
   JPN: {
     continent: "asia",
@@ -2881,13 +3115,15 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     mountainAreaShare: 0.46588521683909717,
     forestCoverShare: 0.683957811364628,
     urbanCentresOver1M: 9,
+    productionRanks: {},
+    coalElectricityShare: 0.32189999999999996,
   },
   KAZ: {
     continent: "asia",
     waterAccess: "landlocked",
     borders: ["CHN", "KGZ", "RUS", "TKM", "UZB"],
     areaKm2: 2724900,
-    population: 20590589,
+    population: 20604819,
     officialLanguages: ["kk", "ru"],
     latitude: 48,
     subregion: "Central Asia",
@@ -2913,6 +3149,10 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     mountainAreaShare: 0.06967815332672758,
     forestCoverShare: 0.0131214516427751,
     urbanCentresOver1M: 3,
+    productionRanks: {
+      crude_oil: 11,
+    },
+    coalElectricityShare: 0.5403,
   },
   KEN: {
     continent: "africa",
@@ -2949,6 +3189,8 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     mountainAreaShare: 0.24725733889073637,
     forestCoverShare: 0.062166247788040196,
     urbanCentresOver1M: 2,
+    productionRanks: {},
+    coalElectricityShare: 0,
   },
   KGZ: {
     continent: "asia",
@@ -2981,6 +3223,8 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     mountainAreaShare: 0.9066071187440923,
     forestCoverShare: 0.0714337851929093,
     urbanCentresOver1M: 1,
+    productionRanks: {},
+    coalElectricityShare: 0.09699999999999999,
   },
   KHM: {
     continent: "asia",
@@ -3013,6 +3257,10 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     mountainAreaShare: 0.08713232247907862,
     forestCoverShare: 0.430619759800589,
     urbanCentresOver1M: 1,
+    productionRanks: {
+      rice: 10,
+    },
+    coalElectricityShare: 0.6092,
   },
   KIR: {
     continent: "oceania",
@@ -3045,6 +3293,8 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     mountainAreaShare: 0,
     forestCoverShare: 0.0145679012345679,
     urbanCentresOver1M: 0,
+    productionRanks: {},
+    coalElectricityShare: 0,
   },
   KNA: {
     continent: "north_america",
@@ -3077,6 +3327,8 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     mountainAreaShare: 0,
     forestCoverShare: 0.423076923076923,
     urbanCentresOver1M: 0,
+    productionRanks: {},
+    coalElectricityShare: 0,
   },
   KOR: {
     continent: "asia",
@@ -3109,6 +3361,8 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     mountainAreaShare: 0.3184213152380002,
     forestCoverShare: 0.64108606557377,
     urbanCentresOver1M: 5,
+    productionRanks: {},
+    coalElectricityShare: 0.30510000000000004,
   },
   KWT: {
     continent: "asia",
@@ -3141,6 +3395,10 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     mountainAreaShare: 0,
     forestCoverShare: 0.0035072951739618403,
     urbanCentresOver1M: 1,
+    productionRanks: {
+      crude_oil: 10,
+    },
+    coalElectricityShare: 0,
   },
   LAO: {
     continent: "asia",
@@ -3173,6 +3431,8 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     mountainAreaShare: 0.7213302364864866,
     forestCoverShare: 0.714558058925477,
     urbanCentresOver1M: 0,
+    productionRanks: {},
+    coalElectricityShare: 0.2328,
   },
   LBN: {
     continent: "asia",
@@ -3205,6 +3465,8 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     mountainAreaShare: 0.8248182166092612,
     forestCoverShare: 0.141867057673509,
     urbanCentresOver1M: 1,
+    productionRanks: {},
+    coalElectricityShare: 0,
   },
   LBR: {
     continent: "africa",
@@ -3237,6 +3499,8 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     mountainAreaShare: 0.04895437689123544,
     forestCoverShare: 0.781422342192691,
     urbanCentresOver1M: 1,
+    productionRanks: {},
+    coalElectricityShare: 0,
   },
   LBY: {
     continent: "africa",
@@ -3269,6 +3533,10 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     mountainAreaShare: 0.020517862623185605,
     forestCoverShare: 0.00123327687918433,
     urbanCentresOver1M: 1,
+    productionRanks: {
+      crude_oil: 15,
+    },
+    coalElectricityShare: 0,
   },
   LCA: {
     continent: "north_america",
@@ -3301,6 +3569,8 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     mountainAreaShare: 0.15584415584415584,
     forestCoverShare: 0.34049180327868794,
     urbanCentresOver1M: 0,
+    productionRanks: {},
+    coalElectricityShare: 0,
   },
   LIE: {
     continent: "europe",
@@ -3333,6 +3603,8 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     mountainAreaShare: 0.99375,
     forestCoverShare: 0.41875,
     urbanCentresOver1M: 0,
+    productionRanks: {},
+    coalElectricityShare: null,
   },
   LKA: {
     continent: "asia",
@@ -3365,6 +3637,8 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     mountainAreaShare: 0.14924554183813443,
     forestCoverShare: 0.340048496605238,
     urbanCentresOver1M: 1,
+    productionRanks: {},
+    coalElectricityShare: 0.3259,
   },
   LSO: {
     continent: "africa",
@@ -3397,6 +3671,8 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     mountainAreaShare: 0.8732004612090265,
     forestCoverShare: 0.0113702239789196,
     urbanCentresOver1M: 0,
+    productionRanks: {},
+    coalElectricityShare: 0,
   },
   LTU: {
     continent: "europe",
@@ -3429,6 +3705,8 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     mountainAreaShare: 0,
     forestCoverShare: 0.352301501597444,
     urbanCentresOver1M: 0,
+    productionRanks: {},
+    coalElectricityShare: 0,
   },
   LUX: {
     continent: "europe",
@@ -3461,6 +3739,8 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     mountainAreaShare: 0.01894818252126837,
     forestCoverShare: 0.344538272103664,
     urbanCentresOver1M: 0,
+    productionRanks: {},
+    coalElectricityShare: 0,
   },
   LVA: {
     continent: "europe",
@@ -3493,6 +3773,8 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     mountainAreaShare: 0,
     forestCoverShare: 0.549959826450265,
     urbanCentresOver1M: 0,
+    productionRanks: {},
+    coalElectricityShare: 0,
   },
   MAR: {
     continent: "africa",
@@ -3525,6 +3807,8 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     mountainAreaShare: 0.4784816929795096,
     forestCoverShare: 0.129371068787811,
     urbanCentresOver1M: 5,
+    productionRanks: {},
+    coalElectricityShare: 0.6175,
   },
   MCO: {
     continent: "europe",
@@ -3557,6 +3841,8 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     mountainAreaShare: 0,
     forestCoverShare: 0,
     urbanCentresOver1M: 0,
+    productionRanks: {},
+    coalElectricityShare: null,
   },
   MDA: {
     continent: "europe",
@@ -3589,6 +3875,8 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     mountainAreaShare: 0.0019204632748330674,
     forestCoverShare: 0.11737017916793199,
     urbanCentresOver1M: 0,
+    productionRanks: {},
+    coalElectricityShare: 0,
   },
   MDG: {
     continent: "africa",
@@ -3621,6 +3909,8 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     mountainAreaShare: 0.4032086344906063,
     forestCoverShare: 0.212962600550017,
     urbanCentresOver1M: 1,
+    productionRanks: {},
+    coalElectricityShare: 0.20579999999999998,
   },
   MDV: {
     continent: "asia",
@@ -3653,6 +3943,8 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     mountainAreaShare: 0,
     forestCoverShare: 0.0275167785234899,
     urbanCentresOver1M: 0,
+    productionRanks: {},
+    coalElectricityShare: 0,
   },
   MEX: {
     continent: "north_america",
@@ -3691,6 +3983,10 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     mountainAreaShare: 0.4795326757874642,
     forestCoverShare: 0.335959176419147,
     urbanCentresOver1M: 10,
+    productionRanks: {
+      crude_oil: 13,
+    },
+    coalElectricityShare: 0.0349,
   },
   MHL: {
     continent: "oceania",
@@ -3723,6 +4019,8 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     mountainAreaShare: 0,
     forestCoverShare: 0.522222222222222,
     urbanCentresOver1M: 0,
+    productionRanks: {},
+    coalElectricityShare: null,
   },
   MKD: {
     continent: "europe",
@@ -3755,6 +4053,8 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     mountainAreaShare: 0.6804729125345156,
     forestCoverShare: 0.397101506740682,
     urbanCentresOver1M: 0,
+    productionRanks: {},
+    coalElectricityShare: 0.374,
   },
   MLI: {
     continent: "africa",
@@ -3787,6 +4087,8 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     mountainAreaShare: 0.005928114356486738,
     forestCoverShare: 0.10896663634352001,
     urbanCentresOver1M: 1,
+    productionRanks: {},
+    coalElectricityShare: 0,
   },
   MLT: {
     continent: "europe",
@@ -3819,6 +4121,8 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     mountainAreaShare: 0,
     forestCoverShare: 0.014375,
     urbanCentresOver1M: 0,
+    productionRanks: {},
+    coalElectricityShare: 0,
   },
   MMR: {
     continent: "asia",
@@ -3851,6 +4155,10 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     mountainAreaShare: 0.4895281844813163,
     forestCoverShare: 0.42402377924525403,
     urbanCentresOver1M: 2,
+    productionRanks: {
+      rice: 7,
+    },
+    coalElectricityShare: 0.0553,
   },
   MNE: {
     continent: "europe",
@@ -3883,6 +4191,8 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     mountainAreaShare: 0.6754995655951348,
     forestCoverShare: 0.614869888475836,
     urbanCentresOver1M: 0,
+    productionRanks: {},
+    coalElectricityShare: 0.40509999999999996,
   },
   MNG: {
     continent: "asia",
@@ -3915,6 +4225,8 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     mountainAreaShare: 0.3580457896183773,
     forestCoverShare: 0.09091724058793041,
     urbanCentresOver1M: 1,
+    productionRanks: {},
+    coalElectricityShare: 0.8469,
   },
   MOZ: {
     continent: "africa",
@@ -3947,6 +4259,8 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     mountainAreaShare: 0.18195461520228545,
     forestCoverShare: 0.458130349195046,
     urbanCentresOver1M: 2,
+    productionRanks: {},
+    coalElectricityShare: 0,
   },
   MRT: {
     continent: "africa",
@@ -3979,13 +4293,15 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     mountainAreaShare: 0.006685747550208596,
     forestCoverShare: 0.00287611138061512,
     urbanCentresOver1M: 1,
+    productionRanks: {},
+    coalElectricityShare: 0,
   },
   MUS: {
     continent: "africa",
     waterAccess: "island",
     borders: [],
     areaKm2: 2040,
-    population: 1241856,
+    population: 1240316,
     officialLanguages: ["en", "fr", "mfe"],
     latitude: -20.28333333,
     subregion: "Eastern Africa",
@@ -4011,6 +4327,8 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     mountainAreaShare: 0.23921568627450981,
     forestCoverShare: 0.19474211316975498,
     urbanCentresOver1M: 0,
+    productionRanks: {},
+    coalElectricityShare: 0.39299999999999996,
   },
   MWI: {
     continent: "africa",
@@ -4043,6 +4361,8 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     mountainAreaShare: 0.3801103946524425,
     forestCoverShare: 0.22440602460755202,
     urbanCentresOver1M: 1,
+    productionRanks: {},
+    coalElectricityShare: 0,
   },
   MYS: {
     continent: "asia",
@@ -4075,6 +4395,10 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     mountainAreaShare: 0.2841993573214269,
     forestCoverShare: 0.577190381981434,
     urbanCentresOver1M: 2,
+    productionRanks: {
+      natural_gas: 11,
+    },
+    coalElectricityShare: 0.4305,
   },
   NAM: {
     continent: "africa",
@@ -4117,6 +4441,8 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     mountainAreaShare: 0.1992066520109252,
     forestCoverShare: 0.07805111200184629,
     urbanCentresOver1M: 0,
+    productionRanks: {},
+    coalElectricityShare: 0.024399999999999998,
   },
   NER: {
     continent: "africa",
@@ -4149,6 +4475,8 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     mountainAreaShare: 0.01758800315706393,
     forestCoverShare: 0.00822957290597616,
     urbanCentresOver1M: 1,
+    productionRanks: {},
+    coalElectricityShare: 0.1789,
   },
   NGA: {
     continent: "africa",
@@ -4181,6 +4509,11 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     mountainAreaShare: 0.07169549064267218,
     forestCoverShare: 0.23207890027119898,
     urbanCentresOver1M: 17,
+    productionRanks: {
+      cocoa: 5,
+      crude_oil: 14,
+    },
+    coalElectricityShare: 0,
   },
   NIC: {
     continent: "north_america",
@@ -4213,13 +4546,15 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     mountainAreaShare: 0.23860768717449166,
     forestCoverShare: 0.258229183978727,
     urbanCentresOver1M: 1,
+    productionRanks: {},
+    coalElectricityShare: 0,
   },
   NLD: {
     continent: "europe",
     waterAccess: "coastal",
     borders: ["BEL", "DEU"],
     areaKm2: 41850,
-    population: 18153386,
+    population: 18153271,
     officialLanguages: ["nl"],
     latitude: 52.5,
     subregion: "Western Europe",
@@ -4245,6 +4580,8 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     mountainAreaShare: 0,
     forestCoverShare: 0.11057442827442801,
     urbanCentresOver1M: 2,
+    productionRanks: {},
+    coalElectricityShare: 0.0611,
   },
   NOR: {
     continent: "europe",
@@ -4277,6 +4614,11 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     mountainAreaShare: null,
     forestCoverShare: 0.335009745518434,
     urbanCentresOver1M: 0,
+    productionRanks: {
+      crude_oil: 12,
+      natural_gas: 8,
+    },
+    coalElectricityShare: 0,
   },
   NPL: {
     continent: "asia",
@@ -4309,6 +4651,8 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     mountainAreaShare: 0.8192769447143313,
     forestCoverShare: 0.415907220090687,
     urbanCentresOver1M: 1,
+    productionRanks: {},
+    coalElectricityShare: 0,
   },
   NRU: {
     continent: "oceania",
@@ -4341,6 +4685,8 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     mountainAreaShare: 0,
     forestCoverShare: 0,
     urbanCentresOver1M: 0,
+    productionRanks: {},
+    coalElectricityShare: 0,
   },
   NZL: {
     continent: "oceania",
@@ -4373,6 +4719,8 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     mountainAreaShare: 0.5066422151316057,
     forestCoverShare: 0.377892841137822,
     urbanCentresOver1M: 1,
+    productionRanks: {},
+    coalElectricityShare: 0.0273,
   },
   OMN: {
     continent: "asia",
@@ -4405,6 +4753,8 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     mountainAreaShare: 0.13992891760904685,
     forestCoverShare: 0.0000762261712439418,
     urbanCentresOver1M: 0,
+    productionRanks: {},
+    coalElectricityShare: 0,
   },
   PAK: {
     continent: "asia",
@@ -4437,6 +4787,11 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     mountainAreaShare: 0.31121472437159264,
     forestCoverShare: 0.0467242631797426,
     urbanCentresOver1M: 11,
+    productionRanks: {
+      rice: 9,
+      wheat: 8,
+    },
+    coalElectricityShare: 0.1545,
   },
   PAN: {
     continent: "north_america",
@@ -4469,6 +4824,8 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     mountainAreaShare: 0.31246270734714987,
     forestCoverShare: 0.563439727689404,
     urbanCentresOver1M: 1,
+    productionRanks: {},
+    coalElectricityShare: 0.037200000000000004,
   },
   PER: {
     continent: "south_america",
@@ -4506,6 +4863,11 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     mountainAreaShare: 0.4937823680999925,
     forestCoverShare: 0.56103020234375,
     urbanCentresOver1M: 2,
+    productionRanks: {
+      cocoa: 8,
+      coffee: 7,
+    },
+    coalElectricityShare: 0,
   },
   PHL: {
     continent: "asia",
@@ -4538,6 +4900,10 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     mountainAreaShare: 0.3128525235648585,
     forestCoverShare: 0.24460073112653902,
     urbanCentresOver1M: 4,
+    productionRanks: {
+      rice: 8,
+    },
+    coalElectricityShare: 0.6391,
   },
   PLW: {
     continent: "oceania",
@@ -4570,6 +4936,8 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     mountainAreaShare: 0,
     forestCoverShare: 0.905434782608696,
     urbanCentresOver1M: 0,
+    productionRanks: {},
+    coalElectricityShare: null,
   },
   PNG: {
     continent: "oceania",
@@ -4602,6 +4970,8 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     mountainAreaShare: 0.44335839598997495,
     forestCoverShare: 0.7895413593605091,
     urbanCentresOver1M: 0,
+    productionRanks: {},
+    coalElectricityShare: 0,
   },
   POL: {
     continent: "europe",
@@ -4634,6 +5004,8 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     mountainAreaShare: 0.04550033740673342,
     forestCoverShare: 0.310804192379273,
     urbanCentresOver1M: 1,
+    productionRanks: {},
+    coalElectricityShare: 0.5432,
   },
   PRK: {
     continent: "asia",
@@ -4666,6 +5038,8 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     mountainAreaShare: 0.609285038742969,
     forestCoverShare: 0.495507017689561,
     urbanCentresOver1M: 1,
+    productionRanks: {},
+    coalElectricityShare: 0.3406,
   },
   PRT: {
     continent: "europe",
@@ -4698,6 +5072,8 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     mountainAreaShare: 0.23592138125746553,
     forestCoverShare: 0.36154994891142,
     urbanCentresOver1M: 2,
+    productionRanks: {},
+    coalElectricityShare: 0,
   },
   PRY: {
     continent: "south_america",
@@ -4730,6 +5106,8 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     mountainAreaShare: 0.006355223821886555,
     forestCoverShare: 0.38544925264012797,
     urbanCentresOver1M: 1,
+    productionRanks: {},
+    coalElectricityShare: 0,
   },
   PSE: {
     continent: "asia",
@@ -4768,6 +5146,8 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     mountainAreaShare: 0.5590032154340836,
     forestCoverShare: 0.0168298755186722,
     urbanCentresOver1M: 2,
+    productionRanks: {},
+    coalElectricityShare: 0,
   },
   QAT: {
     continent: "asia",
@@ -4800,6 +5180,10 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     mountainAreaShare: 0,
     forestCoverShare: 0,
     urbanCentresOver1M: 1,
+    productionRanks: {
+      natural_gas: 6,
+    },
+    coalElectricityShare: 0,
   },
   ROU: {
     continent: "europe",
@@ -4832,6 +5216,8 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     mountainAreaShare: 0.3292951495652101,
     forestCoverShare: 0.301158292767733,
     urbanCentresOver1M: 1,
+    productionRanks: {},
+    coalElectricityShare: 0.151,
   },
   RUS: {
     continent: "europe",
@@ -4879,6 +5265,12 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     mountainAreaShare: 0.2500397994132964,
     forestCoverShare: 0.497843605035639,
     urbanCentresOver1M: 7,
+    productionRanks: {
+      wheat: 3,
+      crude_oil: 2,
+      natural_gas: 2,
+    },
+    coalElectricityShare: 0.1779,
   },
   RWA: {
     continent: "africa",
@@ -4911,6 +5303,8 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     mountainAreaShare: 0.627230617358949,
     forestCoverShare: 0.113092825293879,
     urbanCentresOver1M: 1,
+    productionRanks: {},
+    coalElectricityShare: 0.15039999999999998,
   },
   SAU: {
     continent: "asia",
@@ -4943,6 +5337,11 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     mountainAreaShare: 0.10386148700510306,
     forestCoverShare: 0.00454484134921779,
     urbanCentresOver1M: 5,
+    productionRanks: {
+      crude_oil: 3,
+      natural_gas: 9,
+    },
+    coalElectricityShare: 0,
   },
   SDN: {
     continent: "africa",
@@ -4975,6 +5374,8 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     mountainAreaShare: 0.07675863224443658,
     forestCoverShare: 0.0955196466809422,
     urbanCentresOver1M: 2,
+    productionRanks: {},
+    coalElectricityShare: 0,
   },
   SEN: {
     continent: "africa",
@@ -5007,6 +5408,8 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     mountainAreaShare: 0.0014589115604762047,
     forestCoverShare: 0.412827091881785,
     urbanCentresOver1M: 2,
+    productionRanks: {},
+    coalElectricityShare: 0.0131,
   },
   SGP: {
     continent: "asia",
@@ -5039,6 +5442,8 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     mountainAreaShare: 0,
     forestCoverShare: 0.20933147632312,
     urbanCentresOver1M: 1,
+    productionRanks: {},
+    coalElectricityShare: 0.0096,
   },
   SLB: {
     continent: "oceania",
@@ -5071,6 +5476,8 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     mountainAreaShare: 0.3206672203765227,
     forestCoverShare: 0.900600214362272,
     urbanCentresOver1M: 0,
+    productionRanks: {},
+    coalElectricityShare: 0,
   },
   SLE: {
     continent: "africa",
@@ -5103,6 +5510,8 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     mountainAreaShare: 0.09901031502648452,
     forestCoverShare: 0.342988362427265,
     urbanCentresOver1M: 1,
+    productionRanks: {},
+    coalElectricityShare: 0,
   },
   SLV: {
     continent: "north_america",
@@ -5135,6 +5544,8 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     mountainAreaShare: 0.57007746780096,
     forestCoverShare: 0.275279922779923,
     urbanCentresOver1M: 1,
+    productionRanks: {},
+    coalElectricityShare: null,
   },
   SMR: {
     continent: "europe",
@@ -5167,6 +5578,8 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     mountainAreaShare: 0.39344262295081966,
     forestCoverShare: 0.166666666666667,
     urbanCentresOver1M: 0,
+    productionRanks: {},
+    coalElectricityShare: null,
   },
   SOM: {
     continent: "africa",
@@ -5199,6 +5612,8 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     mountainAreaShare: 0.09446771540185397,
     forestCoverShare: 0.09165285172314849,
     urbanCentresOver1M: 2,
+    productionRanks: {},
+    coalElectricityShare: 0,
   },
   SRB: {
     continent: "europe",
@@ -5231,6 +5646,8 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     mountainAreaShare: 0.44447210873575443,
     forestCoverShare: 0.323896349149721,
     urbanCentresOver1M: 1,
+    productionRanks: {},
+    coalElectricityShare: 0.6293,
   },
   SSD: {
     continent: "africa",
@@ -5263,6 +5680,8 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     mountainAreaShare: 0.06043937425876772,
     forestCoverShare: 0.113256215087114,
     urbanCentresOver1M: 0,
+    productionRanks: {},
+    coalElectricityShare: 0,
   },
   STP: {
     continent: "africa",
@@ -5295,6 +5714,8 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     mountainAreaShare: 0,
     forestCoverShare: 0.52125,
     urbanCentresOver1M: 0,
+    productionRanks: {},
+    coalElectricityShare: null,
   },
   SUR: {
     continent: "south_america",
@@ -5327,13 +5748,15 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     mountainAreaShare: 0.05239287022341595,
     forestCoverShare: 0.9444758351333,
     urbanCentresOver1M: 0,
+    productionRanks: {},
+    coalElectricityShare: 0,
   },
   SVK: {
     continent: "europe",
     waterAccess: "landlocked",
     borders: ["AUT", "CZE", "HUN", "POL", "UKR"],
     areaKm2: 49037,
-    population: 5405368,
+    population: 5403009,
     officialLanguages: ["sk"],
     latitude: 48.66666666,
     subregion: "Central Europe",
@@ -5359,6 +5782,8 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     mountainAreaShare: 0.5283765320064441,
     forestCoverShare: 0.4005615640599,
     urbanCentresOver1M: 0,
+    productionRanks: {},
+    coalElectricityShare: 0.0176,
   },
   SVN: {
     continent: "europe",
@@ -5391,6 +5816,8 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     mountainAreaShare: 0.6789325704138508,
     forestCoverShare: 0.611748938389332,
     urbanCentresOver1M: 0,
+    productionRanks: {},
+    coalElectricityShare: 0.2095,
   },
   SWE: {
     continent: "europe",
@@ -5423,6 +5850,8 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     mountainAreaShare: 0.1500305355378141,
     forestCoverShare: 0.687013529108454,
     urbanCentresOver1M: 1,
+    productionRanks: {},
+    coalElectricityShare: 0,
   },
   SWZ: {
     continent: "africa",
@@ -5461,6 +5890,8 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     mountainAreaShare: 0.7372149274360748,
     forestCoverShare: 0.291389534883721,
     urbanCentresOver1M: 0,
+    productionRanks: {},
+    coalElectricityShare: 0.032799999999999996,
   },
   SYC: {
     continent: "africa",
@@ -5493,6 +5924,8 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     mountainAreaShare: 0,
     forestCoverShare: 0.732608695652174,
     urbanCentresOver1M: 0,
+    productionRanks: {},
+    coalElectricityShare: 0,
   },
   SYR: {
     continent: "asia",
@@ -5525,6 +5958,8 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     mountainAreaShare: 0.15468733124527487,
     forestCoverShare: 0.028431084245493697,
     urbanCentresOver1M: 2,
+    productionRanks: {},
+    coalElectricityShare: 0,
   },
   TCD: {
     continent: "africa",
@@ -5557,6 +5992,8 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     mountainAreaShare: 0.07996806853582554,
     forestCoverShare: 0.0316103105146125,
     urbanCentresOver1M: 1,
+    productionRanks: {},
+    coalElectricityShare: 0,
   },
   TGO: {
     continent: "africa",
@@ -5589,6 +6026,8 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     mountainAreaShare: 0.07780223650611957,
     forestCoverShare: 0.22070049641478198,
     urbanCentresOver1M: 1,
+    productionRanks: {},
+    coalElectricityShare: 0,
   },
   THA: {
     continent: "asia",
@@ -5621,6 +6060,10 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     mountainAreaShare: 0.289419628936701,
     forestCoverShare: 0.38687388674665796,
     urbanCentresOver1M: 1,
+    productionRanks: {
+      rice: 6,
+    },
+    coalElectricityShare: 0.16670000000000001,
   },
   TJK: {
     continent: "asia",
@@ -5653,6 +6096,8 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     mountainAreaShare: 0.9308455625436758,
     forestCoverShare: 0.0307514950644859,
     urbanCentresOver1M: 1,
+    productionRanks: {},
+    coalElectricityShare: 0.045,
   },
   TKM: {
     continent: "asia",
@@ -5685,6 +6130,10 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     mountainAreaShare: 0.045529604589223525,
     forestCoverShare: 0.08782159044964138,
     urbanCentresOver1M: 1,
+    productionRanks: {
+      natural_gas: 12,
+    },
+    coalElectricityShare: 0,
   },
   TLS: {
     continent: "asia",
@@ -5717,6 +6166,8 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     mountainAreaShare: 0.6192012908430818,
     forestCoverShare: 0.616610625420309,
     urbanCentresOver1M: 0,
+    productionRanks: {},
+    coalElectricityShare: 0,
   },
   TON: {
     continent: "oceania",
@@ -5749,6 +6200,8 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     mountainAreaShare: 0.02677376171352075,
     forestCoverShare: 0.124305555555556,
     urbanCentresOver1M: 0,
+    productionRanks: {},
+    coalElectricityShare: 0,
   },
   TTO: {
     continent: "north_america",
@@ -5781,6 +6234,8 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     mountainAreaShare: 0.050682261208577,
     forestCoverShare: 0.44235867446393795,
     urbanCentresOver1M: 0,
+    productionRanks: {},
+    coalElectricityShare: 0,
   },
   TUN: {
     continent: "africa",
@@ -5813,6 +6268,8 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     mountainAreaShare: 0.16138989059348455,
     forestCoverShare: 0.0455278063851699,
     urbanCentresOver1M: 1,
+    productionRanks: {},
+    coalElectricityShare: 0,
   },
   TUR: {
     continent: "asia",
@@ -5845,6 +6302,8 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     mountainAreaShare: null,
     forestCoverShare: 0.29479568104153897,
     urbanCentresOver1M: 8,
+    productionRanks: {},
+    coalElectricityShare: 0.3555,
   },
   TUV: {
     continent: "oceania",
@@ -5877,6 +6336,8 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     mountainAreaShare: 0,
     forestCoverShare: 0.333333333333333,
     urbanCentresOver1M: 0,
+    productionRanks: {},
+    coalElectricityShare: null,
   },
   TWN: {
     continent: "asia",
@@ -5909,6 +6370,8 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     mountainAreaShare: null,
     forestCoverShare: 0.6071,
     urbanCentresOver1M: 4,
+    productionRanks: {},
+    coalElectricityShare: 0.4007,
   },
   TZA: {
     continent: "africa",
@@ -5941,6 +6404,8 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     mountainAreaShare: 0.24229303757220236,
     forestCoverShare: 0.500541883043576,
     urbanCentresOver1M: 2,
+    productionRanks: {},
+    coalElectricityShare: 0,
   },
   UGA: {
     continent: "africa",
@@ -5973,6 +6438,10 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     mountainAreaShare: 0.20504657420823846,
     forestCoverShare: 0.110419703770197,
     urbanCentresOver1M: 1,
+    productionRanks: {
+      coffee: 6,
+    },
+    coalElectricityShare: 0,
   },
   UKR: {
     continent: "europe",
@@ -6005,6 +6474,10 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     mountainAreaShare: 0.03736205468102734,
     forestCoverShare: 0.16755264066275502,
     urbanCentresOver1M: 2,
+    productionRanks: {
+      wheat: 9,
+    },
+    coalElectricityShare: null,
   },
   URY: {
     continent: "south_america",
@@ -6037,6 +6510,8 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     mountainAreaShare: 0.0010550504325154391,
     forestCoverShare: 0.119643469317792,
     urbanCentresOver1M: 1,
+    productionRanks: {},
+    coalElectricityShare: 0,
   },
   USA: {
     continent: "north_america",
@@ -6076,6 +6551,12 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     mountainAreaShare: 0.2631638359005656,
     forestCoverShare: 0.338669264120375,
     urbanCentresOver1M: 25,
+    productionRanks: {
+      wheat: 4,
+      crude_oil: 1,
+      natural_gas: 1,
+    },
+    coalElectricityShare: 0.1485,
   },
   UZB: {
     continent: "asia",
@@ -6108,6 +6589,8 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     mountainAreaShare: 0.12656459544032186,
     forestCoverShare: 0.0854914331101781,
     urbanCentresOver1M: 1,
+    productionRanks: {},
+    coalElectricityShare: 0.0699,
   },
   VAT: {
     continent: "europe",
@@ -6140,6 +6623,8 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     mountainAreaShare: 0,
     forestCoverShare: 0,
     urbanCentresOver1M: 0,
+    productionRanks: {},
+    coalElectricityShare: null,
   },
   VCT: {
     continent: "north_america",
@@ -6172,6 +6657,8 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     mountainAreaShare: 0.38303341902313626,
     forestCoverShare: 0.731794871794872,
     urbanCentresOver1M: 0,
+    productionRanks: {},
+    coalElectricityShare: 0,
   },
   VEN: {
     continent: "south_america",
@@ -6204,6 +6691,8 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     mountainAreaShare: 0.27422813152998815,
     forestCoverShare: 0.522338793719177,
     urbanCentresOver1M: 3,
+    productionRanks: {},
+    coalElectricityShare: 0,
   },
   VNM: {
     continent: "asia",
@@ -6236,6 +6725,11 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     mountainAreaShare: 0.4239490115092448,
     forestCoverShare: 0.47445482070899603,
     urbanCentresOver1M: 4,
+    productionRanks: {
+      coffee: 2,
+      rice: 5,
+    },
+    coalElectricityShare: 0.5032,
   },
   VUT: {
     continent: "oceania",
@@ -6268,6 +6762,8 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     mountainAreaShare: 0.3829682500615309,
     forestCoverShare: 0.36283839212469204,
     urbanCentresOver1M: 0,
+    productionRanks: {},
+    coalElectricityShare: null,
   },
   WSM: {
     continent: "oceania",
@@ -6300,6 +6796,8 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     mountainAreaShare: 0.4479239971850809,
     forestCoverShare: 0.57636690647482,
     urbanCentresOver1M: 0,
+    productionRanks: {},
+    coalElectricityShare: 0,
   },
   XKX: {
     continent: "europe",
@@ -6332,6 +6830,8 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     mountainAreaShare: null,
     forestCoverShare: 0.447,
     urbanCentresOver1M: 0,
+    productionRanks: {},
+    coalElectricityShare: 0.9126000000000001,
   },
   YEM: {
     continent: "asia",
@@ -6364,6 +6864,8 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     mountainAreaShare: 0.33137046184617247,
     forestCoverShare: 0.010398318086254901,
     urbanCentresOver1M: 2,
+    productionRanks: {},
+    coalElectricityShare: 0,
   },
   ZAF: {
     continent: "africa",
@@ -6420,6 +6922,8 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     mountainAreaShare: 0.35133333387931726,
     forestCoverShare: 0.13965072665672001,
     urbanCentresOver1M: 5,
+    productionRanks: {},
+    coalElectricityShare: 0.8355,
   },
   ZMB: {
     continent: "africa",
@@ -6452,6 +6956,8 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     mountainAreaShare: 0.09353292267463181,
     forestCoverShare: 0.59523784150984,
     urbanCentresOver1M: 1,
+    productionRanks: {},
+    coalElectricityShare: 0.10800000000000001,
   },
   ZWE: {
     continent: "africa",
@@ -6500,5 +7006,7 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     mountainAreaShare: 0.2864875101405733,
     forestCoverShare: 0.447366421093447,
     urbanCentresOver1M: 1,
+    productionRanks: {},
+    coalElectricityShare: 0.4288,
   },
 };

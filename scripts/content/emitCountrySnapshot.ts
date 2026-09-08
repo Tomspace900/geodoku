@@ -55,6 +55,8 @@ const FACT_KEYS = [
   "mountainAreaShare",
   "forestCoverShare",
   "urbanCentresOver1M",
+  "productionRanks",
+  "coalElectricityShare",
 ] as const;
 
 function sortByIso3(records: readonly CountryRecord[]): CountryRecord[] {

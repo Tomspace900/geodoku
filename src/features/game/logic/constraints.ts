@@ -25,7 +25,9 @@ export type ConstraintCategory =
   | "density"
   | "nature"
   | "society"
-  | "ocean";
+  | "ocean"
+  | "production"
+  | "energy";
 
 export type Constraint = {
   id: ConstraintId;
@@ -420,6 +422,45 @@ export const CONSTRAINTS: Constraint[] = [
     id: "urban_centres_min_3_over_1m",
     labelKey: "constraint.urban_centres_min_3_over_1m",
     category: "society",
+  },
+
+  // ── Production agricole ────────────────────────────────────────────────────
+  {
+    id: "production_cocoa_top10",
+    labelKey: "constraint.production_cocoa_top10",
+    category: "production",
+  },
+  {
+    id: "production_coffee_top10",
+    labelKey: "constraint.production_coffee_top10",
+    category: "production",
+  },
+  {
+    id: "production_rice_top10",
+    labelKey: "constraint.production_rice_top10",
+    category: "production",
+  },
+  {
+    id: "production_wheat_top10",
+    labelKey: "constraint.production_wheat_top10",
+    category: "production",
+  },
+
+  // ── Énergie ───────────────────────────────────────────────────────────────
+  {
+    id: "production_crude_oil_top15",
+    labelKey: "constraint.production_crude_oil_top15",
+    category: "energy",
+  },
+  {
+    id: "production_natural_gas_top15",
+    labelKey: "constraint.production_natural_gas_top15",
+    category: "energy",
+  },
+  {
+    id: "energy_coal_electricity_majority",
+    labelKey: "constraint.energy_coal_electricity_majority",
+    category: "energy",
   },
 ];
 

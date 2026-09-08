@@ -126,6 +126,22 @@ alors hors liste sans être compté comme « 0 % ».
   [GHSL Urban Centre Database](https://human-settlement.emergency.copernicus.eu/ghs_ucdb_2024.php)
   — agglomération bâtie, pas la commune administrative.
 
+## Production et énergie
+
+- Production agricole (cacao, café, riz, blé) : [FAOSTAT](https://www.fao.org/faostat/),
+  production territoriale, moyenne triennale 2022-2024. Items « Cocoa beans »,
+  « Coffee, green », « Rice, paddy », « Wheat ».
+- Production d'énergie (pétrole brut, gaz naturel sec) :
+  [U.S. EIA International](https://www.eia.gov/international/data/world).
+  Datasets curés : `top 18` par produit, la longue traîne de producteurs
+  marginaux étant écartée à la curation (hors de portée du top 15).
+- Part du charbon dans l'électricité :
+  [Ember Data Explorer](https://ember-energy.org/data/data-tools/data-explorer/),
+  production d'électricité (pas énergie primaire ni consommation finale).
+
+Tous ces classements portent sur la **production**, jamais les exportations ni
+les réserves. Un pays absent d'une source vaut `null`, jamais 0.
+
 ## Océans
 
 La convention Geodoku part de l'[IHO S-23](https://iho.int/uploads/user/pubs/standards/s-23/S-23_Ed3_1953_EN.pdf).

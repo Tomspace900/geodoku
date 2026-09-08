@@ -387,6 +387,15 @@ export const fr = {
     society_capital_not_largest: "La capitale n'est pas la plus grande ville",
     urban_centres_min_3_over_1m:
       "Au moins 3\u00A0villes de plus d'un million d'habitants",
+    production_cocoa_top10: "Top 10 mondial des producteurs de fèves de cacao",
+    production_coffee_top10: "Top 10 mondial des producteurs de café",
+    production_rice_top10: "Top 10 mondial des producteurs de riz",
+    production_wheat_top10: "Top 10 mondial des producteurs de blé",
+    production_crude_oil_top15: "Top 15 mondial des producteurs de pétrole",
+    production_natural_gas_top15:
+      "Top 15 mondial des producteurs de gaz naturel",
+    energy_coal_electricity_majority:
+      "Plus de 50 % de l'électricité produite au charbon",
     // Archivées — non générées, conservées pour rejouer d'anciennes grilles.
     area_gt_500k: "Grand pays (>500\u00A0000\u00A0km²)",
     area_lt_1k: "Micro-État (<1\u00A0000\u00A0km²)",

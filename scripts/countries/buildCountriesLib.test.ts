@@ -52,6 +52,8 @@ function minimalCountry(code: string): CountryRecord {
     mountainAreaShare: null,
     forestCoverShare: null,
     urbanCentresOver1M: 0,
+    productionRanks: {},
+    coalElectricityShare: null,
   };
 }
 
@@ -376,6 +378,35 @@ describe("quantitativeFactsForCode", () => {
         ],
       },
     },
+    agriculturalProduction: {
+      source: "x",
+      referenceYears: [2022, 2023, 2024],
+      products: {
+        wheat: [
+          { countryCode: "CHN", rank: 1, value: 100 },
+          { countryCode: "FIN", rank: 10, value: 10 },
+        ],
+      },
+    },
+    energyProduction: {
+      source: "x",
+      sourceUpdatedAt: "2026-07-02T00:00:00Z",
+      products: {
+        crude_oil: {
+          referenceYear: 2025,
+          unit: "thousand_barrels_per_day",
+          rankings: [
+            { countryCode: "RUS", rank: 2, value: 9000 },
+            { countryCode: "CHE", rank: 16, value: 1 },
+          ],
+        },
+      },
+    },
+    coalElectricity: {
+      source: "x",
+      referenceYear: 2024,
+      countries: { CHN: 57.77, FIN: 1.01 },
+    },
   };
 
   it("reduces datasets to per-country scalars, shares as 0–1 fractions", () => {
@@ -385,6 +416,8 @@ describe("quantitativeFactsForCode", () => {
       mountainAreaShare: null,
       forestCoverShare: null,
       urbanCentresOver1M: 0,
+      productionRanks: { crude_oil: 2 },
+      coalElectricityShare: null,
     });
     expect(quantitativeFactsForCode("CHE", datasets).mountainAreaShare).toBe(
       0.654,
@@ -397,6 +430,28 @@ describe("quantitativeFactsForCode", () => {
     );
     expect(quantitativeFactsForCode("CHN", datasets).urbanCentresOver1M).toBe(
       3,
+    );
+  });
+
+  it("maps source product keys to jouable keys and caps ranks at 15", () => {
+    expect(quantitativeFactsForCode("CHN", datasets).productionRanks).toEqual({
+      wheat: 1,
+    });
+    // CHE est rang 16 en pétrole → au-delà du cap, écarté.
+    expect(quantitativeFactsForCode("CHE", datasets).productionRanks).toEqual(
+      {},
+    );
+    expect(quantitativeFactsForCode("FIN", datasets).productionRanks).toEqual({
+      wheat: 10,
+    });
+  });
+
+  it("reads coalElectricityShare as a 0–1 fraction, null when uncovered", () => {
+    expect(quantitativeFactsForCode("CHN", datasets).coalElectricityShare).toBe(
+      0.5777,
+    );
+    expect(quantitativeFactsForCode("ZZZ", datasets).coalElectricityShare).toBe(
+      null,
     );
   });
 

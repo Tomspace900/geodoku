@@ -646,6 +646,8 @@ export const manualCountryAdditions: CountryRecord[] = [
     mountainAreaShare: null,
     forestCoverShare: null,
     urbanCentresOver1M: 0,
+    productionRanks: {},
+    coalElectricityShare: null,
   },
 ];
 

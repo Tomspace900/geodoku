@@ -35,6 +35,17 @@ const URBAN_CENTRES_MIN = 3;
 /** « Majorité du territoire » : part strictement supérieure à la moitié. */
 const MAJORITY_SHARE = 0.5;
 
+const PRODUCTION_TOP_10 = 10;
+const PRODUCTION_TOP_15 = 15;
+
+/** Rang mondial du pays pour un produit, `+∞` s'il est hors du top retenu. */
+function productionRank(
+  facts: CountryFacts,
+  product: keyof CountryFacts["productionRanks"],
+): number {
+  return facts.productionRanks[product] ?? Number.POSITIVE_INFINITY;
+}
+
 /** |lat| > POLAR_ABS_LAT → au-delà du 55ᵉ parallèle (Scandinavie, Canada, Russie). */
 const POLAR_ABS_LAT = 55;
 
@@ -178,6 +189,23 @@ export const DERIVATIONS = {
   society_drives_on_left: (f) => f.geoTags.includes("drives_on_left"),
   society_capital_not_largest: (f) => f.geoTags.includes("capital_not_largest"),
   urban_centres_min_3_over_1m: (f) => f.urbanCentresOver1M >= URBAN_CENTRES_MIN,
+
+  // ── Production agricole (FAOSTAT, moyenne 2022-2024) ───────────────────────
+  production_cocoa_top10: (f) =>
+    productionRank(f, "cocoa") <= PRODUCTION_TOP_10,
+  production_coffee_top10: (f) =>
+    productionRank(f, "coffee") <= PRODUCTION_TOP_10,
+  production_rice_top10: (f) => productionRank(f, "rice") <= PRODUCTION_TOP_10,
+  production_wheat_top10: (f) =>
+    productionRank(f, "wheat") <= PRODUCTION_TOP_10,
+
+  // ── Énergie (production EIA, part charbon Ember) ──────────────────────────
+  production_crude_oil_top15: (f) =>
+    productionRank(f, "crude_oil") <= PRODUCTION_TOP_15,
+  production_natural_gas_top15: (f) =>
+    productionRank(f, "natural_gas") <= PRODUCTION_TOP_15,
+  energy_coal_electricity_majority: (f) =>
+    f.coalElectricityShare !== null && f.coalElectricityShare > MAJORITY_SHARE,
 } satisfies Record<ActiveConstraintId, Derivation>;
 
 /**

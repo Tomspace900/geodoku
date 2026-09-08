@@ -121,6 +121,7 @@ export function validateCountryFacts(
       [
         ["mountainAreaShare", facts.mountainAreaShare],
         ["forestCoverShare", facts.forestCoverShare],
+        ["coalElectricityShare", facts.coalElectricityShare],
       ] as const
     ).forEach(([field, value]) => {
       if (value === null) return;
@@ -136,6 +137,11 @@ export function validateCountryFacts(
         `${code}: urbanCentresOver1M invalide (${facts.urbanCentresOver1M})`,
       );
     }
+    Object.entries(facts.productionRanks).forEach(([product, rank]) => {
+      if (!Number.isInteger(rank) || rank < 1 || rank > 15) {
+        errors.push(`${code}: productionRanks.${product} invalide (${rank})`);
+      }
+    });
     facts.capitals.forEach((capital) => {
       if (
         !capital.name ||
@@ -189,6 +195,16 @@ export function validateCountryFacts(
       "urbanCentresOver1M>=3",
       allFacts.filter((f) => f.urbanCentresOver1M >= 3).length,
       15,
+    ],
+    [
+      "productionRanks",
+      allFacts.filter((f) => Object.keys(f.productionRanks).length > 0).length,
+      30,
+    ],
+    [
+      "coalElectricityShare",
+      allFacts.filter((f) => f.coalElectricityShare !== null).length,
+      150,
     ],
   ];
   coverage.forEach(([field, count, min]) => {

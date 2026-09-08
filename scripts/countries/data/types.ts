@@ -11,6 +11,10 @@
  * quantitatifs dérivés ») et les `SOURCE.md` des contraintes concernées.
  */
 
+import type { ProductionRankKey } from "../../../content/countries/type.ts";
+
+export type { ProductionRankKey };
+
 /** Décalages UTC civils distincts observés simultanément à `referenceDate`. */
 export type CivilTimeOffsetsSnapshot = Record<
   string,
@@ -48,5 +52,45 @@ export type ForestCoverSnapshot = {
   source: string;
   referenceYear: number;
   /** Pourcentage 0–100 par ISO3 ; couverture complète des 197 pays jouables. */
+  countries: Record<string, number>;
+};
+
+/** Une ligne de classement mondial (rang 1 = premier producteur). */
+export type ProductionRankingRow = {
+  countryCode: string;
+  rank: number;
+  /** Volume source (tonnes agricoles / kb·j⁻¹ pétrole / Gm³ gaz) ; conservé pour la révision. */
+  value: number;
+};
+
+/**
+ * Classements de production agricole (FAOSTAT, moyenne triennale). Un tableau
+ * `top N` par produit, trié par rang croissant.
+ */
+export type AgriculturalProductionSnapshot = {
+  source: string;
+  referenceYears: number[];
+  products: Record<string, ProductionRankingRow[]>;
+};
+
+/**
+ * Classements de production d'énergie (U.S. EIA International). `top N` par
+ * produit ; les rangs marginaux (producteurs quasi nuls) sont écartés à la
+ * curation — hors de portée de toute contrainte.
+ */
+export type EnergyProductionSnapshot = {
+  source: string;
+  sourceUpdatedAt: string;
+  products: Record<
+    string,
+    { referenceYear: number; unit: string; rankings: ProductionRankingRow[] }
+  >;
+};
+
+/** Part du charbon dans la production d'électricité, en pourcentage (Ember). */
+export type CoalElectricitySnapshot = {
+  source: string;
+  referenceYear: number;
+  /** Pourcentage 0–100 par ISO3 ; un pays absent de la source reste absent (jamais 0). */
   countries: Record<string, number>;
 };

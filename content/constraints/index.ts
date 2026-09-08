@@ -34,6 +34,7 @@ import density_less_russia from "./density_less_russia/answers";
 import density_low from "./density_low/answers";
 import density_more_japan from "./density_more_japan/answers";
 import density_more_netherlands from "./density_more_netherlands/answers";
+import energy_coal_electricity_majority from "./energy_coal_electricity_majority/answers";
 import event_fifa_wc_host from "./event_fifa_wc_host/answers";
 import event_summer_olympics_host from "./event_summer_olympics_host/answers";
 import event_winter_olympics_host from "./event_winter_olympics_host/answers";
@@ -77,6 +78,12 @@ import population_lt_1M from "./population_lt_1M/answers";
 import population_lt_2_5M from "./population_lt_2_5M/answers";
 import population_more_canada from "./population_more_canada/answers";
 import population_more_germany from "./population_more_germany/answers";
+import production_cocoa_top10 from "./production_cocoa_top10/answers";
+import production_coffee_top10 from "./production_coffee_top10/answers";
+import production_crude_oil_top15 from "./production_crude_oil_top15/answers";
+import production_natural_gas_top15 from "./production_natural_gas_top15/answers";
+import production_rice_top10 from "./production_rice_top10/answers";
+import production_wheat_top10 from "./production_wheat_top10/answers";
 import regime_monarchy from "./regime_monarchy/answers";
 import society_capital_not_largest from "./society_capital_not_largest/answers";
 import society_drives_on_left from "./society_drives_on_left/answers";
@@ -160,6 +167,13 @@ export const CONSTRAINT_IDS = [
   "society_drives_on_left",
   "society_capital_not_largest",
   "urban_centres_min_3_over_1m",
+  "production_cocoa_top10",
+  "production_coffee_top10",
+  "production_rice_top10",
+  "production_wheat_top10",
+  "production_crude_oil_top15",
+  "production_natural_gas_top15",
+  "energy_coal_electricity_majority",
 ] as const;
 
 /** Contraintes hors génération, conservées pour rejouer les anciennes grilles. */
@@ -275,6 +289,13 @@ const ANSWER_SETS = {
   society_drives_on_left,
   society_capital_not_largest,
   urban_centres_min_3_over_1m,
+  production_cocoa_top10,
+  production_coffee_top10,
+  production_rice_top10,
+  production_wheat_top10,
+  production_crude_oil_top15,
+  production_natural_gas_top15,
+  energy_coal_electricity_majority,
   flag_two_colors,
   area_gt_2M,
   area_gt_500k,
