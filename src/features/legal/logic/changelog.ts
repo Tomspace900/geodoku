@@ -1,7 +1,7 @@
 /** À mettre à jour quand une entrée est ajoutée en tête de `ChangelogPage` ENTRIES. */
-export const LATEST_CHANGELOG_UPDATE_DATE = "2026-09-09";
+export const LATEST_CHANGELOG_UPDATE_DATE = "2026-09-10";
 
-const NEW_BADGE_WINDOW_MS = 72 * 60 * 60 * 1000; // 72 hours
+const NEW_BADGE_WINDOW_MS = 7 * 24 * 60 * 60 * 1000; // 7 days
 
 function startOfUtcDay(ymd: string): number {
   const [year, month, day] = ymd.split("-").map(Number);

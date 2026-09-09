@@ -91,14 +91,14 @@ export const fr = {
     title: "Changelog",
     backToGame: "Retour au jeu",
     entries: {
-      newConstraintsDate: "9 septembre 2026",
+      newConstraintsDate: "10 septembre 2026",
       newConstraintsTitle: "Une salve de nouvelles contraintes",
       newConstraintsBody:
-        "Le catalogue de contraintes passe de 60 \u00E0 79\u00A0: 25 ajout\u00E9es au fil de l'\u00E9t\u00E9, 6 mises de c\u00F4t\u00E9 en r\u00E9serve, soit 19 de plus. Au menu\u00A0: fuseaux horaires multiples, volcans actifs, pays surtout montagneux ou forestiers, grandes agglom\u00E9rations, fa\u00E7ades sur plusieurs oc\u00E9ans, gros producteurs agricoles et \u00E9nerg\u00E9tiques, et l'histoire coloniale\u00A0: souverainet\u00E9 r\u00E9cente, ind\u00E9pendance vis-\u00E0-vis de la France ou du Royaume-Uni. Elles apparaissent progressivement dans les grilles.",
+        "\u00C7a y est\u00A0! C'est la rentr\u00E9e, le jeu devient plus riche. Le catalogue s'enrichit d'une vingtaine (!) de contraintes suppl\u00E9mentaires, qui arriveront progressivement dans les grilles. Au menu\u00A0: fuseaux horaires, volcans, agglom\u00E9rations, productions agricoles, \u00E9nergies, histoire coloniale et d'autres\u00A0!",
       archiveDate: "9 ao\u00FBt 2026",
       archiveTitle: "Rejouer les grilles passées",
       archiveBody:
-        "Enfin ! Les archives sont là ! Tu peux désormais rejouer les grilles des jours passés, sans limite de vies. Les raretés dépendent des réponses du jour concerné, et tu peux recommencer une grille autant de fois que tu veux. Pour l'instant les sept derniers jours sont disponibles\u00A0, j'\u00E9largirai peut-\u00EAtre la fen\u00EAtre selon vos retours.",
+        "Enfin ! Les archives sont là ! Tu peux désormais rejouer les grilles des jours passés, sans limite de vies. Les raretés dépendent des réponses du jour concerné, et tu peux recommencer une grille autant de fois que tu veux. Pour l'instant les sept derniers jours sont disponibles, j'\u00E9largirai peut-\u00EAtre la fen\u00EAtre selon vos retours.",
       scoreClarityDate: "13 juillet 2026",
       scoreClarityTitle: "Enfin un score compréhensible",
       scoreClarityBody:

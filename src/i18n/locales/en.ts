@@ -89,10 +89,10 @@ export const en = {
     title: "Changelog",
     backToGame: "Back to the game",
     entries: {
-      newConstraintsDate: "September 9, 2026",
+      newConstraintsDate: "September 10, 2026",
       newConstraintsTitle: "A batch of new constraints",
       newConstraintsBody:
-        "The constraint catalogue grows from 60 to 79: 25 added over the summer, 6 set aside, so 19 more overall. On the menu: multiple time zones, active volcanoes, mostly mountainous or forested countries, large metro areas, coasts on several oceans, major farm and energy producers, and colonial history: recent sovereignty, and independence from France or the United Kingdom. They show up in grids gradually.",
+        "Here we go! September is here and the game gets richer. The catalogue gains a good twenty (!) extra constraints, which will show up in grids gradually. On the menu: time zones, volcanoes, metro areas, farm produce, energy, colonial history and more!",
       archiveDate: "August 9, 2026",
       archiveTitle: "Replay past grids",
       archiveBody:
