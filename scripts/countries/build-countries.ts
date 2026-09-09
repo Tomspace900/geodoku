@@ -41,7 +41,6 @@ import {
   gameplayArraysForCode,
   mapLanguages,
   physicalFeaturesForCode,
-  type QuantitativeDatasets,
   quantitativeFactsForCode,
   type RcEnrichment,
   type RcEnrichRow,
@@ -50,27 +49,7 @@ import {
   toWikipediaTitle,
 } from "./buildCountriesLib.ts";
 import { countryPatches } from "./countryPatches.ts";
-import { AGRICULTURAL_PRODUCTION } from "./data/agriculturalProduction.ts";
-import { CIVIL_TIME_OFFSETS } from "./data/civilTimeOffsets.ts";
-import { COAL_ELECTRICITY } from "./data/coalElectricity.ts";
-import { ENERGY_PRODUCTION } from "./data/energyProduction.ts";
-import { FOREST_COVER } from "./data/forestCover.ts";
-import { HOLOCENE_VOLCANOES } from "./data/holoceneVolcanoes.ts";
-import { MOUNTAIN_AREAS } from "./data/mountainArea.ts";
-import { SOVEREIGNTY } from "./data/sovereignty.ts";
-import { URBAN_CENTRES } from "./data/urbanCentres.ts";
-
-const QUANTITATIVE_DATASETS: QuantitativeDatasets = {
-  civilTimeOffsets: CIVIL_TIME_OFFSETS,
-  holoceneVolcanoes: HOLOCENE_VOLCANOES,
-  mountainArea: MOUNTAIN_AREAS,
-  forestCover: FOREST_COVER,
-  urbanCentres: URBAN_CENTRES,
-  agriculturalProduction: AGRICULTURAL_PRODUCTION,
-  energyProduction: ENERGY_PRODUCTION,
-  coalElectricity: COAL_ELECTRICITY,
-  sovereignty: SOVEREIGNTY,
-};
+import { QUANTITATIVE_DATASETS } from "./data/datasets.ts";
 
 // ─── World-countries shape (fields we consume) ────────────────────────────────
 

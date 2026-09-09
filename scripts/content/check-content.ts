@@ -7,6 +7,10 @@
  *   - **obsolescence** : re-dérive les listes actives depuis `COUNTRY_FACTS`
  *     et échoue si un `answers.ts` committé ne correspond plus (facts modifiés
  *     sans regen, ou liste éditée à la main) ;
+ *   - **fraîcheur des faits dérivés** : re-fusionne les datasets curés de
+ *     `scripts/countries/data/` et échoue si `facts.ts` ne correspond plus
+ *     (dataset révisé sans regen, ou faits édités à la main). Les champs
+ *     importés du réseau restent hors de portée — cf. `validateDatasetFacts` ;
  *   - **provenance** : présence et frontmatter cohérent des `SOURCE.md`
  *     (un par contrainte) et des trois documents de socle.
  *
@@ -33,10 +37,12 @@ import {
   ARCHIVED_CONSTRAINTS,
   CONSTRAINTS,
 } from "../../src/features/game/logic/constraints";
+import { QUANTITATIVE_DATASETS } from "../countries/data/datasets";
 import {
   validateCountryCatalog,
   validateCountryFacts,
 } from "../countries/validateCountryCatalog";
+import { validateDatasetFacts } from "../countries/validateDatasetFacts";
 
 const EXPECTED_COUNTRY_COUNT = 197;
 const EXPECTED_ACTIVE_COUNT = 79;
@@ -56,6 +62,13 @@ function isSorted(values: readonly string[]): boolean {
 function checkCountries(errors: string[]): void {
   errors.push(...validateCountryCatalog(COUNTRY_CATALOG));
   errors.push(...validateCountryFacts(COUNTRY_FACTS, COUNTRY_CODES));
+  errors.push(
+    ...validateDatasetFacts(
+      COUNTRY_FACTS,
+      QUANTITATIVE_DATASETS,
+      COUNTRY_CODES,
+    ),
+  );
 
   const countryCodes = COUNTRY_CATALOG.map(({ iso3 }) => iso3);
   if (COUNTRY_CATALOG.length !== EXPECTED_COUNTRY_COUNT) {

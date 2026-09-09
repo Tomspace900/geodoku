@@ -88,6 +88,7 @@ e2e/                      # Playwright — helpers.ts + *.shared|desktop|mobile.
 - Contraintes **en réserve** (`RESERVE_CONSTRAINT_IDS`, [`content/constraints/index.ts`](content/constraints/index.ts)) : conçues et sourcées mais écartées du jeu actif (arbitrage gameplay). **Ni** générables **ni** rejouables — volontairement hors de `ConstraintId` (un id de réserve dans une grille échoue bruyamment) ; seul leur `SOURCE.md` subsiste (`status: archived`, sans `answers.ts`). `check:content` garde présence + absence d'`answers.ts` + non-chevauchement. Réactivation : réintroduire dans `CONSTRAINTS` + `derivations.ts` + i18n, puis `pnpm build:answers`.
 - Chaque contrainte porte un `SOURCE.md` (définition, dérivation, cas limites) ; le socle (`constraints/SOURCES.md`, `content/README.md`, `content/countries/SOURCE.md`) porte le principe et la provenance par famille de champs. `check:content` vérifie présence et frontmatter.
 - Deux leviers pour réviser une contrainte active : la **définition** change → `derivations.ts` (+ `CONSTRAINTS`) ; une **donnée** est fausse → curation (`countryPatches.ts`, `flagData.json`) ou `pnpm build:countries`. Jamais `answers.ts` à la main.
+- `content/countries/facts.ts` est **généré** : les dix champs dérivés des datasets de `scripts/countries/data/` (fuseaux, volcans, relief, forêt, centres urbains, rangs de production, charbon, souveraineté) sont re-fusionnés par `check:content` ([`validateDatasetFacts.ts`](scripts/countries/validateDatasetFacts.ts)) — un dataset révisé sans `pnpm build:countries`, ou une édition à la main, échoue en CI. Les champs venus du réseau (population, capitales, adhésions, pageviews) n'ont d'autre juge que la regen.
 - Après un levier : `pnpm build:answers` → relire le diff ISO3 → `pnpm simulate:scheduling` → régénération du pool via `/admin` si OK.
 - Le snapshot `content/countries/` (identité, faits, popularité) est régénéré par `pnpm build:countries` (réseau), qui enchaîne `build:answers`.
 - Drapeaux → [`scripts/countries/flagData.json`](scripts/countries/flagData.json) curé, pas d'heuristique.
@@ -180,7 +181,7 @@ pnpm build
 # Contenu & pool
 pnpm build:countries             # regen réseau du snapshot content/ (+ enchaîne build:answers)
 pnpm build:answers               # re-dérive content/constraints/<id>/answers.ts (hors-ligne)
-pnpm check:content               # cohérence content/ (job quality) : obsolescence des listes + provenance SOURCE.md
+pnpm check:content               # cohérence content/ (job quality) : obsolescence des listes + fraîcheur des faits dérivés + provenance SOURCE.md
 pnpm analyze:pool
 pnpm simulate:scheduling          # validateur changement contraintes
 pnpm simulate:players             # dry-run par défaut ; --execute pour écrire (develop/dev)

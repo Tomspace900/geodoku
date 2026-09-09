@@ -109,6 +109,12 @@ au jour, puis enchaîne `pnpm build:answers`. Provenance par famille de champs :
 pas d'heuristique. Erreur de drapeau → patcher `flagData.json` puis régénérer.
 Gameplay : 5 contraintes `flag` (`flagSymbols` + `flag_two_colors` archivée).
 
+**Datasets quantitatifs** — montés une seule fois dans
+[`scripts/countries/data/datasets.ts`](../scripts/countries/data/datasets.ts),
+lu à la fois par `build:countries` et par la garde de fraîcheur : deux
+assemblages séparés dériveraient, et la garde finirait par valider un snapshot
+que le build ne produit plus.
+
 ### Contrôles automatiques
 
 `pnpm check:content` (job CI `quality`) vérifie :
@@ -119,6 +125,15 @@ Gameplay : 5 contraintes `flag` (`flagSymbols` + `flag_two_colors` archivée).
 - **obsolescence** : re-dérive les 79 actives depuis `COUNTRY_FACTS` et échoue
   (`+[…] -[…]` + « lancer pnpm build:answers ») si un `answers.ts` committé ne
   correspond plus ;
+- **fraîcheur des faits dérivés** : l'étage du dessus — re-fusionne les datasets
+  de `scripts/countries/data/` et échoue (« lancer pnpm build:countries ») si
+  l'un des dix champs qu'ils produisent (`utcOffsetCount`, `hasHoloceneVolcano`,
+  `mountainAreaShare`, `forestCoverShare`, `urbanCentresOver1M`,
+  `productionRanks`, `coalElectricityShare`, `formerSovereigns`,
+  `sovereigntyYear`, `sovereigntyKind`) ne correspond plus à `facts.ts` : dataset
+  révisé sans regen, ou `facts.ts` édité à la main malgré son en-tête
+  `@generated`. Les champs venus du réseau (population, capitales, adhésions,
+  pageviews) restent hors de portée — seule une regen les vérifie ;
 - **provenance** : présence d'un `SOURCE.md` par contrainte, frontmatter
   cohérent (`constraint_id` == dossier, `status` == actif/archivé réel,
   `checked_at`/`review_after` en `YYYY-MM-DD`), et présence des trois documents
@@ -126,8 +141,9 @@ Gameplay : 5 contraintes `flag` (`flagSymbols` + `flag_two_colors` archivée).
 
 Les invariants par pays vivent dans
 [`scripts/countries/validateCountryCatalog.ts`](../scripts/countries/validateCountryCatalog.ts)
-(`validateCountryCatalog` + `validateCountryFacts`), appelés par la garde et ses
-tests.
+(`validateCountryCatalog` + `validateCountryFacts`), la fraîcheur des faits
+dérivés dans [`scripts/countries/validateDatasetFacts.ts`](../scripts/countries/validateDatasetFacts.ts)
+(`validateDatasetFacts`) — appelés par la garde et ses tests.
 
 ## Difficulté et facilité
 

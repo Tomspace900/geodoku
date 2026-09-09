@@ -71,7 +71,11 @@ une liste manquante, en trop ou branchée sur le mauvais dossier ne compile pas.
 
 `pnpm check:content` (job CI `quality`) vérifie la cohérence du dossier **et
 rejoue les dérivations** : un `answers.ts` actif qui ne correspond plus au
-snapshot fait échouer la CI avec un message actionnable.
+snapshot fait échouer la CI avec un message actionnable. Il rejoue de même
+l'étage du dessus — la fusion des datasets quantitatifs vers `facts.ts` — donc
+un dataset révisé sans `pnpm build:countries`, ou une édition à la main de
+`facts.ts`, échoue aussi. Les champs venus du réseau (population, capitales,
+adhésions, pageviews) restent hors de portée : seule une regen les vérifie.
 
 Le runtime ne recalcule plus une réponse depuis un objet `Country` :
 `matchesConstraint(id, iso3)` teste l'appartenance à la liste versionnée. Une
