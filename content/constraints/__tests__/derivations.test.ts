@@ -67,22 +67,49 @@ describe("DERIVATIONS — bascules de seuil", () => {
     expect({
       russia: derive("time_zones_multiple", "RUS"),
       spain: derive("time_zones_multiple", "ESP"), // péninsule + Canaries
+      // Métropole + DOM : même règle que l'Espagne, appliquée à la France.
+      france: derive("time_zones_multiple", "FRA"),
+      // Aucun territoire intégré décalé : les territoires d'outre-mer et les
+      // pays constitutifs autonomes ne comptent pas.
+      united_kingdom: derive("time_zones_multiple", "GBR"),
+      denmark: derive("time_zones_multiple", "DNK"),
       germany: derive("time_zones_multiple", "DEU"), // un seul
       iceland: derive("time_zones_multiple", "ISL"),
-    }).toEqual({ russia: true, spain: true, germany: false, iceland: false });
+    }).toEqual({
+      russia: true,
+      spain: true,
+      france: true,
+      united_kingdom: false,
+      denmark: false,
+      germany: false,
+      iceland: false,
+    });
   });
 
-  it("nature_holocene_volcano : présence au registre GVP", () => {
+  it("nature_active_volcano : éruption datée depuis 1500, territoire intégré", () => {
     expect({
-      iceland: derive("nature_holocene_volcano", "ISL"),
-      indonesia: derive("nature_holocene_volcano", "IDN"),
-      poland: derive("nature_holocene_volcano", "POL"),
-      egypt: derive("nature_holocene_volcano", "EGY"),
+      iceland: derive("nature_active_volcano", "ISL"),
+      indonesia: derive("nature_active_volcano", "IDN"),
+      poland: derive("nature_active_volcano", "POL"),
+      // La France entre par la Martinique, la Guadeloupe et La Réunion.
+      france: derive("nature_active_volcano", "FRA"),
+      // Le Royaume-Uni n'a aucun volcan sur l'île de Grande-Bretagne : ses 14
+      // volcans GVP sont tous en territoire d'outre-mer, donc hors périmètre.
+      united_kingdom: derive("nature_active_volcano", "GBR"),
+      // Éruptions uniquement préhistoriques : l'Holocène les retenait, pas nous.
+      germany: derive("nature_active_volcano", "DEU"),
+      rwanda: derive("nature_active_volcano", "RWA"),
+      // Continent sans éruption historique, Heard/McDonald étant hors périmètre.
+      australia: derive("nature_active_volcano", "AUS"),
     }).toEqual({
       iceland: true,
       indonesia: true,
       poland: false,
-      egypt: false,
+      france: true,
+      united_kingdom: false,
+      germany: false,
+      rwanda: false,
+      australia: false,
     });
   });
 
@@ -112,15 +139,6 @@ describe("DERIVATIONS — bascules de seuil", () => {
       egypt: false,
       australia: false,
     });
-  });
-
-  it("urban_centres_min_3_over_1m : au moins 3 centres > 1 M", () => {
-    expect({
-      china: derive("urban_centres_min_3_over_1m", "CHN"),
-      usa: derive("urban_centres_min_3_over_1m", "USA"),
-      portugal: derive("urban_centres_min_3_over_1m", "PRT"), // 2
-      iceland: derive("urban_centres_min_3_over_1m", "ISL"),
-    }).toEqual({ china: true, usa: true, portugal: false, iceland: false });
   });
 
   it("ocean_multiple_basins : au moins 2 bassins (Méditerranée/Caraïbes → Atlantique)", () => {
@@ -183,13 +201,20 @@ describe("DERIVATIONS — bascules de seuil", () => {
 
   it("production_coffee_top10 : rang 10 dedans, absent du classement dehors", () => {
     expect({
-      central_african_republic: derive("production_coffee_top10", "CAF"), // rang 10
       brazil: derive("production_coffee_top10", "BRA"), // rang 1
+      mexico: derive("production_coffee_top10", "MEX"), // rang 10
+      guatemala: derive("production_coffee_top10", "GTM"), // rang 11, dehors
       kenya: derive("production_coffee_top10", "KEN"), // producteur hors top 10
+      // La série FAOSTAT classait la RCA 10ᵉ mondiale (316 kt) par imputation, ce
+      // qui écartait le Mexique. Le re-sourçage USDA-FAS (revue métier
+      // 2026-09-10) la sort du classement — elle n'y est même pas listée.
+      central_african_republic: derive("production_coffee_top10", "CAF"),
     }).toEqual({
-      central_african_republic: true,
       brazil: true,
+      mexico: true,
+      guatemala: false,
       kenya: false,
+      central_african_republic: false,
     });
   });
 

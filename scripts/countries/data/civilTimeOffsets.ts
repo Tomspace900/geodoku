@@ -306,7 +306,12 @@ export const CIVIL_TIME_OFFSETS: CivilTimeOffsetsSnapshot = {
     referenceDate: "2026-01-15",
   },
   FRA: {
-    value: ["UTC+01:00"],
+    // Métropole (+01:00) et cinq départements et régions d'outre-mer, qui sont
+    // du territoire pleinement intégré au même titre que les Canaries pour
+    // l'Espagne : Antilles (-04:00), Guyane (-03:00), Mayotte (+03:00),
+    // La Réunion (+04:00). La Polynésie et la Nouvelle-Calédonie, collectivités
+    // non intégrées, ne comptent pas — cf. content/constraints/SOURCES.md.
+    value: ["UTC-04:00", "UTC-03:00", "UTC+01:00", "UTC+03:00", "UTC+04:00"],
     year: 2026,
     referenceDate: "2026-01-15",
   },
@@ -656,7 +661,10 @@ export const CIVIL_TIME_OFFSETS: CivilTimeOffsetsSnapshot = {
     referenceDate: "2026-01-15",
   },
   NLD: {
-    value: ["UTC+01:00"],
+    // Pays-Bas européens (+01:00) et îles BES — Bonaire, Saba, Saint-Eustache —
+    // qui sont des communes à statut particulier des Pays-Bas (-04:00). Aruba,
+    // Curaçao et Saint-Martin sont des pays constitutifs autonomes : exclus.
+    value: ["UTC-04:00", "UTC+01:00"],
     year: 2026,
     referenceDate: "2026-01-15",
   },

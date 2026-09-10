@@ -327,6 +327,12 @@ export const gameplayClassifications: GameplayClassifications = {
     "COL",
     "VEN",
     "MEX",
+    // Guadeloupe et Martinique : départements d'outre-mer, donc territoire
+    // pleinement intégré au même titre que la Guyane pour la façade atlantique
+    // (revue métier 2026-09-10, cf. content/constraints/SOURCES.md). La France
+    // reste hors `pacificCoast` : la Polynésie et la Nouvelle-Calédonie sont des
+    // collectivités non intégrées.
+    "FRA",
   ],
   peakOver5000m: [
     "AFG",
@@ -642,7 +648,7 @@ export const manualCountryAdditions: CountryRecord[] = [
     // Faits quantitatifs : placeholders, recalculés par build-countries via
     // quantitativeFactsForCode (datasets scripts/countries/data/).
     utcOffsetCount: 1,
-    hasHoloceneVolcano: false,
+    lastVolcanicEruptionYear: null,
     mountainAreaShare: null,
     forestCoverShare: null,
     urbanCentresOver1M: 0,

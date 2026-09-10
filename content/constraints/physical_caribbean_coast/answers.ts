@@ -11,6 +11,7 @@ export default defineAnswerSet("physical_caribbean_coast", [
   "CUB",
   "DMA",
   "DOM",
+  "FRA",
   "GRD",
   "GTM",
   "HND",

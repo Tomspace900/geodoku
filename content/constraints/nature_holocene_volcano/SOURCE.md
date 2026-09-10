@@ -1,11 +1,28 @@
 ---
 constraint_id: nature_holocene_volcano
-status: active
-checked_at: 2026-08-29
-review_after: 2027-02-28
+status: archived
+checked_at: 2026-09-10
+review_after: 2027-09-10
 ---
 
 # nature_holocene_volcano
+
+## Archivée
+
+Retirée du jeu actif à la revue métier du **2026-09-10** et remplacée par
+[`nature_active_volcano`](../nature_active_volcano/SOURCE.md), qui exige une
+éruption datée de 1500 ou après et applique le périmètre territorial commun.
+
+Deux motifs. D'abord l'étendue : 76 pays sur 197 (39 %), la plus large contrainte
+du jeu, avec des membres dont la dernière éruption remonte à huit millénaires —
+« volcan actif ou récent » ne décrivait pas la liste. Ensuite le périmètre : le
+Royaume-Uni y figurait alors qu'aucun de ses volcans n'est sur l'île de
+Grande-Bretagne.
+
+Contrairement aux contraintes **en réserve**, celle-ci garde son `answers.ts` :
+elle a été jouée, et les grilles publiées doivent rester rejouables. La liste est
+désormais **figée à la main** (plus d'en-tête `@generated`, hors dérivation), à
+l'état du 2026-09-10.
 
 ## Définition
 

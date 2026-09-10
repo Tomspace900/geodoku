@@ -1,11 +1,33 @@
 ---
 constraint_id: urban_centres_min_3_over_1m
-status: active
-checked_at: 2026-08-29
-review_after: 2027-02-28
+status: archived
+checked_at: 2026-09-10
+review_after: 2027-09-10
 ---
 
 # urban_centres_min_3_over_1m
+
+## En réserve
+
+Retirée du jeu actif à la revue métier du **2026-09-10**, pour deux raisons.
+
+**Indevinable.** La délimitation GHSL des centres urbains ne recoupe pas
+l'intuition : la France compte 2 centres de plus d'un million d'habitants, la
+Bolivie, le Ghana et le Kazakhstan en comptent 3. Aucun joueur ne peut arbitrer
+ça, et la valeur française elle-même est discutable.
+
+**Structurellement coûteuse.** Avec 36 réponses, elle englobait à 0,85 ou plus
+quatre autres contraintes — `area_larger_india` (100 %), `political_g20` (95 %),
+`population_more_germany` (94 %), `area_larger_mexico` (92 %) — qu'elle bannissait
+donc de toute grille où elle figurait. Elle ressortait par ailleurs comme la
+deuxième contrainte la plus réutilisée sur 30 jours simulés.
+
+La contrainte n'est **ni générée ni rejouable** et n'a plus d'`answers.ts`
+(`RESERVE_CONSTRAINT_IDS` dans `content/constraints/index.ts`). Réactivation :
+réintroduire l'entrée dans `CONSTRAINTS` (`src/features/game/logic/constraints.ts`),
+la dérivation dans `content/constraints/derivations.ts` et les clés i18n fr + en,
+puis `pnpm build:answers`. Le champ de faits `urbanCentresOver1M` reste produit
+par le pipeline : rien à régénérer.
 
 ## Définition
 

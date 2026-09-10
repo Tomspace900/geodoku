@@ -185,8 +185,13 @@ export type CountryFacts = Readonly<{
    * pays (IANA Time Zone Database). Toujours ≥ 1.
    */
   utcOffsetCount: number;
-  /** Le pays compte au moins un volcan actif à l'Holocène (Smithsonian GVP). */
-  hasHoloceneVolcano: boolean;
+  /**
+   * Année de la dernière éruption connue du pays (Smithsonian GVP), restreint à
+   * son territoire pleinement intégré. Négative avant notre ère ; `null` s'il n'a
+   * aucun volcan holocène ou aucune éruption datée. Donnée brute : le seuil
+   * d'activité vit dans la dérivation.
+   */
+  lastVolcanicEruptionYear: number | null;
   /**
    * Part de territoire montagneux, fraction 0–1 (ODD 15.4.2, méthode
    * FAO/UNEP-WCMC). `null` quand la source ne couvre pas le pays — jamais 0.
@@ -275,7 +280,7 @@ export type CountryRecord = {
   regime: Regime;
   physicalFeatures: PhysicalFeature[];
   utcOffsetCount: number;
-  hasHoloceneVolcano: boolean;
+  lastVolcanicEruptionYear: number | null;
   mountainAreaShare: number | null;
   forestCoverShare: number | null;
   urbanCentresOver1M: number;

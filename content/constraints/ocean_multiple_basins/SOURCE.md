@@ -1,8 +1,8 @@
 ---
 constraint_id: ocean_multiple_basins
 status: active
-checked_at: 2026-08-29
-review_after: 2027-02-28
+checked_at: 2026-09-10
+review_after: 2027-09-10
 ---
 
 # ocean_multiple_basins
@@ -36,9 +36,19 @@ matérialise `answers.ts` (gardé par `pnpm check:content`).
 - `arctic_coast` est une façade nouvelle, curée et restreinte aux quatre États à
   côte arctique continue : elle donne son second bassin à la **Norvège**
   (Atlantique + Arctique) et à la **Russie** (Pacifique + Arctique).
-- Les territoires ultramarins comptent pour l'État souverain jouable : la
-  **France** est multi-bassins par la Guyane (Atlantique), la Réunion/Mayotte
-  (Indien) et la Polynésie/Nouvelle-Calédonie (Pacifique).
+- **Périmètre territorial** : règle commune, cf.
+  [SOURCES.md](../SOURCES.md#périmètre-territorial-dun-pays). Corrigé à la revue
+  métier du 2026-09-10 : ce document affirmait que la **France** était
+  multi-bassins « par la Guyane (Atlantique), la Réunion/Mayotte (Indien) et la
+  Polynésie/Nouvelle-Calédonie (Pacifique) », alors que la donnée ne lui donnait
+  ni façade pacifique ni façade caraïbe. La France répondait donc « oui » à
+  « Bordé par l'océan Indien » et « non » à « Bordé par l'océan Pacifique ».
+- État corrigé : la France porte Méditerranée, Atlantique (métropole et Guyane),
+  **Caraïbes** (Guadeloupe, Martinique) et Indien (La Réunion, Mayotte). Elle
+  reste **hors du Pacifique** : la Polynésie et la Nouvelle-Calédonie sont des
+  collectivités non intégrées. Le décompte de bassins est inchangé — la France y
+  était déjà — mais les trois contraintes `ocean_*` sont désormais cohérentes
+  entre elles.
 - Les dépendances ne sont pas repliées automatiquement sur leur État souverain.
 
 ## Révision

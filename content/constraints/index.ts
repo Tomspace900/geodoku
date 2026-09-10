@@ -56,6 +56,7 @@ import language_russian from "./language_russian/answers";
 import language_spanish from "./language_spanish/answers";
 import latitude_polar from "./latitude_polar/answers";
 import latitude_south_hemisphere from "./latitude_south_hemisphere/answers";
+import nature_active_volcano from "./nature_active_volcano/answers";
 import nature_desert from "./nature_desert/answers";
 import nature_holocene_volcano from "./nature_holocene_volcano/answers";
 import nature_mountain_area_majority from "./nature_mountain_area_majority/answers";
@@ -68,7 +69,6 @@ import physical_caribbean_coast from "./physical_caribbean_coast/answers";
 import physical_crosses_equator from "./physical_crosses_equator/answers";
 import physical_mediterranean_coast from "./physical_mediterranean_coast/answers";
 import physical_peak_over_5000m from "./physical_peak_over_5000m/answers";
-import political_arab_league from "./political_arab_league/answers";
 import political_commonwealth from "./political_commonwealth/answers";
 import political_eu from "./political_eu/answers";
 import political_g20 from "./political_g20/answers";
@@ -95,7 +95,6 @@ import subregion_middle_east from "./subregion_middle_east/answers";
 import subregion_southeast_asia from "./subregion_southeast_asia/answers";
 import time_zones_multiple from "./time_zones_multiple/answers";
 import type { ConstraintAnswerSet } from "./type";
-import urban_centres_min_3_over_1m from "./urban_centres_min_3_over_1m/answers";
 import water_island from "./water_island/answers";
 import water_landlocked from "./water_landlocked/answers";
 
@@ -147,7 +146,6 @@ export const CONSTRAINT_IDS = [
   "political_g20",
   "political_nato",
   "political_commonwealth",
-  "political_arab_league",
   "political_opec",
   "regime_monarchy",
   "physical_crosses_equator",
@@ -160,7 +158,7 @@ export const CONSTRAINT_IDS = [
   "density_less_canada",
   "nature_desert",
   "nature_rainforest",
-  "nature_holocene_volcano",
+  "nature_active_volcano",
   "nature_mountain_area_majority",
   "forest_cover_majority",
   "ocean_atlantic",
@@ -169,7 +167,6 @@ export const CONSTRAINT_IDS = [
   "ocean_multiple_basins",
   "society_drives_on_left",
   "society_capital_not_largest",
-  "urban_centres_min_3_over_1m",
   "production_cocoa_top10",
   "production_coffee_top10",
   "production_rice_top10",
@@ -185,6 +182,7 @@ export const CONSTRAINT_IDS = [
 /** Contraintes hors génération, conservées pour rejouer les anciennes grilles. */
 export const ARCHIVED_CONSTRAINT_IDS = [
   "flag_two_colors",
+  "nature_holocene_volcano",
   "area_gt_2M",
   "area_gt_500k",
   "area_lt_1k",
@@ -207,12 +205,14 @@ export const ARCHIVED_CONSTRAINT_IDS = [
  * `pnpm build:answers`.
  */
 export const RESERVE_CONSTRAINT_IDS = [
+  "political_arab_league",
   "political_asean",
   "political_brics",
   "political_eurozone",
   "political_g7",
   "political_schengen",
   "time_zones_min_3",
+  "urban_centres_min_3_over_1m",
 ] as const;
 
 /** Contrainte générable — clé de `DERIVATIONS`. */
@@ -272,7 +272,6 @@ const ANSWER_SETS = {
   political_g20,
   political_nato,
   political_commonwealth,
-  political_arab_league,
   political_opec,
   regime_monarchy,
   physical_crosses_equator,
@@ -285,6 +284,7 @@ const ANSWER_SETS = {
   density_less_canada,
   nature_desert,
   nature_rainforest,
+  nature_active_volcano,
   nature_holocene_volcano,
   nature_mountain_area_majority,
   forest_cover_majority,
@@ -294,7 +294,6 @@ const ANSWER_SETS = {
   ocean_multiple_basins,
   society_drives_on_left,
   society_capital_not_largest,
-  urban_centres_min_3_over_1m,
   production_cocoa_top10,
   production_coffee_top10,
   production_rice_top10,

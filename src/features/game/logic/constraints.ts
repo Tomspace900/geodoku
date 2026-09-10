@@ -298,11 +298,6 @@ export const CONSTRAINTS: Constraint[] = [
     category: "political",
   },
   {
-    id: "political_arab_league",
-    labelKey: "constraint.political_arab_league",
-    category: "political",
-  },
-  {
     id: "political_opec",
     labelKey: "constraint.political_opec",
     category: "political",
@@ -371,8 +366,8 @@ export const CONSTRAINTS: Constraint[] = [
     category: "nature",
   },
   {
-    id: "nature_holocene_volcano",
-    labelKey: "constraint.nature_holocene_volcano",
+    id: "nature_active_volcano",
+    labelKey: "constraint.nature_active_volcano",
     category: "nature",
   },
   {
@@ -417,11 +412,6 @@ export const CONSTRAINTS: Constraint[] = [
   {
     id: "society_capital_not_largest",
     labelKey: "constraint.society_capital_not_largest",
-    category: "society",
-  },
-  {
-    id: "urban_centres_min_3_over_1m",
-    labelKey: "constraint.urban_centres_min_3_over_1m",
     category: "society",
   },
 
@@ -494,6 +484,11 @@ export const ARCHIVED_CONSTRAINTS: Constraint[] = [
     id: "flag_two_colors",
     labelKey: "constraint.flag_two_colors",
     category: "flag",
+  },
+  {
+    id: "nature_holocene_volcano",
+    labelKey: "constraint.nature_holocene_volcano",
+    category: "nature",
   },
   {
     id: "area_gt_2M",

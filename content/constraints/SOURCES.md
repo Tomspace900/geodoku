@@ -25,6 +25,43 @@ dérivation elle-même.
 Les territoires et dépendances non jouables n'entrent dans aucune liste, même
 quand la source les distingue.
 
+## Périmètre territorial d'un pays
+
+Un pays jouable **inclut son territoire pleinement intégré, et rien d'autre**.
+Cette règle vaut pour toutes les familles géographiques — volcans, océans,
+fuseaux horaires, relief — et prime sur le découpage de la source, qui varie
+d'un fournisseur à l'autre.
+
+**Intégré, donc compté** : régions et départements d'outre-mer, régions
+autonomes, collectivités qui font partie de l'État au même titre que sa
+métropole. Guadeloupe, Martinique, Guyane, Mayotte et La Réunion (France) ;
+Canaries (Espagne) ; Açores et Madère (Portugal) ; îles BES — Bonaire, Saba,
+Saint-Eustache (Pays-Bas) ; Jan Mayen (Norvège) ; île Marion (Afrique du Sud) ;
+Galápagos (Équateur) ; Andaman-et-Nicobar (Inde) ; Kermadec (Nouvelle-Zélande) ;
+Alaska et Hawaï (États-Unis).
+
+**Non intégré, donc exclu** : territoires d'outre-mer britanniques ; Polynésie
+française, Nouvelle-Calédonie et TAAF ; île Bouvet (dépendance norvégienne) ;
+Groenland et Féroé (pays constitutifs autonomes du Danemark) ; Aruba, Curaçao et
+Saint-Martin (pays constitutifs des Pays-Bas) ; Mariannes du Nord et Samoa
+américaines (territoires non incorporés) ; Heard-et-MacDonald (territoire
+extérieur australien). Sont également hors périmètre les zones sans souveraineté
+reconnue (Antarctique, haute mer) et les territoires contestés, qu'on ne
+tranche pas.
+
+**Pourquoi la règle est écrite ici et pas dans chaque contrainte.** Avant la
+revue métier de 2026-09-10, trois familles y répondaient différemment, chacune
+en héritant du découpage de son dataset : le Smithsonian GVP indexe par État
+souverain, donc le Royaume-Uni « possédait un volcan » par Tristan da Cunha et
+les Pays-Bas par Saba ; la base IANA indexe par code ISO 3166, donc la France
+n'avait qu'un fuseau alors qu'elle en couvre douze, tandis que l'Espagne et le
+Portugal en avaient deux par accident de nomenclature ; la curation des océans
+donnait à la France une façade indienne mais pas de façade caraïbe. Le joueur
+n'avait aucun moyen de deviner laquelle des trois conventions s'appliquait.
+
+Toute contrainte géographique nouvelle applique cette règle et le dit dans son
+`SOURCE.md`.
+
 ## Procédure de révision
 
 Pour une contrainte **active** — on ne touche **jamais** `answers.ts` à la main :

@@ -3,12 +3,12 @@ import { defineAnswerSet } from "../defineAnswerSet";
 
 export default defineAnswerSet("production_coffee_top10", [
   "BRA",
-  "CAF",
   "COL",
   "ETH",
   "HND",
   "IDN",
   "IND",
+  "MEX",
   "PER",
   "UGA",
   "VNM",

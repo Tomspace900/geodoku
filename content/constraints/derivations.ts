@@ -31,7 +31,13 @@ const BORDERS_MIN_5 = 5;
 const BORDERS_MIN_7 = 7;
 
 const TIME_ZONES_MULTIPLE = 2;
-const URBAN_CENTRES_MIN = 3;
+/**
+ * Borne de l'activité volcanique « historique » : une éruption datée de 1500 ou
+ * après. En deçà, le GVP recense surtout des édifices dormants depuis des
+ * millénaires, qu'aucun joueur ne rattache à un volcan « actif » — l'Allemagne
+ * (−8300) ou le Rwanda (−8050) passaient le filtre Holocène.
+ */
+const VOLCANO_HISTORICAL_SINCE = 1500;
 /** « Majorité du territoire » : part strictement supérieure à la moitié. */
 const MAJORITY_SHARE = 0.5;
 
@@ -161,7 +167,6 @@ export const DERIVATIONS = {
   political_g20: (f) => f.memberships.includes("g20"),
   political_nato: (f) => f.memberships.includes("nato"),
   political_commonwealth: (f) => f.memberships.includes("commonwealth"),
-  political_arab_league: (f) => f.memberships.includes("arab_league"),
   political_opec: (f) => f.memberships.includes("opec"),
 
   // ── Régime ─────────────────────────────────────────────────────────────────
@@ -187,7 +192,9 @@ export const DERIVATIONS = {
   // ── Nature — biomes ────────────────────────────────────────────────────────
   nature_desert: (f) => f.physicalFeatures.includes("has_desert"),
   nature_rainforest: (f) => f.physicalFeatures.includes("rainforest"),
-  nature_holocene_volcano: (f) => f.hasHoloceneVolcano,
+  nature_active_volcano: (f) =>
+    f.lastVolcanicEruptionYear !== null &&
+    f.lastVolcanicEruptionYear >= VOLCANO_HISTORICAL_SINCE,
   nature_mountain_area_majority: (f) =>
     f.mountainAreaShare !== null && f.mountainAreaShare > MAJORITY_SHARE,
   forest_cover_majority: (f) =>
@@ -202,7 +209,6 @@ export const DERIVATIONS = {
   // ── Société ────────────────────────────────────────────────────────────────
   society_drives_on_left: (f) => f.geoTags.includes("drives_on_left"),
   society_capital_not_largest: (f) => f.geoTags.includes("capital_not_largest"),
-  urban_centres_min_3_over_1m: (f) => f.urbanCentresOver1M >= URBAN_CENTRES_MIN,
 
   // ── Production agricole (FAOSTAT, moyenne 2022-2024) ───────────────────────
   production_cocoa_top10: (f) =>

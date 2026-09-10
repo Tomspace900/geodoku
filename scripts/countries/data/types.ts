@@ -25,16 +25,32 @@ export type CivilTimeOffsetsSnapshot = Record<
   { value: string[]; year: number; referenceDate: string }
 >;
 
-/** Volcans dont une éruption est connue pendant l'Holocène (Smithsonian GVP). */
-export type HoloceneVolcanoSnapshot = Record<
-  string,
-  { names: string[]; databaseVersion: string }
->;
+/**
+ * Volcans dont une éruption est connue pendant l'Holocène (Smithsonian GVP),
+ * restreints au territoire pleinement intégré de chaque État. `lastEruptionYear`
+ * est l'année brute (négative avant notre ère, `null` si aucune éruption datée) :
+ * le seuil d'activité vit dans la dérivation, pas dans la donnée.
+ */
+export type HoloceneVolcanoSnapshot = {
+  source: string;
+  extractedAt: string;
+  countries: Record<
+    string,
+    { name: string; lastEruptionYear: number | null }[]
+  >;
+};
 
-/** Part de territoire montagneux en pourcentage (ODD 15.4.2, méthode FAO/UNEP-WCMC). */
+/**
+ * Part de territoire montagneux en pourcentage (ODD 15.4.2, méthode
+ * FAO/UNEP-WCMC). `source` n'est renseigné que pour les quelques pays **absents
+ * de la série onusienne**, dont la valeur est curée ailleurs : elle n'est alors
+ * pas issue de la même mesure, et n'est retenue que si l'écart au seuil de 50 %
+ * rend le choix de délimitation indifférent. Voir le `SOURCE.md` de
+ * `nature_mountain_area_majority`.
+ */
 export type MountainAreaSnapshot = Record<
   string,
-  { value: number; year: number }
+  { value: number; year: number; source?: string }
 >;
 
 export type UrbanCentre = {
@@ -63,18 +79,27 @@ export type ForestCoverSnapshot = {
 export type ProductionRankingRow = {
   countryCode: string;
   rank: number;
-  /** Volume source (tonnes agricoles / kb·j⁻¹ pétrole / Gm³ gaz) ; conservé pour la révision. */
+  /** Volume source, dans l'`unit` de son bloc ; conservé pour la révision. */
   value: number;
 };
 
 /**
- * Classements de production agricole (FAOSTAT, moyenne triennale). Un tableau
- * `top N` par produit, trié par rang croissant.
+ * Classements de production agricole. Un bloc `top N` par produit, trié par rang
+ * croissant, **avec sa propre source** : la revue métier 2026-09-10 a re-sourcé
+ * le café sur l'USDA-FAS (la série FAOSTAT plaçait la République centrafricaine
+ * au 10ᵉ rang mondial par imputation), et les sources ne sont donc plus
+ * homogènes entre produits. Même forme que `EnergyProductionSnapshot`.
  */
 export type AgriculturalProductionSnapshot = {
-  source: string;
-  referenceYears: number[];
-  products: Record<string, ProductionRankingRow[]>;
+  products: Record<
+    string,
+    {
+      source: string;
+      referenceYears: number[];
+      unit: string;
+      rankings: ProductionRankingRow[];
+    }
+  >;
 };
 
 /**

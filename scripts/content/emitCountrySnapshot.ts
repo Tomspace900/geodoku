@@ -51,7 +51,7 @@ const FACT_KEYS = [
   "regime",
   "physicalFeatures",
   "utcOffsetCount",
-  "hasHoloceneVolcano",
+  "lastVolcanicEruptionYear",
   "mountainAreaShare",
   "forestCoverShare",
   "urbanCentresOver1M",

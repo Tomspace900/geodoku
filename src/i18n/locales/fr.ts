@@ -94,7 +94,7 @@ export const fr = {
       newConstraintsDate: "10 septembre 2026",
       newConstraintsTitle: "Une salve de nouvelles contraintes",
       newConstraintsBody:
-        "\u00C7a y est\u00A0! C'est la rentr\u00E9e, le jeu devient plus riche. Le catalogue s'enrichit d'une vingtaine (!) de contraintes suppl\u00E9mentaires, qui arriveront progressivement dans les grilles. Au menu\u00A0: fuseaux horaires, volcans, agglom\u00E9rations, productions agricoles, \u00E9nergies, histoire coloniale et d'autres\u00A0!",
+        "\u00C7a y est\u00A0! C'est la rentr\u00E9e, le jeu devient plus riche. Le catalogue s'enrichit d'une bonne quinzaine de contraintes suppl\u00E9mentaires, qui arriveront progressivement dans les grilles. Au menu\u00A0: fuseaux horaires, volcans en activit\u00E9, productions agricoles, \u00E9nergies, relief, histoire coloniale et d'autres\u00A0!",
       archiveDate: "9 ao\u00FBt 2026",
       archiveTitle: "Rejouer les grilles passées",
       archiveBody:
@@ -363,7 +363,6 @@ export const fr = {
     political_g20: "Membre du G20",
     political_nato: "Membre de l'OTAN",
     political_commonwealth: "Membre du Commonwealth",
-    political_arab_league: "Membre de la Ligue arabe",
     political_opec: "Membre de l'OPEP",
     regime_monarchy: "Monarchie",
     physical_crosses_equator: "Traversé par l'équateur",
@@ -380,7 +379,8 @@ export const fr = {
       "Moins densément peuplé que le Canada (4\u00A0hab./km²)",
     nature_desert: "Possède un désert",
     nature_rainforest: "Abrite une forêt tropicale",
-    nature_holocene_volcano: "Possède un volcan actif ou récent (Holocène)",
+    nature_active_volcano:
+      "Possède un volcan en activité (éruption depuis 1500)",
     nature_mountain_area_majority: "Plus de 50\u00A0% du territoire montagneux",
     forest_cover_majority: "Plus de 50\u00A0% du territoire couvert de forêt",
     ocean_atlantic: "Bordé par l'océan Atlantique",
@@ -389,21 +389,21 @@ export const fr = {
     ocean_multiple_basins: "Bordé par au moins deux océans",
     society_drives_on_left: "Roule à gauche",
     society_capital_not_largest: "La capitale n'est pas la plus grande ville",
-    urban_centres_min_3_over_1m:
-      "Au moins 3\u00A0villes de plus d'un million d'habitants",
     production_cocoa_top10: "Top 10 mondial des producteurs de fèves de cacao",
     production_coffee_top10: "Top 10 mondial des producteurs de café",
     production_rice_top10: "Top 10 mondial des producteurs de riz",
     production_wheat_top10: "Top 10 mondial des producteurs de blé",
-    production_crude_oil_top15: "Top 15 mondial des producteurs de pétrole",
+    production_crude_oil_top15:
+      "Top 15 mondial des producteurs de pétrole brut",
     production_natural_gas_top15:
       "Top 15 mondial des producteurs de gaz naturel",
     energy_coal_electricity_majority:
       "Plus de 50 % de l'électricité produite au charbon",
-    history_sovereignty_since_1990: "Devenu souverain depuis 1990",
+    history_sovereignty_since_1990: "A accédé à l'indépendance depuis 1990",
     history_from_france: "Indépendance obtenue de la France",
-    history_from_united_kingdom: "Indépendance obtenue du Royaume-Uni",
+    history_from_united_kingdom: "Anciennement sous domination britannique",
     // Archivées — non générées, conservées pour rejouer d'anciennes grilles.
+    nature_holocene_volcano: "Possède un volcan actif ou récent (Holocène)",
     area_gt_500k: "Grand pays (>500\u00A0000\u00A0km²)",
     area_lt_1k: "Micro-État (<1\u00A0000\u00A0km²)",
     density_high: "Densité de population élevée (>300\u00A0hab./km²)",

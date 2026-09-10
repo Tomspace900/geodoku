@@ -25,6 +25,7 @@ export default defineAnswerSet("nature_mountain_area_majority", [
   "LSO",
   "MKD",
   "MNE",
+  "NOR",
   "NPL",
   "NZL",
   "PRK",
@@ -36,4 +37,7 @@ export default defineAnswerSet("nature_mountain_area_majority", [
   "SWZ",
   "TJK",
   "TLS",
+  "TUR",
+  "TWN",
+  "XKX",
 ]);

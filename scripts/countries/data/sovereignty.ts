@@ -330,7 +330,10 @@ export const SOVEREIGNTY: SovereigntySnapshot = {
       kind: "independence",
       year: 1956,
       date: "1956-01-01",
-      formerSovereigns: [],
+      // « from Egypt and the UK » — complété en revue métier 2026-09-10 : le
+      // Soudan anglo-égyptien est un condominium britannique (1899-1956), et la
+      // contrainte couvre explicitement mandats et protectorats.
+      formerSovereigns: ["united_kingdom"],
       sourceDescription: "1 January 1956 (from Egypt and the UK)",
     },
     TGO: {
@@ -452,7 +455,10 @@ export const SOVEREIGNTY: SovereigntySnapshot = {
       kind: "independence",
       year: 1968,
       date: "1968-01-31",
-      formerSovereigns: [],
+      // « UK-administered UN trusteeship » — complété en revue métier 2026-09-10.
+      // La même formulation de tutelle produit déjà `united_states` pour PLW,
+      // MHL et FSM : la tutelle britannique était seule à ne pas être lue.
+      formerSovereigns: ["united_kingdom"],
       sourceDescription:
         "31 January 1968 (from the Australia-, NZ-, and UK-administered UN trusteeship)",
     },

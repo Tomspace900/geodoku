@@ -444,7 +444,7 @@ export type QuantitativeDatasets = {
 type QuantitativeFacts = Pick<
   CountryRecord,
   | "utcOffsetCount"
-  | "hasHoloceneVolcano"
+  | "lastVolcanicEruptionYear"
   | "mountainAreaShare"
   | "forestCoverShare"
   | "urbanCentresOver1M"
@@ -477,14 +477,11 @@ function productionRanksForCode(
 ): Partial<Record<ProductionRankKey, number>> {
   const ranks: Partial<Record<ProductionRankKey, number>> = {};
   const rows = [
-    ...Object.entries(datasets.agriculturalProduction.products).flatMap(
-      ([product, list]) => list.map((row) => [product, row] as const),
-    ),
-    ...Object.entries(datasets.energyProduction.products).flatMap(
-      ([product, block]) =>
-        block.rankings.map((row) => [product, row] as const),
-    ),
-  ];
+    ...Object.entries(datasets.agriculturalProduction.products),
+    ...Object.entries(datasets.energyProduction.products),
+  ].flatMap(([product, block]) =>
+    block.rankings.map((row) => [product, row] as const),
+  );
   for (const [product, row] of rows) {
     const key = PRODUCTION_KEY_BY_SOURCE[product];
     if (!key || row.countryCode !== code || row.rank > PRODUCTION_RANK_CAP) {
@@ -493,6 +490,21 @@ function productionRanksForCode(
     ranks[key] = row.rank;
   }
   return ranks;
+}
+
+/**
+ * Année de la dernière éruption connue du pays, tous volcans confondus — `null`
+ * s'il n'a aucun volcan holocène en territoire intégré, ou aucune éruption datée.
+ * Année brute : le seuil d'« activité » est appliqué par la dérivation.
+ */
+function lastVolcanicEruptionYearForCode(
+  code: string,
+  datasets: QuantitativeDatasets,
+): number | null {
+  const years = (datasets.holoceneVolcanoes.countries[code] ?? [])
+    .map(({ lastEruptionYear }) => lastEruptionYear)
+    .filter((year): year is number => year !== null);
+  return years.length > 0 ? Math.max(...years) : null;
 }
 
 /**
@@ -512,7 +524,7 @@ export function quantitativeFactsForCode(
   const sovereignty = datasets.sovereignty.countries[code];
   return {
     utcOffsetCount: offsets && offsets.length > 0 ? offsets.length : 1,
-    hasHoloceneVolcano: Object.hasOwn(datasets.holoceneVolcanoes, code),
+    lastVolcanicEruptionYear: lastVolcanicEruptionYearForCode(code, datasets),
     mountainAreaShare: typeof mountain === "number" ? mountain / 100 : null,
     forestCoverShare: typeof forest === "number" ? forest / 100 : null,
     urbanCentresOver1M: datasets.urbanCentres.countries[code]?.length ?? 0,

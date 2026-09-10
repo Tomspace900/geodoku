@@ -1,11 +1,28 @@
 ---
 constraint_id: political_arab_league
-status: active
-checked_at: 2026-08-28
-review_after: 2027-02-28
+status: archived
+checked_at: 2026-09-10
+review_after: 2027-09-10
 ---
 
 # political_arab_league
+
+## En réserve
+
+Retirée du jeu actif à la revue métier du **2026-09-10**. Motif mesuré : **les 22
+membres de la Ligue arabe sont tous dans `language_arabic`** (25 réponses) —
+coefficient d'inclusion 1,00, Jaccard 0,88. Le générateur interdit donc déjà la
+co-occurrence des deux contraintes dans une grille (`MAX_CONSTRAINT_OVERLAP`
+0,85), et la contrainte n'ouvrait aucun croisement que « Langue officielle arabe »
+n'ouvre déjà. À quoi s'ajoute le critère de fun : c'est une liste d'États à
+mémoriser, exactement le motif qui a écarté le G7 et Schengen au lot 2, alors que
+la contrainte de langue, elle, est devinable.
+
+La contrainte n'est **ni générée ni rejouable** et n'a plus d'`answers.ts`
+(`RESERVE_CONSTRAINT_IDS` dans `content/constraints/index.ts`). Réactivation :
+réintroduire l'entrée dans `CONSTRAINTS` (`src/features/game/logic/constraints.ts`),
+la dérivation dans `content/constraints/derivations.ts` et les clés i18n fr + en,
+puis `pnpm build:answers`.
 
 ## Définition
 

@@ -1,5 +1,30 @@
 import type { MountainAreaSnapshot } from "./types";
 
+/**
+ * Part de territoire montagneux par pays, en pourcentage.
+ *
+ * Série principale : indicateur ODD 15.4.2 (`ER_MTN_TOTL`, base ONU/FAO),
+ * méthode UNEP-WCMC dite « classes de Kapos » (altitude, pente, amplitude
+ * locale), millésime 2021.
+ *
+ * **Huit pays sont absents de cette série**, tous millésimes confondus —
+ * vérifié sur l'API `unstats.un.org` : ARG, CAN, DEU, ISR, NOR, TUR (30 lignes
+ * chacun, aucune valeur), et TWN / XKX qui sont hors du système onusien. Ce
+ * n'est pas un défaut de moisson : la série ne les publie pas.
+ *
+ * Quatre d'entre eux franchissent le seuil de 50 % et étaient donc des faux
+ * négatifs visibles en jeu : ils reçoivent une valeur **curée**, marquée par
+ * `source` (revue métier 2026-09-10). Les quatre autres restent absents : ils
+ * sont sous le seuil de l'avis de toutes les sources consultées (Canada ~25 %
+ * d'après Zurba et al. 2021), et `null` y est indiscernable de « sous le seuil ».
+ *
+ * Règle de curation : une valeur hors-série n'est écrite que si l'écart au seuil
+ * dépasse largement l'écart entre délimitations. C'est nécessaire — la Norvège
+ * vaut ~30 % sous la définition norvégienne (au-dessus de la limite des arbres,
+ * Arnesen et al. 2010) contre 91,3 % sous la délimitation européenne, un facteur
+ * 3 qui inverse la réponse. Les quatre valeurs curées sont à 14 points ou plus
+ * du seuil.
+ */
 export const MOUNTAIN_AREAS: MountainAreaSnapshot = {
   AFG: {
     value: 61.2582984529997,
@@ -756,5 +781,33 @@ export const MOUNTAIN_AREAS: MountainAreaSnapshot = {
   ZWE: {
     value: 28.64875101405733,
     year: 2021,
+  },
+
+  // ─── Hors série ONU — valeurs curées (revue métier 2026-09-10) ─────────────
+  // Provenances distinctes, donc `source` explicite. Ne pas les mélanger à la
+  // série ci-dessus lors d'une régénération : elles doivent y survivre.
+  NOR: {
+    value: 91.3,
+    year: 2004,
+    source:
+      "Nordregio, Mountain Areas in Europe (Report 2004:1, étude DG Regio) — délimitation européenne des zones de montagne",
+  },
+  TUR: {
+    value: 80,
+    year: 2024,
+    source:
+      "Encyclopædia Britannica, Türkiye — « more than 80 percent of the land surface is rough, broken, and mountainous »",
+  },
+  TWN: {
+    value: 66,
+    year: 2024,
+    source:
+      "Tourism Administration, ministère des Transports et des Communications (R.O.C.) — terrain de haute montagne sur plus des deux tiers de l'île",
+  },
+  XKX: {
+    value: 64,
+    year: 2024,
+    source:
+      "Portail géographique national du Kosovo — environ 36 % du territoire en plaines, le reste en collines et montagnes",
   },
 } satisfies MountainAreaSnapshot;

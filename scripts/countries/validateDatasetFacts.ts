@@ -23,7 +23,7 @@ import {
 /** Les champs de `CountryFacts` que la fusion des datasets produit intégralement. */
 const DATASET_DERIVED_KEYS = [
   "utcOffsetCount",
-  "hasHoloceneVolcano",
+  "lastVolcanicEruptionYear",
   "mountainAreaShare",
   "forestCoverShare",
   "urbanCentresOver1M",

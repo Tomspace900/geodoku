@@ -46,9 +46,9 @@ import { validateContentSeam } from "./validateContentSeam";
 import { validateDerivationFreshness } from "./validateDerivationFreshness";
 
 const EXPECTED_COUNTRY_COUNT = 197;
-const EXPECTED_ACTIVE_COUNT = 79;
-const EXPECTED_ARCHIVED_COUNT = 11;
-const EXPECTED_RESERVE_COUNT = 6;
+const EXPECTED_ACTIVE_COUNT = 77;
+const EXPECTED_ARCHIVED_COUNT = 12;
+const EXPECTED_RESERVE_COUNT = 8;
 
 function sameValues(a: readonly string[], b: readonly string[]): boolean {
   return a.length === b.length && a.every((value, index) => value === b[index]);

@@ -137,8 +137,11 @@ export function validateCountryFacts(
     ) {
       errors.push(`${code}: utcOffsetCount invalide (${facts.utcOffsetCount})`);
     }
-    if (typeof facts.hasHoloceneVolcano !== "boolean") {
-      errors.push(`${code}: hasHoloceneVolcano invalide`);
+    if (
+      facts.lastVolcanicEruptionYear !== null &&
+      !Number.isInteger(facts.lastVolcanicEruptionYear)
+    ) {
+      errors.push(`${code}: lastVolcanicEruptionYear invalide`);
     }
     (
       [
@@ -228,8 +231,8 @@ export function validateCountryFacts(
   const allFacts = Object.values(factsByCode);
   const coverage: Array<[string, number, number]> = [
     [
-      "hasHoloceneVolcano",
-      allFacts.filter((f) => f.hasHoloceneVolcano).length,
+      "lastVolcanicEruptionYear",
+      allFacts.filter((f) => f.lastVolcanicEruptionYear !== null).length,
       40,
     ],
     [

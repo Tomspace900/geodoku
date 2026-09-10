@@ -48,7 +48,7 @@ function minimalCountry(code: string): CountryRecord {
     regime: "republic",
     physicalFeatures: [],
     utcOffsetCount: 1,
-    hasHoloceneVolcano: false,
+    lastVolcanicEruptionYear: null,
     mountainAreaShare: null,
     forestCoverShare: null,
     urbanCentresOver1M: 0,
@@ -361,7 +361,15 @@ describe("quantitativeFactsForCode", () => {
       },
     },
     holoceneVolcanoes: {
-      ISL: { names: ["Hekla"], databaseVersion: "x" },
+      source: "x",
+      extractedAt: "2026-09-10",
+      countries: {
+        ISL: [
+          { name: "Hekla", lastEruptionYear: 2000 },
+          { name: "Snaefellsjokull", lastEruptionYear: -1750 },
+        ],
+        DEU: [{ name: "West Eifel", lastEruptionYear: null }],
+      },
     },
     mountainArea: { CHE: { value: 65.4, year: 2021 } },
     forestCover: {
@@ -382,13 +390,16 @@ describe("quantitativeFactsForCode", () => {
       },
     },
     agriculturalProduction: {
-      source: "x",
-      referenceYears: [2022, 2023, 2024],
       products: {
-        wheat: [
-          { countryCode: "CHN", rank: 1, value: 100 },
-          { countryCode: "FIN", rank: 10, value: 10 },
-        ],
+        wheat: {
+          source: "x",
+          referenceYears: [2022, 2023, 2024],
+          unit: "tonnes",
+          rankings: [
+            { countryCode: "CHN", rank: 1, value: 100 },
+            { countryCode: "FIN", rank: 10, value: 10 },
+          ],
+        },
       },
     },
     energyProduction: {
@@ -426,7 +437,7 @@ describe("quantitativeFactsForCode", () => {
   it("reduces datasets to per-country scalars, shares as 0–1 fractions", () => {
     expect(quantitativeFactsForCode("RUS", datasets)).toEqual({
       utcOffsetCount: 3,
-      hasHoloceneVolcano: false,
+      lastVolcanicEruptionYear: null,
       mountainAreaShare: null,
       forestCoverShare: null,
       urbanCentresOver1M: 0,
@@ -442,9 +453,14 @@ describe("quantitativeFactsForCode", () => {
     expect(quantitativeFactsForCode("FIN", datasets).forestCoverShare).toBe(
       0.737,
     );
-    expect(quantitativeFactsForCode("ISL", datasets).hasHoloceneVolcano).toBe(
-      true,
-    );
+    // Le max des éruptions datées, pas la première entrée du tableau.
+    expect(
+      quantitativeFactsForCode("ISL", datasets).lastVolcanicEruptionYear,
+    ).toBe(2000);
+    // Un pays sans aucune éruption datée reste `null`, jamais 0.
+    expect(
+      quantitativeFactsForCode("DEU", datasets).lastVolcanicEruptionYear,
+    ).toBeNull();
     expect(quantitativeFactsForCode("CHN", datasets).urbanCentresOver1M).toBe(
       3,
     );
