@@ -4,7 +4,7 @@ import type { CountryCode } from "./countryCodes";
 import type { CountryFacts, CountryFactsSnapshot } from "./type";
 
 export const FACTS_SNAPSHOT: CountryFactsSnapshot = {
-  date: "2026-09-08",
+  date: "2026-09-10",
   note: "régénéré par pnpm build:countries",
 };
 
@@ -3199,7 +3199,7 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     waterAccess: "coastal",
     borders: ["EGY", "JOR", "LBN", "PSE", "SYR"],
     areaKm2: 20770,
-    population: 10273700,
+    population: 10305000,
     officialLanguages: ["ar", "he"],
     latitude: 31.47,
     subregion: "Western Asia",
@@ -6316,7 +6316,7 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     waterAccess: "coastal",
     borders: ["FIN", "NOR"],
     areaKm2: 450295,
-    population: 10610483,
+    population: 10613531,
     officialLanguages: ["sv"],
     latitude: 62,
     subregion: "Northern Europe",
