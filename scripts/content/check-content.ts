@@ -11,6 +11,8 @@
  *     `scripts/countries/data/` et échoue si `facts.ts` ne correspond plus
  *     (dataset révisé sans regen, ou faits édités à la main). Les champs
  *     importés du réseau restent hors de portée — cf. `validateDatasetFacts` ;
+ *   - **souveraineté** : une `sourceDescription` qui nomme une puissance absente
+ *     de `formerSovereigns` échoue — cf. `validateSovereigntySources` ;
  *   - **seam** : `content/` est terminal, aucun module n'y importe `@/…` ni ne
  *     remonte hors du dossier — cf. `validateContentSeam` ;
  *   - **provenance** : présence et frontmatter cohérent des `SOURCE.md`
@@ -42,6 +44,7 @@ import {
   validateCountryFacts,
 } from "../countries/validateCountryCatalog";
 import { validateDatasetFacts } from "../countries/validateDatasetFacts";
+import { validateSovereigntySources } from "../countries/validateSovereigntySources";
 import { validateContentSeam } from "./validateContentSeam";
 import { validateDerivationFreshness } from "./validateDerivationFreshness";
 
@@ -70,6 +73,7 @@ function checkCountries(errors: string[]): void {
       COUNTRY_CODES,
     ),
   );
+  errors.push(...validateSovereigntySources(QUANTITATIVE_DATASETS.sovereignty));
 
   const countryCodes = COUNTRY_CATALOG.map(({ iso3 }) => iso3);
   if (COUNTRY_CATALOG.length !== EXPECTED_COUNTRY_COUNT) {
