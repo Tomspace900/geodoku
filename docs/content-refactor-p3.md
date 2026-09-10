@@ -519,3 +519,116 @@ dans `content-pipeline.md`) ; première entrée `/changelog` joueur du refacto
 (catalogue 60 → 79 actives : 25 ajoutées, 6 en réserve, 19 nettes) +
 `LATEST_CHANGELOG_UPDATE_DATE` 2026-09-09 ; tag `archive/constraint-explorer` puis
 suppression de la branche (entièrement moissonnée par les 4 lots).
+
+## Revue métier adverse (2026-09-10)
+
+Revue adverse du contenu P3 avant merge dans `main`, conduite en parallèle de la
+revue technique. Verdict : mergeable après corrections — toutes appliquées
+ci-dessous, qui tiennent lieu de compte rendu (le rapport de revue lui-même n'est
+pas versionné, il n'avait de valeur que le temps de la passe).
+
+### Le défaut de fond : aucune règle de périmètre territorial
+
+La revue n'a pas trouvé une liste fausse, elle a trouvé **trois conventions
+contradictoires**, chaque famille héritant du découpage de son dataset :
+
+| famille | outre-mer | conséquence observée |
+| --- | --- | --- |
+| volcans | compté (GVP indexe par État souverain) | Royaume-Uni et Pays-Bas dans la liste |
+| océans | compté à moitié, à la main | France « bordée par l'Indien » mais pas par le Pacifique, alors que son `SOURCE.md` affirmait le contraire |
+| fuseaux | ignoré (IANA indexe par ISO 3166) | France à 1 décalage, alors qu'elle en couvre 12 |
+
+Le joueur n'avait aucun moyen de deviner laquelle s'appliquait. Règle tranchée et
+écrite une fois dans [`content/constraints/SOURCES.md`](../content/constraints/SOURCES.md)
+(section « Périmètre territorial d'un pays ») : **seul le territoire pleinement
+intégré compte**. Elle prime sur la source et vaut pour toute contrainte
+géographique future.
+
+### Corrections de données (une seule regen, 2026-09-10)
+
+| contrainte | avant | après | motif |
+| --- | --: | --: | --- |
+| `history_from_united_kingdom` | 59 | **61** | +SDN, +NRU — le Factbook nomme le Royaume-Uni dans les deux notices |
+| `time_zones_multiple` | 19 | **21** | +FRA (5 décalages), +NLD (2) — règle de périmètre |
+| `physical_caribbean_coast` | 22 | **23** | +FRA (Guadeloupe, Martinique) |
+| `production_coffee_top10` | — | — | −CAF, +MEX — re-sourcé sur l'USDA-FAS |
+| `nature_mountain_area_majority` | 34 | **38** | +NOR, +TUR, +TWN, +XKX — valeurs curées |
+| `nature_holocene_volcano` → `nature_active_volcano` | 76 | **56** | éruption ≥ 1500 + périmètre |
+
+Diff ISO3 total : **10 lignes**. Aucune dérive collatérale.
+
+**Le trou de parsing n'était pas rattrapé.** Le lot 4 avait complété USA, PAK et
+CAN à l'œil et conclu « rattrapé ». Une passe systématique sur les 193
+`sourceDescription` en a trouvé deux de plus : le **Soudan** (« from Egypt and the
+UK ») et **Nauru** (« UK-administered UN trusteeship » — la même formulation
+produisait pourtant déjà `united_states` pour PLW, MHL et FSM). La passe est
+désormais outillée : `validateSovereigntySources`, câblée à `check:content` et
+testée dans les deux sens, avec une liste d'omissions justifiées (occupation
+quadripartite de l'Allemagne, co-principauté d'Andorre, auto-références…).
+
+**Le café était fidèle à sa source et faux en jeu.** FAOSTAT classait la
+République centrafricaine 10ᵉ producteur mondial (316 kt) — une imputation, la
+production réelle se comptant en milliers de tonnes — ce qui évinçait le Mexique.
+Seul cas du lot où la dérivation était irréprochable et le résultat mauvais.
+Re-sourcé sur l'USDA-FAS ; `AgriculturalProductionSnapshot` porte désormais la
+source **par produit**, les trois autres restant sur FAOSTAT.
+
+**Volcans : de l'Holocène à l'activité historique.** 76 pays sur 197 (39 %),
+c'était la contrainte la plus large du jeu, et « volcan actif » y désignait des
+édifices dormants depuis huit millénaires (Allemagne −8300, Rwanda −8050).
+`nature_holocene_volcano` est **archivée** (liste figée, grilles passées
+rejouables) et remplacée par `nature_active_volcano` : éruption datée de 1500 ou
+après, territoire intégré. Dataset ré-extrait du service WFS du Smithsonian GVP
+(1 146 volcans, 75 pays, avec `Last_Eruption_Year`). Le fait passe de
+`hasHoloceneVolcano: boolean` à `lastVolcanicEruptionYear: number | null` — donnée
+brute, seuil dans la dérivation.
+
+### Mises en réserve
+
+- **`political_arab_league`** — les 22 membres sont **tous** dans
+  `language_arabic` (inclusion 1,00, Jaccard 0,88). Le générateur interdisait déjà
+  la paire : la contrainte n'ouvrait aucun croisement neuf. C'est en outre une
+  liste d'États à mémoriser, le motif exact qui a écarté le G7 et Schengen au
+  lot 2, alors que la contrainte de langue est devinable.
+- **`urban_centres_min_3_over_1m`** — indevinable (France 2 centres GHSL, Bolivie
+  et Ghana 3) et structurellement coûteuse : elle englobait à ≥ 0,85 quatre autres
+  contraintes qu'elle bannissait de toute grille où elle figurait.
+
+`political_opec` est **gardée** : « pays exportateur de pétrole » est évocateur et
+la liste ne recoupe rien (aucun Jaccard ≥ 0,40).
+
+### Relief : la seule correction qui a résisté
+
+L'API `unstats.un.org` ne publie **aucune** valeur `ER_MTN_TOTL` pour ARG, CAN,
+DEU, ISR, NOR et TUR — 30 lignes chacun, toutes vides — et TWN/XKX sont hors
+système onusien. Le rapport de revue affirmait un trou de moisson ; **c'est le
+journal du lot 2 qui avait raison**, la source ne les couvre pas.
+
+Combler n'est pas anodin : la Norvège vaut ~30 % sous la définition norvégienne
+(au-dessus de la limite des arbres) contre 91,3 % sous la délimitation
+européenne — un facteur 3 qui inverse la réponse. D'où la règle retenue : **une
+valeur hors-série n'est écrite que si l'écart au seuil dépasse largement l'écart
+entre délimitations**. Quatre pays franchissaient le seuil et sont curés avec leur
+provenance explicite (Norvège 91,3 %, Turquie 80 %, Taïwan 66 %, Kosovo 64 %) ;
+les quatre autres restent absents, `null` étant indiscernable de « sous le seuil »
+côté joueur.
+
+### Libellés revus
+
+`history_from_united_kingdom` (« Anciennement sous domination britannique » — la
+liste contient les États-Unis, Israël, l'Afghanistan), `history_sovereignty_since_1990`
+(« A accédé à l'indépendance depuis 1990 » — la dérivation exclut unifications et
+continuités), `production_crude_oil_top15` (« pétrole **brut** » — la donnée EIA
+est le brut), plus le libellé de la nouvelle contrainte volcans.
+
+### Checklist
+
+`pnpm lint` ✓ (2 warnings préexistants `convex/**`) · `pnpm test` **553/553** ✓
+(+5 : garde souveraineté) · `pnpm check:content` « **77 actives, 12 archivées,
+8 en réserve, 197 pays** » ✓ · `pnpm check:bundle` **246,4 KiB** gzip (budget
+280) ✓ · `pnpm simulate:scheduling` **14/14 PASS**, couverture 100 % sur 77,
+failed seeds 0/77, overlap max 0,846 < 0,85, cold-start ≤ 1 newcomer/grille.
+
+**Reste à faire** : `refreshPool` via `/admin` après le push — le pool en base
+référence encore `nature_holocene_volcano`, `political_arab_league` et
+`urban_centres_min_3_over_1m`, que `getGridContentIssue` invalide désormais.

@@ -19,9 +19,9 @@ SNAPSHOT (content/countries/ — généré, committé, daté par FACTS_SNAPSHOT.
         │  pnpm build:answers   (dérivation PURE, hors-ligne)
         ▼
 LISTES DÉRIVÉES (content/constraints/<id>/answers.ts)
-  79 actives   # en-tête @generated — DERIVATIONS[id] appliqué aux 197 pays
-  11 archivées # figées à la main, sans en-tête — conservées pour le replay
-  6 en réserve # SOURCE.md seul, sans answers.ts — conçues puis écartées
+  77 actives   # en-tête @generated — DERIVATIONS[id] appliqué aux 197 pays
+  12 archivées # figées à la main, sans en-tête — conservées pour le replay
+  8 en réserve # SOURCE.md seul, sans answers.ts — conçues puis écartées
         │  imports relatifs (jamais l'alias @/)
         ▼
 RUNTIME + OUTILLAGE
@@ -38,7 +38,7 @@ snapshot `gridAnswers`. Le contenu courant ne sert qu'à générer les candidats
 
 ## Contraintes
 
-- **79 actives / 22 catégories** — [`src/features/game/logic/constraints.ts`](../src/features/game/logic/constraints.ts)
+- **77 actives / 22 catégories** — [`src/features/game/logic/constraints.ts`](../src/features/game/logic/constraints.ts)
   porte l'interface (`id`, `labelKey`, `category`), **sans prédicat**. La
   dérivation vit dans [`content/constraints/derivations.ts`](../content/constraints/derivations.ts).
 - **Réserve** (6) : contraintes conçues, sourcées, puis écartées du jeu pour
@@ -83,7 +83,7 @@ Deux leviers, jamais `answers.ts` à la main :
 Puis, dans l'ordre :
 
 ```bash
-pnpm build:answers          # régénère les 79 answers.ts actifs (hors-ligne)
+pnpm build:answers          # régénère les 77 answers.ts actifs (hors-ligne)
 git diff content/constraints # relire le diff ISO3 pays par pays
 pnpm check:content           # cohérence + obsolescence + provenance
 pnpm test
@@ -129,10 +129,10 @@ que le build ne produit plus.
 
 `pnpm check:content` (job CI `quality`) vérifie :
 
-- comptes attendus (197 pays / 79 actives / 11 archivées / 6 en réserve) ;
+- comptes attendus (197 pays / 77 actives / 12 archivées / 8 en réserve) ;
 - catalogue ↔ `COUNTRY_CODES` ↔ popularité synchronisés, tri strict, unicité ;
 - `answers.ts` : non vides, triés, ISO3 connus, tout pays couvert par ≥ 1 liste ;
-- **obsolescence** : re-dérive les 79 actives depuis `COUNTRY_FACTS` et échoue
+- **obsolescence** : re-dérive les 77 actives depuis `COUNTRY_FACTS` et échoue
   (`+[…] -[…]` + « lancer pnpm build:answers ») si un `answers.ts` committé ne
   correspond plus ;
 - **fraîcheur des faits dérivés** : l'étage du dessus — re-fusionne les datasets

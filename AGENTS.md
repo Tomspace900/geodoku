@@ -84,11 +84,13 @@ e2e/                      # Playwright — helpers.ts + *.shared|desktop|mobile.
 
 - **Archiver, jamais supprimer** une contrainte (`ARCHIVED_CONSTRAINTS` + `CONSTRAINT_BY_ID` pour replay).
 - Une contrainte **active** n'a pas de prédicat runtime : sa liste ISO3 est **dérivée** de [`content/constraints/derivations.ts`](content/constraints/derivations.ts) sur le snapshot de faits, **générée** par `pnpm build:answers` dans `content/constraints/<id>/answers.ts`, **committée** et relue en diff. `matchesConstraint(id, iso3)` lit cette liste. `pnpm check:content` (job `quality`) échoue si un `answers.ts` est obsolète.
-- Les 11 listes **archivées** sont figées à la main (pas d'en-tête `@generated`), hors dérivation.
+- Les 12 listes **archivées** sont figées à la main (pas d'en-tête `@generated`), hors dérivation.
+- **Périmètre territorial** : un pays inclut son territoire **pleinement intégré**, et rien d'autre (DOM français, Canaries, Açores, Jan Mayen, îles BES… ; pas les territoires britanniques d'outre-mer, la Polynésie, le Groenland ni Heard-et-MacDonald). Règle commune à toutes les familles géographiques — volcans, océans, fuseaux, relief — écrite une fois dans [`content/constraints/SOURCES.md`](content/constraints/SOURCES.md) et qui prime sur le découpage de la source. Sans elle, chaque dataset imposait sa convention : le Royaume-Uni « possédait un volcan » par Tristan da Cunha pendant que la France n'avait qu'un fuseau horaire.
 - Contraintes **en réserve** (`RESERVE_CONSTRAINT_IDS`, [`content/constraints/index.ts`](content/constraints/index.ts)) : conçues et sourcées mais écartées du jeu actif (arbitrage gameplay). **Ni** générables **ni** rejouables — volontairement hors de `ConstraintId` (un id de réserve dans une grille échoue bruyamment) ; seul leur `SOURCE.md` subsiste (`status: archived`, sans `answers.ts`). `check:content` garde présence + absence d'`answers.ts` + non-chevauchement. Réactivation : réintroduire dans `CONSTRAINTS` + `derivations.ts` + i18n, puis `pnpm build:answers`.
 - Chaque contrainte porte un `SOURCE.md` (définition, dérivation, cas limites) ; le socle (`constraints/SOURCES.md`, `content/README.md`, `content/countries/SOURCE.md`) porte le principe et la provenance par famille de champs. `check:content` vérifie présence et frontmatter.
 - Deux leviers pour réviser une contrainte active : la **définition** change → `derivations.ts` (+ `CONSTRAINTS`) ; une **donnée** est fausse → curation (`countryPatches.ts`, `flagData.json`) ou `pnpm build:countries`. Jamais `answers.ts` à la main.
 - `content/countries/facts.ts` est **généré** : les dix champs dérivés des datasets de `scripts/countries/data/` (fuseaux, volcans, relief, forêt, centres urbains, rangs de production, charbon, souveraineté) sont re-fusionnés par `check:content` ([`validateDatasetFacts.ts`](scripts/countries/validateDatasetFacts.ts)) — un dataset révisé sans `pnpm build:countries`, ou une édition à la main, échoue en CI. Les champs venus du réseau (population, capitales, adhésions, pageviews) n'ont d'autre juge que la regen.
+- `formerSovereigns` est une lecture **à la main** du texte libre du Factbook, et deux revues successives l'ont faite à l'œil en ratant des cas. [`validateSovereigntySources.ts`](scripts/countries/validateSovereigntySources.ts) (`check:content`) échoue si une `sourceDescription` nomme une des neuf puissances tracées sans la porter dans `formerSovereigns` : compléter la curation, ou inscrire le cas dans `ACCEPTED_OMISSIONS` **avec son motif**. Y verser un échec sans motif viderait la garde de son sens.
 - Après un levier : `pnpm build:answers` → relire le diff ISO3 → `pnpm simulate:scheduling` → régénération du pool via `/admin` si OK.
 - Le snapshot `content/countries/` (identité, faits, popularité) est régénéré par `pnpm build:countries` (réseau), qui enchaîne `build:answers`.
 - Drapeaux → [`scripts/countries/flagData.json`](scripts/countries/flagData.json) curé, pas d'heuristique.
@@ -181,7 +183,7 @@ pnpm build
 # Contenu & pool
 pnpm build:countries             # regen réseau du snapshot content/ (+ enchaîne build:answers)
 pnpm build:answers               # re-dérive content/constraints/<id>/answers.ts (hors-ligne)
-pnpm check:content               # cohérence content/ (job quality + pre-commit) : obsolescence des listes + fraîcheur des faits dérivés + seam terminal + provenance SOURCE.md
+pnpm check:content               # cohérence content/ (job quality + pre-commit) : obsolescence des listes + fraîcheur des faits dérivés + cohérence souveraineté + seam terminal + provenance SOURCE.md
 pnpm analyze:pool
 pnpm simulate:scheduling          # validateur changement contraintes
 pnpm simulate:players             # dry-run par défaut ; --execute pour écrire (develop/dev)
