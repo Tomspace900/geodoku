@@ -101,16 +101,15 @@ export type CoalElectricitySnapshot = {
 
 /**
  * Événement de souveraineté retenu pour un pays (CIA World Factbook, champ
- * *Independence*). `qualifiesForIndependenceConstraints` est conservé du snapshot
- * v1 mais **non lu en aval** : l'éligibilité de `history_sovereignty_since_1990`
- * se re-dérive du `kind` (`independence` / `restoration` / `dissolution_successor`).
+ * *Independence*). L'éligibilité de `history_sovereignty_since_1990` se dérive
+ * du `kind` (`independence` / `restoration` / `dissolution_successor`) — le
+ * snapshot ne porte pas de drapeau d'éligibilité, qui n'en serait que la copie.
  */
 export type SovereigntyEvent = Readonly<{
   kind: SovereigntyKind;
   year: number;
   date?: string;
   formerSovereigns: readonly FormerSovereign[];
-  qualifiesForIndependenceConstraints: boolean;
   sourceDescription: string;
 }>;
 

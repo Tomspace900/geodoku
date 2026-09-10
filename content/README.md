@@ -2,9 +2,16 @@
 
 Ce dossier porte les décisions éditoriales versionnées du jeu. Le graphe de
 dépendances est unidirectionnel : le runtime et les scripts lisent `content/` ;
-le contenu n'importe jamais une feature React, un module Convex ou `src/`. Les
-imports **vers** `content/` sont toujours **relatifs** (`../../content/…`),
-jamais l'alias `@/`.
+le contenu n'importe jamais une feature React, un module Convex ou `src/`. À
+l'intérieur du dossier, tous les imports sont **relatifs internes** ; les imports
+**vers** `content/` sont eux aussi **relatifs** (`../../content/…`), jamais
+l'alias `@/`.
+
+La règle est **vérifiée**, pas seulement écrite : `validateContentSeam`
+(`pnpm check:content`) échoue sur un `@/…` comme sur une remontée hors du
+dossier. Sans elle rien ne l'attraperait — `tsx` et Vite résolvent les `paths`
+du tsconfig, et le typecheck Convex ne couvre que la part de `content/` qu'il
+importe.
 
 ```
 ENTRÉES DE CURATION (éditées à la main)
@@ -69,8 +76,8 @@ doit échouer bruyamment) et l'accès aux listes. Son registre
 `ANSWER_SETS` est typé par `{ [K in ConstraintId]: ConstraintAnswerSet<K> }` :
 une liste manquante, en trop ou branchée sur le mauvais dossier ne compile pas.
 
-`pnpm check:content` (job CI `quality`) vérifie la cohérence du dossier **et
-rejoue les dérivations** : un `answers.ts` actif qui ne correspond plus au
+`pnpm check:content` (job CI `quality`, et pre-commit) vérifie la cohérence du
+dossier, garde le seam ci-dessus **et rejoue les dérivations** : un `answers.ts` actif qui ne correspond plus au
 snapshot fait échouer la CI avec un message actionnable. Il rejoue de même
 l'étage du dessus — la fusion des datasets quantitatifs vers `facts.ts` — donc
 un dataset révisé sans `pnpm build:countries`, ou une édition à la main de

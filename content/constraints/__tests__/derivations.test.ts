@@ -168,6 +168,53 @@ describe("DERIVATIONS — bascules de seuil", () => {
     });
   });
 
+  /**
+   * Les datasets agricoles sont **trimés au top 10** à la curation : hors du
+   * classement, `productionRank` retombe sur `+∞`. La bascule se joue donc entre
+   * le rang 10 et l'absence, pas entre 10 et 11.
+   */
+  it("production_cocoa_top10 : rang 10 dedans, absent du classement dehors", () => {
+    expect({
+      colombia: derive("production_cocoa_top10", "COL"), // rang 10
+      ivory_coast: derive("production_cocoa_top10", "CIV"), // rang 1
+      mexico: derive("production_cocoa_top10", "MEX"), // producteur hors top 10
+    }).toEqual({ colombia: true, ivory_coast: true, mexico: false });
+  });
+
+  it("production_coffee_top10 : rang 10 dedans, absent du classement dehors", () => {
+    expect({
+      central_african_republic: derive("production_coffee_top10", "CAF"), // rang 10
+      brazil: derive("production_coffee_top10", "BRA"), // rang 1
+      kenya: derive("production_coffee_top10", "KEN"), // producteur hors top 10
+    }).toEqual({
+      central_african_republic: true,
+      brazil: true,
+      kenya: false,
+    });
+  });
+
+  it("production_rice_top10 : rang 10 dedans, absent du classement dehors", () => {
+    expect({
+      cambodia: derive("production_rice_top10", "KHM"), // rang 10
+      china: derive("production_rice_top10", "CHN"), // rang 1
+      japan: derive("production_rice_top10", "JPN"), // producteur hors top 10
+    }).toEqual({ cambodia: true, china: true, japan: false });
+  });
+
+  it("production_natural_gas_top15 : rang EIA ≤ 15", () => {
+    expect({
+      egypt: derive("production_natural_gas_top15", "EGY"), // rang 15
+      argentina: derive("production_natural_gas_top15", "ARG"), // rang 16
+      united_states: derive("production_natural_gas_top15", "USA"), // rang 1
+      france: derive("production_natural_gas_top15", "FRA"),
+    }).toEqual({
+      egypt: true,
+      argentina: false,
+      united_states: true,
+      france: false,
+    });
+  });
+
   it("production_crude_oil_top15 : rang EIA ≤ 15", () => {
     expect({
       libya: derive("production_crude_oil_top15", "LBY"), // rang 15

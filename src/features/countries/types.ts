@@ -1,26 +1,10 @@
 /**
  * Le modèle pays appartient à `content/` ; ce module n'existe que pour garder
- * les imports familiers `@/features/countries/types` côté application. Les
- * scripts du pipeline contenu importent `content/countries/type` directement.
+ * l'import familier `@/features/countries/types` côté application, qui ne
+ * consomme que l'identité joueur.
  *
- * - `Country` : identité joueur (le runtime ne charge plus que ça).
- * - `CountryRecord` : enregistrement complet, produit par la régénération.
- * - énums gameplay : réexportées pour limiter le churn d'imports.
+ * Les scripts du pipeline contenu importent `content/countries/type`
+ * directement : ils sont en **amont** de `content/`, passer par un module
+ * `src/` inverserait le sens du graphe.
  */
-export type {
-  CapitalRole,
-  Continent,
-  Country,
-  CountryCapital,
-  CountryEvent,
-  CountryRecord,
-  DrivingSide,
-  FlagColor,
-  FlagLayout,
-  FlagSymbol,
-  PhysicalFeature,
-  PoliticalGroup,
-  Regime,
-  WaterAccess,
-} from "../../../content/countries/type";
-export type { LocalizedString } from "../../../content/type";
+export type { Country } from "../../../content/countries/type";

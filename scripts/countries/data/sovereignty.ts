@@ -11,9 +11,8 @@ import type { SovereigntySnapshot } from "./types";
  * `sourceCommit` conservé tel quel.
  *
  * Le Factbook distingue indépendance, restauration, séparation, succession
- * d'État, continuité, fondation et unification. `qualifiesForIndependenceConstraints`
- * est conservé du snapshot mais **n'est pas lu** : `build-countries` ne retient
- * que `formerSovereigns`, `year` et `kind` ; l'éligibilité de
+ * d'État, continuité, fondation et unification. Seuls `formerSovereigns`, `year`
+ * et `kind` sont retenus par `build-countries` : l'éligibilité de
  * `history_sovereignty_since_1990` se dérive du `kind`.
  *
  * Révision : reprendre le champ *Independence* du Factbook pays par pays,
@@ -30,7 +29,6 @@ export const SOVEREIGNTY: SovereigntySnapshot = {
       year: 1962,
       date: "1962-07-05",
       formerSovereigns: ["france"],
-      qualifiesForIndependenceConstraints: true,
       sourceDescription: "5 July 1962 (from France)",
     },
     AGO: {
@@ -38,7 +36,6 @@ export const SOVEREIGNTY: SovereigntySnapshot = {
       year: 1975,
       date: "1975-11-11",
       formerSovereigns: ["portugal"],
-      qualifiesForIndependenceConstraints: true,
       sourceDescription: "11 November 1975 (from Portugal)",
     },
     BWA: {
@@ -46,7 +43,6 @@ export const SOVEREIGNTY: SovereigntySnapshot = {
       year: 1966,
       date: "1966-09-30",
       formerSovereigns: ["united_kingdom"],
-      qualifiesForIndependenceConstraints: true,
       sourceDescription: "30 September 1966 (from the UK)",
     },
     BEN: {
@@ -54,7 +50,6 @@ export const SOVEREIGNTY: SovereigntySnapshot = {
       year: 1960,
       date: "1960-08-01",
       formerSovereigns: ["france"],
-      qualifiesForIndependenceConstraints: true,
       sourceDescription: "1 August 1960 (from France)",
     },
     BDI: {
@@ -62,7 +57,6 @@ export const SOVEREIGNTY: SovereigntySnapshot = {
       year: 1962,
       date: "1962-07-01",
       formerSovereigns: ["belgium"],
-      qualifiesForIndependenceConstraints: true,
       sourceDescription:
         "1 July 1962 (from UN trusteeship under Belgian administration)",
     },
@@ -71,7 +65,6 @@ export const SOVEREIGNTY: SovereigntySnapshot = {
       year: 1960,
       date: "1960-08-11",
       formerSovereigns: ["france"],
-      qualifiesForIndependenceConstraints: true,
       sourceDescription: "11 August 1960 (from France)",
     },
     COG: {
@@ -79,7 +72,6 @@ export const SOVEREIGNTY: SovereigntySnapshot = {
       year: 1960,
       date: "1960-08-15",
       formerSovereigns: ["france"],
-      qualifiesForIndependenceConstraints: true,
       sourceDescription: "15 August 1960 (from France)",
     },
     COD: {
@@ -87,7 +79,6 @@ export const SOVEREIGNTY: SovereigntySnapshot = {
       year: 1960,
       date: "1960-06-30",
       formerSovereigns: ["belgium"],
-      qualifiesForIndependenceConstraints: true,
       sourceDescription: "30 June 1960 (from Belgium)",
     },
     CMR: {
@@ -95,7 +86,6 @@ export const SOVEREIGNTY: SovereigntySnapshot = {
       year: 1960,
       date: "1960-01-01",
       formerSovereigns: ["france"],
-      qualifiesForIndependenceConstraints: true,
       sourceDescription:
         "1 January 1960 (from French-administered UN trusteeship)",
     },
@@ -104,7 +94,6 @@ export const SOVEREIGNTY: SovereigntySnapshot = {
       year: 1975,
       date: "1975-07-06",
       formerSovereigns: ["france"],
-      qualifiesForIndependenceConstraints: true,
       sourceDescription: "6 July 1975 (from France)",
     },
     CAF: {
@@ -112,7 +101,6 @@ export const SOVEREIGNTY: SovereigntySnapshot = {
       year: 1960,
       date: "1960-08-13",
       formerSovereigns: ["france"],
-      qualifiesForIndependenceConstraints: true,
       sourceDescription: "13 August 1960 (from France)",
     },
     CPV: {
@@ -120,7 +108,6 @@ export const SOVEREIGNTY: SovereigntySnapshot = {
       year: 1975,
       date: "1975-07-05",
       formerSovereigns: ["portugal"],
-      qualifiesForIndependenceConstraints: true,
       sourceDescription: "5 July 1975 (from Portugal)",
     },
     DJI: {
@@ -128,7 +115,6 @@ export const SOVEREIGNTY: SovereigntySnapshot = {
       year: 1977,
       date: "1977-06-27",
       formerSovereigns: ["france"],
-      qualifiesForIndependenceConstraints: true,
       sourceDescription: "27 June 1977 (from France)",
     },
     EGY: {
@@ -136,7 +122,6 @@ export const SOVEREIGNTY: SovereigntySnapshot = {
       year: 1922,
       date: "1922-02-28",
       formerSovereigns: ["united_kingdom"],
-      qualifiesForIndependenceConstraints: true,
       sourceDescription:
         "28 February 1922 (from UK protectorate status; the military-led revolution that began on 23 July 1952 led to a republic being declared on 18 June 1953 and all British troops withdrawn on 18 June 1956)",
     },
@@ -145,7 +130,6 @@ export const SOVEREIGNTY: SovereigntySnapshot = {
       year: 1968,
       date: "1968-10-12",
       formerSovereigns: ["spain"],
-      qualifiesForIndependenceConstraints: true,
       sourceDescription: "12 October 1968 (from Spain)",
     },
     ERI: {
@@ -153,7 +137,6 @@ export const SOVEREIGNTY: SovereigntySnapshot = {
       year: 1993,
       date: "1993-05-24",
       formerSovereigns: [],
-      qualifiesForIndependenceConstraints: true,
       sourceDescription: "24 May 1993 (from Ethiopia)",
     },
     GMB: {
@@ -161,7 +144,6 @@ export const SOVEREIGNTY: SovereigntySnapshot = {
       year: 1965,
       date: "1965-02-18",
       formerSovereigns: ["united_kingdom"],
-      qualifiesForIndependenceConstraints: true,
       sourceDescription: "18 February 1965 (from the UK)",
     },
     GAB: {
@@ -169,7 +151,6 @@ export const SOVEREIGNTY: SovereigntySnapshot = {
       year: 1960,
       date: "1960-08-17",
       formerSovereigns: ["france"],
-      qualifiesForIndependenceConstraints: true,
       sourceDescription: "17 August 1960 (from France)",
     },
     GHA: {
@@ -177,7 +158,6 @@ export const SOVEREIGNTY: SovereigntySnapshot = {
       year: 1957,
       date: "1957-03-06",
       formerSovereigns: ["united_kingdom"],
-      qualifiesForIndependenceConstraints: true,
       sourceDescription: "6 March 1957 (from the UK)",
     },
     GIN: {
@@ -185,7 +165,6 @@ export const SOVEREIGNTY: SovereigntySnapshot = {
       year: 1958,
       date: "1958-10-02",
       formerSovereigns: ["france"],
-      qualifiesForIndependenceConstraints: true,
       sourceDescription: "2 October 1958 (from France)",
     },
     CIV: {
@@ -193,7 +172,6 @@ export const SOVEREIGNTY: SovereigntySnapshot = {
       year: 1960,
       date: "1960-08-07",
       formerSovereigns: ["france"],
-      qualifiesForIndependenceConstraints: true,
       sourceDescription: "7 August 1960 (from France)",
     },
     KEN: {
@@ -201,7 +179,6 @@ export const SOVEREIGNTY: SovereigntySnapshot = {
       year: 1963,
       date: "1963-12-12",
       formerSovereigns: ["united_kingdom"],
-      qualifiesForIndependenceConstraints: true,
       sourceDescription: "12 December 1963 (from the UK)",
     },
     LBR: {
@@ -209,7 +186,6 @@ export const SOVEREIGNTY: SovereigntySnapshot = {
       year: 1847,
       date: "1847-07-26",
       formerSovereigns: [],
-      qualifiesForIndependenceConstraints: false,
       sourceDescription: "26 July 1847",
     },
     LSO: {
@@ -217,7 +193,6 @@ export const SOVEREIGNTY: SovereigntySnapshot = {
       year: 1966,
       date: "1966-10-04",
       formerSovereigns: ["united_kingdom"],
-      qualifiesForIndependenceConstraints: true,
       sourceDescription: "4 October 1966 (from the UK)",
     },
     LBY: {
@@ -225,7 +200,6 @@ export const SOVEREIGNTY: SovereigntySnapshot = {
       year: 1951,
       date: "1951-12-24",
       formerSovereigns: [],
-      qualifiesForIndependenceConstraints: true,
       sourceDescription: "24 December 1951 (from UN trusteeship)",
     },
     MDG: {
@@ -233,7 +207,6 @@ export const SOVEREIGNTY: SovereigntySnapshot = {
       year: 1960,
       date: "1960-06-26",
       formerSovereigns: ["france"],
-      qualifiesForIndependenceConstraints: true,
       sourceDescription: "26 June 1960 (from France)",
     },
     MWI: {
@@ -241,7 +214,6 @@ export const SOVEREIGNTY: SovereigntySnapshot = {
       year: 1964,
       date: "1964-07-06",
       formerSovereigns: ["united_kingdom"],
-      qualifiesForIndependenceConstraints: true,
       sourceDescription: "6 July 1964 (from the UK)",
     },
     MLI: {
@@ -249,7 +221,6 @@ export const SOVEREIGNTY: SovereigntySnapshot = {
       year: 1960,
       date: "1960-09-22",
       formerSovereigns: ["france"],
-      qualifiesForIndependenceConstraints: true,
       sourceDescription: "22 September 1960 (from France)",
     },
     MAR: {
@@ -257,7 +228,6 @@ export const SOVEREIGNTY: SovereigntySnapshot = {
       year: 1956,
       date: "1956-03-02",
       formerSovereigns: ["france"],
-      qualifiesForIndependenceConstraints: true,
       sourceDescription: "2 March 1956 (from France)",
     },
     MUS: {
@@ -265,7 +235,6 @@ export const SOVEREIGNTY: SovereigntySnapshot = {
       year: 1968,
       date: "1968-03-12",
       formerSovereigns: ["united_kingdom"],
-      qualifiesForIndependenceConstraints: true,
       sourceDescription: "12 March 1968 (from the UK)",
     },
     MRT: {
@@ -273,7 +242,6 @@ export const SOVEREIGNTY: SovereigntySnapshot = {
       year: 1960,
       date: "1960-11-28",
       formerSovereigns: ["france"],
-      qualifiesForIndependenceConstraints: true,
       sourceDescription: "28 November 1960 (from France)",
     },
     MOZ: {
@@ -281,7 +249,6 @@ export const SOVEREIGNTY: SovereigntySnapshot = {
       year: 1975,
       date: "1975-06-25",
       formerSovereigns: ["portugal"],
-      qualifiesForIndependenceConstraints: true,
       sourceDescription: "25 June 1975 (from Portugal)",
     },
     NER: {
@@ -289,7 +256,6 @@ export const SOVEREIGNTY: SovereigntySnapshot = {
       year: 1960,
       date: "1960-08-03",
       formerSovereigns: ["france"],
-      qualifiesForIndependenceConstraints: true,
       sourceDescription: "3 August 1960 (from France)",
     },
     NGA: {
@@ -297,7 +263,6 @@ export const SOVEREIGNTY: SovereigntySnapshot = {
       year: 1960,
       date: "1960-10-01",
       formerSovereigns: ["united_kingdom"],
-      qualifiesForIndependenceConstraints: true,
       sourceDescription: "1 October 1960 (from the UK)",
     },
     SSD: {
@@ -305,7 +270,6 @@ export const SOVEREIGNTY: SovereigntySnapshot = {
       year: 2011,
       date: "2011-07-09",
       formerSovereigns: [],
-      qualifiesForIndependenceConstraints: true,
       sourceDescription: "9 July 2011 (from Sudan)",
     },
     GNB: {
@@ -313,7 +277,6 @@ export const SOVEREIGNTY: SovereigntySnapshot = {
       year: 1973,
       date: "1973-09-24",
       formerSovereigns: ["portugal"],
-      qualifiesForIndependenceConstraints: true,
       sourceDescription:
         "24 September 1973 (declared); 10 September 1974 (from Portugal)",
     },
@@ -322,7 +285,6 @@ export const SOVEREIGNTY: SovereigntySnapshot = {
       year: 1962,
       date: "1962-07-01",
       formerSovereigns: ["belgium"],
-      qualifiesForIndependenceConstraints: true,
       sourceDescription:
         "1 July 1962 (from Belgium-administered UN trusteeship)",
     },
@@ -331,7 +293,6 @@ export const SOVEREIGNTY: SovereigntySnapshot = {
       year: 1976,
       date: "1976-06-29",
       formerSovereigns: ["united_kingdom"],
-      qualifiesForIndependenceConstraints: true,
       sourceDescription: "29 June 1976 (from the UK)",
     },
     ZAF: {
@@ -339,7 +300,6 @@ export const SOVEREIGNTY: SovereigntySnapshot = {
       year: 1910,
       date: "1910-05-31",
       formerSovereigns: ["united_kingdom"],
-      qualifiesForIndependenceConstraints: true,
       sourceDescription:
         "31 May 1910 (Union of South Africa formed from four British colonies: Cape Colony, Natal, Transvaal, and Orange Free State); 22 August 1934 (Status of the Union Act); 31 May 1961 (republic declared); 27 April 1994 (majority rule)",
     },
@@ -348,7 +308,6 @@ export const SOVEREIGNTY: SovereigntySnapshot = {
       year: 1960,
       date: "1960-04-04",
       formerSovereigns: ["france"],
-      qualifiesForIndependenceConstraints: true,
       sourceDescription:
         "4 April 1960 (from France); 20 August 1960 (full independence after federation with Mali is dissolved)",
     },
@@ -357,7 +316,6 @@ export const SOVEREIGNTY: SovereigntySnapshot = {
       year: 1961,
       date: "1961-04-27",
       formerSovereigns: ["united_kingdom"],
-      qualifiesForIndependenceConstraints: true,
       sourceDescription: "27 April 1961 (from the UK)",
     },
     SOM: {
@@ -365,7 +323,6 @@ export const SOVEREIGNTY: SovereigntySnapshot = {
       year: 1960,
       date: "1960-07-01",
       formerSovereigns: ["united_kingdom"],
-      qualifiesForIndependenceConstraints: true,
       sourceDescription:
         "1 July 1960 (from a merger of British Somaliland, which became independent from the UK on 26 June 1960, and Italian Somaliland, which became independent from the Italian-administered UN trusteeship on 1 July 1960 to form the Somali Republic)",
     },
@@ -374,7 +331,6 @@ export const SOVEREIGNTY: SovereigntySnapshot = {
       year: 1956,
       date: "1956-01-01",
       formerSovereigns: [],
-      qualifiesForIndependenceConstraints: true,
       sourceDescription: "1 January 1956 (from Egypt and the UK)",
     },
     TGO: {
@@ -382,7 +338,6 @@ export const SOVEREIGNTY: SovereigntySnapshot = {
       year: 1960,
       date: "1960-04-27",
       formerSovereigns: ["france"],
-      qualifiesForIndependenceConstraints: true,
       sourceDescription:
         "27 April 1960 (from French-administered UN trusteeship)",
     },
@@ -391,7 +346,6 @@ export const SOVEREIGNTY: SovereigntySnapshot = {
       year: 1975,
       date: "1975-07-12",
       formerSovereigns: ["portugal"],
-      qualifiesForIndependenceConstraints: true,
       sourceDescription: "12 July 1975 (from Portugal)",
     },
     TUN: {
@@ -399,7 +353,6 @@ export const SOVEREIGNTY: SovereigntySnapshot = {
       year: 1956,
       date: "1956-03-20",
       formerSovereigns: ["france"],
-      qualifiesForIndependenceConstraints: true,
       sourceDescription: "20 March 1956 (from France)",
     },
     TZA: {
@@ -407,7 +360,6 @@ export const SOVEREIGNTY: SovereigntySnapshot = {
       year: 1964,
       date: "1964-04-26",
       formerSovereigns: ["united_kingdom"],
-      qualifiesForIndependenceConstraints: true,
       sourceDescription:
         "26 April 1964 (Tanganyika united with Zanzibar to form the United Republic of Tanganyika and Zanzibar); 29 October 1964 (renamed United Republic of Tanzania); notable earlier dates: 9 December 1961 (Tanganyika became independent from UK-administered UN trusteeship); 10 December 1963 (Zanzibar became independent from UK)",
     },
@@ -416,7 +368,6 @@ export const SOVEREIGNTY: SovereigntySnapshot = {
       year: 1962,
       date: "1962-10-09",
       formerSovereigns: ["united_kingdom"],
-      qualifiesForIndependenceConstraints: true,
       sourceDescription: "9 October 1962 (from the UK)",
     },
     BFA: {
@@ -424,7 +375,6 @@ export const SOVEREIGNTY: SovereigntySnapshot = {
       year: 1960,
       date: "1960-08-05",
       formerSovereigns: ["france"],
-      qualifiesForIndependenceConstraints: true,
       sourceDescription: "5 August 1960 (from France)",
     },
     NAM: {
@@ -432,7 +382,6 @@ export const SOVEREIGNTY: SovereigntySnapshot = {
       year: 1990,
       date: "1990-03-21",
       formerSovereigns: [],
-      qualifiesForIndependenceConstraints: true,
       sourceDescription: "21 March 1990 (from South African mandate)",
     },
     SWZ: {
@@ -440,7 +389,6 @@ export const SOVEREIGNTY: SovereigntySnapshot = {
       year: 1968,
       date: "1968-09-06",
       formerSovereigns: ["united_kingdom"],
-      qualifiesForIndependenceConstraints: true,
       sourceDescription: "6 September 1968 (from the UK)",
     },
     ZMB: {
@@ -448,7 +396,6 @@ export const SOVEREIGNTY: SovereigntySnapshot = {
       year: 1964,
       date: "1964-10-24",
       formerSovereigns: ["united_kingdom"],
-      qualifiesForIndependenceConstraints: true,
       sourceDescription: "24 October 1964 (from the UK)",
     },
     ZWE: {
@@ -456,7 +403,6 @@ export const SOVEREIGNTY: SovereigntySnapshot = {
       year: 1980,
       date: "1980-04-18",
       formerSovereigns: ["united_kingdom"],
-      qualifiesForIndependenceConstraints: true,
       sourceDescription: "18 April 1980 (from the UK)",
     },
     AUS: {
@@ -464,7 +410,6 @@ export const SOVEREIGNTY: SovereigntySnapshot = {
       year: 1901,
       date: "1901-01-01",
       formerSovereigns: ["united_kingdom"],
-      qualifiesForIndependenceConstraints: true,
       sourceDescription: "1 January 1901 (from the federation of UK colonies)",
     },
     SLB: {
@@ -472,7 +417,6 @@ export const SOVEREIGNTY: SovereigntySnapshot = {
       year: 1978,
       date: "1978-07-07",
       formerSovereigns: ["united_kingdom"],
-      qualifiesForIndependenceConstraints: true,
       sourceDescription: "7 July 1978 (from the UK)",
     },
     FJI: {
@@ -480,7 +424,6 @@ export const SOVEREIGNTY: SovereigntySnapshot = {
       year: 1970,
       date: "1970-10-10",
       formerSovereigns: ["united_kingdom"],
-      qualifiesForIndependenceConstraints: true,
       sourceDescription: "10 October 1970 (from the UK)",
     },
     FSM: {
@@ -488,7 +431,6 @@ export const SOVEREIGNTY: SovereigntySnapshot = {
       year: 1986,
       date: "1986-11-03",
       formerSovereigns: ["united_states"],
-      qualifiesForIndependenceConstraints: true,
       sourceDescription:
         "3 November 1986 (from the US-administered UN trusteeship)",
     },
@@ -497,7 +439,6 @@ export const SOVEREIGNTY: SovereigntySnapshot = {
       year: 1979,
       date: "1979-07-12",
       formerSovereigns: ["united_kingdom"],
-      qualifiesForIndependenceConstraints: true,
       sourceDescription: "12 July 1979 (from the UK)",
     },
     VUT: {
@@ -505,7 +446,6 @@ export const SOVEREIGNTY: SovereigntySnapshot = {
       year: 1980,
       date: "1980-07-30",
       formerSovereigns: ["france", "united_kingdom"],
-      qualifiesForIndependenceConstraints: true,
       sourceDescription: "30 July 1980 (from France and the UK)",
     },
     NRU: {
@@ -513,7 +453,6 @@ export const SOVEREIGNTY: SovereigntySnapshot = {
       year: 1968,
       date: "1968-01-31",
       formerSovereigns: [],
-      qualifiesForIndependenceConstraints: true,
       sourceDescription:
         "31 January 1968 (from the Australia-, NZ-, and UK-administered UN trusteeship)",
     },
@@ -522,7 +461,6 @@ export const SOVEREIGNTY: SovereigntySnapshot = {
       year: 1907,
       date: "1907-09-26",
       formerSovereigns: ["united_kingdom"],
-      qualifiesForIndependenceConstraints: true,
       sourceDescription: "26 September 1907 (from the UK)",
     },
     PLW: {
@@ -530,7 +468,6 @@ export const SOVEREIGNTY: SovereigntySnapshot = {
       year: 1994,
       date: "1994-10-01",
       formerSovereigns: ["united_states"],
-      qualifiesForIndependenceConstraints: true,
       sourceDescription:
         "1 October 1994 (from the US-administered UN trusteeship)",
     },
@@ -539,7 +476,6 @@ export const SOVEREIGNTY: SovereigntySnapshot = {
       year: 1986,
       date: "1986-10-21",
       formerSovereigns: ["united_states"],
-      qualifiesForIndependenceConstraints: true,
       sourceDescription:
         "21 October 1986 (from the US-administered UN trusteeship)",
     },
@@ -548,7 +484,6 @@ export const SOVEREIGNTY: SovereigntySnapshot = {
       year: 1970,
       date: "1970-06-04",
       formerSovereigns: ["united_kingdom"],
-      qualifiesForIndependenceConstraints: true,
       sourceDescription: "4 June 1970 (from UK protectorate status)",
     },
     TUV: {
@@ -556,7 +491,6 @@ export const SOVEREIGNTY: SovereigntySnapshot = {
       year: 1978,
       date: "1978-10-01",
       formerSovereigns: ["united_kingdom"],
-      qualifiesForIndependenceConstraints: true,
       sourceDescription: "1 October 1978 (from the UK)",
     },
     WSM: {
@@ -564,7 +498,6 @@ export const SOVEREIGNTY: SovereigntySnapshot = {
       year: 1962,
       date: "1962-01-01",
       formerSovereigns: [],
-      qualifiesForIndependenceConstraints: true,
       sourceDescription:
         "1 January 1962 (from New Zealand-administered UN trusteeship)",
     },
@@ -573,7 +506,6 @@ export const SOVEREIGNTY: SovereigntySnapshot = {
       year: 1981,
       date: "1981-11-01",
       formerSovereigns: ["united_kingdom"],
-      qualifiesForIndependenceConstraints: true,
       sourceDescription: "1 November 1981 (from the UK)",
     },
     BRB: {
@@ -581,7 +513,6 @@ export const SOVEREIGNTY: SovereigntySnapshot = {
       year: 1966,
       date: "1966-11-30",
       formerSovereigns: ["united_kingdom"],
-      qualifiesForIndependenceConstraints: true,
       sourceDescription: "30 November 1966 (from the UK)",
     },
     BHS: {
@@ -589,7 +520,6 @@ export const SOVEREIGNTY: SovereigntySnapshot = {
       year: 1973,
       date: "1973-07-10",
       formerSovereigns: ["united_kingdom"],
-      qualifiesForIndependenceConstraints: true,
       sourceDescription: "10 July 1973 (from the UK)",
     },
     BLZ: {
@@ -597,7 +527,6 @@ export const SOVEREIGNTY: SovereigntySnapshot = {
       year: 1981,
       date: "1981-09-21",
       formerSovereigns: ["united_kingdom"],
-      qualifiesForIndependenceConstraints: true,
       sourceDescription: "21 September 1981 (from the UK)",
     },
     CRI: {
@@ -605,7 +534,6 @@ export const SOVEREIGNTY: SovereigntySnapshot = {
       year: 1821,
       date: "1821-09-15",
       formerSovereigns: ["spain"],
-      qualifiesForIndependenceConstraints: true,
       sourceDescription: "15 September 1821 (from Spain)",
     },
     CUB: {
@@ -613,7 +541,6 @@ export const SOVEREIGNTY: SovereigntySnapshot = {
       year: 1902,
       date: "1902-05-20",
       formerSovereigns: ["spain"],
-      qualifiesForIndependenceConstraints: true,
       sourceDescription:
         "20 May 1902 (from US administration); 10 December 1898 (from Spain); not acknowledged by the Cuban Government as days of independence",
     },
@@ -622,7 +549,6 @@ export const SOVEREIGNTY: SovereigntySnapshot = {
       year: 1978,
       date: "1978-11-03",
       formerSovereigns: ["united_kingdom"],
-      qualifiesForIndependenceConstraints: true,
       sourceDescription: "3 November 1978 (from the UK)",
     },
     DOM: {
@@ -630,7 +556,6 @@ export const SOVEREIGNTY: SovereigntySnapshot = {
       year: 1844,
       date: "1844-02-27",
       formerSovereigns: [],
-      qualifiesForIndependenceConstraints: true,
       sourceDescription: "27 February 1844 (from Haiti)",
     },
     SLV: {
@@ -638,7 +563,6 @@ export const SOVEREIGNTY: SovereigntySnapshot = {
       year: 1821,
       date: "1821-09-15",
       formerSovereigns: ["spain"],
-      qualifiesForIndependenceConstraints: true,
       sourceDescription: "15 September 1821 (from Spain)",
     },
     GRD: {
@@ -646,7 +570,6 @@ export const SOVEREIGNTY: SovereigntySnapshot = {
       year: 1974,
       date: "1974-02-07",
       formerSovereigns: ["united_kingdom"],
-      qualifiesForIndependenceConstraints: true,
       sourceDescription: "7 February 1974 (from the UK)",
     },
     GTM: {
@@ -654,7 +577,6 @@ export const SOVEREIGNTY: SovereigntySnapshot = {
       year: 1821,
       date: "1821-09-15",
       formerSovereigns: ["spain"],
-      qualifiesForIndependenceConstraints: true,
       sourceDescription: "15 September 1821 (from Spain)",
     },
     HTI: {
@@ -662,7 +584,6 @@ export const SOVEREIGNTY: SovereigntySnapshot = {
       year: 1804,
       date: "1804-01-01",
       formerSovereigns: ["france"],
-      qualifiesForIndependenceConstraints: true,
       sourceDescription: "1 January 1804 (from France)",
     },
     HND: {
@@ -670,7 +591,6 @@ export const SOVEREIGNTY: SovereigntySnapshot = {
       year: 1821,
       date: "1821-09-15",
       formerSovereigns: ["spain"],
-      qualifiesForIndependenceConstraints: true,
       sourceDescription: "15 September 1821 (from Spain)",
     },
     JAM: {
@@ -678,7 +598,6 @@ export const SOVEREIGNTY: SovereigntySnapshot = {
       year: 1962,
       date: "1962-08-06",
       formerSovereigns: ["united_kingdom"],
-      qualifiesForIndependenceConstraints: true,
       sourceDescription: "6 August 1962 (from the UK)",
     },
     NIC: {
@@ -686,7 +605,6 @@ export const SOVEREIGNTY: SovereigntySnapshot = {
       year: 1821,
       date: "1821-09-15",
       formerSovereigns: ["spain"],
-      qualifiesForIndependenceConstraints: true,
       sourceDescription: "15 September 1821 (from Spain)",
     },
     PAN: {
@@ -694,7 +612,6 @@ export const SOVEREIGNTY: SovereigntySnapshot = {
       year: 1903,
       date: "1903-11-03",
       formerSovereigns: ["spain"],
-      qualifiesForIndependenceConstraints: true,
       sourceDescription:
         "3 November 1903 (from Colombia); 28 November 1821 (from Spain)",
     },
@@ -703,7 +620,6 @@ export const SOVEREIGNTY: SovereigntySnapshot = {
       year: 1983,
       date: "1983-09-19",
       formerSovereigns: ["united_kingdom"],
-      qualifiesForIndependenceConstraints: true,
       sourceDescription: "19 September 1983 (from the UK)",
     },
     LCA: {
@@ -711,7 +627,6 @@ export const SOVEREIGNTY: SovereigntySnapshot = {
       year: 1979,
       date: "1979-02-22",
       formerSovereigns: ["united_kingdom"],
-      qualifiesForIndependenceConstraints: true,
       sourceDescription: "22 February 1979 (from the UK)",
     },
     TTO: {
@@ -719,7 +634,6 @@ export const SOVEREIGNTY: SovereigntySnapshot = {
       year: 1962,
       date: "1962-08-31",
       formerSovereigns: ["united_kingdom"],
-      qualifiesForIndependenceConstraints: true,
       sourceDescription: "31 August 1962 (from the UK)",
     },
     VCT: {
@@ -727,7 +641,6 @@ export const SOVEREIGNTY: SovereigntySnapshot = {
       year: 1979,
       date: "1979-10-27",
       formerSovereigns: ["united_kingdom"],
-      qualifiesForIndependenceConstraints: true,
       sourceDescription: "27 October 1979 (from the UK)",
     },
     AZE: {
@@ -735,7 +648,6 @@ export const SOVEREIGNTY: SovereigntySnapshot = {
       year: 1991,
       date: "1991-08-30",
       formerSovereigns: ["soviet_union"],
-      qualifiesForIndependenceConstraints: true,
       sourceDescription:
         "30 August 1991 (declared from the Soviet Union); 18 October 1991 (adopted by the Supreme Council of Azerbaijan)",
     },
@@ -744,7 +656,6 @@ export const SOVEREIGNTY: SovereigntySnapshot = {
       year: 1991,
       date: "1991-09-21",
       formerSovereigns: ["soviet_union"],
-      qualifiesForIndependenceConstraints: true,
       sourceDescription:
         "21 September 1991 (from the Soviet Union); notable earlier dates: 321 B.C. (Kingdom of Armenia established under the Orontid Dynasty), A.D. 884 (Armenian Kingdom reestablished under the Bagratid Dynasty); 1198 (Cilician Kingdom established); 28 May 1918 (Democratic Republic of Armenia declared)",
     },
@@ -753,7 +664,6 @@ export const SOVEREIGNTY: SovereigntySnapshot = {
       year: 1991,
       date: "1991-04-09",
       formerSovereigns: ["soviet_union"],
-      qualifiesForIndependenceConstraints: true,
       sourceDescription:
         "9 April 1991 (from the Soviet Union); notable earlier date: A.D. 1008 (Georgia unified under King BAGRAT III)",
     },
@@ -762,7 +672,6 @@ export const SOVEREIGNTY: SovereigntySnapshot = {
       year: 1991,
       date: "1991-08-31",
       formerSovereigns: ["soviet_union"],
-      qualifiesForIndependenceConstraints: true,
       sourceDescription: "31 August 1991 (from the Soviet Union)",
     },
     KAZ: {
@@ -770,7 +679,6 @@ export const SOVEREIGNTY: SovereigntySnapshot = {
       year: 1991,
       date: "1991-12-16",
       formerSovereigns: ["soviet_union"],
-      qualifiesForIndependenceConstraints: true,
       sourceDescription: "16 December 1991 (from the Soviet Union)",
     },
     RUS: {
@@ -778,7 +686,6 @@ export const SOVEREIGNTY: SovereigntySnapshot = {
       year: 1991,
       date: "1991-12-25",
       formerSovereigns: ["soviet_union"],
-      qualifiesForIndependenceConstraints: false,
       sourceDescription:
         "25 December 1991 (from the Soviet Union; Russian SFSR renamed Russian Federation); notable earlier dates: 1157 (Principality of Vladimir-Suzdal created); 16 January 1547 (Tsardom of Muscovy established); 22 October 1721 (Russian Empire proclaimed); 30 December 1922 (Soviet Union established)",
     },
@@ -787,7 +694,6 @@ export const SOVEREIGNTY: SovereigntySnapshot = {
       year: 1991,
       date: "1991-09-09",
       formerSovereigns: ["soviet_union"],
-      qualifiesForIndependenceConstraints: true,
       sourceDescription: "9 September 1991 (from the Soviet Union)",
     },
     TKM: {
@@ -795,7 +701,6 @@ export const SOVEREIGNTY: SovereigntySnapshot = {
       year: 1991,
       date: "1991-10-27",
       formerSovereigns: ["soviet_union"],
-      qualifiesForIndependenceConstraints: true,
       sourceDescription: "27 October 1991 (from the Soviet Union)",
     },
     UZB: {
@@ -803,7 +708,6 @@ export const SOVEREIGNTY: SovereigntySnapshot = {
       year: 1991,
       date: "1991-09-01",
       formerSovereigns: ["soviet_union"],
-      qualifiesForIndependenceConstraints: true,
       sourceDescription: "1 September 1991 (from the Soviet Union)",
     },
     MMR: {
@@ -811,7 +715,6 @@ export const SOVEREIGNTY: SovereigntySnapshot = {
       year: 1948,
       date: "1948-01-04",
       formerSovereigns: ["united_kingdom"],
-      qualifiesForIndependenceConstraints: true,
       sourceDescription: "4 January 1948 (from the UK)",
     },
     BRN: {
@@ -819,7 +722,6 @@ export const SOVEREIGNTY: SovereigntySnapshot = {
       year: 1984,
       date: "1984-01-01",
       formerSovereigns: ["united_kingdom"],
-      qualifiesForIndependenceConstraints: true,
       sourceDescription: "1 January 1984 (from the UK)",
     },
     KHM: {
@@ -827,7 +729,6 @@ export const SOVEREIGNTY: SovereigntySnapshot = {
       year: 1953,
       date: "1953-11-09",
       formerSovereigns: ["france"],
-      qualifiesForIndependenceConstraints: true,
       sourceDescription: "9 November 1953 (from France)",
     },
     CHN: {
@@ -835,7 +736,6 @@ export const SOVEREIGNTY: SovereigntySnapshot = {
       year: 1949,
       date: "1949-10-01",
       formerSovereigns: [],
-      qualifiesForIndependenceConstraints: false,
       sourceDescription:
         "1 October 1949 (People's Republic of China established); notable earlier dates: 221 B.C. (unification under the Qin Dynasty); 1 January 1912 (Qing Dynasty replaced by the Republic of China)",
     },
@@ -844,7 +744,6 @@ export const SOVEREIGNTY: SovereigntySnapshot = {
       year: 1945,
       date: "1945-08-17",
       formerSovereigns: ["netherlands"],
-      qualifiesForIndependenceConstraints: true,
       sourceDescription:
         "17 August 1945 (declared independence from the Netherlands)",
     },
@@ -853,7 +752,6 @@ export const SOVEREIGNTY: SovereigntySnapshot = {
       year: 1947,
       date: "1947-05-03",
       formerSovereigns: [],
-      qualifiesForIndependenceConstraints: false,
       sourceDescription:
         "3 May 1947 (current constitution adopted as amendment to Meiji Constitution); notable earlier dates: 11 February 660 B.C. (mythological date of Emperor JIMMU founding the nation); 29 November 1890 (Meiji Constitution provides for constitutional monarchy)",
     },
@@ -862,7 +760,6 @@ export const SOVEREIGNTY: SovereigntySnapshot = {
       year: 1945,
       date: "1945-08-15",
       formerSovereigns: [],
-      qualifiesForIndependenceConstraints: true,
       sourceDescription: "15 August 1945 (from Japan)",
     },
     KOR: {
@@ -870,7 +767,6 @@ export const SOVEREIGNTY: SovereigntySnapshot = {
       year: 1945,
       date: "1945-08-15",
       formerSovereigns: [],
-      qualifiesForIndependenceConstraints: true,
       sourceDescription: "15 August 1945 (from Japan)",
     },
     LAO: {
@@ -878,7 +774,6 @@ export const SOVEREIGNTY: SovereigntySnapshot = {
       year: 1949,
       date: "1949-07-19",
       formerSovereigns: ["france"],
-      qualifiesForIndependenceConstraints: true,
       sourceDescription:
         "19 July 1949 (from France); 22 October 1953 (Franco-Lao Treaty recognizes full independence)",
     },
@@ -887,7 +782,6 @@ export const SOVEREIGNTY: SovereigntySnapshot = {
       year: 1911,
       date: "1911-12-29",
       formerSovereigns: [],
-      qualifiesForIndependenceConstraints: true,
       sourceDescription:
         "29 December 1911 (independence declared from China; in actuality, autonomy attained); 11 July 1921 (from China)",
     },
@@ -896,7 +790,6 @@ export const SOVEREIGNTY: SovereigntySnapshot = {
       year: 1957,
       date: "1957-08-31",
       formerSovereigns: ["united_kingdom"],
-      qualifiesForIndependenceConstraints: true,
       sourceDescription: "31 August 1957 (from the UK)",
     },
     PNG: {
@@ -904,7 +797,6 @@ export const SOVEREIGNTY: SovereigntySnapshot = {
       year: 1975,
       date: "1975-09-16",
       formerSovereigns: [],
-      qualifiesForIndependenceConstraints: true,
       sourceDescription:
         "16 September 1975 (from the Australia-administered UN trusteeship)",
     },
@@ -913,7 +805,6 @@ export const SOVEREIGNTY: SovereigntySnapshot = {
       year: 1946,
       date: "1946-07-04",
       formerSovereigns: ["united_states"],
-      qualifiesForIndependenceConstraints: true,
       sourceDescription: "4 July 1946 (from the US)",
     },
     SGP: {
@@ -921,14 +812,12 @@ export const SOVEREIGNTY: SovereigntySnapshot = {
       year: 1965,
       date: "1965-08-09",
       formerSovereigns: [],
-      qualifiesForIndependenceConstraints: true,
       sourceDescription: "9 August 1965 (from Malaysian Federation)",
     },
     THA: {
       kind: "foundation",
       year: 1238,
       formerSovereigns: [],
-      qualifiesForIndependenceConstraints: false,
       sourceDescription: "1238 (traditional founding date; never colonized)",
     },
     TLS: {
@@ -936,7 +825,6 @@ export const SOVEREIGNTY: SovereigntySnapshot = {
       year: 2002,
       date: "2002-05-20",
       formerSovereigns: ["portugal"],
-      qualifiesForIndependenceConstraints: true,
       sourceDescription:
         "28 November 1975 (from Portugal); 20 May 2002 (from Indonesia)",
     },
@@ -945,7 +833,6 @@ export const SOVEREIGNTY: SovereigntySnapshot = {
       year: 1945,
       date: "1945-09-02",
       formerSovereigns: ["france"],
-      qualifiesForIndependenceConstraints: true,
       sourceDescription: "2 September 1945 (from France)",
     },
     ALB: {
@@ -953,14 +840,12 @@ export const SOVEREIGNTY: SovereigntySnapshot = {
       year: 1912,
       date: "1912-11-28",
       formerSovereigns: [],
-      qualifiesForIndependenceConstraints: true,
       sourceDescription: "28 November 1912 (from the Ottoman Empire)",
     },
     AND: {
       kind: "foundation",
       year: 1278,
       formerSovereigns: [],
-      qualifiesForIndependenceConstraints: false,
       sourceDescription:
         "1278 (formed under the joint sovereignty of the French Count of Foix and the Spanish Bishop of Urgell)",
     },
@@ -969,7 +854,6 @@ export const SOVEREIGNTY: SovereigntySnapshot = {
       year: 1156,
       date: "1156-09-17",
       formerSovereigns: [],
-      qualifiesForIndependenceConstraints: true,
       sourceDescription:
         "no official date of independence: 976 (Margravate of Austria established); 17 September 1156 (Duchy of Austria founded); 6 January 1453 (Archduchy of Austria acknowledged); 11 August 1804 (Austrian Empire proclaimed); 30 March 1867 (Austro-Hungarian dual monarchy established); 12 November 1918 (First Republic proclaimed); 27 April 1945 (Second Republic proclaimed)",
     },
@@ -978,7 +862,6 @@ export const SOVEREIGNTY: SovereigntySnapshot = {
       year: 1830,
       date: "1830-10-04",
       formerSovereigns: ["netherlands"],
-      qualifiesForIndependenceConstraints: true,
       sourceDescription:
         "4 October 1830 (a provisional government declared independence from the Netherlands); 21 July 1831 (King LEOPOLD I ascended to the throne)",
     },
@@ -987,7 +870,6 @@ export const SOVEREIGNTY: SovereigntySnapshot = {
       year: 1992,
       date: "1992-03-01",
       formerSovereigns: ["yugoslavia"],
-      qualifiesForIndependenceConstraints: true,
       sourceDescription: "1 March 1992 (from Yugoslavia)",
     },
     BLR: {
@@ -995,7 +877,6 @@ export const SOVEREIGNTY: SovereigntySnapshot = {
       year: 1991,
       date: "1991-08-25",
       formerSovereigns: ["soviet_union"],
-      qualifiesForIndependenceConstraints: true,
       sourceDescription: "25 August 1991 (from the Soviet Union)",
     },
     BGR: {
@@ -1003,7 +884,6 @@ export const SOVEREIGNTY: SovereigntySnapshot = {
       year: 1878,
       date: "1878-03-03",
       formerSovereigns: [],
-      qualifiesForIndependenceConstraints: true,
       sourceDescription:
         "3 March 1878 (as an autonomous principality within the Ottoman Empire); 22 September 1908 (complete independence from the Ottoman Empire)",
     },
@@ -1012,7 +892,6 @@ export const SOVEREIGNTY: SovereigntySnapshot = {
       year: 1960,
       date: "1960-08-16",
       formerSovereigns: ["united_kingdom"],
-      qualifiesForIndependenceConstraints: true,
       sourceDescription: "16 August 1960 (from the UK)",
     },
     DNK: {
@@ -1020,7 +899,6 @@ export const SOVEREIGNTY: SovereigntySnapshot = {
       year: 1849,
       date: "1849-06-05",
       formerSovereigns: [],
-      qualifiesForIndependenceConstraints: false,
       sourceDescription:
         "ca. 965 (unified and Christianized under Harald I GORMSSON); 5 June 1849 (became a parliamentary constitutional monarchy)",
     },
@@ -1029,7 +907,6 @@ export const SOVEREIGNTY: SovereigntySnapshot = {
       year: 1921,
       date: "1921-12-06",
       formerSovereigns: ["united_kingdom"],
-      qualifiesForIndependenceConstraints: true,
       sourceDescription:
         "6 December 1921 (from the UK); 6 December 1922 (Irish Free State established); 18 April 1949 (Republic of Ireland Act enabled)",
     },
@@ -1038,7 +915,6 @@ export const SOVEREIGNTY: SovereigntySnapshot = {
       year: 1991,
       date: "1991-08-20",
       formerSovereigns: ["soviet_union"],
-      qualifiesForIndependenceConstraints: true,
       sourceDescription:
         "24 February 1918 (from Soviet Russia); 20 August 1991 (declared from the Soviet Union); 6 September 1991 (recognized by the Soviet Union)",
     },
@@ -1047,7 +923,6 @@ export const SOVEREIGNTY: SovereigntySnapshot = {
       year: 1993,
       date: "1993-01-01",
       formerSovereigns: [],
-      qualifiesForIndependenceConstraints: true,
       sourceDescription:
         "1 January 1993 (Czechoslovakia split into the Czech Republic and Slovakia)",
     },
@@ -1056,7 +931,6 @@ export const SOVEREIGNTY: SovereigntySnapshot = {
       year: 1917,
       date: "1917-12-06",
       formerSovereigns: [],
-      qualifiesForIndependenceConstraints: true,
       sourceDescription: "6 December 1917 (from Russia)",
     },
     FRA: {
@@ -1064,7 +938,6 @@ export const SOVEREIGNTY: SovereigntySnapshot = {
       year: 1789,
       date: "1789-07-14",
       formerSovereigns: [],
-      qualifiesForIndependenceConstraints: true,
       sourceDescription:
         "no official date of independence: 486 (Frankish tribes unified under Merovingian kingship); 10 August 843 (Western Francia established from the division of the Carolingian Empire); 14 July 1789 (French monarchy overthrown); 22 September 1792 (First French Republic established); 4 October 1958 (Fifth French Republic established)",
     },
@@ -1073,7 +946,6 @@ export const SOVEREIGNTY: SovereigntySnapshot = {
       year: 1871,
       date: "1871-01-18",
       formerSovereigns: [],
-      qualifiesForIndependenceConstraints: true,
       sourceDescription:
         "18 January 1871 (establishment of the German Empire); divided into four zones of occupation (UK, US, USSR, and France) in 1945 after World War II; Federal Republic of Germany (FRG or West Germany) proclaimed on 23 May 1949 and included the former UK, US, and French zones; German Democratic Republic (GDR or East Germany) proclaimed on 7 October 1949 and included the former USSR zone; West Germany and East Germany unified on 3 October 1990, with all four powers formally relinquishing rights on 15 March 1991; notable earlier dates: 10 August 843 (Eastern Francia established from the division of the Carolingian Empire); 2 February 962 (crowning of OTTO I, recognized as the first Holy Roman Emperor)",
     },
@@ -1082,7 +954,6 @@ export const SOVEREIGNTY: SovereigntySnapshot = {
       year: 1830,
       date: "1830-02-03",
       formerSovereigns: [],
-      qualifiesForIndependenceConstraints: true,
       sourceDescription: "3 February 1830 (from the Ottoman Empire)",
     },
     HRV: {
@@ -1090,7 +961,6 @@ export const SOVEREIGNTY: SovereigntySnapshot = {
       year: 1991,
       date: "1991-06-25",
       formerSovereigns: ["yugoslavia"],
-      qualifiesForIndependenceConstraints: true,
       sourceDescription:
         "25 June 1991 (from Yugoslavia); notable earlier dates: ca. 925 (Kingdom of Croatia established), 1 December 1918 (Kingdom of Serbs, Croats, and Slovenes established, later became Yugoslavia)",
     },
@@ -1099,7 +969,6 @@ export const SOVEREIGNTY: SovereigntySnapshot = {
       year: 1918,
       date: "1918-11-16",
       formerSovereigns: [],
-      qualifiesForIndependenceConstraints: false,
       sourceDescription:
         "16 November 1918 (republic proclaimed); notable earlier dates: 25 December 1000 (crowning of King STEPHEN I, traditional founding date); 30 March 1867 (Austro-Hungarian dual monarchy established)",
     },
@@ -1108,7 +977,6 @@ export const SOVEREIGNTY: SovereigntySnapshot = {
       year: 1918,
       date: "1918-12-01",
       formerSovereigns: [],
-      qualifiesForIndependenceConstraints: true,
       sourceDescription:
         "1 December 1918 (became a sovereign state under the Danish Crown); 17 June 1944 (from Denmark; birthday of Jon SIGURDSSON, leader of Iceland's 19th-century independence movement)",
     },
@@ -1117,7 +985,6 @@ export const SOVEREIGNTY: SovereigntySnapshot = {
       year: 1861,
       date: "1861-03-17",
       formerSovereigns: [],
-      qualifiesForIndependenceConstraints: false,
       sourceDescription: "17 March 1861 ",
     },
     XKX: {
@@ -1125,7 +992,6 @@ export const SOVEREIGNTY: SovereigntySnapshot = {
       year: 2008,
       date: "2008-02-17",
       formerSovereigns: [],
-      qualifiesForIndependenceConstraints: true,
       sourceDescription: "17 February 2008 (from Serbia)",
     },
     LVA: {
@@ -1133,7 +999,6 @@ export const SOVEREIGNTY: SovereigntySnapshot = {
       year: 1991,
       date: "1918-11-18",
       formerSovereigns: ["soviet_union"],
-      qualifiesForIndependenceConstraints: true,
       sourceDescription:
         "18 November 1918 (from Soviet Russia); 4 May 1990 (declared from the Soviet Union); 6 September 1991 (recognized by the Soviet Union)",
     },
@@ -1142,7 +1007,6 @@ export const SOVEREIGNTY: SovereigntySnapshot = {
       year: 1990,
       date: "1990-03-11",
       formerSovereigns: ["soviet_union"],
-      qualifiesForIndependenceConstraints: true,
       sourceDescription:
         "16 February 1918 (from Soviet Russia and Germany); 11 March 1990 (declared from the Soviet Union); 6 September 1991 (recognized by the Soviet Union); notable earlier dates: 6 July 1253 (coronation of MINDAUGAS, traditional founding date); 1 July 1569 (Polish-Lithuanian Commonwealth created)",
     },
@@ -1151,7 +1015,6 @@ export const SOVEREIGNTY: SovereigntySnapshot = {
       year: 1993,
       date: "1993-01-01",
       formerSovereigns: [],
-      qualifiesForIndependenceConstraints: true,
       sourceDescription:
         "1 January 1993 (Czechoslovakia split into the Czech Republic and Slovakia)",
     },
@@ -1160,7 +1023,6 @@ export const SOVEREIGNTY: SovereigntySnapshot = {
       year: 1719,
       date: "1719-01-23",
       formerSovereigns: [],
-      qualifiesForIndependenceConstraints: true,
       sourceDescription:
         "23 January 1719 (Principality of Liechtenstein established); 12 July 1806 (independence from the Holy Roman Empire); 24 August 1866 (independence from the German Confederation)",
     },
@@ -1168,7 +1030,6 @@ export const SOVEREIGNTY: SovereigntySnapshot = {
       kind: "independence",
       year: 1839,
       formerSovereigns: ["netherlands"],
-      qualifiesForIndependenceConstraints: true,
       sourceDescription: "1839 (from the Netherlands)",
     },
     MDA: {
@@ -1176,7 +1037,6 @@ export const SOVEREIGNTY: SovereigntySnapshot = {
       year: 1991,
       date: "1991-08-27",
       formerSovereigns: ["soviet_union"],
-      qualifiesForIndependenceConstraints: true,
       sourceDescription: "27 August 1991 (from the Soviet Union)",
     },
     MNE: {
@@ -1184,7 +1044,6 @@ export const SOVEREIGNTY: SovereigntySnapshot = {
       year: 2006,
       date: "2006-06-03",
       formerSovereigns: [],
-      qualifiesForIndependenceConstraints: true,
       sourceDescription:
         "3 June 2006 (from the State Union of Serbia and Montenegro); notable earlier dates: 13 March 1852 (Principality of Montenegro established); 13 July 1878 (Congress of Berlin recognizes Montenegrin independence); 28 August 1910 (Kingdom of Montenegro established)",
     },
@@ -1193,7 +1052,6 @@ export const SOVEREIGNTY: SovereigntySnapshot = {
       year: 1991,
       date: "1991-09-08",
       formerSovereigns: ["yugoslavia"],
-      qualifiesForIndependenceConstraints: true,
       sourceDescription:
         "8 September 1991 (referendum endorsed independence from Yugoslavia)",
     },
@@ -1201,7 +1059,6 @@ export const SOVEREIGNTY: SovereigntySnapshot = {
       kind: "foundation",
       year: 1419,
       formerSovereigns: [],
-      qualifiesForIndependenceConstraints: false,
       sourceDescription:
         "1419 (beginning of permanent rule by the House of GRIMALDI)",
     },
@@ -1210,7 +1067,6 @@ export const SOVEREIGNTY: SovereigntySnapshot = {
       year: 1964,
       date: "1964-09-21",
       formerSovereigns: ["united_kingdom"],
-      qualifiesForIndependenceConstraints: true,
       sourceDescription: "21 September 1964 (from the UK)",
     },
     NLD: {
@@ -1218,7 +1074,6 @@ export const SOVEREIGNTY: SovereigntySnapshot = {
       year: 1581,
       date: "1581-07-26",
       formerSovereigns: [],
-      qualifiesForIndependenceConstraints: false,
       sourceDescription: "26 July 1581 ",
     },
     NOR: {
@@ -1226,7 +1081,6 @@ export const SOVEREIGNTY: SovereigntySnapshot = {
       year: 1905,
       date: "1905-06-07",
       formerSovereigns: [],
-      qualifiesForIndependenceConstraints: false,
       sourceDescription:
         "7 June 1905 (union with Sweden declared dissolved); 26 October 1905 (Sweden agreed to the repeal of the union); notable earlier dates: ca. 872 (traditional unification of Norwegian kingdoms by HARALD Fairhair); 1397 (Kalmar Union of Denmark, Norway, and Sweden); 1524 (Denmark-Norway); 17 May 1814 (Norwegian constitution adopted); 4 November 1814 (Sweden-Norway union confirmed)",
     },
@@ -1235,7 +1089,6 @@ export const SOVEREIGNTY: SovereigntySnapshot = {
       year: 1918,
       date: "1918-11-11",
       formerSovereigns: [],
-      qualifiesForIndependenceConstraints: false,
       sourceDescription:
         "11 November 1918 (republic proclaimed); notable earlier dates: 14 April 966 (adoption of Christianity, traditional founding date), 1 July 1569 (Polish-Lithuanian Commonwealth created)",
     },
@@ -1244,7 +1097,6 @@ export const SOVEREIGNTY: SovereigntySnapshot = {
       year: 1640,
       date: "1640-12-01",
       formerSovereigns: [],
-      qualifiesForIndependenceConstraints: true,
       sourceDescription:
         "1143 (Kingdom of Portugal recognized); 1 December 1640 (independence reestablished after 60 years of Spanish rule); 5 October 1910 (republic proclaimed)",
     },
@@ -1253,7 +1105,6 @@ export const SOVEREIGNTY: SovereigntySnapshot = {
       year: 2006,
       date: "2006-06-05",
       formerSovereigns: [],
-      qualifiesForIndependenceConstraints: true,
       sourceDescription:
         "5 June 2006 (from the State Union of Serbia and Montenegro); notable earlier dates: 1217 (Serbian Kingdom established); 16 April 1346 (Serbian Empire established); 13 July 1878 (Congress of Berlin recognizes Serbian independence); 1 December 1918 (Kingdom of Serbs, Croats, and Slovenes established, later known as Yugoslavia)",
     },
@@ -1262,7 +1113,6 @@ export const SOVEREIGNTY: SovereigntySnapshot = {
       year: 1877,
       date: "1877-05-09",
       formerSovereigns: [],
-      qualifiesForIndependenceConstraints: true,
       sourceDescription:
         "9 May 1877 (independence proclaimed from the Ottoman Empire; 13 July 1878 (independence recognized by the Treaty of Berlin); 26 March 1881 (kingdom proclaimed); 30 December 1947 (republic proclaimed)",
     },
@@ -1271,14 +1121,12 @@ export const SOVEREIGNTY: SovereigntySnapshot = {
       year: 1991,
       date: "1991-06-25",
       formerSovereigns: ["yugoslavia"],
-      qualifiesForIndependenceConstraints: true,
       sourceDescription: "25 June 1991 (from Yugoslavia)",
     },
     ESP: {
       kind: "foundation",
       year: 1492,
       formerSovereigns: [],
-      qualifiesForIndependenceConstraints: false,
       sourceDescription: "1492",
     },
     SWE: {
@@ -1286,7 +1134,6 @@ export const SOVEREIGNTY: SovereigntySnapshot = {
       year: 1523,
       date: "1523-06-06",
       formerSovereigns: [],
-      qualifiesForIndependenceConstraints: false,
       sourceDescription:
         "6 June 1523 (Gustav VASA elected king of Sweden, marking the abolishment of the Kalmar Union of Denmark, Norway, and Sweden)",
     },
@@ -1295,7 +1142,6 @@ export const SOVEREIGNTY: SovereigntySnapshot = {
       year: 1291,
       date: "1291-08-01",
       formerSovereigns: [],
-      qualifiesForIndependenceConstraints: false,
       sourceDescription: "1 August 1291 (founding of the Swiss Confederation)",
     },
     GBR: {
@@ -1303,7 +1149,6 @@ export const SOVEREIGNTY: SovereigntySnapshot = {
       year: 1284,
       date: "1284-03-03",
       formerSovereigns: [],
-      qualifiesForIndependenceConstraints: true,
       sourceDescription:
         "no official date of independence: 927 (minor English kingdoms unite); 3 March 1284 (enactment of the Statute of Rhuddlan uniting England and Wales); 1536 (Act of Union incorporates England and Wales); 1 May 1707 (Acts of Union unite England, Scotland, and Wales as Great Britain); 1 January 1801 (Acts of Union unite Great Britain and Ireland as the United Kingdom of Great Britain and Ireland); 6 December 1921 (Anglo-Irish Treaty formalizes partition of Ireland; six counties become Northern Ireland and remain part of the UK); 12 April 1927 (Royal and Parliamentary Titles Act establishes current name of the United Kingdom of Great Britain and Northern Ireland)",
     },
@@ -1312,7 +1157,6 @@ export const SOVEREIGNTY: SovereigntySnapshot = {
       year: 1991,
       date: "1991-08-24",
       formerSovereigns: ["soviet_union"],
-      qualifiesForIndependenceConstraints: true,
       sourceDescription:
         "24 August 1991 (from the Soviet Union); notable earlier dates: ca. 982 (VOLODYMYR I consolidates Kyivan Rus); 1199 (Principality (later Kingdom) of Ruthenia formed); 1648 (establishment of the Cossack Hetmanate); 22 January 1918 (from Soviet Russia)",
     },
@@ -1321,7 +1165,6 @@ export const SOVEREIGNTY: SovereigntySnapshot = {
       year: 1929,
       date: "1929-02-11",
       formerSovereigns: [],
-      qualifiesForIndependenceConstraints: false,
       sourceDescription: "11 February 1929",
     },
     ARE: {
@@ -1329,7 +1172,6 @@ export const SOVEREIGNTY: SovereigntySnapshot = {
       year: 1971,
       date: "1971-12-02",
       formerSovereigns: ["united_kingdom"],
-      qualifiesForIndependenceConstraints: true,
       sourceDescription: "2 December 1971 (from the UK)",
     },
     BHR: {
@@ -1337,7 +1179,6 @@ export const SOVEREIGNTY: SovereigntySnapshot = {
       year: 1971,
       date: "1971-08-15",
       formerSovereigns: ["united_kingdom"],
-      qualifiesForIndependenceConstraints: true,
       sourceDescription: "15 August 1971 (from the UK)",
     },
     IRN: {
@@ -1345,7 +1186,6 @@ export const SOVEREIGNTY: SovereigntySnapshot = {
       year: 1979,
       date: "1979-04-01",
       formerSovereigns: [],
-      qualifiesForIndependenceConstraints: false,
       sourceDescription:
         "1 April 1979 (Islamic Republic of Iran proclaimed); notable earlier dates: ca. 550 B.C. (Achaemenid or Persian Empire established); A.D. 1501 (Iran reunified under the Safavid dynasty); 1794 (beginning of Qajar dynasty); 12 December 1925 (modern Iran established under the PAHLAVI dynasty)",
     },
@@ -1354,7 +1194,6 @@ export const SOVEREIGNTY: SovereigntySnapshot = {
       year: 1948,
       date: "1948-05-14",
       formerSovereigns: ["united_kingdom"],
-      qualifiesForIndependenceConstraints: false,
       sourceDescription:
         "14 May 1948 (following League of Nations mandate under British administration)",
     },
@@ -1363,7 +1202,6 @@ export const SOVEREIGNTY: SovereigntySnapshot = {
       year: 1932,
       date: "1932-10-03",
       formerSovereigns: ["united_kingdom"],
-      qualifiesForIndependenceConstraints: true,
       sourceDescription:
         "3 October 1932 (from League of Nations mandate under British administration)",
     },
@@ -1372,7 +1210,6 @@ export const SOVEREIGNTY: SovereigntySnapshot = {
       year: 1946,
       date: "1946-05-25",
       formerSovereigns: ["united_kingdom"],
-      qualifiesForIndependenceConstraints: true,
       sourceDescription:
         "25 May 1946 (from League of Nations mandate under British administration)",
     },
@@ -1381,7 +1218,6 @@ export const SOVEREIGNTY: SovereigntySnapshot = {
       year: 1961,
       date: "1961-06-19",
       formerSovereigns: ["united_kingdom"],
-      qualifiesForIndependenceConstraints: true,
       sourceDescription: "19 June 1961 (from the UK)",
     },
     LBN: {
@@ -1389,7 +1225,6 @@ export const SOVEREIGNTY: SovereigntySnapshot = {
       year: 1943,
       date: "1943-11-22",
       formerSovereigns: ["france"],
-      qualifiesForIndependenceConstraints: true,
       sourceDescription:
         "22 November 1943 (from League of Nations mandate under French administration)",
     },
@@ -1397,7 +1232,6 @@ export const SOVEREIGNTY: SovereigntySnapshot = {
       kind: "foundation",
       year: 1650,
       formerSovereigns: [],
-      qualifiesForIndependenceConstraints: false,
       sourceDescription: "1650 (expulsion of the Portuguese)",
     },
     QAT: {
@@ -1405,7 +1239,6 @@ export const SOVEREIGNTY: SovereigntySnapshot = {
       year: 1971,
       date: "1971-09-03",
       formerSovereigns: ["united_kingdom"],
-      qualifiesForIndependenceConstraints: true,
       sourceDescription: "3 September 1971 (from the UK)",
     },
     SAU: {
@@ -1413,7 +1246,6 @@ export const SOVEREIGNTY: SovereigntySnapshot = {
       year: 1932,
       date: "1932-09-23",
       formerSovereigns: [],
-      qualifiesForIndependenceConstraints: false,
       sourceDescription: "23 September 1932 (unification of the kingdom)",
     },
     SYR: {
@@ -1421,7 +1253,6 @@ export const SOVEREIGNTY: SovereigntySnapshot = {
       year: 1946,
       date: "1946-04-17",
       formerSovereigns: ["france"],
-      qualifiesForIndependenceConstraints: true,
       sourceDescription:
         "17 April 1946 (from League of Nations mandate under French administration)",
     },
@@ -1430,7 +1261,6 @@ export const SOVEREIGNTY: SovereigntySnapshot = {
       year: 1923,
       date: "1923-10-29",
       formerSovereigns: [],
-      qualifiesForIndependenceConstraints: false,
       sourceDescription:
         "29 October 1923 (republic proclaimed, succeeding the Ottoman Empire)",
     },
@@ -1439,7 +1269,6 @@ export const SOVEREIGNTY: SovereigntySnapshot = {
       year: 1990,
       date: "1990-05-22",
       formerSovereigns: ["united_kingdom"],
-      qualifiesForIndependenceConstraints: false,
       sourceDescription:
         "22 May 1990 (Republic of Yemen established with the merger of the Yemen Arab Republic [Yemen (Sanaa) or North Yemen] and the People's Democratic Republic of Yemen [Yemen (Aden) or South Yemen]); notable earlier dates: 1 November 1918 (North Yemen independent from the Ottoman Empire), 27 September 1962 (North Yemen becomes republic), 30 November 1967 (South Yemen independent from the UK)",
     },
@@ -1451,7 +1280,6 @@ export const SOVEREIGNTY: SovereigntySnapshot = {
       // Statute of Westminster » — complété en revue 2026-09-09 : l'extracteur
       // v1 ne reconnaissait pas ces formulations.
       formerSovereigns: ["united_kingdom"],
-      qualifiesForIndependenceConstraints: false,
       sourceDescription:
         "1 July 1867 (union of British North American colonies); 11 December 1931 (recognized by UK per Statute of Westminster)",
     },
@@ -1460,7 +1288,6 @@ export const SOVEREIGNTY: SovereigntySnapshot = {
       year: 1810,
       date: "1810-09-16",
       formerSovereigns: ["spain"],
-      qualifiesForIndependenceConstraints: true,
       sourceDescription:
         "16 September 1810 (declared independence from Spain); 27 September 1821 (recognized by Spain)",
     },
@@ -1471,7 +1298,6 @@ export const SOVEREIGNTY: SovereigntySnapshot = {
       // « declared independence from Great Britain » — complété en revue
       // 2026-09-09 : l'extracteur v1 ne reconnaissait pas ces formulations.
       formerSovereigns: ["united_kingdom"],
-      qualifiesForIndependenceConstraints: true,
       sourceDescription:
         "4 July 1776 (declared independence from Great Britain); 3 September 1783 (recognized by Great Britain)",
     },
@@ -1480,7 +1306,6 @@ export const SOVEREIGNTY: SovereigntySnapshot = {
       year: 1816,
       date: "1816-07-09",
       formerSovereigns: ["spain"],
-      qualifiesForIndependenceConstraints: true,
       sourceDescription: "9 July 1816 (from Spain)",
     },
     BOL: {
@@ -1488,7 +1313,6 @@ export const SOVEREIGNTY: SovereigntySnapshot = {
       year: 1825,
       date: "1825-08-06",
       formerSovereigns: ["spain"],
-      qualifiesForIndependenceConstraints: true,
       sourceDescription: "6 August 1825 (from Spain)",
     },
     BRA: {
@@ -1496,7 +1320,6 @@ export const SOVEREIGNTY: SovereigntySnapshot = {
       year: 1822,
       date: "1822-09-07",
       formerSovereigns: ["portugal"],
-      qualifiesForIndependenceConstraints: true,
       sourceDescription: "7 September 1822 (from Portugal)",
     },
     CHL: {
@@ -1504,7 +1327,6 @@ export const SOVEREIGNTY: SovereigntySnapshot = {
       year: 1810,
       date: "1810-09-18",
       formerSovereigns: ["spain"],
-      qualifiesForIndependenceConstraints: true,
       sourceDescription: "18 September 1810 (from Spain)",
     },
     COL: {
@@ -1512,7 +1334,6 @@ export const SOVEREIGNTY: SovereigntySnapshot = {
       year: 1810,
       date: "1810-07-20",
       formerSovereigns: ["spain"],
-      qualifiesForIndependenceConstraints: true,
       sourceDescription: "20 July 1810 (from Spain)",
     },
     ECU: {
@@ -1520,7 +1341,6 @@ export const SOVEREIGNTY: SovereigntySnapshot = {
       year: 1822,
       date: "1822-05-24",
       formerSovereigns: ["spain"],
-      qualifiesForIndependenceConstraints: true,
       sourceDescription: "24 May 1822 (from Spain)",
     },
     GUY: {
@@ -1528,7 +1348,6 @@ export const SOVEREIGNTY: SovereigntySnapshot = {
       year: 1966,
       date: "1966-05-26",
       formerSovereigns: ["united_kingdom"],
-      qualifiesForIndependenceConstraints: true,
       sourceDescription: "26 May 1966 (from the UK)",
     },
     SUR: {
@@ -1536,7 +1355,6 @@ export const SOVEREIGNTY: SovereigntySnapshot = {
       year: 1975,
       date: "1975-11-25",
       formerSovereigns: ["netherlands"],
-      qualifiesForIndependenceConstraints: true,
       sourceDescription: "25 November 1975 (from the Netherlands)",
     },
     PRY: {
@@ -1544,7 +1362,6 @@ export const SOVEREIGNTY: SovereigntySnapshot = {
       year: 1811,
       date: "1811-05-15",
       formerSovereigns: ["spain"],
-      qualifiesForIndependenceConstraints: true,
       sourceDescription: "14-15 May 1811 (from Spain)",
     },
     PER: {
@@ -1552,7 +1369,6 @@ export const SOVEREIGNTY: SovereigntySnapshot = {
       year: 1821,
       date: "1821-07-28",
       formerSovereigns: ["spain"],
-      qualifiesForIndependenceConstraints: true,
       sourceDescription: "28 July 1821 (from Spain)",
     },
     URY: {
@@ -1560,7 +1376,6 @@ export const SOVEREIGNTY: SovereigntySnapshot = {
       year: 1825,
       date: "1825-08-25",
       formerSovereigns: [],
-      qualifiesForIndependenceConstraints: true,
       sourceDescription: "25 August 1825 (from Brazil)",
     },
     VEN: {
@@ -1568,7 +1383,6 @@ export const SOVEREIGNTY: SovereigntySnapshot = {
       year: 1811,
       date: "1811-07-05",
       formerSovereigns: ["spain"],
-      qualifiesForIndependenceConstraints: true,
       sourceDescription: "5 July 1811 (from Spain)",
     },
     AFG: {
@@ -1576,7 +1390,6 @@ export const SOVEREIGNTY: SovereigntySnapshot = {
       year: 1919,
       date: "1919-08-19",
       formerSovereigns: ["united_kingdom"],
-      qualifiesForIndependenceConstraints: true,
       sourceDescription:
         "19 August 1919 (from UK control over Afghan foreign affairs)",
     },
@@ -1585,7 +1398,6 @@ export const SOVEREIGNTY: SovereigntySnapshot = {
       year: 1971,
       date: "1971-12-16",
       formerSovereigns: [],
-      qualifiesForIndependenceConstraints: true,
       sourceDescription: "16 December 1971 (from Pakistan)",
     },
     BTN: {
@@ -1593,7 +1405,6 @@ export const SOVEREIGNTY: SovereigntySnapshot = {
       year: 1907,
       date: "1907-12-17",
       formerSovereigns: [],
-      qualifiesForIndependenceConstraints: true,
       sourceDescription:
         "17 December 1907 (became a unified kingdom under its first hereditary king); 8 August 1949 (Treaty of Friendship with India maintains Bhutanese independence)",
     },
@@ -1602,7 +1413,6 @@ export const SOVEREIGNTY: SovereigntySnapshot = {
       year: 1948,
       date: "1948-02-04",
       formerSovereigns: ["united_kingdom"],
-      qualifiesForIndependenceConstraints: true,
       sourceDescription: "4 February 1948 (from the UK)",
     },
     IND: {
@@ -1610,7 +1420,6 @@ export const SOVEREIGNTY: SovereigntySnapshot = {
       year: 1947,
       date: "1947-08-15",
       formerSovereigns: ["united_kingdom"],
-      qualifiesForIndependenceConstraints: true,
       sourceDescription: "15 August 1947 (from the UK)",
     },
     MDV: {
@@ -1618,14 +1427,12 @@ export const SOVEREIGNTY: SovereigntySnapshot = {
       year: 1965,
       date: "1965-07-26",
       formerSovereigns: ["united_kingdom"],
-      qualifiesForIndependenceConstraints: true,
       sourceDescription: "26 July 1965 (from the UK)",
     },
     NPL: {
       kind: "foundation",
       year: 1768,
       formerSovereigns: [],
-      qualifiesForIndependenceConstraints: false,
       sourceDescription: "1768 (unified by Prithvi Narayan SHAH)",
     },
     PAK: {
@@ -1635,7 +1442,6 @@ export const SOVEREIGNTY: SovereigntySnapshot = {
       // « from British India » — complété en revue 2026-09-09 : l'extracteur v1
       // ne reconnaissait pas ces formulations.
       formerSovereigns: ["united_kingdom"],
-      qualifiesForIndependenceConstraints: true,
       sourceDescription: "14 August 1947 (from British India)",
     },
   },

@@ -1,5 +1,5 @@
-import type { CountryFacts } from "../../content/countries/type";
-import type { Country } from "../../src/features/countries/types";
+import type { Country, CountryFacts } from "../../content/countries/type";
+import { PRODUCTION_RANK_CAP } from "./buildCountriesLib";
 
 const COUNTRY_CODE = /^[A-Z]{3}$/;
 const ISO2_CODE = /^[A-Z]{2}$/;
@@ -161,7 +161,7 @@ export function validateCountryFacts(
       );
     }
     Object.entries(facts.productionRanks).forEach(([product, rank]) => {
-      if (!Number.isInteger(rank) || rank < 1 || rank > 15) {
+      if (!Number.isInteger(rank) || rank < 1 || rank > PRODUCTION_RANK_CAP) {
         errors.push(`${code}: productionRanks.${product} invalide (${rank})`);
       }
     });

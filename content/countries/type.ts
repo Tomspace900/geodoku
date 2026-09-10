@@ -292,7 +292,8 @@ export type CountryPopularityEntry = Readonly<{
   wikipediaTitle: string;
   rawPageviews: number | null;
   percentile: number;
-  fallback: null | "legacy_raw_metric_not_persisted" | "pageviews_unavailable";
+  /** Non nul quand `rawPageviews` manque : le percentile est alors la médiane. */
+  fallback: null | "legacy_raw_metric_not_persisted";
 }>;
 
 export type CountryPopularitySnapshot = Readonly<{

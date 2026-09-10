@@ -12,7 +12,7 @@ import type {
   PoliticalGroup,
   Regime,
   WaterAccess,
-} from "../../src/features/countries/types.ts";
+} from "../../content/countries/type.ts";
 import type {
   AgriculturalProductionSnapshot,
   CivilTimeOffsetsSnapshot,
@@ -469,7 +469,7 @@ const PRODUCTION_KEY_BY_SOURCE: Record<string, ProductionRankKey> = {
 };
 
 /** Rang au-delà duquel un classement de production n'intéresse plus aucune contrainte. */
-const PRODUCTION_RANK_CAP = 15;
+export const PRODUCTION_RANK_CAP = 15;
 
 function productionRanksForCode(
   code: string,

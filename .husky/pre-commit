@@ -17,3 +17,7 @@ pnpm typecheck || exit 1
 
 # 3. Unit tests (Vitest).
 pnpm test || exit 1
+
+# 4. Cohérence du contenu éditorial (~1 s) : attrape l'oubli de `pnpm build:answers`
+#    avant l'aller-retour CI, qui est l'erreur la plus fréquente du pipeline.
+pnpm check:content || exit 1

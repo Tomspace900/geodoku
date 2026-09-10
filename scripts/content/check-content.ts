@@ -11,6 +11,8 @@
  *     `scripts/countries/data/` et échoue si `facts.ts` ne correspond plus
  *     (dataset révisé sans regen, ou faits édités à la main). Les champs
  *     importés du réseau restent hors de portée — cf. `validateDatasetFacts` ;
+ *   - **seam** : `content/` est terminal, aucun module n'y importe `@/…` ni ne
+ *     remonte hors du dossier — cf. `validateContentSeam` ;
  *   - **provenance** : présence et frontmatter cohérent des `SOURCE.md`
  *     (un par contrainte) et des trois documents de socle.
  *
@@ -25,10 +27,7 @@ import {
   CONSTRAINT_IDS,
   RESERVE_CONSTRAINT_IDS,
 } from "../../content/constraints";
-import {
-  DERIVATIONS,
-  type DerivationContext,
-} from "../../content/constraints/derivations";
+import { DERIVATIONS } from "../../content/constraints/derivations";
 import { COUNTRY_CATALOG } from "../../content/countries/catalog";
 import { COUNTRY_CODES } from "../../content/countries/countryCodes";
 import { COUNTRY_FACTS } from "../../content/countries/facts";
@@ -43,6 +42,8 @@ import {
   validateCountryFacts,
 } from "../countries/validateCountryCatalog";
 import { validateDatasetFacts } from "../countries/validateDatasetFacts";
+import { validateContentSeam } from "./validateContentSeam";
+import { validateDerivationFreshness } from "./validateDerivationFreshness";
 
 const EXPECTED_COUNTRY_COUNT = 197;
 const EXPECTED_ACTIVE_COUNT = 79;
@@ -175,28 +176,6 @@ function checkAnswerSets(errors: string[]): void {
   }
 }
 
-/**
- * Contrôle d'obsolescence : les `answers.ts` des contraintes **actives**
- * doivent être exactement ce que `DERIVATIONS` produit sur `COUNTRY_FACTS`. Les
- * 11 archivées sont figées à la main, hors de ce contrôle.
- */
-function checkDerivationFreshness(errors: string[]): void {
-  const ctx: DerivationContext = { factsOf: (code) => COUNTRY_FACTS[code] };
-  for (const id of CONSTRAINT_IDS) {
-    const derived = COUNTRY_CODES.filter((code) =>
-      DERIVATIONS[id](COUNTRY_FACTS[code], ctx),
-    );
-    const committed = answersForConstraint(id);
-    if (!sameValues(committed, derived)) {
-      const added = derived.filter((c) => !committed.includes(c));
-      const removed = committed.filter((c) => !derived.includes(c));
-      errors.push(
-        `${id}: answers.ts obsolète (+[${added.join(",")}] -[${removed.join(",")}]) — lancer pnpm build:answers`,
-      );
-    }
-  }
-}
-
 const ISO_DATE = /^\d{4}-\d{2}-\d{2}$/;
 
 /**
@@ -265,7 +244,15 @@ function main(): void {
   checkCountries(errors);
   checkConstraintCatalogs(errors);
   checkAnswerSets(errors);
-  checkDerivationFreshness(errors);
+  errors.push(
+    ...validateDerivationFreshness(
+      DERIVATIONS,
+      COUNTRY_FACTS,
+      COUNTRY_CODES,
+      answersForConstraint,
+    ),
+  );
+  errors.push(...validateContentSeam(resolve(".")));
   checkConstraintSources(errors);
 
   if (errors.length > 0) {

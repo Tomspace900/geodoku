@@ -76,7 +76,7 @@ e2e/                      # Playwright — helpers.ts + *.shared|desktop|mobile.
 - Hooks → seule couche logique + Convex + React.
 - Composants → pas de calcul significatif ; reducer + dispatch.
 - Pas de copie `src/` ↔ `convex/lib/` sauf [`convex/lib/dates.ts`](convex/lib/dates.ts) qui réexporte [`src/lib/dates.ts`](src/lib/dates.ts). `gridGenerator`, `gridScheduler`, `gridConstants` importent depuis `src/`.
-- `content/` est **terminal** (n'importe rien de `src/`, `convex/`, features). Les imports **vers** `content/` sont toujours **relatifs** (`../../content/…`), jamais l'alias `@/` : Convex et `tsx` ne résolvent pas les `paths` du tsconfig. `src/features/countries/types.ts` réexporte `Country` (identité) + les énums depuis `content/countries/type` pour garder l'import familier `@/features/countries/types`.
+- `content/` est **terminal** (n'importe rien de `src/`, `convex/`, features), et à l'intérieur du dossier tous les imports sont **relatifs internes**. La règle est vérifiée par `validateContentSeam` (`pnpm check:content`) : ni `tsx` ni Vite ne la feraient échouer — ils résolvent les `paths` du tsconfig — et le typecheck Convex ne couvre que la part de `content/` qu'il importe. Les imports **vers** `content/` depuis `src/`, `convex/`, `scripts/` et `e2e/` sont eux aussi toujours relatifs (`../../content/…`), jamais l'alias `@/` : le bundler Convex ne résout pas les `paths`. `src/features/countries/types.ts` réexporte `Country` depuis `content/countries/type` pour garder l'import familier `@/features/countries/types` ; les scripts du pipeline, en **amont** de `content/`, importent `content/countries/type` directement.
 - **Vies = union discriminée** `LivesState` ([`types.ts`](src/features/game/types.ts)), jamais un compteur nu : `{kind:"limited",remaining}` en daily, `{kind:"unlimited",failedAttempts}` en entraînement. Toute lecture passe par [`logic/lives.ts`](src/features/game/logic/lives.ts) — le reducer, le score et la persistance n'ont donc **aucune branche de mode**. Le format persisté du daily garde en revanche un `remainingLives` numérique (compatibilité du shadow v2).
 - `archive` dépend de `game` (reducer, validation, composants de grille), jamais l'inverse. Les sanitizers d'entraînement vivent dans `game/logic/sanitizePersisted.ts` et prennent des **primitives**, pour que le domaine du jeu ignore la feature `archive`.
 
@@ -181,7 +181,7 @@ pnpm build
 # Contenu & pool
 pnpm build:countries             # regen réseau du snapshot content/ (+ enchaîne build:answers)
 pnpm build:answers               # re-dérive content/constraints/<id>/answers.ts (hors-ligne)
-pnpm check:content               # cohérence content/ (job quality) : obsolescence des listes + fraîcheur des faits dérivés + provenance SOURCE.md
+pnpm check:content               # cohérence content/ (job quality + pre-commit) : obsolescence des listes + fraîcheur des faits dérivés + seam terminal + provenance SOURCE.md
 pnpm analyze:pool
 pnpm simulate:scheduling          # validateur changement contraintes
 pnpm simulate:players             # dry-run par défaut ; --execute pour écrire (develop/dev)
@@ -207,7 +207,7 @@ pnpm exec convex env set ADMIN_TOKEN "xxx"
 > develop ont des **données persistantes** : on ne les wipe jamais. Pour diagnostiquer
 > un souci observé en prod, on **dump puis on observe**.
 
-**Pre-commit** ([`.husky/pre-commit`](.husky/pre-commit)) : `lint-staged` (Biome sur fichiers stagés, auto-fix + re-stage) → si fichiers stagés : `typecheck` → `pnpm test` (skip si rien en stage, ex. `amend --no-edit`). Pas d'e2e (trop lent) — e2e en CI. `core.hooksPath` posé au `pnpm install` (`prepare`). Bypass : `git commit --no-verify` ou `HUSKY=0`.
+**Pre-commit** ([`.husky/pre-commit`](.husky/pre-commit)) : `lint-staged` (Biome sur fichiers stagés, auto-fix + re-stage) → si fichiers stagés : `typecheck` → `pnpm test` → `pnpm check:content` (~1 s, attrape l'oubli de `build:answers` avant l'aller-retour CI) (skip si rien en stage, ex. `amend --no-edit`). Pas d'e2e (trop lent) — e2e en CI. `core.hooksPath` posé au `pnpm install` (`prepare`). Bypass : `git commit --no-verify` ou `HUSKY=0`.
 
 ## 8. CI, Vercel et `convex/_generated`
 
@@ -295,3 +295,13 @@ Source de vérité détaillée : grep `posthog?.capture` dans le code.
 | Convention / commande / flux documenté | mettre à jour `AGENTS.md` ou `README` si pertinent (cf. §4 Documentation) |
 
 **E2E — conventions.** `*.shared.spec.ts` → tous navigateurs ; `*.desktop.spec.ts` → Chromium ; `*.mobile.spec.ts` → profils mobile. Workers sérialisés. Voir [`playwright.config.ts`](playwright.config.ts).
+
+**Après un merge de contenu dans `main` : régénérer le pool en production.** Le
+refill automatique n'a lieu qu'en dessous de `POOL_LOW_THRESHOLD` (50 candidats,
+[`gridConstants.ts`](convex/lib/gridConstants.ts)) — avec ~950 grilles en stock
+et une par jour, ce seuil n'arrive jamais. Une contrainte ajoutée, une liste
+re-dérivée ou un fait corrigé **ne parviennent donc à aucun joueur** tant que
+« Regénérer le pool » (`refreshPool`) n'a pas été lancé dans `/admin` sur la prod.
+Aucune garde ne le signale : `getGridContentIssue` vérifie la validité des grilles
+futures, pas leur fraîcheur éditoriale. Les grilles déjà publiées restent
+protégées par `gridAnswers`.

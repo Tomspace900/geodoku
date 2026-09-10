@@ -28,7 +28,7 @@ import type {
   CountryRecord,
   DrivingSide,
   PoliticalGroup,
-} from "../../src/features/countries/types.ts";
+} from "../../content/countries/type.ts";
 import { writeCountrySnapshot } from "../content/emitCountrySnapshot.ts";
 import {
   applySourceCorrections,
@@ -405,7 +405,14 @@ async function fetchRcEnrichment(): Promise<Map<string, RcEnrichment>> {
   return rcEnrichmentMapFromRows(rows);
 }
 
-function getWikipediaRange(): { start: string; end: string } {
+/**
+ * Fenêtre de mesure des pageviews : 12 mois glissants se terminant au dernier
+ * mois complet. `start`/`end` sont au format de l'API Wikimedia,
+ * `startMonth`/`endMonth` au format `YYYY-MM` du snapshot de popularité — la
+ * provenance committée doit décrire la période réellement interrogée, pas la
+ * date d'exécution.
+ */
+function getWikipediaRange(): WikipediaRange {
   const endDate = new Date();
   // Use previous complete month to avoid partial-month noise.
   endDate.setUTCDate(1);
@@ -415,13 +422,19 @@ function getWikipediaRange(): { start: string; end: string } {
   const startDate = new Date(endDate);
   startDate.setUTCMonth(startDate.getUTCMonth() - 11);
 
-  function toApiMonth(d: Date): string {
+  function toMonth(d: Date): string {
     const y = d.getUTCFullYear();
     const m = String(d.getUTCMonth() + 1).padStart(2, "0");
-    return `${y}${m}0100`;
+    return `${y}-${m}`;
   }
+  const toApiMonth = (d: Date): string => `${toMonth(d).replace("-", "")}0100`;
 
-  return { start: toApiMonth(startDate), end: toApiMonth(endDate) };
+  return {
+    start: toApiMonth(startDate),
+    end: toApiMonth(endDate),
+    startMonth: toMonth(startDate),
+    endMonth: toMonth(endDate),
+  };
 }
 
 type CountryPageviewFailure = {
@@ -430,9 +443,18 @@ type CountryPageviewFailure = {
   reason: string;
 };
 
+type WikipediaRange = {
+  /** Bornes au format API Wikimedia (`YYYYMM0100`). */
+  start: string;
+  end: string;
+  /** Mêmes bornes au format `YYYY-MM`, pour `COUNTRY_POPULARITY.measurementPeriod`. */
+  startMonth: string;
+  endMonth: string;
+};
+
 async function fetchCountryPageviews(
   title: string,
-  range: { start: string; end: string },
+  range: WikipediaRange,
 ): Promise<
   | { kind: "ok"; views: number }
   | { kind: "not_found" }
@@ -551,6 +573,7 @@ async function fetchPageviewsByCountryCode(
 ): Promise<{
   pageviews: Map<string, number>;
   failures: CountryPageviewFailure[];
+  range: WikipediaRange;
 }> {
   const range = getWikipediaRange();
   const pageviews = new Map<string, number>();
@@ -604,7 +627,7 @@ async function fetchPageviewsByCountryCode(
     `Done in ${formatDuration(Date.now() - startedAt)} — ${pageviews.size} ok, ${failures.length} failed`,
   );
 
-  return { pageviews, failures };
+  return { pageviews, failures, range };
 }
 
 // ─── Main ─────────────────────────────────────────────────────────────────────
@@ -794,8 +817,11 @@ async function main(): Promise<void> {
   log("Build records", `${result.length} countries ready`);
 
   // 5. Enrich with Wikipedia pageviews-based popularity index
-  const { pageviews: pageviewsByCode, failures: pageviewFailures } =
-    await fetchPageviewsByCountryCode(result, wikiTitles);
+  const {
+    pageviews: pageviewsByCode,
+    failures: pageviewFailures,
+    range: pageviewRange,
+  } = await fetchPageviewsByCountryCode(result, wikiTitles);
 
   if (pageviewFailures.length > 0) {
     for (const f of pageviewFailures) {
@@ -930,8 +956,13 @@ async function main(): Promise<void> {
     snapshotNote: "régénéré par pnpm build:countries",
     generatedBy: "pnpm build:countries",
     popularity: {
-      snapshotId: `wikipedia-pageviews-${snapshotDate}`,
-      measurementPeriod: { startMonth: snapshotDate, endMonth: snapshotDate },
+      // La période interrogée, pas la date d'exécution : c'est elle qui dit sur
+      // quelles données le score de facilité admin est calibré.
+      snapshotId: `wikipedia-pageviews-${pageviewRange.startMonth}_${pageviewRange.endMonth}`,
+      measurementPeriod: {
+        startMonth: pageviewRange.startMonth,
+        endMonth: pageviewRange.endMonth,
+      },
       collectedAt: snapshotDate,
       algorithmVersion: "assignPopularity",
     },
@@ -940,6 +971,17 @@ async function main(): Promise<void> {
   // 9. Re-dériver les listes de réponses des contraintes actives.
   log("Output", "Running pnpm build:answers…");
   execFileSync("pnpm", ["build:answers"], { cwd: root, stdio: "inherit" });
+
+  // 10. Normaliser tout `content/` au format Biome, en dernier pour couvrir le
+  // snapshot ET les listes régénérées. `writeCountrySnapshot` sérialise en JSON
+  // (clés entre guillemets, pas de virgule finale) : sans cette passe, la regen
+  // suivante réécrit les fichiers de bout en bout et le diff — seule vraie
+  // relecture du contenu — devient illisible.
+  log("Output", "Normalising content/ with Biome…");
+  execFileSync("pnpm", ["exec", "biome", "check", "--write", "content"], {
+    cwd: root,
+    stdio: "inherit",
+  });
 
   log(
     "Output",

@@ -99,10 +99,20 @@ protégées par `gridAnswers`.
 `pnpm build:countries` (`tsx --env-file=.env.local`) : world-countries npm pour
 la liste jouable / noms / langues / superficie / frontières / centroïde, REST
 Countries v5 pour population / capitales / conduite / adhésions, Wikimedia pour
-les pageviews. Le script **valide tout en mémoire** (197 pays, invariants par
-pays, `MAX_MISSING_PAGEVIEWS`) **avant** d'écrire — un échec réseau n'écrit rien.
+les pageviews. Le script **valide en mémoire avant d'écrire** ce qu'il a lui-même
+lu du réseau (197 pays, invariants de champ, `MAX_MISSING_PAGEVIEWS`) — un échec
+réseau n'écrit rien. Les dix champs dérivés des datasets échappent à cette passe :
+ils sont jugés après coup par `check:content` (cf. plus bas).
 Il réécrit les quatre fichiers `content/countries/`, met `FACTS_SNAPSHOT.date`
-au jour, puis enchaîne `pnpm build:answers`. Provenance par famille de champs :
+au jour, enchaîne `pnpm build:answers`, puis **normalise tout `content/` avec
+Biome** (en dernier, pour couvrir snapshot et listes régénérées).
+La passe Biome n'est pas cosmétique : le snapshot est sérialisé en JSON (clés
+entre guillemets, pas de virgule finale) alors que le committé est au format
+Biome — sans elle, chaque regen réécrit `catalog.ts`, `facts.ts` et
+`popularity.ts` de bout en bout et le diff, seule vraie relecture du contenu,
+devient illisible. `COUNTRY_POPULARITY.measurementPeriod` porte la **fenêtre
+réellement interrogée** (12 mois glissants jusqu'au dernier mois complet), pas la
+date d'exécution. Provenance par famille de champs :
 [`content/countries/SOURCE.md`](../content/countries/SOURCE.md).
 
 **Drapeaux** — table curée [`scripts/countries/flagData.json`](../scripts/countries/flagData.json),
@@ -134,6 +144,12 @@ que le build ne produit plus.
   révisé sans regen, ou `facts.ts` édité à la main malgré son en-tête
   `@generated`. Les champs venus du réseau (population, capitales, adhésions,
   pageviews) restent hors de portée — seule une regen les vérifie ;
+- **seam terminal** : aucun module de `content/` n'importe via l'alias `@/` ni
+  ne remonte hors du dossier ([`validateContentSeam.ts`](../scripts/content/validateContentSeam.ts)).
+  Ni `tsx` ni Vite ne feraient échouer un `@/…` — ils résolvent les `paths` du
+  tsconfig — et le typecheck Convex ne couvre que la part de `content/` qu'il
+  importe : sans cette garde, un `@/` dans `catalog.ts` ou `derivations.ts`
+  traverse la CI en vert ;
 - **provenance** : présence d'un `SOURCE.md` par contrainte, frontmatter
   cohérent (`constraint_id` == dossier, `status` == actif/archivé réel,
   `checked_at`/`review_after` en `YYYY-MM-DD`), et présence des trois documents
@@ -143,7 +159,15 @@ Les invariants par pays vivent dans
 [`scripts/countries/validateCountryCatalog.ts`](../scripts/countries/validateCountryCatalog.ts)
 (`validateCountryCatalog` + `validateCountryFacts`), la fraîcheur des faits
 dérivés dans [`scripts/countries/validateDatasetFacts.ts`](../scripts/countries/validateDatasetFacts.ts)
-(`validateDatasetFacts`) — appelés par la garde et ses tests.
+(`validateDatasetFacts`), l'obsolescence des listes dans
+[`scripts/content/validateDerivationFreshness.ts`](../scripts/content/validateDerivationFreshness.ts)
+et le seam dans [`scripts/content/validateContentSeam.ts`](../scripts/content/validateContentSeam.ts)
+— tous appelés par `check:content` et couverts par leurs propres tests, dans les
+deux sens (vert sur le contenu committé, rouge sur une divergence injectée).
+
+⚠️ **`build:countries` ne rejoue pas ces validateurs** : il a sa propre passe
+inline sur les champs réseau, et les dix champs dérivés des datasets ne sont
+jugés qu'ensuite, par `check:content`. On écrit, puis on vérifie.
 
 ## Difficulté et facilité
 

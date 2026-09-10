@@ -43,8 +43,8 @@ const SOVEREIGNTY_SINCE_YEAR = 1990;
  * `kind` traduisant une **acquisition** de souveraineté par l'État actuel — par
  * opposition à une continuité (`continuation`) ou une refondation
  * (`foundation`, `unification`), qui ne comptent pas pour
- * `history_sovereignty_since_1990`. Reproduit exactement le flag v1
- * `qualifiesForIndependenceConstraints`, qui n'est qu'une fonction du `kind`.
+ * `history_sovereignty_since_1990`. L'éligibilité est **une fonction du `kind`** :
+ * le dataset ne porte volontairement pas de drapeau qui la dupliquerait.
  */
 const SOVEREIGNTY_GAINED: ReadonlySet<string> = new Set([
   "independence",

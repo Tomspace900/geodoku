@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import type { CountryRecord } from "../../src/features/countries/types.ts";
+import type { CountryRecord } from "../../content/countries/type.ts";
 import {
   applySourceCorrections,
   assignPopularity,
@@ -417,7 +417,6 @@ describe("quantitativeFactsForCode", () => {
           kind: "independence",
           year: 1962,
           formerSovereigns: ["france"],
-          qualifiesForIndependenceConstraints: true,
           sourceDescription: "1962 (from France)",
         },
       },
