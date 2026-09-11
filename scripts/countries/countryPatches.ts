@@ -88,6 +88,26 @@ export const sourceCorrectionsByIso3: Record<Iso3, SourceCorrection> = {
   IDN: { membershipsAdd: ["brics"] },
   /** Émirats arabes unis — retrait effectif de l'OPEP au 1ᵉʳ mai 2026 (confirmé). À retirer quand REST v5 est à jour. */
   ARE: { membershipsRemove: ["opec"] },
+
+  /**
+   * Langues officielles **nationales de jure**. REST Countries confond statut
+   * officiel et langue de travail / statut spécial / usage administratif : ces
+   * corrections rétablissent la définition retenue par `language_*`.
+   */
+  /** Mali — constitution de 2023 : le français passe de langue officielle à langue de travail. */
+  MLI: { officialLanguages: ["bm"] },
+  /** Burkina Faso — révision de décembre 2023 : le français devient langue de travail. */
+  BFA: { officialLanguages: ["mos", "dyu", "ff"] },
+  /** Niger — mars 2025 : le français perd son statut officiel, le haoussa devient langue nationale. */
+  NER: { officialLanguages: ["ha"] },
+  /** Israël — loi fondamentale de 2018 : l'arabe passe d'officiel à « statut spécial ». */
+  ISR: { officialLanguages: ["he"] },
+  /** Tchéquie — le slovaque a un statut procédural, pas de langue officielle nationale. */
+  CZE: { officialLanguages: ["cs"] },
+  /** Malaisie — le malais est seule langue officielle depuis le National Language Act de 1967. */
+  MYS: { officialLanguages: ["ms"] },
+  /** Liban — l'arabe est seule langue officielle ; le français a un statut d'usage, pas officiel. */
+  LBN: { officialLanguages: ["ar"] },
 };
 
 // ─── Search aliases (player variants beyond names + REST alternates) ────────────
@@ -309,9 +329,7 @@ export const gameplayClassifications: GameplayClassifications = {
     "HTI",
     "DOM",
     "JAM",
-    "BHS",
     "TTO",
-    "BRB",
     "GRD",
     "VCT",
     "LCA",
@@ -327,12 +345,8 @@ export const gameplayClassifications: GameplayClassifications = {
     "COL",
     "VEN",
     "MEX",
-    // Guadeloupe et Martinique : départements d'outre-mer, donc territoire
-    // pleinement intégré au même titre que la Guyane pour la façade atlantique
-    // (revue métier 2026-09-10, cf. content/constraints/SOURCES.md). La France
-    // reste hors `pacificCoast` : la Polynésie et la Nouvelle-Calédonie sont des
-    // collectivités non intégrées.
     "FRA",
+    "NLD",
   ],
   peakOver5000m: [
     "AFG",
@@ -394,6 +408,9 @@ export const gameplayClassifications: GameplayClassifications = {
     "PAK",
     "PLW",
     "FSM",
+    "GMB",
+    "GNQ",
+    "SWZ",
   ],
   desert: [
     "DZA",
@@ -439,6 +456,11 @@ export const gameplayClassifications: GameplayClassifications = {
     "SOM",
     "DJI",
     "ERI",
+    "ETH",
+    "BHR",
+    "KEN",
+    "COL",
+    "ESP",
   ],
   rainforest: [
     "BRA",
@@ -475,6 +497,34 @@ export const gameplayClassifications: GameplayClassifications = {
     "GHA",
     "NGA",
     "USA",
+    "BLZ",
+    "GTM",
+    "HND",
+    "NIC",
+    "MEX",
+    "DMA",
+    "JAM",
+    "TTO",
+    "LCA",
+    "VCT",
+    "GRD",
+    "KNA",
+    "CAF",
+    "GIN",
+    "SLE",
+    "GNB",
+    "UGA",
+    "TZA",
+    "RWA",
+    "BDI",
+    "STP",
+    "FRA",
+    "FJI",
+    "VUT",
+    "SLB",
+    "WSM",
+    "PLW",
+    "FSM",
   ],
   atlanticCoast: [
     "ISL",
@@ -521,6 +571,18 @@ export const gameplayClassifications: GameplayClassifications = {
     "SUR",
     "VEN",
     "BHS",
+    "ATG",
+    "BRB",
+    "CUB",
+    "DMA",
+    "DOM",
+    "GRD",
+    "HTI",
+    "JAM",
+    "KNA",
+    "LCA",
+    "TTO",
+    "VCT",
   ],
   pacificCoast: [
     "CAN",
@@ -600,6 +662,8 @@ export const gameplayClassifications: GameplayClassifications = {
     "MYS",
     "AUS",
     "FRA",
+    "ISR",
+    "JOR",
   ],
   /**
    * Façade sur l'océan Arctique. Convention Geodoku restreinte aux quatre États

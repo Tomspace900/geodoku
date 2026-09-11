@@ -340,7 +340,7 @@ export const en = {
     flag_has_animal: "Flag shows an animal",
     flag_two_colors: "Flag with only two colors",
     latitude_south_hemisphere: "Southern hemisphere",
-    latitude_polar: "Polar latitude (>\u00A055°N)",
+    latitude_polar: "Beyond 55°N",
     subregion_middle_east: "Middle Eastern country",
     subregion_caribbean: "Caribbean country",
     subregion_southeast_asia: "Southeast Asian country",

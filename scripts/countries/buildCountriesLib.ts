@@ -44,6 +44,13 @@ export type SourceCorrection = {
    */
   membershipsAdd?: PoliticalGroup[];
   membershipsRemove?: PoliticalGroup[];
+  /**
+   * Langues officielles **nationales** de jure, quand REST Countries liste une
+   * langue qui n'a pas ce statut (langue de travail, statut spécial, usage
+   * administratif local). Remplace la liste entière — la source n'est pas
+   * corrigeable par delta, elle se trompe sur la définition, pas sur un élément.
+   */
+  officialLanguages?: string[];
 };
 
 /** Curated constraint tag lists (events, geo, physical features, regime). */
@@ -363,6 +370,9 @@ export function applySourceCorrections(
     country.waterAccess = correction.waterAccess;
   }
   if (correction.latitude !== undefined) country.latitude = correction.latitude;
+  if (correction.officialLanguages !== undefined) {
+    country.officialLanguages = [...correction.officialLanguages];
+  }
   if (correction.membershipsAdd || correction.membershipsRemove) {
     const remove = new Set<PoliticalGroup>(correction.membershipsRemove ?? []);
     country.memberships = [

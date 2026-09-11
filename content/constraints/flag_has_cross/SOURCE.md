@@ -1,8 +1,8 @@
 ---
 constraint_id: flag_has_cross
 status: active
-checked_at: 2026-07-21
-review_after: 2027-01-21
+checked_at: 2026-09-11
+review_after: 2027-03-11
 ---
 
 # flag_has_cross
@@ -25,5 +25,7 @@ Pays dont le drapeau porte une **croix**.
 Un motif stylisé, minuscule ou intégré à des armoiries relève d'une décision explicite — c'est la principale source de désaccord sur cette contrainte.
 
 ## Révision
+
+Revue 2026-09-11 — même règle. Ajout : **SRB** (croix serbe cantonnée de quatre briquets, dans les armoiries qui fournissaient déjà l'aigle compté comme `animal`).
 
 Procédure commune : [SOURCES.md](../SOURCES.md#procédure-de-révision).

@@ -1,8 +1,8 @@
 ---
 constraint_id: flag_has_star
 status: active
-checked_at: 2026-07-21
-review_after: 2027-01-21
+checked_at: 2026-09-11
+review_after: 2027-03-11
 ---
 
 # flag_has_star
@@ -25,5 +25,7 @@ Pays dont le drapeau porte une ou plusieurs **étoiles**.
 Un motif stylisé, minuscule ou intégré à des armoiries relève d'une décision explicite — c'est la principale source de désaccord sur cette contrainte.
 
 ## Révision
+
+Revue 2026-09-11 — même règle (drapeau d'État, armoiries comprises). Ajouts : **HRV**, **MDA**, **GNQ** (six étoiles à six branches au-dessus du fromager, lui déjà compté comme `plant`), **CRI** (sept étoiles du drapeau d'État).
 
 Procédure commune : [SOURCES.md](../SOURCES.md#procédure-de-révision).

@@ -32,7 +32,6 @@ export default defineAnswerSet("language_english", [
   "MLT",
   "MUS",
   "MWI",
-  "MYS",
   "NAM",
   "NGA",
   "NRU",

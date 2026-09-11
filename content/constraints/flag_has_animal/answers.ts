@@ -3,6 +3,8 @@ import { defineAnswerSet } from "../defineAnswerSet";
 
 export default defineAnswerSet("flag_has_animal", [
   "ALB",
+  "AND",
+  "BOL",
   "BTN",
   "DMA",
   "ECU",
@@ -19,8 +21,10 @@ export default defineAnswerSet("flag_has_animal", [
   "MNE",
   "PER",
   "PNG",
+  "PRY",
   "SRB",
   "UGA",
+  "VEN",
   "ZMB",
   "ZWE",
 ]);

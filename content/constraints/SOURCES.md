@@ -106,8 +106,29 @@ La classification visuelle est vérifiée à partir des drapeaux officiels réun
 par [UN Member States](https://www.un.org/en/about-us/member-states) et des
 descriptions nationales. Les symboles, couleurs et dispositions retenus par le
 jeu vivent dans la table curée `scripts/countries/flagData.json` — pas
-d'heuristique. Les symboles stylisés ou intégrés à des armoiries font l'objet
-d'une convention éditoriale explicite.
+d'heuristique.
+
+**Convention `flag_*` (tranchée le 2026-09-11).** Deux règles, communes aux quatre
+contraintes de drapeau :
+
+1. **Le drapeau d'État fait foi**, pas le drapeau civil. Costa Rica, Bolivie,
+   Venezuela et Paraguay ne portent leurs armoiries que sur la version d'État :
+   elles comptent.
+2. **Tout élément figurant sur le drapeau compte, armoiries comprises**, quelle que
+   soit sa taille. Un croissant dans un écu vaut `crescent` au même titre qu'un
+   croissant en pleine étoffe.
+
+Ces deux règles n'en sont qu'une seule vue de deux côtés : *ce qu'on voit sur le
+drapeau officiel*. La liste les appliquait déjà de fait — la Dominique tire ses
+quatre symboles de son blason, la Croatie sa martre de la couronne — mais de
+façon incohérente : le même blason croate fournissait l'animal et pas le croissant
+ni l'étoile. La revue 2026-09-11 a rattrapé HRV, MDA, GNQ, AND, SRB, CRI, BOL,
+VEN et PRY.
+
+Restent **hors** convention faute d'élément identifiable à l'œil sur le drapeau
+rendu : la croix au sommet de la couronne espagnole, l'orbe crucifère de l'aigle
+monténégrin, la disposition en croix des quinas portugaises, la défense de sanglier
+vanuatuane. À rouvrir si un joueur les réclame.
 
 ## Organisations politiques
 

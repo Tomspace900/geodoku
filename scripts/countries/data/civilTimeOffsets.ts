@@ -175,8 +175,13 @@ export const CIVIL_TIME_OFFSETS: CivilTimeOffsetsSnapshot = {
     year: 2026,
     referenceDate: "2026-01-15",
   },
+  /**
+   * Un seul fuseau civil officiel (UTC+8) sur tout le territoire : l'heure du
+   * Xinjiang (UTC+6) est un usage local, pas un fuseau civil imposé. IANA distingue
+   * Asia/Shanghai et Asia/Urumqi ; la convention Geodoku suit le fuseau officiel.
+   */
   CHN: {
-    value: ["UTC+06:00", "UTC+08:00"],
+    value: ["UTC+08:00"],
     year: 2026,
     referenceDate: "2026-01-15",
   },
@@ -945,8 +950,13 @@ export const CIVIL_TIME_OFFSETS: CivilTimeOffsetsSnapshot = {
     year: 2026,
     referenceDate: "2026-01-15",
   },
+  /**
+   * Un seul fuseau civil (UTC+2) : le second décalage d'IANA vient de
+   * Europe/Simferopol, l'heure de Moscou imposée en Crimée occupée. La convention
+   * Geodoku ne compte pas un fuseau imposé par l'occupant comme fuseau ukrainien.
+   */
   UKR: {
-    value: ["UTC+02:00", "UTC+03:00"],
+    value: ["UTC+02:00"],
     year: 2026,
     referenceDate: "2026-01-15",
   },

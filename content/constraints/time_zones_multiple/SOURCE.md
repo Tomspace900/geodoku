@@ -1,8 +1,8 @@
 ---
 constraint_id: time_zones_multiple
 status: active
-checked_at: 2026-09-10
-review_after: 2027-09-10
+checked_at: 2026-09-11
+review_after: 2027-03-11
 ---
 
 # time_zones_multiple
@@ -61,5 +61,7 @@ Pékin est la seule heure civile officielle de la République populaire. Au sens
 strict de la définition ci-dessus, la Chine ne devrait pas qualifier.
 
 ## Révision
+
+Revue 2026-09-11 — deux comptes IANA ne correspondaient pas à un fuseau **civil officiel** : **CHN** (UTC+8 partout, l'heure du Xinjiang est un usage local) et **UKR** (le second décalage vient d'Europe/Simferopol, l'heure de Moscou imposée en Crimée occupée). Les deux passent à un fuseau.
 
 Procédure commune : [SOURCES.md](../SOURCES.md#procédure-de-révision).

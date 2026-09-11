@@ -18,6 +18,7 @@ export default defineAnswerSet("flag_has_cross", [
   "MLT",
   "NOR",
   "NZL",
+  "SRB",
   "SVK",
   "SWE",
   "TON",

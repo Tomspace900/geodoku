@@ -1,8 +1,8 @@
 ---
 constraint_id: ocean_indian
 status: active
-checked_at: 2026-07-21
-review_after: 2027-01-21
+checked_at: 2026-09-11
+review_after: 2027-03-11
 ---
 
 # ocean_indian
@@ -25,5 +25,7 @@ Pays disposant d'une façade sur l'océan Indien.
 La mer Rouge et le golfe Persique sont rattachés à l'océan Indien ; la limite avec l'Atlantique passe au cap des Aiguilles.
 
 ## Révision
+
+Revue 2026-09-11 — la mer Rouge était rattachée à l'Indien pour EGY, SAU, SDN, ERI, DJI et YEM mais pas pour **ISR** (Eilat) ni **JOR** (Aqaba). Les deux sont ajoutés ; Israël bascule par conséquent dans `ocean_multiple_basins` (Méditerranée + Indien).
 
 Procédure commune : [SOURCES.md](../SOURCES.md#procédure-de-révision).

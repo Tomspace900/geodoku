@@ -351,7 +351,7 @@ export const fr = {
     flag_has_animal: "Drapeau avec un animal",
     flag_two_colors: "Drapeau à deux couleurs",
     latitude_south_hemisphere: "Hémisphère sud",
-    latitude_polar: "Latitude polaire (>\u00A055°N)",
+    latitude_polar: "Au-delà du 55ᵉ parallèle nord",
     subregion_middle_east: "Pays du Moyen-Orient",
     subregion_caribbean: "Pays des Caraïbes",
     subregion_southeast_asia: "Pays d'Asie du Sud-Est",

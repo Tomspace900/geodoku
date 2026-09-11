@@ -1,8 +1,8 @@
 ---
 constraint_id: language_arabic
 status: active
-checked_at: 2026-07-21
-review_after: 2027-01-21
+checked_at: 2026-09-11
+review_after: 2027-03-11
 ---
 
 # language_arabic
@@ -26,5 +26,7 @@ Pays dont **l'arabe** est une langue officielle nationale.
 Seul le statut officiel **national** compte : une langue régionale, co-officielle localement ou simplement majoritaire n'ouvre pas la liste.
 
 ## Révision
+
+Revue 2026-09-11 — **ISR** retiré : la loi fondamentale de 2018 a remplacé le statut officiel de l'arabe par un « statut spécial ».
 
 Procédure commune : [SOURCES.md](../SOURCES.md#procédure-de-révision).

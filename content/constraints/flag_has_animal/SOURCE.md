@@ -1,8 +1,8 @@
 ---
 constraint_id: flag_has_animal
 status: active
-checked_at: 2026-07-21
-review_after: 2027-01-21
+checked_at: 2026-09-11
+review_after: 2027-03-11
 ---
 
 # flag_has_animal
@@ -25,5 +25,7 @@ Pays dont le drapeau porte un **animal**.
 Un motif stylisé, minuscule ou intégré à des armoiries relève d'une décision explicite — c'est la principale source de désaccord sur cette contrainte.
 
 ## Révision
+
+Revue 2026-09-11 — même règle. Ajouts : **AND** (deux vaches du quartier de Béarn), **BOL** (condor et alpaga), **VEN** (cheval blanc), **PRY** (lion du revers, armes du Trésor).
 
 Procédure commune : [SOURCES.md](../SOURCES.md#procédure-de-révision).

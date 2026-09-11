@@ -32,6 +32,7 @@ const ALLOWED_SOURCE_CORRECTION_KEYS = new Set<keyof SourceCorrection>([
   "latitude",
   "membershipsAdd",
   "membershipsRemove",
+  "officialLanguages",
 ]);
 
 function assertAllCountryCodes(label: string, list: string[]): void {

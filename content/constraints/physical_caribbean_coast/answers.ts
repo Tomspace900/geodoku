@@ -3,9 +3,7 @@ import { defineAnswerSet } from "../defineAnswerSet";
 
 export default defineAnswerSet("physical_caribbean_coast", [
   "ATG",
-  "BHS",
   "BLZ",
-  "BRB",
   "COL",
   "CRI",
   "CUB",
@@ -21,6 +19,7 @@ export default defineAnswerSet("physical_caribbean_coast", [
   "LCA",
   "MEX",
   "NIC",
+  "NLD",
   "PAN",
   "TTO",
   "VCT",

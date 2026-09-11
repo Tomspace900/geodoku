@@ -10,7 +10,6 @@ export default defineAnswerSet("language_arabic", [
   "EGY",
   "ERI",
   "IRQ",
-  "ISR",
   "JOR",
   "KWT",
   "LBN",

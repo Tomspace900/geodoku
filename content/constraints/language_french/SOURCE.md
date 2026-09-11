@@ -1,8 +1,8 @@
 ---
 constraint_id: language_french
 status: active
-checked_at: 2026-07-21
-review_after: 2027-01-21
+checked_at: 2026-09-11
+review_after: 2027-03-11
 ---
 
 # language_french
@@ -26,5 +26,7 @@ Pays dont **le français** est une langue officielle nationale.
 Seul le statut officiel **national** compte : une langue régionale, co-officielle localement ou simplement majoritaire n'ouvre pas la liste.
 
 ## Révision
+
+Revue 2026-09-11 — trois retraits datés, tous des changements constitutionnels que REST Countries n'a pas intégrés : **MLI** (constitution 2023), **BFA** (révision décembre 2023) et **NER** (mars 2025) ont fait passer le français de langue officielle à langue de travail. **LBN** retiré aussi : l'arabe est la seule langue officielle du Liban, le français n'a qu'un statut d'usage.
 
 Procédure commune : [SOURCES.md](../SOURCES.md#procédure-de-révision).

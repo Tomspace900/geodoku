@@ -6,7 +6,6 @@ export default defineAnswerSet("time_zones_multiple", [
   "BRA",
   "CAN",
   "CHL",
-  "CHN",
   "COD",
   "ECU",
   "ESP",
@@ -21,6 +20,5 @@ export default defineAnswerSet("time_zones_multiple", [
   "PNG",
   "PRT",
   "RUS",
-  "UKR",
   "USA",
 ]);

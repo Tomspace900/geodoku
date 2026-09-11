@@ -16,7 +16,7 @@
   },
   "AND": {
     "flagColors": ["red", "blue", "yellow"],
-    "flagSymbols": [],
+    "flagSymbols": ["animal"],
     "flagLayout": ["vertical_stripes"]
   },
   "ARE": {
@@ -111,7 +111,7 @@
   },
   "BOL": {
     "flagColors": ["red", "green", "yellow"],
-    "flagSymbols": [],
+    "flagSymbols": ["animal"],
     "flagLayout": ["horizontal_stripes"]
   },
   "BRA": {
@@ -201,7 +201,7 @@
   },
   "CRI": {
     "flagColors": ["red", "blue", "white"],
-    "flagSymbols": ["circle"],
+    "flagSymbols": ["circle", "star"],
     "flagLayout": ["horizontal_stripes"]
   },
   "CUB": {
@@ -336,7 +336,7 @@
   },
   "GNQ": {
     "flagColors": ["red", "blue", "green", "white"],
-    "flagSymbols": ["triangle", "plant"],
+    "flagSymbols": ["triangle", "plant", "star"],
     "flagLayout": ["horizontal_stripes"]
   },
   "GRC": {
@@ -366,7 +366,7 @@
   },
   "HRV": {
     "flagColors": ["red", "blue", "white"],
-    "flagSymbols": ["animal"],
+    "flagSymbols": ["animal", "crescent", "star"],
     "flagLayout": ["horizontal_stripes"]
   },
   "HTI": {
@@ -541,7 +541,7 @@
   },
   "MDA": {
     "flagColors": ["red", "blue", "yellow"],
-    "flagSymbols": ["animal"],
+    "flagSymbols": ["animal", "crescent", "star"],
     "flagLayout": ["vertical_stripes"]
   },
   "MDG": {
@@ -716,7 +716,7 @@
   },
   "PRY": {
     "flagColors": ["red", "blue", "white"],
-    "flagSymbols": ["star", "circle", "plant"],
+    "flagSymbols": ["star", "circle", "plant", "animal"],
     "flagLayout": ["horizontal_stripes"]
   },
   "PSE": {
@@ -791,7 +791,7 @@
   },
   "SRB": {
     "flagColors": ["red", "blue", "white"],
-    "flagSymbols": ["animal"],
+    "flagSymbols": ["animal", "cross"],
     "flagLayout": ["horizontal_stripes"]
   },
   "SSD": {
@@ -941,7 +941,7 @@
   },
   "VEN": {
     "flagColors": ["red", "blue", "yellow", "white"],
-    "flagSymbols": ["star"],
+    "flagSymbols": ["star", "animal"],
     "flagLayout": ["horizontal_stripes"]
   },
   "VNM": {
