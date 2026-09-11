@@ -11,7 +11,6 @@ export default defineAnswerSet("ocean_multiple_basins", [
   "GTM",
   "HND",
   "IDN",
-  "ISR",
   "MEX",
   "MYS",
   "NIC",

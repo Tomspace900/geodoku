@@ -26,6 +26,17 @@ La mer Rouge et le golfe Persique sont rattachés à l'océan Indien ; la limite
 
 ## Révision
 
-Revue 2026-09-11 — la mer Rouge était rattachée à l'Indien pour EGY, SAU, SDN, ERI, DJI et YEM mais pas pour **ISR** (Eilat) ni **JOR** (Aqaba). Les deux sont ajoutés ; Israël bascule par conséquent dans `ocean_multiple_basins` (Méditerranée + Indien).
+Revue 2026-09-11 — **une mer fermée n'est pas un océan.** La mer Rouge et le golfe
+Persique ne valent pas façade sur l'Indien : **ISR** (Eilat) et **JOR** (Aqaba) sont
+donc exclus, et Israël ne satisfait pas `ocean_multiple_basins`. Une première version
+de cette revue les avait ajoutés par cohérence avec l'Égypte et l'Arabie saoudite —
+c'était résoudre l'incohérence du mauvais côté.
+
+**Reste ouvert.** La même règle voudrait retirer **EGY, SAU, SDN, ERI, IRQ, KWT, QAT
+et BHR**, qui n'ont aussi qu'une façade sur mer fermée. Ils sont conservés pour
+l'instant : le repli des mers sur leur bassin est ce qui donne son deuxième océan à
+Panama (mer des Caraïbes + Pacifique), et « le Panama n'est pas bordé par deux
+océans » serait la conclusion la moins jouable du jeu. Arbitrage à trancher en même
+temps que celui de `ocean_multiple_basins`.
 
 Procédure commune : [SOURCES.md](../SOURCES.md#procédure-de-révision).

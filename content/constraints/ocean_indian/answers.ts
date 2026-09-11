@@ -15,8 +15,6 @@ export default defineAnswerSet("ocean_indian", [
   "IND",
   "IRN",
   "IRQ",
-  "ISR",
-  "JOR",
   "KEN",
   "KWT",
   "LKA",
