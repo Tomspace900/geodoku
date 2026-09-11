@@ -59,6 +59,19 @@ Portugal en avaient deux par accident de nomenclature ; la curation des océans
 donnait à la France une façade indienne mais pas de façade caraïbe. Le joueur
 n'avait aucun moyen de deviner laquelle des trois conventions s'appliquait.
 
+**Une exception assumée : la superficie.** `areaKm2` retient la **France
+métropolitaine** (551 695 km²) alors que les DOM comptent pour ses océans, ses
+cinq fuseaux et ses frontières brésilienne et surinamaise. C'est délibéré : « la
+France » à laquelle un joueur compare une superficie est l'hexagone, pas les
+643 801 km² DOM compris. Le choix décide `area_larger_france` pour l'Ukraine,
+Madagascar, le Botswana et le Kenya, tous les quatre entre les deux valeurs.
+
+`areaKm2` est par ailleurs la **superficie totale** (terres et eaux
+intérieures), uniformément pour les 197 pays. Les Pays-Bas à 41 850 km² ne sont
+pas une anomalie de méthode : ils ont simplement 18 % d'eau, ce qui abaisse leur
+densité calculée par rapport au chiffre usuel, lequel se fonde sur la seule
+superficie terrestre.
+
 Toute contrainte géographique nouvelle applique cette règle et le dit dans son
 `SOURCE.md`.
 
@@ -209,6 +222,17 @@ côte arctique continue (Canada, Norvège, Russie, États-Unis) ; elle ne sert
 qu'à `ocean_multiple_basins`. Les dépendances ne sont pas automatiquement
 repliées sur leur État souverain — mais les territoires ultramarins d'un État
 jouable comptent pour lui.
+
+**Mers fermées (tranché le 2026-09-11).** La **Baltique** et la **mer Noire** ne
+sont rattachées à aucun bassin : ce sont des mers intérieures, pas des océans.
+Conséquence assumée — SWE, FIN, POL, EST, LVA, LTU (Baltique) et BGR, ROU, UKR,
+GEO (mer Noire) sont `coastal` sans satisfaire aucune contrainte `ocean_*`. Le
+contraste avec DEU et DNK, qui ont l'Atlantique par la mer du Nord, est voulu :
+la mer du Nord est un bras ouvert de l'Atlantique, la Baltique non.
+
+La **Finlande n'a pas de façade arctique** : elle a perdu Petsamo en 1944 et
+n'atteint plus l'océan Glacial. Aucun État jouable ne borde l'océan Austral —
+l'Antarctique n'est pas jouable et l'île Marion (46°S) relève de l'Indien.
 
 ## Histoire et souveraineté
 

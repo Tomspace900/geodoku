@@ -403,7 +403,7 @@ export const fr = {
     history_from_france: "Indépendance obtenue de la France",
     history_from_united_kingdom: "Anciennement sous domination britannique",
     // Archivées — non générées, conservées pour rejouer d'anciennes grilles.
-    nature_holocene_volcano: "Possède un volcan actif ou récent (Holocène)",
+    nature_holocene_volcano: "Possède un volcan actif ou récent",
     area_gt_500k: "Grand pays (>500\u00A0000\u00A0km²)",
     area_lt_1k: "Micro-État (<1\u00A0000\u00A0km²)",
     density_high: "Densité de population élevée (>300\u00A0hab./km²)",

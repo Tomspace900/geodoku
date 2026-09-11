@@ -385,7 +385,7 @@ export const en = {
     history_from_france: "Gained independence from France",
     history_from_united_kingdom: "Formerly under British rule",
     // Archived — no longer generated, kept so past grids stay replayable.
-    nature_holocene_volcano: "Has an active or recent volcano (Holocene)",
+    nature_holocene_volcano: "Has an active or recent volcano",
     area_gt_500k: "Large country (>500,000\u00A0km²)",
     area_lt_1k: "Micro-state (<1,000\u00A0km²)",
     density_high: "High population density (>300\u00A0inhab./km²)",
