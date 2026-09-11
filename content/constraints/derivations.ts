@@ -242,20 +242,22 @@ export const DERIVATIONS = {
 } satisfies Record<ActiveConstraintId, Derivation>;
 
 /**
- * Nombre de bassins océaniques distincts bordant le pays, convention Geodoku
- * (IHO S-23) : Méditerranée et mer des Caraïbes repliées sur l'Atlantique ;
- * façade arctique curée (`arcticCoast`). Sert à `ocean_multiple_basins`.
+ * Nombre d'océans distincts bordant le pays. **Une mer fermée n'est pas un
+ * océan** (arbitrage 2026-09-11) : Méditerranée, mer des Caraïbes, mer Rouge,
+ * golfe Persique, Baltique et mer Noire ne comptent pas, seule une façade sur
+ * l'océan lui-même le fait. Un pays qui a les deux — la côte est atlantique
+ * ouverte des Petites Antilles, la côte pacifique d'un pays d'Amérique
+ * centrale — porte le tag océanique correspondant et compte par lui.
+ *
+ * Le Panama, le Costa Rica, la Colombie, le Guatemala, le Honduras et le
+ * Nicaragua sortent donc de `ocean_multiple_basins` : leur second bassin
+ * n'était que la mer des Caraïbes. C'est contre-intuitif pour le Panama, et
+ * c'est le prix assumé d'une règle qui se dit en une phrase.
  */
 function oceanBasinCount(facts: CountryFacts): number {
   const f = facts.physicalFeatures;
   let count = 0;
-  if (
-    f.includes("atlantic_coast") ||
-    f.includes("mediterranean_coast") ||
-    f.includes("caribbean_coast")
-  ) {
-    count += 1;
-  }
+  if (f.includes("atlantic_coast")) count += 1;
   if (f.includes("pacific_coast")) count += 1;
   if (f.includes("indian_ocean_coast")) count += 1;
   if (f.includes("arctic_coast")) count += 1;

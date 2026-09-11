@@ -141,17 +141,23 @@ describe("DERIVATIONS — bascules de seuil", () => {
     });
   });
 
-  it("ocean_multiple_basins : au moins 2 bassins (Méditerranée/Caraïbes → Atlantique)", () => {
+  it("ocean_multiple_basins : au moins 2 océans, une mer fermée n'en est pas un", () => {
     expect({
-      usa: derive("ocean_multiple_basins", "USA"),
-      egypt: derive("ocean_multiple_basins", "EGY"), // Méditerranée + mer Rouge
+      usa: derive("ocean_multiple_basins", "USA"), // Atlantique + Pacifique + Arctique
       norway: derive("ocean_multiple_basins", "NOR"), // Atlantique + Arctique
+      southAfrica: derive("ocean_multiple_basins", "ZAF"), // Atlantique + Indien
+      panama: derive("ocean_multiple_basins", "PAN"), // Pacifique + mer des Caraïbes
+      egypt: derive("ocean_multiple_basins", "EGY"), // Méditerranée + mer Rouge
       germany: derive("ocean_multiple_basins", "DEU"), // Atlantique seul
       chile: derive("ocean_multiple_basins", "CHL"), // Pacifique seul
     }).toEqual({
       usa: true,
-      egypt: true,
       norway: true,
+      southAfrica: true,
+      // Le canal relie deux océans, mais la côte panaméenne nord donne sur une
+      // mer fermée : la règle « une mer n'est pas un océan » le fait sortir.
+      panama: false,
+      egypt: false,
       germany: false,
       chile: false,
     });

@@ -22,7 +22,14 @@ Pays disposant d'une façade sur l'océan Atlantique.
 
 ## Cas limites
 
-La Méditerranée et la mer des Caraïbes sont rattachées à l'Atlantique par la convention Geodoku.
+**Ni la Méditerranée ni la mer des Caraïbes ne valent façade atlantique** : une mer
+fermée n'est pas un océan (cf. [SOURCES.md](../SOURCES.md#océans)). Les îles des
+Petites Antilles sont dans la liste par leur **côte est**, qui donne sur l'Atlantique
+ouvert — pas par leur côte caraïbe ; les pays continentaux à seule façade caraïbe
+(BLZ, GTM, HND, NIC, PAN, CRI, COL) restent dehors. Le golfe du Mexique est en
+revanche conservé comme façade atlantique pour **MEX** : il communique largement
+avec l'océan par le détroit de Floride et le canal du Yucatán, et « le Mexique n'est
+pas bordé par l'Atlantique » ne se défend pas.
 
 ## Révision
 

@@ -22,21 +22,20 @@ Pays disposant d'une façade sur l'océan Indien.
 
 ## Cas limites
 
-La mer Rouge et le golfe Persique sont rattachés à l'océan Indien ; la limite avec l'Atlantique passe au cap des Aiguilles.
+La limite avec l'Atlantique passe au cap des Aiguilles. **La mer Rouge et le golfe
+Persique ne sont pas l'océan Indien** : ce sont des mers fermées, et une mer n'est
+pas un océan (cf. [SOURCES.md](../SOURCES.md#océans)). Un pays n'entre dans la liste
+que par un débouché réellement océanique — mer d'Arabie, golfe d'Oman, golfe d'Aden.
 
 ## Révision
 
-Revue 2026-09-11 — **une mer fermée n'est pas un océan.** La mer Rouge et le golfe
-Persique ne valent pas façade sur l'Indien : **ISR** (Eilat) et **JOR** (Aqaba) sont
-donc exclus, et Israël ne satisfait pas `ocean_multiple_basins`. Une première version
-de cette revue les avait ajoutés par cohérence avec l'Égypte et l'Arabie saoudite —
-c'était résoudre l'incohérence du mauvais côté.
+Revue 2026-09-11 — application de la règle « une mer fermée n'est pas un océan ».
+Dix pays sortent : **ISR** (Eilat), **JOR** (Aqaba), **EGY**, **SDN**, **ERI**
+(mer Rouge seule), **SAU** (mer Rouge + golfe Persique), **IRQ**, **KWT**, **QAT**,
+**BHR** (golfe Persique seul). 33 → 25 pays.
 
-**Reste ouvert.** La même règle voudrait retirer **EGY, SAU, SDN, ERI, IRQ, KWT, QAT
-et BHR**, qui n'ont aussi qu'une façade sur mer fermée. Ils sont conservés pour
-l'instant : le repli des mers sur leur bassin est ce qui donne son deuxième océan à
-Panama (mer des Caraïbes + Pacifique), et « le Panama n'est pas bordé par deux
-océans » serait la conclusion la moins jouable du jeu. Arbitrage à trancher en même
-temps que celui de `ocean_multiple_basins`.
+Restent les pays à débouché océanique réel : **OMN** et **IRN** (golfe d'Oman,
+ouvert sur la mer d'Arabie), **ARE** (Fujairah, côte est sur le golfe d'Oman),
+**YEM** (mer d'Arabie), **DJI** (golfe d'Aden).
 
 Procédure commune : [SOURCES.md](../SOURCES.md#procédure-de-révision).

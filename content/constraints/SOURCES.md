@@ -216,7 +216,17 @@ les réserves. Un pays absent d'une source vaut `null`, jamais 0.
 ## Océans
 
 La convention Geodoku part de l'[IHO S-23](https://iho.int/uploads/user/pubs/standards/s-23/S-23_Ed3_1953_EN.pdf).
-La Méditerranée et la mer des Caraïbes sont rattachées à l'Atlantique. La façade
+
+**Une mer fermée n'est pas un océan (tranché le 2026-09-11).** Méditerranée, mer
+des Caraïbes, mer Rouge, golfe Persique, Baltique et mer Noire ne valent pas
+façade océanique : seule une côte sur l'océan lui-même compte, pour `ocean_*`
+comme pour `ocean_multiple_basins`. Un pays qui a les deux — la côte est
+atlantique ouverte des Petites Antilles, la côte pacifique d'un pays d'Amérique
+centrale — porte le tag correspondant et compte par lui.
+
+La règle a un coût assumé : le Panama n'est plus « bordé par deux océans ». On le
+paie plutôt que d'entretenir une liste d'exceptions, et le libellé joueur devient
+littéralement exact. La façade
 arctique (`arctic_coast`) est une convention curée, restreinte aux quatre États à
 côte arctique continue (Canada, Norvège, Russie, États-Unis) ; elle ne sert
 qu'à `ocean_multiple_basins`. Les dépendances ne sont pas automatiquement

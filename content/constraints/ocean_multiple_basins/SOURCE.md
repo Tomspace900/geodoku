@@ -1,8 +1,8 @@
 ---
 constraint_id: ocean_multiple_basins
 status: active
-checked_at: 2026-09-10
-review_after: 2027-09-10
+checked_at: 2026-09-11
+review_after: 2027-03-11
 ---
 
 # ocean_multiple_basins
@@ -52,5 +52,21 @@ matérialise `answers.ts` (gardé par `pnpm check:content`).
 - Les dépendances ne sont pas repliées automatiquement sur leur État souverain.
 
 ## Révision
+
+Revue 2026-09-11 — `oceanBasinCount` ne replie plus les mers fermées sur leur
+bassin. Méditerranée, mer des Caraïbes, mer Rouge, golfe Persique, Baltique et mer
+Noire ne comptent plus : seule une façade sur l'océan lui-même compte. 18 → 11 pays.
+
+Sortent **PAN, CRI, COL, GTM, HND, NIC** (leur second bassin n'était que la mer des
+Caraïbes), **EGY** (Méditerranée + mer Rouge) et **ISR** (Méditerranée + mer Rouge).
+
+**Le Panama est le prix assumé de la règle.** Le pays du canal entre deux océans
+n'est plus « bordé par deux océans » : sa côte nord donne sur une mer fermée. C'est
+contre-intuitif, et c'est le coût d'une règle qui tient en une phrase plutôt que
+d'une liste d'exceptions. Le libellé joueur — « Bordé par au moins deux océans » —
+devient en revanche littéralement exact, ce qu'il n'était pas avant.
+
+Onze pays restent, au-dessus du plancher du jeu (les plus petites contraintes
+actives en comptent six) ; `simulate:scheduling` passe 14/14.
 
 Procédure commune : [SOURCES.md](../SOURCES.md#procédure-de-révision).
