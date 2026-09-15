@@ -141,15 +141,13 @@ Philosophie **Editorial Intellectual** (NYT Games) : spacieux, typographique, to
 
 **Crons** ([`convex/crons.ts`](convex/crons.ts)) : `ensureDailyGrids` (horaire) ; `reconcilePoolAndSchedule` (03:00 UTC si stock bas, hors migration legacy explicite).
 
-**Endpoints jeu** ([`convex/grids.ts`](convex/grids.ts), [`guesses.ts`](convex/guesses.ts)) : `getTodayGrid`, `submitTodayGuess`, `recordTodayFailedGuess`, `getTodayGuessDistribution`, `recordTodayGameEnd`, `submitTodayGridFeedback`. Chaque écriture reçoit un `operationId` idempotent ; les anciennes interfaces restent transitoirement disponibles pendant le rollout.
+**Endpoints jeu** ([`convex/grids.ts`](convex/grids.ts), [`guesses.ts`](convex/guesses.ts)) : `getTodayGrid`, `submitTodayGuess`, `recordTodayFailedGuess`, `getTodayGuessDistribution`, `recordTodayGameEnd`, `submitTodayGridFeedback`. Chaque écriture reçoit un `operationId` idempotent.
 
 **Endpoints archive** (mode entraînement, **lecture seule**) : `getReplayableGrids` (J-1 → J-7, **sans `validAnswers`** — la liste ne doit rien révéler) et `getReplayGrid({date})` (grille + réponses). Ce dernier est gardé par `assertReplayableDate` ([`gameWriteValidation.ts`](convex/gameWriteValidation.ts)) : **le refus des dates `>= todayUTC()` est le point critique** — sans lui, `/archive/<demain>` livrerait la grille du lendemain avec ses réponses. Une date hors fenêtre **lève** ; une grille absente renvoie `null` (trou de données, pas une demande illégitime). La rareté figée est lue via `guesses.getGuessDistributionForDate` — promu de « legacy à supprimer » à endpoint du parcours joueur. Aucune mutation, donc aucun rate-limit ni `operationId` sur ce chemin.
 
 **Endpoints admin** (token `ADMIN_TOKEN`) : `getScheduledGrids`, `getGridCellMetrics`, `getPoolStats`, `refreshPool`, `retryPoolFinalization`, `runEnsureTomorrow`, etc. Après activation, `refreshPool` retourne d'éventuels warnings de finalisation ; leur retry ne doit jamais relancer une génération.
 
 **Rate limiting** ([`convex/rateLimit.ts`](convex/rateLimit.ts)) : clé `clientId` (localStorage), buckets `guess` + `feedback`.
-
-**Rollout en cours.** La persistence minimale v3 est dual-write avec un shadow v2 pendant la fenêtre de rollback. Ne retirer ni ce shadow ni les endpoints legacy avant la fin de l'observation. Procédure complète : [`docs/rollout-write-integrity.md`](docs/rollout-write-integrity.md).
 
 **Admin UI** ([`src/features/admin/AdminPage.tsx`](src/features/admin/AdminPage.tsx)) : `PoolOverviewPanel` (santé pool), `GameCalendar` + `GridDayDetail` (métriques par jour, facilité via `topKPopularity`, struggle observé), `GameHealthPanel` (win rate ~30 j), `ConstraintExplorerPanel` (intersection des listes ISO3 + chevauchement générateur, analyse 100 % client). Pas de panneau de tuning : ajuster `gridConstants.ts` + simuler.
 

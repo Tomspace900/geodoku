@@ -60,8 +60,6 @@ an interactive `develop` confirmation before replacing preview/develop.
 generated games; writes to an unverifiable or production target remain blocked
 unless `--force` is supplied explicitly.
 
-The additive write-integrity rollout, rollback-safe persistence window and
-explicit first migration of the legacy pool are documented in
-[`docs/rollout-write-integrity.md`](docs/rollout-write-integrity.md).
+The explicit first migration of the legacy pool is documented in `AGENTS.md §6`.
 
 For CI/deployment (Vercel build command, preview auto-seed, environment mapping), see `AGENTS.md §8`.
