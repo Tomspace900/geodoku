@@ -12,7 +12,7 @@ Son `answers.ts` est une **matérialisation générée** par `pnpm build:answers
 committée et **relue en diff** — jamais éditée à la main. `pnpm check:content`
 rejoue les dérivations et échoue si un `answers.ts` est obsolète.
 
-Les 11 contraintes **archivées** n'ont pas de dérivation : leur `answers.ts` est
+Les 12 contraintes **archivées** n'ont pas de dérivation : leur `answers.ts` est
 une **liste figée à la main** (sans en-tête `@generated`), conservée pour le
 replay des grilles déjà publiées.
 

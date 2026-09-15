@@ -25,7 +25,7 @@ SNAPSHOT (content/countries/ — généré, committé, daté par FACTS_SNAPSHOT.
         │  pnpm build:answers  (dérivation PURE, hors-ligne)
         ▼
 LISTES DÉRIVÉES (content/constraints/<id>/answers.ts)
-  actives générées + 11 archivées figées
+  actives générées + 12 archivées figées
         │  imports relatifs
         ▼
 RUNTIME + OUTILLAGE   matchesConstraint(id, iso3)
@@ -53,7 +53,7 @@ Chaque dossier de `constraints/` contient :
 - `answers.ts` — la liste ISO3 acceptée par le jeu. Pour les contraintes
   **actives**, fichier **`@generated`** : la vérité est `derivations.ts` appliqué au snapshot
   de faits, `answers.ts` en est la matérialisation, régénérée par
-  `pnpm build:answers` et **relue en diff**. Pour les **11 archivées**, liste
+  `pnpm build:answers` et **relue en diff**. Pour les **12 archivées**, liste
   **figée à la main** (pas d'en-tête `@generated`), conservée pour le replay.
   Les contraintes **en réserve** (`RESERVE_CONSTRAINT_IDS`) n'ont **pas** d'`answers.ts` :
   conçues et sourcées mais écartées du jeu, ni générées ni rejouables.

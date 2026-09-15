@@ -137,7 +137,7 @@ que le build ne produit plus.
   correspond plus ;
 - **fraîcheur des faits dérivés** : l'étage du dessus — re-fusionne les datasets
   de `scripts/countries/data/` et échoue (« lancer pnpm build:countries ») si
-  l'un des dix champs qu'ils produisent (`utcOffsetCount`, `hasHoloceneVolcano`,
+  l'un des dix champs qu'ils produisent (`utcOffsetCount`, `lastVolcanicEruptionYear`,
   `mountainAreaShare`, `forestCoverShare`, `urbanCentresOver1M`,
   `productionRanks`, `coalElectricityShare`, `formerSovereigns`,
   `sovereigntyYear`, `sovereigntyKind`) ne correspond plus à `facts.ts` : dataset

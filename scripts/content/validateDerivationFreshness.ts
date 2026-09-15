@@ -6,7 +6,7 @@
  * Extrait de `check-content.ts` pour être testable des deux côtés : qu'il passe
  * sur le contenu committé, et qu'il **échoue** quand il doit échouer.
  *
- * Les 11 listes archivées sont figées à la main, hors de ce contrôle.
+ * Les listes archivées sont figées à la main, hors de ce contrôle.
  */
 import type {
   DERIVATIONS,

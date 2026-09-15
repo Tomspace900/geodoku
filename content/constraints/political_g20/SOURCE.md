@@ -9,7 +9,7 @@ review_after: 2027-01-21
 
 ## Définition
 
-États membres de **le G20** retenus par la convention Geodoku.
+États membres du **G20** retenus par la convention Geodoku.
 
 ## Sources
 

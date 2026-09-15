@@ -51,14 +51,14 @@ Documenté **par famille de champs** de `CountryFacts` (voir
 | `geoTags` (`middle_east`, `drives_on_left`, `capital_not_largest`, …) | classification éditoriale (`countryPatches.ts`) | curé |
 | `regime` (`monarchy` / `republic`) | classification binaire éditoriale, réf. [CIA World Factbook — government type](https://www.cia.gov/the-world-factbook/field/government-type/) | curé |
 | `physicalFeatures` (`equator_crosser`, `mediterranean_coast`, `caribbean_coast`, `peak_over_5000m`, `has_desert`, `rainforest`, `atlantic_coast`, `pacific_coast`, `indian_ocean_coast`, `arctic_coast`) | revue éditoriale cartographique / biomes nommés (`countryPatches.ts`) | curé |
-| `utcOffsetCount`, `hasHoloceneVolcano`, `mountainAreaShare`, `forestCoverShare`, `urbanCentresOver1M`, `productionRanks`, `coalElectricityShare`, `formerSovereigns`, `sovereigntyYear`, `sovereigntyKind` | datasets datés+sourcés de `scripts/countries/data/`, fusionnés en scalaires par `build-countries` (`quantitativeFactsForCode`) — IANA tz, Smithsonian GVP, ODD 15.4.2 (FAO/UNEP-WCMC), FAO FRA, GHSL UCDB, FAOSTAT, U.S. EIA, Ember, CIA World Factbook (*Independence*) | curé |
+| `utcOffsetCount`, `lastVolcanicEruptionYear`, `mountainAreaShare`, `forestCoverShare`, `urbanCentresOver1M`, `productionRanks`, `coalElectricityShare`, `formerSovereigns`, `sovereigntyYear`, `sovereigntyKind` | datasets datés+sourcés de `scripts/countries/data/`, fusionnés en scalaires par `build-countries` (`quantitativeFactsForCode`) — IANA tz, Smithsonian GVP, ODD 15.4.2 (FAO/UNEP-WCMC), FAO FRA, GHSL UCDB, FAOSTAT, U.S. EIA, Ember, CIA World Factbook (*Independence*) | curé |
 
 Plusieurs dérivations lisent un `geoTags` curé plutôt que le champ dédié
 (`society_drives_on_left` lit `geoTags`, pas `drivingSide` ; `subregion_middle_east`
 lit `geoTags`, pas `subregion`) — c'est voulu : le tag encode la convention
 jouable, le champ importé encode la donnée brute.
 
-Les **faits quantitatifs dérivés** (`utcOffsetCount`, `hasHoloceneVolcano`,
+Les **faits quantitatifs dérivés** (`utcOffsetCount`, `lastVolcanicEruptionYear`,
 `mountainAreaShare`, `forestCoverShare`, `urbanCentresOver1M`, `productionRanks`,
 `coalElectricityShare`) proviennent des datasets de `scripts/countries/data/` :
 des snapshots datés et sourcés, révisés à la main selon leur en-tête, au même

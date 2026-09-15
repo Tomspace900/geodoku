@@ -22,7 +22,7 @@ function check(
 }
 
 describe("obsolescence des listes de réponses", () => {
-  it("garde les 79 answers.ts alignés sur leur dérivation", () => {
+  it("garde chaque answers.ts actif aligné sur sa dérivation", () => {
     expect(check(COUNTRY_FACTS)).toEqual([]);
     expect(CONSTRAINT_IDS).toHaveLength(Object.keys(DERIVATIONS).length);
   });

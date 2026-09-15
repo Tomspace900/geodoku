@@ -9,7 +9,7 @@ review_after: 2027-01-21
 
 ## Définition
 
-États membres de **le Commonwealth** retenus par la convention Geodoku.
+États membres du **Commonwealth** retenus par la convention Geodoku.
 
 ## Sources
 
