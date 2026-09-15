@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Une seule URL pour l'instant : /privacy et /changelog déclarent tous deux
+  <link rel="canonical" href="https://www.geodoku.app/"> (canonical codé en dur
+  dans index.html, servi tel quel sur toutes les routes du SPA). Les lister ici
+  enverrait un signal contradictoire à Google — sitemap « indexe-moi » contre
+  canonical « je suis un doublon de la home ». Ils rejoindront ce fichier quand
+  le prerender donnera à chaque route son propre canonical.
+-->
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  <url>
+    <loc>https://www.geodoku.app/</loc>
+    <lastmod>2026-09-15</lastmod>
+  </url>
+</urlset>

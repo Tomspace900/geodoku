@@ -1,12 +1,12 @@
 <!doctype html>
-<html lang="en">
+<html lang="fr">
   <head>
     <meta charset="UTF-8" />
     <meta
       name="viewport"
       content="width=device-width, initial-scale=1.0, viewport-fit=cover"
     />
-    <title>Geodoku</title>
+    <title>Geodoku — Le sudoku de géographie quotidien</title>
     <link
       rel="icon"
       type="image/svg+xml"
@@ -22,36 +22,76 @@
     <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png" />
     <link rel="icon" type="image/png" sizes="192x192" href="/icon-192.png" />
     <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+    <link rel="manifest" href="/site.webmanifest" />
     <script type="application/ld+json">
       {
         "@context": "https://schema.org",
-        "@type": "WebSite",
-        "name": "Geodoku",
-        "alternateName": ["geodoku.app"],
-        "url": "https://www.geodoku.app/"
+        "@graph": [
+          {
+            "@type": "WebSite",
+            "@id": "https://www.geodoku.app/#website",
+            "name": "Geodoku",
+            "alternateName": ["geodoku.app"],
+            "url": "https://www.geodoku.app/",
+            "inLanguage": ["fr", "en"]
+          },
+          {
+            "@type": "VideoGame",
+            "@id": "https://www.geodoku.app/#game",
+            "name": "Geodoku",
+            "url": "https://www.geodoku.app/",
+            "description": "Un sudoku de géographie. Chaque jour, une grille 3×3 dont chaque ligne et chaque colonne impose une contrainte géographique : trouve un pays qui valide les deux.",
+            "image": "https://www.geodoku.app/og-image.png",
+            "inLanguage": ["fr", "en"],
+            "genre": ["Puzzle", "Jeu de géographie", "Jeu éducatif"],
+            "gamePlatform": "Navigateur web",
+            "playMode": "SinglePlayer",
+            "applicationCategory": "GameApplication",
+            "operatingSystem": "Tout navigateur web moderne",
+            "isAccessibleForFree": true,
+            "offers": {
+              "@type": "Offer",
+              "price": "0",
+              "priceCurrency": "EUR",
+              "availability": "https://schema.org/InStock"
+            }
+          }
+        ]
       }
     </script>
     <meta name="theme-color" content="#f9f9f9" />
     <meta
       name="description"
-      content="Mini-jeu géo quotidien. Sudoku de pays - une grille 3×3 par jour. Révise ou teste tes connaissances."
+      content="Sudoku de géographie gratuit. Chaque jour, une grille 3×3 : trouve les pays qui valident leur ligne et leur colonne. Sans inscription."
     />
     <meta property="og:type" content="website" />
     <meta property="og:site_name" content="Geodoku" />
-    <meta property="og:title" content="Geodoku" />
+    <meta property="og:locale" content="fr_FR" />
+    <meta property="og:locale:alternate" content="en_US" />
+    <meta
+      property="og:title"
+      content="Geodoku — Le sudoku de géographie quotidien"
+    />
     <meta
       property="og:description"
-      content="Mini-jeu géo quotidien. Sudoku de pays - une grille 3×3 par jour. Révise ou teste tes connaissances."
+      content="Sudoku de géographie gratuit. Chaque jour, une grille 3×3 : trouve les pays qui valident leur ligne et leur colonne. Sans inscription."
     />
     <meta property="og:url" content="https://www.geodoku.app" />
     <meta property="og:image" content="https://www.geodoku.app/og-image.png" />
     <meta property="og:image:width" content="1200" />
     <meta property="og:image:height" content="630" />
+    <meta
+      property="og:image:alt"
+      content="Geodoku — une grille 3×3 de sudoku géographique"
+    />
     <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:title" content="Geodoku" />
+    <meta
+      name="twitter:title"
+      content="Geodoku — Le sudoku de géographie quotidien"
+    />
     <meta
       name="twitter:description"
-      content="Mini-jeu géo quotidien. Sudoku de pays - une grille 3×3 par jour. Révise ou teste tes connaissances."
+      content="Sudoku de géographie gratuit. Chaque jour, une grille 3×3 : trouve les pays qui valident leur ligne et leur colonne. Sans inscription."
     />
     <meta name="twitter:image" content="https://www.geodoku.app/og-image.png" />
     <link rel="canonical" href="https://www.geodoku.app/" />
