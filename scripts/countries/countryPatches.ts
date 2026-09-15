@@ -7,7 +7,7 @@
  * - gameplayClassifications: constraint tag lists (events, geo, physical features, regime)
  * - manualCountryAdditions: countries absent from world-countries (Kosovo XKX → 196 + 1 = 197 playable)
  */
-import type { Country } from "../../src/features/countries/types.ts";
+import type { CountryRecord } from "../../content/countries/type.ts";
 import type {
   CountryPatchesConfig,
   GameplayClassifications,
@@ -17,11 +17,11 @@ import type {
 /** ISO 3166-1 alpha-3 — playable country (196 UN + inclusions) or addition like XKX. */
 export type Iso3 = string;
 
-// ─── Source corrections (borders, waterAccess only) ───────────────────────────
+// ─── Source corrections (borders, waterAccess, latitude, memberships) ─────────
 
 export const sourceCorrectionsByIso3: Record<Iso3, SourceCorrection> = {
-  /** Tasmania-only border count would mark AUS as island; gameplay = coastal mainland. */
-  AUS: { waterAccess: "coastal" as const },
+  /** Continent-État entouré d'eau, sans frontière terrestre : jouée comme insulaire (convention Geodoku, révision P2). */
+  AUS: { waterAccess: "island" as const },
   /** Island nation; world-countries lists a land border with India. */
   LKA: { waterAccess: "island" as const, borders: [] },
   /** Kosovo recognition: REST uses UNK, gameplay uses XKX. */
@@ -49,6 +49,20 @@ export const sourceCorrectionsByIso3: Record<Iso3, SourceCorrection> = {
     ],
   },
   SUR: { borders: ["BRA", "FRA", "GUY"] },
+  /**
+   * Hémisphère d'un pays à cheval sur l'équateur : on tranche sur la MAJORITÉ DE
+   * LA SUPERFICIE TERRESTRE (pas la capitale — Libreville est au nord alors que
+   * les deux tiers du Gabon sont au sud).
+   *
+   * world-countries donne à la RDC un point représentatif arrondi à `0`, seul
+   * pays du catalogue exactement sur l'équateur : le `latitude < 0` de
+   * `latitude_south_hemisphere` la classait donc au nord par accident d'arrondi.
+   * Elle s'étend de 5,4°N à 13,5°S, sa capitale est à -4,32° et son centroïde à
+   * -2,88° : sud à l'unanimité des trois lectures.
+   *
+   * Les 12 autres `equatorCrosser` tombent déjà du bon côté sans patch.
+   */
+  COD: { latitude: -2.88 },
   FRA: {
     borders: [
       "AND",
@@ -63,6 +77,37 @@ export const sourceCorrectionsByIso3: Record<Iso3, SourceCorrection> = {
       "CHE",
     ],
   },
+  /**
+   * Deltas d'adhésion : rattrapent un changement officiel daté que REST Countries
+   * v5 n'a pas encore intégré. Idempotents (`applySourceCorrections`), à retirer
+   * dès que la source est à jour.
+   */
+  /** Timor oriental — 11ᵉ membre de l'ASEAN (admission actée le 26 octobre 2025). À retirer quand REST v5 est à jour. */
+  TLS: { membershipsAdd: ["asean"] },
+  /** Indonésie — membre plein des BRICS depuis le 6 janvier 2025. À retirer quand REST v5 est à jour. */
+  IDN: { membershipsAdd: ["brics"] },
+  /** Émirats arabes unis — retrait effectif de l'OPEP au 1ᵉʳ mai 2026 (confirmé). À retirer quand REST v5 est à jour. */
+  ARE: { membershipsRemove: ["opec"] },
+
+  /**
+   * Langues officielles **nationales de jure**. REST Countries confond statut
+   * officiel et langue de travail / statut spécial / usage administratif : ces
+   * corrections rétablissent la définition retenue par `language_*`.
+   */
+  /** Mali — constitution de 2023 : le français passe de langue officielle à langue de travail. */
+  MLI: { officialLanguages: ["bm"] },
+  /** Burkina Faso — révision de décembre 2023 : le français devient langue de travail. */
+  BFA: { officialLanguages: ["mos", "dyu", "ff"] },
+  /** Niger — mars 2025 : le français perd son statut officiel, le haoussa devient langue nationale. */
+  NER: { officialLanguages: ["ha"] },
+  /** Israël — loi fondamentale de 2018 : l'arabe passe d'officiel à « statut spécial ». */
+  ISR: { officialLanguages: ["he"] },
+  /** Tchéquie — le slovaque a un statut procédural, pas de langue officielle nationale. */
+  CZE: { officialLanguages: ["cs"] },
+  /** Malaisie — le malais est seule langue officielle depuis le National Language Act de 1967. */
+  MYS: { officialLanguages: ["ms"] },
+  /** Liban — l'arabe est seule langue officielle ; le français a un statut d'usage, pas officiel. */
+  LBN: { officialLanguages: ["ar"] },
 };
 
 // ─── Search aliases (player variants beyond names + REST alternates) ────────────
@@ -180,6 +225,21 @@ export const gameplayClassifications: GameplayClassifications = {
     "BRA",
     "RUS",
   ],
+  eventWinterOlympicsHost: [
+    "AUT",
+    "BIH",
+    "CAN",
+    "CHE",
+    "CHN",
+    "DEU",
+    "FRA",
+    "ITA",
+    "JPN",
+    "KOR",
+    "NOR",
+    "RUS",
+    "USA",
+  ],
   monarchy: [
     "GBR",
     "CAN",
@@ -269,9 +329,7 @@ export const gameplayClassifications: GameplayClassifications = {
     "HTI",
     "DOM",
     "JAM",
-    "BHS",
     "TTO",
-    "BRB",
     "GRD",
     "VCT",
     "LCA",
@@ -287,6 +345,8 @@ export const gameplayClassifications: GameplayClassifications = {
     "COL",
     "VEN",
     "MEX",
+    "FRA",
+    "NLD",
   ],
   peakOver5000m: [
     "AFG",
@@ -348,6 +408,9 @@ export const gameplayClassifications: GameplayClassifications = {
     "PAK",
     "PLW",
     "FSM",
+    "GMB",
+    "GNQ",
+    "SWZ",
   ],
   desert: [
     "DZA",
@@ -393,6 +456,11 @@ export const gameplayClassifications: GameplayClassifications = {
     "SOM",
     "DJI",
     "ERI",
+    "ETH",
+    "BHR",
+    "KEN",
+    "COL",
+    "ESP",
   ],
   rainforest: [
     "BRA",
@@ -429,6 +497,20 @@ export const gameplayClassifications: GameplayClassifications = {
     "GHA",
     "NGA",
     "USA",
+    "BLZ",
+    "GTM",
+    "HND",
+    "NIC",
+    "MEX",
+    "CAF",
+    "GIN",
+    "SLE",
+    "GNB",
+    "UGA",
+    "TZA",
+    "RWA",
+    "BDI",
+    "FRA",
   ],
   atlanticCoast: [
     "ISL",
@@ -475,6 +557,18 @@ export const gameplayClassifications: GameplayClassifications = {
     "SUR",
     "VEN",
     "BHS",
+    "ATG",
+    "BRB",
+    "CUB",
+    "DMA",
+    "DOM",
+    "GRD",
+    "HTI",
+    "JAM",
+    "KNA",
+    "LCA",
+    "TTO",
+    "VCT",
   ],
   pacificCoast: [
     "CAN",
@@ -531,17 +625,9 @@ export const gameplayClassifications: GameplayClassifications = {
     "SYC",
     "COM",
     "DJI",
-    "ERI",
-    "SDN",
-    "EGY",
-    "SAU",
     "YEM",
     "OMN",
     "ARE",
-    "QAT",
-    "BHR",
-    "KWT",
-    "IRQ",
     "IRN",
     "PAK",
     "IND",
@@ -555,11 +641,19 @@ export const gameplayClassifications: GameplayClassifications = {
     "AUS",
     "FRA",
   ],
+  /**
+   * Façade sur l'océan Arctique. Convention Geodoku restreinte aux quatre États
+   * riverains d'une côte arctique continue et substantielle (reprise du champ
+   * `oceanBasins` du snapshot country-core v1). Sert uniquement à
+   * `ocean_multiple_basins` : la Norvège n'a sinon qu'une façade (Atlantique),
+   * la Russie que Pacifique + Arctique.
+   */
+  arcticCoast: ["CAN", "NOR", "RUS", "USA"],
 };
 
 // ─── Manual country additions ─────────────────────────────────────────────────
 
-export const manualCountryAdditions: Country[] = [
+export const manualCountryAdditions: CountryRecord[] = [
   {
     iso3: "XKX",
     iso2: "XK",
@@ -591,6 +685,18 @@ export const manualCountryAdditions: Country[] = [
     geoTags: [],
     regime: "republic",
     physicalFeatures: [],
+    // Faits quantitatifs : placeholders, recalculés par build-countries via
+    // quantitativeFactsForCode (datasets scripts/countries/data/).
+    utcOffsetCount: 1,
+    lastVolcanicEruptionYear: null,
+    mountainAreaShare: null,
+    forestCoverShare: null,
+    urbanCentresOver1M: 0,
+    productionRanks: {},
+    coalElectricityShare: null,
+    formerSovereigns: [],
+    sovereigntyYear: null,
+    sovereigntyKind: null,
   },
 ];
 

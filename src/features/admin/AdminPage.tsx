@@ -11,6 +11,7 @@ import { Input } from "@/components/ui/input";
 import { todayUTC, tomorrowUTC } from "@/lib/dates";
 import { api } from "../../../convex/_generated/api";
 import { AdminAuthBoundary } from "./components/AdminAuthBoundary";
+import { ConstraintExplorerPanel } from "./components/ConstraintExplorerPanel";
 import { GameCalendar } from "./components/GameCalendar";
 import { GameHealthPanel } from "./components/GameHealthPanel";
 import { type DayView, GridDayDetail } from "./components/GridDayDetail";
@@ -243,6 +244,8 @@ function AuthenticatedAdminDashboard({
         </PanelCard>
 
         <GameHealthPanel feedbackStats={feedbackStats} />
+
+        <ConstraintExplorerPanel />
       </main>
       <AppFooter className="mt-auto w-full shrink-0" />
     </div>

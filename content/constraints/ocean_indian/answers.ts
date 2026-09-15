@@ -1,0 +1,30 @@
+// @generated par pnpm build:answers — ne pas éditer à la main.
+import { defineAnswerSet } from "../defineAnswerSet";
+
+export default defineAnswerSet("ocean_indian", [
+  "ARE",
+  "AUS",
+  "BGD",
+  "COM",
+  "DJI",
+  "FRA",
+  "IDN",
+  "IND",
+  "IRN",
+  "KEN",
+  "LKA",
+  "MDG",
+  "MDV",
+  "MMR",
+  "MOZ",
+  "MUS",
+  "MYS",
+  "OMN",
+  "PAK",
+  "SOM",
+  "SYC",
+  "THA",
+  "TZA",
+  "YEM",
+  "ZAF",
+]);

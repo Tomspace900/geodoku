@@ -1,0 +1,30 @@
+// @generated par pnpm build:answers — ne pas éditer à la main.
+import { defineAnswerSet } from "../defineAnswerSet";
+
+export default defineAnswerSet("flag_has_animal", [
+  "ALB",
+  "AND",
+  "BOL",
+  "BTN",
+  "DMA",
+  "ECU",
+  "EGY",
+  "ESP",
+  "FJI",
+  "GTM",
+  "HRV",
+  "KAZ",
+  "KIR",
+  "LKA",
+  "MDA",
+  "MEX",
+  "MNE",
+  "PER",
+  "PNG",
+  "PRY",
+  "SRB",
+  "UGA",
+  "VEN",
+  "ZMB",
+  "ZWE",
+]);

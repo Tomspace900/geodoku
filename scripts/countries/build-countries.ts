@@ -1,5 +1,7 @@
 /**
- * Generates src/features/countries/data/countries.json
+ * Régénère le snapshot `content/countries/` (catalog + countryCodes + facts +
+ * popularity), puis enchaîne `pnpm build:answers` pour re-dériver les listes de
+ * contraintes actives.
  *
  * Sources:
  * - world-countries npm (v5): name.common (EN), translations.fra.common (FR), cca2
@@ -16,16 +18,18 @@
  *
  * Run: pnpm build:countries (requires network for population fetch)
  */
-import { readFileSync, writeFileSync } from "node:fs";
+import { execFileSync } from "node:child_process";
+import { readFileSync } from "node:fs";
 import { resolve } from "node:path";
 import rawWorldCountries from "world-countries";
 import type {
   CapitalRole,
-  Country,
   CountryCapital,
+  CountryRecord,
   DrivingSide,
   PoliticalGroup,
-} from "../../src/features/countries/types.ts";
+} from "../../content/countries/type.ts";
+import { writeCountrySnapshot } from "../content/emitCountrySnapshot.ts";
 import {
   applySourceCorrections,
   assignPopularity,
@@ -37,6 +41,7 @@ import {
   gameplayArraysForCode,
   mapLanguages,
   physicalFeaturesForCode,
+  quantitativeFactsForCode,
   type RcEnrichment,
   type RcEnrichRow,
   rcEnrichmentMapFromRows,
@@ -44,6 +49,7 @@ import {
   toWikipediaTitle,
 } from "./buildCountriesLib.ts";
 import { countryPatches } from "./countryPatches.ts";
+import { QUANTITATIVE_DATASETS } from "./data/datasets.ts";
 
 // ─── World-countries shape (fields we consume) ────────────────────────────────
 
@@ -399,7 +405,14 @@ async function fetchRcEnrichment(): Promise<Map<string, RcEnrichment>> {
   return rcEnrichmentMapFromRows(rows);
 }
 
-function getWikipediaRange(): { start: string; end: string } {
+/**
+ * Fenêtre de mesure des pageviews : 12 mois glissants se terminant au dernier
+ * mois complet. `start`/`end` sont au format de l'API Wikimedia,
+ * `startMonth`/`endMonth` au format `YYYY-MM` du snapshot de popularité — la
+ * provenance committée doit décrire la période réellement interrogée, pas la
+ * date d'exécution.
+ */
+function getWikipediaRange(): WikipediaRange {
   const endDate = new Date();
   // Use previous complete month to avoid partial-month noise.
   endDate.setUTCDate(1);
@@ -409,13 +422,19 @@ function getWikipediaRange(): { start: string; end: string } {
   const startDate = new Date(endDate);
   startDate.setUTCMonth(startDate.getUTCMonth() - 11);
 
-  function toApiMonth(d: Date): string {
+  function toMonth(d: Date): string {
     const y = d.getUTCFullYear();
     const m = String(d.getUTCMonth() + 1).padStart(2, "0");
-    return `${y}${m}0100`;
+    return `${y}-${m}`;
   }
+  const toApiMonth = (d: Date): string => `${toMonth(d).replace("-", "")}0100`;
 
-  return { start: toApiMonth(startDate), end: toApiMonth(endDate) };
+  return {
+    start: toApiMonth(startDate),
+    end: toApiMonth(endDate),
+    startMonth: toMonth(startDate),
+    endMonth: toMonth(endDate),
+  };
 }
 
 type CountryPageviewFailure = {
@@ -424,9 +443,18 @@ type CountryPageviewFailure = {
   reason: string;
 };
 
+type WikipediaRange = {
+  /** Bornes au format API Wikimedia (`YYYYMM0100`). */
+  start: string;
+  end: string;
+  /** Mêmes bornes au format `YYYY-MM`, pour `COUNTRY_POPULARITY.measurementPeriod`. */
+  startMonth: string;
+  endMonth: string;
+};
+
 async function fetchCountryPageviews(
   title: string,
-  range: { start: string; end: string },
+  range: WikipediaRange,
 ): Promise<
   | { kind: "ok"; views: number }
   | { kind: "not_found" }
@@ -540,11 +568,12 @@ async function fetchCountryPageviews(
 }
 
 async function fetchPageviewsByCountryCode(
-  countries: Country[],
+  countries: CountryRecord[],
   wikiTitles: Record<string, string>,
 ): Promise<{
   pageviews: Map<string, number>;
   failures: CountryPageviewFailure[];
+  range: WikipediaRange;
 }> {
   const range = getWikipediaRange();
   const pageviews = new Map<string, number>();
@@ -598,7 +627,7 @@ async function fetchPageviewsByCountryCode(
     `Done in ${formatDuration(Date.now() - startedAt)} — ${pageviews.size} ok, ${failures.length} failed`,
   );
 
-  return { pageviews, failures };
+  return { pageviews, failures, range };
 }
 
 // ─── Main ─────────────────────────────────────────────────────────────────────
@@ -690,9 +719,9 @@ async function main(): Promise<void> {
     }
   }
 
-  // 3. Transform to Country, merge REST Countries + gameplay fields, then corrections
+  // 3. Transform to CountryRecord, merge REST Countries + gameplay fields, then corrections
   log("Build records", "Building from world-countries and manual additions…");
-  const fromWC: Country[] = filtered.map((c) => {
+  const fromWC: CountryRecord[] = filtered.map((c) => {
     const rc = requireRestEnrichment(c.cca3, rcByCca3);
     const pop = rc.population;
     const { flagColors, flagSymbols, flagLayout } = flagFieldsForCode(
@@ -711,7 +740,7 @@ async function main(): Promise<void> {
       ...(searchAliases ?? []),
     ]);
 
-    const country: Country = {
+    const country: CountryRecord = {
       iso3: c.cca3,
       iso2: rc.iso2,
       names: { fr: nameFr, en: nameEn },
@@ -738,6 +767,7 @@ async function main(): Promise<void> {
         c.cca3,
         gameplayClassifications,
       ),
+      ...quantitativeFactsForCode(c.cca3, QUANTITATIVE_DATASETS),
     };
 
     applySourceCorrections(
@@ -749,9 +779,9 @@ async function main(): Promise<void> {
   });
 
   // 4. Merge manual additions (e.g. Kosovo, absent from world-countries).
-  const additions: Country[] = countryPatches.manualCountryAdditions.map(
+  const additions: CountryRecord[] = countryPatches.manualCountryAdditions.map(
     (add) => {
-      const merged: Country = { ...add };
+      const merged: CountryRecord = { ...add };
       const rc = rcByCca3.get(merged.iso3);
       if (rc) {
         if (merged.population <= 0) merged.population = rc.population;
@@ -775,16 +805,23 @@ async function main(): Promise<void> {
         merged.iso3,
         gameplayClassifications,
       );
+      Object.assign(
+        merged,
+        quantitativeFactsForCode(merged.iso3, QUANTITATIVE_DATASETS),
+      );
       return merged;
     },
   );
 
-  const result: Country[] = [...fromWC, ...additions];
+  const result: CountryRecord[] = [...fromWC, ...additions];
   log("Build records", `${result.length} countries ready`);
 
   // 5. Enrich with Wikipedia pageviews-based popularity index
-  const { pageviews: pageviewsByCode, failures: pageviewFailures } =
-    await fetchPageviewsByCountryCode(result, wikiTitles);
+  const {
+    pageviews: pageviewsByCode,
+    failures: pageviewFailures,
+    range: pageviewRange,
+  } = await fetchPageviewsByCountryCode(result, wikiTitles);
 
   if (pageviewFailures.length > 0) {
     for (const f of pageviewFailures) {
@@ -910,23 +947,42 @@ async function main(): Promise<void> {
   // 7. Sort alphabetically by code (stable output across runs)
   result.sort((a, b) => a.iso3.localeCompare(b.iso3));
 
-  // 8. Write
-  const outPath = resolve(root, "src/features/countries/data/countries.json");
-  const codesOutPath = resolve(
+  // 8. Écrire le snapshot content/ (identité + faits + popularité)
+  const snapshotDate = new Date().toISOString().slice(0, 10);
+  log("Output", "Writing content/countries/…");
+  writeCountrySnapshot(result, {
     root,
-    "src/features/countries/data/countryCodes.json",
-  );
-  log("Output", "Writing countries.json…");
-  writeFileSync(outPath, `${JSON.stringify(result, null, 2)}\n`, "utf-8");
-  writeFileSync(
-    codesOutPath,
-    `${JSON.stringify(
-      result.map((country) => country.iso3),
-      null,
-      2,
-    )}\n`,
-    "utf-8",
-  );
+    snapshotDate,
+    snapshotNote: "régénéré par pnpm build:countries",
+    generatedBy: "pnpm build:countries",
+    popularity: {
+      // La période interrogée, pas la date d'exécution : c'est elle qui dit sur
+      // quelles données le score de facilité admin est calibré.
+      snapshotId: `wikipedia-pageviews-${pageviewRange.startMonth}_${pageviewRange.endMonth}`,
+      measurementPeriod: {
+        startMonth: pageviewRange.startMonth,
+        endMonth: pageviewRange.endMonth,
+      },
+      collectedAt: snapshotDate,
+      algorithmVersion: "assignPopularity",
+    },
+  });
+
+  // 9. Re-dériver les listes de réponses des contraintes actives.
+  log("Output", "Running pnpm build:answers…");
+  execFileSync("pnpm", ["build:answers"], { cwd: root, stdio: "inherit" });
+
+  // 10. Normaliser tout `content/` au format Biome, en dernier pour couvrir le
+  // snapshot ET les listes régénérées. `writeCountrySnapshot` sérialise en JSON
+  // (clés entre guillemets, pas de virgule finale) : sans cette passe, la regen
+  // suivante réécrit les fichiers de bout en bout et le diff — seule vraie
+  // relecture du contenu — devient illisible.
+  log("Output", "Normalising content/ with Biome…");
+  execFileSync("pnpm", ["exec", "biome", "check", "--write", "content"], {
+    cwd: root,
+    stdio: "inherit",
+  });
+
   log(
     "Output",
     `Done in ${formatDuration(Date.now() - startedAt)} — ${result.length} countries written`,
@@ -934,6 +990,10 @@ async function main(): Promise<void> {
   log(
     "Output",
     `Pageviews: ${pageviewsByCode.size} fetched, ${pageviewFailures.length} fallback`,
+  );
+  log(
+    "Output",
+    "Relire le diff de content/ (catalog, facts, popularity, constraints/*/answers.ts).",
   );
 }
 

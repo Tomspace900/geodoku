@@ -1,6 +1,6 @@
-import { createRequire } from "node:module";
 import { expect, type Page } from "@playwright/test";
 import { ConvexHttpClient } from "convex/browser";
+import { COUNTRY_CATALOG } from "../content/countries/catalog";
 import { api } from "../convex/_generated/api";
 import {
   CELL_KEYS,
@@ -8,14 +8,12 @@ import {
   solveGrid as solveGridCore,
 } from "../src/features/game/testing/simulation";
 
-const require = createRequire(import.meta.url);
-
-type CountryRecord = { iso3: string; names: { en: string; fr: string } };
-const countries =
-  require("../src/features/countries/data/countries.json") as CountryRecord[];
+const NAME_BY_CODE: ReadonlyMap<string, string> = new Map(
+  COUNTRY_CATALOG.map((country) => [country.iso3, country.names.en]),
+);
 
 function getCountryName(code: string): string {
-  return countries.find((c) => c.iso3 === code)?.names.en ?? code;
+  return NAME_BY_CODE.get(code) ?? code;
 }
 
 // Après un guess réussi, le Drawer (vaul) verrouille `pointer-events` sur le

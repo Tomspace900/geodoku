@@ -1,0 +1,32 @@
+// @generated par pnpm build:answers — ne pas éditer à la main.
+import { defineAnswerSet } from "../defineAnswerSet";
+
+export default defineAnswerSet("language_french", [
+  "BDI",
+  "BEL",
+  "BEN",
+  "CAF",
+  "CAN",
+  "CHE",
+  "CIV",
+  "CMR",
+  "COD",
+  "COG",
+  "COM",
+  "DJI",
+  "FRA",
+  "GAB",
+  "GIN",
+  "GNQ",
+  "HTI",
+  "LUX",
+  "MCO",
+  "MDG",
+  "MUS",
+  "RWA",
+  "SEN",
+  "SYC",
+  "TCD",
+  "TGO",
+  "VUT",
+]);

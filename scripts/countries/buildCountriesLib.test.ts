@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import type { Country } from "../../src/features/countries/types.ts";
+import type { CountryRecord } from "../../content/countries/type.ts";
 import {
   applySourceCorrections,
   assignPopularity,
@@ -13,6 +13,8 @@ import {
   gameplayArraysForCode,
   mapLanguages,
   physicalFeaturesForCode,
+  type QuantitativeDatasets,
+  quantitativeFactsForCode,
   type RcEnrichment,
   type RcEnrichRow,
   rcEnrichmentMapFromRows,
@@ -20,7 +22,7 @@ import {
   toWikipediaTitle,
 } from "./buildCountriesLib.ts";
 
-function minimalCountry(code: string): Country {
+function minimalCountry(code: string): CountryRecord {
   return {
     iso3: code,
     iso2: code.slice(0, 2),
@@ -45,6 +47,16 @@ function minimalCountry(code: string): Country {
     geoTags: [],
     regime: "republic",
     physicalFeatures: [],
+    utcOffsetCount: 1,
+    lastVolcanicEruptionYear: null,
+    mountainAreaShare: null,
+    forestCoverShare: null,
+    urbanCentresOver1M: 0,
+    productionRanks: {},
+    coalElectricityShare: null,
+    formerSovereigns: [],
+    sovereigntyYear: null,
+    sovereigntyKind: null,
   };
 }
 
@@ -154,6 +166,41 @@ describe("applySourceCorrections", () => {
     expect(country.waterAccess).toBe("coastal");
     applySourceCorrections(country, { borders: ["NZL"] });
     expect(country.borders).toEqual(["NZL"]);
+    applySourceCorrections(country, { latitude: -2.88 });
+    expect(country.latitude).toBe(-2.88);
+  });
+
+  it("applies membership deltas after the REST read", () => {
+    const country = minimalCountry("TLS");
+    country.memberships = ["commonwealth"];
+    applySourceCorrections(country, { membershipsAdd: ["asean"] });
+    expect(country.memberships).toEqual(["commonwealth", "asean"]);
+  });
+
+  it("membershipsAdd is idempotent when the group is already present", () => {
+    const country = minimalCountry("IDN");
+    country.memberships = ["brics", "g20"];
+    applySourceCorrections(country, { membershipsAdd: ["brics"] });
+    expect(country.memberships).toEqual(["brics", "g20"]);
+  });
+
+  it("membershipsRemove drops the group and is a no-op when absent", () => {
+    const withOpec = minimalCountry("ARE");
+    withOpec.memberships = ["arab_league", "opec"];
+    applySourceCorrections(withOpec, { membershipsRemove: ["opec"] });
+    expect(withOpec.memberships).toEqual(["arab_league"]);
+
+    const withoutOpec = minimalCountry("QAT");
+    withoutOpec.memberships = ["arab_league"];
+    applySourceCorrections(withoutOpec, { membershipsRemove: ["opec"] });
+    expect(withoutOpec.memberships).toEqual(["arab_league"]);
+  });
+
+  it("leaves memberships untouched when no delta is given", () => {
+    const country = minimalCountry("FRA");
+    country.memberships = ["eu", "g7"];
+    applySourceCorrections(country, { latitude: 46 });
+    expect(country.memberships).toEqual(["eu", "g7"]);
   });
 });
 
@@ -162,6 +209,7 @@ describe("gameplayArraysForCode", () => {
     middleEast: ["SYR"],
     eventFifaWcHost: ["FRA"],
     eventSummerOlympicsHost: ["FRA", "GRC"],
+    eventWinterOlympicsHost: ["FRA"],
     monarchy: [],
     equatorCrosser: [],
     mediterraneanCoast: [],
@@ -173,6 +221,7 @@ describe("gameplayArraysForCode", () => {
     atlanticCoast: [],
     pacificCoast: [],
     indianOceanCoast: [],
+    arcticCoast: [],
   };
   const rc: RcEnrichment = {
     iso2: "FR",
@@ -185,7 +234,11 @@ describe("gameplayArraysForCode", () => {
 
   it("stacks all matching tags for one code", () => {
     const g = gameplayArraysForCode("FRA", classifications, rc);
-    expect(g.events).toEqual(["fifa_wc_host", "summer_olympics_host"]);
+    expect(g.events).toEqual([
+      "fifa_wc_host",
+      "summer_olympics_host",
+      "winter_olympics_host",
+    ]);
   });
 
   it("adds middle_east geo tag when listed", () => {
@@ -211,6 +264,7 @@ describe("regimeForCode", () => {
     middleEast: [],
     eventFifaWcHost: [],
     eventSummerOlympicsHost: [],
+    eventWinterOlympicsHost: [],
     monarchy: ["GBR", "JPN"],
     equatorCrosser: [],
     mediterraneanCoast: [],
@@ -222,6 +276,7 @@ describe("regimeForCode", () => {
     atlanticCoast: [],
     pacificCoast: [],
     indianOceanCoast: [],
+    arcticCoast: [],
   };
 
   it("returns monarchy when code is listed", () => {
@@ -240,6 +295,7 @@ describe("physicalFeaturesForCode", () => {
     middleEast: [],
     eventFifaWcHost: [],
     eventSummerOlympicsHost: [],
+    eventWinterOlympicsHost: [],
     monarchy: [],
     equatorCrosser: ["ECU", "BRA"],
     mediterraneanCoast: ["FRA", "ITA"],
@@ -251,6 +307,7 @@ describe("physicalFeaturesForCode", () => {
     atlanticCoast: ["PRT"],
     pacificCoast: ["CHL", "JPN"],
     indianOceanCoast: ["KEN", "IND"],
+    arcticCoast: ["NOR"],
   };
 
   it("stacks all matching physical features", () => {
@@ -279,10 +336,171 @@ describe("physicalFeaturesForCode", () => {
     expect(physicalFeaturesForCode("KEN", classifications)).toEqual([
       "indian_ocean_coast",
     ]);
+    expect(physicalFeaturesForCode("NOR", classifications)).toEqual([
+      "arctic_coast",
+    ]);
   });
 
   it("returns empty when no features listed", () => {
     expect(physicalFeaturesForCode("POL", classifications)).toEqual([]);
+  });
+});
+
+describe("quantitativeFactsForCode", () => {
+  const datasets: QuantitativeDatasets = {
+    civilTimeOffsets: {
+      RUS: {
+        value: ["UTC+02:00", "UTC+03:00", "UTC+12:00"],
+        year: 2026,
+        referenceDate: "2026-01-15",
+      },
+      DEU: {
+        value: ["UTC+01:00"],
+        year: 2026,
+        referenceDate: "2026-01-15",
+      },
+    },
+    holoceneVolcanoes: {
+      source: "x",
+      extractedAt: "2026-09-10",
+      countries: {
+        ISL: [
+          { name: "Hekla", lastEruptionYear: 2000 },
+          { name: "Snaefellsjokull", lastEruptionYear: -1750 },
+        ],
+        DEU: [{ name: "West Eifel", lastEruptionYear: null }],
+      },
+    },
+    mountainArea: { CHE: { value: 65.4, year: 2021 } },
+    forestCover: {
+      source: "x",
+      referenceYear: 2023,
+      countries: { FIN: 73.7 },
+    },
+    urbanCentres: {
+      sourceVersion: "x",
+      referenceYear: 2025,
+      populationThreshold: 1_000_000,
+      countries: {
+        CHN: [
+          { name: "a", population: 2_000_000, referenceYear: 2025 },
+          { name: "b", population: 1_500_000, referenceYear: 2025 },
+          { name: "c", population: 1_100_000, referenceYear: 2025 },
+        ],
+      },
+    },
+    agriculturalProduction: {
+      products: {
+        wheat: {
+          source: "x",
+          referenceYears: [2022, 2023, 2024],
+          unit: "tonnes",
+          rankings: [
+            { countryCode: "CHN", rank: 1, value: 100 },
+            { countryCode: "FIN", rank: 10, value: 10 },
+          ],
+        },
+      },
+    },
+    energyProduction: {
+      source: "x",
+      sourceUpdatedAt: "2026-07-02T00:00:00Z",
+      products: {
+        crude_oil: {
+          referenceYear: 2025,
+          unit: "thousand_barrels_per_day",
+          rankings: [
+            { countryCode: "RUS", rank: 2, value: 9000 },
+            { countryCode: "CHE", rank: 16, value: 1 },
+          ],
+        },
+      },
+    },
+    coalElectricity: {
+      source: "x",
+      referenceYear: 2024,
+      countries: { CHN: 57.77, FIN: 1.01 },
+    },
+    sovereignty: {
+      sourceCommit: "x",
+      countries: {
+        DZA: {
+          kind: "independence",
+          year: 1962,
+          formerSovereigns: ["france"],
+          sourceDescription: "1962 (from France)",
+        },
+      },
+    },
+  };
+
+  it("reduces datasets to per-country scalars, shares as 0–1 fractions", () => {
+    expect(quantitativeFactsForCode("RUS", datasets)).toEqual({
+      utcOffsetCount: 3,
+      lastVolcanicEruptionYear: null,
+      mountainAreaShare: null,
+      forestCoverShare: null,
+      urbanCentresOver1M: 0,
+      productionRanks: { crude_oil: 2 },
+      coalElectricityShare: null,
+      formerSovereigns: [],
+      sovereigntyYear: null,
+      sovereigntyKind: null,
+    });
+    expect(quantitativeFactsForCode("CHE", datasets).mountainAreaShare).toBe(
+      0.654,
+    );
+    expect(quantitativeFactsForCode("FIN", datasets).forestCoverShare).toBe(
+      0.737,
+    );
+    // Le max des éruptions datées, pas la première entrée du tableau.
+    expect(
+      quantitativeFactsForCode("ISL", datasets).lastVolcanicEruptionYear,
+    ).toBe(2000);
+    // Un pays sans aucune éruption datée reste `null`, jamais 0.
+    expect(
+      quantitativeFactsForCode("DEU", datasets).lastVolcanicEruptionYear,
+    ).toBeNull();
+    expect(quantitativeFactsForCode("CHN", datasets).urbanCentresOver1M).toBe(
+      3,
+    );
+  });
+
+  it("maps source product keys to jouable keys and caps ranks at 15", () => {
+    expect(quantitativeFactsForCode("CHN", datasets).productionRanks).toEqual({
+      wheat: 1,
+    });
+    // CHE est rang 16 en pétrole → au-delà du cap, écarté.
+    expect(quantitativeFactsForCode("CHE", datasets).productionRanks).toEqual(
+      {},
+    );
+    expect(quantitativeFactsForCode("FIN", datasets).productionRanks).toEqual({
+      wheat: 10,
+    });
+  });
+
+  it("reads coalElectricityShare as a 0–1 fraction, null when uncovered", () => {
+    expect(quantitativeFactsForCode("CHN", datasets).coalElectricityShare).toBe(
+      0.5777,
+    );
+    expect(quantitativeFactsForCode("ZZZ", datasets).coalElectricityShare).toBe(
+      null,
+    );
+  });
+
+  it("defaults utcOffsetCount to 1 when the country is absent", () => {
+    expect(quantitativeFactsForCode("ZZZ", datasets).utcOffsetCount).toBe(1);
+  });
+
+  it("copies the sovereignty event verbatim, [] / null when uncovered", () => {
+    const dza = quantitativeFactsForCode("DZA", datasets);
+    expect(dza.formerSovereigns).toEqual(["france"]);
+    expect(dza.sovereigntyYear).toBe(1962);
+    expect(dza.sovereigntyKind).toBe("independence");
+    const zzz = quantitativeFactsForCode("ZZZ", datasets);
+    expect(zzz.formerSovereigns).toEqual([]);
+    expect(zzz.sovereigntyYear).toBe(null);
+    expect(zzz.sovereigntyKind).toBe(null);
   });
 });
 

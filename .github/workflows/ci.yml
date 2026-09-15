@@ -30,6 +30,7 @@ jobs:
       - run: pnpm install --frozen-lockfile
       - run: pnpm lint # biome check + tsc --noEmit
       - run: pnpm test # vitest
+      - run: pnpm check:content
       - run: pnpm check:design-system
       - run: pnpm check:bundle
       - run: pnpm simulate:scheduling --seed=20260714

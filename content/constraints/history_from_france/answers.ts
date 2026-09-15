@@ -1,0 +1,32 @@
+// @generated par pnpm build:answers — ne pas éditer à la main.
+import { defineAnswerSet } from "../defineAnswerSet";
+
+export default defineAnswerSet("history_from_france", [
+  "BEN",
+  "BFA",
+  "CAF",
+  "CIV",
+  "CMR",
+  "COG",
+  "COM",
+  "DJI",
+  "DZA",
+  "GAB",
+  "GIN",
+  "HTI",
+  "KHM",
+  "LAO",
+  "LBN",
+  "MAR",
+  "MDG",
+  "MLI",
+  "MRT",
+  "NER",
+  "SEN",
+  "SYR",
+  "TCD",
+  "TGO",
+  "TUN",
+  "VNM",
+  "VUT",
+]);

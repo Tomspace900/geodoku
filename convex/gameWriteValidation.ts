@@ -1,7 +1,5 @@
 import { ConvexError } from "convex/values";
-import countryCodesJson from "../src/features/countries/data/countryCodes.json" with {
-  type: "json",
-};
+import { isCountryCode } from "../content/countries/countryCodes";
 import {
   GRID_CELL_COUNT,
   STARTING_LIVES,
@@ -11,8 +9,6 @@ import type { Doc } from "./_generated/dataModel";
 import type { MutationCtx, QueryCtx } from "./_generated/server";
 import { getGridAnswers } from "./gridData";
 import { todayUTC } from "./lib/dates";
-
-const PLAYABLE_COUNTRY_CODES = new Set(countryCodesJson as string[]);
 
 const UUID_PATTERN =
   /^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
@@ -49,7 +45,7 @@ export function assertClientId(clientId: string): void {
 }
 
 export function assertCountryCode(countryCode: string): void {
-  if (!PLAYABLE_COUNTRY_CODES.has(countryCode)) {
+  if (!isCountryCode(countryCode)) {
     throw new ConvexError("Invalid countryCode");
   }
 }

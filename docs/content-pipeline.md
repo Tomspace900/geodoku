@@ -1,50 +1,207 @@
 # Geodoku — Pipeline contenu (pays, contraintes, pool)
 
-Référence détaillée pour les changements de contraintes, pays et tuning du générateur. Résumé agent dans `AGENTS.md` §3.
+Référence détaillée pour les changements de contraintes, de faits pays et le
+tuning du générateur. Résumé agent dans `AGENTS.md` §3.
+
+## Le modèle en un coup d'œil
+
+```
+ENTRÉES DE CURATION (éditées à la main)
+  scripts/countries/countryPatches.ts    # corrections, alias, classifications gameplay
+  scripts/countries/flagData.json        # table de vérité drapeaux (couleurs, symboles, disposition)
+        │  pnpm build:countries   (RÉSEAU — world-countries npm + REST Countries v5 + Wikimedia)
+        ▼
+SNAPSHOT (content/countries/ — généré, committé, daté par FACTS_SNAPSHOT.date)
+  catalog.ts       # identité joueur : iso2/3, noms fr/en, alias, emoji drapeau — CHARGÉ dans le bundle
+  countryCodes.ts  # 197 codes + type CountryCode + garde isCountryCode
+  facts.ts         # FACTS_SNAPSHOT + COUNTRY_FACTS : faits gameplay — HORS bundle
+  popularity.ts    # snapshot pageviews Wikipédia (percentiles) — analyse de difficulté admin
+        │  pnpm build:answers   (dérivation PURE, hors-ligne)
+        ▼
+LISTES DÉRIVÉES (content/constraints/<id>/answers.ts)
+  77 actives   # en-tête @generated — DERIVATIONS[id] appliqué aux 197 pays
+  12 archivées # figées à la main, sans en-tête — conservées pour le replay
+  8 en réserve # SOURCE.md seul, sans answers.ts — conçues puis écartées
+        │  imports relatifs (jamais l'alias @/)
+        ▼
+RUNTIME + OUTILLAGE
+  matchesConstraint(id, iso3)  # teste l'appartenance à la liste versionnée
+```
+
+**Principe.** La vérité d'une contrainte **active** est
+`content/constraints/derivations.ts` appliqué à `content/countries/facts.ts` :
+un prédicat pur, une donnée datée. `answers.ts` en est la **matérialisation
+générée**, committée et relue en diff — jamais éditée à la main. Les grilles
+**déjà publiées** ne dépendent pas de ce contenu : elles portent leur propre
+snapshot `gridAnswers`. Le contenu courant ne sert qu'à générer les candidats
+**futurs** et à expliquer quelle contrainte a échoué.
 
 ## Contraintes
 
-- **60 contraintes / 18 catégories** — [`src/features/game/logic/constraints.ts`](../src/features/game/logic/constraints.ts) : `continent`, `water_access`, `borders_count`, `borders_pivot`, `area`, `population`, `language`, `flag`, `latitude`, `subregion`, `event`, `political`, `regime`, `physical`, `density`, `nature`, `society`, `ocean`.
-- Seuils quantitatifs remplacés par **comparaisons à un pays-repère** (seuil = valeur live du repère dans `countries.json`).
+- **77 actives / 22 catégories** — [`src/features/game/logic/constraints.ts`](../src/features/game/logic/constraints.ts)
+  porte l'interface (`id`, `labelKey`, `category`), **sans prédicat**. La
+  dérivation vit dans [`content/constraints/derivations.ts`](../content/constraints/derivations.ts).
+- **Réserve** (6) : contraintes conçues, sourcées, puis écartées du jeu pour
+  raison éditoriale (pas assez fun, redondantes). Le dossier garde son
+  `SOURCE.md` **sans** `answers.ts` et l'id sort du registre actif. Réactivation :
+  réintroduire dans `CONSTRAINTS` + `derivations.ts` + i18n, puis
+  `pnpm build:answers`. À distinguer des **archivées**, qui ont été jouées et
+  dont la liste figée sert le replay.
+- Seuils quantitatifs = **comparaisons à un pays-repère** : `factsOf("FRA").areaKm2`
+  lit la valeur live du repère dans le snapshot (même sémantique que l'ancien
+  `ref("FRA")`).
 - Sweet-spot : 3..15 pays valides par case (`MIN_CELL_SIZE` / `MAX_CELL_SIZE`).
+- Chaque contrainte porte un [`SOURCE.md`](../content/constraints/) : définition
+  jouable, **dérivation** (champ du snapshot + seuil/pivot), cas limites. Le
+  socle partagé est [`content/constraints/SOURCES.md`](../content/constraints/SOURCES.md).
 
 ### Archivage (critique)
 
-**Ne jamais supprimer une contrainte — l'archiver** dans `ARCHIVED_CONSTRAINTS`. D'anciennes grilles et le replay ont besoin du label **et** du prédicat.
+**Ne jamais supprimer une contrainte — l'archiver.** D'anciennes grilles et le
+replay ont besoin du **label** ; la liste figée sert de repli.
 
-- `CONSTRAINTS` = générables uniquement (générateur, scheduler).
-- `CONSTRAINT_BY_ID` = actif + archivé (jeu, admin, replay).
+- `CONSTRAINTS` = actives uniquement (générateur, scheduler).
+- `CONSTRAINT_BY_ID` = actives + archivées (jeu, admin, replay).
+- `CONSTRAINT_IDS` / `ARCHIVED_CONSTRAINT_IDS` dans
+  [`content/constraints/index.ts`](../content/constraints/index.ts) ; l'archivage
+  se déclare **aux deux endroits** (`ARCHIVED_CONSTRAINT_IDS` + `ARCHIVED_CONSTRAINTS`).
 - La clé i18n seule ne suffit pas. Le test `translate` couvre actif + archivé.
 
-## Pays (`countries.json`)
+### Modifier une contrainte
 
-**Build :** `pnpm build:countries` — pageviews Wikimedia EN, séquentiel + retry 429. Échec si JSON incomplet. Overrides : [`scripts/countries/countryPatches.ts`](../scripts/countries/countryPatches.ts) (`wikipediaTitlesByIso3`, NATO, Commonwealth, monarchies, pics…). Tests : [`buildCountriesLib.test.ts`](../scripts/countries/buildCountriesLib.test.ts), [`countryPatches.test.ts`](../scripts/countries/countryPatches.test.ts) et [`validateCountryCatalog.test.ts`](../scripts/countries/validateCountryCatalog.test.ts).
+Deux leviers, jamais `answers.ts` à la main :
 
-**`popularityIndex`** : [0, 1], percentile rank des vues. Fallback médiane 0,5 si pas de pageviews.
+1. **La définition change** (seuil, champ, pivot) → éditer
+   `content/constraints/derivations.ts` (et `CONSTRAINTS` si libellé/catégorie
+   bougent). Ajouter une bascule de seuil au test
+   [`content/constraints/__tests__/derivations.test.ts`](../content/constraints/__tests__/derivations.test.ts)
+   si le cas est sensible.
+2. **Une donnée est fausse ou périmée** → corriger l'entrée de curation
+   (`scripts/countries/countryPatches.ts` ou `flagData.json`), ou attendre la
+   prochaine `pnpm build:countries` qui rafraîchit le snapshot.
 
-**Drapeaux** — table curée [`scripts/countries/flagData.json`](../scripts/countries/flagData.json), pas d'heuristique depuis `flags.alt`. Erreur de drapeau → patcher `flagData.json` puis régénérer. Gameplay : 5 contraintes `flag` (`flagSymbols` + `flag_two_colors`).
+Puis, dans l'ordre :
+
+```bash
+pnpm build:answers          # régénère les 77 answers.ts actifs (hors-ligne)
+git diff content/constraints # relire le diff ISO3 pays par pays
+pnpm check:content           # cohérence + obsolescence + provenance
+pnpm test
+pnpm simulate:scheduling     # le pool doit rester sain (PASS/FAIL)
+```
+
+Si OK : « Regénérer le pool » dans `/admin` (`refreshPool`), y compris sur une
+copie locale obtenue par `pnpm dump:prod`. Les grilles déjà publiées restent
+protégées par `gridAnswers`.
+
+### Réviser un fait pays
+
+`pnpm build:countries` (`tsx --env-file=.env.local`) : world-countries npm pour
+la liste jouable / noms / langues / superficie / frontières / centroïde, REST
+Countries v5 pour population / capitales / conduite / adhésions, Wikimedia pour
+les pageviews. Le script **valide en mémoire avant d'écrire** ce qu'il a lui-même
+lu du réseau (197 pays, invariants de champ, `MAX_MISSING_PAGEVIEWS`) — un échec
+réseau n'écrit rien. Les dix champs dérivés des datasets échappent à cette passe :
+ils sont jugés après coup par `check:content` (cf. plus bas).
+Il réécrit les quatre fichiers `content/countries/`, met `FACTS_SNAPSHOT.date`
+au jour, enchaîne `pnpm build:answers`, puis **normalise tout `content/` avec
+Biome** (en dernier, pour couvrir snapshot et listes régénérées).
+La passe Biome n'est pas cosmétique : le snapshot est sérialisé en JSON (clés
+entre guillemets, pas de virgule finale) alors que le committé est au format
+Biome — sans elle, chaque regen réécrit `catalog.ts`, `facts.ts` et
+`popularity.ts` de bout en bout et le diff, seule vraie relecture du contenu,
+devient illisible. `COUNTRY_POPULARITY.measurementPeriod` porte la **fenêtre
+réellement interrogée** (12 mois glissants jusqu'au dernier mois complet), pas la
+date d'exécution. Provenance par famille de champs :
+[`content/countries/SOURCE.md`](../content/countries/SOURCE.md).
+
+**Drapeaux** — table curée [`scripts/countries/flagData.json`](../scripts/countries/flagData.json),
+pas d'heuristique. Erreur de drapeau → patcher `flagData.json` puis régénérer.
+Gameplay : 5 contraintes `flag` (`flagSymbols` + `flag_two_colors` archivée).
+
+**Datasets quantitatifs** — montés une seule fois dans
+[`scripts/countries/data/datasets.ts`](../scripts/countries/data/datasets.ts),
+lu à la fois par `build:countries` et par la garde de fraîcheur : deux
+assemblages séparés dériveraient, et la garde finirait par valider un snapshot
+que le build ne produit plus.
+
+### Contrôles automatiques
+
+`pnpm check:content` (job CI `quality`) vérifie :
+
+- comptes attendus (197 pays / 77 actives / 12 archivées / 8 en réserve) ;
+- catalogue ↔ `COUNTRY_CODES` ↔ popularité synchronisés, tri strict, unicité ;
+- `answers.ts` : non vides, triés, ISO3 connus, tout pays couvert par ≥ 1 liste ;
+- **obsolescence** : re-dérive les 77 actives depuis `COUNTRY_FACTS` et échoue
+  (`+[…] -[…]` + « lancer pnpm build:answers ») si un `answers.ts` committé ne
+  correspond plus ;
+- **fraîcheur des faits dérivés** : l'étage du dessus — re-fusionne les datasets
+  de `scripts/countries/data/` et échoue (« lancer pnpm build:countries ») si
+  l'un des dix champs qu'ils produisent (`utcOffsetCount`, `lastVolcanicEruptionYear`,
+  `mountainAreaShare`, `forestCoverShare`, `urbanCentresOver1M`,
+  `productionRanks`, `coalElectricityShare`, `formerSovereigns`,
+  `sovereigntyYear`, `sovereigntyKind`) ne correspond plus à `facts.ts` : dataset
+  révisé sans regen, ou `facts.ts` édité à la main malgré son en-tête
+  `@generated`. Les champs venus du réseau (population, capitales, adhésions,
+  pageviews) restent hors de portée — seule une regen les vérifie ;
+- **seam terminal** : aucun module de `content/` n'importe via l'alias `@/` ni
+  ne remonte hors du dossier ([`validateContentSeam.ts`](../scripts/content/validateContentSeam.ts)).
+  Ni `tsx` ni Vite ne feraient échouer un `@/…` — ils résolvent les `paths` du
+  tsconfig — et le typecheck Convex ne couvre que la part de `content/` qu'il
+  importe : sans cette garde, un `@/` dans `catalog.ts` ou `derivations.ts`
+  traverse la CI en vert ;
+- **provenance** : présence d'un `SOURCE.md` par contrainte, frontmatter
+  cohérent (`constraint_id` == dossier, `status` == actif/archivé réel,
+  `checked_at`/`review_after` en `YYYY-MM-DD`), et présence des trois documents
+  de socle.
+
+Les invariants par pays vivent dans
+[`scripts/countries/validateCountryCatalog.ts`](../scripts/countries/validateCountryCatalog.ts)
+(`validateCountryCatalog` + `validateCountryFacts`), la fraîcheur des faits
+dérivés dans [`scripts/countries/validateDatasetFacts.ts`](../scripts/countries/validateDatasetFacts.ts)
+(`validateDatasetFacts`), l'obsolescence des listes dans
+[`scripts/content/validateDerivationFreshness.ts`](../scripts/content/validateDerivationFreshness.ts)
+et le seam dans [`scripts/content/validateContentSeam.ts`](../scripts/content/validateContentSeam.ts)
+— tous appelés par `check:content` et couverts par leurs propres tests, dans les
+deux sens (vert sur le contenu committé, rouge sur une divergence injectée).
+
+⚠️ **`build:countries` ne rejoue pas ces validateurs** : il a sa propre passe
+inline sur les champs réseau, et les dix champs dérivés des datasets ne sont
+jugés qu'ensuite, par `check:content`. On écrit, puis on vérifie.
 
 ## Difficulté et facilité
 
-**Difficulté prédite supprimée (juin 2026)** — `computeCellDifficulty`, `Constraint.difficulty`, etc. retirés.
+**Difficulté prédite supprimée (juin 2026)** — `computeCellDifficulty`,
+`Constraint.difficulty`, etc. retirés.
 
-**Prédicteur validé : notoriété des solutions** — `topKPopularity(3)` dans [`popularity.ts`](../src/features/countries/logic/popularity.ts). Admin : score facilité 0–100 (vert = connu), calculé live depuis `validAnswers`, jamais stocké. Re-tuning : `pnpm analyze:observed` quand le volume de jours a ~doublé.
+**Prédicteur validé : notoriété des solutions** — `topKPopularity(3)` dans
+[`popularity.ts`](../src/features/countries/logic/popularity.ts). Admin : score
+facilité 0–100 (vert = connu), calculé live depuis `validAnswers`, jamais
+stocké. Re-tuning : `pnpm analyze:observed` quand le volume de jours a ~doublé.
 
 ## Tunables (`gridConstants.ts`)
 
-Centralise **tous** les seuils : hard filters, pool, poids scheduler, garde cold-start, `POOL_LOW_THRESHOLD`. Aucun magic number ailleurs.
+Centralise **tous** les seuils : hard filters, pool, poids scheduler, garde
+cold-start, `POOL_LOW_THRESHOLD`. Aucun magic number ailleurs.
 
 **Boucle de calibration :**
 
 1. Ajuster `convex/lib/gridConstants.ts`
 2. `pnpm simulate:scheduling` — **validateur PASS/FAIL** (pool + 30 j + cold-start)
-3. Si OK : « Regénérer le pool » dans `/admin`, y compris sur la copie locale obtenue par `pnpm dump:prod`. `wipe` + `seed` est réservé à un environnement dev personnel vide ou jetable.
-4. `pnpm analyze:pool` — audit qualité (représentation, redondance intra-grille, rendu grilles, concentration)
+3. Si OK : « Regénérer le pool » dans `/admin`, y compris sur la copie locale
+   obtenue par `pnpm dump:prod`. `wipe` + `seed` est réservé à un environnement
+   dev personnel vide ou jetable.
+4. `pnpm analyze:pool` — audit qualité (représentation, redondance intra-grille,
+   rendu grilles, concentration)
 
 ## Sur-représentation des contraintes
 
-Auto-régulée par le générateur (`MAX_CELL_SIZE`). Max observé ~24 % (`flag_has_star`). **Ne pas ajouter** de pondérage usage ou `MAX_CONSTRAINT_SHARE` — testés et rejetés (juin 2026).
+Auto-régulée par le générateur (`MAX_CELL_SIZE`). Max observé ~24 %
+(`flag_has_star`). **Ne pas ajouter** de pondérage usage ou `MAX_CONSTRAINT_SHARE`
+— testés et rejetés (juin 2026).
 
-**À ne pas confondre :** `MAX_CONSTRAINT_OVERLAP` = redondance **intra-grille** (seuil 0,85, coefficient `|A∩B|/min(|A|,|B|)`), pas la part dans le pool.
+**À ne pas confondre :** `MAX_CONSTRAINT_OVERLAP` = redondance **intra-grille**
+(seuil 0,85, coefficient `|A∩B|/min(|A|,|B|)`), pas la part dans le pool.
 
-Risque inverse : seeds groupés (Méditerranée, monarchie) qui n'atteignent pas leur cible — borné par `MAX_OVERLAP_BETWEEN_GRIDS`, pas `MAX_ATTEMPTS_PER_SEED`.
+Risque inverse : seeds groupés (Méditerranée, monarchie) qui n'atteignent pas
+leur cible — borné par `MAX_OVERLAP_BETWEEN_GRIDS`, pas `MAX_ATTEMPTS_PER_SEED`.

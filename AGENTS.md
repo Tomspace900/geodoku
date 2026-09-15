@@ -49,6 +49,10 @@ Barème tranché sur données réelles. La rareté d'une case s'appuie sur la **
 ## 3. Architecture
 
 ```
+content/                  # snapshot de contenu versionné, TERMINAL (n'importe rien de src/convex)
+  README.md               # carte du dossier + modèle facts → dérivation → listes
+  countries/              # catalog (identité) + countryCodes + facts + popularity (générés, datés) + SOURCE.md
+  constraints/            # index (registre typé) + derivations (prédicats) + SOURCES.md + <id>/{answers.ts, SOURCE.md}
 src/features/<feature>/   # game, archive, countries, admin, legal, errors
   logic/                  # pur, testé, zéro React/Convex
   testing/                # simulation partagée par Vitest/E2E/scripts
@@ -56,6 +60,7 @@ src/features/<feature>/   # game, archive, countries, admin, legal, errors
   components/             # consomment l'état, dispatchent des actions
 convex/                   # schema, grids, guesses, scheduling, seed, crons
 convex/lib/               # gridGenerator, gridScheduler, gridConstants (purs)
+scripts/content/            # dérivation & garde du snapshot content/ (check-content, build-answers, emit)
 scripts/ci/                 # exécutés en CI (check-e2e-convex-url)
 scripts/countries/          # pipeline contenu pays (build-countries, flagData, patches)
 scripts/local/              # outillage local versionné (analytics, simulate, sync gh…)
@@ -71,13 +76,23 @@ e2e/                      # Playwright — helpers.ts + *.shared|desktop|mobile.
 - Hooks → seule couche logique + Convex + React.
 - Composants → pas de calcul significatif ; reducer + dispatch.
 - Pas de copie `src/` ↔ `convex/lib/` sauf [`convex/lib/dates.ts`](convex/lib/dates.ts) qui réexporte [`src/lib/dates.ts`](src/lib/dates.ts). `gridGenerator`, `gridScheduler`, `gridConstants` importent depuis `src/`.
+- `content/` est **terminal** (n'importe rien de `src/`, `convex/`, features), et à l'intérieur du dossier tous les imports sont **relatifs internes**. La règle est vérifiée par `validateContentSeam` (`pnpm check:content`) : ni `tsx` ni Vite ne la feraient échouer — ils résolvent les `paths` du tsconfig — et le typecheck Convex ne couvre que la part de `content/` qu'il importe. Les imports **vers** `content/` depuis `src/`, `convex/`, `scripts/` et `e2e/` sont eux aussi toujours relatifs (`../../content/…`), jamais l'alias `@/` : le bundler Convex ne résout pas les `paths`. `src/features/countries/types.ts` réexporte `Country` depuis `content/countries/type` pour garder l'import familier `@/features/countries/types` ; les scripts du pipeline, en **amont** de `content/`, importent `content/countries/type` directement.
 - **Vies = union discriminée** `LivesState` ([`types.ts`](src/features/game/types.ts)), jamais un compteur nu : `{kind:"limited",remaining}` en daily, `{kind:"unlimited",failedAttempts}` en entraînement. Toute lecture passe par [`logic/lives.ts`](src/features/game/logic/lives.ts) — le reducer, le score et la persistance n'ont donc **aucune branche de mode**. Le format persisté du daily garde en revanche un `remainingLives` numérique (compatibilité du shadow v2).
 - `archive` dépend de `game` (reducer, validation, composants de grille), jamais l'inverse. Les sanitizers d'entraînement vivent dans `game/logic/sanitizePersisted.ts` et prennent des **primitives**, pour que le domaine du jeu ignore la feature `archive`.
 
 **Contenu (pays, contraintes, pool).** Règles critiques :
 
 - **Archiver, jamais supprimer** une contrainte (`ARCHIVED_CONSTRAINTS` + `CONSTRAINT_BY_ID` pour replay).
-- Changement de contrainte → `pnpm simulate:scheduling` puis régénération du pool via `/admin` si OK.
+- Une contrainte **active** n'a pas de prédicat runtime : sa liste ISO3 est **dérivée** de [`content/constraints/derivations.ts`](content/constraints/derivations.ts) sur le snapshot de faits, **générée** par `pnpm build:answers` dans `content/constraints/<id>/answers.ts`, **committée** et relue en diff. `matchesConstraint(id, iso3)` lit cette liste. `pnpm check:content` (job `quality`) échoue si un `answers.ts` est obsolète.
+- Les 12 listes **archivées** sont figées à la main (pas d'en-tête `@generated`), hors dérivation.
+- **Périmètre territorial** : un pays inclut son territoire **pleinement intégré**, et rien d'autre (DOM français, Canaries, Açores, Jan Mayen, îles BES… ; pas les territoires britanniques d'outre-mer, la Polynésie, le Groenland ni Heard-et-MacDonald). Règle commune à toutes les familles géographiques — volcans, océans, fuseaux, relief — écrite une fois dans [`content/constraints/SOURCES.md`](content/constraints/SOURCES.md) et qui prime sur le découpage de la source. Sans elle, chaque dataset imposait sa convention : le Royaume-Uni « possédait un volcan » par Tristan da Cunha pendant que la France n'avait qu'un fuseau horaire.
+- Contraintes **en réserve** (`RESERVE_CONSTRAINT_IDS`, [`content/constraints/index.ts`](content/constraints/index.ts)) : conçues et sourcées mais écartées du jeu actif (arbitrage gameplay). **Ni** générables **ni** rejouables — volontairement hors de `ConstraintId` (un id de réserve dans une grille échoue bruyamment) ; seul leur `SOURCE.md` subsiste (`status: archived`, sans `answers.ts`). `check:content` garde présence + absence d'`answers.ts` + non-chevauchement. Réactivation : réintroduire dans `CONSTRAINTS` + `derivations.ts` + i18n, puis `pnpm build:answers`.
+- Chaque contrainte porte un `SOURCE.md` (définition, dérivation, cas limites) ; le socle (`constraints/SOURCES.md`, `content/README.md`, `content/countries/SOURCE.md`) porte le principe et la provenance par famille de champs. `check:content` vérifie présence et frontmatter.
+- Deux leviers pour réviser une contrainte active : la **définition** change → `derivations.ts` (+ `CONSTRAINTS`) ; une **donnée** est fausse → curation (`countryPatches.ts`, `flagData.json`) ou `pnpm build:countries`. Jamais `answers.ts` à la main.
+- `content/countries/facts.ts` est **généré** : les dix champs dérivés des datasets de `scripts/countries/data/` (fuseaux, volcans, relief, forêt, centres urbains, rangs de production, charbon, souveraineté) sont re-fusionnés par `check:content` ([`validateDatasetFacts.ts`](scripts/countries/validateDatasetFacts.ts)) — un dataset révisé sans `pnpm build:countries`, ou une édition à la main, échoue en CI. Les champs venus du réseau (population, capitales, adhésions, pageviews) n'ont d'autre juge que la regen.
+- `formerSovereigns` est une lecture **à la main** du texte libre du Factbook, et deux revues successives l'ont faite à l'œil en ratant des cas. [`validateSovereigntySources.ts`](scripts/countries/validateSovereigntySources.ts) (`check:content`) échoue si une `sourceDescription` nomme une des neuf puissances tracées sans la porter dans `formerSovereigns` : compléter la curation, ou inscrire le cas dans `ACCEPTED_OMISSIONS` **avec son motif**. Y verser un échec sans motif viderait la garde de son sens.
+- Après un levier : `pnpm build:answers` → relire le diff ISO3 → `pnpm simulate:scheduling` → régénération du pool via `/admin` si OK.
+- Le snapshot `content/countries/` (identité, faits, popularité) est régénéré par `pnpm build:countries` (réseau), qui enchaîne `build:answers`.
 - Drapeaux → [`scripts/countries/flagData.json`](scripts/countries/flagData.json) curé, pas d'heuristique.
 
 Détail complet : [`docs/content-pipeline.md`](docs/content-pipeline.md).
@@ -126,7 +141,7 @@ Philosophie **Editorial Intellectual** (NYT Games) : spacieux, typographique, to
 
 **Crons** ([`convex/crons.ts`](convex/crons.ts)) : `ensureDailyGrids` (horaire) ; `reconcilePoolAndSchedule` (03:00 UTC si stock bas, hors migration legacy explicite).
 
-**Endpoints jeu** ([`convex/grids.ts`](convex/grids.ts), [`guesses.ts`](convex/guesses.ts)) : `getTodayGrid`, `submitTodayGuess`, `recordTodayFailedGuess`, `getTodayGuessDistribution`, `recordTodayGameEnd`, `submitTodayGridFeedback`. Chaque écriture reçoit un `operationId` idempotent ; les anciennes interfaces restent transitoirement disponibles pendant le rollout.
+**Endpoints jeu** ([`convex/grids.ts`](convex/grids.ts), [`guesses.ts`](convex/guesses.ts)) : `getTodayGrid`, `submitTodayGuess`, `recordTodayFailedGuess`, `getTodayGuessDistribution`, `recordTodayGameEnd`, `submitTodayGridFeedback`. Chaque écriture reçoit un `operationId` idempotent.
 
 **Endpoints archive** (mode entraînement, **lecture seule**) : `getReplayableGrids` (J-1 → J-7, **sans `validAnswers`** — la liste ne doit rien révéler) et `getReplayGrid({date})` (grille + réponses). Ce dernier est gardé par `assertReplayableDate` ([`gameWriteValidation.ts`](convex/gameWriteValidation.ts)) : **le refus des dates `>= todayUTC()` est le point critique** — sans lui, `/archive/<demain>` livrerait la grille du lendemain avec ses réponses. Une date hors fenêtre **lève** ; une grille absente renvoie `null` (trou de données, pas une demande illégitime). La rareté figée est lue via `guesses.getGuessDistributionForDate` — promu de « legacy à supprimer » à endpoint du parcours joueur. Aucune mutation, donc aucun rate-limit ni `operationId` sur ce chemin.
 
@@ -134,9 +149,7 @@ Philosophie **Editorial Intellectual** (NYT Games) : spacieux, typographique, to
 
 **Rate limiting** ([`convex/rateLimit.ts`](convex/rateLimit.ts)) : clé `clientId` (localStorage), buckets `guess` + `feedback`.
 
-**Rollout en cours.** La persistence minimale v3 est dual-write avec un shadow v2 pendant la fenêtre de rollback. Ne retirer ni ce shadow ni les endpoints legacy avant la fin de l'observation. Procédure complète : [`docs/rollout-write-integrity.md`](docs/rollout-write-integrity.md).
-
-**Admin UI** ([`src/features/admin/AdminPage.tsx`](src/features/admin/AdminPage.tsx)) : `PoolOverviewPanel` (santé pool), `GameCalendar` + `GridDayDetail` (métriques par jour, facilité via `topKPopularity`, struggle observé), `GameHealthPanel` (win rate ~30 j). Pas de panneau de tuning : ajuster `gridConstants.ts` + simuler.
+**Admin UI** ([`src/features/admin/AdminPage.tsx`](src/features/admin/AdminPage.tsx)) : `PoolOverviewPanel` (santé pool), `GameCalendar` + `GridDayDetail` (métriques par jour, facilité via `topKPopularity`, struggle observé), `GameHealthPanel` (win rate ~30 j), `ConstraintExplorerPanel` (intersection des listes ISO3 + chevauchement générateur, analyse 100 % client). Pas de panneau de tuning : ajuster `gridConstants.ts` + simuler.
 
 **Règles Convex.** Pas de `.filter()` sur queries — index `by_<field>_and_<field>`. `gridGenerator`/`gridScheduler`/`gridConstants` restent **purs** (importables depuis Vitest et scripts).
 
@@ -152,6 +165,8 @@ pnpm lint                         # biome check + tsc
 pnpm typecheck
 pnpm test                         # Vitest (e2e/ exclu)
 pnpm format
+pnpm check:design-system          # audit tokens/DS sur src/**/*.tsx (job quality)
+pnpm check:bundle                 # vite build + budget bundle joueur 280 KiB (job quality)
 
 # E2E Playwright — nécessite une grille du jour
 pnpm check:e2e-convex-url         # ping VITE_CONVEX_URL avant e2e (CI + local)
@@ -164,7 +179,9 @@ pnpm sync:e2e-convex-url          # met à jour vars.VITE_CONVEX_URL (gh) après
 pnpm build
 
 # Contenu & pool
-pnpm build:countries
+pnpm build:countries             # regen réseau du snapshot content/ (+ enchaîne build:answers)
+pnpm build:answers               # re-dérive content/constraints/<id>/answers.ts (hors-ligne)
+pnpm check:content               # cohérence content/ (job quality + pre-commit) : obsolescence des listes + fraîcheur des faits dérivés + cohérence souveraineté + seam terminal + provenance SOURCE.md
 pnpm analyze:pool
 pnpm simulate:scheduling          # validateur changement contraintes
 pnpm simulate:players             # dry-run par défaut ; --execute pour écrire (develop/dev)
@@ -190,14 +207,14 @@ pnpm exec convex env set ADMIN_TOKEN "xxx"
 > develop ont des **données persistantes** : on ne les wipe jamais. Pour diagnostiquer
 > un souci observé en prod, on **dump puis on observe**.
 
-**Pre-commit** ([`.husky/pre-commit`](.husky/pre-commit)) : `lint-staged` (Biome sur fichiers stagés, auto-fix + re-stage) → si fichiers stagés : `typecheck` → `pnpm test` (skip si rien en stage, ex. `amend --no-edit`). Pas d'e2e (trop lent) — e2e en CI. `core.hooksPath` posé au `pnpm install` (`prepare`). Bypass : `git commit --no-verify` ou `HUSKY=0`.
+**Pre-commit** ([`.husky/pre-commit`](.husky/pre-commit)) : `lint-staged` (Biome sur fichiers stagés, auto-fix + re-stage) → si fichiers stagés : `typecheck` → `pnpm test` → `pnpm check:content` (~1 s, attrape l'oubli de `build:answers` avant l'aller-retour CI) (skip si rien en stage, ex. `amend --no-edit`). Pas d'e2e (trop lent) — e2e en CI. `core.hooksPath` posé au `pnpm install` (`prepare`). Bypass : `git commit --no-verify` ou `HUSKY=0`.
 
 ## 8. CI, Vercel et `convex/_generated`
 
 **GitHub Actions** ([`.github/workflows/ci.yml`](.github/workflows/ci.yml)) :
 
 - `quality` (sans secret) — lint, typechecks, Vitest, design system et bundle. Push `main`/`develop` + PR vers `main`/`develop`.
-- `e2e` — `pnpm check:e2e-convex-url` puis Playwright (étape dédiée en CI, fail-fast avant install navigateurs) ; `vars.VITE_CONVEX_URL` = deploy `preview/develop` (si URL invalide : `pnpm sync:e2e-convex-url` en local). Pas de deploy key ni seed (develop déjà seedé, cron horaire). **Sérialisé** (`concurrency: e2e-develop`). ⚠️ soumet de vrais guesses → bruite les stats develop (staging assumé). **Sauté sur les PR Dependabot** (`github.actor`) pour cette raison précise : un bump de dépendance ne vaut pas de polluer les stats de staging. Le build reste couvert, `quality` lançant `check:bundle` (qui fait un `vite build`), et la suite complète tourne au merge dans `develop`.
+- `e2e` — `pnpm check:e2e-convex-url` puis Playwright (étape dédiée en CI, fail-fast avant install navigateurs) ; `vars.VITE_CONVEX_URL` = deploy `preview/develop` (si URL invalide : `pnpm sync:e2e-convex-url` en local, **puis relancer le run** — GitHub fige le contexte `vars` à la *création* du run, donc un run déjà en vol garde l'ancienne URL même si son job `e2e` démarre après le resync ; sans ce re-run on croit à un resync qui n'a pas pris). Pas de deploy key ni seed (develop déjà seedé, cron horaire). **Sérialisé** (`concurrency: e2e-develop`). ⚠️ soumet de vrais guesses → bruite les stats develop (staging assumé). **Sauté sur les PR Dependabot** (`github.actor`) pour cette raison précise : un bump de dépendance ne vaut pas de polluer les stats de staging. Le build reste couvert, `quality` lançant `check:bundle` (qui fait un `vite build`), et la suite complète tourne au merge dans `develop`.
 
 **Mapping branche → environnement :**
 
@@ -278,3 +295,13 @@ Source de vérité détaillée : grep `posthog?.capture` dans le code.
 | Convention / commande / flux documenté | mettre à jour `AGENTS.md` ou `README` si pertinent (cf. §4 Documentation) |
 
 **E2E — conventions.** `*.shared.spec.ts` → tous navigateurs ; `*.desktop.spec.ts` → Chromium ; `*.mobile.spec.ts` → profils mobile. Workers sérialisés. Voir [`playwright.config.ts`](playwright.config.ts).
+
+**Après un merge de contenu dans `main` : régénérer le pool en production.** Le
+refill automatique n'a lieu qu'en dessous de `POOL_LOW_THRESHOLD` (50 candidats,
+[`gridConstants.ts`](convex/lib/gridConstants.ts)) — avec ~950 grilles en stock
+et une par jour, ce seuil n'arrive jamais. Une contrainte ajoutée, une liste
+re-dérivée ou un fait corrigé **ne parviennent donc à aucun joueur** tant que
+« Regénérer le pool » (`refreshPool`) n'a pas été lancé dans `/admin` sur la prod.
+Aucune garde ne le signale : `getGridContentIssue` vérifie la validité des grilles
+futures, pas leur fraîcheur éditoriale. Les grilles déjà publiées restent
+protégées par `gridAnswers`.

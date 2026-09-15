@@ -2,8 +2,8 @@
  * Pure helpers for build-countries (unit-tested). See build-countries.ts.
  */
 import type {
-  Country,
   CountryCapital,
+  CountryRecord,
   DrivingSide,
   FlagColor,
   FlagLayout,
@@ -12,12 +12,45 @@ import type {
   PoliticalGroup,
   Regime,
   WaterAccess,
-} from "../../src/features/countries/types.ts";
+} from "../../content/countries/type.ts";
+import type {
+  AgriculturalProductionSnapshot,
+  CivilTimeOffsetsSnapshot,
+  CoalElectricitySnapshot,
+  EnergyProductionSnapshot,
+  ForestCoverSnapshot,
+  HoloceneVolcanoSnapshot,
+  MountainAreaSnapshot,
+  ProductionRankKey,
+  SovereigntySnapshot,
+  UrbanCentresSnapshot,
+} from "./data/types.ts";
 
 /** Explicit source fixes — only fields where world-countries / REST need gameplay correction. */
 export type SourceCorrection = {
   borders?: string[];
   waterAccess?: WaterAccess;
+  /**
+   * Latitude « intention de jeu », pour les pays à cheval sur l'équateur dont le
+   * point représentatif de world-countries (arrondi au degré) tranche mal.
+   * Règle : majorité de la superficie terrestre — cf. countryPatches.
+   */
+  latitude?: number;
+  /**
+   * Deltas d'adhésion politique appliqués **après** la lecture REST Countries v5,
+   * pour rattraper un changement officiel daté que la source n'a pas encore
+   * intégré. Idempotents : `membershipsAdd` ignore un groupe déjà présent,
+   * `membershipsRemove` un groupe absent. À retirer dès que REST v5 rattrape.
+   */
+  membershipsAdd?: PoliticalGroup[];
+  membershipsRemove?: PoliticalGroup[];
+  /**
+   * Langues officielles **nationales** de jure, quand REST Countries liste une
+   * langue qui n'a pas ce statut (langue de travail, statut spécial, usage
+   * administratif local). Remplace la liste entière — la source n'est pas
+   * corrigeable par delta, elle se trompe sur la définition, pas sur un élément.
+   */
+  officialLanguages?: string[];
 };
 
 /** Curated constraint tag lists (events, geo, physical features, regime). */
@@ -25,6 +58,7 @@ export type GameplayClassifications = {
   middleEast: string[];
   eventFifaWcHost: string[];
   eventSummerOlympicsHost: string[];
+  eventWinterOlympicsHost: string[];
   monarchy: string[];
   equatorCrosser: string[];
   mediterraneanCoast: string[];
@@ -36,6 +70,7 @@ export type GameplayClassifications = {
   atlanticCoast: string[];
   pacificCoast: string[];
   indianOceanCoast: string[];
+  arcticCoast: string[];
 };
 
 export type CountryPatchesConfig = {
@@ -43,7 +78,7 @@ export type CountryPatchesConfig = {
   searchAliasesByIso3: Record<string, string[]>;
   wikipediaTitlesByIso3: Record<string, string>;
   gameplayClassifications: GameplayClassifications;
-  manualCountryAdditions: Country[];
+  manualCountryAdditions: CountryRecord[];
 };
 
 /**
@@ -222,7 +257,7 @@ const ISO639_3_TO_1: Readonly<Record<string, string | null>> = {
 export function deriveContinent(
   region: string,
   subregion: string,
-): Country["continent"] {
+): CountryRecord["continent"] {
   switch (region) {
     case "Africa":
       return "africa";
@@ -311,7 +346,7 @@ export function toWikipediaTitle(name: string): string {
 export function flagFieldsForCode(
   code: string,
   flagData: FlagData,
-): Pick<Country, "flagColors" | "flagSymbols" | "flagLayout"> {
+): Pick<CountryRecord, "flagColors" | "flagSymbols" | "flagLayout"> {
   const entry = flagData[code];
   if (!entry) {
     throw new Error(
@@ -326,7 +361,7 @@ export function flagFieldsForCode(
 }
 
 export function applySourceCorrections(
-  country: Country,
+  country: CountryRecord,
   correction?: SourceCorrection,
 ): void {
   if (!correction) return;
@@ -334,18 +369,33 @@ export function applySourceCorrections(
   if (correction.waterAccess !== undefined) {
     country.waterAccess = correction.waterAccess;
   }
+  if (correction.latitude !== undefined) country.latitude = correction.latitude;
+  if (correction.officialLanguages !== undefined) {
+    country.officialLanguages = [...correction.officialLanguages];
+  }
+  if (correction.membershipsAdd || correction.membershipsRemove) {
+    const remove = new Set<PoliticalGroup>(correction.membershipsRemove ?? []);
+    country.memberships = [
+      ...new Set<PoliticalGroup>([
+        ...country.memberships,
+        ...(correction.membershipsAdd ?? []),
+      ]),
+    ].filter((group) => !remove.has(group));
+  }
 }
 
 export function gameplayArraysForCode(
   code: string,
   classifications: GameplayClassifications,
   rc: RcEnrichment,
-): Pick<Country, "events" | "geoTags"> {
-  const events: Country["events"] = [];
+): Pick<CountryRecord, "events" | "geoTags"> {
+  const events: CountryRecord["events"] = [];
   if (classifications.eventFifaWcHost.includes(code))
     events.push("fifa_wc_host");
   if (classifications.eventSummerOlympicsHost.includes(code))
     events.push("summer_olympics_host");
+  if (classifications.eventWinterOlympicsHost.includes(code))
+    events.push("winter_olympics_host");
   const geoTags: string[] = [];
   if (classifications.middleEast.includes(code)) geoTags.push("middle_east");
   if (rc.drivingSide === "left") {
@@ -384,7 +434,116 @@ export function physicalFeaturesForCode(
     features.push("pacific_coast");
   if (classifications.indianOceanCoast.includes(code))
     features.push("indian_ocean_coast");
+  if (classifications.arcticCoast.includes(code)) features.push("arctic_coast");
   return features;
+}
+
+/** Datasets de faits quantitatifs curés (`scripts/countries/data/`). */
+export type QuantitativeDatasets = {
+  civilTimeOffsets: CivilTimeOffsetsSnapshot;
+  holoceneVolcanoes: HoloceneVolcanoSnapshot;
+  mountainArea: MountainAreaSnapshot;
+  forestCover: ForestCoverSnapshot;
+  urbanCentres: UrbanCentresSnapshot;
+  agriculturalProduction: AgriculturalProductionSnapshot;
+  energyProduction: EnergyProductionSnapshot;
+  coalElectricity: CoalElectricitySnapshot;
+  sovereignty: SovereigntySnapshot;
+};
+
+type QuantitativeFacts = Pick<
+  CountryRecord,
+  | "utcOffsetCount"
+  | "lastVolcanicEruptionYear"
+  | "mountainAreaShare"
+  | "forestCoverShare"
+  | "urbanCentresOver1M"
+  | "productionRanks"
+  | "coalElectricityShare"
+  | "formerSovereigns"
+  | "sovereigntyYear"
+  | "sovereigntyKind"
+>;
+
+/**
+ * Libellé produit d'une source → clé produit jouable. `build:answers` dérive les
+ * contraintes `production_*` / `energy_*` de `productionRanks`.
+ */
+const PRODUCTION_KEY_BY_SOURCE: Record<string, ProductionRankKey> = {
+  cocoa_beans: "cocoa",
+  coffee_green: "coffee",
+  rice_paddy: "rice",
+  wheat: "wheat",
+  crude_oil: "crude_oil",
+  dry_natural_gas: "natural_gas",
+};
+
+/** Rang au-delà duquel un classement de production n'intéresse plus aucune contrainte. */
+export const PRODUCTION_RANK_CAP = 15;
+
+function productionRanksForCode(
+  code: string,
+  datasets: QuantitativeDatasets,
+): Partial<Record<ProductionRankKey, number>> {
+  const ranks: Partial<Record<ProductionRankKey, number>> = {};
+  const rows = [
+    ...Object.entries(datasets.agriculturalProduction.products),
+    ...Object.entries(datasets.energyProduction.products),
+  ].flatMap(([product, block]) =>
+    block.rankings.map((row) => [product, row] as const),
+  );
+  for (const [product, row] of rows) {
+    const key = PRODUCTION_KEY_BY_SOURCE[product];
+    if (!key || row.countryCode !== code || row.rank > PRODUCTION_RANK_CAP) {
+      continue;
+    }
+    ranks[key] = row.rank;
+  }
+  return ranks;
+}
+
+/**
+ * Année de la dernière éruption connue du pays, tous volcans confondus — `null`
+ * s'il n'a aucun volcan holocène en territoire intégré, ou aucune éruption datée.
+ * Année brute : le seuil d'« activité » est appliqué par la dérivation.
+ */
+function lastVolcanicEruptionYearForCode(
+  code: string,
+  datasets: QuantitativeDatasets,
+): number | null {
+  const years = (datasets.holoceneVolcanoes.countries[code] ?? [])
+    .map(({ lastEruptionYear }) => lastEruptionYear)
+    .filter((year): year is number => year !== null);
+  return years.length > 0 ? Math.max(...years) : null;
+}
+
+/**
+ * Fusionne les datasets quantitatifs curés en scalaires dérivés par pays.
+ * Les parts sont ramenées en fraction 0–1 ; une source qui ne couvre pas le
+ * pays donne `null` (jamais 0). `utcOffsetCount` retombe à 1 si absent : tout
+ * pays observe au moins un décalage.
+ */
+export function quantitativeFactsForCode(
+  code: string,
+  datasets: QuantitativeDatasets,
+): QuantitativeFacts {
+  const offsets = datasets.civilTimeOffsets[code]?.value;
+  const mountain = datasets.mountainArea[code]?.value;
+  const forest = datasets.forestCover.countries[code];
+  const coal = datasets.coalElectricity.countries[code];
+  const sovereignty = datasets.sovereignty.countries[code];
+  return {
+    utcOffsetCount: offsets && offsets.length > 0 ? offsets.length : 1,
+    lastVolcanicEruptionYear: lastVolcanicEruptionYearForCode(code, datasets),
+    mountainAreaShare: typeof mountain === "number" ? mountain / 100 : null,
+    forestCoverShare: typeof forest === "number" ? forest / 100 : null,
+    urbanCentresOver1M: datasets.urbanCentres.countries[code]?.length ?? 0,
+    productionRanks: productionRanksForCode(code, datasets),
+    coalElectricityShare: typeof coal === "number" ? coal / 100 : null,
+    formerSovereigns: sovereignty ? [...sovereignty.formerSovereigns] : [],
+    sovereigntyYear: sovereignty?.year ?? null,
+    sovereigntyKind: sovereignty?.kind ?? null,
+  };
 }
 
 /** Fallback when Wikipedia pageviews are missing (`assignPopularity` only). Matches median in percentile ranking. */
@@ -395,7 +554,7 @@ const POPULARITY_MEDIAN_FALLBACK = 0.5;
  * Tie ranks use the average index. Countries without pageviews in the map receive the median fallback.
  */
 export function assignPopularity(
-  countries: Country[],
+  countries: CountryRecord[],
   pageviewsByCode: Map<string, number>,
 ): void {
   for (const country of countries) {

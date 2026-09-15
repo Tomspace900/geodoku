@@ -1,11 +1,38 @@
-import type { Country } from "../../src/features/countries/types";
+import type { Country, CountryFacts } from "../../content/countries/type";
+import { PRODUCTION_RANK_CAP } from "./buildCountriesLib";
 
 const COUNTRY_CODE = /^[A-Z]{3}$/;
 const ISO2_CODE = /^[A-Z]{2}$/;
 // Territoires hors gameplay qui restent des voisins géographiques légitimes.
 const EXTERNAL_BORDER_CODES = new Set(["ESH", "HKG", "MAC"]);
 
-/** Retourne toutes les incohérences afin qu'un run de CI soit actionnable. */
+const FORMER_SOVEREIGN_SLUGS = new Set([
+  "belgium",
+  "france",
+  "netherlands",
+  "portugal",
+  "soviet_union",
+  "spain",
+  "united_kingdom",
+  "united_states",
+  "yugoslavia",
+]);
+const SOVEREIGNTY_KINDS = new Set([
+  "independence",
+  "restoration",
+  "separation",
+  "dissolution_successor",
+  "continuation",
+  "foundation",
+  "unification",
+]);
+/** Le plus ancien événement retenu est l'Autriche (1156). Borne large. */
+const SOVEREIGNTY_MIN_YEAR = 1000;
+
+/**
+ * Invariants d'**identité** du catalogue (`content/countries/catalog.ts`).
+ * Retourne toutes les incohérences afin qu'un run de CI soit actionnable.
+ */
 export function validateCountryCatalog(
   countries: readonly Country[],
 ): string[] {
@@ -15,9 +42,8 @@ export function validateCountryCatalog(
 
   countries.forEach((country, index) => {
     const prefix = country.iso3 || `index ${index}`;
-    if (!COUNTRY_CODE.test(country.iso3)) {
+    if (!COUNTRY_CODE.test(country.iso3))
       errors.push(`${prefix}: iso3 invalide`);
-    }
     if (!ISO2_CODE.test(country.iso2)) errors.push(`${prefix}: iso2 invalide`);
     if (iso3Codes.has(country.iso3)) errors.push(`${prefix}: iso3 dupliqué`);
     if (iso2Codes.has(country.iso2)) errors.push(`${prefix}: iso2 dupliqué`);
@@ -28,49 +54,154 @@ export function validateCountryCatalog(
       errors.push(`${prefix}: noms FR/EN manquants`);
     }
     if (!country.flagEmoji) errors.push(`${prefix}: drapeau manquant`);
-    if (!Number.isFinite(country.population) || country.population <= 0) {
-      errors.push(`${prefix}: population invalide`);
+    if (!Array.isArray(country.aliases))
+      errors.push(`${prefix}: alias invalides`);
+  });
+
+  return errors;
+}
+
+/**
+ * Invariants des **faits** gameplay (`content/countries/facts.ts`), indexés par
+ * ISO3. `codes` = la liste de référence (catalogue) : toute entrée `facts` doit
+ * la couvrir exactement.
+ */
+export function validateCountryFacts(
+  factsByCode: Readonly<Record<string, CountryFacts>>,
+  codes: readonly string[],
+): string[] {
+  const errors: string[] = [];
+  const knownCodes = new Set(codes);
+
+  const factCodes = Object.keys(factsByCode).sort();
+  const expected = [...codes].sort();
+  if (factCodes.length !== expected.length) {
+    errors.push(
+      `facts: ${factCodes.length} entrées au lieu de ${expected.length}`,
+    );
+  }
+  expected.forEach((code) => {
+    if (!(code in factsByCode)) errors.push(`facts: ${code} manquant`);
+  });
+  factCodes.forEach((code) => {
+    if (!knownCodes.has(code)) errors.push(`facts: ${code} hors catalogue`);
+  });
+
+  Object.entries(factsByCode).forEach(([code, facts]) => {
+    if (!Number.isFinite(facts.population) || facts.population <= 0) {
+      errors.push(`${code}: population invalide`);
     }
-    if (!Number.isFinite(country.areaKm2) || country.areaKm2 <= 0) {
-      errors.push(`${prefix}: superficie invalide`);
+    if (!Number.isFinite(facts.areaKm2) || facts.areaKm2 <= 0) {
+      errors.push(`${code}: superficie invalide`);
     }
     if (
-      !Number.isFinite(country.latitude) ||
-      country.latitude < -90 ||
-      country.latitude > 90
+      !Number.isFinite(facts.latitude) ||
+      facts.latitude < -90 ||
+      facts.latitude > 90
     ) {
-      errors.push(`${prefix}: latitude invalide`);
+      errors.push(`${code}: latitude invalide`);
     }
 
     const requiredArrays: Array<[string, unknown]> = [
-      ["aliases", country.aliases],
-      ["borders", country.borders],
-      ["officialLanguages", country.officialLanguages],
-      ["flagColors", country.flagColors],
-      ["flagSymbols", country.flagSymbols],
-      ["flagLayout", country.flagLayout],
-      ["events", country.events],
-      ["memberships", country.memberships],
-      ["capitals", country.capitals],
-      ["geoTags", country.geoTags],
-      ["physicalFeatures", country.physicalFeatures],
+      ["borders", facts.borders],
+      ["officialLanguages", facts.officialLanguages],
+      ["flagColors", facts.flagColors],
+      ["flagSymbols", facts.flagSymbols],
+      ["flagLayout", facts.flagLayout],
+      ["events", facts.events],
+      ["memberships", facts.memberships],
+      ["capitals", facts.capitals],
+      ["geoTags", facts.geoTags],
+      ["physicalFeatures", facts.physicalFeatures],
     ];
     requiredArrays.forEach(([field, value]) => {
-      if (!Array.isArray(value)) errors.push(`${prefix}: ${field} invalide`);
+      if (!Array.isArray(value)) errors.push(`${code}: ${field} invalide`);
     });
-    if (country.officialLanguages.length === 0) {
-      errors.push(`${prefix}: langue officielle manquante`);
+    if (facts.officialLanguages.length === 0) {
+      errors.push(`${code}: langue officielle manquante`);
     }
-    if (country.flagColors.length === 0) {
-      errors.push(`${prefix}: couleurs de drapeau manquantes`);
+    if (facts.flagColors.length === 0) {
+      errors.push(`${code}: couleurs de drapeau manquantes`);
     }
-    if (country.drivingSide !== "left" && country.drivingSide !== "right") {
-      errors.push(`${prefix}: sens de conduite invalide`);
+    if (facts.drivingSide !== "left" && facts.drivingSide !== "right") {
+      errors.push(`${code}: sens de conduite invalide`);
     }
-    if (country.regime !== "monarchy" && country.regime !== "republic") {
-      errors.push(`${prefix}: régime invalide`);
+    if (facts.regime !== "monarchy" && facts.regime !== "republic") {
+      errors.push(`${code}: régime invalide`);
     }
-    country.capitals.forEach((capital) => {
+
+    if (
+      !Number.isInteger(facts.utcOffsetCount) ||
+      facts.utcOffsetCount < 1 ||
+      facts.utcOffsetCount > 12
+    ) {
+      errors.push(`${code}: utcOffsetCount invalide (${facts.utcOffsetCount})`);
+    }
+    if (
+      facts.lastVolcanicEruptionYear !== null &&
+      !Number.isInteger(facts.lastVolcanicEruptionYear)
+    ) {
+      errors.push(`${code}: lastVolcanicEruptionYear invalide`);
+    }
+    (
+      [
+        ["mountainAreaShare", facts.mountainAreaShare],
+        ["forestCoverShare", facts.forestCoverShare],
+        ["coalElectricityShare", facts.coalElectricityShare],
+      ] as const
+    ).forEach(([field, value]) => {
+      if (value === null) return;
+      if (!Number.isFinite(value) || value < 0 || value > 1) {
+        errors.push(`${code}: ${field} hors [0, 1] (${value})`);
+      }
+    });
+    if (
+      !Number.isInteger(facts.urbanCentresOver1M) ||
+      facts.urbanCentresOver1M < 0
+    ) {
+      errors.push(
+        `${code}: urbanCentresOver1M invalide (${facts.urbanCentresOver1M})`,
+      );
+    }
+    Object.entries(facts.productionRanks).forEach(([product, rank]) => {
+      if (!Number.isInteger(rank) || rank < 1 || rank > PRODUCTION_RANK_CAP) {
+        errors.push(`${code}: productionRanks.${product} invalide (${rank})`);
+      }
+    });
+    if (!Array.isArray(facts.formerSovereigns)) {
+      errors.push(`${code}: formerSovereigns invalide`);
+    } else {
+      facts.formerSovereigns.forEach((slug) => {
+        if (!FORMER_SOVEREIGN_SLUGS.has(slug)) {
+          errors.push(`${code}: formerSovereigns slug inconnu (${slug})`);
+        }
+      });
+    }
+    if (
+      facts.sovereigntyKind !== null &&
+      !SOVEREIGNTY_KINDS.has(facts.sovereigntyKind)
+    ) {
+      errors.push(
+        `${code}: sovereigntyKind inconnu (${facts.sovereigntyKind})`,
+      );
+    }
+    if (facts.sovereigntyYear !== null) {
+      if (
+        !Number.isInteger(facts.sovereigntyYear) ||
+        facts.sovereigntyYear < SOVEREIGNTY_MIN_YEAR ||
+        facts.sovereigntyYear > new Date().getFullYear()
+      ) {
+        errors.push(
+          `${code}: sovereigntyYear hors bornes (${facts.sovereigntyYear})`,
+        );
+      }
+    }
+    if ((facts.sovereigntyYear === null) !== (facts.sovereigntyKind === null)) {
+      errors.push(
+        `${code}: sovereigntyYear et sovereigntyKind doivent être définis ensemble`,
+      );
+    }
+    facts.capitals.forEach((capital) => {
       if (
         !capital.name ||
         !Number.isFinite(capital.latitude) ||
@@ -81,21 +212,76 @@ export function validateCountryCatalog(
         capital.longitude > 180 ||
         !Array.isArray(capital.roles)
       ) {
-        errors.push(`${prefix}: capitale invalide`);
+        errors.push(`${code}: capitale invalide`);
+      }
+    });
+    facts.borders.forEach((border) => {
+      if (
+        COUNTRY_CODE.test(border) &&
+        !knownCodes.has(border) &&
+        !EXTERNAL_BORDER_CODES.has(border)
+      ) {
+        errors.push(`${code}: frontière inconnue ${border}`);
       }
     });
   });
 
-  countries.forEach((country) => {
-    country.borders.forEach((border) => {
-      if (
-        COUNTRY_CODE.test(border) &&
-        !iso3Codes.has(border) &&
-        !EXTERNAL_BORDER_CODES.has(border)
-      ) {
-        errors.push(`${country.iso3}: frontière inconnue ${border}`);
-      }
-    });
+  // Couverture attendue des datasets quantitatifs : un branchement cassé se
+  // traduirait par un champ uniformément vide. Bornes larges, pas des comptes exacts.
+  const allFacts = Object.values(factsByCode);
+  const coverage: Array<[string, number, number]> = [
+    [
+      "lastVolcanicEruptionYear",
+      allFacts.filter((f) => f.lastVolcanicEruptionYear !== null).length,
+      40,
+    ],
+    [
+      "mountainAreaShare",
+      allFacts.filter((f) => f.mountainAreaShare !== null).length,
+      150,
+    ],
+    [
+      "forestCoverShare",
+      allFacts.filter((f) => f.forestCoverShare !== null).length,
+      150,
+    ],
+    [
+      "utcOffsetCount>=2",
+      allFacts.filter((f) => f.utcOffsetCount >= 2).length,
+      10,
+    ],
+    [
+      "urbanCentresOver1M>=3",
+      allFacts.filter((f) => f.urbanCentresOver1M >= 3).length,
+      15,
+    ],
+    [
+      "productionRanks",
+      allFacts.filter((f) => Object.keys(f.productionRanks).length > 0).length,
+      30,
+    ],
+    [
+      "coalElectricityShare",
+      allFacts.filter((f) => f.coalElectricityShare !== null).length,
+      150,
+    ],
+    [
+      "sovereigntyYear",
+      allFacts.filter((f) => f.sovereigntyYear !== null).length,
+      150,
+    ],
+    [
+      "formerSovereigns",
+      allFacts.filter((f) => f.formerSovereigns.length > 0).length,
+      90,
+    ],
+  ];
+  coverage.forEach(([field, count, min]) => {
+    if (count < min) {
+      errors.push(
+        `facts: couverture ${field} anormalement basse (${count} < ${min})`,
+      );
+    }
   });
 
   return errors;

@@ -1,11 +1,9 @@
 import { describe, expect, it } from "vitest";
-import countriesJson from "@/features/countries/data/countries.json" with {
-  type: "json",
-};
 import type { Country } from "@/features/countries/types";
+import { COUNTRY_CATALOG } from "../../../../../content/countries/catalog";
 import { validateGuess, validatePublishedGuess } from "../validation";
 
-const countries = countriesJson as Country[];
+const countries: readonly Country[] = COUNTRY_CATALOG;
 
 function byCode(code: string): Country {
   const c = countries.find((c) => c.iso3 === code);

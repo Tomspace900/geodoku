@@ -1,9 +1,9 @@
 /**
  * Planification quotidienne des grilles — en **MUTATION** et dans un **module
- * léger** (aucun import du générateur ni de countries.json).
+ * léger** (aucun import du générateur ni du catalogue pays).
  *
  * C'est le fix de l'incident « no available workers » : le cron ne réveille plus
- * un worker d'**action** dont le module lourd (countries.json + générateur) met
+ * un worker d'**action** dont le module lourd (contenu + générateur) met
  * trop de temps à cold-starter sur un déploiement idle. Ici, une mutation
  * triviale à charger, dans le pool de mutations. Le hot-path n'a besoin que de
  * `selectNextGrid` (léger) + un patch/insert transactionnel.
