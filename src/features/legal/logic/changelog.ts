@@ -1,5 +1,5 @@
 /** À mettre à jour quand une entrée est ajoutée en tête de `ChangelogPage` ENTRIES. */
-export const LATEST_CHANGELOG_UPDATE_DATE = "2026-09-10";
+export const LATEST_CHANGELOG_UPDATE_DATE = "2026-09-16";
 
 const NEW_BADGE_WINDOW_MS = 7 * 24 * 60 * 60 * 1000; // 7 days
 
