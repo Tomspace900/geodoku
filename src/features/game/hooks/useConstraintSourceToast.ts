@@ -74,17 +74,17 @@ export function useConstraintSourceToast({
     constraintId: ConstraintId,
     surface: ConstraintSourceSurface,
   ): void {
+    pausedRef.current = false;
+    if (active?.constraintId === constraintId && active.surface === surface) {
+      setActive(null);
+      return;
+    }
     posthog?.capture("constraint_source_viewed", {
       grid_date: gridDate,
       mode,
       surface,
       constraint_id: constraintId,
     });
-    pausedRef.current = false;
-    if (active?.constraintId === constraintId && active.surface === surface) {
-      setActive(null);
-      return;
-    }
     setActive({ constraintId, surface });
   }
 
