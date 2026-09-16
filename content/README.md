@@ -46,6 +46,16 @@ RUNTIME + OUTILLAGE   matchesConstraint(id, iso3)
 enchaîne `pnpm build:answers`. Provenance par famille de champs :
 [`countries/SOURCE.md`](countries/SOURCE.md).
 
+- `countries/factProvenance.ts` — provenance **par champ** de `CountryFacts`
+  (`FACT_PROVENANCE : { [K in keyof CountryFacts]: FactProvenance }`), même
+  union `basis: "source"/"convention"` + `SourceId[]` que les `about.ts` des
+  contraintes. Consommé par `buildCountrySheet` (fiche pays,
+  `src/features/countries/logic/countrySheet.ts`), jamais par le snapshot lui-même :
+  éditée à la main, elle **doit évoluer avec** le tableau de
+  [`countries/SOURCE.md`](countries/SOURCE.md) plutôt qu'avec `facts.ts`. Gardée
+  par `pnpm check:content` (`validateFactProvenance.ts`), qui étend la
+  vérification « source référencée » du lot 1 à ce fichier.
+
 ## Contraintes
 
 Chaque dossier de `constraints/` contient :

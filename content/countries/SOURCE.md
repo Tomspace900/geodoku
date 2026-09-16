@@ -69,6 +69,15 @@ pays donne `null` (ou une clé absente) — **jamais 0** (`SOURCES.md`). La fusi
 est déterministe et hors-ligne ; seul le rafraîchissement population/popularité de
 `build-countries` demande le réseau.
 
+Ce tableau documente la provenance **narrative** (origine, curation) des
+champs de `facts.ts`. Depuis le lot 2, [`countries/factProvenance.ts`](factProvenance.ts)
+en porte la contrepartie **structurée par champ** (`FACT_PROVENANCE`,
+`basis: "source"/"convention"` + `SourceId[]` de [`../sources.ts`](../sources.ts)) —
+c'est elle qu'affiche la fiche pays (`buildCountrySheet`), en pied de chaque
+catégorie. Un champ ajouté ou reclassé (« importé » ↔ « curé ») ici doit
+recevoir la même mise à jour dans `factProvenance.ts` : les deux dérivent de la
+même décision éditoriale, mais rien ne les garde synchronisés automatiquement.
+
 Les **faits de souveraineté** (`formerSovereigns`, `sovereigntyYear`,
 `sovereigntyKind`) sont issus du même dataset (`scripts/countries/data/sovereignty.ts`,
 CIA World Factbook — champ *Independence*) mais **repris tels quels** de
