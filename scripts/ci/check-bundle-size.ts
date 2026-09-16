@@ -7,8 +7,10 @@ const MODULE_MANIFEST = "dist/.bundle-modules.json";
 // Baseline 2026-07-15 : jeu, résultat et pages éditoriales eager ; admin lazy.
 // Depuis le 2026-08-09, l'archive et l'entraînement sont lazy eux aussi (cf.
 // `LAZY_ROUTE_MODULES`). React Router rend les navigations publiques
-// instantanées, au prix assumé d'un entry plus gros. Les chunks non initiaux
-// gardent leur budget anti-monolithe.
+// instantanées, au prix assumé d'un entry plus gros. Depuis le 2026-09-16
+// (P4 lot 2), le chunk de fiche pays (`LAZY_FEATURE_MODULES`) suit le même
+// principe : hors chemin critique, chargé à la demande. Les chunks non
+// initiaux gardent leur budget anti-monolithe.
 const MAX_NON_INITIAL_CHUNK_GZIP_BYTES = 150 * 1024;
 // Relevé de 250 à 280 KiB le 2026-08-11. posthog-js pèse à lui seul ~12 KiB de
 // plus entre 1.386 et 1.415, et il est `init()` de façon synchrone avant le
@@ -101,17 +103,30 @@ if (oversizedNonInitial.length > 0) {
 // Routes volontairement chargées en lazy : l'admin (hors parcours joueur), plus
 // l'archive et l'entraînement (inatteignables tant que la grille du jour n'est
 // pas terminée). Les sortir du chemin critique ne coûte donc rien au quotidien.
-// La liste est **exhaustive** dans les deux sens : un `lazy()` retiré comme un
-// `lazy()` ajouté par inadvertance fait échouer la vérification.
 const LAZY_ROUTE_MODULES = [
   "/src/features/admin/AdminPage.tsx",
   "/src/features/archive/ArchivePage.tsx",
   "/src/features/archive/TrainingPage.tsx",
 ];
 
+// Entrées dynamiques hors routes : le chunk de fiche pays (P4 lot 2), seul
+// module qui importe `content/countries/facts` — cf. `countrySheetData.ts`.
+// Chargé via `import()` depuis `loadCountrySheetData.ts`, préchargé au montage
+// de la grille solution, jamais importé statiquement par `src/`.
+const LAZY_FEATURE_MODULES = [
+  "/src/features/countries/logic/countrySheetData.ts",
+];
+
+// Les deux listes sont **exhaustives** dans les deux sens : une entrée lazy
+// retirée comme une entrée ajoutée par inadvertance fait échouer la vérification.
+const EXPECTED_DYNAMIC_MODULES = [
+  ...LAZY_ROUTE_MODULES,
+  ...LAZY_FEATURE_MODULES,
+];
+
 const dynamicEntries = moduleChunks.filter((chunk) => chunk.isDynamicEntry);
 const dynamicEntryByModule = new Map(
-  LAZY_ROUTE_MODULES.map((moduleSuffix) => [
+  EXPECTED_DYNAMIC_MODULES.map((moduleSuffix) => [
     moduleSuffix,
     dynamicEntries.find((chunk) =>
       chunk.modules.some((moduleId) => moduleId.endsWith(moduleSuffix)),
@@ -119,19 +134,36 @@ const dynamicEntryByModule = new Map(
   ]),
 );
 
-const missingLazyRoutes = LAZY_ROUTE_MODULES.filter(
+const missingLazyModules = EXPECTED_DYNAMIC_MODULES.filter(
   (moduleSuffix) => !dynamicEntryByModule.get(moduleSuffix),
 );
-if (missingLazyRoutes.length > 0) {
+if (missingLazyModules.length > 0) {
   throw new Error(
-    `Ces routes doivent rester en chargement lazy : ${missingLazyRoutes.join(", ")}`,
+    `Ces modules doivent rester en chargement lazy : ${missingLazyModules.join(", ")}`,
   );
 }
-if (dynamicEntries.length !== LAZY_ROUTE_MODULES.length) {
+if (dynamicEntries.length !== EXPECTED_DYNAMIC_MODULES.length) {
   throw new Error(
-    `Entrée dynamique inattendue : le bundle doit en compter exactement ${LAZY_ROUTE_MODULES.length}, trouvé ${dynamicEntries
+    `Entrée dynamique inattendue : le bundle doit en compter exactement ${EXPECTED_DYNAMIC_MODULES.length}, trouvé ${dynamicEntries
       .map((chunk) => chunk.fileName)
       .join(", ")}`,
+  );
+}
+
+// `content/countries/facts` (le snapshot de faits pays, ~197 pays) ne doit
+// jamais rentrer dans le graphe initial : seul le chunk de fiche l'importe.
+const countrySheetDataEntry = dynamicEntryByModule.get(
+  "/src/features/countries/logic/countrySheetData.ts",
+);
+if (!countrySheetDataEntry) throw new Error("Chunk de fiche pays introuvable");
+const factsOwner = moduleChunks.find((chunk) =>
+  chunk.modules.some((moduleId) =>
+    moduleId.endsWith("/content/countries/facts.ts"),
+  ),
+);
+if (!factsOwner || initialFiles.has(factsOwner.fileName)) {
+  throw new Error(
+    "content/countries/facts.ts doit rester hors du chargement initial (chunk de fiche pays uniquement)",
   );
 }
 
