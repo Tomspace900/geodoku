@@ -1,15 +1,19 @@
+import { useEffect } from "react";
+import { Button } from "@/components/ui/button";
+import { loadCountrySheetData } from "@/features/countries/logic/loadCountrySheetData";
 import { getCountryByIso3 } from "@/features/countries/logic/search";
 import { RARITY_STYLES } from "@/features/game/logic/constants";
 import {
   CONSTRAINT_BY_ID,
   type ConstraintId,
 } from "@/features/game/logic/constraints";
-import { formatRarityPercent } from "@/features/game/logic/rarity";
-import { orderSolutionCountries } from "@/features/game/logic/solutionGridOrder";
+import { isCohortComplete } from "@/features/game/logic/rarity";
+import { computeSolutionCellSummary } from "@/features/game/logic/solutionCellSummary";
 import type {
   Cell,
   CellGuessDistribution,
   CellKey,
+  CellPosition,
   GameModeId,
   RarityTier,
 } from "@/features/game/types";
@@ -37,7 +41,38 @@ type Props = {
   cells: Record<CellKey, Cell>;
   mode?: GameModeId;
   onHeaderClick: (constraintId: ConstraintId) => void;
+  onCellClick: (cell: CellPosition) => void;
 };
+
+function CountryPill({
+  iso,
+  tier,
+  locale,
+  emphasis,
+}: {
+  iso: string;
+  tier: RarityTier | null;
+  locale: Locale;
+  emphasis: boolean;
+}) {
+  const country = getCountryByIso3(iso);
+  return (
+    <span
+      className={cn(
+        "flex w-full min-w-0 items-center justify-center gap-1 rounded-md px-1 py-0.5 text-[11px] font-medium leading-tight",
+        tier ? RARITY_STYLES[tier] : "text-on-surface",
+        !emphasis && "opacity-80",
+      )}
+    >
+      <span aria-hidden="true" className="shrink-0 text-[11px] leading-none">
+        {country?.flagEmoji ?? "🏳️"}
+      </span>
+      <span className="min-w-0 truncate">
+        {country ? country.names[locale] : iso}
+      </span>
+    </span>
+  );
+}
 
 export function SolutionGrid({
   rows,
@@ -47,8 +82,16 @@ export function SolutionGrid({
   cells,
   mode = "daily",
   onHeaderClick,
+  onCellClick,
 }: Props) {
   const { locale, t } = useLocale();
+
+  // Précharge le chunk de fiche pays dès le montage de la grille solution,
+  // pour qu'il soit déjà arrivé au premier tap sur une case.
+  useEffect(() => {
+    void loadCountrySheetData();
+  }, []);
+
   const rowLabels = rows.map((constraintId) => {
     const constraint = CONSTRAINT_BY_ID.get(constraintId);
     return constraint ? t(constraint.labelKey) : constraintId;
@@ -57,6 +100,7 @@ export function SolutionGrid({
     const constraint = CONSTRAINT_BY_ID.get(constraintId);
     return constraint ? t(constraint.labelKey) : constraintId;
   });
+  const cohortComplete = isCohortComplete(mode);
 
   return (
     <GridMatrix
@@ -79,63 +123,9 @@ export function SolutionGrid({
           onClick={() => onHeaderClick(rows[row])}
         />
       )}
-      renderCell={({ row, col }) => {
+      renderCell={({ row, col, rowLabel, colLabel }) => {
         const key = `${row},${col}` as CellKey;
         const codes = validAnswers[key] ?? [];
-        const cellDist = distribution?.[key];
-        const totalGuesses = cellDist?.totalGuesses ?? 0;
-        const userCell = cells[key];
-
-        const rarityByCountry = cellDist?.rarityByCountry ?? {};
-        const ordered = orderSolutionCountries(
-          codes,
-          totalGuesses,
-          rarityByCountry,
-          (a, b) => compareIsoByLocalizedName(locale, a, b),
-        );
-
-        function countryChip(iso: string, tier: RarityTier | null) {
-          const country = getCountryByIso3(iso);
-          const countryName = country ? country.names[locale] : iso;
-          const isUserPick =
-            userCell?.status === "filled" && userCell.countryCode === iso;
-          const hasData = totalGuesses > 0;
-          const share = rarityByCountry[iso] ?? 0;
-
-          return (
-            <div
-              key={iso}
-              className={cn(
-                "flex w-full min-w-0 shrink-0 items-baseline gap-x-0.5 rounded-md px-1 py-[3px] text-[8px] font-medium leading-snug sm:px-1.5 sm:py-0.5 sm:text-[11px]",
-                tier ? RARITY_STYLES[tier] : "text-on-surface",
-                isUserPick && "ring-1 ring-inset ring-on-surface/50",
-              )}
-            >
-              <span
-                aria-hidden
-                className="shrink-0 text-[8px] leading-none sm:text-[11px]"
-              >
-                {country?.flagEmoji ?? "🏳️"}
-              </span>
-              {/* Sur mobile la case est trop étroite pour une colonne % dédiée :
-                      le % suit le nom INLINE (il coule dans le texte, largeur max
-                      pour le nom). Sur desktop il redevient un item aligné à droite. */}
-              <span className="min-w-0 flex-1 break-words">
-                {countryName}
-                {hasData && (
-                  <span className="font-normal tabular-nums sm:hidden">
-                    {` ${formatRarityPercent(share)}`}
-                  </span>
-                )}
-              </span>
-              {hasData && (
-                <span className="hidden shrink-0 text-[7px] font-normal tabular-nums sm:inline sm:text-[9px]">
-                  {formatRarityPercent(share)}
-                </span>
-              )}
-            </div>
-          );
-        }
 
         if (codes.length === 0) {
           return (
@@ -145,12 +135,59 @@ export function SolutionGrid({
           );
         }
 
+        const summary = computeSolutionCellSummary({
+          codes,
+          userCell: cells[key],
+          cellDist: distribution?.[key],
+          cohortComplete,
+          compareByName: (a, b) => compareIsoByLocalizedName(locale, a, b),
+        });
+
+        const headline = summary.userPick
+          ? { iso: summary.userPick.iso, tier: summary.userPick.tier }
+          : summary.rarestFound
+            ? { iso: summary.rarestFound.iso, tier: summary.rarestFound.tier }
+            : null;
+        const secondary =
+          summary.userPick && summary.rarestFound ? summary.rarestFound : null;
+
         return (
-          <div className="relative isolate aspect-square w-full min-h-0 rounded-xl bg-surface-lowest shadow-editorial">
-            <div className="flex h-full min-h-0 flex-col gap-0.5 overflow-y-auto p-1 sm:gap-1 sm:p-1.5">
-              {ordered.map(({ iso, tier }) => countryChip(iso, tier))}
-            </div>
-          </div>
+          <Button
+            type="button"
+            variant="ghost"
+            size="auto"
+            onClick={() => onCellClick({ row, col })}
+            aria-label={t("ui.solutionCellAriaLabel", {
+              row: row + 1,
+              col: col + 1,
+              rowConstraint: rowLabel,
+              colConstraint: colLabel,
+              count: summary.answerCount,
+            })}
+            className="relative isolate flex aspect-square w-full min-h-0 flex-col items-center justify-center gap-0.5 rounded-xl bg-surface-lowest p-1.5 shadow-editorial hover:bg-surface-highest/40"
+          >
+            {headline && (
+              <CountryPill
+                iso={headline.iso}
+                tier={headline.tier}
+                locale={locale}
+                emphasis
+              />
+            )}
+            {secondary && (
+              <CountryPill
+                iso={secondary.iso}
+                tier={secondary.tier}
+                locale={locale}
+                emphasis={false}
+              />
+            )}
+            <span className="text-[10px] text-on-surface-variant">
+              {t("countrySheet.cell.answerCount", {
+                count: summary.answerCount,
+              })}
+            </span>
+          </Button>
         );
       }}
     />

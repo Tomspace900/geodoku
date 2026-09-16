@@ -11,8 +11,10 @@ import { GameGrid } from "@/features/game/components/GameGrid";
 import { GridSkeleton } from "@/features/game/components/GridSkeleton";
 import { GuessModal } from "@/features/game/components/GuessModal";
 import { Header } from "@/features/game/components/Header";
+import { SolutionCellDrawer } from "@/features/game/components/SolutionCellDrawer";
 import { SolutionGrid } from "@/features/game/components/SolutionGrid";
 import { useConstraintSourceToast } from "@/features/game/hooks/useConstraintSourceToast";
+import { useSolutionCellDrawer } from "@/features/game/hooks/useSolutionCellDrawer";
 import { getGridNumberForDate } from "@/features/game/logic/gridIssue";
 import { loadPersistedGame } from "@/features/game/logic/persistence";
 import { classifyReplayDate } from "@/features/game/logic/replayWindow";
@@ -114,6 +116,10 @@ function TrainingBoard({ date }: { date: string }) {
     mode: state.mode,
     selectedCell: state.selectedCell,
   });
+  const solutionDrawer = useSolutionCellDrawer({
+    gridDate: state.date,
+    mode: state.mode,
+  });
 
   // Rareté de la cohorte du jour concerné : complète et figée, donc le score
   // affiché est exact et stable (pas de marqueur « ≈ » qui bougerait).
@@ -153,6 +159,13 @@ function TrainingBoard({ date }: { date: string }) {
               cells={state.cells}
               mode="training"
               onHeaderClick={(id) => sourceToast.onHeaderClick(id, "solution")}
+              onCellClick={(cell) => {
+                const key = `${cell.row},${cell.col}`;
+                solutionDrawer.openCellDrawer(
+                  cell,
+                  validAnswers[key]?.length ?? 0,
+                );
+              }}
             />
           ) : (
             <GameGrid
@@ -218,6 +231,15 @@ function TrainingBoard({ date }: { date: string }) {
       )}
 
       <ConstraintSourceToast toast={sourceToast} />
+
+      {solutionDrawer.openCell !== null && (
+        <SolutionCellDrawer
+          state={state}
+          validAnswers={validAnswers}
+          distribution={distribution ?? undefined}
+          drawer={solutionDrawer}
+        />
+      )}
     </TrainingShell>
   );
 }

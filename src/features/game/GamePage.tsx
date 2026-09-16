@@ -9,6 +9,7 @@ import { ErrorScreen } from "@/features/errors/components/ErrorScreen";
 import { useBackendDownTimeout } from "@/features/errors/hooks/useBackendDownTimeout";
 import { useConstraintSourceToast } from "@/features/game/hooks/useConstraintSourceToast";
 import { useGameState } from "@/features/game/hooks/useGameState";
+import { useSolutionCellDrawer } from "@/features/game/hooks/useSolutionCellDrawer";
 import {
   getGridNumberForDate,
   getGridNumberForTodayUtc,
@@ -25,6 +26,7 @@ import { Header } from "./components/Header";
 import { HowToPlayLink } from "./components/HowToPlayLink";
 import { RarityHint } from "./components/RarityHint";
 import { ResultScreen } from "./components/ResultScreen";
+import { SolutionCellDrawer } from "./components/SolutionCellDrawer";
 import { SolutionGrid } from "./components/SolutionGrid";
 import { SurveyCta } from "./components/SurveyCta";
 
@@ -59,6 +61,10 @@ export function GamePage() {
     gridDate: state.date,
     mode: state.mode,
     selectedCell: state.selectedCell,
+  });
+  const solutionDrawer = useSolutionCellDrawer({
+    gridDate: state.date,
+    mode: state.mode,
   });
 
   // biome-ignore lint/correctness/useExhaustiveDependencies: réinitialiser modale / vue lorsque la date de grille change (jour suivant)
@@ -136,6 +142,13 @@ export function GamePage() {
                 onHeaderClick={(id) =>
                   sourceToast.onHeaderClick(id, "solution")
                 }
+                onCellClick={(cell) => {
+                  const key = `${cell.row},${cell.col}`;
+                  solutionDrawer.openCellDrawer(
+                    cell,
+                    validAnswers[key]?.length ?? 0,
+                  );
+                }}
               />
 
               <RarityHint />
@@ -232,6 +245,15 @@ export function GamePage() {
       )}
 
       <ConstraintSourceToast toast={sourceToast} />
+
+      {solutionDrawer.openCell !== null && (
+        <SolutionCellDrawer
+          state={state}
+          validAnswers={validAnswers}
+          distribution={guessDistribution ?? undefined}
+          drawer={solutionDrawer}
+        />
+      )}
     </div>
   );
 }
