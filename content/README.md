@@ -60,6 +60,19 @@ Chaque dossier de `constraints/` contient :
 - `SOURCE.md` — définition jouable, dérivation (champ + seuil/pivot) et cas
   limites propres à cette contrainte. Une contrainte en réserve ne garde que ce
   fichier (`status: archived`, section « En réserve »).
+- `about.ts` — sources (millésime compris), `basis` (`source` / `convention`) et
+  clarification joueur affichées par le toast de source (tap sur un en-tête).
+  Un `about.ts` par contrainte **active ou archivée** (89), **aucun** en réserve.
+  Défini via `defineAbout`, sur le patron d'`answers.ts` / `defineAnswerSet`.
+  Registre séparé : [`constraints/abouts.ts`](constraints/abouts.ts) (jamais
+  dans `index.ts`, que Convex importe). Gardé par `validateConstraintAbouts`
+  (`pnpm check:content`) : couverture des dossiers, sources toutes référencées,
+  URLs `https://`, clarifications ≤ 160 caractères sans nom de pays hors libellé.
+
+Le registre des sources externes, [`content/sources.ts`](sources.ts), est
+partagé par tous les `about.ts` (et, à partir de P4 lot 2, par la provenance
+des faits pays) : une entrée = une source **et** un millésime (période décrite
+par la donnée, jamais la date de regen).
 
 Les faits quantitatifs (fuseaux, volcans, relief, forêt, centres urbains) sont
 des datasets datés dans `scripts/countries/data/`, fusionnés en scalaires par

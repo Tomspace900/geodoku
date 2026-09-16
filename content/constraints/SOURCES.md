@@ -94,7 +94,10 @@ Pour une contrainte **active** — on ne touche **jamais** `answers.ts` à la ma
    bougé depuis la dernière révision.
 5. Consigner tout arbitrage nouveau dans la section « Cas limites » ; mettre à
    jour `checked_at` (et `review_after` si utile).
-6. `pnpm check:content`, `pnpm test`, `pnpm simulate:scheduling`, puis
+6. Si la source citée ou son millésime ont changé, mettre à jour l'`about.ts`
+   de la contrainte (et `content/sources.ts` si la source elle-même est
+   nouvelle) — c'est ce texte, pas le `SOURCE.md`, qu'affiche le toast joueur.
+7. `pnpm check:content`, `pnpm test`, `pnpm simulate:scheduling`, puis
    régénération du pool depuis `/admin` une fois la revue produit faite — les
    grilles déjà publiées restent protégées par `gridAnswers`.
 

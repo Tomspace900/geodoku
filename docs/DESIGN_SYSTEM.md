@@ -70,6 +70,7 @@ Référence visuelle : [`ResultScreen.tsx`](../src/features/game/components/Resu
 | `hero-number` | `font-serif font-medium text-brand text-5xl` + caption `text-xs text-on-surface-variant`. Un seul par vue. |
 | `accent-word` | `<span className="text-brand font-medium">` |
 | `eyebrow` | [`Eyebrow`](../src/components/editorial/Eyebrow.tsx) ou [`PanelHeader`](../src/features/admin/components/PanelHeader.tsx) en admin |
+| `toast flottant` | [`ConstraintSourceToast`](../src/features/game/components/ConstraintSourceToast.tsx) : conteneur `fixed` bas d'écran `pointer-events-none`, toast lui-même `pointer-events-auto`, marge `env(safe-area-inset-bottom)`, `rounded-xl` + `shadow-editorial`, `role="status"` `aria-live="polite"`, z-index sous les Drawers/Dialogs (`z-40`). Un seul à la fois. |
 
 ### Composants admin
 

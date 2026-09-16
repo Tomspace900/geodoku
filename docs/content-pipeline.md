@@ -54,6 +54,10 @@ snapshot `gridAnswers`. Le contenu courant ne sert qu'à générer les candidats
 - Chaque contrainte porte un [`SOURCE.md`](../content/constraints/) : définition
   jouable, **dérivation** (champ du snapshot + seuil/pivot), cas limites. Le
   socle partagé est [`content/constraints/SOURCES.md`](../content/constraints/SOURCES.md).
+- Chaque contrainte active/archivée porte aussi un `about.ts` (source, millésime,
+  `basis`, clarification) affiché par le toast de source joueur — registre
+  [`content/constraints/abouts.ts`](../content/constraints/abouts.ts), sources
+  partagées dans [`content/sources.ts`](../content/sources.ts).
 
 ### Archivage (critique)
 
@@ -153,7 +157,11 @@ que le build ne produit plus.
 - **provenance** : présence d'un `SOURCE.md` par contrainte, frontmatter
   cohérent (`constraint_id` == dossier, `status` == actif/archivé réel,
   `checked_at`/`review_after` en `YYYY-MM-DD`), et présence des trois documents
-  de socle.
+  de socle ;
+- **sources des contraintes** : un `about.ts` par contrainte active/archivée
+  (aucun en réserve), chaque `SourceId` de `content/sources.ts` référencé par au
+  moins une contrainte, URLs `https://`, clarifications ≤ 160 caractères sans
+  nom de pays hors libellé traduit — `validateConstraintAbouts`.
 
 Les invariants par pays vivent dans
 [`scripts/countries/validateCountryCatalog.ts`](../scripts/countries/validateCountryCatalog.ts)
