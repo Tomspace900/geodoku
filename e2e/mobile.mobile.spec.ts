@@ -2,6 +2,7 @@ import { expect, test } from "@playwright/test";
 import {
   fetchTodayGrid,
   pickCountry,
+  playToDefeat,
   prepareSession,
   type TodayGrid,
   waitForGrid,
@@ -136,4 +137,32 @@ test("drawer can be dismissed by swiping down", async ({ page }) => {
   // Grid should still be visible after dismiss
   const cells = page.getByRole("button", { name: /^Select cell row/i });
   await expect(cells.first()).toBeVisible();
+});
+
+// ── 5. Grille solution — Drawer et fiche pays au toucher ─────────────────────
+
+test("tapping a solution cell then a country opens its sheet on mobile", async ({
+  page,
+}) => {
+  test.setTimeout(60_000);
+  await playToDefeat(page, grid);
+  await page.getByRole("button", { name: "Skip and view answers" }).tap();
+
+  const cellKey = "0,0";
+  const pick = pickCountry(grid.validAnswers, cellKey, new Set());
+  if (!pick)
+    throw new Error(`Invariant violated: cell ${cellKey} has no answer`);
+
+  await page.getByRole("button", { name: /^Row 1 column 1:/ }).tap();
+
+  const countryRow = page
+    .getByRole("button", { name: new RegExp(pick.name) })
+    .first();
+  await expect(countryRow).toBeVisible({ timeout: 5_000 });
+  await countryRow.tap();
+
+  await expect(
+    page.getByRole("heading", { name: pick.name, exact: true }),
+  ).toBeVisible({ timeout: 5_000 });
+  await expect(page.getByText("Landmarks")).toBeVisible();
 });

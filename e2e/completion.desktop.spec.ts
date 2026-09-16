@@ -4,6 +4,7 @@ import {
   fetchTodayGrid,
   fillCell,
   getResultDialog,
+  pickCountry,
   playToDefeat,
   prepareSession,
   solveGrid,
@@ -216,4 +217,50 @@ test("rating the difficulty acknowledges the feedback", async ({ page }) => {
   await expect(page.getByRole("button", { name: "View answers" })).toBeVisible({
     timeout: 5_000,
   });
+});
+
+// ── Grille solution — Drawer et fiche pays ───────────────────────────────────
+
+test("opening a solution cell lists its answers, and picking one opens the country sheet", async ({
+  page,
+}) => {
+  test.setTimeout(60_000);
+  await playToDefeat(page, grid);
+  await page.getByRole("button", { name: "Skip and view answers" }).click();
+
+  const cellKey = "0,0";
+  const pick = pickCountry(grid.validAnswers, cellKey, new Set());
+  if (!pick)
+    throw new Error(`Invariant violated: cell ${cellKey} has no answer`);
+
+  const openerCell = page.getByRole("button", { name: /^Row 1 column 1:/ });
+  await openerCell.click();
+
+  const countryRow = page
+    .getByRole("button", { name: new RegExp(pick.name) })
+    .first();
+  await expect(countryRow).toBeVisible({ timeout: 5_000 });
+  await countryRow.click();
+
+  // The country sheet replaces the list in place: back button focused, the
+  // country's name as heading, and at least one always-present category
+  // (every country carries landmarks/population facts).
+  const backButton = page.getByRole("button", { name: "Back to answers" });
+  await expect(backButton).toBeVisible({ timeout: 5_000 });
+  await expect(backButton).toBeFocused();
+  await expect(
+    page.getByRole("heading", { name: pick.name, exact: true }),
+  ).toBeVisible();
+  await expect(page.getByText("Landmarks")).toBeVisible();
+  await expect(page.getByText("Population")).toBeVisible();
+
+  // Back to the list restores focus on the row that was opened.
+  await backButton.click();
+  await expect(countryRow).toBeVisible();
+  await expect(countryRow).toBeFocused();
+
+  // Closing the drawer returns focus to the cell that opened it.
+  await page.keyboard.press("Escape");
+  await expect(backButton).toBeHidden({ timeout: 3_000 });
+  await expect(openerCell).toBeFocused();
 });
