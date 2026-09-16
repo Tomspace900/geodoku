@@ -12,6 +12,8 @@ export const en = {
     errorUnknown: "Unknown error.",
     rarityEvolvesHint: "Rarities keep shifting as more people play today.",
     constraintSourceConvention: "Geodoku classification",
+    constraintSourcePrefix: "Source:",
+    constraintSourcesPrefix: "Sources:",
     feedbackQuestion: "How did you find this grid?",
     feedbackError: "We couldn't save your rating.",
     feedbackRetry: "Try again",

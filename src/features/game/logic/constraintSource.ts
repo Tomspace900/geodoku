@@ -1,9 +1,10 @@
 import type { Locale } from "@/i18n";
 import type { ConstraintId } from "../../../../content/constraints";
 import { aboutForConstraint } from "../../../../content/constraints/abouts";
-import { SOURCES } from "../../../../content/sources";
+import { SOURCES, type SourceId } from "../../../../content/sources";
 
 export type ConstraintSourceReference = Readonly<{
+  id: SourceId;
   name: string;
   url: string;
   vintage: string | null;
@@ -28,6 +29,7 @@ export function constraintSourceView(
     sources: about.sources.map((sourceId) => {
       const source = SOURCES[sourceId];
       return {
+        id: sourceId,
         name: source.name[locale],
         url: source.url,
         vintage: source.vintage ? source.vintage[locale] : null,

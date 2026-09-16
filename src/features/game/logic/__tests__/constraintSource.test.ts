@@ -6,6 +6,7 @@ describe("constraintSourceView", () => {
     const view = constraintSourceView("nature_active_volcano", "fr");
     expect(view.sources).toEqual([
       {
+        id: "smithsonian_gvp",
         name: "Smithsonian Global Volcanism Program",
         url: "https://volcano.si.edu/",
         vintage: null,
@@ -41,5 +42,11 @@ describe("constraintSourceView", () => {
       "world-countries",
       "REST Countries",
     ]);
+  });
+
+  it("une convention peut n'avoir aucune source externe", () => {
+    const view = constraintSourceView("physical_peak_over_5000m", "fr");
+    expect(view.sources).toEqual([]);
+    expect(view.isConvention).toBe(true);
   });
 });

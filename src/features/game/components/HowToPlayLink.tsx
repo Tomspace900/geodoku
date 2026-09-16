@@ -152,6 +152,10 @@ export function HowToPlayLink() {
             ))}
           </ol>
 
+          <p className="text-center text-xs text-on-surface-variant">
+            {t("howToPlay.sourcesHint")}
+          </p>
+
           <label
             htmlFor="howtoplay-dont-show"
             className="flex items-center gap-2 text-xs text-on-surface-variant cursor-pointer select-none"
@@ -163,10 +167,6 @@ export function HowToPlayLink() {
             />
             <span>{t("howToPlay.dontShowAgain")}</span>
           </label>
-
-          <p className="text-center text-xs text-on-surface-variant">
-            {t("howToPlay.sourcesHint")}
-          </p>
         </DialogContent>
       </Dialog>
     </>

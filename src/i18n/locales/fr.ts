@@ -14,6 +14,8 @@ export const fr = {
     errorUnknown: "Erreur inconnue.",
     rarityEvolvesHint: "Les raretés évoluent au fil des parties du jour.",
     constraintSourceConvention: "Classification Geodoku",
+    constraintSourcePrefix: "Source :",
+    constraintSourcesPrefix: "Sources :",
     feedbackQuestion: "Comment as-tu trouvé la grille\u00A0?",
     feedbackError: "La note n'a pas pu être enregistrée.",
     feedbackRetry: "Réessayer",

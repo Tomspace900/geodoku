@@ -62,23 +62,34 @@ export function ConstraintSourceToast({ toast }: Props) {
         </div>
 
         <p className="mt-1 font-sans text-xs text-on-surface-variant">
-          {view.sources.map((source, index) => (
-            <span key={source.url}>
-              {index > 0 && ", "}
-              <Button
-                asChild
-                variant="link"
-                className="text-xs text-on-surface-variant"
-              >
-                <a href={source.url} target="_blank" rel="noreferrer">
-                  {source.name}
-                </a>
-              </Button>
-              {source.vintage ? ` (${source.vintage})` : ""}
-            </span>
-          ))}
-          {view.isConvention && (
-            <span> — {t("ui.constraintSourceConvention")}</span>
+          {view.sources.length > 0 ? (
+            <>
+              {t(
+                view.sources.length > 1
+                  ? "ui.constraintSourcesPrefix"
+                  : "ui.constraintSourcePrefix",
+              )}{" "}
+              {view.sources.map((source, index) => (
+                <span key={source.id}>
+                  {index > 0 && ", "}
+                  <Button
+                    asChild
+                    variant="link"
+                    className="text-xs text-on-surface-variant"
+                  >
+                    <a href={source.url} target="_blank" rel="noreferrer">
+                      {source.name}
+                    </a>
+                  </Button>
+                  {source.vintage ? ` (${source.vintage})` : ""}
+                </span>
+              ))}
+              {view.isConvention && (
+                <span> — {t("ui.constraintSourceConvention")}</span>
+              )}
+            </>
+          ) : (
+            t("ui.constraintSourceConvention")
           )}
         </p>
 
