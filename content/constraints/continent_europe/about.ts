@@ -3,5 +3,8 @@ import { defineAbout } from "../defineAbout";
 export default defineAbout("continent_europe", {
   sources: ["un_m49"],
   basis: "convention",
-  clarification: null,
+  clarification: {
+    fr: "Un pays à cheval sur deux continents n'est compté que dans un seul.",
+    en: "A country spanning two continents counts for only one of them.",
+  },
 });

@@ -41,7 +41,7 @@ export const SOURCES = {
   iana_tz: {
     name: { fr: "IANA Time Zone Database", en: "IANA Time Zone Database" },
     url: "https://www.iana.org/time-zones",
-    vintage: null,
+    vintage: { fr: "au 15 janvier 2026", en: "as of 15 January 2026" },
   },
   fifa_world_cup: {
     name: { fr: "FIFA — Coupe du monde", en: "FIFA — World Cup" },
@@ -64,22 +64,6 @@ export const SOURCES = {
     url: "https://www.cia.gov/the-world-factbook/field/government-type/",
     vintage: null,
   },
-  cia_factbook_capital: {
-    name: {
-      fr: "CIA World Factbook — Capitale",
-      en: "CIA World Factbook — Capital",
-    },
-    url: "https://www.cia.gov/the-world-factbook/field/capital/",
-    vintage: null,
-  },
-  cia_factbook_elevation: {
-    name: {
-      fr: "CIA World Factbook — Altitude",
-      en: "CIA World Factbook — Elevation",
-    },
-    url: "https://www.cia.gov/the-world-factbook/field/elevation/",
-    vintage: null,
-  },
   cia_factbook_independence: {
     name: {
       fr: "CIA World Factbook — Indépendance",
@@ -99,7 +83,7 @@ export const SOURCES = {
       en: "IHO S-23 — Limits of Oceans and Seas",
     },
     url: "https://iho.int/uploads/user/pubs/standards/s-23/S-23_Ed3_1953_EN.pdf",
-    vintage: { fr: "1953", en: "1953" },
+    vintage: null,
   },
   nasa_modis_mcd12q1: {
     name: { fr: "NASA MODIS MCD12Q1", en: "NASA MODIS MCD12Q1" },

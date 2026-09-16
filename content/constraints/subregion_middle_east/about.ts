@@ -1,10 +1,10 @@
 import { defineAbout } from "../defineAbout";
 
 export default defineAbout("subregion_middle_east", {
-  sources: ["un_m49"],
+  sources: [],
   basis: "convention",
   clarification: {
-    fr: "Moyen-Orient perçu par les joueurs, pas la sous-région ONU officielle.",
-    en: "The Middle East as commonly perceived, not the official UN subregion.",
+    fr: "Moyen-Orient au sens courant, qui ne coïncide pas avec la sous-région ONU.",
+    en: "The Middle East in its common sense, which differs from the UN subregion.",
   },
 });
