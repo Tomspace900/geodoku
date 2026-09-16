@@ -16,10 +16,8 @@ import type {
 import { useLocale } from "@/i18n/LocaleContext";
 import type { Locale } from "@/i18n/types";
 import { cn } from "@/lib/utils";
+import { ConstraintHeaderButton } from "./ConstraintHeaderButton";
 import { GridMatrix } from "./GridMatrix";
-
-const headerClass =
-  "flex items-center justify-center text-center text-[10px] font-medium text-on-surface-variant bg-surface-low rounded-xl p-2 leading-tight min-h-[52px]";
 
 function compareIsoByLocalizedName(
   locale: Locale,
@@ -38,6 +36,7 @@ type Props = {
   distribution: Record<string, CellGuessDistribution> | undefined;
   cells: Record<CellKey, Cell>;
   mode?: GameModeId;
+  onHeaderClick: (constraintId: ConstraintId) => void;
 };
 
 export function SolutionGrid({
@@ -47,6 +46,7 @@ export function SolutionGrid({
   distribution,
   cells,
   mode = "daily",
+  onHeaderClick,
 }: Props) {
   const { locale, t } = useLocale();
   const rowLabels = rows.map((constraintId) => {
@@ -67,11 +67,17 @@ export function SolutionGrid({
       )}
       rowLabels={rowLabels}
       colLabels={colLabels}
-      renderColumnHeader={(label) => (
-        <div className={cn(headerClass, "p-1.5")}>{label}</div>
+      renderColumnHeader={(label, col) => (
+        <ConstraintHeaderButton
+          label={label}
+          onClick={() => onHeaderClick(cols[col])}
+        />
       )}
-      renderRowHeader={(label) => (
-        <div className={cn(headerClass, "p-1.5")}>{label}</div>
+      renderRowHeader={(label, row) => (
+        <ConstraintHeaderButton
+          label={label}
+          onClick={() => onHeaderClick(rows[row])}
+        />
       )}
       renderCell={({ row, col }) => {
         const key = `${row},${col}` as CellKey;

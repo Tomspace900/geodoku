@@ -42,3 +42,6 @@ export const SHARE_EMOJIS = {
   rare: "🟨", // Jaune : plus rare
   ultra: "🟥", // Rouge : ultra rare (le meilleur)
 } as const;
+
+/** Durée d'affichage du toast de source d'une contrainte avant fermeture auto. */
+export const CONSTRAINT_SOURCE_TOAST_MS = 6000;

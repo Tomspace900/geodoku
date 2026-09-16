@@ -163,6 +163,10 @@ export function HowToPlayLink() {
             />
             <span>{t("howToPlay.dontShowAgain")}</span>
           </label>
+
+          <p className="text-center text-xs text-on-surface-variant">
+            {t("howToPlay.sourcesHint")}
+          </p>
         </DialogContent>
       </Dialog>
     </>

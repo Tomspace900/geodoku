@@ -13,6 +13,7 @@ export const fr = {
     noResults: "Aucun pays trouvé.",
     errorUnknown: "Erreur inconnue.",
     rarityEvolvesHint: "Les raretés évoluent au fil des parties du jour.",
+    constraintSourceConvention: "Classification Geodoku",
     feedbackQuestion: "Comment as-tu trouvé la grille\u00A0?",
     feedbackError: "La note n'a pas pu être enregistrée.",
     feedbackRetry: "Réessayer",
@@ -182,6 +183,7 @@ export const fr = {
     rule4Body:
       "Plus ton pays est rare parmi les choix des autres joueurs du jour, plus il rapporte de points.",
     dontShowAgain: "Ne plus afficher",
+    sourcesHint: "Touche une contrainte pour voir d'où viennent les données.",
   },
   error: {
     already_used: "Ce pays a déjà été utilisé dans une autre cellule.",

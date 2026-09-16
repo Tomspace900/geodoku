@@ -7,7 +7,9 @@ import AppFooter from "@/app/AppFooter";
 import { Button } from "@/components/ui/button";
 import { ErrorScreen } from "@/features/errors/components/ErrorScreen";
 import { useBackendDownTimeout } from "@/features/errors/hooks/useBackendDownTimeout";
+import { useConstraintSourceToast } from "@/features/game/hooks/useConstraintSourceToast";
 import { useGameState } from "@/features/game/hooks/useGameState";
+import type { ConstraintId } from "@/features/game/logic/constraints";
 import {
   getGridNumberForDate,
   getGridNumberForTodayUtc,
@@ -16,6 +18,7 @@ import { useT } from "@/i18n/LocaleContext";
 import { focusWithoutVisibleRing } from "@/lib/focus";
 import { cn } from "@/lib/utils";
 import { api } from "../../../convex/_generated/api";
+import { ConstraintSourceToast } from "./components/ConstraintSourceToast";
 import { GameGrid } from "./components/GameGrid";
 import { GridSkeleton } from "./components/GridSkeleton";
 import { GuessModal } from "./components/GuessModal";
@@ -53,6 +56,26 @@ export function GamePage() {
   const [resultModalDismissed, setResultModalDismissed] = useState(false);
   const resultTriggerRef = useRef<HTMLButtonElement>(null);
   const prevStatusRef = useRef(state.status);
+  const sourceToast = useConstraintSourceToast();
+
+  // Ouvrir la modale de saisie ferme le toast de source, pour ne jamais superposer les deux.
+  // biome-ignore lint/correctness/useExhaustiveDependencies: close est stable
+  useEffect(() => {
+    if (state.selectedCell !== null) sourceToast.close();
+  }, [state.selectedCell]);
+
+  function handleHeaderClick(
+    constraintId: ConstraintId,
+    surface: "playing" | "solution",
+  ) {
+    posthog?.capture("constraint_source_viewed", {
+      grid_date: state.date,
+      mode: state.mode,
+      surface,
+      constraint_id: constraintId,
+    });
+    sourceToast.open(constraintId, surface);
+  }
 
   // biome-ignore lint/correctness/useExhaustiveDependencies: réinitialiser modale / vue lorsque la date de grille change (jour suivant)
   useEffect(() => {
@@ -126,6 +149,7 @@ export function GamePage() {
                 validAnswers={validAnswers}
                 distribution={guessDistribution ?? undefined}
                 cells={state.cells}
+                onHeaderClick={(id) => handleHeaderClick(id, "solution")}
               />
 
               <RarityHint />
@@ -185,6 +209,7 @@ export function GamePage() {
                   });
                   selectCell(cell);
                 }}
+                onHeaderClick={(id) => handleHeaderClick(id, "playing")}
               />
 
               <RarityHint />
@@ -219,6 +244,8 @@ export function GamePage() {
           onViewAnswers={(source) => dismissResultModal(source)}
         />
       )}
+
+      <ConstraintSourceToast toast={sourceToast} />
     </div>
   );
 }

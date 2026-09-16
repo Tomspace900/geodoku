@@ -11,6 +11,7 @@ export const en = {
     noResults: "No country found.",
     errorUnknown: "Unknown error.",
     rarityEvolvesHint: "Rarities keep shifting as more people play today.",
+    constraintSourceConvention: "Geodoku classification",
     feedbackQuestion: "How did you find this grid?",
     feedbackError: "We couldn't save your rating.",
     feedbackRetry: "Try again",
@@ -176,6 +177,7 @@ export const en = {
     rule4Body:
       "The rarer your country among today's players' picks, the more points it scores.",
     dontShowAgain: "Don't show again",
+    sourcesHint: "Tap a constraint to see where its data comes from.",
   },
   error: {
     already_used: "This country has already been used in another cell.",
