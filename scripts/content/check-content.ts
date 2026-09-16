@@ -16,7 +16,10 @@
  *   - **seam** : `content/` est terminal, aucun module n'y importe `@/…` ni ne
  *     remonte hors du dossier — cf. `validateContentSeam` ;
  *   - **provenance** : présence et frontmatter cohérent des `SOURCE.md`
- *     (un par contrainte) et des trois documents de socle.
+ *     (un par contrainte) et des trois documents de socle ;
+ *   - **sources des contraintes** : un `about.ts` par contrainte active/archivée,
+ *     sources référencées, URLs https, clarifications conformes — cf.
+ *     `validateConstraintAbouts`.
  *
  *   pnpm check:content
  */
@@ -45,6 +48,7 @@ import {
 } from "../countries/validateCountryCatalog";
 import { validateDatasetFacts } from "../countries/validateDatasetFacts";
 import { validateSovereigntySources } from "../countries/validateSovereigntySources";
+import { validateConstraintAbouts } from "./validateConstraintAbouts";
 import { validateContentSeam } from "./validateContentSeam";
 import { validateDerivationFreshness } from "./validateDerivationFreshness";
 
@@ -258,6 +262,7 @@ function main(): void {
   );
   errors.push(...validateContentSeam(resolve(".")));
   checkConstraintSources(errors);
+  errors.push(...validateConstraintAbouts());
 
   if (errors.length > 0) {
     throw new Error(`Contenu invalide:\n- ${errors.join("\n- ")}`);
