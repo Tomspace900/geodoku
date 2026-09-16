@@ -51,6 +51,7 @@ consigner au journal : `pnpm test` (nombre de tests), `pnpm check:content`
 | Contenu | Source(s) avec leur **millésime** ; la mention « Classification Geodoku » si la contrainte est une convention ; au plus **une** phrase de clarification. |
 | Millésime | La **période que décrit la donnée** (« 2024 », « campagnes 2023/24 à 2025/26 »). Aucune date quand la source n'en a pas (nomenclature, drapeaux, frontières). Jamais la date de regen ni `checked_at`. |
 | Convention | `basis: "convention"` quand l'appartenance à la liste est un **jugement éditorial Geodoku**, défendable mais discutable (symboles de drapeau, reliefs et milieux, Moyen-Orient, régime, continent des pays transcontinentaux). Une donnée d'autorité recopiée à la main (volcans, café, souveraineté) reste `basis: "source"`. |
+| Convention sans source (décidé au gate du lot 1) | Une convention **peut n'avoir aucune source externe** — `sources: []` — quand la revue éditoriale ne s'appuie sur aucun dataset lu par le pipeline (ex. `physical_peak_over_5000m`, `society_capital_not_largest`, `subregion_middle_east` : leurs `SOURCE.md` ne citent qu'une « revue éditoriale », jamais un dataset). Le toast affiche alors seulement « Classification Geodoku » (+ la clarification éventuelle), sans liste de sources ni préfixe « Source(s) : ». Anticiper une source que le pipeline ne lit pas encore (ex. citer le Factbook avant que le lot 5 ne le lise réellement) est **interdit** — cf. §2.1 « ne jamais citer une référence de révision que le pipeline ne lit pas ». `basis: "source"` reste soumis à `sources: readonly [SourceId, ...SourceId[]]` (au moins une entrée) : seule `"convention"` autorise le tableau vide. Vaut aussi pour `FactProvenance` au lot 2 (§2.3). |
 | Clarification | Seulement si le libellé est ambigu (la plupart valent `null`). **Aucun nom de pays**, sauf un pays déjà nommé par le libellé (« Frontalier de la Russie »). Aucune aide explicite. |
 | Niveau 2 | **Aucun.** Les cas limites restent dans les `SOURCE.md` et ne sont jamais affichés. |
 | Découvrabilité | Aucun indice permanent sur l'en-tête : un retour au survol ou à la pression seulement, et une phrase dans « Comment jouer ». |
@@ -88,6 +89,11 @@ Chaque lot est mergeable seul et enrichit la fiche dès son merge.
 **Recommandation de publication** (décision de l'utilisateur) : ne pas publier
 les fiches sur `main` avant le lot 3, sans quoi une fiche française afficherait
 « Vienna ».
+
+**Changelog** (décidé au gate du lot 1) : aucune entrée pour le lot 1 — le toast
+de source est une amélioration discrète, pas un événement à annoncer seul. Une
+entrée commune « sources et fiches pays » sera proposée à la publication des
+fiches (lot 3 au plus tôt, cf. recommandation ci-dessus).
 
 ## 2. Modèle cible
 
@@ -134,12 +140,15 @@ Règles :
 
 ```ts
 // content/constraints/type.ts — ajout
-export type ConstraintAbout<TId extends string> = Readonly<{
-  id: TId;
-  sources: readonly [SourceId, ...SourceId[]];
-  basis: ContentBasis;
-  clarification: LocalizedString | null;
-}>;
+// Union discriminée (décidée au gate du lot 1) : seule "convention" peut
+// n'avoir aucune source ; "source" en exige au moins une.
+export type ConstraintAboutSources =
+  | { basis: "source"; sources: readonly [SourceId, ...SourceId[]] }
+  | { basis: "convention"; sources: readonly SourceId[] };
+
+export type ConstraintAbout<TId extends string> = Readonly<
+  { id: TId; clarification: LocalizedString | null } & ConstraintAboutSources
+>;
 ```
 
 ```ts
@@ -185,6 +194,13 @@ tout changement se fait dans les deux. Le statut « curé » de la doc ne vaut
 **pas** automatiquement `convention` (cf. §1.1) : `flagColors`, `flagSymbols`,
 `flagLayout`, `geoTags`, `regime`, `physicalFeatures` et `continent` sont des
 conventions ; les datasets quantitatifs, `events` et `memberships` sont `source`.
+
+**Convention sans source (décidé au gate du lot 1, §1.1) :** `FactProvenance`
+doit suivre la même union discriminée que `ConstraintAbout` — `sources: []`
+autorisé seulement quand `basis: "convention"` et qu'aucun dataset n'est
+effectivement lu. Ne pas répéter au lot 2 l'erreur du lot 1 (citer une source
+que le pipeline ne lit pas encore) : un champ de convention sans dataset dédié
+n'a droit à aucune entrée `SOURCES`, pas à une entrée anticipant un lot futur.
 
 ### 2.4 Chargement paresseux de la fiche (lot 2)
 
@@ -740,6 +756,30 @@ de publication recommandées (PR `develop` → `main`, entrées changelog).
 - Dossier de gate : voir le message remis avec ce lot (captures desktop/mobile du toast — avec et sans clarification, contrainte de convention et contrainte source —, tableau des 89 `about.ts`, registre des sources).
 - Décisions utilisateur : en attente.
 - Merge : en attente.
-- Points ouverts :
+- Points ouverts (avant corrections — voir addendum ci-dessous) :
   - Deux citations de source anticipent une donnée que le pipeline ne lit pas encore littéralement aujourd'hui : `physical_peak_over_5000m` (`cia_factbook_elevation`) et `society_capital_not_largest` (`cia_factbook_capital`) sont la référence générale la plus défendable pour une revue éditoriale sans dataset dédié, et la première anticipe le choix du lot 5 — mais ce sont des choix éditoriaux à valider, pas des sources automatiquement vérifiées par le pipeline actuel.
   - `content/sources.ts` et les 89 `about.ts` sont un premier jet de curation (citations, millésimes, `basis`, clarifications) : à relire en détail avant merge, notamment la cohérence des choix `source` vs `convention` sur les familles `borders_*`, `ocean_*`/`physical_*` et `language_*`.
+
+#### Lot 1 — Corrections post-gate (branche p4-lot1, 2026-09-16)
+
+Corrections apportées suite à `scripts/dev/p4-lot1-corrections.md` (dossier de
+retour remis par l'utilisateur après la première présentation du gate).
+
+- Ligne de base / après : tests 572 → 577 · chargement initial 252,2 → 252,3 KiB gzip (inchangé, sous le plafond de 8 au-dessus du 246,4 du tout début) · chunk fiche : sans objet (lot 2)
+- Commits :
+  - `2adc94a` [FIX] Minuteur du toast de source régressait après pause + fermeture
+  - `a6ab9a8` [CONTENT] Convention sans source + corrections de curation (gate lot 1)
+  - `49fddbc` [FEAT] Toast : préfixe Source(s), rendu du cas sans source
+- Décisions utilisateur consignées :
+  1. Une convention peut n'avoir aucune source externe (reporté au plan §1.1, §2.2, §2.3).
+  2. Clarifications des continents et de l'hémisphère sud ajoutées ; monarchie et Moyen-Orient reformulées (§3 du dossier de corrections).
+  3. Changelog : aucune entrée pour le lot 1 ; entrée commune proposée à la publication des fiches (lot 3 au plus tôt) — reporté au plan §1.3.
+- Corrections bloquantes appliquées :
+  - **A. Bug du minuteur** (confirmé par un test qui reproduisait exactement le scénario du gate) : `pausedRef` n'était jamais réarmé par une fermeture explicite après une pause. `onHeaderClick()`/`close()` le remettent à `false`. 4 tests du hook avec minuteurs factices.
+  - **B. Sources inventées retirées** : `ConstraintAbout` est une union discriminée (`basis: "source"` exige ≥ 1 source, `"convention"` peut en avoir zéro) ; `physical_peak_over_5000m`, `society_capital_not_largest`, `subregion_middle_east` passent à `sources: []` ; `cia_factbook_elevation` et `cia_factbook_capital` retirés de `content/sources.ts`. Le toast n'affiche plus de préfixe « Source(s) » ni de liste quand `sources.length === 0`.
+  - **C. Contenu** : `society_drives_on_left` → `basis: "source"` ; `language_multilingual` → clarification `null` ; `iho_s23.vintage` → `null` ; `iana_tz.vintage` → « au 15 janvier 2026 » (`referenceDate` du dataset).
+- Mineurs appliqués : préfixe « Source : »/« Sources : » (i18n fr/en) ; clé React sur `source.id` plutôt que l'URL (les deux entrées EIA la partagent) ; `howToPlay.sourcesHint` déplacé avant la case « Ne plus afficher » ; duplication `GamePage`/`TrainingPage` supprimée (`useConstraintSourceToast({ gridDate, mode, selectedCell })` porte l'event PostHog et la fermeture à l'ouverture de la saisie, les pages ne câblent plus que `onHeaderClick`).
+- Gardes : `pnpm lint` OK (mêmes 2 avertissements pré-existants et sans rapport) · `pnpm test` OK (577/577) · `pnpm check:content` OK (77/12/8/197, 20 sources toutes référencées) · `pnpm check:design-system` OK (14 règles) · `pnpm check:bundle` OK · `pnpm test:e2e` OK (133/133, backend dev perso, suite complète)
+- Vérification manuelle (sur la grille du jour, `physical_peak_over_5000m` y figurant justement) : toast d'une convention sans source (« Has a peak over 5,000 m » → « Geodoku classification » seul, sans préfixe ni lien) ; toast avec préfixe (« More populous than Germany (83M) » → « Source : REST Countries ») ; scénario de régression rejoué en direct dans le navigateur — survol, fermeture par la croix, tap sur un autre en-tête, 7 s d'attente sans interaction : fermeture seule confirmée, plus de blocage.
+- Points ouverts restants : le reste de la curation `content/sources.ts`/`about.ts` (cohérence `source` vs `convention` sur `borders_*`/`ocean_*`/`physical_*`/`language_*`) n'a pas été retouché dans cette manche — non demandé, à revoir séparément si besoin.
+- Merge : en attente (nouveau feu vert requis).
