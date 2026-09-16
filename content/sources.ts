@@ -145,6 +145,14 @@ export const SOURCES = {
     url: "https://ember-energy.org/data/data-tools/data-explorer/",
     vintage: { fr: "2024", en: "2024" },
   },
+  ghsl_urban_centre_database: {
+    name: {
+      fr: "GHSL Urban Centre Database",
+      en: "GHSL Urban Centre Database",
+    },
+    url: "https://human-settlement.emergency.copernicus.eu/ghs_ucdb_2024.php",
+    vintage: { fr: "2025", en: "2025" },
+  },
 } as const satisfies Record<string, SourceReference>;
 
 export type SourceId = keyof typeof SOURCES;

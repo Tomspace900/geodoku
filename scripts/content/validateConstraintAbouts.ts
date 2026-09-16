@@ -8,9 +8,6 @@
  * `checkAnswerSets` pour `answers.ts` :
  *   - présence d'un `about.ts` par dossier actif/archivé, absence en réserve,
  *     aucun dossier orphelin (contrôle **fichier**, indépendant du registre) ;
- *   - chaque `SourceId` de `content/sources.ts` est référencé par au moins une
- *     contrainte ;
- *   - chaque URL de source est en `https://` ;
  *   - une clarification non nulle a des `fr`/`en` non vides, ≤ 160 caractères,
  *     et ne nomme aucun pays du catalogue — sauf un nom déjà présent dans le
  *     libellé traduit de la contrainte, ou une exception motivée dans
@@ -20,6 +17,12 @@
  * Les fonctions `*Errors` sont pures (données injectées, testables en isolation
  * dans les deux sens) ; `validateConstraintAbouts` les câble sur le contenu réel,
  * sur le patron de `validateContentSeam` / `contentSeamViolations`.
+ *
+ * `referencedSourcesFromAbouts` est réutilisée par `check-content.ts`, qui
+ * l'unit avec `referencedSourcesFromFactProvenance` (lot 2) avant d'appeler
+ * `unreferencedSourceErrors` une seule fois sur l'ensemble de
+ * `content/sources.ts` — une source ne servant qu'aux faits pays
+ * (`ghsl_urban_centre_database`) ne doit pas être signalée orpheline ici.
  */
 import { existsSync, readdirSync, statSync } from "node:fs";
 import { resolve } from "node:path";
@@ -31,7 +34,7 @@ import {
 } from "../../content/constraints";
 import { aboutForConstraint } from "../../content/constraints/abouts";
 import { COUNTRY_CATALOG } from "../../content/countries/catalog";
-import { SOURCES, type SourceId } from "../../content/sources";
+import type { SourceId } from "../../content/sources";
 import type { LocalizedString } from "../../content/type";
 import { CONSTRAINT_BY_ID } from "../../src/features/game/logic/constraints";
 import { translate } from "../../src/i18n";
@@ -177,18 +180,15 @@ function allIds(): readonly ConstraintId[] {
   return [...CONSTRAINT_IDS, ...ARCHIVED_CONSTRAINT_IDS];
 }
 
-function checkSourcesReferenced(errors: string[]): void {
+/** Chaque `SourceId` cité par au moins un `about.ts` — voir `check-content.ts`. */
+export function referencedSourcesFromAbouts(): ReadonlySet<SourceId> {
   const referenced = new Set<SourceId>();
   allIds().forEach((id) => {
     aboutForConstraint(id).sources.forEach((sourceId) => {
       referenced.add(sourceId);
     });
   });
-  errors.push(...unreferencedSourceErrors(Object.keys(SOURCES), referenced));
-}
-
-function checkSourceUrls(errors: string[]): void {
-  errors.push(...sourceUrlErrors(new Map(Object.entries(SOURCES))));
+  return referenced;
 }
 
 function localizedCountryNames(locale: "fr" | "en"): readonly string[] {
@@ -228,8 +228,6 @@ function checkClarifications(errors: string[]): void {
 export function validateConstraintAbouts(): string[] {
   const errors: string[] = [];
   checkAboutFiles(errors);
-  checkSourcesReferenced(errors);
-  checkSourceUrls(errors);
   checkClarifications(errors);
   return errors;
 }

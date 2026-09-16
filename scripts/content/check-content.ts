@@ -18,8 +18,10 @@
  *   - **provenance** : présence et frontmatter cohérent des `SOURCE.md`
  *     (un par contrainte) et des trois documents de socle ;
  *   - **sources des contraintes** : un `about.ts` par contrainte active/archivée,
- *     sources référencées, URLs https, clarifications conformes — cf.
- *     `validateConstraintAbouts`.
+ *     clarifications conformes — cf. `validateConstraintAbouts` ;
+ *   - **sources référencées** : chaque `SourceId` de `content/sources.ts` (about.ts
+ *     des contraintes + `factProvenance.ts` des faits pays, lot 2) est cité au
+ *     moins une fois, et chaque URL de source est en `https://`.
  *
  *   pnpm check:content
  */
@@ -37,6 +39,7 @@ import { COUNTRY_CATALOG } from "../../content/countries/catalog";
 import { COUNTRY_CODES } from "../../content/countries/countryCodes";
 import { COUNTRY_FACTS } from "../../content/countries/facts";
 import { COUNTRY_POPULARITY } from "../../content/countries/popularity";
+import { SOURCES } from "../../content/sources";
 import {
   ARCHIVED_CONSTRAINTS,
   CONSTRAINTS,
@@ -48,9 +51,15 @@ import {
 } from "../countries/validateCountryCatalog";
 import { validateDatasetFacts } from "../countries/validateDatasetFacts";
 import { validateSovereigntySources } from "../countries/validateSovereigntySources";
-import { validateConstraintAbouts } from "./validateConstraintAbouts";
+import {
+  referencedSourcesFromAbouts,
+  sourceUrlErrors,
+  unreferencedSourceErrors,
+  validateConstraintAbouts,
+} from "./validateConstraintAbouts";
 import { validateContentSeam } from "./validateContentSeam";
 import { validateDerivationFreshness } from "./validateDerivationFreshness";
+import { referencedSourcesFromFactProvenance } from "./validateFactProvenance";
 
 const EXPECTED_COUNTRY_COUNT = 197;
 const EXPECTED_ACTIVE_COUNT = 77;
@@ -263,6 +272,15 @@ function main(): void {
   errors.push(...validateContentSeam(resolve(".")));
   checkConstraintSources(errors);
   errors.push(...validateConstraintAbouts());
+
+  const referencedSources = new Set([
+    ...referencedSourcesFromAbouts(),
+    ...referencedSourcesFromFactProvenance(),
+  ]);
+  errors.push(
+    ...unreferencedSourceErrors(Object.keys(SOURCES), referencedSources),
+  );
+  errors.push(...sourceUrlErrors(new Map(Object.entries(SOURCES))));
 
   if (errors.length > 0) {
     throw new Error(`Contenu invalide:\n- ${errors.join("\n- ")}`);
