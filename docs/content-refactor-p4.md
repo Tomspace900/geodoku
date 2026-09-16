@@ -800,3 +800,27 @@ retour remis par l'utilisateur après la première présentation du gate).
 - Merge : local dans `develop`, branche `p4-lot1` supprimée après merge, pas de
   push (l'utilisateur s'en charge). P4 ne modifie aucune liste `answers.ts` :
   aucun `refreshPool` requis.
+
+### Lot 2 — Grille solution, Drawer et fiches (branche p4-lot2, 2026-09-16/17)
+
+- Ligne de base / après : tests 577 → 610 · chargement initial 252,3 → 257,4 KiB gzip (+5,1, sous le plafond de 10) · chunk fiche pays : 24,3 KiB gzip (nouveau, `countrySheetData-*.js`)
+- Commits :
+  - `e21254b` [FEAT] Provenance des faits pays — content/sources.ts et factProvenance.ts
+  - `9839615` [FEAT] Logique pure du résumé de case et du modèle de fiche pays
+  - `71e5a94` [FEAT] Chargement paresseux de la fiche pays et garde de bundle
+  - `0f64c51` [FEAT] Grille solution cliquable, Drawer de réponses et fiche pays (UI)
+  - `7accae9` [TEST] e2e — grille solution, Drawer et fiche pays
+  - `7085969` [DOCS] Lot 2 — factProvenance, chunk de fiche, events analytics
+- Écarts au plan :
+  - Deux bugs trouvés à la vérification visuelle en direct (aucun test automatisé ne les couvrait, les deux formateurs testés utilisaient des valeurs attendues que j'avais moi-même mal calculées à l'écriture des tests) :
+    - `formatYear` groupait les années par milliers (`Intl.NumberFormat` par défaut) — « Indépendance (1 922) » au lieu de « 1922 ». Corrigé avec `useGrouping: false` ; jamais pertinent pour une année civile.
+    - Le rang de production s'affichait sans phrase (« 15e Gaz naturel ») au lieu d'une lecture complète. Ajout de la clé i18n `countrySheet.value.productionRank` (« 15e producteur mondial de Gaz naturel »).
+  - `Edit` a échoué à répétition sur `fr.ts` malgré un contenu byte-identique vérifié (`od`/`xxd`) ; contournement par réécriture complète du fichier via `Write` — aucun impact sur le contenu final, juste un détour d'outillage.
+- Gardes : `pnpm lint` OK (mêmes 2 avertissements pré-existants et sans rapport, non liés à ce lot) · `pnpm test` OK (610/610) · `pnpm check:content` OK (77/12/8/197) · `pnpm check:design-system` OK (14 règles, aucune violation) · `pnpm check:bundle` OK (+5,1 KiB, chunk fiche 24,3 KiB, `content/countries/facts.ts` absent du graphe initial — vérifié par le script ET relu à la main dans `dist/.bundle-modules.json`) · `pnpm test:e2e` OK (137/137, backend dev perso, suite complète — deux passes, avant et après les deux corrections ci-dessus, la seconde contre la grille du 2026-09-17 après bascule de jour)
+- Vérification manuelle : grille solution, Drawer (liste triée par rareté) et fiche pays testés en direct sur desktop (1280px) et mobile (375px, Egypte : les 6 catégories, retour, fermeture) ; fiche multi-capitales vérifiée sur l'Afrique du Sud (« Pretoria (Executive), Cape Town (Legislative), and Bloemfontein (Judicial) (not the largest city) ») ; aucune fiche atteignable en cours de partie, en quotidien (`GamePage.tsx`, `state.status !== "playing"`) comme en entraînement (`TrainingPage.tsx`, `isFinished`) — grille solution non montée avant la fin de partie dans les deux cas, confirmé au code et à l'écran (grille de jeu normale affichée mi-partie en entraînement, aucun bouton de case cliquable vers une fiche).
+- Codes de langue sans nom `Intl` (relevé empirique sur les 90 codes `officialLanguages` du snapshot, 5 en défaut) et leur libellé curé : `ber` → « Langues berbères »/« Berber languages » ; `bjz` → « Créole du Belize »/« Belize Kriol English » ; `nzs` → « Langue des signes néo-zélandaise »/« New Zealand Sign Language » ; `pov` → « Créole de Guinée-Bissau »/« Upper Guinea Crioulo » ; `zdj` → « Comorien ngazidja »/« Ngazidja Comorian ».
+- Revue d'affichage (faits corrects en dérivation, potentiellement trompeurs une fois affichés isolément) :
+  - Souveraineté d'un pays classé `independence` sans `formerSovereigns` (FRA, GBR, DEU) : la fiche affiche « Indépendance (année) » sans puissance de tutelle — lu isolément, on peut croire à une omission de donnée plutôt qu'à l'absence structurelle de colonisateur. Règle recommandée : pas de changement de donnée (le champ est correct), mais si un jour la ligne « Ancienne puissance » est masquée par manque de place à côté de « Souveraineté », les deux doivent rester adjacentes pour que l'absence de la première se lise comme une réponse, pas un trou.
+  - Pays sans date d'indépendance officielle reconnue (cas `sovereigntyYear`/`sovereigntyKind` `null`) : la ligne « Souveraineté » est simplement masquée (règle déjà en place, cf. tableau §3 du lot). Aucun changement requis — signalé pour mémoire, pas un défaut.
+- Merge : en attente (feu vert requis avant merge, comme pour le lot 1).
+- Points ouverts : aucun — pas de curation `content/sources.ts`/`about.ts` supplémentaire touchée par ce lot (le registre est celui étendu par `factProvenance.ts`, cohérent avec la revue déjà validée au lot 1).
