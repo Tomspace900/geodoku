@@ -1,4 +1,3 @@
-import { usePostHog } from "@posthog/react";
 import { useQuery } from "convex/react";
 import { RotateCcw } from "lucide-react";
 import { type ReactNode, useEffect, useState } from "react";
@@ -14,7 +13,6 @@ import { GuessModal } from "@/features/game/components/GuessModal";
 import { Header } from "@/features/game/components/Header";
 import { SolutionGrid } from "@/features/game/components/SolutionGrid";
 import { useConstraintSourceToast } from "@/features/game/hooks/useConstraintSourceToast";
-import type { ConstraintId } from "@/features/game/logic/constraints";
 import { getGridNumberForDate } from "@/features/game/logic/gridIssue";
 import { loadPersistedGame } from "@/features/game/logic/persistence";
 import { classifyReplayDate } from "@/features/game/logic/replayWindow";
@@ -102,7 +100,6 @@ export function TrainingPage() {
  */
 function TrainingBoard({ date }: { date: string }) {
   const t = useT();
-  const posthog = usePostHog();
   const {
     state,
     selectCell,
@@ -112,26 +109,11 @@ function TrainingBoard({ date }: { date: string }) {
     hasGrid,
     validAnswers,
   } = useTrainingGame(date);
-  const sourceToast = useConstraintSourceToast();
-
-  // Ouvrir la modale de saisie ferme le toast de source, pour ne jamais superposer les deux.
-  // biome-ignore lint/correctness/useExhaustiveDependencies: close est stable
-  useEffect(() => {
-    if (state.selectedCell !== null) sourceToast.close();
-  }, [state.selectedCell]);
-
-  function handleHeaderClick(
-    constraintId: ConstraintId,
-    surface: "playing" | "solution",
-  ) {
-    posthog?.capture("constraint_source_viewed", {
-      grid_date: state.date,
-      mode: state.mode,
-      surface,
-      constraint_id: constraintId,
-    });
-    sourceToast.open(constraintId, surface);
-  }
+  const sourceToast = useConstraintSourceToast({
+    gridDate: state.date,
+    mode: state.mode,
+    selectedCell: state.selectedCell,
+  });
 
   // Rareté de la cohorte du jour concerné : complète et figée, donc le score
   // affiché est exact et stable (pas de marqueur « ≈ » qui bougerait).
@@ -170,14 +152,14 @@ function TrainingBoard({ date }: { date: string }) {
               distribution={distribution ?? undefined}
               cells={state.cells}
               mode="training"
-              onHeaderClick={(id) => handleHeaderClick(id, "solution")}
+              onHeaderClick={(id) => sourceToast.onHeaderClick(id, "solution")}
             />
           ) : (
             <GameGrid
               state={state}
               distribution={distribution ?? undefined}
               onCellClick={selectCell}
-              onHeaderClick={(id) => handleHeaderClick(id, "playing")}
+              onHeaderClick={(id) => sourceToast.onHeaderClick(id, "playing")}
             />
           )}
 

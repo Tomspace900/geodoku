@@ -9,7 +9,6 @@ import { ErrorScreen } from "@/features/errors/components/ErrorScreen";
 import { useBackendDownTimeout } from "@/features/errors/hooks/useBackendDownTimeout";
 import { useConstraintSourceToast } from "@/features/game/hooks/useConstraintSourceToast";
 import { useGameState } from "@/features/game/hooks/useGameState";
-import type { ConstraintId } from "@/features/game/logic/constraints";
 import {
   getGridNumberForDate,
   getGridNumberForTodayUtc,
@@ -56,26 +55,11 @@ export function GamePage() {
   const [resultModalDismissed, setResultModalDismissed] = useState(false);
   const resultTriggerRef = useRef<HTMLButtonElement>(null);
   const prevStatusRef = useRef(state.status);
-  const sourceToast = useConstraintSourceToast();
-
-  // Ouvrir la modale de saisie ferme le toast de source, pour ne jamais superposer les deux.
-  // biome-ignore lint/correctness/useExhaustiveDependencies: close est stable
-  useEffect(() => {
-    if (state.selectedCell !== null) sourceToast.close();
-  }, [state.selectedCell]);
-
-  function handleHeaderClick(
-    constraintId: ConstraintId,
-    surface: "playing" | "solution",
-  ) {
-    posthog?.capture("constraint_source_viewed", {
-      grid_date: state.date,
-      mode: state.mode,
-      surface,
-      constraint_id: constraintId,
-    });
-    sourceToast.open(constraintId, surface);
-  }
+  const sourceToast = useConstraintSourceToast({
+    gridDate: state.date,
+    mode: state.mode,
+    selectedCell: state.selectedCell,
+  });
 
   // biome-ignore lint/correctness/useExhaustiveDependencies: réinitialiser modale / vue lorsque la date de grille change (jour suivant)
   useEffect(() => {
@@ -149,7 +133,9 @@ export function GamePage() {
                 validAnswers={validAnswers}
                 distribution={guessDistribution ?? undefined}
                 cells={state.cells}
-                onHeaderClick={(id) => handleHeaderClick(id, "solution")}
+                onHeaderClick={(id) =>
+                  sourceToast.onHeaderClick(id, "solution")
+                }
               />
 
               <RarityHint />
@@ -209,7 +195,7 @@ export function GamePage() {
                   });
                   selectCell(cell);
                 }}
-                onHeaderClick={(id) => handleHeaderClick(id, "playing")}
+                onHeaderClick={(id) => sourceToast.onHeaderClick(id, "playing")}
               />
 
               <RarityHint />
