@@ -783,3 +783,20 @@ retour remis par l'utilisateur après la première présentation du gate).
 - Vérification manuelle (sur la grille du jour, `physical_peak_over_5000m` y figurant justement) : toast d'une convention sans source (« Has a peak over 5,000 m » → « Geodoku classification » seul, sans préfixe ni lien) ; toast avec préfixe (« More populous than Germany (83M) » → « Source : REST Countries ») ; scénario de régression rejoué en direct dans le navigateur — survol, fermeture par la croix, tap sur un autre en-tête, 7 s d'attente sans interaction : fermeture seule confirmée, plus de blocage.
 - Points ouverts restants : le reste de la curation `content/sources.ts`/`about.ts` (cohérence `source` vs `convention` sur `borders_*`/`ocean_*`/`physical_*`/`language_*`) n'a pas été retouché dans cette manche — non demandé, à revoir séparément si besoin.
 - Merge : en attente (nouveau feu vert requis).
+
+#### Lot 1 — Feu vert conditionnel (branche p4-lot1, 2026-09-16)
+
+- Décision utilisateur : feu vert pour le lot 1, **sous réserve** d'un dernier
+  correctif ; la curation `source`/`convention` des familles frontières,
+  océans, côtes et langues (dernier point ouvert ci-dessus) est **validée
+  telle quelle** — point clos, rien à y revoir.
+- Correctif : dans `useConstraintSourceToast.onHeaderClick`, l'event PostHog
+  `constraint_source_viewed` ne devait s'émettre que lorsque le clic **ouvre**
+  un toast, jamais quand il le ferme (tap sur l'en-tête déjà affiché) — sinon
+  une fermeture se comptait à tort comme une consultation. La capture est
+  déplacée après la sortie anticipée du cas « même en-tête → fermeture ».
+- Gardes : `pnpm lint` OK (mêmes 2 avertissements pré-existants et sans
+  rapport) · `pnpm test` OK (577/577).
+- Merge : local dans `develop`, branche `p4-lot1` supprimée après merge, pas de
+  push (l'utilisateur s'en charge). P4 ne modifie aucune liste `answers.ts` :
+  aucun `refreshPool` requis.
