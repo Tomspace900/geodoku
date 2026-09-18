@@ -14,9 +14,13 @@ import type {
   SolutionCellDrawerView,
   useSolutionCellDrawer,
 } from "@/features/game/hooks/useSolutionCellDrawer";
-import { RARITY_STYLES } from "@/features/game/logic/constants";
+import {
+  RARITY_STYLES,
+  UI_ANIMATION_MS,
+} from "@/features/game/logic/constants";
 import { CONSTRAINT_BY_ID } from "@/features/game/logic/constraints";
 import {
+  filledCellShare,
   formatRarityPercent,
   isCohortComplete,
 } from "@/features/game/logic/rarity";
@@ -63,14 +67,16 @@ function ListView({
       return na.localeCompare(nb, locale);
     },
   );
-  const hasData = cellDist !== undefined;
-
   return (
     <ul className="flex flex-col gap-1 overflow-y-auto px-4 pb-4">
       {ordered.map(({ iso, tier }) => {
         const country = getCountryByIso3(iso);
         const isUserPick = iso === userPickIso;
-        const share = cellDist?.rarityByCountry[iso];
+        // Même base de rareté que la case et le jeu (`filledCellShare`), pas
+        // `cellDist.rarityByCountry` brut : sur une cohorte close (entraînement),
+        // une réponse jamais choisie est absente de la distribution brute mais
+        // vaut tout de même une part de 0 (donc ultra), pas « aucun badge ».
+        const share = filledCellShare(iso, cellDist, cohortComplete);
         return (
           <li key={iso}>
             <Button
@@ -98,14 +104,14 @@ function ListView({
                   {t("ui.yourPick")}
                 </span>
               )}
-              {hasData && share !== undefined && (
+              {share && (
                 <span
                   className={cn(
                     "shrink-0 rounded-full px-2 py-0.5 text-[10px] font-medium",
                     tier ? RARITY_STYLES[tier] : "text-on-surface-variant",
                   )}
                 >
-                  {formatRarityPercent(share)}
+                  {formatRarityPercent(share.share)}
                 </span>
               )}
             </Button>
@@ -143,9 +149,9 @@ function SheetView({
         >
           <ChevronLeft size={18} />
         </Button>
-        <h3 className="min-w-0 truncate font-serif text-lg font-medium text-on-surface">
+        <DrawerTitle className="min-w-0 truncate font-serif text-lg font-medium text-on-surface">
           {country ? country.names[locale] : iso3}
-        </h3>
+        </DrawerTitle>
       </div>
 
       {state.status === "loading" && (
@@ -219,7 +225,7 @@ export function SolutionCellDrawer({
 
   function handleClose() {
     setOpen(false);
-    setTimeout(drawer.close, 300);
+    setTimeout(drawer.close, UI_ANIMATION_MS.drawerClose);
   }
 
   // Focus : entrée dans la fiche → bouton retour ; retour à la liste → ligne du pays.

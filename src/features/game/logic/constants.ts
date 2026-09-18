@@ -7,6 +7,8 @@ export const UI_ANIMATION_MS = {
   errorFeedback: 1500,
   heartBreak: 450,
   flagBounce: 700,
+  /** Laisse l'animation de fermeture du Drawer (vaul) se jouer avant de démonter. */
+  drawerClose: 300,
 } as const;
 
 /** Pastilles / lignes de rareté (aligné cellules de jeu et grille solution). */

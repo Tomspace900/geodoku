@@ -49,11 +49,15 @@ function CountryPill({
   tier,
   locale,
   emphasis,
+  isUserPick,
+  rarestBadgeLabel,
 }: {
   iso: string;
   tier: RarityTier | null;
   locale: Locale;
   emphasis: boolean;
+  isUserPick?: boolean;
+  rarestBadgeLabel?: string;
 }) {
   const country = getCountryByIso3(iso);
   return (
@@ -62,6 +66,7 @@ function CountryPill({
         "flex w-full min-w-0 items-center justify-center gap-1 rounded-md px-1 py-0.5 text-[11px] font-medium leading-tight",
         tier ? RARITY_STYLES[tier] : "text-on-surface",
         !emphasis && "opacity-80",
+        isUserPick && "ring-1 ring-inset ring-on-surface/40",
       )}
     >
       <span aria-hidden="true" className="shrink-0 text-[11px] leading-none">
@@ -70,6 +75,11 @@ function CountryPill({
       <span className="min-w-0 truncate">
         {country ? country.names[locale] : iso}
       </span>
+      {rarestBadgeLabel && (
+        <span className="shrink-0 text-[10px] font-normal opacity-80">
+          · {rarestBadgeLabel}
+        </span>
+      )}
     </span>
   );
 }
@@ -143,13 +153,27 @@ export function SolutionGrid({
           compareByName: (a, b) => compareIsoByLocalizedName(locale, a, b),
         });
 
-        const headline = summary.userPick
-          ? { iso: summary.userPick.iso, tier: summary.userPick.tier }
-          : summary.rarestFound
-            ? { iso: summary.rarestFound.iso, tier: summary.rarestFound.tier }
-            : null;
-        const secondary =
-          summary.userPick && summary.rarestFound ? summary.rarestFound : null;
+        // Une case vide ou bloquée affiche « — » en ligne principale : jamais
+        // le pays le plus rare trouvé à la place, qui la ferait passer pour
+        // remplie après une défaite. Le plus rare trouvé reste visible, mais
+        // sur sa propre ligne étiquetée, que la case soit remplie ou non.
+        const userPickName = summary.userPick
+          ? (getCountryByIso3(summary.userPick.iso)?.names[locale] ??
+            summary.userPick.iso)
+          : null;
+        const rarestName = summary.rarestFound
+          ? (getCountryByIso3(summary.rarestFound.iso)?.names[locale] ??
+            summary.rarestFound.iso)
+          : null;
+
+        const pickAriaSentence = summary.userPick
+          ? t("ui.solutionCellYourPick", { country: userPickName as string })
+          : cells[key]?.status === "blocked"
+            ? t("ui.solutionCellBlocked")
+            : t("ui.solutionCellEmpty");
+        const rarestAriaSentence = summary.rarestFound
+          ? t("ui.solutionCellRarestFound", { country: rarestName as string })
+          : "";
 
         return (
           <Button
@@ -157,32 +181,51 @@ export function SolutionGrid({
             variant="ghost"
             size="auto"
             onClick={() => onCellClick({ row, col })}
-            aria-label={t("ui.solutionCellAriaLabel", {
-              row: row + 1,
-              col: col + 1,
-              rowConstraint: rowLabel,
-              colConstraint: colLabel,
-              count: summary.answerCount,
-            })}
+            aria-label={[
+              t("ui.solutionCellAriaLabel", {
+                row: row + 1,
+                col: col + 1,
+                rowConstraint: rowLabel,
+                colConstraint: colLabel,
+                count: summary.answerCount,
+              }),
+              pickAriaSentence,
+              rarestAriaSentence,
+            ]
+              .filter(Boolean)
+              .join(" ")}
             className="relative isolate flex aspect-square w-full min-h-0 flex-col items-center justify-center gap-0.5 rounded-xl bg-surface-lowest p-1.5 shadow-editorial hover:bg-surface-highest/40"
           >
-            {headline && (
+            {summary.userPick ? (
               <CountryPill
-                iso={headline.iso}
-                tier={headline.tier}
+                iso={summary.userPick.iso}
+                tier={summary.userPick.tier}
                 locale={locale}
                 emphasis
+                isUserPick
+                rarestBadgeLabel={
+                  summary.userPick.isRarestFound
+                    ? t("ui.rarestFoundBadge")
+                    : undefined
+                }
               />
+            ) : (
+              <span className="text-[11px] text-on-surface-variant">—</span>
             )}
-            {secondary && (
-              <CountryPill
-                iso={secondary.iso}
-                tier={secondary.tier}
-                locale={locale}
-                emphasis={false}
-              />
+            {summary.rarestFound && (
+              <div className="flex w-full min-w-0 flex-col items-center gap-0.5">
+                <span className="text-[10px] leading-none text-on-surface-variant">
+                  {t("ui.rarestFoundLabel")}
+                </span>
+                <CountryPill
+                  iso={summary.rarestFound.iso}
+                  tier={summary.rarestFound.tier}
+                  locale={locale}
+                  emphasis={false}
+                />
+              </div>
             )}
-            <span className="text-[10px] text-on-surface-variant">
+            <span className="text-[11px] text-on-surface-variant">
               {t("countrySheet.cell.answerCount", {
                 count: summary.answerCount,
               })}
