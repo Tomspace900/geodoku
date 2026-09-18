@@ -46,15 +46,24 @@ RUNTIME + OUTILLAGE   matchesConstraint(id, iso3)
 enchaîne `pnpm build:answers`. Provenance par famille de champs :
 [`countries/SOURCE.md`](countries/SOURCE.md).
 
-- `countries/factProvenance.ts` — provenance **par champ** de `CountryFacts`
-  (`FACT_PROVENANCE : { [K in keyof CountryFacts]: FactProvenance }`), même
-  union `basis: "source"/"convention"` + `SourceId[]` que les `about.ts` des
-  contraintes. Consommé par `buildCountrySheet` (fiche pays,
-  `src/features/countries/logic/countrySheet.ts`), jamais par le snapshot lui-même :
-  éditée à la main, elle **doit évoluer avec** le tableau de
-  [`countries/SOURCE.md`](countries/SOURCE.md) plutôt qu'avec `facts.ts`. Gardée
-  par `pnpm check:content` (`validateFactProvenance.ts`), qui étend la
-  vérification « source référencée » du lot 1 à ce fichier.
+- `countries/factProvenance.ts` — provenance **par ligne de la fiche pays**
+  (`FACT_PROVENANCE : { [K in SheetRowId]: FactProvenance }`), pas par champ
+  `CountryFacts` : un champ composite (`physicalFeatures`, `geoTags`) se
+  décompose en plusieurs lignes affichées, chacune avec sa propre source (une
+  façade maritime cite l'IHO, l'équateur cite Natural Earth, un milieu cite
+  MODIS) — la granularité par champ confondait ces lignes sous « aucune
+  source ». `PRODUCTION_PROVENANCE` porte à part la provenance par produit de
+  `productionRanks` : la fiche ne cite que les produits qu'elle affiche
+  réellement pour un pays donné. Même union `basis: "source"/"convention"` +
+  `SourceId[]` que les `about.ts` des contraintes ; une ligne qui recoupe une
+  contrainte du lot 1 reprend exactement la même provenance, vérifié par
+  `content/countries/__tests__/factProvenance.test.ts`. Consommé par
+  `buildCountrySheet` (fiche pays, `src/features/countries/logic/countrySheet.ts`),
+  jamais par le snapshot lui-même : éditée à la main, elle **doit évoluer
+  avec** le tableau de [`countries/SOURCE.md`](countries/SOURCE.md) plutôt
+  qu'avec `facts.ts`. Gardée par `pnpm check:content`
+  (`validateFactProvenance.ts`), qui étend la vérification « source
+  référencée » du lot 1 à ce fichier.
 
 ## Contraintes
 

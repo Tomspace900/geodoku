@@ -69,6 +69,8 @@ consigner au journal : `pnpm test` (nombre de tests), `pnpm check:content`
 | Chargement | Les faits sont chargés à la demande dans un chunk dédié, préchargé à l'affichage de la grille solution. |
 | Valeur absente | `null` ou champ non couvert → ligne **masquée**, jamais affichée comme 0. |
 | Convention | La mention « Classification Geodoku » s'applique aussi aux faits de convention sur la fiche. |
+| Souveraineté | Ligne **masquée** jusqu'au lot 4 : `sovereigntyKind` n'a jamais été relu avant 1990 (il ne servait qu'à dériver `history_sovereignty_since_1990`) et plusieurs entrées sont fausses une fois affichées telles quelles (France « Indépendance (1789) », Royaume-Uni « Indépendance (1284) »…). `formerSovereigns` (ancienne puissance) reste affiché : lecture à la main indépendante de `sovereigntyKind`/`sovereigntyYear`. Revue au lot 4, annexe A du dossier de corrections du 2026-09-17. |
+| Pays voisins | N'affiche que des pays du **catalogue joueur** : un territoire non jouable (ESH, HKG, MAC…) présent dans la donnée `borders` brute n'a pas de fiche possible et est exclu de l'affichage. La donnée `borders` elle-même reste inchangée. Liste vide après filtre → « Aucun ». |
 | Faits ajoutés | Monnaie, gentilé, point culminant, PIB par habitant, espérance de vie, IDH, et la date complète de l'événement de souveraineté. |
 | Noms propres | Capitales et points culminants en FR/EN, à partir d'une table amorcée par une récolte Wikidata ponctuelle et vendorée. |
 | Stash | `stash@{0}` « wip barre solutiongrid » est abandonné : il contredit la règle « une seule base de rareté partout », et la case résumé le rend caduc. |
@@ -177,21 +179,49 @@ export default defineAbout("nature_active_volcano", {
 
 ### 2.3 Provenance des faits — `content/countries/factProvenance.ts` (lot 2)
 
+**Provenance par ligne de fiche, pas par champ `CountryFacts`** (corrigé au
+gate du 2026-09-17) : la granularité par champ produisait deux erreurs — un
+champ composite (`physicalFeatures`, `geoTags`) confondait sous « aucune
+source » des lignes qui citent en réalité des sources différentes (une façade
+maritime cite l'IHO, l'équateur cite Natural Earth, un milieu cite MODIS), et
+`productionRanks` citait ses quatre sources en bloc même quand un pays n'avait
+qu'un seul rang affiché (la France n'a qu'un rang blé, mais sa légende citait
+aussi l'USDA et l'EIA).
+
 ```ts
+export type SheetRowId = /* une entrée par ligne affichée sur la fiche */;
+
 export type FactProvenance = Readonly<{
-  sources: readonly [SourceId, ...SourceId[]];
+  sources: readonly SourceId[]; // non vide si basis: "source"
   basis: ContentBasis;
 }>;
 
 export const FACT_PROVENANCE: {
-  readonly [K in keyof CountryFacts]: FactProvenance;
+  readonly [K in SheetRowId]: FactProvenance;
+} = { /* … */ };
+
+// Provenance par produit affiché, séparée : la légende ne cite que les
+// produits réellement présents pour le pays (cocoa/rice/wheat → FAOSTAT,
+// coffee → USDA, crude_oil/natural_gas → EIA).
+export const PRODUCTION_PROVENANCE: {
+  readonly [K in ProductionRankKey]: FactProvenance;
 } = { /* … */ };
 ```
 
-Le type est exhaustif : ajouter un champ à `CountryFacts` sans provenance ne
-compile pas. Ce fichier reflète le tableau de `content/countries/SOURCE.md`, et
-tout changement se fait dans les deux. Le statut « curé » de la doc ne vaut
-**pas** automatiquement `convention` (cf. §1.1) : `flagColors`, `flagSymbols`,
+Une ligne qui recoupe une contrainte du lot 1 reprend **exactement** la même
+provenance que son `about.ts` (façades → `ocean_*`/`physical_*_coast`,
+équateur → `physical_crosses_equator`, milieux → `nature_desert`/
+`nature_rainforest`, sommet → `physical_peak_over_5000m`, Moyen-Orient →
+`subregion_middle_east`, sous-région → `subregion_caribbean`/
+`subregion_southeast_asia`, continent → `continent_*`, capitale pas plus
+grande ville → `society_capital_not_largest`) — un **test de cohérence
+toast ↔ fiche** (`content/countries/__tests__/factProvenance.test.ts`, un
+test unitaire, pas de garde `check:content`) vérifie l'égalité `basis`/
+`sources` pour chacune de ces lignes contre `aboutForConstraint(id)`.
+
+Ce fichier reflète le tableau de `content/countries/SOURCE.md`, et tout
+changement se fait dans les deux. Le statut « curé » de la doc ne vaut **pas**
+automatiquement `convention` (cf. §1.1) : `flagColors`, `flagSymbols`,
 `flagLayout`, `geoTags`, `regime`, `physicalFeatures` et `continent` sont des
 conventions ; les datasets quantitatifs, `events` et `memberships` sont `source`.
 
@@ -400,38 +430,44 @@ En-tête : drapeau, nom localisé, sous-région.
 
 | Catégorie | Ligne | Champ(s) | Affichage | Masquée si |
 | --- | --- | --- | --- | --- |
-| Repères | Capitale(s) | `capitals` | noms, avec rôles si plusieurs (ZAF, BOL, PSE, SWZ) ; mention « n'est pas la plus grande ville » si `geoTags` ∋ `capital_not_largest` (conv.) | jamais |
+| Repères | Capitale(s) | `capitals` | noms ; rôles entre parenthèses **seulement si plusieurs capitales** (ZAF, BOL, PSE, SWZ) — une seule capitale n'affiche jamais son rôle (« Paris », pas « Paris (Principale) ») ; mention « n'est pas la plus grande ville du pays » (accordée au pluriel si plusieurs capitales : « aucune n'est… ») sur sa propre ligne de légende si `geoTags` ∋ `capital_not_largest`, sans faire basculer la ligne en convention (la liste elle-même reste `source`) | jamais |
 | Repères | Population | `population` | nombre complet localisé | jamais |
 | Repères | Superficie | `areaKm2` | `551 695 km²` | jamais |
 | Repères | Densité | calculée | `125 hab./km²`, arrondie | jamais |
 | Repères | Langues officielles | `officialLanguages` | noms localisés | liste vide |
 | Géographie | Continent | `continent` | libellé (conv.) | jamais |
 | Géographie | Moyen-Orient | `geoTags` ∋ `middle_east` | « Oui » (conv.) | tag absent |
-| Géographie | Accès à la mer | `waterAccess` | enclavé, côtier ou insulaire | jamais |
-| Géographie | Pays voisins | `borders` | noms localisés triés ; vide → « Aucun » | jamais |
-| Géographie | Façades maritimes | `physicalFeatures` (6 façades) | liste (conv.) | aucune |
+| Géographie | Accès à la mer | `waterAccess` | enclavé, côtier ou insulaire (minuscules) | jamais |
+| Géographie | Pays voisins | `borders` | noms localisés **du catalogue joueur uniquement** (ESH/HKG/MAC exclus), triés par nom ; vide → « Aucun » | jamais |
+| Géographie | Façades maritimes | `physicalFeatures` (6 façades) | liste (conv.) — « océan Atlantique », « mer Méditerranée » (nom générique en minuscule, nom propre capitalisé) | aucune |
 | Géographie | Traversé par l'équateur | `physicalFeatures` ∋ `equator_crosser` | « Oui » (conv.) | absent |
-| Géographie | Fuseaux horaires | `utcOffsetCount` | « 5 décalages horaires distincts » | jamais |
+| Géographie | Décalages horaires | `utcOffsetCount` | « 5 décalages horaires distincts » (libellé et valeur alignés sur la clarification du toast lot 1 : décalages, pas fuseaux) | jamais |
 | Relief et nature | Sommet de plus de 5 000 m | `physicalFeatures` ∋ `peak_over_5000m` | « Oui » (conv.), **retiré au lot 5** | absent |
 | Relief et nature | Part montagneuse | `mountainAreaShare` | `21 %` | `null` |
-| Relief et nature | Couverture forestière | `forestCoverShare` | `32 %` | `null` |
-| Relief et nature | Milieux | `has_desert`, `rainforest` | liste (conv.) | aucun |
+| Relief et nature | Couverture forestière | `forestCoverShare` | `32 %` ; une décimale sous 10 % (jamais `0 %` pour une valeur non nulle) | `null` |
+| Relief et nature | Milieux | `has_desert`, `rainforest` | liste (conv.), minuscules | aucun |
 | Relief et nature | Dernière éruption | `lastVolcanicEruptionYear` | année | `null` |
 | Société et économie | Villes de plus d'un million d'habitants | `urbanCentresOver1M` | nombre ; 0 → « Aucune » | jamais |
 | Société et économie | Sens de circulation | `drivingSide` | à gauche ou à droite | jamais |
-| Société et économie | Productions | `productionRanks` | une ligne par produit, par rang : « 7ᵉ producteur mondial de blé » | aucun rang |
-| Société et économie | Électricité issue du charbon | `coalElectricityShare` | `0,2 %` | `null` |
-| Histoire et politique | Régime | `regime` | monarchie ou république (conv.) | jamais |
-| Histoire et politique | Souveraineté | `sovereigntyKind`, `sovereigntyYear` | nature et année (cf. gate) | `null` |
+| Société et économie | Productions | `productionRanks` | une ligne par produit affiché, par rang : « 7ᵉ producteur mondial de blé » (produit en minuscule) — une source **par produit affiché**, jamais les quatre sources de la famille en bloc | aucun rang |
+| Société et économie | Électricité issue du charbon | `coalElectricityShare` | `0,2 %` ; une décimale sous 10 % (jamais `0 %` pour une valeur non nulle) | `null` |
+| Histoire et politique | Régime | `regime` | monarchie ou république (conv., minuscules) | jamais |
+| Histoire et politique | Souveraineté | `sovereigntyKind`, `sovereigntyYear` | — | **toujours masquée jusqu'au lot 4** (cf. §1.2, annexe A du dossier de corrections du 2026-09-17) |
 | Histoire et politique | Ancienne puissance | `formerSovereigns` | liste | liste vide |
 | Histoire et politique | Organisations | `memberships` | liste, ordre fixe | liste vide |
-| Histoire et politique | Grands événements accueillis | `events` | liste | liste vide |
-| Drapeau | Couleurs, symboles, disposition | `flag*` | listes (conv.) | liste vide |
+| Histoire et politique | Grands événements accueillis | `events` | liste, sans le « Hôte de » redondant avec le libellé de la ligne : « Coupe du monde de football, Jeux olympiques d'été » | liste vide |
+| Drapeau | Couleurs, symboles, disposition | `flag*` | listes (conv.), minuscules | liste vide |
 
-Champs non affichés : `latitude` (brute) et `geoTags` ∋ `drives_on_left`
-(doublon de `drivingSide`, cohérence vérifiée le 2026-09-16). Chaque catégorie
-se termine par une légende listant ses sources et leurs millésimes. Aucune date
-de snapshot n'est affichée.
+Casing (correctif du 2026-09-17) : les valeurs d'énumération s'écrivent en
+minuscules dans les deux langues, sauf noms propres (continents, sous-régions,
+noms d'organisations, d'anciennes puissances, d'océans/mers, de produits
+agricoles restant minuscules car noms communs). Champs non affichés :
+`latitude` (brute) et `geoTags` ∋ `drives_on_left` (doublon de `drivingSide`,
+cohérence vérifiée le 2026-09-16). Chaque catégorie se termine par une légende
+« Source(s) : nom (millésime), … » avec liens, sur le patron du toast lot 1 —
+pas seulement des noms. Une ligne `basis: "convention"` porte en plus sa propre
+légende discrète « Classification Geodoku ». Aucune date de snapshot n'est
+affichée.
 
 **Données et chargement**
 
@@ -531,7 +567,7 @@ de snapshot n'est affichée.
 entrées sont listées si le volume reste lisible), les overrides et leurs motifs,
 et les libellés douteux.
 
-### Lot 4 — Monnaie, gentilé, date de souveraineté (hors-ligne)
+### Lot 4 — Monnaie, gentilé et souveraineté (hors-ligne)
 
 1. `currencies` : les clés de `world-countries` `currencies`, corrigées dans
    `countryPatches.ts` par une nouvelle table `currencyCorrectionsByIso3`, dont
@@ -552,9 +588,46 @@ et les libellés douteux.
    Affichage en date complète localisée (UTC), ou en année à défaut.
 4. Fiche : ajouter Monnaie et Gentilé dans « Repères », et la date complète dans
    « Souveraineté ».
+5. **Revue d'affichage de `sovereigntyKind`/`sovereigntyYear`** (annexe A du
+   dossier de corrections du 2026-09-17, relevé le 2026-09-17) : `sovereigntyKind`
+   n'a jamais été relu avant 1990, seul `history_sovereignty_since_1990` en
+   dépendait. Trois groupes à trancher avant de réafficher la ligne :
+   - sans date officielle d'indépendance (AUT 1156, FRA 1789, GBR 1284) ;
+   - nature manifestement inadaptée (IRN/NOR/CHN `unification`, JPN/HUN/POL/DNK/TUR
+     `foundation`, LIE/PRT/DEU `independence` erronés — liste complète en annexe) ;
+   - fondations anciennes à valider (AND, CHE, ESP, ITA, LBR, MCO, NLD, NPL, OMN,
+     SAU, SWE, THA, VAT) et cas à relire séparément (RUS, ISR, CAN, YEM).
+   **Invariant** : la liste `history_sovereignty_since_1990` ne doit **pas**
+   changer suite à cette revue (vérifier le diff ISO3 après `pnpm build:answers`) —
+   la revue corrige l'affichage, pas la dérivation de la contrainte. Toute
+   correction de donnée passe par `scripts/countries/data/sovereignty.ts` et
+   `validateSovereigntySources`, **jamais** par une édition de `facts.ts`. La
+   ligne « Souveraineté » de la fiche ne réapparaît, avec la date complète, qu'une
+   fois cette revue validée par l'utilisateur.
 
 **Dossier de gate** : les corrections de monnaie, un échantillon de 20 fiches
-(valeurs rendues), et les codes sans nom `Intl`.
+(valeurs rendues), les codes sans nom `Intl`, et la revue d'affichage de
+souveraineté (point 5) avec la décision retenue par entrée.
+
+**Annexe A — Entrées de souveraineté douteuses à l'affichage** (relevé du
+2026-09-17, `kind` `année` : extrait de `sourceDescription`) :
+
+- Sans date officielle d'indépendance (« no official date of independence ») :
+  AUT `independence` 1156, FRA `independence` 1789, GBR `independence` 1284.
+- Nature manifestement inadaptée : IRN `unification` 1979 (proclamation de la
+  République islamique) ; NOR `unification` 1905 (dissolution de l'union avec
+  la Suède) ; CHN `unification` 1949 (proclamation de la RPC) ; JPN
+  `foundation` 1947 (constitution) ; HUN et POL `foundation` 1918
+  (proclamation de la république) ; DNK `foundation` 1849 (monarchie
+  parlementaire) ; TUR `foundation` 1923 ; LIE `independence` 1719 (fondation
+  de la principauté) ; PRT `independence` 1640 (restauration) ; DEU
+  `independence` 1871 (Empire allemand).
+- Fondations anciennes à valider : AND 1278, CHE 1291, ESP 1492, ITA 1861, LBR
+  1847, MCO 1419, NLD 1581, NPL 1768, OMN 1650, SAU 1932 (`unification`), SWE
+  1523, THA 1238, VAT 1929.
+- Cas à relire : RUS `continuation` 1991, ISR `foundation` 1948, CAN
+  `foundation` 1867, YEM `unification` 1990 (vérifier l'effet sur la liste
+  « depuis 1990 »).
 
 ### Lot 5 — Point culminant (CIA World Factbook et libellés Wikidata)
 
