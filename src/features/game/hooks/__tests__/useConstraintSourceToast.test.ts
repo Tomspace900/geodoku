@@ -26,10 +26,10 @@ describe("useConstraintSourceToast", () => {
   it("un toast ouvert après pause + fermeture explicite se referme seul", () => {
     const { result } = renderHook(() => useConstraintSourceToast(PARAMS));
 
-    act(() => result.current.onHeaderClick("continent_africa", "playing"));
+    act(() => result.current.onHeaderClick("continent_africa"));
     act(() => result.current.pause());
     act(() => result.current.close());
-    act(() => result.current.onHeaderClick("continent_asia", "playing"));
+    act(() => result.current.onHeaderClick("continent_asia"));
 
     act(() => vi.advanceTimersByTime(CONSTRAINT_SOURCE_TOAST_MS));
 
@@ -39,7 +39,7 @@ describe("useConstraintSourceToast", () => {
   it("le minuteur suspendu par pause() ne ferme pas le toast", () => {
     const { result } = renderHook(() => useConstraintSourceToast(PARAMS));
 
-    act(() => result.current.onHeaderClick("continent_africa", "playing"));
+    act(() => result.current.onHeaderClick("continent_africa"));
     act(() => result.current.pause());
     act(() => vi.advanceTimersByTime(CONSTRAINT_SOURCE_TOAST_MS));
 
@@ -49,7 +49,7 @@ describe("useConstraintSourceToast", () => {
   it("resume() relance le minuteur jusqu'à la fermeture", () => {
     const { result } = renderHook(() => useConstraintSourceToast(PARAMS));
 
-    act(() => result.current.onHeaderClick("continent_africa", "playing"));
+    act(() => result.current.onHeaderClick("continent_africa"));
     act(() => result.current.pause());
     act(() => vi.advanceTimersByTime(CONSTRAINT_SOURCE_TOAST_MS));
     act(() => result.current.resume());
@@ -67,7 +67,7 @@ describe("useConstraintSourceToast", () => {
       { initialProps: PARAMS },
     );
 
-    act(() => result.current.onHeaderClick("continent_africa", "playing"));
+    act(() => result.current.onHeaderClick("continent_africa"));
     expect(result.current.active).not.toBeNull();
 
     rerender({ ...PARAMS, selectedCell: { row: 0, col: 0 } });

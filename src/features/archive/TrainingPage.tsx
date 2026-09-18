@@ -11,10 +11,11 @@ import { GameGrid } from "@/features/game/components/GameGrid";
 import { GridSkeleton } from "@/features/game/components/GridSkeleton";
 import { GuessModal } from "@/features/game/components/GuessModal";
 import { Header } from "@/features/game/components/Header";
-import { SolutionCellDrawer } from "@/features/game/components/SolutionCellDrawer";
+import { SolutionDrawer } from "@/features/game/components/SolutionDrawer";
 import { SolutionGrid } from "@/features/game/components/SolutionGrid";
 import { useConstraintSourceToast } from "@/features/game/hooks/useConstraintSourceToast";
-import { useSolutionCellDrawer } from "@/features/game/hooks/useSolutionCellDrawer";
+import { useSolutionDrawer } from "@/features/game/hooks/useSolutionDrawer";
+import { constraintAnswers } from "@/features/game/logic/constraints";
 import { getGridNumberForDate } from "@/features/game/logic/gridIssue";
 import { loadPersistedGame } from "@/features/game/logic/persistence";
 import { classifyReplayDate } from "@/features/game/logic/replayWindow";
@@ -116,7 +117,7 @@ function TrainingBoard({ date }: { date: string }) {
     mode: state.mode,
     selectedCell: state.selectedCell,
   });
-  const solutionDrawer = useSolutionCellDrawer({
+  const solutionDrawer = useSolutionDrawer({
     gridDate: state.date,
     mode: state.mode,
   });
@@ -158,13 +159,12 @@ function TrainingBoard({ date }: { date: string }) {
               distribution={distribution ?? undefined}
               cells={state.cells}
               mode="training"
-              onHeaderClick={(id) => sourceToast.onHeaderClick(id, "solution")}
+              onHeaderClick={(id) =>
+                solutionDrawer.openConstraint(id, constraintAnswers(id).size)
+              }
               onCellClick={(cell) => {
                 const key = `${cell.row},${cell.col}`;
-                solutionDrawer.openCellDrawer(
-                  cell,
-                  validAnswers[key]?.length ?? 0,
-                );
+                solutionDrawer.openCell(cell, validAnswers[key]?.length ?? 0);
               }}
             />
           ) : (
@@ -172,7 +172,7 @@ function TrainingBoard({ date }: { date: string }) {
               state={state}
               distribution={distribution ?? undefined}
               onCellClick={selectCell}
-              onHeaderClick={(id) => sourceToast.onHeaderClick(id, "playing")}
+              onHeaderClick={(id) => sourceToast.onHeaderClick(id)}
             />
           )}
 
@@ -232,8 +232,8 @@ function TrainingBoard({ date }: { date: string }) {
 
       <ConstraintSourceToast toast={sourceToast} />
 
-      {solutionDrawer.openCell !== null && (
-        <SolutionCellDrawer
+      {solutionDrawer.target !== null && (
+        <SolutionDrawer
           state={state}
           validAnswers={validAnswers}
           distribution={distribution ?? undefined}

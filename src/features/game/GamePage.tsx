@@ -9,7 +9,8 @@ import { ErrorScreen } from "@/features/errors/components/ErrorScreen";
 import { useBackendDownTimeout } from "@/features/errors/hooks/useBackendDownTimeout";
 import { useConstraintSourceToast } from "@/features/game/hooks/useConstraintSourceToast";
 import { useGameState } from "@/features/game/hooks/useGameState";
-import { useSolutionCellDrawer } from "@/features/game/hooks/useSolutionCellDrawer";
+import { useSolutionDrawer } from "@/features/game/hooks/useSolutionDrawer";
+import { constraintAnswers } from "@/features/game/logic/constraints";
 import {
   getGridNumberForDate,
   getGridNumberForTodayUtc,
@@ -26,7 +27,7 @@ import { Header } from "./components/Header";
 import { HowToPlayLink } from "./components/HowToPlayLink";
 import { RarityHint } from "./components/RarityHint";
 import { ResultScreen } from "./components/ResultScreen";
-import { SolutionCellDrawer } from "./components/SolutionCellDrawer";
+import { SolutionDrawer } from "./components/SolutionDrawer";
 import { SolutionGrid } from "./components/SolutionGrid";
 import { SurveyCta } from "./components/SurveyCta";
 
@@ -62,7 +63,7 @@ export function GamePage() {
     mode: state.mode,
     selectedCell: state.selectedCell,
   });
-  const solutionDrawer = useSolutionCellDrawer({
+  const solutionDrawer = useSolutionDrawer({
     gridDate: state.date,
     mode: state.mode,
   });
@@ -140,14 +141,11 @@ export function GamePage() {
                 distribution={guessDistribution ?? undefined}
                 cells={state.cells}
                 onHeaderClick={(id) =>
-                  sourceToast.onHeaderClick(id, "solution")
+                  solutionDrawer.openConstraint(id, constraintAnswers(id).size)
                 }
                 onCellClick={(cell) => {
                   const key = `${cell.row},${cell.col}`;
-                  solutionDrawer.openCellDrawer(
-                    cell,
-                    validAnswers[key]?.length ?? 0,
-                  );
+                  solutionDrawer.openCell(cell, validAnswers[key]?.length ?? 0);
                 }}
               />
 
@@ -208,7 +206,7 @@ export function GamePage() {
                   });
                   selectCell(cell);
                 }}
-                onHeaderClick={(id) => sourceToast.onHeaderClick(id, "playing")}
+                onHeaderClick={(id) => sourceToast.onHeaderClick(id)}
               />
 
               <RarityHint />
@@ -246,8 +244,8 @@ export function GamePage() {
 
       <ConstraintSourceToast toast={sourceToast} />
 
-      {solutionDrawer.openCell !== null && (
-        <SolutionCellDrawer
+      {solutionDrawer.target !== null && (
+        <SolutionDrawer
           state={state}
           validAnswers={validAnswers}
           distribution={guessDistribution ?? undefined}

@@ -4,11 +4,8 @@ import { CONSTRAINT_SOURCE_TOAST_MS } from "@/features/game/logic/constants";
 import type { ConstraintId } from "@/features/game/logic/constraints";
 import type { CellPosition, GameModeId } from "@/features/game/types";
 
-export type ConstraintSourceSurface = "playing" | "solution";
-
 export type ConstraintSourceToastTarget = Readonly<{
   constraintId: ConstraintId;
-  surface: ConstraintSourceSurface;
 }>;
 
 type Params = {
@@ -18,13 +15,16 @@ type Params = {
 };
 
 /**
- * État du toast de source d'une contrainte : au plus un affiché à la fois.
- * Taper l'en-tête déjà affiché ferme le toast ; taper un autre en-tête le
- * remplace et relance le minuteur. Le minuteur se suspend au survol et au
- * focus interne (`pause`/`resume`). `onHeaderClick` porte l'event PostHog
- * `constraint_source_viewed` ; l'ouverture de la modale de saisie
- * (`selectedCell`) ferme le toast — regroupé ici pour que `GamePage` et
- * `TrainingPage` n'aient plus qu'à câbler l'en-tête cliqué.
+ * État du toast de source d'une contrainte, **en jeu uniquement** : sur la
+ * grille solution, l'en-tête ouvre le Drawer de contrainte à la place (lot 2)
+ * — ce hook n'y est plus câblé. Au plus un toast affiché à la fois. Taper
+ * l'en-tête déjà affiché ferme le toast ; taper un autre en-tête le remplace
+ * et relance le minuteur. Le minuteur se suspend au survol et au focus
+ * interne (`pause`/`resume`). `onHeaderClick` porte l'event PostHog
+ * `constraint_source_viewed` (`surface: "playing"`, conservé pour ne pas
+ * casser les groupements existants bien qu'il ne prenne plus qu'une seule
+ * valeur) ; l'ouverture de la modale de saisie (`selectedCell`) ferme le
+ * toast.
  */
 export function useConstraintSourceToast({
   gridDate,
@@ -70,22 +70,19 @@ export function useConstraintSourceToast({
     if (selectedCell !== null) close();
   }, [selectedCell]);
 
-  function onHeaderClick(
-    constraintId: ConstraintId,
-    surface: ConstraintSourceSurface,
-  ): void {
+  function onHeaderClick(constraintId: ConstraintId): void {
     pausedRef.current = false;
-    if (active?.constraintId === constraintId && active.surface === surface) {
+    if (active?.constraintId === constraintId) {
       setActive(null);
       return;
     }
     posthog?.capture("constraint_source_viewed", {
       grid_date: gridDate,
       mode,
-      surface,
+      surface: "playing",
       constraint_id: constraintId,
     });
-    setActive({ constraintId, surface });
+    setActive({ constraintId });
   }
 
   function pause(): void {
