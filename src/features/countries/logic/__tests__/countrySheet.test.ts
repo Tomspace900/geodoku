@@ -159,12 +159,33 @@ describe("buildCountrySheet", () => {
     }
   });
 
-  it("renders the timezones row as a distinct-UTC-offsets count, not a bare number", () => {
+  it("renders the timezones row as a distinct-UTC-offsets count, plural label above one", () => {
     const model = buildCountrySheet("FRA", COUNTRY_FACTS.FRA);
     const row = rowByLabel(model, "countrySheet.field.timezones");
     expect(row?.value).toEqual({
       kind: "utcOffsets",
       count: COUNTRY_FACTS.FRA.utcOffsetCount,
+      labelKey: "countrySheet.value.utcOffsetsCountPlural",
     });
+  });
+
+  it("uses the singular UTC-offsets label for a single-offset country", () => {
+    // XKX (Kosovo) : un seul décalage horaire.
+    const model = buildCountrySheet("XKX", COUNTRY_FACTS.XKX);
+    const row = rowByLabel(model, "countrySheet.field.timezones");
+    expect(row?.value).toEqual({
+      kind: "utcOffsets",
+      count: 1,
+      labelKey: "countrySheet.value.utcOffsetsCountSingular",
+    });
+  });
+
+  it("cites only the source of the event actually hosted (South Africa: FIFA World Cup only)", () => {
+    // L'Afrique du Sud n'a accueilli que la Coupe du monde (FIFA) : la ligne ne
+    // doit jamais citer le CIO (Jeux olympiques) — cf. lot 2, correctif du
+    // 2026-09-18.
+    const model = buildCountrySheet("ZAF", COUNTRY_FACTS.ZAF);
+    const row = rowByLabel(model, "countrySheet.field.events");
+    expect(row?.sources).toEqual(["fifa_world_cup"]);
   });
 });

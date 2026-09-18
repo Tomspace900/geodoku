@@ -1,6 +1,10 @@
 import { describe, expect, it } from "vitest";
 import { aboutForConstraint } from "../../constraints/abouts";
-import { FACT_PROVENANCE, PRODUCTION_PROVENANCE } from "../factProvenance";
+import {
+  EVENT_PROVENANCE,
+  FACT_PROVENANCE,
+  PRODUCTION_PROVENANCE,
+} from "../factProvenance";
 
 function expectSameProvenance(
   row: { basis: string; sources: readonly string[] },
@@ -124,6 +128,21 @@ describe("FACT_PROVENANCE — cohérence avec les about.ts de contraintes", () =
     expectSameProvenance(
       PRODUCTION_PROVENANCE.natural_gas,
       aboutForConstraint("production_natural_gas_top15"),
+    );
+  });
+
+  it("événements : une source par événement affiché", () => {
+    expectSameProvenance(
+      EVENT_PROVENANCE.fifa_wc_host,
+      aboutForConstraint("event_fifa_wc_host"),
+    );
+    expectSameProvenance(
+      EVENT_PROVENANCE.summer_olympics_host,
+      aboutForConstraint("event_summer_olympics_host"),
+    );
+    expectSameProvenance(
+      EVENT_PROVENANCE.winter_olympics_host,
+      aboutForConstraint("event_winter_olympics_host"),
     );
   });
 });

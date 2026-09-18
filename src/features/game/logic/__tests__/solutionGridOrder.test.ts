@@ -1,45 +1,51 @@
 import { describe, expect, it } from "vitest";
-import type { CellGuessDistribution } from "../../types";
 import { raritySharePercent } from "../rarity";
-import { orderSolutionCountries } from "../solutionGridOrder";
+import {
+  orderSolutionCountries,
+  resolveSolutionCountryTier,
+} from "../solutionGridOrder";
 
 const compareIso = (a: string, b: string) => a.localeCompare(b);
 
+describe("resolveSolutionCountryTier", () => {
+  it("derives every country's tier from the day's share (player's pick included)", () => {
+    // 0.5 n'est pas > 0.5 → uncommon (même chemin pour la réponse du joueur).
+    expect(resolveSolutionCountryTier("FR", 10, { FR: 0.5 })).toBe("uncommon");
+  });
+
+  it("maps 0% share to ultra when stats exist", () => {
+    expect(resolveSolutionCountryTier("AL", 5, {})).toBe("ultra");
+  });
+
+  it("returns null when no stats yet", () => {
+    expect(resolveSolutionCountryTier("FR", 0, {})).toBeNull();
+  });
+});
+
 describe("orderSolutionCountries", () => {
-  it("sorts by share ascending, then name, with unresolved shares pushed to the end", () => {
-    // AL/ME/SI n'ont pas encore de part agrégée (cohorte ouverte) : elles
-    // suivent les réponses connues plutôt que de s'y mêler comme des « 0 % ».
-    const cellDist: CellGuessDistribution = {
-      totalGuesses: 12,
-      rarityByCountry: { IT: 0.08, HR: 0.08, TR: 0.08, FR: 0.25 },
-    };
+  it("sorts by share ascending, then name", () => {
     const ordered = orderSolutionCountries(
       ["FR", "IT", "AL", "HR", "ME", "SI", "TR"],
-      cellDist,
-      false,
+      12,
+      { IT: 0.08, HR: 0.08, TR: 0.08, FR: 0.25 },
       compareIso,
     );
     expect(ordered.map((c) => c.iso)).toEqual([
+      "AL",
+      "ME",
+      "SI",
       "HR",
       "IT",
       "TR",
       "FR",
-      "AL",
-      "ME",
-      "SI",
-    ]);
-    expect(ordered.filter((c) => ["AL", "ME", "SI"].includes(c.iso))).toEqual([
-      { iso: "AL", tier: null },
-      { iso: "ME", tier: null },
-      { iso: "SI", tier: null },
     ]);
   });
 
-  it("falls back to alphabetical without a distribution", () => {
+  it("falls back to alphabetical when no stats", () => {
     const ordered = orderSolutionCountries(
       ["DE", "AT", "CH"],
-      undefined,
-      false,
+      0,
+      {},
       compareIso,
     );
     expect(ordered.map((c) => c.iso)).toEqual(["AT", "CH", "DE"]);
@@ -47,14 +53,10 @@ describe("orderSolutionCountries", () => {
   });
 
   it("sorts by share ascending even below the display threshold (<5)", () => {
-    const cellDist: CellGuessDistribution = {
-      totalGuesses: 4,
-      rarityByCountry: { FR: 0.5, IT: 0.25, AL: 0.05 },
-    };
     const ordered = orderSolutionCountries(
       ["FR", "IT", "AL"],
-      cellDist,
-      false,
+      4,
+      { FR: 0.5, IT: 0.25, AL: 0.05 },
       compareIso,
     );
     expect(ordered.map((c) => c.iso)).toEqual(["AL", "IT", "FR"]);
@@ -63,14 +65,10 @@ describe("orderSolutionCountries", () => {
   it("below 5, orders same-tier countries by finer share, not just by tier", () => {
     // AT 20 %, CH 15 % : même tier (rare), mais CH est plus rare → CH avant AT.
     // Un tri par tier seul (puis nom alphabétique) donnerait AT avant CH.
-    const cellDist: CellGuessDistribution = {
-      totalGuesses: 4,
-      rarityByCountry: { AT: 0.2, CH: 0.15 },
-    };
     const ordered = orderSolutionCountries(
       ["AT", "CH"],
-      cellDist,
-      false,
+      4,
+      { AT: 0.2, CH: 0.15 },
       compareIso,
     );
     expect(ordered.map((c) => c.iso)).toEqual(["CH", "AT"]);
@@ -86,14 +84,10 @@ describe("orderSolutionCountries", () => {
       SI: 0,
       TR: 0.083,
     };
-    const cellDist: CellGuessDistribution = {
-      totalGuesses: 12,
-      rarityByCountry,
-    };
     const ordered = orderSolutionCountries(
       ["FR", "IT", "AL", "HR", "ME", "SI", "TR"],
-      cellDist,
-      false,
+      12,
+      rarityByCountry,
       compareIso,
     );
     const displayed = ordered.map(({ iso }) =>
@@ -102,20 +96,5 @@ describe("orderSolutionCountries", () => {
     for (let i = 1; i < displayed.length; i++) {
       expect(displayed[i]).toBeGreaterThanOrEqual(displayed[i - 1]!);
     }
-  });
-
-  it("on a closed cohort, an absent answer sorts as the rarest (ultra, share 0)", () => {
-    const cellDist: CellGuessDistribution = {
-      totalGuesses: 3,
-      rarityByCountry: { FR: 0.5 },
-    };
-    const ordered = orderSolutionCountries(
-      ["FR", "DE"],
-      cellDist,
-      true,
-      compareIso,
-    );
-    expect(ordered.map((c) => c.iso)).toEqual(["DE", "FR"]);
-    expect(ordered[0]).toEqual({ iso: "DE", tier: "ultra" });
   });
 });

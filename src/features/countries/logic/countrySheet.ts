@@ -1,6 +1,7 @@
 import type { TKey } from "@/i18n/types";
 import { isCountryCode } from "../../../../content/countries/countryCodes";
 import {
+  EVENT_PROVENANCE,
   FACT_PROVENANCE,
   PRODUCTION_PROVENANCE,
 } from "../../../../content/countries/factProvenance";
@@ -48,7 +49,7 @@ export type CountrySheetValue =
   | { kind: "density"; value: number }
   | { kind: "percent"; value: number }
   | { kind: "year"; value: number }
-  | { kind: "utcOffsets"; count: number }
+  | { kind: "utcOffsets"; count: number; labelKey: TKey }
   | {
       kind: "countries";
       iso3: readonly string[];
@@ -226,7 +227,14 @@ function buildGeographyRows(facts: CountryFacts): CountrySheetRow[] {
 
   rows.push({
     labelKey: "countrySheet.field.timezones",
-    value: { kind: "utcOffsets", count: facts.utcOffsetCount },
+    value: {
+      kind: "utcOffsets",
+      count: facts.utcOffsetCount,
+      labelKey:
+        facts.utcOffsetCount === 1
+          ? "countrySheet.value.utcOffsetsCountSingular"
+          : "countrySheet.value.utcOffsetsCountPlural",
+    },
     basis: FACT_PROVENANCE.timezones.basis,
     sources: FACT_PROVENANCE.timezones.sources,
   });
@@ -399,14 +407,21 @@ function buildHistoryRows(facts: CountryFacts): CountrySheetRow[] {
   }
 
   if (facts.events.length > 0) {
+    // Une source par événement affiché, jamais la Coupe du monde et les Jeux
+    // olympiques en bloc (cf. lot 2, correctif du 2026-09-18) : un pays qui n'a
+    // accueilli que la Coupe du monde ne cite que la FIFA, pas aussi le CIO.
     rows.push({
       labelKey: "countrySheet.field.events",
       value: {
         kind: "enumList",
         labelKeys: facts.events.map((event) => EVENT_LABELS[event]),
       },
-      basis: FACT_PROVENANCE.events.basis,
-      sources: FACT_PROVENANCE.events.sources,
+      basis: mergeBasis(
+        facts.events.map((event) => EVENT_PROVENANCE[event].basis),
+      ),
+      sources: dedupeSources(
+        facts.events.map((event) => EVENT_PROVENANCE[event].sources),
+      ),
     });
   }
 

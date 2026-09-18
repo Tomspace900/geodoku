@@ -4,9 +4,11 @@
  * décompose en plusieurs lignes affichées, chacune avec sa propre source —
  * une façade maritime cite l'IHO, l'équateur cite Natural Earth, un milieu
  * cite MODIS, quand `physicalFeatures` seul les confondait sous « aucune
- * source ». La provenance par produit de `productionRanks` est séparée
- * (`PRODUCTION_PROVENANCE`) : la fiche ne cite que les produits qu'elle
- * affiche réellement pour un pays donné, jamais les quatre sources en bloc.
+ * source ». La provenance par produit de `productionRanks`
+ * (`PRODUCTION_PROVENANCE`) et par événement de `events` (`EVENT_PROVENANCE`)
+ * est séparée du reste : la fiche ne cite que les produits et événements
+ * qu'elle affiche réellement pour un pays donné, jamais toutes les sources
+ * de la famille en bloc.
  *
  * Union discriminée identique à `ConstraintAboutSources` (lot 1) :
  * `basis: "source"` exige au moins une source, `"convention"` peut n'en citer
@@ -18,7 +20,8 @@
  * `nature_rainforest`, sommet → `physical_peak_over_5000m`, Moyen-Orient →
  * `subregion_middle_east`, sous-région → `subregion_caribbean`/
  * `subregion_southeast_asia`, continent → `continent_*`, capitale pas plus
- * grande ville → `society_capital_not_largest`) — vérifié par
+ * grande ville → `society_capital_not_largest`, chaque événement → son
+ * `event_*_host`, chaque produit → son `production_*`) — vérifié par
  * `content/countries/__tests__/factProvenance.test.ts`.
  *
  * Ce fichier reflète le tableau de `content/countries/SOURCE.md`, et tout
@@ -26,7 +29,7 @@
  */
 
 import type { SourceId } from "../sources";
-import type { ProductionRankKey } from "./type";
+import type { CountryEvent, ProductionRankKey } from "./type";
 
 export type FactProvenanceSources =
   | { basis: "source"; sources: readonly [SourceId, ...SourceId[]] }
@@ -59,7 +62,6 @@ export type SheetRowId =
   | "regime"
   | "formerSovereigns"
   | "memberships"
-  | "events"
   | "flagColors"
   | "flagSymbols"
   | "flagLayout"
@@ -110,7 +112,6 @@ export const FACT_PROVENANCE: { readonly [K in SheetRowId]: FactProvenance } = {
     sources: ["cia_factbook_independence"],
   },
   memberships: { basis: "source", sources: ["rest_countries"] },
-  events: { basis: "source", sources: ["fifa_world_cup", "ioc_olympic_hosts"] },
   flagColors: { basis: "convention", sources: ["un_flags"] },
   flagSymbols: { basis: "convention", sources: ["un_flags"] },
   flagLayout: { basis: "convention", sources: ["un_flags"] },
@@ -133,4 +134,17 @@ export const PRODUCTION_PROVENANCE: {
   coffee: { basis: "source", sources: ["usda_fas_coffee"] },
   crude_oil: { basis: "source", sources: ["eia_crude_oil"] },
   natural_gas: { basis: "source", sources: ["eia_natural_gas"] },
+};
+
+/**
+ * Provenance **par événement** de `events` — une source par événement, jamais
+ * la Coupe du monde et les Jeux olympiques en bloc : la légende ne cite que
+ * les événements qu'un pays a réellement accueillis (cf. `event_*_host`).
+ */
+export const EVENT_PROVENANCE: {
+  readonly [K in CountryEvent]: FactProvenance;
+} = {
+  fifa_wc_host: { basis: "source", sources: ["fifa_world_cup"] },
+  summer_olympics_host: { basis: "source", sources: ["ioc_olympic_hosts"] },
+  winter_olympics_host: { basis: "source", sources: ["ioc_olympic_hosts"] },
 };

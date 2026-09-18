@@ -84,6 +84,17 @@ describe("formatPercent", () => {
     expect(formatPercent(0, "en")).toBe("0%");
     expect(formatPercent(0, "fr")).toBe("0 %");
   });
+
+  it("floors to < 0.1% below one tenth of a percent, never 0.0%", () => {
+    // Belarus coal-fired electricity (0.04%), Egypt/Oman forest cover.
+    expect(formatPercent(0.0004, "en")).toBe("< 0.1%");
+    expect(formatPercent(0.0004, "fr")).toBe("< 0,1 %");
+  });
+
+  it("shows the plain value at exactly 0.1%, without the floor prefix", () => {
+    expect(formatPercent(0.001, "en")).toBe("0.1%");
+    expect(formatPercent(0.001, "fr")).toBe("0,1 %");
+  });
 });
 
 describe("formatList", () => {

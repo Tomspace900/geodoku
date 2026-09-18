@@ -15,9 +15,19 @@ export function formatInteger(value: number, locale: Locale): string {
 /**
  * Un entier au-delà de 10 %, une décimale en-deçà — une valeur non nulle
  * (l'électricité au charbon française, 0,18 %) ne s'affiche jamais « 0 % »,
- * ce qu'un arrondi à l'entier ferait à tort.
+ * ce qu'un arrondi à l'entier ferait à tort. Sous 0,1 % (Biélorussie 0,04 %,
+ * forêts égyptienne et omanaise), même une décimale arrondirait à « 0,0 % » :
+ * la valeur plancher « < 0,1 % » / « < 0.1% » prend le relais.
  */
 export function formatPercent(fraction: number, locale: Locale): string {
+  if (fraction !== 0 && Math.abs(fraction) < 0.001) {
+    const floor = new Intl.NumberFormat(locale, {
+      style: "percent",
+      minimumFractionDigits: 1,
+      maximumFractionDigits: 1,
+    }).format(0.001);
+    return `< ${floor}`;
+  }
   const digits = fraction !== 0 && Math.abs(fraction) < 0.1 ? 1 : 0;
   return new Intl.NumberFormat(locale, {
     style: "percent",

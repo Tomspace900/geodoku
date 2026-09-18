@@ -55,7 +55,7 @@ function renderValue(
     case "year":
       return formatYear(value.value, locale);
     case "utcOffsets":
-      return t("countrySheet.value.utcOffsetsCount", {
+      return t(value.labelKey, {
         count: formatInteger(value.count, locale),
       });
     case "countries": {
