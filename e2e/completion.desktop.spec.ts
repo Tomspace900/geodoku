@@ -264,3 +264,56 @@ test("opening a solution cell lists its answers, and picking one opens the count
   await expect(backButton).toBeHidden({ timeout: 3_000 });
   await expect(openerCell).toBeFocused();
 });
+
+test("tapping a header on the solution grid opens the constraint drawer with its sources and answers", async ({
+  page,
+}) => {
+  test.setTimeout(60_000);
+  await playToDefeat(page, grid);
+  await page.getByRole("button", { name: "Skip and view answers" }).click();
+
+  // Any valid answer for cell (0,0) is necessarily a valid answer for its
+  // column's constraint alone — the cell requires both row and column, so
+  // the column's own answer list is a superset.
+  const expectedCountry = pickCountry(grid.validAnswers, "0,0", new Set());
+  if (!expectedCountry) {
+    throw new Error("Invariant violated: cell 0,0 has no answer");
+  }
+
+  const solutionTable = page.getByRole("table", {
+    name: "Solutions for today's geography grid",
+  });
+  const headerButton = solutionTable
+    .getByRole("columnheader")
+    .first()
+    .getByRole("button");
+  await headerButton.click();
+
+  // The source (or convention) line sits right under the title, same pure
+  // view as the in-game toast (`constraintSourceView`).
+  await expect(
+    page.getByText(/Sources?:|Geodoku classification/).first(),
+  ).toBeVisible({ timeout: 5_000 });
+
+  const countryRow = page
+    .getByRole("button", { name: new RegExp(expectedCountry.name) })
+    .first();
+  await expect(countryRow).toBeVisible({ timeout: 5_000 });
+  await countryRow.click();
+
+  const backButton = page.getByRole("button", { name: "Back to answers" });
+  await expect(backButton).toBeVisible({ timeout: 5_000 });
+  await expect(
+    page.getByRole("heading", { name: expectedCountry.name, exact: true }),
+  ).toBeVisible();
+
+  // Back to the list restores focus on the row that was opened.
+  await backButton.click();
+  await expect(countryRow).toBeVisible();
+  await expect(countryRow).toBeFocused();
+
+  // Closing the drawer returns focus to the header that opened it.
+  await page.keyboard.press("Escape");
+  await expect(backButton).toBeHidden({ timeout: 3_000 });
+  await expect(headerButton).toBeFocused();
+});
