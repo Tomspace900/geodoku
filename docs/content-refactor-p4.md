@@ -897,3 +897,34 @@ retour remis par l'utilisateur après la première présentation du gate).
   - Pays sans date d'indépendance officielle reconnue (cas `sovereigntyYear`/`sovereigntyKind` `null`) : la ligne « Souveraineté » est simplement masquée (règle déjà en place, cf. tableau §3 du lot). Aucun changement requis — signalé pour mémoire, pas un défaut.
 - Merge : en attente (feu vert requis avant merge, comme pour le lot 1).
 - Points ouverts : aucun — pas de curation `content/sources.ts`/`about.ts` supplémentaire touchée par ce lot (le registre est celui étendu par `factProvenance.ts`, cohérent avec la revue déjà validée au lot 1).
+- **Addendum** : le premier point de la revue d'affichage ci-dessus (souveraineté FRA/GBR/DEU) est **superseded** par les corrections post-gate ci-dessous — la ligne « Souveraineté » est retirée de ce lot dans son ensemble, pas seulement adaptée pour ces trois pays.
+
+#### Lot 2 — Corrections post-gate (branche p4-lot2, 2026-09-17/18)
+
+Corrections apportées suite à `scripts/dev/p4-lot2-corrections.md` (dossier de
+retour remis par l'utilisateur après la première présentation du gate). Le
+premier rapport annonçait « Deviations: none » ; la revue a trouvé quatre
+décisions du plan non appliquées, une régression i18n hors périmètre et
+plusieurs bugs, tous découverts **en générant de vraies fiches en français
+avec le vrai composant**, pas en relisant le modèle.
+
+- Ligne de base / après : tests 610 → 626 · chargement initial 257,4 → 257,7 KiB gzip (quasi inchangé) · chunk fiche pays : 24,3 KiB gzip (inchangé)
+- Commits :
+  - `0b1a60e` [FIX] Provenance des faits pays — par ligne de fiche, pas par champ
+  - `8477a31` [FIX] Fiche pays — souveraineté masquée, voisins filtrés, casing, capitales
+  - `6ba0715` [FIX] Résumé de case, Drawer et chargement de la fiche
+  - `dc8a7d1` [FIX] Restaure fr.ts à l'octet près, ajoute les clés du correctif
+  - `3b5f0fe` [DOCS] Corrections du gate lot 2 — provenance par ligne, souveraineté, plan
+- Décisions utilisateur consignées :
+  1. Souveraineté : ligne masquée jusqu'au lot 4 ; `sovereigntyKind` n'a jamais été relu avant 1990, l'affichage de plusieurs entrées est faux tel quel (France « Indépendance (1789) », Royaume-Uni « Indépendance (1284) », Iran/Norvège « Unification »…). Revue reportée au lot 4 (annexe A).
+  2. Frontières : « Pays voisins » n'affiche que les pays du catalogue (ESH/HKG/MAC exclus) ; la donnée `borders` reste inchangée ; `nonPlayableBorderTerritories.ts` supprimé.
+  3. Signatures : l'utilisateur re-signera lui-même tous les commits P4 avant de pousser `develop` ; l'agent continue de committer normalement (`--no-gpg-sign`), sans pousser ni réécrire l'historique.
+- Écarts réels trouvés à la revue (le premier rapport de lot 2 avait annoncé « Deviations: none », à tort) :
+  - **Décisions du plan non appliquées** : case résumé de la grille solution (une case vide affichait le pays le plus rare comme si elle était remplie — bug A du dossier de corrections) ; mention « Classification Geodoku » absente de la fiche malgré `row.basis` disponible (bug B) ; provenance par champ au lieu de par ligne, avec deux erreurs concrètes — façades/équateur/milieux confondus sous « aucune source », légende de production citant 4 sources même pour un seul rang affiché (bug C) ; légendes de sources sans millésime ni lien (bug D).
+  - **Régression i18n hors périmètre** : la réécriture complète de `fr.ts` (contournement d'un bug de l'outil d'édition) avait converti 137 lignes sans rapport en caractères littéraux et, plus grave, changé 6 espaces insécables en espaces normales. Restauré à l'octet près depuis `develop`, vérifié par comparaison des valeurs évaluées (0 modifiée, 0 manquante, 154 ajoutées) plutôt que par simple relecture visuelle — deux des six occurrences avaient en réalité été retapées à la main avec un espace normal au lieu de ` `, un vrai oubli de transcription et non un artefact de l'outil.
+  - **Bugs** : `loadCountrySheetData` mémorisait une promesse rejetée pour toujours, rendant « Réessayer » inopérant (F) ; pourcentages arrondis à 0 % pour une valeur non nulle sous 1 % (G) ; rôles de capitale affichés même pour une capitale unique, mention « n'est pas la plus grande ville » collée sans espace et non accordée au pluriel (H) ; voisins triés par code ISO plutôt que par nom localisé (I) ; badge de rareté du Drawer lisant la distribution brute plutôt que `filledCellShare`, donc absent sur une réponse jamais choisie en entraînement au lieu d'ultra (J) ; vue fiche perdant le nom accessible du Drawer (`<h3>` au lieu de `<DrawerTitle>`, K) ; délai de fermeture en nombre magique (L).
+  - **Rendu** : casing des valeurs d'énumération (minuscules sauf noms propres) ; nom de produit en minuscule dans la phrase de production ; libellé « Fuseaux horaires » renommé « Décalages horaires » avec une valeur en phrase complète, pour cohérence avec la clarification du toast lot 1 ; « Hôte de » redondant retiré de la liste des grands événements.
+- Gardes : `pnpm lint` OK (mêmes 2 avertissements pré-existants et sans rapport) · `pnpm test` OK (626/626) · `pnpm check:content` OK (77/12/8/197) · `pnpm check:design-system` OK (14 règles) · `pnpm check:bundle` OK (257,7 KiB, chunk fiche 24,3 KiB) · `pnpm test:e2e` OK (137/137, backend dev perso, suite complète lancée seule — une première tentative avait échoué par contention de ressources après avoir lancé e2e et le pre-commit Vitest simultanément, sans rapport avec le code)
+- Vérification manuelle : fiches réelles générées en français (composant rendu, pas le modèle) sur le Brésil (façades, décalages horaires, capitale unique sans rôle, productions limitées au blé/café/cacao avec leurs sources exactes, événements sans « Hôte de », légendes avec liens et millésimes), l'Indonésie (voisins triés, pourcentages ≥ 10 % sans décimale) et l'Afrique du Sud en anglais (capitales multiples avec rôles, mention plurielle « None is the country's largest city. » espacée correctement) ; grille solution vérifiée après défaite (cases vides affichant « — », `aria-label` avec « Case vide. ») sur desktop et mobile (375 px).
+- Merge : en attente (nouveau feu vert requis).
+- Points ouverts : aucun — l'annexe A (revue de `sovereigntyKind`/`sovereigntyYear`) est explicitement reportée au lot 4, pas un point ouvert de ce lot.
