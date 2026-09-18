@@ -388,20 +388,16 @@ hausse du chargement initial **≤ 8 KiB**, au-delà s'arrêter et le signaler.
 
 **Logique pure**
 
-1. `src/features/game/logic/solutionCellSummary.ts`, qui renvoie
-   `{ userPick, rarestFound, answerCount }` :
-   - `userPick` : le pays placé et son tier, ou `null` si la case est vide ou
-     bloquée ;
-   - `rarestFound` : parmi les réponses de la case, celle de **plus petite part
-     strictement positive** dans la distribution (donc choisie au moins une
-     fois). En cas d'égalité, ordre alphabétique localisé via un comparateur
-     injecté. `null` sans distribution. Si c'est le choix du joueur, le résumé
-     le signale au lieu de dupliquer la ligne.
-   - **Base de rareté unique** : les tiers de la case, du Drawer et du jeu
-     passent tous par `filledCellShare(iso, cellDist, isCohortComplete(mode))`.
-     Aujourd'hui `resolveSolutionCountryTier` donne `null` quand
-     `totalGuesses === 0` alors que `filledCellTier` donne « ultra » sur une
-     cohorte close : unifier, et adapter `solutionGridOrder` et ses tests.
+1. ~~`src/features/game/logic/solutionCellSummary.ts`~~ — **abandonné** à la
+   troisième passe (décision utilisateur du 2026-09-18, cf. journal) : la case
+   de la grille solution revient à l'identique d'avant le lot 2 (toutes les
+   réponses en puces teintées par tier, triées du plus rare au plus commun,
+   choix du joueur entouré), sans résumé. `solutionGridOrder.ts` et ses tests
+   sont **restaurés depuis `develop`**, pas unifiés avec `filledCellShare` :
+   cette base de rareté reste réservée à la case **en jeu**, au score et aux
+   emojis de partage — `resolveSolutionCountryTier` (part `rarityByCountry[iso]
+   ?? 0` dès `totalGuesses > 0`) régit la grille solution **et** son Drawer,
+   pour que les deux restent d'accord.
 2. `src/features/countries/logic/countrySheet.ts` :
    `buildCountrySheet(iso3, data)` renvoie un modèle **pur** composé de
    catégories, chacune avec sa clé de titre, ses lignes
@@ -419,9 +415,9 @@ hausse du chargement initial **≤ 8 KiB**, au-delà s'arrêter et le signaler.
    circulation, régime, territoires non jouables cités en frontière (`ESH`,
    `HKG`, `MAC`). Ne **pas** réutiliser les libellés `constraint.*`, formulés
    comme des contraintes.
-5. Tests : `solutionCellSummary.test.ts` et `countrySheet.test.ts`, qui couvrent
-   les règles de masquage, la densité calculée, les capitales multiples, les
-   années négatives, les ordinaux FR et EN, et les frontières hors catalogue.
+5. Tests : `countrySheet.test.ts`, qui couvre les règles de masquage, la
+   densité calculée, les capitales multiples, les années négatives, les
+   ordinaux FR et EN, et les frontières hors catalogue.
 
 **Correspondance faits → fiche** (faits existants ; « conv. » = mention
 « Classification Geodoku »)
@@ -441,21 +437,21 @@ En-tête : drapeau, nom localisé, sous-région.
 | Géographie | Pays voisins | `borders` | noms localisés **du catalogue joueur uniquement** (ESH/HKG/MAC exclus), triés par nom ; vide → « Aucun » | jamais |
 | Géographie | Façades maritimes | `physicalFeatures` (6 façades) | liste (conv.) — « océan Atlantique », « mer Méditerranée » (nom générique en minuscule, nom propre capitalisé) | aucune |
 | Géographie | Traversé par l'équateur | `physicalFeatures` ∋ `equator_crosser` | « Oui » (conv.) | absent |
-| Géographie | Décalages horaires | `utcOffsetCount` | « 5 décalages horaires distincts » (libellé et valeur alignés sur la clarification du toast lot 1 : décalages, pas fuseaux) | jamais |
+| Géographie | Décalages horaires | `utcOffsetCount` | « 5 décalages horaires distincts » / « 1 décalage horaire distinct » au singulier (libellé et valeur alignés sur la clarification du toast lot 1 : décalages, pas fuseaux) | jamais |
 | Relief et nature | Sommet de plus de 5 000 m | `physicalFeatures` ∋ `peak_over_5000m` | « Oui » (conv.), **retiré au lot 5** | absent |
 | Relief et nature | Part montagneuse | `mountainAreaShare` | `21 %` | `null` |
-| Relief et nature | Couverture forestière | `forestCoverShare` | `32 %` ; une décimale sous 10 % (jamais `0 %` pour une valeur non nulle) | `null` |
+| Relief et nature | Couverture forestière | `forestCoverShare` | `32 %` ; une décimale sous 10 %, `< 0,1 %` sous ce seuil (jamais `0 %`/`0,0 %` pour une valeur non nulle — Égypte, Oman) | `null` |
 | Relief et nature | Milieux | `has_desert`, `rainforest` | liste (conv.), minuscules | aucun |
 | Relief et nature | Dernière éruption | `lastVolcanicEruptionYear` | année | `null` |
 | Société et économie | Villes de plus d'un million d'habitants | `urbanCentresOver1M` | nombre ; 0 → « Aucune » | jamais |
 | Société et économie | Sens de circulation | `drivingSide` | à gauche ou à droite | jamais |
 | Société et économie | Productions | `productionRanks` | une ligne par produit affiché, par rang : « 7ᵉ producteur mondial de blé » (produit en minuscule) — une source **par produit affiché**, jamais les quatre sources de la famille en bloc | aucun rang |
-| Société et économie | Électricité issue du charbon | `coalElectricityShare` | `0,2 %` ; une décimale sous 10 % (jamais `0 %` pour une valeur non nulle) | `null` |
+| Société et économie | Électricité issue du charbon | `coalElectricityShare` | `0,2 %` ; une décimale sous 10 %, `< 0,1 %` sous ce seuil (jamais `0 %`/`0,0 %` pour une valeur non nulle — Biélorussie 0,04 %) | `null` |
 | Histoire et politique | Régime | `regime` | monarchie ou république (conv., minuscules) | jamais |
 | Histoire et politique | Souveraineté | `sovereigntyKind`, `sovereigntyYear` | — | **toujours masquée jusqu'au lot 4** (cf. §1.2, annexe A du dossier de corrections du 2026-09-17) |
 | Histoire et politique | Ancienne puissance | `formerSovereigns` | liste | liste vide |
 | Histoire et politique | Organisations | `memberships` | liste, ordre fixe | liste vide |
-| Histoire et politique | Grands événements accueillis | `events` | liste, sans le « Hôte de » redondant avec le libellé de la ligne : « Coupe du monde de football, Jeux olympiques d'été » | liste vide |
+| Histoire et politique | Grands événements accueillis | `events` | liste, sans le « Hôte de » redondant avec le libellé de la ligne : « Coupe du monde de football, Jeux olympiques d'été » — une source **par événement affiché** (`EVENT_PROVENANCE`), jamais la FIFA et le CIO en bloc | liste vide |
 | Drapeau | Couleurs, symboles, disposition | `flag*` | listes (conv.), minuscules | liste vide |
 
 Casing (correctif du 2026-09-17) : les valeurs d'énumération s'écrivent en
@@ -481,35 +477,47 @@ affichée.
 
 **UI**
 
-8. `SolutionGrid.tsx` : chaque case non vide devient un `<Button>` (jamais un
-   `<button>` natif) qui affiche le résumé, en texte **d'au moins 11 px** sur
-   mobile. Une case sans réponse reste « — » et n'est pas cliquable. Les
-   en-têtes utilisent `ConstraintHeaderButton` (lot 1).
-9. `src/features/game/components/SolutionCellDrawer.tsx`, qui reprend la coque
-   `DrawerContent` de `GuessModal` :
-   - titre « ligne × colonne » ;
-   - liste ordonnée par `orderSolutionCountries` : drapeau, nom, part, pastille
-     de tier, et marque « ton choix » ;
-   - chaque ligne est un `<Button>` qui pousse la fiche.
-   Vue fiche :
-   - un bouton retour (`variant="ghost"`, icône, nom accessible « Retour aux
-     réponses ») ;
-   - le nom du pays en titre ;
-   - un squelette pendant le chargement, un message et un bouton « Réessayer »
-     en cas d'erreur.
-   Focus :
-   - à la fermeture, rendre le focus à la case via `focusWithoutVisibleRing` ;
-   - à l'ouverture de la fiche, placer le focus sur le bouton retour ;
-   - au retour, le rendre à la ligne du pays.
+8. **Case (révisée à la troisième passe, 2026-09-18)** : `SolutionGrid.tsx`
+   revient à la case d'avant le lot 2 **à l'identique** (quatre maquettes
+   comparées, A retenue pour ne pas dérouter les joueurs) — toutes les
+   réponses en puces teintées par tier, triées du plus rare au plus commun,
+   choix du joueur entouré, défilement interne. Seul ajout : la case devient
+   un `<Button>` (jamais un `<button>` natif) dont le tap ouvre le Drawer ; le
+   défilement au doigt de la liste interne ne doit pas déclencher l'ouverture.
+   Une case sans réponse reste « — » et n'est pas cliquable. Les en-têtes
+   utilisent `ConstraintHeaderButton` (lot 1), dont la zone cliquable doit
+   couvrir toute la cellule de tableau (correctif de style, cf. journal).
+9. **Drawer unifié (révisé, 2026-09-18)** :
+   `src/features/game/components/SolutionDrawer.tsx` (`useSolutionDrawer`),
+   qui reprend la coque `DrawerContent` de `GuessModal` et sert **deux
+   cibles** — une case (`{kind:"cell"}`) ou un en-tête de contrainte
+   (`{kind:"constraint"}`), avec une pile liste → fiche partagée :
+   - case : titre « ligne × colonne », liste ordonnée par
+     `orderSolutionCountries` (règle restaurée depuis `develop`, pas
+     `filledCellShare`) — drapeau, nom, part, pastille de tier, marque
+     « ton choix » ;
+   - contrainte (nouveau, tap sur un en-tête de la grille solution
+     uniquement — en jeu, l'en-tête garde le toast) : titre = libellé de la
+     contrainte, **une ligne de source juste sous le titre** (même vue pure
+     que le toast, `constraintSourceView`, extraite dans
+     `ConstraintSourceInfo.tsx` et partagée par les deux), un décompte, puis
+     tous les pays de la contrainte seule (`constraintAnswers(id)`, archivées
+     comprises), triés par nom localisé, sans % ni tier ;
+   - chaque ligne de pays est un `<Button>` qui pousse la fiche, avec le même
+     retour/focus/chargement/erreur que l'ancien Drawer de case.
    Un Drawer rouvert repart toujours sur la liste.
 10. `src/features/countries/components/CountrySheet.tsx` rend le modèle, avec
     des titres de catégorie en `Eyebrow`, des lignes libellé/valeur, la mention
     de convention en légende discrète et les sources en pied de catégorie.
     L'état de la pile (liste ou fiche) est un état UI local du Drawer.
-11. Analytics : `solution_cell_opened` (`grid_date`, `mode`, `cell`,
-    `answer_count`) et `country_sheet_opened` (`grid_date`, `mode`, `cell`,
-    `country_code`), deux events partagés distingués par `mode`. Mettre à jour
-    `AGENTS.md` §10 et garder `solution_viewed` inchangé.
+11. Analytics (révisé, 2026-09-18) : `solution_cell_opened` (`grid_date`,
+    `mode`, `cell`, `answer_count`), `solution_constraint_opened` (`grid_date`,
+    `mode`, `constraint_id`, `answer_count`) et `country_sheet_opened`
+    (`grid_date`, `mode`, `country_code`, `origin`: `cell`/`constraint`, plus
+    `cell` ou `constraint_id` selon le cas) — trois events partagés distingués
+    par `mode`. `constraint_source_viewed` ne s'émet plus qu'en jeu (`surface`
+    conservé, toujours `playing`). Mettre à jour `AGENTS.md` §10 et garder
+    `solution_viewed` inchangé.
 12. e2e : étendre le parcours après défaite de `completion.desktop.spec.ts` :
     - ouvrir la case 1,1, qui affiche une réponse de `solution["0,0"]` ;
     - toucher cette réponse, qui ouvre la fiche avec son nom en titre et une
@@ -518,6 +526,11 @@ affichée.
     Les assertions existantes (focus « View my score », `RarityHint`) restent
     vertes. Ajouter un cas mobile si un helper de défaite réutilisable existe ;
     sinon, le consigner.
+    **Ajouté à la troisième passe (2026-09-18)** : toucher un en-tête de la
+    grille solution ouvre le Drawer de contrainte (ligne de source visible,
+    un pays attendu de `validAnswers`), ce pays ouvre sa fiche, retour, puis
+    fermeture rend le focus à l'en-tête. L'e2e du toast en jeu
+    (`constraint-source.shared.spec.ts`) reste inchangé et vert.
 13. Docs : `AGENTS.md` §3 (chunk de fiche, garde bundle, `factProvenance`) et
     §10 ; `content/README.md` ; `content/countries/SOURCE.md` (le tableau et
     `FACT_PROVENANCE` évoluent ensemble) ; commentaire de
@@ -928,3 +941,88 @@ avec le vrai composant**, pas en relisant le modèle.
 - Vérification manuelle : fiches réelles générées en français (composant rendu, pas le modèle) sur le Brésil (façades, décalages horaires, capitale unique sans rôle, productions limitées au blé/café/cacao avec leurs sources exactes, événements sans « Hôte de », légendes avec liens et millésimes), l'Indonésie (voisins triés, pourcentages ≥ 10 % sans décimale) et l'Afrique du Sud en anglais (capitales multiples avec rôles, mention plurielle « None is the country's largest city. » espacée correctement) ; grille solution vérifiée après défaite (cases vides affichant « — », `aria-label` avec « Case vide. ») sur desktop et mobile (375 px).
 - Merge : en attente (nouveau feu vert requis).
 - Points ouverts : aucun — l'annexe A (revue de `sovereigntyKind`/`sovereigntyYear`) est explicitement reportée au lot 4, pas un point ouvert de ce lot.
+
+#### Lot 2 — Troisième passe (branche p4-lot2, 2026-09-18)
+
+Corrections apportées suite à `scripts/dev/p4-lot2-corrections-2.md`, qui
+remplaçait un précédent message de correction non appliqué et intégrait des
+décisions utilisateur prises après une revue visuelle de quatre maquettes de
+case (A–D).
+
+- Ligne de base / après : tests 626 → 624 (résumé de case retiré avec ses
+  tests, `solutionGridOrder` restauré depuis `develop`, plusieurs tests
+  ajoutés — net −2) · chargement initial 257,7 → 257,7 KiB gzip (inchangé) ·
+  chunk fiche pays : 24,3 KiB gzip (inchangé)
+- Commits :
+  - `1d8b5b4` [FIX] Provenance par événement, plancher < 0,1 % des pourcentages
+  - `5ab9f65` [FIX] Grille solution — case restaurée à l'identique (décision du 2026-09-18)
+  - `b51de3a` [FEAT] Drawer de contrainte unifié sur la grille solution
+  - `484a066` [FIX] Zone cliquable des en-têtes, défilement fantôme du Drawer
+  - `029cfa6` [FIX] i18n — nouvelles clés de la troisième passe
+  - `bc49294` [TEST] e2e — Drawer de contrainte sur la grille solution
+- Décisions utilisateur consignées (2026-09-18) :
+  1. Case de la grille solution : retour à la case d'avant le lot 2 à
+     l'identique (maquette A retenue sur quatre comparées), pour ne pas
+     dérouter les joueurs dans un premier temps. Seul ajout : le tap ouvre
+     le Drawer des réponses.
+  2. En-têtes de la grille solution : ouvrent un Drawer de contrainte, en
+     plus du toast qui reste réservé au jeu.
+  3. Dans ce Drawer, les informations de source vont en haut, sous le titre.
+- Écarts trouvés en cours de route (aucun n'était anticipé par le brief) :
+  - **Bug découvert en e2e, pas en revue visuelle** : le premier essai de
+    correctif pour la zone cliquable des en-têtes (`absolute inset-0` sans
+    hauteur propre sur le `<th>`) effondrait la ligne d'en-têtes de colonnes
+    à 0 (aucun `<th>` de cette ligne n'a de contenu en flux), faisant
+    déborder les boutons d'en-tête sur la première rangée de cases et
+    intercepter leurs clics — reproduit sur `chromium-android` et
+    `webkit-iphone`/`webkit-ipad`, jamais sur `chromium-desktop` (grille
+    plus large, marge de superposition différente). Un premier correctif
+    (`min-h-[52px]` sur le `<th>`) a semblé fonctionner sur Chromium mais
+    a rejoué le même échec sur `webkit-iphone` — WebKit ignore `min-height`
+    pour le calcul de hauteur de ligne d'un `<th>`, vérifié empiriquement en
+    comparant les deux classes en direct sur la même page. `h-[52px]` (une
+    hauteur, pas un minimum) est honoré comme plancher de ligne par
+    l'algorithme de mise en page des tableaux sur les trois moteurs — c'est
+    la version commitée. Sans la suite e2e complète (§7 preuve 6), ce bug
+    aurait atteint la production : il bloque la sélection de la première
+    case du jeu quotidien sur WebKit mobile, pas seulement la grille
+    solution visée par le correctif.
+  - **Preuve §7.3 reformulée** : le brief demandait « le `scrollHeight` du
+    dialog égale son `clientHeight` » après le correctif `overflow-x-clip`.
+    Mesuré en direct : ce n'est jamais le cas — le `::after` que vaul ajoute
+    contribue à `scrollHeight` quelle que soit la valeur d'`overflow`, y
+    compris une fois le Drawer redevenu non défilable. La preuve retenue à
+    la place, plus directe : `overflow-y` calculé reste `visible` (pas
+    `auto`) avec `overflow-x-clip`, et le Drawer cesse réellement d'être
+    défilable (`scrollTop` réassigné n'a plus d'effet) — comparé en direct
+    à `overflow-x-hidden`, qui reproduit l'ancien bug sur la même page
+    (`overflow-y` bascule à `auto`, le Drawer défile réellement).
+- Gardes : `pnpm lint` OK (mêmes 2 avertissements pré-existants et sans
+  rapport) · `pnpm test` OK (624/624) · `pnpm check:content` OK
+  (77/12/8/197) · `pnpm check:design-system` OK (14 règles) ·
+  `pnpm check:bundle` OK (257,7 KiB, chunk fiche 24,3 KiB) ·
+  `pnpm test:e2e` OK (138/138, backend dev perso, suite complète lancée
+  seule après le correctif — un sous-ensemble ciblé de 51 tests, lancé
+  d'abord pour isoler le bug WebKit ci-dessus sans attendre la suite
+  complète, est passé aussi une fois le correctif en place)
+- Vérification manuelle (navigateur intégré, backend dev perso, jamais en
+  parallèle d'une suite de tests) :
+  - grille solution après défaite, desktop et 375 px : case d'avant le
+    lot 2 à l'identique, une case remplie (Russie, ultra-rare) visiblement
+    entourée ; tap sur la case ouvre son Drawer de réponses avec « Your
+    pick » sur la bonne ligne ;
+  - Drawer de contrainte à 375 px, tap sur un en-tête de ligne
+    (« Official language: Russian ») : « Source: world-countries » (lien) et
+    la clarification juste sous le titre, puis « 8 countries » et la liste
+    alphabétique sans % ni tier ; un en-tête de colonne de convention
+    (« Has a peak over 5,000 m ») affiche « Geodoku classification » seul,
+    même position ; le tap sur un pays du Drawer de contrainte ouvre sa
+    fiche (vérifié sur la Russie — 11 décalages horaires distincts, libellé
+    pluriel) ;
+  - mesure géométrique de la zone cliquable d'un en-tête de ligne, sur la
+    grille solution : `<th>` et bouton mesurent tous deux 160,5 px (hauteur
+    de la ligne, dictée par les cases solution voisines) contre 52 px pour
+    un en-tête de colonne (ligne uniforme, aucune case tall à côté) — la
+    zone cliquable couvre bien toute la cellule dans les deux cas.
+- Merge : en attente (nouveau feu vert requis).
+- Points ouverts : aucun.
