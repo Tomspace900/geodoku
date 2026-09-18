@@ -278,7 +278,7 @@ export function GuessModal({
       }}
     >
       <DrawerContent
-        className="mt-10 max-h-[94svh] w-full overflow-x-hidden pb-[env(safe-area-inset-bottom)] sm:mx-auto sm:mt-24 sm:max-w-xl"
+        className="mt-10 max-h-[94svh] w-full overflow-x-clip pb-[env(safe-area-inset-bottom)] sm:mx-auto sm:mt-24 sm:max-w-xl"
         onCloseAutoFocus={(event) => {
           event.preventDefault();
           focusWithoutVisibleRing(openerRef.current);

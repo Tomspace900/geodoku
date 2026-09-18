@@ -51,7 +51,7 @@ export function GridMatrix({
             <th
               key={`col-${col}`}
               scope="col"
-              className="rounded-xl bg-surface-low p-0 align-middle font-normal"
+              className="relative h-[52px] rounded-xl bg-surface-low p-0 align-middle font-normal"
             >
               {renderColumnHeader(colLabels[col] ?? "", col)}
             </th>
@@ -63,7 +63,7 @@ export function GridMatrix({
           <tr key={`row-${row}`}>
             <th
               scope="row"
-              className="rounded-xl bg-surface-low p-0 align-middle font-normal"
+              className="relative h-[52px] rounded-xl bg-surface-low p-0 align-middle font-normal"
             >
               {renderRowHeader(rowLabels[row] ?? "", row)}
             </th>
