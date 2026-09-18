@@ -1,8 +1,8 @@
 import { Eyebrow } from "@/components/editorial/Eyebrow";
+import { Button } from "@/components/ui/button";
 import { getCountryByIso3 } from "@/features/countries/logic/search";
 import { useLocale } from "@/i18n/LocaleContext";
 import type { Locale, TKey } from "@/i18n/types";
-import { SOURCES } from "../../../../content/sources";
 import type {
   CountrySheetCategory,
   CountrySheetModel,
@@ -15,20 +15,13 @@ import {
   formatOrdinal,
   formatPercent,
   formatYear,
+  sourceReferences,
 } from "../logic/countrySheetFormat";
-import { NON_PLAYABLE_BORDER_TERRITORY_LABELS } from "../logic/nonPlayableBorderTerritories";
 
 type TranslateFn = (
   key: TKey,
   vars?: Record<string, string | number>,
 ) => string;
-
-function territoryName(iso3: string, locale: Locale, t: TranslateFn): string {
-  const country = getCountryByIso3(iso3);
-  if (country) return country.names[locale];
-  const territoryKey = NON_PLAYABLE_BORDER_TERRITORY_LABELS[iso3];
-  return territoryKey ? t(territoryKey) : iso3;
-}
 
 function renderValue(
   value: CountrySheetValue,
@@ -61,12 +54,19 @@ function renderValue(
       return formatPercent(value.value, locale);
     case "year":
       return formatYear(value.value, locale);
+    case "utcOffsets":
+      return t("countrySheet.value.utcOffsetsCount", {
+        count: formatInteger(value.count, locale),
+      });
     case "countries": {
       if (value.iso3.length === 0) {
         return value.emptyLabelKey ? t(value.emptyLabelKey) : "";
       }
+      const names = value.iso3.map(
+        (iso) => getCountryByIso3(iso)?.names[locale] ?? iso,
+      );
       return formatList(
-        value.iso3.map((iso) => territoryName(iso, locale, t)),
+        [...names].sort((a, b) => a.localeCompare(b, locale)),
         locale,
       );
     }
@@ -78,7 +78,7 @@ function renderValue(
     case "capitals":
       return formatList(
         value.capitals.map((capital) =>
-          capital.roleLabelKeys.length > 0
+          value.capitals.length > 1 && capital.roleLabelKeys.length > 0
             ? `${capital.name} (${capital.roleLabelKeys.map((key) => t(key)).join(", ")})`
             : capital.name,
         ),
@@ -94,12 +94,73 @@ function renderValue(
         ),
         locale,
       );
-    case "sovereignty":
-      return t("countrySheet.value.sovereigntyValue", {
-        kind: t(value.kindLabelKey),
-        year: formatYear(value.year, locale),
-      });
   }
+}
+
+function RowCaption({ children }: { children: React.ReactNode }) {
+  return <p className="text-[10px] text-on-surface-variant">{children}</p>;
+}
+
+function CapitalNotLargestCaption({
+  capitalCount,
+  t,
+}: {
+  capitalCount: number;
+  t: TranslateFn;
+}) {
+  return (
+    <RowCaption>
+      {t(
+        capitalCount > 1
+          ? "countrySheet.value.capitalNotLargestPlural"
+          : "countrySheet.value.capitalNotLargestSingular",
+      )}
+    </RowCaption>
+  );
+}
+
+/** Ligne discrète propre à une catégorie : une légende « Classification Geodoku ». */
+function ConventionCaption({ t }: { t: TranslateFn }) {
+  return <RowCaption>{t("ui.constraintSourceConvention")}</RowCaption>;
+}
+
+/**
+ * Légende de sources d'une catégorie, sur le patron du toast de source
+ * (lot 1) : « Source(s) : nom (millésime), … » avec des liens. Une
+ * catégorie ne cite que les sources réellement engagées par ses lignes
+ * affichées — pas toutes les sources possibles de la famille de faits.
+ */
+function CategorySourceLegend({
+  sourceIds,
+  locale,
+  t,
+}: {
+  sourceIds: CountrySheetCategory["sources"];
+  locale: Locale;
+  t: TranslateFn;
+}) {
+  if (sourceIds.length === 0) return null;
+  const sources = sourceReferences(sourceIds, locale);
+  return (
+    <RowCaption>
+      {t(
+        sources.length > 1
+          ? "ui.constraintSourcesPrefix"
+          : "ui.constraintSourcePrefix",
+      )}{" "}
+      {sources.map((source, index) => (
+        <span key={source.id}>
+          {index > 0 && ", "}
+          <Button asChild variant="link" className="h-auto p-0 text-[10px]">
+            <a href={source.url} target="_blank" rel="noreferrer">
+              {source.name}
+            </a>
+          </Button>
+          {source.vintage ? ` (${source.vintage})` : ""}
+        </span>
+      ))}
+    </RowCaption>
+  );
 }
 
 function CategorySection({
@@ -116,30 +177,29 @@ function CategorySection({
       <Eyebrow>{t(category.titleKey)}</Eyebrow>
       <dl className="flex flex-col gap-1.5">
         {category.rows.map((row) => (
-          <div
-            key={row.labelKey}
-            className="flex items-baseline justify-between gap-3 text-sm"
-          >
-            <dt className="text-on-surface-variant">{t(row.labelKey)}</dt>
-            <dd className="text-right font-medium text-on-surface">
-              {renderValue(row.value, locale, t)}
-              {row.value.kind === "capitals" &&
-                row.value.capitalNotLargestCity && (
-                  <span className="ml-1 font-normal text-on-surface-variant">
-                    ({t("countrySheet.value.capitalNotLargest")})
-                  </span>
-                )}
-            </dd>
+          <div key={row.labelKey} className="flex flex-col gap-0.5">
+            <div className="flex items-baseline justify-between gap-3 text-sm">
+              <dt className="text-on-surface-variant">{t(row.labelKey)}</dt>
+              <dd className="text-right font-medium text-on-surface">
+                {renderValue(row.value, locale, t)}
+              </dd>
+            </div>
+            {row.value.kind === "capitals" &&
+              row.value.capitalNotLargestCity && (
+                <CapitalNotLargestCaption
+                  capitalCount={row.value.capitals.length}
+                  t={t}
+                />
+              )}
+            {row.basis === "convention" && <ConventionCaption t={t} />}
           </div>
         ))}
       </dl>
-      {category.sources.length > 0 && (
-        <p className="text-[10px] text-on-surface-variant">
-          {category.sources
-            .map((sourceId) => SOURCES[sourceId].name[locale])
-            .join(", ")}
-        </p>
-      )}
+      <CategorySourceLegend
+        sourceIds={category.sources}
+        locale={locale}
+        t={t}
+      />
     </section>
   );
 }

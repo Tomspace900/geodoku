@@ -6,6 +6,7 @@ import {
   formatOrdinal,
   formatPercent,
   formatYear,
+  sourceReferences,
 } from "../countrySheetFormat";
 
 describe("formatOrdinal", () => {
@@ -68,8 +69,20 @@ describe("computeDensity", () => {
 });
 
 describe("formatPercent", () => {
-  it("rounds to the nearest integer percent", () => {
+  it("rounds to the nearest integer percent at or above 10%", () => {
     expect(formatPercent(0.213, "en")).toBe("21%");
+    expect(formatPercent(0.213, "fr")).toBe("21 %");
+  });
+
+  it("shows one decimal below 10% so a small non-zero share never reads 0%", () => {
+    // French coal-fired electricity share (0.18%) — the bug this guards against.
+    expect(formatPercent(0.0018, "en")).toBe("0.2%");
+    expect(formatPercent(0.0018, "fr")).toBe("0,2 %");
+  });
+
+  it("still shows a plain 0% for an actual zero share", () => {
+    expect(formatPercent(0, "en")).toBe("0%");
+    expect(formatPercent(0, "fr")).toBe("0 %");
   });
 });
 
@@ -78,5 +91,26 @@ describe("formatList", () => {
     expect(formatList(["France", "Germany", "Spain"], "en")).toBe(
       "France, Germany, and Spain",
     );
+  });
+});
+
+describe("sourceReferences", () => {
+  it("resolves source ids to their localized name, url and vintage", () => {
+    expect(
+      sourceReferences(["rest_countries", "faostat_2022_2024"], "en"),
+    ).toEqual([
+      {
+        id: "rest_countries",
+        name: "REST Countries",
+        url: "https://restcountries.com/",
+        vintage: null,
+      },
+      {
+        id: "faostat_2022_2024",
+        name: "FAOSTAT",
+        url: "https://www.fao.org/faostat/",
+        vintage: "2022–2024 average",
+      },
+    ]);
   });
 });

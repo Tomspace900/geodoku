@@ -1,4 +1,5 @@
 import type { Locale } from "@/i18n/types";
+import { SOURCES, type SourceId } from "../../../../content/sources";
 import type { LocalizedString } from "../../../../content/type";
 
 /**
@@ -11,10 +12,17 @@ export function formatInteger(value: number, locale: Locale): string {
   return new Intl.NumberFormat(locale).format(Math.round(value));
 }
 
+/**
+ * Un entier au-delà de 10 %, une décimale en-deçà — une valeur non nulle
+ * (l'électricité au charbon française, 0,18 %) ne s'affiche jamais « 0 % »,
+ * ce qu'un arrondi à l'entier ferait à tort.
+ */
 export function formatPercent(fraction: number, locale: Locale): string {
+  const digits = fraction !== 0 && Math.abs(fraction) < 0.1 ? 1 : 0;
   return new Intl.NumberFormat(locale, {
     style: "percent",
-    maximumFractionDigits: 0,
+    minimumFractionDigits: digits,
+    maximumFractionDigits: digits,
   }).format(fraction);
 }
 
@@ -74,6 +82,34 @@ const LANGUAGE_NAME_FALLBACKS: Readonly<Record<string, LocalizedString>> = {
   pov: { fr: "Créole de Guinée-Bissau", en: "Upper Guinea Crioulo" },
   zdj: { fr: "Comorien ngazidja", en: "Ngazidja Comorian" },
 };
+
+export type CountrySheetSourceReference = Readonly<{
+  id: SourceId;
+  name: string;
+  url: string;
+  vintage: string | null;
+}>;
+
+/**
+ * Résout des `SourceId` vers leur fiche localisée (nom, URL, millésime),
+ * sur le même patron que `constraintSourceView` (toast de source, lot 1) —
+ * la légende de catégorie de la fiche pays affiche « Sources : nom
+ * (millésime), … » avec des liens, pas seulement des noms.
+ */
+export function sourceReferences(
+  sourceIds: readonly SourceId[],
+  locale: Locale,
+): readonly CountrySheetSourceReference[] {
+  return sourceIds.map((id) => {
+    const source = SOURCES[id];
+    return {
+      id,
+      name: source.name[locale],
+      url: source.url,
+      vintage: source.vintage ? source.vintage[locale] : null,
+    };
+  });
+}
 
 export function formatLanguageName(code: string, locale: Locale): string {
   try {

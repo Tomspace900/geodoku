@@ -1,5 +1,9 @@
 import type { TKey } from "@/i18n/types";
-import { FACT_PROVENANCE } from "../../../../content/countries/factProvenance";
+import { isCountryCode } from "../../../../content/countries/countryCodes";
+import {
+  FACT_PROVENANCE,
+  PRODUCTION_PROVENANCE,
+} from "../../../../content/countries/factProvenance";
 import type { CountryFacts } from "../../../../content/countries/type";
 import type { SourceId } from "../../../../content/sources";
 import type { ContentBasis } from "../../../../content/type";
@@ -21,7 +25,6 @@ import {
   PRODUCTION_LABELS,
   PRODUCTION_ORDER,
   REGIME_LABELS,
-  SOVEREIGNTY_KIND_LABELS,
   SUBREGION_LABELS,
   WATER_ACCESS_LABELS,
 } from "./countrySheetLabels";
@@ -45,6 +48,7 @@ export type CountrySheetValue =
   | { kind: "density"; value: number }
   | { kind: "percent"; value: number }
   | { kind: "year"; value: number }
+  | { kind: "utcOffsets"; count: number }
   | {
       kind: "countries";
       iso3: readonly string[];
@@ -56,8 +60,7 @@ export type CountrySheetValue =
       capitals: readonly CountrySheetCapital[];
       capitalNotLargestCity: boolean;
     }
-  | { kind: "productions"; entries: readonly CountrySheetProduction[] }
-  | { kind: "sovereignty"; kindLabelKey: TKey; year: number };
+  | { kind: "productions"; entries: readonly CountrySheetProduction[] };
 
 export type CountrySheetRow = Readonly<{
   labelKey: TKey;
@@ -102,8 +105,10 @@ function physicalFeatureLabels(
 function buildLandmarksRows(facts: CountryFacts): CountrySheetRow[] {
   const rows: CountrySheetRow[] = [];
 
-  const capitalsProvenance = FACT_PROVENANCE.capitals;
-  const capitalNotLargest = facts.geoTags.includes("capital_not_largest");
+  // La liste des capitales reste « source » (REST Countries) même quand la
+  // mention « n'est pas la plus grande ville » (convention, sans source)
+  // s'y ajoute : les deux ont leur propre provenance, la ligne ne prend pas
+  // la moyenne des deux (cf. lot 2, correctif « capitales »).
   rows.push({
     labelKey: "countrySheet.field.capitals",
     value: {
@@ -112,14 +117,10 @@ function buildLandmarksRows(facts: CountryFacts): CountrySheetRow[] {
         name: capital.name,
         roleLabelKeys: capital.roles.map((role) => CAPITAL_ROLE_LABELS[role]),
       })),
-      capitalNotLargestCity: capitalNotLargest,
+      capitalNotLargestCity: facts.geoTags.includes("capital_not_largest"),
     },
-    basis: mergeBasis(
-      capitalNotLargest
-        ? [capitalsProvenance.basis, FACT_PROVENANCE.geoTags.basis]
-        : [capitalsProvenance.basis],
-    ),
-    sources: capitalsProvenance.sources,
+    basis: FACT_PROVENANCE.capitals.basis,
+    sources: FACT_PROVENANCE.capitals.sources,
   });
 
   rows.push({
@@ -178,8 +179,8 @@ function buildGeographyRows(facts: CountryFacts): CountrySheetRow[] {
     rows.push({
       labelKey: "countrySheet.field.middleEast",
       value: { kind: "enum", labelKey: "countrySheet.value.yes" },
-      basis: FACT_PROVENANCE.geoTags.basis,
-      sources: FACT_PROVENANCE.geoTags.sources,
+      basis: FACT_PROVENANCE.middleEast.basis,
+      sources: FACT_PROVENANCE.middleEast.sources,
     });
   }
 
@@ -190,11 +191,14 @@ function buildGeographyRows(facts: CountryFacts): CountrySheetRow[] {
     sources: FACT_PROVENANCE.waterAccess.sources,
   });
 
+  // Seuls les pays du catalogue joueur sont cités : un territoire non jouable
+  // (ESH, HKG, MAC…) présent dans la donnée `borders` brute serait un pays
+  // sans fiche possible. La donnée `borders` elle-même reste inchangée.
   rows.push({
     labelKey: "countrySheet.field.borders",
     value: {
       kind: "countries",
-      iso3: facts.borders,
+      iso3: facts.borders.filter((code) => isCountryCode(code)),
       emptyLabelKey: "countrySheet.value.none",
     },
     basis: FACT_PROVENANCE.borders.basis,
@@ -206,8 +210,8 @@ function buildGeographyRows(facts: CountryFacts): CountrySheetRow[] {
     rows.push({
       labelKey: "countrySheet.field.coastlines",
       value: { kind: "enumList", labelKeys: coastlineLabels },
-      basis: FACT_PROVENANCE.physicalFeatures.basis,
-      sources: FACT_PROVENANCE.physicalFeatures.sources,
+      basis: FACT_PROVENANCE.coastlines.basis,
+      sources: FACT_PROVENANCE.coastlines.sources,
     });
   }
 
@@ -215,16 +219,16 @@ function buildGeographyRows(facts: CountryFacts): CountrySheetRow[] {
     rows.push({
       labelKey: "countrySheet.field.equatorCrosser",
       value: { kind: "enum", labelKey: "countrySheet.value.yes" },
-      basis: FACT_PROVENANCE.physicalFeatures.basis,
-      sources: FACT_PROVENANCE.physicalFeatures.sources,
+      basis: FACT_PROVENANCE.equatorCrosser.basis,
+      sources: FACT_PROVENANCE.equatorCrosser.sources,
     });
   }
 
   rows.push({
     labelKey: "countrySheet.field.timezones",
-    value: { kind: "count", value: facts.utcOffsetCount },
-    basis: FACT_PROVENANCE.utcOffsetCount.basis,
-    sources: FACT_PROVENANCE.utcOffsetCount.sources,
+    value: { kind: "utcOffsets", count: facts.utcOffsetCount },
+    basis: FACT_PROVENANCE.timezones.basis,
+    sources: FACT_PROVENANCE.timezones.sources,
   });
 
   return rows;
@@ -237,8 +241,8 @@ function buildNatureRows(facts: CountryFacts): CountrySheetRow[] {
     rows.push({
       labelKey: "countrySheet.field.peakOver5000m",
       value: { kind: "enum", labelKey: "countrySheet.value.yes" },
-      basis: FACT_PROVENANCE.physicalFeatures.basis,
-      sources: FACT_PROVENANCE.physicalFeatures.sources,
+      basis: FACT_PROVENANCE.peakOver5000m.basis,
+      sources: FACT_PROVENANCE.peakOver5000m.sources,
     });
   }
 
@@ -265,8 +269,8 @@ function buildNatureRows(facts: CountryFacts): CountrySheetRow[] {
     rows.push({
       labelKey: "countrySheet.field.biomes",
       value: { kind: "enumList", labelKeys: biomeLabels },
-      basis: FACT_PROVENANCE.physicalFeatures.basis,
-      sources: FACT_PROVENANCE.physicalFeatures.sources,
+      basis: FACT_PROVENANCE.biomes.basis,
+      sources: FACT_PROVENANCE.biomes.sources,
     });
   }
 
@@ -306,18 +310,32 @@ function buildSocietyRows(facts: CountryFacts): CountrySheetRow[] {
     sources: FACT_PROVENANCE.drivingSide.sources,
   });
 
-  const productionEntries: CountrySheetProduction[] = PRODUCTION_ORDER.filter(
+  const displayedProducts = PRODUCTION_ORDER.filter(
     (product) => facts.productionRanks[product] !== undefined,
-  ).map((product) => ({
-    productLabelKey: PRODUCTION_LABELS[product],
-    rank: facts.productionRanks[product] as number,
-  }));
-  if (productionEntries.length > 0) {
+  );
+  if (displayedProducts.length > 0) {
+    // Une source par produit affiché, jamais les quatre sources de la
+    // catégorie « productions » en bloc (cf. lot 2, correctif C) : un pays qui
+    // n'a qu'un rang blé ne cite que FAOSTAT, pas aussi l'USDA et l'EIA.
     rows.push({
       labelKey: "countrySheet.field.productions",
-      value: { kind: "productions", entries: productionEntries },
-      basis: FACT_PROVENANCE.productionRanks.basis,
-      sources: FACT_PROVENANCE.productionRanks.sources,
+      value: {
+        kind: "productions",
+        entries: displayedProducts.map((product) => ({
+          productLabelKey: PRODUCTION_LABELS[product],
+          rank: facts.productionRanks[product] as number,
+        })),
+      },
+      basis: mergeBasis(
+        displayedProducts.map(
+          (product) => PRODUCTION_PROVENANCE[product].basis,
+        ),
+      ),
+      sources: dedupeSources(
+        displayedProducts.map(
+          (product) => PRODUCTION_PROVENANCE[product].sources,
+        ),
+      ),
     });
   }
 
@@ -343,24 +361,13 @@ function buildHistoryRows(facts: CountryFacts): CountrySheetRow[] {
     sources: FACT_PROVENANCE.regime.sources,
   });
 
-  if (facts.sovereigntyYear !== null && facts.sovereigntyKind !== null) {
-    rows.push({
-      labelKey: "countrySheet.field.sovereignty",
-      value: {
-        kind: "sovereignty",
-        kindLabelKey: SOVEREIGNTY_KIND_LABELS[facts.sovereigntyKind],
-        year: facts.sovereigntyYear,
-      },
-      basis: mergeBasis([
-        FACT_PROVENANCE.sovereigntyYear.basis,
-        FACT_PROVENANCE.sovereigntyKind.basis,
-      ]),
-      sources: dedupeSources([
-        FACT_PROVENANCE.sovereigntyYear.sources,
-        FACT_PROVENANCE.sovereigntyKind.sources,
-      ]),
-    });
-  }
+  // La ligne « Souveraineté » (nature + année) reste masquée jusqu'au lot 4 :
+  // `sovereigntyKind` n'a jamais été relu avant 1990 (il ne servait qu'à
+  // dériver `history_sovereignty_since_1990`), et plusieurs entrées sont
+  // fausses une fois affichées telles quelles (France « Indépendance (1789) »,
+  // Royaume-Uni « Indépendance (1284) »…) — cf. lot 2, annexe A du dossier de
+  // corrections. `formerSovereigns` reste affiché : c'est une liste de slugs
+  // relue à la main, indépendante de `sovereigntyKind`/`sovereigntyYear`.
 
   if (facts.formerSovereigns.length > 0) {
     rows.push({

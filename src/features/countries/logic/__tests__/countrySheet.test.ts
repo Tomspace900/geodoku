@@ -48,9 +48,13 @@ describe("buildCountrySheet", () => {
     expect(
       rowByLabel(model, "countrySheet.field.formerSovereigns"),
     ).toBeUndefined();
-    // Régime et souveraineté restent affichés : la catégorie n'est pas vide.
+    // Régime reste affiché : la catégorie n'est pas vide.
     expect(rowByLabel(model, "countrySheet.field.regime")).toBeDefined();
-    expect(rowByLabel(model, "countrySheet.field.sovereignty")).toBeDefined();
+  });
+
+  it("never builds a sovereignty row — masked until lot 4 (sourceDescription not reviewed pre-1990)", () => {
+    const model = buildCountrySheet("FRA", COUNTRY_FACTS.FRA);
+    expect(rowByLabel(model, "countrySheet.field.sovereignty")).toBeUndefined();
   });
 
   it("omits an entire category once all of its rows are masked (no production for Kosovo)", () => {
@@ -99,22 +103,30 @@ describe("buildCountrySheet", () => {
     }
   });
 
-  it("passes non-playable border territory codes (ESH, HKG, MAC) through unfiltered", () => {
+  it("excludes non-playable border territory codes (ESH, HKG, MAC) — only catalogue countries are cited", () => {
     const dza = COUNTRY_FACTS.DZA;
     const model = buildCountrySheet("DZA", dza);
     const row = rowByLabel(model, "countrySheet.field.borders");
     expect(row?.value.kind).toBe("countries");
     if (row?.value.kind === "countries") {
-      expect(row.value.iso3).toEqual(dza.borders);
-      expect(row.value.iso3).toContain("ESH");
+      expect(row.value.iso3).not.toContain("ESH");
+      expect(row.value.iso3).toContain("TUN");
+      expect(row.value.iso3).toContain("MAR");
+      expect(row.value.iso3.length).toBe(dza.borders.length - 1);
     }
   });
 
-  it("merges basis to convention when the capital-not-largest note applies", () => {
-    // BDI (Burundi) : geoTags porte capital_not_largest.
+  it("keeps the capitals row basis as source even when the capital-not-largest note applies", () => {
+    // BDI (Burundi) : geoTags porte capital_not_largest, mais la liste des
+    // capitales elle-même reste REST Countries — la note est une convention
+    // séparée, pas une moyenne des deux provenances.
     const model = buildCountrySheet("BDI", COUNTRY_FACTS.BDI);
     const row = rowByLabel(model, "countrySheet.field.capitals");
-    expect(row?.basis).toBe("convention");
+    expect(row?.basis).toBe("source");
+    expect(row?.value.kind).toBe("capitals");
+    if (row?.value.kind === "capitals") {
+      expect(row.value.capitalNotLargestCity).toBe(true);
+    }
   });
 
   it("drops an entire category when every row is masked", () => {
@@ -133,5 +145,26 @@ describe("buildCountrySheet", () => {
         (c) => c.titleKey === "countrySheet.category.natureRelief",
       ),
     ).toBe(false);
+  });
+
+  it("cites only the source of the products actually displayed (France: wheat only)", () => {
+    // La France n'a qu'un rang blé (FAOSTAT) : la ligne ne doit jamais citer
+    // l'USDA (café) ni l'EIA (pétrole, gaz) — cf. lot 2, correctif C.
+    const model = buildCountrySheet("FRA", COUNTRY_FACTS.FRA);
+    const row = rowByLabel(model, "countrySheet.field.productions");
+    expect(row?.sources).toEqual(["faostat_2022_2024"]);
+    expect(row?.value.kind).toBe("productions");
+    if (row?.value.kind === "productions") {
+      expect(row.value.entries).toHaveLength(1);
+    }
+  });
+
+  it("renders the timezones row as a distinct-UTC-offsets count, not a bare number", () => {
+    const model = buildCountrySheet("FRA", COUNTRY_FACTS.FRA);
+    const row = rowByLabel(model, "countrySheet.field.timezones");
+    expect(row?.value).toEqual({
+      kind: "utcOffsets",
+      count: COUNTRY_FACTS.FRA.utcOffsetCount,
+    });
   });
 });
