@@ -1,10 +1,13 @@
 import { Button } from "@/components/ui/button";
-import { cn } from "@/lib/utils";
 
 type Props = {
   label: string;
   onClick: () => void;
 };
+
+/** Rendu typographique commun au bouton et à son jumeau de mesure. */
+const LABEL_CLASS =
+  "min-h-[52px] whitespace-normal p-1.5 text-center text-[10px] font-medium leading-tight";
 
 /**
  * En-tête de ligne/colonne cliquable, partagé par `GameGrid` et `SolutionGrid` —
@@ -12,38 +15,35 @@ type Props = {
  * en-tête statique hors survol et pression ; le texte affiché est son nom
  * accessible.
  *
- * `absolute inset-0` plutôt que `h-full w-full` : dans une cellule de tableau
- * (`<th>`) sans hauteur propre, un pourcentage de hauteur sur un enfant ne se
- * résout pas de façon fiable d'un moteur à l'autre — le bouton restait bloqué
- * à sa hauteur minimale (52 px) alors que la ligne, dictée par les cases de
- * la grille solution à côté, est bien plus haute, ce qui se voyait au survol.
- * Le `<th>` porte `relative` (`GridMatrix`) pour servir de repère.
+ * **Le bouton couvre toute la cellule** (`absolute inset-0`, le `<th>` portant
+ * `relative`), et non `h-full` : un pourcentage de hauteur sur l'enfant d'une
+ * cellule de tableau ne se résout pas de la même façon d'un moteur à l'autre,
+ * et le bouton restait haut de 52 px dans un en-tête de ligne bien plus haut
+ * (la rangée est dictée par les cases voisines), ce qui se voyait au survol.
  *
- * Piège découvert en e2e (webkit-iphone) : un enfant `absolute` sort du flux
- * et ne contribue plus à la hauteur de son `<th>`. Sur la ligne d'en-têtes de
- * colonnes, où *tous* les `<th>` n'ont que ce bouton en contenu, la ligne
- * entière s'effondrait à 0 — le bouton (toujours haut de 52 px via `min-h`)
- * débordait alors sous la grille et interceptait les clics sur la première
- * rangée de cases. `GridMatrix` donne donc `h-[52px]` (pas `min-h-[52px]` :
- * WebKit ignore `min-height` pour le calcul de hauteur de ligne d'un `<th>`,
- * `height` y est honoré comme un plancher par l'algorithme de mise en page
- * des tableaux, sur les trois moteurs) au `<th>` lui-même : la ligne
- * d'en-têtes ne peut plus s'effondrer, et une ligne d'en-tête à côté de cases
- * plus hautes (grille solution) reste libre de s'étirer au-delà de ce
- * plancher.
+ * **Le jumeau invisible dimensionne la cellule.** Un enfant `absolute` sort du
+ * flux : sans lui, la rangée des en-têtes de colonne — où ces boutons sont le
+ * seul contenu — ne peut plus grandir. Elle s'effondrait à 0, puis, figée à
+ * 52 px, laissait les libellés longs déborder sur la première rangée de cases
+ * (« Plus densément peuplé que les Pays-Bas (430 hab./km²) » mesure 75 px en
+ * 375 px de large). Le jumeau porte le même texte et la même typographie, donc
+ * la rangée retrouve exactement la hauteur qu'elle avait avant le bouton.
+ * `invisible` (`visibility: hidden`) garde la place tout en sortant de l'arbre
+ * d'accessibilité : le libellé n'est annoncé qu'une fois, par le bouton.
  */
 export function ConstraintHeaderButton({ label, onClick }: Props) {
   return (
-    <Button
-      type="button"
-      variant="ghost"
-      size="auto"
-      onClick={onClick}
-      className={cn(
-        "absolute inset-0 flex min-h-[52px] items-center justify-center whitespace-normal rounded-xl bg-surface-low p-1.5 text-center text-[10px] font-medium leading-tight text-on-surface-variant hover:bg-surface-highest/50 hover:text-on-surface-variant",
-      )}
-    >
-      {label}
-    </Button>
+    <>
+      <span className={`block ${LABEL_CLASS} invisible`}>{label}</span>
+      <Button
+        type="button"
+        variant="ghost"
+        size="auto"
+        onClick={onClick}
+        className={`absolute inset-0 flex items-center justify-center rounded-xl bg-surface-low text-on-surface-variant hover:bg-surface-highest/50 hover:text-on-surface-variant ${LABEL_CLASS}`}
+      >
+        {label}
+      </Button>
+    </>
   );
 }

@@ -959,6 +959,7 @@ case (A–D).
   - `b51de3a` [FEAT] Drawer de contrainte unifié sur la grille solution
   - `484a066` [FIX] Zone cliquable des en-têtes, défilement fantôme du Drawer
   - `029cfa6` [FIX] i18n — nouvelles clés de la troisième passe
+  - (revue) [FIX] En-tête de contrainte — la rangée grandit de nouveau avec son libellé
   - `bc49294` [TEST] e2e — Drawer de contrainte sur la grille solution
 - Décisions utilisateur consignées (2026-09-18) :
   1. Case de la grille solution : retour à la case d'avant le lot 2 à

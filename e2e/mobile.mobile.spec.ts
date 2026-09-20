@@ -39,6 +39,33 @@ test("grid fits within mobile viewport without horizontal scroll", async ({
   expect(scrollWidth).toBeLessThanOrEqual(clientWidth + 2); // 2px tolerance for sub-pixel
 });
 
+// Le bouton d'en-tête est en `absolute` pour couvrir toute la cellule : il ne
+// dimensionne donc plus sa rangée, et c'est son jumeau invisible qui s'en
+// charge (`ConstraintHeaderButton`). Sans lui, la rangée des en-têtes de
+// colonne s'effondre ou se fige, et un libellé long déborde sur les cases —
+// invisible pour les autres tests, dont aucun ne regarde la mise en page. Le
+// libellé le plus long du catalogue est injecté : les grilles du jour sont trop
+// courtes pour révéler le défaut.
+test("a long constraint label stays inside its header cell", async ({
+  page,
+}) => {
+  const spill = await page.evaluate(() => {
+    const th = document.querySelector('th[scope="col"]') as HTMLElement;
+    const label = th.querySelector("span") as HTMLElement;
+    const button = th.querySelector("button") as HTMLElement;
+    const longest = "Plus densément peuplé que les Pays-Bas (430 hab./km²)";
+    label.textContent = longest;
+    button.textContent = longest;
+    const range = document.createRange();
+    range.selectNodeContents(button);
+    const text = range.getBoundingClientRect();
+    const cell = th.getBoundingClientRect();
+    return { top: cell.top - text.top, bottom: text.bottom - cell.bottom };
+  });
+  expect(spill.top).toBeLessThanOrEqual(1);
+  expect(spill.bottom).toBeLessThanOrEqual(1);
+});
+
 // ── 2. Tap sur une case → le drawer s'ouvre par le bas ───────────────────────
 
 test("tapping a cell opens the GuessModal drawer from the bottom", async ({
