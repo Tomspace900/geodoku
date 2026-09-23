@@ -41,6 +41,11 @@ async function runSparql(query: string): Promise<SparqlResponse> {
   return (await response.json()) as SparqlResponse;
 }
 
+/**
+ * Overrides du dataset précédent, préservés par la récolte. Seule l'absence du
+ * fichier (première récolte) donne un bloc vide : toute autre erreur de lecture
+ * remonte, sinon une curation motivée serait réécrite en silence.
+ */
 async function previousOverrides(): Promise<
   CapitalLabelsSnapshot["overrides"]
 > {
@@ -49,8 +54,11 @@ async function previousOverrides(): Promise<
       CAPITAL_LABELS: CapitalLabelsSnapshot;
     };
     return module.CAPITAL_LABELS.overrides;
-  } catch {
-    return {};
+  } catch (error) {
+    if ((error as NodeJS.ErrnoException).code === "ERR_MODULE_NOT_FOUND") {
+      return {};
+    }
+    throw error;
   }
 }
 
