@@ -64,6 +64,8 @@ convex/lib/               # gridGenerator, gridScheduler, gridConstants (purs)
 scripts/content/            # dérivation & garde du snapshot content/ (check-content, build-answers, emit)
 scripts/ci/                 # exécutés en CI (check-e2e-convex-url)
 scripts/countries/          # pipeline contenu pays (build-countries, flagData, patches)
+  harvest/                # récoltes réseau isolées (Wikidata…) → data/*.ts committé, relu en diff
+  data/                   # datasets de faits datés (curés ou récoltés)
 scripts/local/              # outillage local versionné (analytics, simulate, sync gh…)
 scripts/dev/                # scratch perso (gitignored)
 e2e/                      # Playwright — helpers.ts + *.shared|desktop|mobile.spec.ts
@@ -97,6 +99,7 @@ e2e/                      # Playwright — helpers.ts + *.shared|desktop|mobile.
 - `formerSovereigns` est une lecture **à la main** du texte libre du Factbook, et deux revues successives l'ont faite à l'œil en ratant des cas. [`validateSovereigntySources.ts`](scripts/countries/validateSovereigntySources.ts) (`check:content`) échoue si une `sourceDescription` nomme une des neuf puissances tracées sans la porter dans `formerSovereigns` : compléter la curation, ou inscrire le cas dans `ACCEPTED_OMISSIONS` **avec son motif**. Y verser un échec sans motif viderait la garde de son sens.
 - Après un levier : `pnpm build:answers` → relire le diff ISO3 → `pnpm simulate:scheduling` → régénération du pool via `/admin` si OK.
 - Le snapshot `content/countries/` (identité, faits, popularité) est régénéré par `pnpm build:countries` (réseau), qui enchaîne `build:answers`.
+- **Récoltes réseau** (`scripts/countries/harvest/`, ex. `pnpm harvest:capitals` pour les libellés fr/en des capitales, Wikidata) : un script par source, séparé de `build-countries`, qui écrit un dataset de `scripts/countries/data/` relu en diff puis committé ; `build:countries` le fusionne hors-ligne. Le dataset porte un bloc `overrides` curé (motif obligatoire), préservé à chaque récolte. La récolte **traduit** une liste qui reste celle de REST Countries : jamais d'ajout ni de retrait de capitale, jamais de repli silencieux sur l'anglais — [`validateCapitalLabels`](scripts/countries/validateDatasetFacts.ts) (`check:content`) échoue sur un libellé obsolète ou une entrée orpheline.
 - Drapeaux → [`scripts/countries/flagData.json`](scripts/countries/flagData.json) curé, pas d'heuristique.
 
 Détail complet : [`docs/content-pipeline.md`](docs/content-pipeline.md).

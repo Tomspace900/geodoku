@@ -9,6 +9,7 @@ tuning du générateur. Résumé agent dans `AGENTS.md` §3.
 ENTRÉES DE CURATION (éditées à la main)
   scripts/countries/countryPatches.ts    # corrections, alias, classifications gameplay
   scripts/countries/flagData.json        # table de vérité drapeaux (couleurs, symboles, disposition)
+  scripts/countries/data/capitalLabels.ts # libellés fr/en des capitales — RÉCOLTÉ (pnpm harvest:capitals, Wikidata)
         │  pnpm build:countries   (RÉSEAU — world-countries npm + REST Countries v5 + Wikimedia)
         ▼
 SNAPSHOT (content/countries/ — généré, committé, daté par FACTS_SNAPSHOT.date)
@@ -129,6 +130,19 @@ lu à la fois par `build:countries` et par la garde de fraîcheur : deux
 assemblages séparés dériveraient, et la garde finirait par valider un snapshot
 que le build ne produit plus.
 
+**Récoltes réseau** — `scripts/countries/harvest/` (premier dossier du genre) :
+un script par source externe, qui interroge le réseau et écrit un dataset dans
+`scripts/countries/data/`. La récolte est séparée de `build-countries` : elle se
+lance à part (`pnpm harvest:capitals`), son résultat est **relu en diff et
+committé**, et `build:countries` ne fait que le fusionner hors-ligne. Chaque
+dataset porte sa date de récolte et un bloc `overrides` curé (chaque entrée
+avec son motif), préservé à chaque récolte. Capitales : la liste reste celle de
+REST Countries, Wikidata ne fournit que les libellés fr/en (correspondance sur
+le libellé anglais normalisé — NFD, sans accents, apostrophes unifiées ; un nom
+sans libellé fr **et** en exploitable passe en override, jamais en repli
+silencieux sur l'anglais). Wikidata migre les libellés identiques dans toutes
+les langues vers `mul` : ces cas (Oslo…) sont des overrides.
+
 ### Contrôles automatiques
 
 `pnpm check:content` (job CI `quality`) vérifie :
@@ -146,7 +160,9 @@ que le build ne produit plus.
   `productionRanks`, `coalElectricityShare`, `formerSovereigns`,
   `sovereigntyYear`, `sovereigntyKind`) ne correspond plus à `facts.ts` : dataset
   révisé sans regen, ou `facts.ts` édité à la main malgré son en-tête
-  `@generated`. Les champs venus du réseau (population, capitales, adhésions,
+  `@generated`. Les **libellés des capitales** sont vérifiés de même contre
+  `capitalLabels.ts` (`validateCapitalLabels`), qui signale aussi toute entrée
+  orpheline — capitale ajoutée ou retirée par rapport à REST Countries. Les champs venus du réseau (population, capitales, adhésions,
   pageviews) restent hors de portée — seule une regen les vérifie ;
 - **seam terminal** : aucun module de `content/` n'importe via l'alias `@/` ni
   ne remonte hors du dossier ([`validateContentSeam.ts`](../scripts/content/validateContentSeam.ts)).
