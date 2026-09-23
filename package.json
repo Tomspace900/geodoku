@@ -32,6 +32,7 @@
     "test:e2e:reset": "pnpm wipe:db && pnpm seed:grids && pnpm test:e2e",
     "check:e2e-convex-url": "tsx --env-file-if-exists=.env.local scripts/ci/check-e2e-convex-url.ts",
     "check:content": "tsx scripts/content/check-content.ts",
+    "harvest:capitals": "tsx scripts/countries/harvest/capitalLabels.ts",
     "build:answers": "tsx scripts/content/build-answers.ts",
     "check:bundle": "vite build && tsx scripts/ci/check-bundle-size.ts",
     "check:design-system": "tsx scripts/ci/check-design-system.ts",

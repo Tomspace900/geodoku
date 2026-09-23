@@ -97,8 +97,8 @@ describe("buildCountrySheet", () => {
     expect(row?.value.kind).toBe("capitals");
     if (row?.value.kind === "capitals") {
       expect(row.value.capitals.length).toBe(COUNTRY_FACTS.ZAF.capitals.length);
-      expect(row.value.capitals.map((c) => c.name)).toEqual(
-        COUNTRY_FACTS.ZAF.capitals.map((c) => c.name),
+      expect(row.value.capitals.map((c) => c.names)).toEqual(
+        COUNTRY_FACTS.ZAF.capitals.map((c) => c.names),
       );
     }
   });

@@ -46,7 +46,8 @@ Documenté **par famille de champs** de `CountryFacts` (voir
 | `flagColors` / `flagSymbols` / `flagLayout` | `scripts/countries/flagData.json` (table curée, pas d'heuristique) | curé |
 | `events` (`fifa_wc_host`, `summer_olympics_host`, `winter_olympics_host`) | compilation éditoriale édition par édition (`countryPatches.ts`) | curé |
 | `memberships` (`eu`, `g20`, `nato`, `commonwealth`, `arab_league`, `asean`, `brics`, `eurozone`, `g7`, `opec`, `schengen`, …) | REST Countries v5, avec deltas datés dans `countryPatches.ts` (`membershipsAdd` / `membershipsRemove`) pour rattraper un changement officiel que la source n'a pas encore intégré | importé + curé |
-| `capitals` (`name`, `latitude`, `longitude`, `roles`) | REST Countries v5 | importé |
+| `capitals` (`name`, `latitude`, `longitude`, `roles`) | REST Countries v5 — la liste des capitales, non rouverte (choix politique : PSE, TWN) | importé |
+| `capitals[].names` (`fr`, `en`) | [Wikidata](https://www.wikidata.org/) (`P36`, `rdfs:label`), récolté par `pnpm harvest:capitals` dans `scripts/countries/data/capitalLabels.ts`, corrigé par des `overrides` motivés (libellé absent, variante d'orthographe, choix politique). La récolte **traduit** la liste REST Countries : elle n'ajoute ni ne retire aucune capitale. État courant de Wikidata, daté par sa date de récolte | importé + curé |
 | `drivingSide` (`left` / `right`) | REST Countries v5 `car.side` | importé |
 | `geoTags` (`middle_east`, `drives_on_left`, `capital_not_largest`, …) | classification éditoriale (`countryPatches.ts`) | curé |
 | `regime` (`monarchy` / `republic`) | classification binaire éditoriale, réf. [CIA World Factbook — government type](https://www.cia.gov/the-world-factbook/field/government-type/) | curé |

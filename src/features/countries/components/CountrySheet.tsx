@@ -79,8 +79,8 @@ function renderValue(
       return formatList(
         value.capitals.map((capital) =>
           value.capitals.length > 1 && capital.roleLabelKeys.length > 0
-            ? `${capital.name} (${capital.roleLabelKeys.map((key) => t(key)).join(", ")})`
-            : capital.name,
+            ? `${capital.names[locale]} (${capital.roleLabelKeys.map((key) => t(key)).join(", ")})`
+            : capital.names[locale],
         ),
         locale,
       );

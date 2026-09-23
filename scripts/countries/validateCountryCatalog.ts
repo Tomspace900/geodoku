@@ -204,6 +204,8 @@ export function validateCountryFacts(
     facts.capitals.forEach((capital) => {
       if (
         !capital.name ||
+        !capital.names?.fr ||
+        !capital.names?.en ||
         !Number.isFinite(capital.latitude) ||
         capital.latitude < -90 ||
         capital.latitude > 90 ||

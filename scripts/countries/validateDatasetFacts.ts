@@ -19,6 +19,7 @@ import {
   type QuantitativeDatasets,
   quantitativeFactsForCode,
 } from "./buildCountriesLib";
+import type { CapitalLabelsSnapshot } from "./data/types";
 
 /** Les champs de `CountryFacts` que la fusion des datasets produit intégralement. */
 const DATASET_DERIVED_KEYS = [
@@ -93,6 +94,59 @@ export function validateDatasetFacts(
         `${code}: faits dérivés obsolètes (${divergences.join(" ; ")}) — lancer pnpm build:countries`,
       );
     }
+  });
+
+  return errors;
+}
+
+/**
+ * Confronte les libellés des capitales de `factsByCode` au dataset
+ * `capitalLabels` (override d'abord, récolte ensuite). Signale aussi les
+ * entrées orphelines du dataset : la liste des capitales est celle de REST
+ * Countries, le dataset ne fait que la traduire — une entrée sans capitale
+ * source correspondante signale une capitale ajoutée ou retirée.
+ */
+export function validateCapitalLabels(
+  factsByCode: Readonly<Record<string, CountryFacts>>,
+  dataset: CapitalLabelsSnapshot,
+  codes: readonly string[],
+): string[] {
+  const errors: string[] = [];
+
+  codes.forEach((code) => {
+    const facts = factsByCode[code];
+    if (!facts) return;
+    const sourceNames = new Set(facts.capitals.map((capital) => capital.name));
+
+    facts.capitals.forEach((capital) => {
+      const expected =
+        dataset.overrides[code]?.[capital.name] ??
+        dataset.labels[code]?.[capital.name];
+      if (!expected) {
+        errors.push(
+          `${code}: capitale « ${capital.name} » sans libellé dans le dataset — lancer pnpm harvest:capitals`,
+        );
+        return;
+      }
+      if (
+        capital.names.fr !== expected.fr ||
+        capital.names.en !== expected.en
+      ) {
+        errors.push(
+          `${code}: libellés de « ${capital.name} » obsolètes (attendu ${format({ fr: expected.fr, en: expected.en })}, trouvé ${format(capital.names)}) — lancer pnpm build:countries`,
+        );
+      }
+    });
+
+    [dataset.labels[code], dataset.overrides[code]].forEach((entries) => {
+      Object.keys(entries ?? {})
+        .filter((name) => !sourceNames.has(name))
+        .forEach((name) => {
+          errors.push(
+            `${code}: le dataset des capitales porte « ${name} », absente des capitales sources`,
+          );
+        });
+    });
   });
 
   return errors;

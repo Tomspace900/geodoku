@@ -143,3 +143,24 @@ export type SovereigntySnapshot = Readonly<{
   sourceCommit: string;
   countries: Readonly<Record<string, SovereigntyEvent>>;
 }>;
+
+/** Libellés d'une capitale, dans les deux langues du jeu. */
+export type CapitalLabel = { fr: string; en: string };
+
+/** Libellé posé à la main : le motif dit pourquoi la récolte ne suffit pas. */
+export type CapitalLabelOverride = CapitalLabel & { reason: string };
+
+/**
+ * Libellés des capitales, indexés par ISO3 puis par **nom source** REST
+ * Countries (`CountryCapital.name`). La liste des capitales reste celle de REST
+ * Countries : ce dataset ne fait que la traduire.
+ *
+ * `labels` est écrit par `harvest/capitalLabels.ts` (Wikidata) ; `overrides`
+ * est curé à la main, préservé à chaque récolte, et l'emporte sur `labels`.
+ */
+export type CapitalLabelsSnapshot = {
+  /** Date de récolte (`YYYY-MM-DD`) : Wikidata est un état courant, pas un millésime. */
+  harvestedAt: string;
+  labels: Record<string, Record<string, CapitalLabel>>;
+  overrides: Record<string, Record<string, CapitalLabelOverride>>;
+};

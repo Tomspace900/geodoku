@@ -68,7 +68,11 @@ export type SheetRowId =
   | "subregion";
 
 export const FACT_PROVENANCE: { readonly [K in SheetRowId]: FactProvenance } = {
-  capitals: { basis: "source", sources: ["rest_countries"] },
+  // La liste vient de REST Countries, les libellés fr/en de Wikidata.
+  capitals: {
+    basis: "source",
+    sources: ["rest_countries", "wikidata_capital_labels"],
+  },
   // Mention « n'est pas la plus grande ville » — même provenance que la
   // contrainte `society_capital_not_largest` : classification éditoriale,
   // aucune source à citer.

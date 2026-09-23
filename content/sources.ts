@@ -33,6 +33,17 @@ export const SOURCES = {
     url: "https://restcountries.com/",
     vintage: null,
   },
+  wikidata_capital_labels: {
+    name: {
+      fr: "Wikidata — libellés des capitales",
+      en: "Wikidata — capital labels",
+    },
+    url: "https://www.wikidata.org/",
+    vintage: {
+      fr: "récolte du 23 septembre 2026",
+      en: "harvested 23 September 2026",
+    },
+  },
   un_flags: {
     name: { fr: "Drapeaux officiels — ONU", en: "Official flags — UN" },
     url: "https://www.un.org/en/about-us/member-states",

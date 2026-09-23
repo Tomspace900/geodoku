@@ -83,7 +83,13 @@ export type CapitalRole =
   | "primary";
 
 export type CountryCapital = {
+  /**
+   * Nom source (REST Countries) : clé de correspondance du dataset des
+   * libellés, jamais affiché. La fiche affiche `names[locale]`.
+   */
   name: string;
+  /** Libellés fr/en (Wikidata, cf. `scripts/countries/data/capitalLabels.ts`). */
+  names: LocalizedString;
   latitude: number;
   longitude: number;
   roles: CapitalRole[];

@@ -7,7 +7,7 @@ import {
 } from "../../../../content/countries/factProvenance";
 import type { CountryFacts } from "../../../../content/countries/type";
 import type { SourceId } from "../../../../content/sources";
-import type { ContentBasis } from "../../../../content/type";
+import type { ContentBasis, LocalizedString } from "../../../../content/type";
 import type { PhysicalFeature } from "../types";
 import {
   BIOME_FEATURES,
@@ -31,7 +31,7 @@ import {
 } from "./countrySheetLabels";
 
 export type CountrySheetCapital = Readonly<{
-  name: string;
+  names: LocalizedString;
   roleLabelKeys: readonly TKey[];
 }>;
 
@@ -115,7 +115,7 @@ function buildLandmarksRows(facts: CountryFacts): CountrySheetRow[] {
     value: {
       kind: "capitals",
       capitals: facts.capitals.map((capital) => ({
-        name: capital.name,
+        names: capital.names,
         roleLabelKeys: capital.roles.map((role) => CAPITAL_ROLE_LABELS[role]),
       })),
       capitalNotLargestCity: facts.geoTags.includes("capital_not_largest"),

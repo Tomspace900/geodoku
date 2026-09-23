@@ -15,6 +15,7 @@ import type {
 } from "../../content/countries/type.ts";
 import type {
   AgriculturalProductionSnapshot,
+  CapitalLabelsSnapshot,
   CivilTimeOffsetsSnapshot,
   CoalElectricitySnapshot,
   EnergyProductionSnapshot,
@@ -73,12 +74,17 @@ export type GameplayClassifications = {
   arcticCoast: string[];
 };
 
+/** Ajout manuel : ses capitales sont sources, leurs libellés viennent du dataset. */
+export type ManualCountryAddition = Omit<CountryRecord, "capitals"> & {
+  capitals: SourceCapital[];
+};
+
 export type CountryPatchesConfig = {
   sourceCorrectionsByIso3: Record<string, SourceCorrection>;
   searchAliasesByIso3: Record<string, string[]>;
   wikipediaTitlesByIso3: Record<string, string>;
   gameplayClassifications: GameplayClassifications;
-  manualCountryAdditions: CountryRecord[];
+  manualCountryAdditions: ManualCountryAddition[];
 };
 
 /**
@@ -95,6 +101,33 @@ export type FlagData = Record<
   }
 >;
 
+/** Capitale telle que REST Countries la donne, avant fusion des libellés. */
+export type SourceCapital = Omit<CountryCapital, "names">;
+
+/**
+ * Ajoute `names` à chaque capitale source : l'override curé l'emporte sur la
+ * récolte. Une capitale sans libellé échoue bruyamment — ni repli sur le nom
+ * source ni sur l'anglais : la liste vient de REST Countries, les libellés de
+ * `pnpm harvest:capitals`.
+ */
+export function withCapitalLabels(
+  iso3: string,
+  capitals: readonly SourceCapital[],
+  dataset: CapitalLabelsSnapshot,
+): CountryCapital[] {
+  return capitals.map((capital) => {
+    const label =
+      dataset.overrides[iso3]?.[capital.name] ??
+      dataset.labels[iso3]?.[capital.name];
+    if (!label) {
+      throw new Error(
+        `${iso3}: aucun libellé fr/en pour la capitale « ${capital.name} » — lancer pnpm harvest:capitals, puis un override motivé si besoin`,
+      );
+    }
+    return { ...capital, names: { fr: label.fr, en: label.en } };
+  });
+}
+
 /** REST Countries v5 row (subset consumed by build-countries). */
 export interface RcEnrichRow {
   cca3?: string | string[];
@@ -102,7 +135,7 @@ export interface RcEnrichRow {
   population: number;
   officialName?: string;
   alternateNames?: string[];
-  capitals?: CountryCapital[];
+  capitals?: SourceCapital[];
   drivingSide?: DrivingSide;
   memberships?: PoliticalGroup[];
   borders?: string[];
@@ -114,7 +147,7 @@ export type RcEnrichment = {
   population: number;
   officialName?: string;
   alternateNames: string[];
-  capitals: CountryCapital[];
+  capitals: SourceCapital[];
   drivingSide: DrivingSide;
   memberships: PoliticalGroup[];
   borders?: string[];

@@ -44,12 +44,16 @@ import {
   ARCHIVED_CONSTRAINTS,
   CONSTRAINTS,
 } from "../../src/features/game/logic/constraints";
+import { CAPITAL_LABELS } from "../countries/data/capitalLabels";
 import { QUANTITATIVE_DATASETS } from "../countries/data/datasets";
 import {
   validateCountryCatalog,
   validateCountryFacts,
 } from "../countries/validateCountryCatalog";
-import { validateDatasetFacts } from "../countries/validateDatasetFacts";
+import {
+  validateCapitalLabels,
+  validateDatasetFacts,
+} from "../countries/validateDatasetFacts";
 import { validateSovereigntySources } from "../countries/validateSovereigntySources";
 import {
   referencedSourcesFromAbouts,
@@ -85,6 +89,9 @@ function checkCountries(errors: string[]): void {
       QUANTITATIVE_DATASETS,
       COUNTRY_CODES,
     ),
+  );
+  errors.push(
+    ...validateCapitalLabels(COUNTRY_FACTS, CAPITAL_LABELS, COUNTRY_CODES),
   );
   errors.push(...validateSovereigntySources(QUANTITATIVE_DATASETS.sovereignty));
 

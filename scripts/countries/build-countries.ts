@@ -24,7 +24,6 @@ import { resolve } from "node:path";
 import rawWorldCountries from "world-countries";
 import type {
   CapitalRole,
-  CountryCapital,
   CountryRecord,
   DrivingSide,
   PoliticalGroup,
@@ -46,9 +45,12 @@ import {
   type RcEnrichRow,
   rcEnrichmentMapFromRows,
   regimeForCode,
+  type SourceCapital,
   toWikipediaTitle,
+  withCapitalLabels,
 } from "./buildCountriesLib.ts";
 import { countryPatches } from "./countryPatches.ts";
+import { CAPITAL_LABELS } from "./data/capitalLabels.ts";
 import { QUANTITATIVE_DATASETS } from "./data/datasets.ts";
 
 // ─── World-countries shape (fields we consume) ────────────────────────────────
@@ -273,7 +275,7 @@ function readObjectArrayField(
 
 function capitalFromV5Object(
   rawCapital: RestCountriesV5Object,
-): CountryCapital | null {
+): SourceCapital | null {
   const name = rawCapital.name;
   const coordinates = rawCapital.coordinates;
   const attributes = rawCapital.attributes;
@@ -320,7 +322,7 @@ function rcRowFromV5Object(obj: RestCountriesV5Object): RcEnrichRow | null {
   );
   const capitals = readObjectArrayField(obj, "capitals")
     .map(capitalFromV5Object)
-    .filter((capital): capital is CountryCapital => capital !== null);
+    .filter((capital): capital is SourceCapital => capital !== null);
   const drivingSide = drivingSideFromString(
     readStringField(obj, "cars.driving_side", "cars.driving_side"),
   );
@@ -759,7 +761,7 @@ async function main(): Promise<void> {
       flagLayout,
       events: gameplay.events,
       memberships: rc.memberships,
-      capitals: rc.capitals,
+      capitals: withCapitalLabels(c.cca3, rc.capitals, CAPITAL_LABELS),
       drivingSide: rc.drivingSide,
       geoTags: gameplay.geoTags,
       regime: regimeForCode(c.cca3, gameplayClassifications),
@@ -781,12 +783,18 @@ async function main(): Promise<void> {
   // 4. Merge manual additions (e.g. Kosovo, absent from world-countries).
   const additions: CountryRecord[] = countryPatches.manualCountryAdditions.map(
     (add) => {
-      const merged: CountryRecord = { ...add };
-      const rc = rcByCca3.get(merged.iso3);
+      const rc = rcByCca3.get(add.iso3);
+      const merged: CountryRecord = {
+        ...add,
+        capitals: withCapitalLabels(
+          add.iso3,
+          rc ? rc.capitals : add.capitals,
+          CAPITAL_LABELS,
+        ),
+      };
       if (rc) {
         if (merged.population <= 0) merged.population = rc.population;
         merged.iso2 = rc.iso2;
-        merged.capitals = rc.capitals;
         merged.drivingSide = rc.drivingSide;
         merged.memberships = rc.memberships;
       }
@@ -909,6 +917,11 @@ async function main(): Promise<void> {
     for (const capital of c.capitals) {
       if (!capital.name) {
         throw new Error(`${c.iso3}: capital missing name`);
+      }
+      if (!capital.names.fr || !capital.names.en) {
+        throw new Error(
+          `${c.iso3}: capital « ${capital.name} » missing fr/en label`,
+        );
       }
       if (
         !Number.isFinite(capital.latitude) ||
