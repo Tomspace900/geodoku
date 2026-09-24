@@ -162,7 +162,10 @@ les langues vers `mul` : ces cas (Oslo…) sont des overrides.
   révisé sans regen, ou `facts.ts` édité à la main malgré son en-tête
   `@generated`. Les **libellés des capitales** sont vérifiés de même contre
   `capitalLabels.ts` (`validateCapitalLabels`), qui signale aussi toute entrée
-  orpheline — capitale ajoutée ou retirée par rapport à REST Countries. Les
+  orpheline — capitale ajoutée ou retirée par rapport à REST Countries. Le
+  millésime affiché de la source Wikidata (`content/sources.ts`, écrit à la main)
+  doit dire la même date que `harvestedAt` : `validateHarvestVintage` échoue
+  sinon, et `pnpm harvest:capitals` imprime la valeur à reporter. Les
   champs venus du réseau (population, **liste** des capitales, adhésions,
   pageviews) restent hors de portée — seule une regen les vérifie ;
 - **seam terminal** : aucun module de `content/` n'importe via l'alias `@/` ni

@@ -46,6 +46,7 @@ import {
 } from "../../src/features/game/logic/constraints";
 import { CAPITAL_LABELS } from "../countries/data/capitalLabels";
 import { QUANTITATIVE_DATASETS } from "../countries/data/datasets";
+import { validateHarvestVintage } from "../countries/harvest/capitalLabelsLib";
 import {
   validateCountryCatalog,
   validateCountryFacts,
@@ -92,6 +93,12 @@ function checkCountries(errors: string[]): void {
   );
   errors.push(
     ...validateCapitalLabels(COUNTRY_FACTS, CAPITAL_LABELS, COUNTRY_CODES),
+  );
+  errors.push(
+    ...validateHarvestVintage(
+      SOURCES.wikidata_capital_labels.vintage,
+      CAPITAL_LABELS.harvestedAt,
+    ),
   );
   errors.push(...validateSovereigntySources(QUANTITATIVE_DATASETS.sovereignty));
 

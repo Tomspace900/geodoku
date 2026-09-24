@@ -3,6 +3,7 @@
  * requête SPARQL, lecture de la réponse, correspondance des noms. Séparée du
  * script pour être testable sans réseau.
  */
+import type { LocalizedString } from "../../../content/type.ts";
 import type {
   CapitalLabel,
   CapitalLabelOverride,
@@ -173,3 +174,72 @@ export const CAPITAL_LABELS: CapitalLabelsSnapshot = ${JSON.stringify(snapshot, 
 }
 
 export type { CapitalLabelOverride };
+
+const MONTHS_FR = [
+  "janvier",
+  "février",
+  "mars",
+  "avril",
+  "mai",
+  "juin",
+  "juillet",
+  "août",
+  "septembre",
+  "octobre",
+  "novembre",
+  "décembre",
+];
+const MONTHS_EN = [
+  "January",
+  "February",
+  "March",
+  "April",
+  "May",
+  "June",
+  "July",
+  "August",
+  "September",
+  "October",
+  "November",
+  "December",
+];
+
+/**
+ * Millésime affiché sur la fiche pour la source `wikidata_capital_labels` :
+ * la date de récolte (`YYYY-MM-DD`, UTC), le 1er du mois s'écrivant « 1er » en
+ * français. Calculé à la main plutôt que par `Intl`, qui donnerait « 1 octobre »
+ * et dépendrait du fuseau de la machine.
+ */
+export function harvestVintage(harvestedAt: string): LocalizedString {
+  const match = /^(\d{4})-(\d{2})-(\d{2})$/.exec(harvestedAt);
+  const monthIndex = match ? Number(match[2]) - 1 : -1;
+  if (!match || monthIndex < 0 || monthIndex > 11) {
+    throw new Error(
+      `harvestedAt doit être une date YYYY-MM-DD : « ${harvestedAt} »`,
+    );
+  }
+  const [, year, , dayText] = match;
+  const day = Number(dayText);
+  return {
+    fr: `récolte du ${day === 1 ? "1er" : day} ${MONTHS_FR[monthIndex]} ${year}`,
+    en: `harvested ${day} ${MONTHS_EN[monthIndex]} ${year}`,
+  };
+}
+
+/**
+ * Garde : le millésime de `content/sources.ts` (écrit à la main, affiché au
+ * joueur) doit dire la même date que `harvestedAt`, que seule la récolte met à
+ * jour. Comparaison exacte.
+ */
+export function validateHarvestVintage(
+  sourceVintage: LocalizedString | null,
+  harvestedAt: string,
+): string[] {
+  const expected = harvestVintage(harvestedAt);
+  if (sourceVintage?.fr === expected.fr && sourceVintage?.en === expected.en) {
+    return [];
+  }
+  return [
+    `sources.wikidata_capital_labels: millésime ${JSON.stringify(sourceVintage)} désaccordé de la récolte (harvestedAt ${harvestedAt}, attendu ${JSON.stringify(expected)}) — mettre à jour content/sources.ts`,
+  ];
+}

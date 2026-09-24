@@ -15,6 +15,7 @@ import type { CapitalLabelsSnapshot } from "../data/types.ts";
 import {
   buildCapitalLabelsQuery,
   buildKosovoQuery,
+  harvestVintage,
   KOSOVO_ISO3,
   matchCapitalLabels,
   parseCapitalRows,
@@ -97,6 +98,11 @@ async function main(): Promise<void> {
   writeFileSync(OUTPUT_PATH, renderCapitalLabelsModule(snapshot));
   console.log(
     `[capitalLabels] ${Object.values(labels).reduce((n, c) => n + Object.keys(c).length, 0)} libellés récoltés, ${unresolved.length} à traiter en override.`,
+  );
+
+  const vintage = harvestVintage(snapshot.harvestedAt);
+  console.log(
+    `[capitalLabels] millésime à reporter dans content/sources.ts (wikidata_capital_labels.vintage) :\n  vintage: { fr: ${JSON.stringify(vintage.fr)}, en: ${JSON.stringify(vintage.en)} },`,
   );
 
   if (unresolved.length > 0) {

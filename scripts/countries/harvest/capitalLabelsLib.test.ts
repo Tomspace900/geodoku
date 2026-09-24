@@ -1,9 +1,11 @@
 import { describe, expect, it } from "vitest";
 import {
   buildCapitalLabelsQuery,
+  harvestVintage,
   matchCapitalLabels,
   normalizeCityName,
   parseCapitalRows,
+  validateHarvestVintage,
   type WikidataCapitalRow,
 } from "./capitalLabelsLib";
 
@@ -99,5 +101,39 @@ describe("buildCapitalLabelsQuery", () => {
     expect(buildCapitalLabelsQuery(["FRA", "ZAF"])).toContain(
       'VALUES ?iso3 { "FRA" "ZAF" }',
     );
+  });
+});
+
+describe("harvestVintage", () => {
+  it("formate une date ordinaire", () => {
+    expect(harvestVintage("2026-09-23")).toEqual({
+      fr: "récolte du 23 septembre 2026",
+      en: "harvested 23 September 2026",
+    });
+  });
+
+  it("écrit « 1er » en français le premier du mois", () => {
+    expect(harvestVintage("2026-10-01")).toEqual({
+      fr: "récolte du 1er octobre 2026",
+      en: "harvested 1 October 2026",
+    });
+  });
+});
+
+describe("validateHarvestVintage", () => {
+  it("accepte un millésime accordé à la récolte", () => {
+    expect(
+      validateHarvestVintage(harvestVintage("2026-09-23"), "2026-09-23"),
+    ).toEqual([]);
+  });
+
+  it("signale un millésime désaccordé, valeurs et remède à l'appui", () => {
+    const [error] = validateHarvestVintage(
+      harvestVintage("2026-09-23"),
+      "2026-10-01",
+    );
+    expect(error).toContain("récolte du 1er octobre 2026");
+    expect(error).toContain("récolte du 23 septembre 2026");
+    expect(error).toContain("content/sources.ts");
   });
 });
