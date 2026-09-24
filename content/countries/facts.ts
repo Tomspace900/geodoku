@@ -4,7 +4,7 @@ import type { CountryCode } from "./countryCodes";
 import type { CountryFacts, CountryFactsSnapshot } from "./type";
 
 export const FACTS_SNAPSHOT: CountryFactsSnapshot = {
-  date: "2026-09-23",
+  date: "2026-09-24",
   note: "régénéré par pnpm build:countries",
 };
 
@@ -1906,7 +1906,7 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     waterAccess: "coastal",
     borders: ["AUT", "BEL", "CZE", "DNK", "FRA", "LUX", "NLD", "POL", "CHE"],
     areaKm2: 357114,
-    population: 83467117,
+    population: 83298787,
     officialLanguages: ["de"],
     latitude: 51,
     subregion: "Western Europe",
@@ -4336,7 +4336,7 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
         longitude: 79.9,
         roles: ["primary"],
         names: {
-          fr: "Sri Jayawardenapura",
+          fr: "Sri Jayawardenapura Kotte",
           en: "Sri Jayawardenepura Kotte",
         },
       },
@@ -5962,7 +5962,7 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     waterAccess: "coastal",
     borders: ["BLR", "CZE", "DEU", "LTU", "RUS", "SVK", "UKR"],
     areaKm2: 312679,
-    population: 37243000,
+    population: 37232000,
     officialLanguages: ["pl"],
     latitude: 52,
     subregion: "Central Europe",
@@ -7750,7 +7750,7 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
         longitude: 30.52,
         roles: ["primary"],
         names: {
-          fr: "Kiev",
+          fr: "Kyiv",
           en: "Kyiv",
         },
       },

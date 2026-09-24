@@ -610,12 +610,6 @@ export const CAPITAL_LABELS: CapitalLabelsSnapshot = {
         en: "Vaduz",
       },
     },
-    LKA: {
-      "Sri Jayawardenepura Kotte": {
-        fr: "Sri Jayawardenapura",
-        en: "Sri Jayawardenepura Kotte",
-      },
-    },
     LSO: {
       Maseru: {
         fr: "Maseru",
@@ -1076,12 +1070,6 @@ export const CAPITAL_LABELS: CapitalLabelsSnapshot = {
         en: "Kampala",
       },
     },
-    UKR: {
-      Kyiv: {
-        fr: "Kiev",
-        en: "Kyiv",
-      },
-    },
     URY: {
       Montevideo: {
         fr: "Montevideo",
@@ -1186,6 +1174,14 @@ export const CAPITAL_LABELS: CapitalLabelsSnapshot = {
           "P36 pointe désormais Ciudad de la Paz (Q1140136) ; la liste REST Countries garde Malabo et n'est pas rouverte — libellé = nom source",
       },
     },
+    LKA: {
+      "Sri Jayawardenepura Kotte": {
+        fr: "Sri Jayawardenapura Kotte",
+        en: "Sri Jayawardenepura Kotte",
+        reason:
+          "Le libellé fr de Wikidata (Q41963) ampute le nom de « Kotte » ; l'article français s'intitule « Sri Jayawardenapura Kotte »",
+      },
+    },
     MNG: {
       "Ulan Bator": {
         fr: "Oulan-Bator",
@@ -1224,6 +1220,14 @@ export const CAPITAL_LABELS: CapitalLabelsSnapshot = {
         en: "San Marino",
         reason:
           "Le nom source « City of San Marino » désigne la ville (Q1848) que Wikidata libelle « San Marino » / « Saint-Marin »",
+      },
+    },
+    UKR: {
+      Kyiv: {
+        fr: "Kyiv",
+        en: "Kyiv",
+        reason:
+          "Choix éditorial : Wikidata (Q1899) donne « Kiev » en fr ; on suit le nom source REST Countries et la désignation française de l'ONU (« Kyïv » depuis mars 2022, à la demande de l'Ukraine)",
       },
     },
     YEM: {
