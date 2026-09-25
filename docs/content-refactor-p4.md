@@ -1077,8 +1077,8 @@ case (A–D).
 
 ### Lot 4 — Monnaie, gentilé et souveraineté (branche p4-lot4, 2026-09-25)
 
-- Ligne de base / après : tests 642 → 659 · chargement initial 257,8 → 257,9 KiB
-  gzip · chunk fiche pays 26,2 → 32,3 KiB gzip
+- Ligne de base / après : tests 642 → 665 · chargement initial 257,8 → 258,2 KiB
+  gzip · chunk fiche pays 26,2 → 32,7 KiB gzip
 - Commits : voir `git log develop..p4-lot4` (rien de poussé)
 - Écarts au plan :
   - **SLE** : `SLL` remplacé par `SLE` (redénomination de 2022) — absent de la
@@ -1100,9 +1100,25 @@ case (A–D).
   - **Rafraîchissement réseau** : SAU 33,7 M → 35,3 M ; date du snapshot.
   - **Ligne Souveraineté** : toujours masquée, en attente de la revue de
     l'annexe A au gate. `sovereigntyDate` est stocké mais non affiché.
-- Gardes : lint · 659 tests · `check:content` · `check:design-system` ·
+- Gardes : lint · 665 tests · `check:content` · `check:design-system` ·
   `check:bundle` · 141 e2e passés.
 - Dossier de gate : voir le message de fin de lot.
-- Décisions utilisateur : en attente.
-- Points ouverts : ZWE (`ZWG, USD`), alignement des gentilés sur la CNT,
-  annexe A, vérification visuelle mobile des valeurs longues (ZWE, PSE, BIH).
+- Décisions utilisateur (2026-09-25) :
+  1. ZWE : `ZWG, USD` validé.
+  2. Gentilés fr : on corrige les fautes, on ne s'aligne pas sur la CNT (13
+     écarts de radical inchangés). ATG : « Antiguais et Barbudien » (faute de
+     genre seule).
+  3. Gentilés en : corrigés sur le CIA World Factbook, champ *Nationality*
+     (miroir `factbook.json` au commit 8662a8b, vérifié) : DJI Djiboutian, CPV
+     Cabo Verdean, MDV Maldivian, TJK Tajikistani, KGZ Kyrgyzstani ; SUR
+     « Surinamer » inchangé ; BIH et ATG écrits avec « or ». Source
+     `cia_factbook_nationality` ajoutée.
+  4. Annexe A : table validée avec six `kind` changés (ISR, LBR, NLD →
+     `independence` ; NPL, DEU, ITA → `unification`), plus NOR, POL, LIE, PRT
+     corrigés. Masquage (AUT, FRA, GBR, IRN, CHN, JPN, DNK, HUN, TUR, ESP) porté
+     par le dataset (`sheetHidden`, motif) → fait `sovereigntySheetHidden`.
+     Ligne « Souveraineté » affichée (date complète UTC, année seule sinon).
+  5. Changelog et badge : non touchés.
+- Points ouverts : vérification visuelle mobile des valeurs longues (ZWE, PSE,
+  BIH) toujours à faire ; `history_sovereignty_since_1990` inchangée (aucun
+  `answers.ts` modifié).
