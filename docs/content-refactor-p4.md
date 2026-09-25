@@ -1027,3 +1027,50 @@ case (A–D).
     zone cliquable couvre bien toute la cellule dans les deux cas.
 - Merge : en attente (nouveau feu vert requis).
 - Points ouverts : aucun.
+
+### Lot 3 — Capitales en FR/EN (branche p4-lot3, 2026-09-23/24)
+
+- Ligne de base / après : tests 624 → 642 · chargement initial 257,7 → 257,8 KiB
+  gzip · chunk fiche pays 24,3 → 26,2 KiB gzip (202 blocs `names` dans `facts.ts`)
+- Commits :
+  - `2059c7a` [FEAT] Capitales — libellés fr/en récoltés sur Wikidata
+  - `fc2a2cc` [DOCS] Convention scripts/countries/harvest/ — récoltes réseau
+  - `29640e0` [FIX] Récolte des capitales — ne jamais écraser les overrides en silence (revue)
+  - `2e3d628` [CONTENT] Capitales — Kyiv et Sri Jayawardenapura Kotte en français (revue)
+  - `2ff9cfa` [FIX] Capitales — garde sur le millésime de la récolte
+- Écarts au plan :
+  - **Requête bornée par `VALUES`** sur les 196 codes du jeu : non bornée, elle
+    dépasse le délai de 60 s de `query.wikidata.org`. Le Kosovo (sans `P298`)
+    passe par une requête séparée sur `Q1246`.
+  - **Libellés `mul`** : Wikidata déplace vers `mul` les libellés identiques dans
+    toutes les langues (Oslo n'a plus ni fr ni en). Non repliés en silence : ils
+    passent en override, comme le veut le point 2.
+  - **Garde de millésime** (ajoutée après le gate) : la date affichée par
+    `content/sources.ts` est écrite à la main alors que `harvestedAt` est écrit
+    par la récolte. `validateHarvestVintage` (`check:content`) les compare
+    exactement, et `pnpm harvest:capitals` imprime la valeur à reporter.
+  - **Rafraîchissement réseau** : les deux `build:countries` du lot ont aussi mis
+    à jour 14 populations (dont CIV 31,5 M → 33,3 M, une valeur ronde remplacée)
+    et la date du snapshot. Aucun `answers.ts` n'a changé.
+  - `build:countries` dure ~18 min (pageviews) : à ne lancer qu'une fois par lot.
+- Gardes : lint (2 warnings préexistants dans des tests Convex) · 642 tests ·
+  `check:content` · `check:design-system` · `check:bundle` · 141 e2e — passés.
+- Dossier de gate : 202 capitales pour 197 pays, 133 identiques en fr, en et nom
+  source ; 10 overrides motivés (ATG, NOR : `mul` ; MNG, YEM : orthographe ;
+  SMR : ville ; NRU : district ; GNQ : P36 déplacé ; PSE : choix politique ;
+  LKA, UKR : décisions ci-dessous). Vu à l'écran : Russie « Moscou ».
+- Décisions utilisateur (2026-09-24) :
+  1. UKR : « Kyiv » en français (Wikidata donne « Kiev ») — aligné sur le nom
+     source et la désignation française de l'ONU depuis mars 2022.
+  2. LKA : « Sri Jayawardenapura Kotte » (Wikidata amputait « Kotte »).
+  3. PSE : « Jérusalem », comme ISR — la liste REST Countries n'est pas rouverte ;
+     les deux fiches affichent le même mot.
+  4. GNQ : Malabo gardée, bien que `P36` pointe Ciudad de la Paz.
+  5. ATG (« Saint John's » / « St. John's »), les exonymes français (Mexico,
+     Koweït, Panama, Guatemala, Vatican, Washington) et l'okina de Nukuʻalofa sont
+     l'usage de chaque langue : inchangés.
+- Merge : fast-forward sur `develop`, commits re-signés au rebase par l'utilisateur.
+- Points ouverts :
+  - Le lot 3 lève la réserve de publication (§1.3) : les fiches peuvent partir
+    sur `main`, avec l'entrée de changelog commune « sources et fiches pays ».
+  - GNQ à revoir si REST Countries adopte Ciudad de la Paz.
