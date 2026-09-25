@@ -1074,3 +1074,35 @@ case (A–D).
   - Le lot 3 lève la réserve de publication (§1.3) : les fiches peuvent partir
     sur `main`, avec l'entrée de changelog commune « sources et fiches pays ».
   - GNQ à revoir si REST Countries adopte Ciudad de la Paz.
+
+### Lot 4 — Monnaie, gentilé et souveraineté (branche p4-lot4, 2026-09-25)
+
+- Ligne de base / après : tests 642 → 659 · chargement initial 257,8 → 257,9 KiB
+  gzip · chunk fiche pays 26,2 → 32,3 KiB gzip
+- Commits : voir `git log develop..p4-lot4` (rien de poussé)
+- Écarts au plan :
+  - **SLE** : `SLL` remplacé par `SLE` (redénomination de 2022) — absent de la
+    fiche du plan.
+  - **Invariant renforcé** : « code connu de `Intl.supportedValuesOf` » ne
+    suffit pas (CUC et SLL y figurent). `validateCurrencyCode` exige en plus un
+    nom fr et en qui n'est ni le code ni un nom daté (`/\d{4}/`). CUC, dont le
+    nom n'a pas d'année, n'est attrapé que par sa correction explicite.
+  - **ICU** : le nom fr de `ZWG` existe dans l'ICU de Node 22.22 mais pas dans
+    celle de Node 22.19 (version de la CI et de Volta). Exception motivée dans
+    `CURRENCY_CODES_WITHOUT_ICU_NAME` ; la fiche se replie sur le code.
+  - **Gentilés** : plus que XKX — 12 corrections fr (fautes, accents, majuscule
+    de chaque élément des composés), motif par entrée. Liste CNT (fév. 2025)
+    consultée comme référence de relecture, **non citée** dans `sources.ts`.
+  - **LVA** : `date` du dataset valait `1918-11-18` pour une restauration de
+    1991 ; corrigée en `1990-05-04` / année 1990 (déclaration, comme LTU). La
+    liste `history_sovereignty_since_1990` ne bouge pas (aucun `answers.ts`
+    modifié). Nouvel invariant : l'année de `sovereigntyDate` = `sovereigntyYear`.
+  - **Rafraîchissement réseau** : SAU 33,7 M → 35,3 M ; date du snapshot.
+  - **Ligne Souveraineté** : toujours masquée, en attente de la revue de
+    l'annexe A au gate. `sovereigntyDate` est stocké mais non affiché.
+- Gardes : lint · 659 tests · `check:content` · `check:design-system` ·
+  `check:bundle` · 141 e2e passés.
+- Dossier de gate : voir le message de fin de lot.
+- Décisions utilisateur : en attente.
+- Points ouverts : ZWE (`ZWG, USD`), alignement des gentilés sur la CNT,
+  annexe A, vérification visuelle mobile des valeurs longues (ZWE, PSE, BIH).
