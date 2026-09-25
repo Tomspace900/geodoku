@@ -47,7 +47,7 @@ const ACCEPTED_OMISSIONS: Readonly<
   PRT: {
     portugal: "notice du Portugal, qui se nomme lui-même",
     spain:
-      "1640 = restauration après la domination espagnole, pas une décolonisation ; l'événement retenu est une refondation",
+      "1640 = restauration après la domination espagnole, pas une décolonisation ; l'Espagne n'est pas une puissance de tutelle",
   },
   // Occupation quadripartite de 1945 : ni mandat, ni tutelle, ni indépendance.
   DEU: {

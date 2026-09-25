@@ -700,6 +700,7 @@ export const manualCountryAdditions: ManualCountryAddition[] = [
     sovereigntyYear: null,
     sovereigntyKind: null,
     sovereigntyDate: null,
+    sovereigntySheetHidden: false,
     // Monnaie et gentilé : placeholders, fixés par les tables de correction
     // (currencyCorrectionsByIso3 / demonymCorrectionsByIso3) au build.
     currencies: [],
@@ -766,9 +767,42 @@ export const currencyCorrectionsByIso3: Record<Iso3, CurrencyCorrection> = {
  * d'un composé prend la majuscule. Référence consultée : liste « Pays,
  * territoires et villes du monde » de la Commission nationale de toponymie
  * (fév. 2025), qui ne donne que l'adjectif en minuscules — la majuscule du nom
- * est une convention d'affichage.
+ * est une convention d'affichage. Règle du gate : on corrige les fautes, on ne
+ * s'aligne pas sur la CNT (formes à trait d'union et radicaux attestés gardés).
+ * Anglais : CIA World Factbook, champ *Nationality* (miroir figé `factbook.json`
+ * au commit 8662a8b, comme le champ *Independence*).
  */
 export const demonymCorrectionsByIso3: Record<Iso3, DemonymCorrection> = {
+  BIH: {
+    en: { m: "Bosnian or Herzegovinian", f: "Bosnian or Herzegovinian" },
+    reason:
+      "en : le Factbook (Nationality) donne « Bosnian, Herzegovinian » ; écrit « or » pour ne pas se lire « masculin, féminin » à côté du format français",
+    date: CORRECTION_DATE,
+  },
+  DJI: {
+    en: { m: "Djiboutian", f: "Djiboutian" },
+    reason:
+      "en : world-countries donne « Djibouti » (le nom du pays) ; le Factbook (Nationality) donne « Djiboutian »",
+    date: CORRECTION_DATE,
+  },
+  KGZ: {
+    en: { m: "Kyrgyzstani", f: "Kyrgyzstani" },
+    reason:
+      "en : world-countries donne « Kirghiz » ; le Factbook (Nationality) donne « Kyrgyzstani »",
+    date: CORRECTION_DATE,
+  },
+  MDV: {
+    en: { m: "Maldivian", f: "Maldivian" },
+    reason:
+      "en : world-countries donne « Maldivan » (faute) ; le Factbook (Nationality) donne « Maldivian »",
+    date: CORRECTION_DATE,
+  },
+  TJK: {
+    en: { m: "Tajikistani", f: "Tajikistani" },
+    reason:
+      "en : world-countries donne « Tadzhik » ; le Factbook (Nationality) donne « Tajikistani »",
+    date: CORRECTION_DATE,
+  },
   ARE: {
     fr: { m: "Émirien", f: "Émirienne" },
     reason: "majuscule accentuée manquante (CNT : émirien)",
@@ -776,16 +810,19 @@ export const demonymCorrectionsByIso3: Record<Iso3, DemonymCorrection> = {
   },
   ATG: {
     fr: {
-      m: "Antiguayen et Barbudien",
-      f: "Antiguayenne et Barbudienne",
+      m: "Antiguais et Barbudien",
+      f: "Antiguaise et Barbudienne",
     },
+    en: { m: "Antiguan or Barbudan", f: "Antiguan or Barbudan" },
     reason:
-      "le masculin de world-countries est au féminin (« Antiguaise et barbudien ») ; radical de la CNT : antiguayen",
+      "fr : le masculin de world-countries est au féminin (« Antiguaise et barbudien »), correction minimale sans changer de radical ; en : le Factbook donne « Antiguan, Barbudan », écrit « or » comme KNA",
     date: CORRECTION_DATE,
   },
   CPV: {
     fr: { m: "Cap-Verdien", f: "Cap-Verdienne" },
-    reason: "second élément du composé sans majuscule (CNT : cap-verdien)",
+    en: { m: "Cabo Verdean", f: "Cabo Verdean" },
+    reason:
+      "fr : second élément du composé sans majuscule (CNT : cap-verdien) ; en : « Cape Verdian » est une faute, le Factbook (Nationality) donne « Cabo Verdean »",
     date: CORRECTION_DATE,
   },
   GNQ: {

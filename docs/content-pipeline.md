@@ -155,10 +155,10 @@ les langues vers `mul` : ces cas (Oslo…) sont des overrides.
   correspond plus ;
 - **fraîcheur des faits dérivés** : l'étage du dessus — re-fusionne les datasets
   de `scripts/countries/data/` et échoue (« lancer pnpm build:countries ») si
-  l'un des onze champs qu'ils produisent (`utcOffsetCount`, `lastVolcanicEruptionYear`,
+  l'un des douze champs qu'ils produisent (`utcOffsetCount`, `lastVolcanicEruptionYear`,
   `mountainAreaShare`, `forestCoverShare`, `urbanCentresOver1M`,
   `productionRanks`, `coalElectricityShare`, `formerSovereigns`,
-  `sovereigntyYear`, `sovereigntyKind`, `sovereigntyDate`) ne correspond plus à `facts.ts` : dataset
+  `sovereigntyYear`, `sovereigntyKind`, `sovereigntyDate`, `sovereigntySheetHidden`) ne correspond plus à `facts.ts` : dataset
   révisé sans regen, ou `facts.ts` édité à la main malgré son en-tête
   `@generated`. Les **libellés des capitales** sont vérifiés de même contre
   `capitalLabels.ts` (`validateCapitalLabels`), qui signale aussi toute entrée

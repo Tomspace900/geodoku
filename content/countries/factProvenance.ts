@@ -46,6 +46,7 @@ export type SheetRowId =
   | "officialLanguages"
   | "currencies"
   | "demonyms"
+  | "sovereignty"
   | "continent"
   | "middleEast"
   | "waterAccess"
@@ -85,9 +86,17 @@ export const FACT_PROVENANCE: { readonly [K in SheetRowId]: FactProvenance } = {
   // world-countries, corrigé pays par pays (`currencyCorrectionsByIso3` /
   // `demonymCorrectionsByIso3`, motif et date par entrée) : la correction ne
   // change pas la source citée. La liste de la CNT, consultée pour les
-  // gentilés, n'est pas citée : elle n'alimente aucune valeur telle quelle.
+  // gentilés fr, n'est pas citée : elle n'alimente aucune valeur telle quelle.
   currencies: { basis: "source", sources: ["world_countries"] },
-  demonyms: { basis: "source", sources: ["world_countries"] },
+  // Gentilé fr : world-countries. Gentilé en : world-countries, corrigé sur le
+  // champ *Nationality* du Factbook pour une douzaine de pays.
+  demonyms: {
+    basis: "source",
+    sources: ["world_countries", "cia_factbook_nationality"],
+  },
+  // Nature, année et date complète de l'événement de souveraineté : même
+  // provenance que `formerSovereigns`.
+  sovereignty: { basis: "source", sources: ["cia_factbook_independence"] },
   // Même provenance que `continent_*` : convention éditoriale de découpage,
   // alignée sur la nomenclature ONU M49.
   continent: { basis: "convention", sources: ["un_m49"] },

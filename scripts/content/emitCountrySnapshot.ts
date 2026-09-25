@@ -61,6 +61,7 @@ const FACT_KEYS = [
   "sovereigntyYear",
   "sovereigntyKind",
   "sovereigntyDate",
+  "sovereigntySheetHidden",
   "currencies",
   "demonyms",
 ] as const;

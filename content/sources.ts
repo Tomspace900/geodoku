@@ -83,6 +83,14 @@ export const SOURCES = {
     url: "https://www.cia.gov/the-world-factbook/field/independence/",
     vintage: null,
   },
+  cia_factbook_nationality: {
+    name: {
+      fr: "CIA World Factbook — Nationalité",
+      en: "CIA World Factbook — Nationality",
+    },
+    url: "https://www.cia.gov/the-world-factbook/field/nationality/",
+    vintage: null,
+  },
   natural_earth: {
     name: { fr: "Natural Earth", en: "Natural Earth" },
     url: "https://github.com/nvkelso/natural-earth-vector/tree/v5.1.2/geojson",

@@ -523,6 +523,7 @@ type QuantitativeFacts = Pick<
   | "sovereigntyYear"
   | "sovereigntyKind"
   | "sovereigntyDate"
+  | "sovereigntySheetHidden"
 >;
 
 /**
@@ -604,6 +605,7 @@ export function quantitativeFactsForCode(
     sovereigntyYear: sovereignty?.year ?? null,
     sovereigntyKind: sovereignty?.kind ?? null,
     sovereigntyDate: sovereignty?.date ?? null,
+    sovereigntySheetHidden: sovereignty?.sheetHidden !== undefined,
   };
 }
 

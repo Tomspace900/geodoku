@@ -50,6 +50,7 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     sovereigntyYear: 1919,
     sovereigntyKind: "independence",
     sovereigntyDate: "1919-08-19",
+    sovereigntySheetHidden: false,
     currencies: ["AFN"],
     demonyms: {
       fr: {
@@ -103,6 +104,7 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     sovereigntyYear: 1975,
     sovereigntyKind: "independence",
     sovereigntyDate: "1975-11-11",
+    sovereigntySheetHidden: false,
     currencies: ["AOA"],
     demonyms: {
       fr: {
@@ -156,6 +158,7 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     sovereigntyYear: 1912,
     sovereigntyKind: "independence",
     sovereigntyDate: "1912-11-28",
+    sovereigntySheetHidden: false,
     currencies: ["ALL"],
     demonyms: {
       fr: {
@@ -209,6 +212,7 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     sovereigntyYear: 1278,
     sovereigntyKind: "foundation",
     sovereigntyDate: null,
+    sovereigntySheetHidden: false,
     currencies: ["EUR"],
     demonyms: {
       fr: {
@@ -265,6 +269,7 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     sovereigntyYear: 1971,
     sovereigntyKind: "independence",
     sovereigntyDate: "1971-12-02",
+    sovereigntySheetHidden: false,
     currencies: ["AED"],
     demonyms: {
       fr: {
@@ -318,6 +323,7 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     sovereigntyYear: 1816,
     sovereigntyKind: "independence",
     sovereigntyDate: "1816-07-09",
+    sovereigntySheetHidden: false,
     currencies: ["ARS"],
     demonyms: {
       fr: {
@@ -371,6 +377,7 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     sovereigntyYear: 1991,
     sovereigntyKind: "independence",
     sovereigntyDate: "1991-09-21",
+    sovereigntySheetHidden: false,
     currencies: ["AMD"],
     demonyms: {
       fr: {
@@ -424,15 +431,16 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     sovereigntyYear: 1981,
     sovereigntyKind: "independence",
     sovereigntyDate: "1981-11-01",
+    sovereigntySheetHidden: false,
     currencies: ["XCD"],
     demonyms: {
       fr: {
-        m: "Antiguayen et Barbudien",
-        f: "Antiguayenne et Barbudienne",
+        m: "Antiguais et Barbudien",
+        f: "Antiguaise et Barbudienne",
       },
       en: {
-        m: "Antiguan, Barbudan",
-        f: "Antiguan, Barbudan",
+        m: "Antiguan or Barbudan",
+        f: "Antiguan or Barbudan",
       },
     },
   },
@@ -485,6 +493,7 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     sovereigntyYear: 1901,
     sovereigntyKind: "independence",
     sovereigntyDate: "1901-01-01",
+    sovereigntySheetHidden: false,
     currencies: ["AUD"],
     demonyms: {
       fr: {
@@ -538,6 +547,7 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     sovereigntyYear: 1156,
     sovereigntyKind: "independence",
     sovereigntyDate: "1156-09-17",
+    sovereigntySheetHidden: true,
     currencies: ["EUR"],
     demonyms: {
       fr: {
@@ -591,6 +601,7 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     sovereigntyYear: 1991,
     sovereigntyKind: "independence",
     sovereigntyDate: "1991-08-30",
+    sovereigntySheetHidden: false,
     currencies: ["AZN"],
     demonyms: {
       fr: {
@@ -644,6 +655,7 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     sovereigntyYear: 1962,
     sovereigntyKind: "independence",
     sovereigntyDate: "1962-07-01",
+    sovereigntySheetHidden: false,
     currencies: ["BIF"],
     demonyms: {
       fr: {
@@ -697,6 +709,7 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     sovereigntyYear: 1830,
     sovereigntyKind: "independence",
     sovereigntyDate: "1830-10-04",
+    sovereigntySheetHidden: false,
     currencies: ["EUR"],
     demonyms: {
       fr: {
@@ -750,6 +763,7 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     sovereigntyYear: 1960,
     sovereigntyKind: "independence",
     sovereigntyDate: "1960-08-01",
+    sovereigntySheetHidden: false,
     currencies: ["XOF"],
     demonyms: {
       fr: {
@@ -803,6 +817,7 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     sovereigntyYear: 1960,
     sovereigntyKind: "independence",
     sovereigntyDate: "1960-08-05",
+    sovereigntySheetHidden: false,
     currencies: ["XOF"],
     demonyms: {
       fr: {
@@ -858,6 +873,7 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     sovereigntyYear: 1971,
     sovereigntyKind: "independence",
     sovereigntyDate: "1971-12-16",
+    sovereigntySheetHidden: false,
     currencies: ["BDT"],
     demonyms: {
       fr: {
@@ -911,6 +927,7 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     sovereigntyYear: 1878,
     sovereigntyKind: "independence",
     sovereigntyDate: "1878-03-03",
+    sovereigntySheetHidden: false,
     currencies: ["BGN"],
     demonyms: {
       fr: {
@@ -964,6 +981,7 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     sovereigntyYear: 1971,
     sovereigntyKind: "independence",
     sovereigntyDate: "1971-08-15",
+    sovereigntySheetHidden: false,
     currencies: ["BHD"],
     demonyms: {
       fr: {
@@ -1017,6 +1035,7 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     sovereigntyYear: 1973,
     sovereigntyKind: "independence",
     sovereigntyDate: "1973-07-10",
+    sovereigntySheetHidden: false,
     currencies: ["BSD", "USD"],
     demonyms: {
       fr: {
@@ -1070,6 +1089,7 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     sovereigntyYear: 1992,
     sovereigntyKind: "independence",
     sovereigntyDate: "1992-03-01",
+    sovereigntySheetHidden: false,
     currencies: ["BAM"],
     demonyms: {
       fr: {
@@ -1077,8 +1097,8 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
         f: "Bosnienne",
       },
       en: {
-        m: "Bosnian, Herzegovinian",
-        f: "Bosnian, Herzegovinian",
+        m: "Bosnian or Herzegovinian",
+        f: "Bosnian or Herzegovinian",
       },
     },
   },
@@ -1123,6 +1143,7 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     sovereigntyYear: 1991,
     sovereigntyKind: "independence",
     sovereigntyDate: "1991-08-25",
+    sovereigntySheetHidden: false,
     currencies: ["BYN"],
     demonyms: {
       fr: {
@@ -1176,6 +1197,7 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     sovereigntyYear: 1981,
     sovereigntyKind: "independence",
     sovereigntyDate: "1981-09-21",
+    sovereigntySheetHidden: false,
     currencies: ["BZD"],
     demonyms: {
       fr: {
@@ -1239,6 +1261,7 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     sovereigntyYear: 1825,
     sovereigntyKind: "independence",
     sovereigntyDate: "1825-08-06",
+    sovereigntySheetHidden: false,
     currencies: ["BOB"],
     demonyms: {
       fr: {
@@ -1307,6 +1330,7 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     sovereigntyYear: 1822,
     sovereigntyKind: "independence",
     sovereigntyDate: "1822-09-07",
+    sovereigntySheetHidden: false,
     currencies: ["BRL"],
     demonyms: {
       fr: {
@@ -1360,6 +1384,7 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     sovereigntyYear: 1966,
     sovereigntyKind: "independence",
     sovereigntyDate: "1966-11-30",
+    sovereigntySheetHidden: false,
     currencies: ["BBD"],
     demonyms: {
       fr: {
@@ -1413,6 +1438,7 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     sovereigntyYear: 1984,
     sovereigntyKind: "independence",
     sovereigntyDate: "1984-01-01",
+    sovereigntySheetHidden: false,
     currencies: ["BND", "SGD"],
     demonyms: {
       fr: {
@@ -1466,6 +1492,7 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     sovereigntyYear: 1907,
     sovereigntyKind: "independence",
     sovereigntyDate: "1907-12-17",
+    sovereigntySheetHidden: false,
     currencies: ["BTN", "INR"],
     demonyms: {
       fr: {
@@ -1519,6 +1546,7 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     sovereigntyYear: 1966,
     sovereigntyKind: "independence",
     sovereigntyDate: "1966-09-30",
+    sovereigntySheetHidden: false,
     currencies: ["BWP"],
     demonyms: {
       fr: {
@@ -1572,6 +1600,7 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     sovereigntyYear: 1960,
     sovereigntyKind: "independence",
     sovereigntyDate: "1960-08-13",
+    sovereigntySheetHidden: false,
     currencies: ["XAF"],
     demonyms: {
       fr: {
@@ -1634,6 +1663,7 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     sovereigntyYear: 1867,
     sovereigntyKind: "foundation",
     sovereigntyDate: "1867-07-01",
+    sovereigntySheetHidden: false,
     currencies: ["CAD"],
     demonyms: {
       fr: {
@@ -1687,6 +1717,7 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     sovereigntyYear: 1291,
     sovereigntyKind: "foundation",
     sovereigntyDate: "1291-08-01",
+    sovereigntySheetHidden: false,
     currencies: ["CHF"],
     demonyms: {
       fr: {
@@ -1740,6 +1771,7 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     sovereigntyYear: 1810,
     sovereigntyKind: "independence",
     sovereigntyDate: "1810-09-18",
+    sovereigntySheetHidden: false,
     currencies: ["CLP"],
     demonyms: {
       fr: {
@@ -1815,6 +1847,7 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     sovereigntyYear: 1949,
     sovereigntyKind: "unification",
     sovereigntyDate: "1949-10-01",
+    sovereigntySheetHidden: true,
     currencies: ["CNY"],
     demonyms: {
       fr: {
@@ -1870,6 +1903,7 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     sovereigntyYear: 1960,
     sovereigntyKind: "independence",
     sovereigntyDate: "1960-08-07",
+    sovereigntySheetHidden: false,
     currencies: ["XOF"],
     demonyms: {
       fr: {
@@ -1925,6 +1959,7 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     sovereigntyYear: 1960,
     sovereigntyKind: "independence",
     sovereigntyDate: "1960-01-01",
+    sovereigntySheetHidden: false,
     currencies: ["XAF"],
     demonyms: {
       fr: {
@@ -1983,6 +2018,7 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     sovereigntyYear: 1960,
     sovereigntyKind: "independence",
     sovereigntyDate: "1960-06-30",
+    sovereigntySheetHidden: false,
     currencies: ["CDF"],
     demonyms: {
       fr: {
@@ -2036,6 +2072,7 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     sovereigntyYear: 1960,
     sovereigntyKind: "independence",
     sovereigntyDate: "1960-08-15",
+    sovereigntySheetHidden: false,
     currencies: ["XAF"],
     demonyms: {
       fr: {
@@ -2099,6 +2136,7 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     sovereigntyYear: 1810,
     sovereigntyKind: "independence",
     sovereigntyDate: "1810-07-20",
+    sovereigntySheetHidden: false,
     currencies: ["COP"],
     demonyms: {
       fr: {
@@ -2152,6 +2190,7 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     sovereigntyYear: 1975,
     sovereigntyKind: "independence",
     sovereigntyDate: "1975-07-06",
+    sovereigntySheetHidden: false,
     currencies: ["KMF"],
     demonyms: {
       fr: {
@@ -2205,6 +2244,7 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     sovereigntyYear: 1975,
     sovereigntyKind: "independence",
     sovereigntyDate: "1975-07-05",
+    sovereigntySheetHidden: false,
     currencies: ["CVE"],
     demonyms: {
       fr: {
@@ -2212,8 +2252,8 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
         f: "Cap-Verdienne",
       },
       en: {
-        m: "Cape Verdian",
-        f: "Cape Verdian",
+        m: "Cabo Verdean",
+        f: "Cabo Verdean",
       },
     },
   },
@@ -2258,6 +2298,7 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     sovereigntyYear: 1821,
     sovereigntyKind: "independence",
     sovereigntyDate: "1821-09-15",
+    sovereigntySheetHidden: false,
     currencies: ["CRC"],
     demonyms: {
       fr: {
@@ -2311,6 +2352,7 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     sovereigntyYear: 1902,
     sovereigntyKind: "independence",
     sovereigntyDate: "1902-05-20",
+    sovereigntySheetHidden: false,
     currencies: ["CUP"],
     demonyms: {
       fr: {
@@ -2364,6 +2406,7 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     sovereigntyYear: 1960,
     sovereigntyKind: "independence",
     sovereigntyDate: "1960-08-16",
+    sovereigntySheetHidden: false,
     currencies: ["EUR"],
     demonyms: {
       fr: {
@@ -2417,6 +2460,7 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     sovereigntyYear: 1993,
     sovereigntyKind: "dissolution_successor",
     sovereigntyDate: "1993-01-01",
+    sovereigntySheetHidden: false,
     currencies: ["CZK"],
     demonyms: {
       fr: {
@@ -2470,8 +2514,9 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     coalElectricityShare: 0.2144,
     formerSovereigns: [],
     sovereigntyYear: 1871,
-    sovereigntyKind: "independence",
+    sovereigntyKind: "unification",
     sovereigntyDate: "1871-01-18",
+    sovereigntySheetHidden: false,
     currencies: ["EUR"],
     demonyms: {
       fr: {
@@ -2525,6 +2570,7 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     sovereigntyYear: 1977,
     sovereigntyKind: "independence",
     sovereigntyDate: "1977-06-27",
+    sovereigntySheetHidden: false,
     currencies: ["DJF"],
     demonyms: {
       fr: {
@@ -2532,8 +2578,8 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
         f: "Djiboutienne",
       },
       en: {
-        m: "Djibouti",
-        f: "Djibouti",
+        m: "Djiboutian",
+        f: "Djiboutian",
       },
     },
   },
@@ -2578,6 +2624,7 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     sovereigntyYear: 1978,
     sovereigntyKind: "independence",
     sovereigntyDate: "1978-11-03",
+    sovereigntySheetHidden: false,
     currencies: ["XCD"],
     demonyms: {
       fr: {
@@ -2631,6 +2678,7 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     sovereigntyYear: 1849,
     sovereigntyKind: "foundation",
     sovereigntyDate: "1849-06-05",
+    sovereigntySheetHidden: true,
     currencies: ["DKK"],
     demonyms: {
       fr: {
@@ -2686,6 +2734,7 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     sovereigntyYear: 1844,
     sovereigntyKind: "independence",
     sovereigntyDate: "1844-02-27",
+    sovereigntySheetHidden: false,
     currencies: ["DOP"],
     demonyms: {
       fr: {
@@ -2741,6 +2790,7 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     sovereigntyYear: 1962,
     sovereigntyKind: "independence",
     sovereigntyDate: "1962-07-05",
+    sovereigntySheetHidden: false,
     currencies: ["DZD"],
     demonyms: {
       fr: {
@@ -2801,6 +2851,7 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     sovereigntyYear: 1822,
     sovereigntyKind: "independence",
     sovereigntyDate: "1822-05-24",
+    sovereigntySheetHidden: false,
     currencies: ["USD"],
     demonyms: {
       fr: {
@@ -2856,6 +2907,7 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     sovereigntyYear: 1922,
     sovereigntyKind: "independence",
     sovereigntyDate: "1922-02-28",
+    sovereigntySheetHidden: false,
     currencies: ["EGP"],
     demonyms: {
       fr: {
@@ -2909,6 +2961,7 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     sovereigntyYear: 1993,
     sovereigntyKind: "independence",
     sovereigntyDate: "1993-05-24",
+    sovereigntySheetHidden: false,
     currencies: ["ERN"],
     demonyms: {
       fr: {
@@ -2962,6 +3015,7 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     sovereigntyYear: 1492,
     sovereigntyKind: "foundation",
     sovereigntyDate: null,
+    sovereigntySheetHidden: true,
     currencies: ["EUR"],
     demonyms: {
       fr: {
@@ -3015,6 +3069,7 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     sovereigntyYear: 1991,
     sovereigntyKind: "restoration",
     sovereigntyDate: "1991-08-20",
+    sovereigntySheetHidden: false,
     currencies: ["EUR"],
     demonyms: {
       fr: {
@@ -3070,6 +3125,7 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     sovereigntyYear: null,
     sovereigntyKind: null,
     sovereigntyDate: null,
+    sovereigntySheetHidden: false,
     currencies: ["ETB"],
     demonyms: {
       fr: {
@@ -3123,6 +3179,7 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     sovereigntyYear: 1917,
     sovereigntyKind: "independence",
     sovereigntyDate: "1917-12-06",
+    sovereigntySheetHidden: false,
     currencies: ["EUR"],
     demonyms: {
       fr: {
@@ -3176,6 +3233,7 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     sovereigntyYear: 1970,
     sovereigntyKind: "independence",
     sovereigntyDate: "1970-10-10",
+    sovereigntySheetHidden: false,
     currencies: ["FJD"],
     demonyms: {
       fr: {
@@ -3248,6 +3306,7 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     sovereigntyYear: 1789,
     sovereigntyKind: "independence",
     sovereigntyDate: "1789-07-14",
+    sovereigntySheetHidden: true,
     currencies: ["EUR"],
     demonyms: {
       fr: {
@@ -3301,6 +3360,7 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     sovereigntyYear: 1986,
     sovereigntyKind: "independence",
     sovereigntyDate: "1986-11-03",
+    sovereigntySheetHidden: false,
     currencies: ["USD"],
     demonyms: {
       fr: {
@@ -3354,6 +3414,7 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     sovereigntyYear: 1960,
     sovereigntyKind: "independence",
     sovereigntyDate: "1960-08-17",
+    sovereigntySheetHidden: false,
     currencies: ["XAF"],
     demonyms: {
       fr: {
@@ -3407,6 +3468,7 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     sovereigntyYear: 1284,
     sovereigntyKind: "independence",
     sovereigntyDate: "1284-03-03",
+    sovereigntySheetHidden: true,
     currencies: ["GBP"],
     demonyms: {
       fr: {
@@ -3460,6 +3522,7 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     sovereigntyYear: 1991,
     sovereigntyKind: "independence",
     sovereigntyDate: "1991-04-09",
+    sovereigntySheetHidden: false,
     currencies: ["GEL"],
     demonyms: {
       fr: {
@@ -3515,6 +3578,7 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     sovereigntyYear: 1957,
     sovereigntyKind: "independence",
     sovereigntyDate: "1957-03-06",
+    sovereigntySheetHidden: false,
     currencies: ["GHS"],
     demonyms: {
       fr: {
@@ -3568,6 +3632,7 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     sovereigntyYear: 1958,
     sovereigntyKind: "independence",
     sovereigntyDate: "1958-10-02",
+    sovereigntySheetHidden: false,
     currencies: ["GNF"],
     demonyms: {
       fr: {
@@ -3621,6 +3686,7 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     sovereigntyYear: 1965,
     sovereigntyKind: "independence",
     sovereigntyDate: "1965-02-18",
+    sovereigntySheetHidden: false,
     currencies: ["GMD"],
     demonyms: {
       fr: {
@@ -3674,6 +3740,7 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     sovereigntyYear: 1973,
     sovereigntyKind: "independence",
     sovereigntyDate: "1973-09-24",
+    sovereigntySheetHidden: false,
     currencies: ["XOF"],
     demonyms: {
       fr: {
@@ -3727,6 +3794,7 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     sovereigntyYear: 1968,
     sovereigntyKind: "independence",
     sovereigntyDate: "1968-10-12",
+    sovereigntySheetHidden: false,
     currencies: ["XAF"],
     demonyms: {
       fr: {
@@ -3780,6 +3848,7 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     sovereigntyYear: 1830,
     sovereigntyKind: "independence",
     sovereigntyDate: "1830-02-03",
+    sovereigntySheetHidden: false,
     currencies: ["EUR"],
     demonyms: {
       fr: {
@@ -3833,6 +3902,7 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     sovereigntyYear: 1974,
     sovereigntyKind: "independence",
     sovereigntyDate: "1974-02-07",
+    sovereigntySheetHidden: false,
     currencies: ["XCD"],
     demonyms: {
       fr: {
@@ -3886,6 +3956,7 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     sovereigntyYear: 1821,
     sovereigntyKind: "independence",
     sovereigntyDate: "1821-09-15",
+    sovereigntySheetHidden: false,
     currencies: ["GTQ"],
     demonyms: {
       fr: {
@@ -3939,6 +4010,7 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     sovereigntyYear: 1966,
     sovereigntyKind: "independence",
     sovereigntyDate: "1966-05-26",
+    sovereigntySheetHidden: false,
     currencies: ["GYD"],
     demonyms: {
       fr: {
@@ -3994,6 +4066,7 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     sovereigntyYear: 1821,
     sovereigntyKind: "independence",
     sovereigntyDate: "1821-09-15",
+    sovereigntySheetHidden: false,
     currencies: ["HNL"],
     demonyms: {
       fr: {
@@ -4047,6 +4120,7 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     sovereigntyYear: 1991,
     sovereigntyKind: "independence",
     sovereigntyDate: "1991-06-25",
+    sovereigntySheetHidden: false,
     currencies: ["EUR"],
     demonyms: {
       fr: {
@@ -4100,6 +4174,7 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     sovereigntyYear: 1804,
     sovereigntyKind: "independence",
     sovereigntyDate: "1804-01-01",
+    sovereigntySheetHidden: false,
     currencies: ["HTG"],
     demonyms: {
       fr: {
@@ -4153,6 +4228,7 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     sovereigntyYear: 1918,
     sovereigntyKind: "foundation",
     sovereigntyDate: "1918-11-16",
+    sovereigntySheetHidden: true,
     currencies: ["HUF"],
     demonyms: {
       fr: {
@@ -4216,6 +4292,7 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     sovereigntyYear: 1945,
     sovereigntyKind: "independence",
     sovereigntyDate: "1945-08-17",
+    sovereigntySheetHidden: false,
     currencies: ["IDR"],
     demonyms: {
       fr: {
@@ -4278,6 +4355,7 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     sovereigntyYear: 1947,
     sovereigntyKind: "independence",
     sovereigntyDate: "1947-08-15",
+    sovereigntySheetHidden: false,
     currencies: ["INR"],
     demonyms: {
       fr: {
@@ -4331,6 +4409,7 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     sovereigntyYear: 1921,
     sovereigntyKind: "independence",
     sovereigntyDate: "1921-12-06",
+    sovereigntySheetHidden: false,
     currencies: ["EUR"],
     demonyms: {
       fr: {
@@ -4387,6 +4466,7 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     sovereigntyYear: 1979,
     sovereigntyKind: "unification",
     sovereigntyDate: "1979-04-01",
+    sovereigntySheetHidden: true,
     currencies: ["IRR"],
     demonyms: {
       fr: {
@@ -4442,6 +4522,7 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     sovereigntyYear: 1932,
     sovereigntyKind: "independence",
     sovereigntyDate: "1932-10-03",
+    sovereigntySheetHidden: false,
     currencies: ["IQD"],
     demonyms: {
       fr: {
@@ -4495,6 +4576,7 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     sovereigntyYear: 1918,
     sovereigntyKind: "independence",
     sovereigntyDate: "1918-12-01",
+    sovereigntySheetHidden: false,
     currencies: ["ISK"],
     demonyms: {
       fr: {
@@ -4546,8 +4628,9 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     coalElectricityShare: 0.14300000000000002,
     formerSovereigns: ["united_kingdom"],
     sovereigntyYear: 1948,
-    sovereigntyKind: "foundation",
+    sovereigntyKind: "independence",
     sovereigntyDate: "1948-05-14",
+    sovereigntySheetHidden: false,
     currencies: ["ILS"],
     demonyms: {
       fr: {
@@ -4599,8 +4682,9 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     coalElectricityShare: 0.0148,
     formerSovereigns: [],
     sovereigntyYear: 1861,
-    sovereigntyKind: "foundation",
+    sovereigntyKind: "unification",
     sovereigntyDate: "1861-03-17",
+    sovereigntySheetHidden: false,
     currencies: ["EUR"],
     demonyms: {
       fr: {
@@ -4654,6 +4738,7 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     sovereigntyYear: 1962,
     sovereigntyKind: "independence",
     sovereigntyDate: "1962-08-06",
+    sovereigntySheetHidden: false,
     currencies: ["JMD"],
     demonyms: {
       fr: {
@@ -4707,6 +4792,7 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     sovereigntyYear: 1946,
     sovereigntyKind: "independence",
     sovereigntyDate: "1946-05-25",
+    sovereigntySheetHidden: false,
     currencies: ["JOD"],
     demonyms: {
       fr: {
@@ -4760,6 +4846,7 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     sovereigntyYear: 1947,
     sovereigntyKind: "foundation",
     sovereigntyDate: "1947-05-03",
+    sovereigntySheetHidden: true,
     currencies: ["JPY"],
     demonyms: {
       fr: {
@@ -4815,6 +4902,7 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     sovereigntyYear: 1991,
     sovereigntyKind: "independence",
     sovereigntyDate: "1991-12-16",
+    sovereigntySheetHidden: false,
     currencies: ["KZT"],
     demonyms: {
       fr: {
@@ -4873,6 +4961,7 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     sovereigntyYear: 1963,
     sovereigntyKind: "independence",
     sovereigntyDate: "1963-12-12",
+    sovereigntySheetHidden: false,
     currencies: ["KES"],
     demonyms: {
       fr: {
@@ -4926,6 +5015,7 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     sovereigntyYear: 1991,
     sovereigntyKind: "independence",
     sovereigntyDate: "1991-08-31",
+    sovereigntySheetHidden: false,
     currencies: ["KGS"],
     demonyms: {
       fr: {
@@ -4933,8 +5023,8 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
         f: "Kirghize",
       },
       en: {
-        m: "Kirghiz",
-        f: "Kirghiz",
+        m: "Kyrgyzstani",
+        f: "Kyrgyzstani",
       },
     },
   },
@@ -4981,6 +5071,7 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     sovereigntyYear: 1953,
     sovereigntyKind: "independence",
     sovereigntyDate: "1953-11-09",
+    sovereigntySheetHidden: false,
     currencies: ["KHR", "USD"],
     demonyms: {
       fr: {
@@ -5034,6 +5125,7 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     sovereigntyYear: 1979,
     sovereigntyKind: "independence",
     sovereigntyDate: "1979-07-12",
+    sovereigntySheetHidden: false,
     currencies: ["AUD"],
     demonyms: {
       fr: {
@@ -5087,6 +5179,7 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     sovereigntyYear: 1983,
     sovereigntyKind: "independence",
     sovereigntyDate: "1983-09-19",
+    sovereigntySheetHidden: false,
     currencies: ["XCD"],
     demonyms: {
       fr: {
@@ -5140,6 +5233,7 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     sovereigntyYear: 1945,
     sovereigntyKind: "independence",
     sovereigntyDate: "1945-08-15",
+    sovereigntySheetHidden: false,
     currencies: ["KRW"],
     demonyms: {
       fr: {
@@ -5195,6 +5289,7 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     sovereigntyYear: 1961,
     sovereigntyKind: "independence",
     sovereigntyDate: "1961-06-19",
+    sovereigntySheetHidden: false,
     currencies: ["KWD"],
     demonyms: {
       fr: {
@@ -5248,6 +5343,7 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     sovereigntyYear: 1949,
     sovereigntyKind: "independence",
     sovereigntyDate: "1949-07-19",
+    sovereigntySheetHidden: false,
     currencies: ["LAK"],
     demonyms: {
       fr: {
@@ -5301,6 +5397,7 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     sovereigntyYear: 1943,
     sovereigntyKind: "independence",
     sovereigntyDate: "1943-11-22",
+    sovereigntySheetHidden: false,
     currencies: ["LBP"],
     demonyms: {
       fr: {
@@ -5352,8 +5449,9 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     coalElectricityShare: 0,
     formerSovereigns: [],
     sovereigntyYear: 1847,
-    sovereigntyKind: "foundation",
+    sovereigntyKind: "independence",
     sovereigntyDate: "1847-07-26",
+    sovereigntySheetHidden: false,
     currencies: ["LRD"],
     demonyms: {
       fr: {
@@ -5409,6 +5507,7 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     sovereigntyYear: 1951,
     sovereigntyKind: "independence",
     sovereigntyDate: "1951-12-24",
+    sovereigntySheetHidden: false,
     currencies: ["LYD"],
     demonyms: {
       fr: {
@@ -5462,6 +5561,7 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     sovereigntyYear: 1979,
     sovereigntyKind: "independence",
     sovereigntyDate: "1979-02-22",
+    sovereigntySheetHidden: false,
     currencies: ["XCD"],
     demonyms: {
       fr: {
@@ -5512,9 +5612,10 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     productionRanks: {},
     coalElectricityShare: null,
     formerSovereigns: [],
-    sovereigntyYear: 1719,
+    sovereigntyYear: 1806,
     sovereigntyKind: "independence",
-    sovereigntyDate: "1719-01-23",
+    sovereigntyDate: "1806-07-12",
+    sovereigntySheetHidden: false,
     currencies: ["CHF"],
     demonyms: {
       fr: {
@@ -5568,6 +5669,7 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     sovereigntyYear: 1948,
     sovereigntyKind: "independence",
     sovereigntyDate: "1948-02-04",
+    sovereigntySheetHidden: false,
     currencies: ["LKR"],
     demonyms: {
       fr: {
@@ -5621,6 +5723,7 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     sovereigntyYear: 1966,
     sovereigntyKind: "independence",
     sovereigntyDate: "1966-10-04",
+    sovereigntySheetHidden: false,
     currencies: ["LSL", "ZAR"],
     demonyms: {
       fr: {
@@ -5674,6 +5777,7 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     sovereigntyYear: 1990,
     sovereigntyKind: "restoration",
     sovereigntyDate: "1990-03-11",
+    sovereigntySheetHidden: false,
     currencies: ["EUR"],
     demonyms: {
       fr: {
@@ -5727,6 +5831,7 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     sovereigntyYear: 1839,
     sovereigntyKind: "independence",
     sovereigntyDate: null,
+    sovereigntySheetHidden: false,
     currencies: ["EUR"],
     demonyms: {
       fr: {
@@ -5780,6 +5885,7 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     sovereigntyYear: 1990,
     sovereigntyKind: "restoration",
     sovereigntyDate: "1990-05-04",
+    sovereigntySheetHidden: false,
     currencies: ["EUR"],
     demonyms: {
       fr: {
@@ -5833,6 +5939,7 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     sovereigntyYear: 1956,
     sovereigntyKind: "independence",
     sovereigntyDate: "1956-03-02",
+    sovereigntySheetHidden: false,
     currencies: ["MAD"],
     demonyms: {
       fr: {
@@ -5886,6 +5993,7 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     sovereigntyYear: 1419,
     sovereigntyKind: "foundation",
     sovereigntyDate: null,
+    sovereigntySheetHidden: false,
     currencies: ["EUR"],
     demonyms: {
       fr: {
@@ -5939,6 +6047,7 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     sovereigntyYear: 1991,
     sovereigntyKind: "independence",
     sovereigntyDate: "1991-08-27",
+    sovereigntySheetHidden: false,
     currencies: ["MDL"],
     demonyms: {
       fr: {
@@ -5992,6 +6101,7 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     sovereigntyYear: 1960,
     sovereigntyKind: "independence",
     sovereigntyDate: "1960-06-26",
+    sovereigntySheetHidden: false,
     currencies: ["MGA"],
     demonyms: {
       fr: {
@@ -6045,6 +6155,7 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     sovereigntyYear: 1965,
     sovereigntyKind: "independence",
     sovereigntyDate: "1965-07-26",
+    sovereigntySheetHidden: false,
     currencies: ["MVR"],
     demonyms: {
       fr: {
@@ -6052,8 +6163,8 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
         f: "Maldivienne",
       },
       en: {
-        m: "Maldivan",
-        f: "Maldivan",
+        m: "Maldivian",
+        f: "Maldivian",
       },
     },
   },
@@ -6108,6 +6219,7 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     sovereigntyYear: 1810,
     sovereigntyKind: "independence",
     sovereigntyDate: "1810-09-16",
+    sovereigntySheetHidden: false,
     currencies: ["MXN"],
     demonyms: {
       fr: {
@@ -6161,6 +6273,7 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     sovereigntyYear: 1986,
     sovereigntyKind: "independence",
     sovereigntyDate: "1986-10-21",
+    sovereigntySheetHidden: false,
     currencies: ["USD"],
     demonyms: {
       fr: {
@@ -6214,6 +6327,7 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     sovereigntyYear: 1991,
     sovereigntyKind: "independence",
     sovereigntyDate: "1991-09-08",
+    sovereigntySheetHidden: false,
     currencies: ["MKD"],
     demonyms: {
       fr: {
@@ -6267,6 +6381,7 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     sovereigntyYear: 1960,
     sovereigntyKind: "independence",
     sovereigntyDate: "1960-09-22",
+    sovereigntySheetHidden: false,
     currencies: ["XOF"],
     demonyms: {
       fr: {
@@ -6320,6 +6435,7 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     sovereigntyYear: 1964,
     sovereigntyKind: "independence",
     sovereigntyDate: "1964-09-21",
+    sovereigntySheetHidden: false,
     currencies: ["EUR"],
     demonyms: {
       fr: {
@@ -6375,6 +6491,7 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     sovereigntyYear: 1948,
     sovereigntyKind: "independence",
     sovereigntyDate: "1948-01-04",
+    sovereigntySheetHidden: false,
     currencies: ["MMK"],
     demonyms: {
       fr: {
@@ -6428,6 +6545,7 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     sovereigntyYear: 2006,
     sovereigntyKind: "independence",
     sovereigntyDate: "2006-06-03",
+    sovereigntySheetHidden: false,
     currencies: ["EUR"],
     demonyms: {
       fr: {
@@ -6481,6 +6599,7 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     sovereigntyYear: 1911,
     sovereigntyKind: "independence",
     sovereigntyDate: "1911-12-29",
+    sovereigntySheetHidden: false,
     currencies: ["MNT"],
     demonyms: {
       fr: {
@@ -6534,6 +6653,7 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     sovereigntyYear: 1975,
     sovereigntyKind: "independence",
     sovereigntyDate: "1975-06-25",
+    sovereigntySheetHidden: false,
     currencies: ["MZN"],
     demonyms: {
       fr: {
@@ -6587,6 +6707,7 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     sovereigntyYear: 1960,
     sovereigntyKind: "independence",
     sovereigntyDate: "1960-11-28",
+    sovereigntySheetHidden: false,
     currencies: ["MRU"],
     demonyms: {
       fr: {
@@ -6640,6 +6761,7 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     sovereigntyYear: 1968,
     sovereigntyKind: "independence",
     sovereigntyDate: "1968-03-12",
+    sovereigntySheetHidden: false,
     currencies: ["MUR"],
     demonyms: {
       fr: {
@@ -6693,6 +6815,7 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     sovereigntyYear: 1964,
     sovereigntyKind: "independence",
     sovereigntyDate: "1964-07-06",
+    sovereigntySheetHidden: false,
     currencies: ["MWK"],
     demonyms: {
       fr: {
@@ -6748,6 +6871,7 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     sovereigntyYear: 1957,
     sovereigntyKind: "independence",
     sovereigntyDate: "1957-08-31",
+    sovereigntySheetHidden: false,
     currencies: ["MYR"],
     demonyms: {
       fr: {
@@ -6811,6 +6935,7 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     sovereigntyYear: 1990,
     sovereigntyKind: "independence",
     sovereigntyDate: "1990-03-21",
+    sovereigntySheetHidden: false,
     currencies: ["NAD", "ZAR"],
     demonyms: {
       fr: {
@@ -6864,6 +6989,7 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     sovereigntyYear: 1960,
     sovereigntyKind: "independence",
     sovereigntyDate: "1960-08-03",
+    sovereigntySheetHidden: false,
     currencies: ["XOF"],
     demonyms: {
       fr: {
@@ -6920,6 +7046,7 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     sovereigntyYear: 1960,
     sovereigntyKind: "independence",
     sovereigntyDate: "1960-10-01",
+    sovereigntySheetHidden: false,
     currencies: ["NGN"],
     demonyms: {
       fr: {
@@ -6973,6 +7100,7 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     sovereigntyYear: 1821,
     sovereigntyKind: "independence",
     sovereigntyDate: "1821-09-15",
+    sovereigntySheetHidden: false,
     currencies: ["NIO"],
     demonyms: {
       fr: {
@@ -7024,8 +7152,9 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     coalElectricityShare: 0.0611,
     formerSovereigns: [],
     sovereigntyYear: 1581,
-    sovereigntyKind: "foundation",
+    sovereigntyKind: "independence",
     sovereigntyDate: "1581-07-26",
+    sovereigntySheetHidden: false,
     currencies: ["EUR"],
     demonyms: {
       fr: {
@@ -7080,8 +7209,9 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     coalElectricityShare: 0,
     formerSovereigns: [],
     sovereigntyYear: 1905,
-    sovereigntyKind: "unification",
+    sovereigntyKind: "independence",
     sovereigntyDate: "1905-06-07",
+    sovereigntySheetHidden: false,
     currencies: ["NOK"],
     demonyms: {
       fr: {
@@ -7133,8 +7263,9 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     coalElectricityShare: 0,
     formerSovereigns: [],
     sovereigntyYear: 1768,
-    sovereigntyKind: "foundation",
+    sovereigntyKind: "unification",
     sovereigntyDate: null,
+    sovereigntySheetHidden: false,
     currencies: ["NPR"],
     demonyms: {
       fr: {
@@ -7188,6 +7319,7 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     sovereigntyYear: 1968,
     sovereigntyKind: "independence",
     sovereigntyDate: "1968-01-31",
+    sovereigntySheetHidden: false,
     currencies: ["AUD"],
     demonyms: {
       fr: {
@@ -7241,6 +7373,7 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     sovereigntyYear: 1907,
     sovereigntyKind: "independence",
     sovereigntyDate: "1907-09-26",
+    sovereigntySheetHidden: false,
     currencies: ["NZD"],
     demonyms: {
       fr: {
@@ -7294,6 +7427,7 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     sovereigntyYear: 1650,
     sovereigntyKind: "foundation",
     sovereigntyDate: null,
+    sovereigntySheetHidden: false,
     currencies: ["OMR"],
     demonyms: {
       fr: {
@@ -7350,6 +7484,7 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     sovereigntyYear: 1947,
     sovereigntyKind: "independence",
     sovereigntyDate: "1947-08-14",
+    sovereigntySheetHidden: false,
     currencies: ["PKR"],
     demonyms: {
       fr: {
@@ -7403,6 +7538,7 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     sovereigntyYear: 1903,
     sovereigntyKind: "independence",
     sovereigntyDate: "1903-11-03",
+    sovereigntySheetHidden: false,
     currencies: ["PAB", "USD"],
     demonyms: {
       fr: {
@@ -7464,6 +7600,7 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     sovereigntyYear: 1821,
     sovereigntyKind: "independence",
     sovereigntyDate: "1821-07-28",
+    sovereigntySheetHidden: false,
     currencies: ["PEN"],
     demonyms: {
       fr: {
@@ -7519,6 +7656,7 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     sovereigntyYear: 1946,
     sovereigntyKind: "independence",
     sovereigntyDate: "1946-07-04",
+    sovereigntySheetHidden: false,
     currencies: ["PHP"],
     demonyms: {
       fr: {
@@ -7572,6 +7710,7 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     sovereigntyYear: 1994,
     sovereigntyKind: "independence",
     sovereigntyDate: "1994-10-01",
+    sovereigntySheetHidden: false,
     currencies: ["USD"],
     demonyms: {
       fr: {
@@ -7625,6 +7764,7 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     sovereigntyYear: 1975,
     sovereigntyKind: "independence",
     sovereigntyDate: "1975-09-16",
+    sovereigntySheetHidden: false,
     currencies: ["PGK"],
     demonyms: {
       fr: {
@@ -7676,8 +7816,9 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     coalElectricityShare: 0.5432,
     formerSovereigns: [],
     sovereigntyYear: 1918,
-    sovereigntyKind: "foundation",
+    sovereigntyKind: "restoration",
     sovereigntyDate: "1918-11-11",
+    sovereigntySheetHidden: false,
     currencies: ["PLN"],
     demonyms: {
       fr: {
@@ -7731,6 +7872,7 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     sovereigntyYear: 1945,
     sovereigntyKind: "independence",
     sovereigntyDate: "1945-08-15",
+    sovereigntySheetHidden: false,
     currencies: ["KPW"],
     demonyms: {
       fr: {
@@ -7782,8 +7924,9 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     coalElectricityShare: 0,
     formerSovereigns: [],
     sovereigntyYear: 1640,
-    sovereigntyKind: "independence",
+    sovereigntyKind: "restoration",
     sovereigntyDate: "1640-12-01",
+    sovereigntySheetHidden: false,
     currencies: ["EUR"],
     demonyms: {
       fr: {
@@ -7837,6 +7980,7 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     sovereigntyYear: 1811,
     sovereigntyKind: "independence",
     sovereigntyDate: "1811-05-15",
+    sovereigntySheetHidden: false,
     currencies: ["PYG"],
     demonyms: {
       fr: {
@@ -7900,6 +8044,7 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     sovereigntyYear: null,
     sovereigntyKind: null,
     sovereigntyDate: null,
+    sovereigntySheetHidden: false,
     currencies: ["EGP", "ILS", "JOD"],
     demonyms: {
       fr: {
@@ -7955,6 +8100,7 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     sovereigntyYear: 1971,
     sovereigntyKind: "independence",
     sovereigntyDate: "1971-09-03",
+    sovereigntySheetHidden: false,
     currencies: ["QAR"],
     demonyms: {
       fr: {
@@ -8008,6 +8154,7 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     sovereigntyYear: 1877,
     sovereigntyKind: "independence",
     sovereigntyDate: "1877-05-09",
+    sovereigntySheetHidden: false,
     currencies: ["RON"],
     demonyms: {
       fr: {
@@ -8080,6 +8227,7 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     sovereigntyYear: 1991,
     sovereigntyKind: "continuation",
     sovereigntyDate: "1991-12-25",
+    sovereigntySheetHidden: false,
     currencies: ["RUB"],
     demonyms: {
       fr: {
@@ -8133,6 +8281,7 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     sovereigntyYear: 1962,
     sovereigntyKind: "independence",
     sovereigntyDate: "1962-07-01",
+    sovereigntySheetHidden: false,
     currencies: ["RWF"],
     demonyms: {
       fr: {
@@ -8189,6 +8338,7 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     sovereigntyYear: 1932,
     sovereigntyKind: "unification",
     sovereigntyDate: "1932-09-23",
+    sovereigntySheetHidden: false,
     currencies: ["SAR"],
     demonyms: {
       fr: {
@@ -8242,6 +8392,7 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     sovereigntyYear: 1956,
     sovereigntyKind: "independence",
     sovereigntyDate: "1956-01-01",
+    sovereigntySheetHidden: false,
     currencies: ["SDG"],
     demonyms: {
       fr: {
@@ -8295,6 +8446,7 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     sovereigntyYear: 1960,
     sovereigntyKind: "independence",
     sovereigntyDate: "1960-04-04",
+    sovereigntySheetHidden: false,
     currencies: ["XOF"],
     demonyms: {
       fr: {
@@ -8348,6 +8500,7 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     sovereigntyYear: 1965,
     sovereigntyKind: "independence",
     sovereigntyDate: "1965-08-09",
+    sovereigntySheetHidden: false,
     currencies: ["SGD"],
     demonyms: {
       fr: {
@@ -8401,6 +8554,7 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     sovereigntyYear: 1978,
     sovereigntyKind: "independence",
     sovereigntyDate: "1978-07-07",
+    sovereigntySheetHidden: false,
     currencies: ["SBD"],
     demonyms: {
       fr: {
@@ -8454,6 +8608,7 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     sovereigntyYear: 1961,
     sovereigntyKind: "independence",
     sovereigntyDate: "1961-04-27",
+    sovereigntySheetHidden: false,
     currencies: ["SLE"],
     demonyms: {
       fr: {
@@ -8507,6 +8662,7 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     sovereigntyYear: 1821,
     sovereigntyKind: "independence",
     sovereigntyDate: "1821-09-15",
+    sovereigntySheetHidden: false,
     currencies: ["USD"],
     demonyms: {
       fr: {
@@ -8560,6 +8716,7 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     sovereigntyYear: null,
     sovereigntyKind: null,
     sovereigntyDate: null,
+    sovereigntySheetHidden: false,
     currencies: ["EUR"],
     demonyms: {
       fr: {
@@ -8613,6 +8770,7 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     sovereigntyYear: 1960,
     sovereigntyKind: "independence",
     sovereigntyDate: "1960-07-01",
+    sovereigntySheetHidden: false,
     currencies: ["SOS"],
     demonyms: {
       fr: {
@@ -8666,6 +8824,7 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     sovereigntyYear: 2006,
     sovereigntyKind: "independence",
     sovereigntyDate: "2006-06-05",
+    sovereigntySheetHidden: false,
     currencies: ["RSD"],
     demonyms: {
       fr: {
@@ -8719,6 +8878,7 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     sovereigntyYear: 2011,
     sovereigntyKind: "independence",
     sovereigntyDate: "2011-07-09",
+    sovereigntySheetHidden: false,
     currencies: ["SSP"],
     demonyms: {
       fr: {
@@ -8772,6 +8932,7 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     sovereigntyYear: 1975,
     sovereigntyKind: "independence",
     sovereigntyDate: "1975-07-12",
+    sovereigntySheetHidden: false,
     currencies: ["STN"],
     demonyms: {
       fr: {
@@ -8825,6 +8986,7 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     sovereigntyYear: 1975,
     sovereigntyKind: "independence",
     sovereigntyDate: "1975-11-25",
+    sovereigntySheetHidden: false,
     currencies: ["SRD"],
     demonyms: {
       fr: {
@@ -8878,6 +9040,7 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     sovereigntyYear: 1993,
     sovereigntyKind: "dissolution_successor",
     sovereigntyDate: "1993-01-01",
+    sovereigntySheetHidden: false,
     currencies: ["EUR"],
     demonyms: {
       fr: {
@@ -8931,6 +9094,7 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     sovereigntyYear: 1991,
     sovereigntyKind: "independence",
     sovereigntyDate: "1991-06-25",
+    sovereigntySheetHidden: false,
     currencies: ["EUR"],
     demonyms: {
       fr: {
@@ -8984,6 +9148,7 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     sovereigntyYear: 1523,
     sovereigntyKind: "foundation",
     sovereigntyDate: "1523-06-06",
+    sovereigntySheetHidden: false,
     currencies: ["SEK"],
     demonyms: {
       fr: {
@@ -9047,6 +9212,7 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     sovereigntyYear: 1968,
     sovereigntyKind: "independence",
     sovereigntyDate: "1968-09-06",
+    sovereigntySheetHidden: false,
     currencies: ["SZL", "ZAR"],
     demonyms: {
       fr: {
@@ -9100,6 +9266,7 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     sovereigntyYear: 1976,
     sovereigntyKind: "independence",
     sovereigntyDate: "1976-06-29",
+    sovereigntySheetHidden: false,
     currencies: ["SCR"],
     demonyms: {
       fr: {
@@ -9153,6 +9320,7 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     sovereigntyYear: 1946,
     sovereigntyKind: "independence",
     sovereigntyDate: "1946-04-17",
+    sovereigntySheetHidden: false,
     currencies: ["SYP"],
     demonyms: {
       fr: {
@@ -9206,6 +9374,7 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     sovereigntyYear: 1960,
     sovereigntyKind: "independence",
     sovereigntyDate: "1960-08-11",
+    sovereigntySheetHidden: false,
     currencies: ["XAF"],
     demonyms: {
       fr: {
@@ -9259,6 +9428,7 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     sovereigntyYear: 1960,
     sovereigntyKind: "independence",
     sovereigntyDate: "1960-04-27",
+    sovereigntySheetHidden: false,
     currencies: ["XOF"],
     demonyms: {
       fr: {
@@ -9314,6 +9484,7 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     sovereigntyYear: 1238,
     sovereigntyKind: "foundation",
     sovereigntyDate: null,
+    sovereigntySheetHidden: false,
     currencies: ["THB"],
     demonyms: {
       fr: {
@@ -9367,6 +9538,7 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     sovereigntyYear: 1991,
     sovereigntyKind: "independence",
     sovereigntyDate: "1991-09-09",
+    sovereigntySheetHidden: false,
     currencies: ["TJS"],
     demonyms: {
       fr: {
@@ -9374,8 +9546,8 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
         f: "Tadjike",
       },
       en: {
-        m: "Tadzhik",
-        f: "Tadzhik",
+        m: "Tajikistani",
+        f: "Tajikistani",
       },
     },
   },
@@ -9422,6 +9594,7 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     sovereigntyYear: 1991,
     sovereigntyKind: "independence",
     sovereigntyDate: "1991-10-27",
+    sovereigntySheetHidden: false,
     currencies: ["TMT"],
     demonyms: {
       fr: {
@@ -9475,6 +9648,7 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     sovereigntyYear: 2002,
     sovereigntyKind: "restoration",
     sovereigntyDate: "2002-05-20",
+    sovereigntySheetHidden: false,
     currencies: ["USD"],
     demonyms: {
       fr: {
@@ -9528,6 +9702,7 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     sovereigntyYear: 1970,
     sovereigntyKind: "independence",
     sovereigntyDate: "1970-06-04",
+    sovereigntySheetHidden: false,
     currencies: ["TOP"],
     demonyms: {
       fr: {
@@ -9581,6 +9756,7 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     sovereigntyYear: 1962,
     sovereigntyKind: "independence",
     sovereigntyDate: "1962-08-31",
+    sovereigntySheetHidden: false,
     currencies: ["TTD"],
     demonyms: {
       fr: {
@@ -9634,6 +9810,7 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     sovereigntyYear: 1956,
     sovereigntyKind: "independence",
     sovereigntyDate: "1956-03-20",
+    sovereigntySheetHidden: false,
     currencies: ["TND"],
     demonyms: {
       fr: {
@@ -9687,6 +9864,7 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     sovereigntyYear: 1923,
     sovereigntyKind: "foundation",
     sovereigntyDate: "1923-10-29",
+    sovereigntySheetHidden: true,
     currencies: ["TRY"],
     demonyms: {
       fr: {
@@ -9740,6 +9918,7 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     sovereigntyYear: 1978,
     sovereigntyKind: "independence",
     sovereigntyDate: "1978-10-01",
+    sovereigntySheetHidden: false,
     currencies: ["AUD"],
     demonyms: {
       fr: {
@@ -9793,6 +9972,7 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     sovereigntyYear: null,
     sovereigntyKind: null,
     sovereigntyDate: null,
+    sovereigntySheetHidden: false,
     currencies: ["TWD"],
     demonyms: {
       fr: {
@@ -9846,6 +10026,7 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     sovereigntyYear: 1964,
     sovereigntyKind: "independence",
     sovereigntyDate: "1964-04-26",
+    sovereigntySheetHidden: false,
     currencies: ["TZS"],
     demonyms: {
       fr: {
@@ -9901,6 +10082,7 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     sovereigntyYear: 1962,
     sovereigntyKind: "independence",
     sovereigntyDate: "1962-10-09",
+    sovereigntySheetHidden: false,
     currencies: ["UGX"],
     demonyms: {
       fr: {
@@ -9956,6 +10138,7 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     sovereigntyYear: 1991,
     sovereigntyKind: "independence",
     sovereigntyDate: "1991-08-24",
+    sovereigntySheetHidden: false,
     currencies: ["UAH"],
     demonyms: {
       fr: {
@@ -10009,6 +10192,7 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     sovereigntyYear: 1825,
     sovereigntyKind: "independence",
     sovereigntyDate: "1825-08-25",
+    sovereigntySheetHidden: false,
     currencies: ["UYU"],
     demonyms: {
       fr: {
@@ -10073,6 +10257,7 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     sovereigntyYear: 1776,
     sovereigntyKind: "independence",
     sovereigntyDate: "1776-07-04",
+    sovereigntySheetHidden: false,
     currencies: ["USD"],
     demonyms: {
       fr: {
@@ -10126,6 +10311,7 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     sovereigntyYear: 1991,
     sovereigntyKind: "independence",
     sovereigntyDate: "1991-09-01",
+    sovereigntySheetHidden: false,
     currencies: ["UZS"],
     demonyms: {
       fr: {
@@ -10179,6 +10365,7 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     sovereigntyYear: 1929,
     sovereigntyKind: "foundation",
     sovereigntyDate: "1929-02-11",
+    sovereigntySheetHidden: false,
     currencies: ["EUR"],
     demonyms: {
       fr: {
@@ -10232,6 +10419,7 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     sovereigntyYear: 1979,
     sovereigntyKind: "independence",
     sovereigntyDate: "1979-10-27",
+    sovereigntySheetHidden: false,
     currencies: ["XCD"],
     demonyms: {
       fr: {
@@ -10285,6 +10473,7 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     sovereigntyYear: 1811,
     sovereigntyKind: "independence",
     sovereigntyDate: "1811-07-05",
+    sovereigntySheetHidden: false,
     currencies: ["VES"],
     demonyms: {
       fr: {
@@ -10341,6 +10530,7 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     sovereigntyYear: 1945,
     sovereigntyKind: "independence",
     sovereigntyDate: "1945-09-02",
+    sovereigntySheetHidden: false,
     currencies: ["VND"],
     demonyms: {
       fr: {
@@ -10394,6 +10584,7 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     sovereigntyYear: 1980,
     sovereigntyKind: "independence",
     sovereigntyDate: "1980-07-30",
+    sovereigntySheetHidden: false,
     currencies: ["VUV"],
     demonyms: {
       fr: {
@@ -10447,6 +10638,7 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     sovereigntyYear: 1962,
     sovereigntyKind: "independence",
     sovereigntyDate: "1962-01-01",
+    sovereigntySheetHidden: false,
     currencies: ["WST"],
     demonyms: {
       fr: {
@@ -10500,6 +10692,7 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     sovereigntyYear: 2008,
     sovereigntyKind: "independence",
     sovereigntyDate: "2008-02-17",
+    sovereigntySheetHidden: false,
     currencies: ["EUR"],
     demonyms: {
       fr: {
@@ -10553,6 +10746,7 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     sovereigntyYear: 1990,
     sovereigntyKind: "unification",
     sovereigntyDate: "1990-05-22",
+    sovereigntySheetHidden: false,
     currencies: ["YER"],
     demonyms: {
       fr: {
@@ -10638,6 +10832,7 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     sovereigntyYear: 1910,
     sovereigntyKind: "independence",
     sovereigntyDate: "1910-05-31",
+    sovereigntySheetHidden: false,
     currencies: ["ZAR"],
     demonyms: {
       fr: {
@@ -10691,6 +10886,7 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     sovereigntyYear: 1964,
     sovereigntyKind: "independence",
     sovereigntyDate: "1964-10-24",
+    sovereigntySheetHidden: false,
     currencies: ["ZMW"],
     demonyms: {
       fr: {
@@ -10760,6 +10956,7 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     sovereigntyYear: 1980,
     sovereigntyKind: "independence",
     sovereigntyDate: "1980-04-18",
+    sovereigntySheetHidden: false,
     currencies: ["ZWG", "USD"],
     demonyms: {
       fr: {

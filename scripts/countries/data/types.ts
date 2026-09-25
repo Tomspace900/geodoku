@@ -134,6 +134,13 @@ export type SovereigntyEvent = Readonly<{
   kind: SovereigntyKind;
   year: number;
   date?: string;
+  /**
+   * Motif pour lequel la fiche pays ne montre pas cet événement : le libellé
+   * d'une nature (« Indépendance », « Fondation »…) le rendrait faux. Vit dans
+   * la donnée, pas dans une liste de la couche joueur ; la dérivation de
+   * `history_sovereignty_since_1990` ne le lit pas.
+   */
+  sheetHidden?: string;
   formerSovereigns: readonly FormerSovereign[];
   sourceDescription: string;
 }>;

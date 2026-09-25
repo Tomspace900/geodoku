@@ -266,6 +266,11 @@ export function validateCountryFacts(
         );
       }
     }
+    if (facts.sovereigntySheetHidden && facts.sovereigntyKind === null) {
+      errors.push(
+        `${code}: sovereigntySheetHidden sans événement de souveraineté`,
+      );
+    }
     facts.capitals.forEach((capital) => {
       if (
         !capital.name ||

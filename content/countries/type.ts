@@ -246,6 +246,13 @@ export type CountryFacts = Readonly<{
    */
   sovereigntyDate: string | null;
   /**
+   * `true` quand la fiche ne doit pas montrer l'événement de souveraineté : sa
+   * nature serait fausse une fois affichée (motif dans `sheetHidden` du dataset).
+   * Ne concerne que l'affichage : `history_sovereignty_since_1990` ne le lit pas.
+   * `false` quand le pays n'a pas d'entrée.
+   */
+  sovereigntySheetHidden: boolean;
+  /**
    * Codes ISO 4217 des monnaies ayant cours (world-countries, corrigé par
    * `currencyCorrectionsByIso3`). Jamais vide.
    */
@@ -317,6 +324,7 @@ export type CountryRecord = {
   sovereigntyYear: number | null;
   sovereigntyKind: SovereigntyKind | null;
   sovereigntyDate: string | null;
+  sovereigntySheetHidden: boolean;
   currencies: string[];
   demonyms: Demonyms;
 };

@@ -2,7 +2,7 @@
  * Garde de fraîcheur des faits **dérivés de datasets** (`content/countries/facts.ts`).
  *
  * `checkDerivationFreshness` surveille l'étage du dessous — les `answers.ts`
- * face à `COUNTRY_FACTS`. Ici on surveille l'étage du dessus : les onze champs
+ * face à `COUNTRY_FACTS`. Ici on surveille l'étage du dessus : les douze champs
  * que `quantitativeFactsForCode` fusionne depuis `scripts/countries/data/` sont
  * re-calculés et confrontés au snapshot committé. Cette fusion est déterministe
  * et hors-ligne, donc rejouable en CI — ce qui permet d'attraper une édition à
@@ -38,6 +38,7 @@ const DATASET_DERIVED_KEYS = [
   "sovereigntyYear",
   "sovereigntyKind",
   "sovereigntyDate",
+  "sovereigntySheetHidden",
 ] as const;
 
 function isPlainRecord(value: unknown): value is Record<string, unknown> {
@@ -45,7 +46,7 @@ function isPlainRecord(value: unknown): value is Record<string, unknown> {
 }
 
 /**
- * Égalité de surface, suffisante pour les onze champs : scalaires (`Object.is`),
+ * Égalité de surface, suffisante pour les douze champs : scalaires (`Object.is`),
  * `formerSovereigns` (ordre du dataset, donc comparé en séquence) et
  * `productionRanks` (record plat, comparé sur l'union des clés).
  */

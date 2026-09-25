@@ -59,6 +59,7 @@ function minimalCountry(code: string): CountryRecord {
     sovereigntyYear: null,
     sovereigntyKind: null,
     sovereigntyDate: null,
+    sovereigntySheetHidden: false,
     currencies: ["EUR"],
     demonyms: { fr: { m: "X", f: "X" }, en: { m: "X", f: "X" } },
   };
@@ -452,6 +453,7 @@ describe("quantitativeFactsForCode", () => {
       sovereigntyYear: null,
       sovereigntyKind: null,
       sovereigntyDate: null,
+      sovereigntySheetHidden: false,
     });
     expect(quantitativeFactsForCode("CHE", datasets).mountainAreaShare).toBe(
       0.654,
@@ -498,12 +500,35 @@ describe("quantitativeFactsForCode", () => {
     expect(quantitativeFactsForCode("ZZZ", datasets).utcOffsetCount).toBe(1);
   });
 
+  it("flags a country whose dataset entry carries a sheetHidden reason", () => {
+    const hidden: QuantitativeDatasets = {
+      ...datasets,
+      sovereignty: {
+        sourceCommit: "x",
+        countries: {
+          FRA: {
+            kind: "independence",
+            year: 1789,
+            date: "1789-07-14",
+            sheetHidden: "aucune date officielle",
+            formerSovereigns: [],
+            sourceDescription: "no official date of independence",
+          },
+        },
+      },
+    };
+    expect(quantitativeFactsForCode("FRA", hidden).sovereigntySheetHidden).toBe(
+      true,
+    );
+  });
+
   it("copies the sovereignty event verbatim, [] / null when uncovered", () => {
     const dza = quantitativeFactsForCode("DZA", datasets);
     expect(dza.formerSovereigns).toEqual(["france"]);
     expect(dza.sovereigntyYear).toBe(1962);
     expect(dza.sovereigntyKind).toBe("independence");
     expect(dza.sovereigntyDate).toBe("1962-07-05");
+    expect(dza.sovereigntySheetHidden).toBe(false);
     const zzz = quantitativeFactsForCode("ZZZ", datasets);
     expect(zzz.formerSovereigns).toEqual([]);
     expect(zzz.sovereigntyYear).toBe(null);
