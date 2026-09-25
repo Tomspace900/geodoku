@@ -135,15 +135,18 @@ export function formatLanguageName(code: string, locale: Locale): string {
 }
 
 /**
- * « Euro (EUR) » : le nom localisé suivi du code, pour lever l'ambiguïté des
- * dollars et des francs. Une monnaie récente que l'ICU embarquée ne connaît pas
- * encore (`DisplayNames` renvoie le code) s'affiche par son seul code.
+ * « euro (EUR) » : le nom localisé suivi du code, pour lever l'ambiguïté des
+ * dollars et des francs. La casse est celle de l'ICU, comme pour les langues
+ * (« français », « euro ») : une majuscule forcée donnait « … et Dollar des
+ * États-Unis » au milieu d'une liste. Une monnaie récente que l'ICU embarquée
+ * ne connaît pas encore (`DisplayNames` renvoie le code) s'affiche par son seul
+ * code.
  */
 export function formatCurrency(code: string, locale: Locale): string {
   try {
     const name = new Intl.DisplayNames([locale], { type: "currency" }).of(code);
     if (name && name !== code) {
-      return `${name.charAt(0).toLocaleUpperCase(locale)}${name.slice(1)} (${code})`;
+      return `${name} (${code})`;
     }
   } catch {
     // Code non reconnu par l'ICU embarquée — repli ci-dessous.

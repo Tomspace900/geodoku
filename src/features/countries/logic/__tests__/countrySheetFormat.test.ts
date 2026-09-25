@@ -148,8 +148,8 @@ describe("formatCurrency", () => {
     expect(formatCurrency("EUR", "en")).toBe("Euro (EUR)");
   });
 
-  it("capitalizes the French name", () => {
-    expect(formatCurrency("EUR", "fr")).toBe("Euro (EUR)");
+  it("keeps the ICU casing in French, like language names", () => {
+    expect(formatCurrency("EUR", "fr")).toBe("euro (EUR)");
   });
 
   it("falls back to the bare code when Intl has no name for it", () => {

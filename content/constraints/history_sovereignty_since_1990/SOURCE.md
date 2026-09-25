@@ -40,8 +40,11 @@ non).
   sont **hors liste** — écartés par le `kind`, pas par une donnée effacée : leur
   `sovereigntyYear` reste 1991 / 1990 dans le snapshot.
 - **Namibie** : 1990, pile sur la borne — incluse.
-- **Estonie / Lettonie** : `sovereigntyYear` = 1991 (déclaration puis reconnaissance
-  soviétique) ; le champ `date` de la source porte parfois 1918, il n'est pas lu.
+- **États baltes** : l'année et la date sont celles de la **déclaration** de
+  rétablissement de l'indépendance que donne la source — Lituanie 11 mars 1990,
+  Lettonie 4 mai 1990, Estonie 20 août 1991 (reconnaissance soviétique le
+  6 septembre 1991 pour les trois). La Lettonie portait jusqu'au lot 4 l'année
+  1991 avec la date de 1918 ; corrigée le 2026-09-25, sans effet sur la liste.
 - Timor-Leste : 2002, `restoration` — inclus.
 - Territoires et dépendances non jouables : hors liste.
 

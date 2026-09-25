@@ -28,6 +28,10 @@ updates:
     ignore:
       - dependency-name: "*"
         update-types: [version-update:semver-major]
+      # Source du snapshot content/countries/, figé à une date : check:content
+      # compare monnaies et gentilés au paquet installé, et un bump bloquerait
+      # tout le groupe. Se met à jour avec pnpm build:countries, jamais seul.
+      - dependency-name: "world-countries"
 
   - package-ecosystem: github-actions
     directory: /
