@@ -4,6 +4,7 @@ import {
   applySourceCorrections,
   assignPopularity,
   buildAliases,
+  currencyAndDemonymFacts,
   dedupe,
   deriveContinent,
   deriveWaterAccess,
@@ -57,6 +58,9 @@ function minimalCountry(code: string): CountryRecord {
     formerSovereigns: [],
     sovereigntyYear: null,
     sovereigntyKind: null,
+    sovereigntyDate: null,
+    currencies: ["EUR"],
+    demonyms: { fr: { m: "X", f: "X" }, en: { m: "X", f: "X" } },
   };
 }
 
@@ -427,6 +431,7 @@ describe("quantitativeFactsForCode", () => {
         DZA: {
           kind: "independence",
           year: 1962,
+          date: "1962-07-05",
           formerSovereigns: ["france"],
           sourceDescription: "1962 (from France)",
         },
@@ -446,6 +451,7 @@ describe("quantitativeFactsForCode", () => {
       formerSovereigns: [],
       sovereigntyYear: null,
       sovereigntyKind: null,
+      sovereigntyDate: null,
     });
     expect(quantitativeFactsForCode("CHE", datasets).mountainAreaShare).toBe(
       0.654,
@@ -497,10 +503,91 @@ describe("quantitativeFactsForCode", () => {
     expect(dza.formerSovereigns).toEqual(["france"]);
     expect(dza.sovereigntyYear).toBe(1962);
     expect(dza.sovereigntyKind).toBe("independence");
+    expect(dza.sovereigntyDate).toBe("1962-07-05");
     const zzz = quantitativeFactsForCode("ZZZ", datasets);
     expect(zzz.formerSovereigns).toEqual([]);
     expect(zzz.sovereigntyYear).toBe(null);
     expect(zzz.sovereigntyKind).toBe(null);
+  });
+});
+
+describe("currencyAndDemonymFacts", () => {
+  const wcFrance = {
+    currencies: { EUR: { name: "Euro" } },
+    demonyms: {
+      fra: { m: "Français", f: "Française" },
+      eng: { m: "French", f: "French" },
+    },
+  };
+  const reason = { reason: "test", date: "2026-09-25" };
+
+  it("reads world-countries when no correction applies", () => {
+    expect(
+      currencyAndDemonymFacts("FRA", wcFrance, undefined, undefined),
+    ).toEqual({
+      currencies: ["EUR"],
+      demonyms: {
+        fr: { m: "Français", f: "Française" },
+        en: { m: "French", f: "French" },
+      },
+    });
+  });
+
+  it("replaces the whole currency list with the correction", () => {
+    const row = { ...wcFrance, currencies: { CUC: {}, CUP: {} } };
+    expect(
+      currencyAndDemonymFacts(
+        "CUB",
+        row,
+        { currencies: ["CUP"], ...reason },
+        undefined,
+      ).currencies,
+    ).toEqual(["CUP"]);
+  });
+
+  it("corrects one language and keeps the other from the source", () => {
+    const facts = currencyAndDemonymFacts("ZAF", wcFrance, undefined, {
+      fr: { m: "Sud-Africain", f: "Sud-Africaine" },
+      ...reason,
+    });
+    expect(facts.demonyms.en).toEqual({ m: "French", f: "French" });
+  });
+
+  it("builds a country absent from world-countries from its corrections alone", () => {
+    expect(
+      currencyAndDemonymFacts(
+        "XKX",
+        undefined,
+        { currencies: ["EUR"], ...reason },
+        {
+          fr: { m: "Kosovar", f: "Kosovare" },
+          en: { m: "Kosovar", f: "Kosovar" },
+          ...reason,
+        },
+      ).currencies,
+    ).toEqual(["EUR"]);
+  });
+
+  it("fails loudly on an empty currency list", () => {
+    expect(() =>
+      currencyAndDemonymFacts(
+        "FSM",
+        { ...wcFrance, currencies: {} },
+        undefined,
+        undefined,
+      ),
+    ).toThrow(/aucune monnaie/);
+  });
+
+  it("fails loudly on a missing demonym", () => {
+    expect(() =>
+      currencyAndDemonymFacts(
+        "XKX",
+        undefined,
+        { currencies: ["EUR"], ...reason },
+        undefined,
+      ),
+    ).toThrow(/gentilé/);
   });
 });
 

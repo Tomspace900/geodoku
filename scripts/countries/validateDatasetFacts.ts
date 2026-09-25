@@ -2,7 +2,7 @@
  * Garde de fraîcheur des faits **dérivés de datasets** (`content/countries/facts.ts`).
  *
  * `checkDerivationFreshness` surveille l'étage du dessous — les `answers.ts`
- * face à `COUNTRY_FACTS`. Ici on surveille l'étage du dessus : les dix champs
+ * face à `COUNTRY_FACTS`. Ici on surveille l'étage du dessus : les onze champs
  * que `quantitativeFactsForCode` fusionne depuis `scripts/countries/data/` sont
  * re-calculés et confrontés au snapshot committé. Cette fusion est déterministe
  * et hors-ligne, donc rejouable en CI — ce qui permet d'attraper une édition à
@@ -16,8 +16,12 @@
  */
 import type { CountryFacts } from "../../content/countries/type";
 import {
+  type CurrencyCorrection,
+  currencyAndDemonymFacts,
+  type DemonymCorrection,
   type QuantitativeDatasets,
   quantitativeFactsForCode,
+  type WcCurrencyDemonymRow,
 } from "./buildCountriesLib";
 import type { CapitalLabelsSnapshot } from "./data/types";
 
@@ -33,6 +37,7 @@ const DATASET_DERIVED_KEYS = [
   "formerSovereigns",
   "sovereigntyYear",
   "sovereigntyKind",
+  "sovereigntyDate",
 ] as const;
 
 function isPlainRecord(value: unknown): value is Record<string, unknown> {
@@ -40,7 +45,7 @@ function isPlainRecord(value: unknown): value is Record<string, unknown> {
 }
 
 /**
- * Égalité de surface, suffisante pour les dix champs : scalaires (`Object.is`),
+ * Égalité de surface, suffisante pour les onze champs : scalaires (`Object.is`),
  * `formerSovereigns` (ordre du dataset, donc comparé en séquence) et
  * `productionRanks` (record plat, comparé sur l'union des clés).
  */
@@ -148,6 +153,54 @@ export function validateCapitalLabels(
         });
     });
   });
+
+  return errors;
+}
+
+/**
+ * Confronte `currencies` et `demonyms` de `factsByCode` à world-countries (un
+ * paquet npm versionné, donc rejouable hors-ligne) corrigé par les tables
+ * `currencyCorrectionsByIso3` / `demonymCorrectionsByIso3`. Une correction
+ * orpheline (pays absent du catalogue) est signalée aussi.
+ */
+export function validateCurrencyDemonymFacts(
+  factsByCode: Readonly<Record<string, CountryFacts>>,
+  wcRows: Readonly<Record<string, WcCurrencyDemonymRow>>,
+  currencyCorrections: Readonly<Record<string, CurrencyCorrection>>,
+  demonymCorrections: Readonly<Record<string, DemonymCorrection>>,
+  codes: readonly string[],
+): string[] {
+  const errors: string[] = [];
+
+  codes.forEach((code) => {
+    const facts = factsByCode[code];
+    if (!facts) return;
+    try {
+      const expected = currencyAndDemonymFacts(
+        code,
+        wcRows[code],
+        currencyCorrections[code],
+        demonymCorrections[code],
+      );
+      (["currencies", "demonyms"] as const).forEach((key) => {
+        if (JSON.stringify(expected[key]) !== JSON.stringify(facts[key])) {
+          errors.push(
+            `${code}: ${key} obsolète (attendu ${format(expected[key])}, trouvé ${format(facts[key])}) — lancer pnpm build:countries`,
+          );
+        }
+      });
+    } catch (error) {
+      errors.push(error instanceof Error ? error.message : String(error));
+    }
+  });
+
+  [...Object.keys(currencyCorrections), ...Object.keys(demonymCorrections)]
+    .filter((code) => !codes.includes(code))
+    .forEach((code) => {
+      errors.push(
+        `${code}: correction de monnaie/gentilé sans pays du catalogue`,
+      );
+    });
 
   return errors;
 }

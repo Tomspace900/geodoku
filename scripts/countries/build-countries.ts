@@ -33,6 +33,7 @@ import {
   applySourceCorrections,
   assignPopularity,
   buildAliases,
+  currencyAndDemonymFacts,
   deriveContinent,
   deriveWaterAccess,
   type FlagData,
@@ -66,6 +67,11 @@ interface WCEntry {
   landlocked: boolean;
   borders: string[];
   languages: Record<string, string>;
+  currencies?: Record<string, unknown>;
+  demonyms?: {
+    fra?: { m: string; f: string };
+    eng?: { m: string; f: string };
+  };
   area: number;
   unMember: boolean;
   latlng?: [number, number];
@@ -770,6 +776,12 @@ async function main(): Promise<void> {
         gameplayClassifications,
       ),
       ...quantitativeFactsForCode(c.cca3, QUANTITATIVE_DATASETS),
+      ...currencyAndDemonymFacts(
+        c.cca3,
+        c,
+        countryPatches.currencyCorrectionsByIso3[c.cca3],
+        countryPatches.demonymCorrectionsByIso3[c.cca3],
+      ),
     };
 
     applySourceCorrections(
@@ -816,6 +828,12 @@ async function main(): Promise<void> {
       Object.assign(
         merged,
         quantitativeFactsForCode(merged.iso3, QUANTITATIVE_DATASETS),
+        currencyAndDemonymFacts(
+          merged.iso3,
+          undefined,
+          countryPatches.currencyCorrectionsByIso3[merged.iso3],
+          countryPatches.demonymCorrectionsByIso3[merged.iso3],
+        ),
       );
       return merged;
     },

@@ -4,6 +4,7 @@
 import type {
   CountryCapital,
   CountryRecord,
+  Demonyms,
   DrivingSide,
   FlagColor,
   FlagLayout,
@@ -79,8 +80,33 @@ export type ManualCountryAddition = Omit<CountryRecord, "capitals"> & {
   capitals: SourceCapital[];
 };
 
+/**
+ * Correction de la liste des monnaies de world-countries. Chaque entrée porte
+ * son motif et sa date : la liste **remplace** celle de la source (rien n'est
+ * corrigeable par delta, la source se trompe sur l'ensemble).
+ */
+export type CurrencyCorrection = Readonly<{
+  currencies: readonly string[];
+  reason: string;
+  date: string;
+}>;
+
+/**
+ * Correction des gentilés de world-countries, par langue. Une langue absente
+ * garde la valeur de la source ; `XKX`, absent de world-countries, n'a que des
+ * corrections.
+ */
+export type DemonymCorrection = Readonly<{
+  fr?: Demonyms["fr"];
+  en?: Demonyms["en"];
+  reason: string;
+  date: string;
+}>;
+
 export type CountryPatchesConfig = {
   sourceCorrectionsByIso3: Record<string, SourceCorrection>;
+  currencyCorrectionsByIso3: Record<string, CurrencyCorrection>;
+  demonymCorrectionsByIso3: Record<string, DemonymCorrection>;
   searchAliasesByIso3: Record<string, string[]>;
   wikipediaTitlesByIso3: Record<string, string>;
   gameplayClassifications: GameplayClassifications;
@@ -496,6 +522,7 @@ type QuantitativeFacts = Pick<
   | "formerSovereigns"
   | "sovereigntyYear"
   | "sovereigntyKind"
+  | "sovereigntyDate"
 >;
 
 /**
@@ -576,6 +603,48 @@ export function quantitativeFactsForCode(
     formerSovereigns: sovereignty ? [...sovereignty.formerSovereigns] : [],
     sovereigntyYear: sovereignty?.year ?? null,
     sovereigntyKind: sovereignty?.kind ?? null,
+    sovereigntyDate: sovereignty?.date ?? null,
+  };
+}
+
+/** Sous-ensemble de world-countries lu pour les monnaies et les gentilés. */
+export type WcCurrencyDemonymRow = Readonly<{
+  currencies?: Readonly<Record<string, unknown>>;
+  demonyms?: Readonly<{
+    fra?: Readonly<{ m: string; f: string }>;
+    eng?: Readonly<{ m: string; f: string }>;
+  }>;
+}>;
+
+/**
+ * Monnaies et gentilés d'un pays : world-countries, puis les corrections
+ * curées. Échoue bruyamment si le résultat est incomplet (monnaie vide, gentilé
+ * absent) — un pays sans donnée n'est jamais rempli en silence.
+ */
+export function currencyAndDemonymFacts(
+  iso3: string,
+  row: WcCurrencyDemonymRow | undefined,
+  currencyCorrection: CurrencyCorrection | undefined,
+  demonymCorrection: DemonymCorrection | undefined,
+): Pick<CountryRecord, "currencies" | "demonyms"> {
+  const currencies = currencyCorrection
+    ? [...currencyCorrection.currencies]
+    : Object.keys(row?.currencies ?? {});
+  if (currencies.length === 0) {
+    throw new Error(
+      `${iso3}: aucune monnaie — ajouter une entrée à currencyCorrectionsByIso3`,
+    );
+  }
+  const fr = demonymCorrection?.fr ?? row?.demonyms?.fra;
+  const en = demonymCorrection?.en ?? row?.demonyms?.eng;
+  if (!fr?.m || !fr.f || !en?.m || !en.f) {
+    throw new Error(
+      `${iso3}: gentilé fr/en incomplet — ajouter une entrée à demonymCorrectionsByIso3`,
+    );
+  }
+  return {
+    currencies,
+    demonyms: { fr: { m: fr.m, f: fr.f }, en: { m: en.m, f: en.f } },
   };
 }
 

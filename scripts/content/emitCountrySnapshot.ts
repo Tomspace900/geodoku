@@ -60,6 +60,9 @@ const FACT_KEYS = [
   "formerSovereigns",
   "sovereigntyYear",
   "sovereigntyKind",
+  "sovereigntyDate",
+  "currencies",
+  "demonyms",
 ] as const;
 
 function sortByIso3(records: readonly CountryRecord[]): CountryRecord[] {

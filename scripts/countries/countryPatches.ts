@@ -9,6 +9,8 @@
  */
 import type {
   CountryPatchesConfig,
+  CurrencyCorrection,
+  DemonymCorrection,
   GameplayClassifications,
   ManualCountryAddition,
   SourceCorrection,
@@ -697,11 +699,156 @@ export const manualCountryAdditions: ManualCountryAddition[] = [
     formerSovereigns: [],
     sovereigntyYear: null,
     sovereigntyKind: null,
+    sovereigntyDate: null,
+    // Monnaie et gentilé : placeholders, fixés par les tables de correction
+    // (currencyCorrectionsByIso3 / demonymCorrectionsByIso3) au build.
+    currencies: [],
+    demonyms: { fr: { m: "", f: "" }, en: { m: "", f: "" } },
   },
 ];
 
+// ─── Monnaies et gentilés (lot 4) ─────────────────────────────────────────────
+
+const CORRECTION_DATE = "2026-09-25";
+
+/**
+ * Monnaies où `world-countries` 5.1.0 est fausse ou incomplète. Une entrée
+ * remplace la liste entière. Invariants (`validateCountryFacts`) : liste non
+ * vide, chaque code connu de `Intl` avec un nom fr et en sans année.
+ */
+export const currencyCorrectionsByIso3: Record<Iso3, CurrencyCorrection> = {
+  FSM: {
+    currencies: ["USD"],
+    reason: "world-countries : liste vide ; le dollar américain a cours légal",
+    date: CORRECTION_DATE,
+  },
+  KIR: {
+    currencies: ["AUD"],
+    reason:
+      "world-countries liste KID, qui n'est pas un code ISO 4217 ; le dollar australien a cours",
+    date: CORRECTION_DATE,
+  },
+  TUV: {
+    currencies: ["AUD"],
+    reason:
+      "world-countries liste TVD, qui n'est pas un code ISO 4217 ; le dollar australien a cours",
+    date: CORRECTION_DATE,
+  },
+  CUB: {
+    currencies: ["CUP"],
+    reason:
+      "world-countries liste CUC, aboli en 2021 ; Intl le connaît encore, l'invariant sur les noms ne l'attrape pas",
+    date: CORRECTION_DATE,
+  },
+  SLE: {
+    currencies: ["SLE"],
+    reason:
+      "world-countries liste SLL, remplacé par le nouveau leone (SLE) lors de la redénomination de 2022",
+    date: CORRECTION_DATE,
+  },
+  ZWE: {
+    currencies: ["ZWG", "USD"],
+    reason:
+      "world-countries : 9 codes dont ZWB (hors ISO) ; ZWG (or du Zimbabwe) a cours depuis 2024 et le dollar américain reste largement utilisé — à valider au gate",
+    date: CORRECTION_DATE,
+  },
+  XKX: {
+    currencies: ["EUR"],
+    reason:
+      "absent de world-countries (ajout manuel) ; le Kosovo utilise l'euro",
+    date: CORRECTION_DATE,
+  },
+};
+
+/**
+ * Gentilés où `world-countries` a une faute ou une casse incohérente. Le
+ * gentilé s'affiche comme un **nom** (« Français, Française ») : chaque élément
+ * d'un composé prend la majuscule. Référence consultée : liste « Pays,
+ * territoires et villes du monde » de la Commission nationale de toponymie
+ * (fév. 2025), qui ne donne que l'adjectif en minuscules — la majuscule du nom
+ * est une convention d'affichage.
+ */
+export const demonymCorrectionsByIso3: Record<Iso3, DemonymCorrection> = {
+  ARE: {
+    fr: { m: "Émirien", f: "Émirienne" },
+    reason: "majuscule accentuée manquante (CNT : émirien)",
+    date: CORRECTION_DATE,
+  },
+  ATG: {
+    fr: {
+      m: "Antiguayen et Barbudien",
+      f: "Antiguayenne et Barbudienne",
+    },
+    reason:
+      "le masculin de world-countries est au féminin (« Antiguaise et barbudien ») ; radical de la CNT : antiguayen",
+    date: CORRECTION_DATE,
+  },
+  CPV: {
+    fr: { m: "Cap-Verdien", f: "Cap-Verdienne" },
+    reason: "second élément du composé sans majuscule (CNT : cap-verdien)",
+    date: CORRECTION_DATE,
+  },
+  GNQ: {
+    fr: { m: "Équato-Guinéen", f: "Équato-Guinéenne" },
+    reason: "second élément du composé sans majuscule",
+    date: CORRECTION_DATE,
+  },
+  KNA: {
+    fr: { m: "Kittitien-et-Névicien", f: "Kittitienne-et-Névicienne" },
+    reason:
+      "majuscule et accent manquants sur le second élément ; la CNT donne christophien, non retenu (moins courant)",
+    date: CORRECTION_DATE,
+  },
+  KOR: {
+    fr: { m: "Sud-Coréen", f: "Sud-Coréenne" },
+    reason: "second élément du composé sans majuscule (CNT : sud-coréen)",
+    date: CORRECTION_DATE,
+  },
+  LKA: {
+    fr: { m: "Sri-Lankais", f: "Sri-Lankaise" },
+    reason: "second élément du composé sans majuscule (CNT : srilankais)",
+    date: CORRECTION_DATE,
+  },
+  NZL: {
+    fr: { m: "Néo-Zélandais", f: "Néo-Zélandaise" },
+    reason:
+      "« Neo » sans accent dans world-countries ; la CNT soude le mot (néozélandais), forme non retenue pour un nom propre",
+    date: CORRECTION_DATE,
+  },
+  PRK: {
+    fr: { m: "Nord-Coréen", f: "Nord-Coréenne" },
+    reason: "second élément du composé sans majuscule (CNT : nord-coréen)",
+    date: CORRECTION_DATE,
+  },
+  SLE: {
+    fr: { m: "Sierra-Léonais", f: "Sierra-Léonaise" },
+    reason:
+      "accent et majuscule manquants ; la CNT soude le mot (sierraléonais), forme non retenue pour un nom propre",
+    date: CORRECTION_DATE,
+  },
+  TLS: {
+    fr: { m: "Est-Timorais", f: "Est-Timoraise" },
+    reason: "second élément du composé sans majuscule",
+    date: CORRECTION_DATE,
+  },
+  ZAF: {
+    fr: { m: "Sud-Africain", f: "Sud-Africaine" },
+    reason:
+      "second élément du composé sans majuscule ; la CNT accepte sudafricain ou sud-africain",
+    date: CORRECTION_DATE,
+  },
+  XKX: {
+    fr: { m: "Kosovar", f: "Kosovare" },
+    en: { m: "Kosovar", f: "Kosovar" },
+    reason: "absent de world-countries (ajout manuel) ; CNT : kosovar, -e",
+    date: CORRECTION_DATE,
+  },
+};
+
 export const countryPatches: CountryPatchesConfig = {
   sourceCorrectionsByIso3,
+  currencyCorrectionsByIso3,
+  demonymCorrectionsByIso3,
   searchAliasesByIso3,
   wikipediaTitlesByIso3,
   gameplayClassifications,

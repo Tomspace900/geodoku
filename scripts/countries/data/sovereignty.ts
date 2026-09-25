@@ -1002,8 +1002,8 @@ export const SOVEREIGNTY: SovereigntySnapshot = {
     },
     LVA: {
       kind: "restoration",
-      year: 1991,
-      date: "1918-11-18",
+      year: 1990,
+      date: "1990-05-04",
       formerSovereigns: ["soviet_union"],
       sourceDescription:
         "18 November 1918 (from Soviet Russia); 4 May 1990 (declared from the Soviet Union); 6 September 1991 (recognized by the Soviet Union)",

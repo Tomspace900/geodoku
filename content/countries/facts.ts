@@ -4,7 +4,7 @@ import type { CountryCode } from "./countryCodes";
 import type { CountryFacts, CountryFactsSnapshot } from "./type";
 
 export const FACTS_SNAPSHOT: CountryFactsSnapshot = {
-  date: "2026-09-24",
+  date: "2026-09-25",
   note: "régénéré par pnpm build:countries",
 };
 
@@ -49,6 +49,18 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     formerSovereigns: ["united_kingdom"],
     sovereigntyYear: 1919,
     sovereigntyKind: "independence",
+    sovereigntyDate: "1919-08-19",
+    currencies: ["AFN"],
+    demonyms: {
+      fr: {
+        m: "Afghan",
+        f: "Afghane",
+      },
+      en: {
+        m: "Afghan",
+        f: "Afghan",
+      },
+    },
   },
   AGO: {
     continent: "africa",
@@ -90,6 +102,18 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     formerSovereigns: ["portugal"],
     sovereigntyYear: 1975,
     sovereigntyKind: "independence",
+    sovereigntyDate: "1975-11-11",
+    currencies: ["AOA"],
+    demonyms: {
+      fr: {
+        m: "Angolais",
+        f: "Angolaise",
+      },
+      en: {
+        m: "Angolan",
+        f: "Angolan",
+      },
+    },
   },
   ALB: {
     continent: "europe",
@@ -131,6 +155,18 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     formerSovereigns: [],
     sovereigntyYear: 1912,
     sovereigntyKind: "independence",
+    sovereigntyDate: "1912-11-28",
+    currencies: ["ALL"],
+    demonyms: {
+      fr: {
+        m: "Albanais",
+        f: "Albanaise",
+      },
+      en: {
+        m: "Albanian",
+        f: "Albanian",
+      },
+    },
   },
   AND: {
     continent: "europe",
@@ -172,6 +208,18 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     formerSovereigns: [],
     sovereigntyYear: 1278,
     sovereigntyKind: "foundation",
+    sovereigntyDate: null,
+    currencies: ["EUR"],
+    demonyms: {
+      fr: {
+        m: "Andorran",
+        f: "Andorrane",
+      },
+      en: {
+        m: "Andorran",
+        f: "Andorran",
+      },
+    },
   },
   ARE: {
     continent: "asia",
@@ -216,6 +264,18 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     formerSovereigns: ["united_kingdom"],
     sovereigntyYear: 1971,
     sovereigntyKind: "independence",
+    sovereigntyDate: "1971-12-02",
+    currencies: ["AED"],
+    demonyms: {
+      fr: {
+        m: "Émirien",
+        f: "Émirienne",
+      },
+      en: {
+        m: "Emirati",
+        f: "Emirati",
+      },
+    },
   },
   ARG: {
     continent: "south_america",
@@ -257,6 +317,18 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     formerSovereigns: ["spain"],
     sovereigntyYear: 1816,
     sovereigntyKind: "independence",
+    sovereigntyDate: "1816-07-09",
+    currencies: ["ARS"],
+    demonyms: {
+      fr: {
+        m: "Argentin",
+        f: "Argentine",
+      },
+      en: {
+        m: "Argentine",
+        f: "Argentine",
+      },
+    },
   },
   ARM: {
     continent: "asia",
@@ -298,6 +370,18 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     formerSovereigns: ["soviet_union"],
     sovereigntyYear: 1991,
     sovereigntyKind: "independence",
+    sovereigntyDate: "1991-09-21",
+    currencies: ["AMD"],
+    demonyms: {
+      fr: {
+        m: "Arménien",
+        f: "Arménienne",
+      },
+      en: {
+        m: "Armenian",
+        f: "Armenian",
+      },
+    },
   },
   ATG: {
     continent: "north_america",
@@ -339,6 +423,18 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     formerSovereigns: ["united_kingdom"],
     sovereigntyYear: 1981,
     sovereigntyKind: "independence",
+    sovereigntyDate: "1981-11-01",
+    currencies: ["XCD"],
+    demonyms: {
+      fr: {
+        m: "Antiguayen et Barbudien",
+        f: "Antiguayenne et Barbudienne",
+      },
+      en: {
+        m: "Antiguan, Barbudan",
+        f: "Antiguan, Barbudan",
+      },
+    },
   },
   AUS: {
     continent: "oceania",
@@ -388,6 +484,18 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     formerSovereigns: ["united_kingdom"],
     sovereigntyYear: 1901,
     sovereigntyKind: "independence",
+    sovereigntyDate: "1901-01-01",
+    currencies: ["AUD"],
+    demonyms: {
+      fr: {
+        m: "Australien",
+        f: "Australienne",
+      },
+      en: {
+        m: "Australian",
+        f: "Australian",
+      },
+    },
   },
   AUT: {
     continent: "europe",
@@ -429,6 +537,18 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     formerSovereigns: [],
     sovereigntyYear: 1156,
     sovereigntyKind: "independence",
+    sovereigntyDate: "1156-09-17",
+    currencies: ["EUR"],
+    demonyms: {
+      fr: {
+        m: "Autrichien",
+        f: "Autrichienne",
+      },
+      en: {
+        m: "Austrian",
+        f: "Austrian",
+      },
+    },
   },
   AZE: {
     continent: "asia",
@@ -470,6 +590,18 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     formerSovereigns: ["soviet_union"],
     sovereigntyYear: 1991,
     sovereigntyKind: "independence",
+    sovereigntyDate: "1991-08-30",
+    currencies: ["AZN"],
+    demonyms: {
+      fr: {
+        m: "Azerbaïdjanais",
+        f: "Azerbaïdjanaise",
+      },
+      en: {
+        m: "Azerbaijani",
+        f: "Azerbaijani",
+      },
+    },
   },
   BDI: {
     continent: "africa",
@@ -511,6 +643,18 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     formerSovereigns: ["belgium"],
     sovereigntyYear: 1962,
     sovereigntyKind: "independence",
+    sovereigntyDate: "1962-07-01",
+    currencies: ["BIF"],
+    demonyms: {
+      fr: {
+        m: "Burundais",
+        f: "Burundaise",
+      },
+      en: {
+        m: "Burundian",
+        f: "Burundian",
+      },
+    },
   },
   BEL: {
     continent: "europe",
@@ -552,6 +696,18 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     formerSovereigns: ["netherlands"],
     sovereigntyYear: 1830,
     sovereigntyKind: "independence",
+    sovereigntyDate: "1830-10-04",
+    currencies: ["EUR"],
+    demonyms: {
+      fr: {
+        m: "Belge",
+        f: "Belge",
+      },
+      en: {
+        m: "Belgian",
+        f: "Belgian",
+      },
+    },
   },
   BEN: {
     continent: "africa",
@@ -593,6 +749,18 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     formerSovereigns: ["france"],
     sovereigntyYear: 1960,
     sovereigntyKind: "independence",
+    sovereigntyDate: "1960-08-01",
+    currencies: ["XOF"],
+    demonyms: {
+      fr: {
+        m: "Béninois",
+        f: "Béninoise",
+      },
+      en: {
+        m: "Beninese",
+        f: "Beninese",
+      },
+    },
   },
   BFA: {
     continent: "africa",
@@ -634,6 +802,18 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     formerSovereigns: ["france"],
     sovereigntyYear: 1960,
     sovereigntyKind: "independence",
+    sovereigntyDate: "1960-08-05",
+    currencies: ["XOF"],
+    demonyms: {
+      fr: {
+        m: "Burkinabé",
+        f: "Burkinabée",
+      },
+      en: {
+        m: "Burkinabe",
+        f: "Burkinabe",
+      },
+    },
   },
   BGD: {
     continent: "asia",
@@ -677,6 +857,18 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     formerSovereigns: [],
     sovereigntyYear: 1971,
     sovereigntyKind: "independence",
+    sovereigntyDate: "1971-12-16",
+    currencies: ["BDT"],
+    demonyms: {
+      fr: {
+        m: "Bangladais",
+        f: "Bangladaise",
+      },
+      en: {
+        m: "Bangladeshi",
+        f: "Bangladeshi",
+      },
+    },
   },
   BGR: {
     continent: "europe",
@@ -718,6 +910,18 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     formerSovereigns: [],
     sovereigntyYear: 1878,
     sovereigntyKind: "independence",
+    sovereigntyDate: "1878-03-03",
+    currencies: ["BGN"],
+    demonyms: {
+      fr: {
+        m: "Bulgare",
+        f: "Bulgare",
+      },
+      en: {
+        m: "Bulgarian",
+        f: "Bulgarian",
+      },
+    },
   },
   BHR: {
     continent: "asia",
@@ -759,6 +963,18 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     formerSovereigns: ["united_kingdom"],
     sovereigntyYear: 1971,
     sovereigntyKind: "independence",
+    sovereigntyDate: "1971-08-15",
+    currencies: ["BHD"],
+    demonyms: {
+      fr: {
+        m: "Bahreïnien",
+        f: "Bahreïnienne",
+      },
+      en: {
+        m: "Bahraini",
+        f: "Bahraini",
+      },
+    },
   },
   BHS: {
     continent: "north_america",
@@ -800,6 +1016,18 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     formerSovereigns: ["united_kingdom"],
     sovereigntyYear: 1973,
     sovereigntyKind: "independence",
+    sovereigntyDate: "1973-07-10",
+    currencies: ["BSD", "USD"],
+    demonyms: {
+      fr: {
+        m: "Bahamien",
+        f: "Bahamienne",
+      },
+      en: {
+        m: "Bahamian",
+        f: "Bahamian",
+      },
+    },
   },
   BIH: {
     continent: "europe",
@@ -841,6 +1069,18 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     formerSovereigns: ["yugoslavia"],
     sovereigntyYear: 1992,
     sovereigntyKind: "independence",
+    sovereigntyDate: "1992-03-01",
+    currencies: ["BAM"],
+    demonyms: {
+      fr: {
+        m: "Bosnien",
+        f: "Bosnienne",
+      },
+      en: {
+        m: "Bosnian, Herzegovinian",
+        f: "Bosnian, Herzegovinian",
+      },
+    },
   },
   BLR: {
     continent: "europe",
@@ -882,6 +1122,18 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     formerSovereigns: ["soviet_union"],
     sovereigntyYear: 1991,
     sovereigntyKind: "independence",
+    sovereigntyDate: "1991-08-25",
+    currencies: ["BYN"],
+    demonyms: {
+      fr: {
+        m: "Biélorusse",
+        f: "Biélorusse",
+      },
+      en: {
+        m: "Belarusian",
+        f: "Belarusian",
+      },
+    },
   },
   BLZ: {
     continent: "north_america",
@@ -923,6 +1175,18 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     formerSovereigns: ["united_kingdom"],
     sovereigntyYear: 1981,
     sovereigntyKind: "independence",
+    sovereigntyDate: "1981-09-21",
+    currencies: ["BZD"],
+    demonyms: {
+      fr: {
+        m: "Bélizien",
+        f: "Bélizienne",
+      },
+      en: {
+        m: "Belizean",
+        f: "Belizean",
+      },
+    },
   },
   BOL: {
     continent: "south_america",
@@ -974,6 +1238,18 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     formerSovereigns: ["spain"],
     sovereigntyYear: 1825,
     sovereigntyKind: "independence",
+    sovereigntyDate: "1825-08-06",
+    currencies: ["BOB"],
+    demonyms: {
+      fr: {
+        m: "Bolivien",
+        f: "Bolivienne",
+      },
+      en: {
+        m: "Bolivian",
+        f: "Bolivian",
+      },
+    },
   },
   BRA: {
     continent: "south_america",
@@ -1030,6 +1306,18 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     formerSovereigns: ["portugal"],
     sovereigntyYear: 1822,
     sovereigntyKind: "independence",
+    sovereigntyDate: "1822-09-07",
+    currencies: ["BRL"],
+    demonyms: {
+      fr: {
+        m: "Brésilien",
+        f: "Brésilienne",
+      },
+      en: {
+        m: "Brazilian",
+        f: "Brazilian",
+      },
+    },
   },
   BRB: {
     continent: "north_america",
@@ -1071,6 +1359,18 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     formerSovereigns: ["united_kingdom"],
     sovereigntyYear: 1966,
     sovereigntyKind: "independence",
+    sovereigntyDate: "1966-11-30",
+    currencies: ["BBD"],
+    demonyms: {
+      fr: {
+        m: "Barbadien",
+        f: "Barbadienne",
+      },
+      en: {
+        m: "Barbadian",
+        f: "Barbadian",
+      },
+    },
   },
   BRN: {
     continent: "asia",
@@ -1112,6 +1412,18 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     formerSovereigns: ["united_kingdom"],
     sovereigntyYear: 1984,
     sovereigntyKind: "independence",
+    sovereigntyDate: "1984-01-01",
+    currencies: ["BND", "SGD"],
+    demonyms: {
+      fr: {
+        m: "Brunéien",
+        f: "Brunéienne",
+      },
+      en: {
+        m: "Bruneian",
+        f: "Bruneian",
+      },
+    },
   },
   BTN: {
     continent: "asia",
@@ -1153,6 +1465,18 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     formerSovereigns: [],
     sovereigntyYear: 1907,
     sovereigntyKind: "independence",
+    sovereigntyDate: "1907-12-17",
+    currencies: ["BTN", "INR"],
+    demonyms: {
+      fr: {
+        m: "Bhoutanais",
+        f: "Bhoutanaise",
+      },
+      en: {
+        m: "Bhutanese",
+        f: "Bhutanese",
+      },
+    },
   },
   BWA: {
     continent: "africa",
@@ -1194,6 +1518,18 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     formerSovereigns: ["united_kingdom"],
     sovereigntyYear: 1966,
     sovereigntyKind: "independence",
+    sovereigntyDate: "1966-09-30",
+    currencies: ["BWP"],
+    demonyms: {
+      fr: {
+        m: "Botswanais",
+        f: "Botswanaise",
+      },
+      en: {
+        m: "Motswana",
+        f: "Motswana",
+      },
+    },
   },
   CAF: {
     continent: "africa",
@@ -1235,6 +1571,18 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     formerSovereigns: ["france"],
     sovereigntyYear: 1960,
     sovereigntyKind: "independence",
+    sovereigntyDate: "1960-08-13",
+    currencies: ["XAF"],
+    demonyms: {
+      fr: {
+        m: "Centrafricain",
+        f: "Centrafricaine",
+      },
+      en: {
+        m: "Central African",
+        f: "Central African",
+      },
+    },
   },
   CAN: {
     continent: "north_america",
@@ -1285,6 +1633,18 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     formerSovereigns: ["united_kingdom"],
     sovereigntyYear: 1867,
     sovereigntyKind: "foundation",
+    sovereigntyDate: "1867-07-01",
+    currencies: ["CAD"],
+    demonyms: {
+      fr: {
+        m: "Canadien",
+        f: "Canadienne",
+      },
+      en: {
+        m: "Canadian",
+        f: "Canadian",
+      },
+    },
   },
   CHE: {
     continent: "europe",
@@ -1326,6 +1686,18 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     formerSovereigns: [],
     sovereigntyYear: 1291,
     sovereigntyKind: "foundation",
+    sovereigntyDate: "1291-08-01",
+    currencies: ["CHF"],
+    demonyms: {
+      fr: {
+        m: "Suisse",
+        f: "Suisse",
+      },
+      en: {
+        m: "Swiss",
+        f: "Swiss",
+      },
+    },
   },
   CHL: {
     continent: "south_america",
@@ -1367,6 +1739,18 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     formerSovereigns: ["spain"],
     sovereigntyYear: 1810,
     sovereigntyKind: "independence",
+    sovereigntyDate: "1810-09-18",
+    currencies: ["CLP"],
+    demonyms: {
+      fr: {
+        m: "Chilien",
+        f: "Chilienne",
+      },
+      en: {
+        m: "Chilean",
+        f: "Chilean",
+      },
+    },
   },
   CHN: {
     continent: "asia",
@@ -1430,6 +1814,18 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     formerSovereigns: [],
     sovereigntyYear: 1949,
     sovereigntyKind: "unification",
+    sovereigntyDate: "1949-10-01",
+    currencies: ["CNY"],
+    demonyms: {
+      fr: {
+        m: "Chinois",
+        f: "Chinoise",
+      },
+      en: {
+        m: "Chinese",
+        f: "Chinese",
+      },
+    },
   },
   CIV: {
     continent: "africa",
@@ -1473,6 +1869,18 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     formerSovereigns: ["france"],
     sovereigntyYear: 1960,
     sovereigntyKind: "independence",
+    sovereigntyDate: "1960-08-07",
+    currencies: ["XOF"],
+    demonyms: {
+      fr: {
+        m: "Ivoirien",
+        f: "Ivoirienne",
+      },
+      en: {
+        m: "Ivorian",
+        f: "Ivorian",
+      },
+    },
   },
   CMR: {
     continent: "africa",
@@ -1516,6 +1924,18 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     formerSovereigns: ["france"],
     sovereigntyYear: 1960,
     sovereigntyKind: "independence",
+    sovereigntyDate: "1960-01-01",
+    currencies: ["XAF"],
+    demonyms: {
+      fr: {
+        m: "Camerounais",
+        f: "Camerounaise",
+      },
+      en: {
+        m: "Cameroonian",
+        f: "Cameroonian",
+      },
+    },
   },
   COD: {
     continent: "africa",
@@ -1562,6 +1982,18 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     formerSovereigns: ["belgium"],
     sovereigntyYear: 1960,
     sovereigntyKind: "independence",
+    sovereigntyDate: "1960-06-30",
+    currencies: ["CDF"],
+    demonyms: {
+      fr: {
+        m: "Congolais",
+        f: "Congolaise",
+      },
+      en: {
+        m: "Congolese",
+        f: "Congolese",
+      },
+    },
   },
   COG: {
     continent: "africa",
@@ -1603,6 +2035,18 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     formerSovereigns: ["france"],
     sovereigntyYear: 1960,
     sovereigntyKind: "independence",
+    sovereigntyDate: "1960-08-15",
+    currencies: ["XAF"],
+    demonyms: {
+      fr: {
+        m: "Congolais",
+        f: "Congolaise",
+      },
+      en: {
+        m: "Congolese",
+        f: "Congolese",
+      },
+    },
   },
   COL: {
     continent: "south_america",
@@ -1654,6 +2098,18 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     formerSovereigns: ["spain"],
     sovereigntyYear: 1810,
     sovereigntyKind: "independence",
+    sovereigntyDate: "1810-07-20",
+    currencies: ["COP"],
+    demonyms: {
+      fr: {
+        m: "Colombien",
+        f: "Colombienne",
+      },
+      en: {
+        m: "Colombian",
+        f: "Colombian",
+      },
+    },
   },
   COM: {
     continent: "africa",
@@ -1695,6 +2151,18 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     formerSovereigns: ["france"],
     sovereigntyYear: 1975,
     sovereigntyKind: "independence",
+    sovereigntyDate: "1975-07-06",
+    currencies: ["KMF"],
+    demonyms: {
+      fr: {
+        m: "Comorien",
+        f: "Comorienne",
+      },
+      en: {
+        m: "Comoran",
+        f: "Comoran",
+      },
+    },
   },
   CPV: {
     continent: "africa",
@@ -1736,6 +2204,18 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     formerSovereigns: ["portugal"],
     sovereigntyYear: 1975,
     sovereigntyKind: "independence",
+    sovereigntyDate: "1975-07-05",
+    currencies: ["CVE"],
+    demonyms: {
+      fr: {
+        m: "Cap-Verdien",
+        f: "Cap-Verdienne",
+      },
+      en: {
+        m: "Cape Verdian",
+        f: "Cape Verdian",
+      },
+    },
   },
   CRI: {
     continent: "north_america",
@@ -1777,6 +2257,18 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     formerSovereigns: ["spain"],
     sovereigntyYear: 1821,
     sovereigntyKind: "independence",
+    sovereigntyDate: "1821-09-15",
+    currencies: ["CRC"],
+    demonyms: {
+      fr: {
+        m: "Costaricain",
+        f: "Costaricaine",
+      },
+      en: {
+        m: "Costa Rican",
+        f: "Costa Rican",
+      },
+    },
   },
   CUB: {
     continent: "north_america",
@@ -1818,6 +2310,18 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     formerSovereigns: ["spain"],
     sovereigntyYear: 1902,
     sovereigntyKind: "independence",
+    sovereigntyDate: "1902-05-20",
+    currencies: ["CUP"],
+    demonyms: {
+      fr: {
+        m: "Cubain",
+        f: "Cubaine",
+      },
+      en: {
+        m: "Cuban",
+        f: "Cuban",
+      },
+    },
   },
   CYP: {
     continent: "europe",
@@ -1859,6 +2363,18 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     formerSovereigns: ["united_kingdom"],
     sovereigntyYear: 1960,
     sovereigntyKind: "independence",
+    sovereigntyDate: "1960-08-16",
+    currencies: ["EUR"],
+    demonyms: {
+      fr: {
+        m: "Chypriote",
+        f: "Chypriote",
+      },
+      en: {
+        m: "Cypriot",
+        f: "Cypriot",
+      },
+    },
   },
   CZE: {
     continent: "europe",
@@ -1900,6 +2416,18 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     formerSovereigns: [],
     sovereigntyYear: 1993,
     sovereigntyKind: "dissolution_successor",
+    sovereigntyDate: "1993-01-01",
+    currencies: ["CZK"],
+    demonyms: {
+      fr: {
+        m: "Tchèque",
+        f: "Tchèque",
+      },
+      en: {
+        m: "Czech",
+        f: "Czech",
+      },
+    },
   },
   DEU: {
     continent: "europe",
@@ -1943,6 +2471,18 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     formerSovereigns: [],
     sovereigntyYear: 1871,
     sovereigntyKind: "independence",
+    sovereigntyDate: "1871-01-18",
+    currencies: ["EUR"],
+    demonyms: {
+      fr: {
+        m: "Allemand",
+        f: "Allemande",
+      },
+      en: {
+        m: "German",
+        f: "German",
+      },
+    },
   },
   DJI: {
     continent: "africa",
@@ -1984,6 +2524,18 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     formerSovereigns: ["france"],
     sovereigntyYear: 1977,
     sovereigntyKind: "independence",
+    sovereigntyDate: "1977-06-27",
+    currencies: ["DJF"],
+    demonyms: {
+      fr: {
+        m: "Djiboutien",
+        f: "Djiboutienne",
+      },
+      en: {
+        m: "Djibouti",
+        f: "Djibouti",
+      },
+    },
   },
   DMA: {
     continent: "north_america",
@@ -2025,6 +2577,18 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     formerSovereigns: ["united_kingdom"],
     sovereigntyYear: 1978,
     sovereigntyKind: "independence",
+    sovereigntyDate: "1978-11-03",
+    currencies: ["XCD"],
+    demonyms: {
+      fr: {
+        m: "Dominiquais",
+        f: "Dominiquaise",
+      },
+      en: {
+        m: "Dominican",
+        f: "Dominican",
+      },
+    },
   },
   DNK: {
     continent: "europe",
@@ -2066,6 +2630,18 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     formerSovereigns: [],
     sovereigntyYear: 1849,
     sovereigntyKind: "foundation",
+    sovereigntyDate: "1849-06-05",
+    currencies: ["DKK"],
+    demonyms: {
+      fr: {
+        m: "Danois",
+        f: "Danoise",
+      },
+      en: {
+        m: "Danish",
+        f: "Danish",
+      },
+    },
   },
   DOM: {
     continent: "north_america",
@@ -2109,6 +2685,18 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     formerSovereigns: [],
     sovereigntyYear: 1844,
     sovereigntyKind: "independence",
+    sovereigntyDate: "1844-02-27",
+    currencies: ["DOP"],
+    demonyms: {
+      fr: {
+        m: "Dominicain",
+        f: "Dominicaine",
+      },
+      en: {
+        m: "Dominican",
+        f: "Dominican",
+      },
+    },
   },
   DZA: {
     continent: "africa",
@@ -2152,6 +2740,18 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     formerSovereigns: ["france"],
     sovereigntyYear: 1962,
     sovereigntyKind: "independence",
+    sovereigntyDate: "1962-07-05",
+    currencies: ["DZD"],
+    demonyms: {
+      fr: {
+        m: "Algérien",
+        f: "Algérienne",
+      },
+      en: {
+        m: "Algerian",
+        f: "Algerian",
+      },
+    },
   },
   ECU: {
     continent: "south_america",
@@ -2200,6 +2800,18 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     formerSovereigns: ["spain"],
     sovereigntyYear: 1822,
     sovereigntyKind: "independence",
+    sovereigntyDate: "1822-05-24",
+    currencies: ["USD"],
+    demonyms: {
+      fr: {
+        m: "Équatorien",
+        f: "Équatorienne",
+      },
+      en: {
+        m: "Ecuadorean",
+        f: "Ecuadorean",
+      },
+    },
   },
   EGY: {
     continent: "africa",
@@ -2243,6 +2855,18 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     formerSovereigns: ["united_kingdom"],
     sovereigntyYear: 1922,
     sovereigntyKind: "independence",
+    sovereigntyDate: "1922-02-28",
+    currencies: ["EGP"],
+    demonyms: {
+      fr: {
+        m: "Égyptien",
+        f: "Égyptienne",
+      },
+      en: {
+        m: "Egyptian",
+        f: "Egyptian",
+      },
+    },
   },
   ERI: {
     continent: "africa",
@@ -2284,6 +2908,18 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     formerSovereigns: [],
     sovereigntyYear: 1993,
     sovereigntyKind: "independence",
+    sovereigntyDate: "1993-05-24",
+    currencies: ["ERN"],
+    demonyms: {
+      fr: {
+        m: "Érythréen",
+        f: "Érythréenne",
+      },
+      en: {
+        m: "Eritrean",
+        f: "Eritrean",
+      },
+    },
   },
   ESP: {
     continent: "europe",
@@ -2325,6 +2961,18 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     formerSovereigns: [],
     sovereigntyYear: 1492,
     sovereigntyKind: "foundation",
+    sovereigntyDate: null,
+    currencies: ["EUR"],
+    demonyms: {
+      fr: {
+        m: "Espagnol",
+        f: "Espagnole",
+      },
+      en: {
+        m: "Spanish",
+        f: "Spanish",
+      },
+    },
   },
   EST: {
     continent: "europe",
@@ -2366,6 +3014,18 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     formerSovereigns: ["soviet_union"],
     sovereigntyYear: 1991,
     sovereigntyKind: "restoration",
+    sovereigntyDate: "1991-08-20",
+    currencies: ["EUR"],
+    demonyms: {
+      fr: {
+        m: "Estonien",
+        f: "Estonienne",
+      },
+      en: {
+        m: "Estonian",
+        f: "Estonian",
+      },
+    },
   },
   ETH: {
     continent: "africa",
@@ -2409,6 +3069,18 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     formerSovereigns: [],
     sovereigntyYear: null,
     sovereigntyKind: null,
+    sovereigntyDate: null,
+    currencies: ["ETB"],
+    demonyms: {
+      fr: {
+        m: "Éthiopien",
+        f: "Éthiopienne",
+      },
+      en: {
+        m: "Ethiopian",
+        f: "Ethiopian",
+      },
+    },
   },
   FIN: {
     continent: "europe",
@@ -2450,6 +3122,18 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     formerSovereigns: [],
     sovereigntyYear: 1917,
     sovereigntyKind: "independence",
+    sovereigntyDate: "1917-12-06",
+    currencies: ["EUR"],
+    demonyms: {
+      fr: {
+        m: "Finlandais",
+        f: "Finlandaise",
+      },
+      en: {
+        m: "Finnish",
+        f: "Finnish",
+      },
+    },
   },
   FJI: {
     continent: "oceania",
@@ -2491,6 +3175,18 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     formerSovereigns: ["united_kingdom"],
     sovereigntyYear: 1970,
     sovereigntyKind: "independence",
+    sovereigntyDate: "1970-10-10",
+    currencies: ["FJD"],
+    demonyms: {
+      fr: {
+        m: "Fidjien",
+        f: "Fidjienne",
+      },
+      en: {
+        m: "Fijian",
+        f: "Fijian",
+      },
+    },
   },
   FRA: {
     continent: "europe",
@@ -2551,6 +3247,18 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     formerSovereigns: [],
     sovereigntyYear: 1789,
     sovereigntyKind: "independence",
+    sovereigntyDate: "1789-07-14",
+    currencies: ["EUR"],
+    demonyms: {
+      fr: {
+        m: "Français",
+        f: "Française",
+      },
+      en: {
+        m: "French",
+        f: "French",
+      },
+    },
   },
   FSM: {
     continent: "oceania",
@@ -2592,6 +3300,18 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     formerSovereigns: ["united_states"],
     sovereigntyYear: 1986,
     sovereigntyKind: "independence",
+    sovereigntyDate: "1986-11-03",
+    currencies: ["USD"],
+    demonyms: {
+      fr: {
+        m: "Micronésien",
+        f: "Micronésienne",
+      },
+      en: {
+        m: "Micronesian",
+        f: "Micronesian",
+      },
+    },
   },
   GAB: {
     continent: "africa",
@@ -2633,6 +3353,18 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     formerSovereigns: ["france"],
     sovereigntyYear: 1960,
     sovereigntyKind: "independence",
+    sovereigntyDate: "1960-08-17",
+    currencies: ["XAF"],
+    demonyms: {
+      fr: {
+        m: "Gabonais",
+        f: "Gabonaise",
+      },
+      en: {
+        m: "Gabonese",
+        f: "Gabonese",
+      },
+    },
   },
   GBR: {
     continent: "europe",
@@ -2674,6 +3406,18 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     formerSovereigns: [],
     sovereigntyYear: 1284,
     sovereigntyKind: "independence",
+    sovereigntyDate: "1284-03-03",
+    currencies: ["GBP"],
+    demonyms: {
+      fr: {
+        m: "Britannique",
+        f: "Britannique",
+      },
+      en: {
+        m: "British",
+        f: "British",
+      },
+    },
   },
   GEO: {
     continent: "asia",
@@ -2715,6 +3459,18 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     formerSovereigns: ["soviet_union"],
     sovereigntyYear: 1991,
     sovereigntyKind: "independence",
+    sovereigntyDate: "1991-04-09",
+    currencies: ["GEL"],
+    demonyms: {
+      fr: {
+        m: "Géorgien",
+        f: "Géorgienne",
+      },
+      en: {
+        m: "Georgian",
+        f: "Georgian",
+      },
+    },
   },
   GHA: {
     continent: "africa",
@@ -2758,6 +3514,18 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     formerSovereigns: ["united_kingdom"],
     sovereigntyYear: 1957,
     sovereigntyKind: "independence",
+    sovereigntyDate: "1957-03-06",
+    currencies: ["GHS"],
+    demonyms: {
+      fr: {
+        m: "Ghanéen",
+        f: "Ghanéenne",
+      },
+      en: {
+        m: "Ghanaian",
+        f: "Ghanaian",
+      },
+    },
   },
   GIN: {
     continent: "africa",
@@ -2799,6 +3567,18 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     formerSovereigns: ["france"],
     sovereigntyYear: 1958,
     sovereigntyKind: "independence",
+    sovereigntyDate: "1958-10-02",
+    currencies: ["GNF"],
+    demonyms: {
+      fr: {
+        m: "Guinéen",
+        f: "Guinéenne",
+      },
+      en: {
+        m: "Guinean",
+        f: "Guinean",
+      },
+    },
   },
   GMB: {
     continent: "africa",
@@ -2840,6 +3620,18 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     formerSovereigns: ["united_kingdom"],
     sovereigntyYear: 1965,
     sovereigntyKind: "independence",
+    sovereigntyDate: "1965-02-18",
+    currencies: ["GMD"],
+    demonyms: {
+      fr: {
+        m: "Gambien",
+        f: "Gambienne",
+      },
+      en: {
+        m: "Gambian",
+        f: "Gambian",
+      },
+    },
   },
   GNB: {
     continent: "africa",
@@ -2881,6 +3673,18 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     formerSovereigns: ["portugal"],
     sovereigntyYear: 1973,
     sovereigntyKind: "independence",
+    sovereigntyDate: "1973-09-24",
+    currencies: ["XOF"],
+    demonyms: {
+      fr: {
+        m: "Bissau-Guinéen",
+        f: "Bissau-Guinéenne",
+      },
+      en: {
+        m: "Guinea-Bissauan",
+        f: "Guinea-Bissauan",
+      },
+    },
   },
   GNQ: {
     continent: "africa",
@@ -2922,6 +3726,18 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     formerSovereigns: ["spain"],
     sovereigntyYear: 1968,
     sovereigntyKind: "independence",
+    sovereigntyDate: "1968-10-12",
+    currencies: ["XAF"],
+    demonyms: {
+      fr: {
+        m: "Équato-Guinéen",
+        f: "Équato-Guinéenne",
+      },
+      en: {
+        m: "Equatorial Guinean",
+        f: "Equatorial Guinean",
+      },
+    },
   },
   GRC: {
     continent: "europe",
@@ -2963,6 +3779,18 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     formerSovereigns: [],
     sovereigntyYear: 1830,
     sovereigntyKind: "independence",
+    sovereigntyDate: "1830-02-03",
+    currencies: ["EUR"],
+    demonyms: {
+      fr: {
+        m: "Grec",
+        f: "Grecque",
+      },
+      en: {
+        m: "Greek",
+        f: "Greek",
+      },
+    },
   },
   GRD: {
     continent: "north_america",
@@ -3004,6 +3832,18 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     formerSovereigns: ["united_kingdom"],
     sovereigntyYear: 1974,
     sovereigntyKind: "independence",
+    sovereigntyDate: "1974-02-07",
+    currencies: ["XCD"],
+    demonyms: {
+      fr: {
+        m: "Grenadien",
+        f: "Grenadienne",
+      },
+      en: {
+        m: "Grenadian",
+        f: "Grenadian",
+      },
+    },
   },
   GTM: {
     continent: "north_america",
@@ -3045,6 +3885,18 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     formerSovereigns: ["spain"],
     sovereigntyYear: 1821,
     sovereigntyKind: "independence",
+    sovereigntyDate: "1821-09-15",
+    currencies: ["GTQ"],
+    demonyms: {
+      fr: {
+        m: "Guatémaltèque",
+        f: "Guatémaltèque",
+      },
+      en: {
+        m: "Guatemalan",
+        f: "Guatemalan",
+      },
+    },
   },
   GUY: {
     continent: "south_america",
@@ -3086,6 +3938,18 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     formerSovereigns: ["united_kingdom"],
     sovereigntyYear: 1966,
     sovereigntyKind: "independence",
+    sovereigntyDate: "1966-05-26",
+    currencies: ["GYD"],
+    demonyms: {
+      fr: {
+        m: "Guyanien",
+        f: "Guyanienne",
+      },
+      en: {
+        m: "Guyanese",
+        f: "Guyanese",
+      },
+    },
   },
   HND: {
     continent: "north_america",
@@ -3129,6 +3993,18 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     formerSovereigns: ["spain"],
     sovereigntyYear: 1821,
     sovereigntyKind: "independence",
+    sovereigntyDate: "1821-09-15",
+    currencies: ["HNL"],
+    demonyms: {
+      fr: {
+        m: "Hondurien",
+        f: "Hondurienne",
+      },
+      en: {
+        m: "Honduran",
+        f: "Honduran",
+      },
+    },
   },
   HRV: {
     continent: "europe",
@@ -3170,6 +4046,18 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     formerSovereigns: ["yugoslavia"],
     sovereigntyYear: 1991,
     sovereigntyKind: "independence",
+    sovereigntyDate: "1991-06-25",
+    currencies: ["EUR"],
+    demonyms: {
+      fr: {
+        m: "Croate",
+        f: "Croate",
+      },
+      en: {
+        m: "Croatian",
+        f: "Croatian",
+      },
+    },
   },
   HTI: {
     continent: "north_america",
@@ -3211,6 +4099,18 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     formerSovereigns: ["france"],
     sovereigntyYear: 1804,
     sovereigntyKind: "independence",
+    sovereigntyDate: "1804-01-01",
+    currencies: ["HTG"],
+    demonyms: {
+      fr: {
+        m: "Haïtien",
+        f: "Haïtienne",
+      },
+      en: {
+        m: "Haitian",
+        f: "Haitian",
+      },
+    },
   },
   HUN: {
     continent: "europe",
@@ -3252,6 +4152,18 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     formerSovereigns: [],
     sovereigntyYear: 1918,
     sovereigntyKind: "foundation",
+    sovereigntyDate: "1918-11-16",
+    currencies: ["HUF"],
+    demonyms: {
+      fr: {
+        m: "Hongrois",
+        f: "Hongroise",
+      },
+      en: {
+        m: "Hungarian",
+        f: "Hungarian",
+      },
+    },
   },
   IDN: {
     continent: "asia",
@@ -3303,6 +4215,18 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     formerSovereigns: ["netherlands"],
     sovereigntyYear: 1945,
     sovereigntyKind: "independence",
+    sovereigntyDate: "1945-08-17",
+    currencies: ["IDR"],
+    demonyms: {
+      fr: {
+        m: "Indonésien",
+        f: "Indonésienne",
+      },
+      en: {
+        m: "Indonesian",
+        f: "Indonesian",
+      },
+    },
   },
   IND: {
     continent: "asia",
@@ -3353,6 +4277,18 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     formerSovereigns: ["united_kingdom"],
     sovereigntyYear: 1947,
     sovereigntyKind: "independence",
+    sovereigntyDate: "1947-08-15",
+    currencies: ["INR"],
+    demonyms: {
+      fr: {
+        m: "Indien",
+        f: "Indienne",
+      },
+      en: {
+        m: "Indian",
+        f: "Indian",
+      },
+    },
   },
   IRL: {
     continent: "europe",
@@ -3394,6 +4330,18 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     formerSovereigns: ["united_kingdom"],
     sovereigntyYear: 1921,
     sovereigntyKind: "independence",
+    sovereigntyDate: "1921-12-06",
+    currencies: ["EUR"],
+    demonyms: {
+      fr: {
+        m: "Irlandais",
+        f: "Irlandaise",
+      },
+      en: {
+        m: "Irish",
+        f: "Irish",
+      },
+    },
   },
   IRN: {
     continent: "asia",
@@ -3438,6 +4386,18 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     formerSovereigns: [],
     sovereigntyYear: 1979,
     sovereigntyKind: "unification",
+    sovereigntyDate: "1979-04-01",
+    currencies: ["IRR"],
+    demonyms: {
+      fr: {
+        m: "Iranien",
+        f: "Iranienne",
+      },
+      en: {
+        m: "Iranian",
+        f: "Iranian",
+      },
+    },
   },
   IRQ: {
     continent: "asia",
@@ -3481,6 +4441,18 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     formerSovereigns: ["united_kingdom"],
     sovereigntyYear: 1932,
     sovereigntyKind: "independence",
+    sovereigntyDate: "1932-10-03",
+    currencies: ["IQD"],
+    demonyms: {
+      fr: {
+        m: "Irakien",
+        f: "Irakienne",
+      },
+      en: {
+        m: "Iraqi",
+        f: "Iraqi",
+      },
+    },
   },
   ISL: {
     continent: "europe",
@@ -3522,6 +4494,18 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     formerSovereigns: [],
     sovereigntyYear: 1918,
     sovereigntyKind: "independence",
+    sovereigntyDate: "1918-12-01",
+    currencies: ["ISK"],
+    demonyms: {
+      fr: {
+        m: "Islandais",
+        f: "Islandaise",
+      },
+      en: {
+        m: "Icelander",
+        f: "Icelander",
+      },
+    },
   },
   ISR: {
     continent: "asia",
@@ -3563,6 +4547,18 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     formerSovereigns: ["united_kingdom"],
     sovereigntyYear: 1948,
     sovereigntyKind: "foundation",
+    sovereigntyDate: "1948-05-14",
+    currencies: ["ILS"],
+    demonyms: {
+      fr: {
+        m: "Israélien",
+        f: "Israélienne",
+      },
+      en: {
+        m: "Israeli",
+        f: "Israeli",
+      },
+    },
   },
   ITA: {
     continent: "europe",
@@ -3604,6 +4600,18 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     formerSovereigns: [],
     sovereigntyYear: 1861,
     sovereigntyKind: "foundation",
+    sovereigntyDate: "1861-03-17",
+    currencies: ["EUR"],
+    demonyms: {
+      fr: {
+        m: "Italien",
+        f: "Italienne",
+      },
+      en: {
+        m: "Italian",
+        f: "Italian",
+      },
+    },
   },
   JAM: {
     continent: "north_america",
@@ -3645,6 +4653,18 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     formerSovereigns: ["united_kingdom"],
     sovereigntyYear: 1962,
     sovereigntyKind: "independence",
+    sovereigntyDate: "1962-08-06",
+    currencies: ["JMD"],
+    demonyms: {
+      fr: {
+        m: "Jamaïcain",
+        f: "Jamaïcaine",
+      },
+      en: {
+        m: "Jamaican",
+        f: "Jamaican",
+      },
+    },
   },
   JOR: {
     continent: "asia",
@@ -3686,6 +4706,18 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     formerSovereigns: ["united_kingdom"],
     sovereigntyYear: 1946,
     sovereigntyKind: "independence",
+    sovereigntyDate: "1946-05-25",
+    currencies: ["JOD"],
+    demonyms: {
+      fr: {
+        m: "Jordanien",
+        f: "Jordanienne",
+      },
+      en: {
+        m: "Jordanian",
+        f: "Jordanian",
+      },
+    },
   },
   JPN: {
     continent: "asia",
@@ -3727,6 +4759,18 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     formerSovereigns: [],
     sovereigntyYear: 1947,
     sovereigntyKind: "foundation",
+    sovereigntyDate: "1947-05-03",
+    currencies: ["JPY"],
+    demonyms: {
+      fr: {
+        m: "Japonais",
+        f: "Japonaise",
+      },
+      en: {
+        m: "Japanese",
+        f: "Japanese",
+      },
+    },
   },
   KAZ: {
     continent: "asia",
@@ -3770,6 +4814,18 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     formerSovereigns: ["soviet_union"],
     sovereigntyYear: 1991,
     sovereigntyKind: "independence",
+    sovereigntyDate: "1991-12-16",
+    currencies: ["KZT"],
+    demonyms: {
+      fr: {
+        m: "Kazakhstanais",
+        f: "Kazakhstanaise",
+      },
+      en: {
+        m: "Kazakhstani",
+        f: "Kazakhstani",
+      },
+    },
   },
   KEN: {
     continent: "africa",
@@ -3816,6 +4872,18 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     formerSovereigns: ["united_kingdom"],
     sovereigntyYear: 1963,
     sovereigntyKind: "independence",
+    sovereigntyDate: "1963-12-12",
+    currencies: ["KES"],
+    demonyms: {
+      fr: {
+        m: "Kényan",
+        f: "Kényane",
+      },
+      en: {
+        m: "Kenyan",
+        f: "Kenyan",
+      },
+    },
   },
   KGZ: {
     continent: "asia",
@@ -3857,6 +4925,18 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     formerSovereigns: ["soviet_union"],
     sovereigntyYear: 1991,
     sovereigntyKind: "independence",
+    sovereigntyDate: "1991-08-31",
+    currencies: ["KGS"],
+    demonyms: {
+      fr: {
+        m: "Kirghize",
+        f: "Kirghize",
+      },
+      en: {
+        m: "Kirghiz",
+        f: "Kirghiz",
+      },
+    },
   },
   KHM: {
     continent: "asia",
@@ -3900,6 +4980,18 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     formerSovereigns: ["france"],
     sovereigntyYear: 1953,
     sovereigntyKind: "independence",
+    sovereigntyDate: "1953-11-09",
+    currencies: ["KHR", "USD"],
+    demonyms: {
+      fr: {
+        m: "Cambodgien",
+        f: "Cambodgienne",
+      },
+      en: {
+        m: "Cambodian",
+        f: "Cambodian",
+      },
+    },
   },
   KIR: {
     continent: "oceania",
@@ -3941,6 +5033,18 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     formerSovereigns: ["united_kingdom"],
     sovereigntyYear: 1979,
     sovereigntyKind: "independence",
+    sovereigntyDate: "1979-07-12",
+    currencies: ["AUD"],
+    demonyms: {
+      fr: {
+        m: "Kiribatien",
+        f: "Kiribatienne",
+      },
+      en: {
+        m: "I-Kiribati",
+        f: "I-Kiribati",
+      },
+    },
   },
   KNA: {
     continent: "north_america",
@@ -3982,6 +5086,18 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     formerSovereigns: ["united_kingdom"],
     sovereigntyYear: 1983,
     sovereigntyKind: "independence",
+    sovereigntyDate: "1983-09-19",
+    currencies: ["XCD"],
+    demonyms: {
+      fr: {
+        m: "Kittitien-et-Névicien",
+        f: "Kittitienne-et-Névicienne",
+      },
+      en: {
+        m: "Kittitian or Nevisian",
+        f: "Kittitian or Nevisian",
+      },
+    },
   },
   KOR: {
     continent: "asia",
@@ -4023,6 +5139,18 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     formerSovereigns: [],
     sovereigntyYear: 1945,
     sovereigntyKind: "independence",
+    sovereigntyDate: "1945-08-15",
+    currencies: ["KRW"],
+    demonyms: {
+      fr: {
+        m: "Sud-Coréen",
+        f: "Sud-Coréenne",
+      },
+      en: {
+        m: "South Korean",
+        f: "South Korean",
+      },
+    },
   },
   KWT: {
     continent: "asia",
@@ -4066,6 +5194,18 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     formerSovereigns: ["united_kingdom"],
     sovereigntyYear: 1961,
     sovereigntyKind: "independence",
+    sovereigntyDate: "1961-06-19",
+    currencies: ["KWD"],
+    demonyms: {
+      fr: {
+        m: "Koweïtien",
+        f: "Koweïtienne",
+      },
+      en: {
+        m: "Kuwaiti",
+        f: "Kuwaiti",
+      },
+    },
   },
   LAO: {
     continent: "asia",
@@ -4107,6 +5247,18 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     formerSovereigns: ["france"],
     sovereigntyYear: 1949,
     sovereigntyKind: "independence",
+    sovereigntyDate: "1949-07-19",
+    currencies: ["LAK"],
+    demonyms: {
+      fr: {
+        m: "Laotien",
+        f: "Laotienne",
+      },
+      en: {
+        m: "Laotian",
+        f: "Laotian",
+      },
+    },
   },
   LBN: {
     continent: "asia",
@@ -4148,6 +5300,18 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     formerSovereigns: ["france"],
     sovereigntyYear: 1943,
     sovereigntyKind: "independence",
+    sovereigntyDate: "1943-11-22",
+    currencies: ["LBP"],
+    demonyms: {
+      fr: {
+        m: "Libanais",
+        f: "Libanaise",
+      },
+      en: {
+        m: "Lebanese",
+        f: "Lebanese",
+      },
+    },
   },
   LBR: {
     continent: "africa",
@@ -4189,6 +5353,18 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     formerSovereigns: [],
     sovereigntyYear: 1847,
     sovereigntyKind: "foundation",
+    sovereigntyDate: "1847-07-26",
+    currencies: ["LRD"],
+    demonyms: {
+      fr: {
+        m: "Libérien",
+        f: "Libérienne",
+      },
+      en: {
+        m: "Liberian",
+        f: "Liberian",
+      },
+    },
   },
   LBY: {
     continent: "africa",
@@ -4232,6 +5408,18 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     formerSovereigns: [],
     sovereigntyYear: 1951,
     sovereigntyKind: "independence",
+    sovereigntyDate: "1951-12-24",
+    currencies: ["LYD"],
+    demonyms: {
+      fr: {
+        m: "Libyen",
+        f: "Libyenne",
+      },
+      en: {
+        m: "Libyan",
+        f: "Libyan",
+      },
+    },
   },
   LCA: {
     continent: "north_america",
@@ -4273,6 +5461,18 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     formerSovereigns: ["united_kingdom"],
     sovereigntyYear: 1979,
     sovereigntyKind: "independence",
+    sovereigntyDate: "1979-02-22",
+    currencies: ["XCD"],
+    demonyms: {
+      fr: {
+        m: "Saint-Lucien",
+        f: "Saint-Lucienne",
+      },
+      en: {
+        m: "Saint Lucian",
+        f: "Saint Lucian",
+      },
+    },
   },
   LIE: {
     continent: "europe",
@@ -4314,6 +5514,18 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     formerSovereigns: [],
     sovereigntyYear: 1719,
     sovereigntyKind: "independence",
+    sovereigntyDate: "1719-01-23",
+    currencies: ["CHF"],
+    demonyms: {
+      fr: {
+        m: "Liechtensteinois",
+        f: "Liechtensteinoise",
+      },
+      en: {
+        m: "Liechtensteiner",
+        f: "Liechtensteiner",
+      },
+    },
   },
   LKA: {
     continent: "asia",
@@ -4355,6 +5567,18 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     formerSovereigns: ["united_kingdom"],
     sovereigntyYear: 1948,
     sovereigntyKind: "independence",
+    sovereigntyDate: "1948-02-04",
+    currencies: ["LKR"],
+    demonyms: {
+      fr: {
+        m: "Sri-Lankais",
+        f: "Sri-Lankaise",
+      },
+      en: {
+        m: "Sri Lankan",
+        f: "Sri Lankan",
+      },
+    },
   },
   LSO: {
     continent: "africa",
@@ -4396,6 +5620,18 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     formerSovereigns: ["united_kingdom"],
     sovereigntyYear: 1966,
     sovereigntyKind: "independence",
+    sovereigntyDate: "1966-10-04",
+    currencies: ["LSL", "ZAR"],
+    demonyms: {
+      fr: {
+        m: "Lésothien",
+        f: "Lésothienne",
+      },
+      en: {
+        m: "Mosotho",
+        f: "Mosotho",
+      },
+    },
   },
   LTU: {
     continent: "europe",
@@ -4437,6 +5673,18 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     formerSovereigns: ["soviet_union"],
     sovereigntyYear: 1990,
     sovereigntyKind: "restoration",
+    sovereigntyDate: "1990-03-11",
+    currencies: ["EUR"],
+    demonyms: {
+      fr: {
+        m: "Lituanien",
+        f: "Lituanienne",
+      },
+      en: {
+        m: "Lithuanian",
+        f: "Lithuanian",
+      },
+    },
   },
   LUX: {
     continent: "europe",
@@ -4478,6 +5726,18 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     formerSovereigns: ["netherlands"],
     sovereigntyYear: 1839,
     sovereigntyKind: "independence",
+    sovereigntyDate: null,
+    currencies: ["EUR"],
+    demonyms: {
+      fr: {
+        m: "Luxembourgeois",
+        f: "Luxembourgeoise",
+      },
+      en: {
+        m: "Luxembourger",
+        f: "Luxembourger",
+      },
+    },
   },
   LVA: {
     continent: "europe",
@@ -4517,8 +5777,20 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     productionRanks: {},
     coalElectricityShare: 0,
     formerSovereigns: ["soviet_union"],
-    sovereigntyYear: 1991,
+    sovereigntyYear: 1990,
     sovereigntyKind: "restoration",
+    sovereigntyDate: "1990-05-04",
+    currencies: ["EUR"],
+    demonyms: {
+      fr: {
+        m: "Letton",
+        f: "Lettone",
+      },
+      en: {
+        m: "Latvian",
+        f: "Latvian",
+      },
+    },
   },
   MAR: {
     continent: "africa",
@@ -4560,6 +5832,18 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     formerSovereigns: ["france"],
     sovereigntyYear: 1956,
     sovereigntyKind: "independence",
+    sovereigntyDate: "1956-03-02",
+    currencies: ["MAD"],
+    demonyms: {
+      fr: {
+        m: "Marocain",
+        f: "Marocaine",
+      },
+      en: {
+        m: "Moroccan",
+        f: "Moroccan",
+      },
+    },
   },
   MCO: {
     continent: "europe",
@@ -4601,6 +5885,18 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     formerSovereigns: [],
     sovereigntyYear: 1419,
     sovereigntyKind: "foundation",
+    sovereigntyDate: null,
+    currencies: ["EUR"],
+    demonyms: {
+      fr: {
+        m: "Monégasque",
+        f: "Monégasque",
+      },
+      en: {
+        m: "Monegasque",
+        f: "Monegasque",
+      },
+    },
   },
   MDA: {
     continent: "europe",
@@ -4642,6 +5938,18 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     formerSovereigns: ["soviet_union"],
     sovereigntyYear: 1991,
     sovereigntyKind: "independence",
+    sovereigntyDate: "1991-08-27",
+    currencies: ["MDL"],
+    demonyms: {
+      fr: {
+        m: "Moldave",
+        f: "Moldave",
+      },
+      en: {
+        m: "Moldovan",
+        f: "Moldovan",
+      },
+    },
   },
   MDG: {
     continent: "africa",
@@ -4683,6 +5991,18 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     formerSovereigns: ["france"],
     sovereigntyYear: 1960,
     sovereigntyKind: "independence",
+    sovereigntyDate: "1960-06-26",
+    currencies: ["MGA"],
+    demonyms: {
+      fr: {
+        m: "Malgache",
+        f: "Malgache",
+      },
+      en: {
+        m: "Malagasy",
+        f: "Malagasy",
+      },
+    },
   },
   MDV: {
     continent: "asia",
@@ -4724,6 +6044,18 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     formerSovereigns: ["united_kingdom"],
     sovereigntyYear: 1965,
     sovereigntyKind: "independence",
+    sovereigntyDate: "1965-07-26",
+    currencies: ["MVR"],
+    demonyms: {
+      fr: {
+        m: "Maldivien",
+        f: "Maldivienne",
+      },
+      en: {
+        m: "Maldivan",
+        f: "Maldivan",
+      },
+    },
   },
   MEX: {
     continent: "north_america",
@@ -4775,6 +6107,18 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     formerSovereigns: ["spain"],
     sovereigntyYear: 1810,
     sovereigntyKind: "independence",
+    sovereigntyDate: "1810-09-16",
+    currencies: ["MXN"],
+    demonyms: {
+      fr: {
+        m: "Mexicain",
+        f: "Mexicaine",
+      },
+      en: {
+        m: "Mexican",
+        f: "Mexican",
+      },
+    },
   },
   MHL: {
     continent: "oceania",
@@ -4816,6 +6160,18 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     formerSovereigns: ["united_states"],
     sovereigntyYear: 1986,
     sovereigntyKind: "independence",
+    sovereigntyDate: "1986-10-21",
+    currencies: ["USD"],
+    demonyms: {
+      fr: {
+        m: "Marshallais",
+        f: "Marshallaise",
+      },
+      en: {
+        m: "Marshallese",
+        f: "Marshallese",
+      },
+    },
   },
   MKD: {
     continent: "europe",
@@ -4857,6 +6213,18 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     formerSovereigns: ["yugoslavia"],
     sovereigntyYear: 1991,
     sovereigntyKind: "independence",
+    sovereigntyDate: "1991-09-08",
+    currencies: ["MKD"],
+    demonyms: {
+      fr: {
+        m: "Macédonien",
+        f: "Macédonienne",
+      },
+      en: {
+        m: "Macedonian",
+        f: "Macedonian",
+      },
+    },
   },
   MLI: {
     continent: "africa",
@@ -4898,6 +6266,18 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     formerSovereigns: ["france"],
     sovereigntyYear: 1960,
     sovereigntyKind: "independence",
+    sovereigntyDate: "1960-09-22",
+    currencies: ["XOF"],
+    demonyms: {
+      fr: {
+        m: "Malien",
+        f: "Malienne",
+      },
+      en: {
+        m: "Malian",
+        f: "Malian",
+      },
+    },
   },
   MLT: {
     continent: "europe",
@@ -4939,6 +6319,18 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     formerSovereigns: ["united_kingdom"],
     sovereigntyYear: 1964,
     sovereigntyKind: "independence",
+    sovereigntyDate: "1964-09-21",
+    currencies: ["EUR"],
+    demonyms: {
+      fr: {
+        m: "Maltais",
+        f: "Maltaise",
+      },
+      en: {
+        m: "Maltese",
+        f: "Maltese",
+      },
+    },
   },
   MMR: {
     continent: "asia",
@@ -4982,6 +6374,18 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     formerSovereigns: ["united_kingdom"],
     sovereigntyYear: 1948,
     sovereigntyKind: "independence",
+    sovereigntyDate: "1948-01-04",
+    currencies: ["MMK"],
+    demonyms: {
+      fr: {
+        m: "Birman",
+        f: "Birmane",
+      },
+      en: {
+        m: "Burmese",
+        f: "Burmese",
+      },
+    },
   },
   MNE: {
     continent: "europe",
@@ -5023,6 +6427,18 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     formerSovereigns: [],
     sovereigntyYear: 2006,
     sovereigntyKind: "independence",
+    sovereigntyDate: "2006-06-03",
+    currencies: ["EUR"],
+    demonyms: {
+      fr: {
+        m: "Monténégrin",
+        f: "Monténégrine",
+      },
+      en: {
+        m: "Montenegrin",
+        f: "Montenegrin",
+      },
+    },
   },
   MNG: {
     continent: "asia",
@@ -5064,6 +6480,18 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     formerSovereigns: [],
     sovereigntyYear: 1911,
     sovereigntyKind: "independence",
+    sovereigntyDate: "1911-12-29",
+    currencies: ["MNT"],
+    demonyms: {
+      fr: {
+        m: "Mongol",
+        f: "Mongole",
+      },
+      en: {
+        m: "Mongolian",
+        f: "Mongolian",
+      },
+    },
   },
   MOZ: {
     continent: "africa",
@@ -5105,6 +6533,18 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     formerSovereigns: ["portugal"],
     sovereigntyYear: 1975,
     sovereigntyKind: "independence",
+    sovereigntyDate: "1975-06-25",
+    currencies: ["MZN"],
+    demonyms: {
+      fr: {
+        m: "Mozambicain",
+        f: "Mozambicaine",
+      },
+      en: {
+        m: "Mozambican",
+        f: "Mozambican",
+      },
+    },
   },
   MRT: {
     continent: "africa",
@@ -5146,6 +6586,18 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     formerSovereigns: ["france"],
     sovereigntyYear: 1960,
     sovereigntyKind: "independence",
+    sovereigntyDate: "1960-11-28",
+    currencies: ["MRU"],
+    demonyms: {
+      fr: {
+        m: "Mauritanien",
+        f: "Mauritanienne",
+      },
+      en: {
+        m: "Mauritanian",
+        f: "Mauritanian",
+      },
+    },
   },
   MUS: {
     continent: "africa",
@@ -5187,6 +6639,18 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     formerSovereigns: ["united_kingdom"],
     sovereigntyYear: 1968,
     sovereigntyKind: "independence",
+    sovereigntyDate: "1968-03-12",
+    currencies: ["MUR"],
+    demonyms: {
+      fr: {
+        m: "Mauricien",
+        f: "Mauricienne",
+      },
+      en: {
+        m: "Mauritian",
+        f: "Mauritian",
+      },
+    },
   },
   MWI: {
     continent: "africa",
@@ -5228,6 +6692,18 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     formerSovereigns: ["united_kingdom"],
     sovereigntyYear: 1964,
     sovereigntyKind: "independence",
+    sovereigntyDate: "1964-07-06",
+    currencies: ["MWK"],
+    demonyms: {
+      fr: {
+        m: "Malawien",
+        f: "Malawienne",
+      },
+      en: {
+        m: "Malawian",
+        f: "Malawian",
+      },
+    },
   },
   MYS: {
     continent: "asia",
@@ -5271,6 +6747,18 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     formerSovereigns: ["united_kingdom"],
     sovereigntyYear: 1957,
     sovereigntyKind: "independence",
+    sovereigntyDate: "1957-08-31",
+    currencies: ["MYR"],
+    demonyms: {
+      fr: {
+        m: "Malaisien",
+        f: "Malaisienne",
+      },
+      en: {
+        m: "Malaysian",
+        f: "Malaysian",
+      },
+    },
   },
   NAM: {
     continent: "africa",
@@ -5322,6 +6810,18 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     formerSovereigns: [],
     sovereigntyYear: 1990,
     sovereigntyKind: "independence",
+    sovereigntyDate: "1990-03-21",
+    currencies: ["NAD", "ZAR"],
+    demonyms: {
+      fr: {
+        m: "Namibien",
+        f: "Namibienne",
+      },
+      en: {
+        m: "Namibian",
+        f: "Namibian",
+      },
+    },
   },
   NER: {
     continent: "africa",
@@ -5363,6 +6863,18 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     formerSovereigns: ["france"],
     sovereigntyYear: 1960,
     sovereigntyKind: "independence",
+    sovereigntyDate: "1960-08-03",
+    currencies: ["XOF"],
+    demonyms: {
+      fr: {
+        m: "Nigérien",
+        f: "Nigérienne",
+      },
+      en: {
+        m: "Nigerien",
+        f: "Nigerien",
+      },
+    },
   },
   NGA: {
     continent: "africa",
@@ -5407,6 +6919,18 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     formerSovereigns: ["united_kingdom"],
     sovereigntyYear: 1960,
     sovereigntyKind: "independence",
+    sovereigntyDate: "1960-10-01",
+    currencies: ["NGN"],
+    demonyms: {
+      fr: {
+        m: "Nigérian",
+        f: "Nigériane",
+      },
+      en: {
+        m: "Nigerian",
+        f: "Nigerian",
+      },
+    },
   },
   NIC: {
     continent: "north_america",
@@ -5448,6 +6972,18 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     formerSovereigns: ["spain"],
     sovereigntyYear: 1821,
     sovereigntyKind: "independence",
+    sovereigntyDate: "1821-09-15",
+    currencies: ["NIO"],
+    demonyms: {
+      fr: {
+        m: "Nicaraguayen",
+        f: "Nicaraguayenne",
+      },
+      en: {
+        m: "Nicaraguan",
+        f: "Nicaraguan",
+      },
+    },
   },
   NLD: {
     continent: "europe",
@@ -5489,6 +7025,18 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     formerSovereigns: [],
     sovereigntyYear: 1581,
     sovereigntyKind: "foundation",
+    sovereigntyDate: "1581-07-26",
+    currencies: ["EUR"],
+    demonyms: {
+      fr: {
+        m: "Néerlandais",
+        f: "Néerlandaise",
+      },
+      en: {
+        m: "Dutch",
+        f: "Dutch",
+      },
+    },
   },
   NOR: {
     continent: "europe",
@@ -5533,6 +7081,18 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     formerSovereigns: [],
     sovereigntyYear: 1905,
     sovereigntyKind: "unification",
+    sovereigntyDate: "1905-06-07",
+    currencies: ["NOK"],
+    demonyms: {
+      fr: {
+        m: "Norvégien",
+        f: "Norvégienne",
+      },
+      en: {
+        m: "Norwegian",
+        f: "Norwegian",
+      },
+    },
   },
   NPL: {
     continent: "asia",
@@ -5574,6 +7134,18 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     formerSovereigns: [],
     sovereigntyYear: 1768,
     sovereigntyKind: "foundation",
+    sovereigntyDate: null,
+    currencies: ["NPR"],
+    demonyms: {
+      fr: {
+        m: "Népalais",
+        f: "Népalaise",
+      },
+      en: {
+        m: "Nepalese",
+        f: "Nepalese",
+      },
+    },
   },
   NRU: {
     continent: "oceania",
@@ -5615,6 +7187,18 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     formerSovereigns: ["united_kingdom"],
     sovereigntyYear: 1968,
     sovereigntyKind: "independence",
+    sovereigntyDate: "1968-01-31",
+    currencies: ["AUD"],
+    demonyms: {
+      fr: {
+        m: "Nauruan",
+        f: "Nauruane",
+      },
+      en: {
+        m: "Nauruan",
+        f: "Nauruan",
+      },
+    },
   },
   NZL: {
     continent: "oceania",
@@ -5656,6 +7240,18 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     formerSovereigns: ["united_kingdom"],
     sovereigntyYear: 1907,
     sovereigntyKind: "independence",
+    sovereigntyDate: "1907-09-26",
+    currencies: ["NZD"],
+    demonyms: {
+      fr: {
+        m: "Néo-Zélandais",
+        f: "Néo-Zélandaise",
+      },
+      en: {
+        m: "New Zealander",
+        f: "New Zealander",
+      },
+    },
   },
   OMN: {
     continent: "asia",
@@ -5697,6 +7293,18 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     formerSovereigns: [],
     sovereigntyYear: 1650,
     sovereigntyKind: "foundation",
+    sovereigntyDate: null,
+    currencies: ["OMR"],
+    demonyms: {
+      fr: {
+        m: "Omanais",
+        f: "Omanaise",
+      },
+      en: {
+        m: "Omani",
+        f: "Omani",
+      },
+    },
   },
   PAK: {
     continent: "asia",
@@ -5741,6 +7349,18 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     formerSovereigns: ["united_kingdom"],
     sovereigntyYear: 1947,
     sovereigntyKind: "independence",
+    sovereigntyDate: "1947-08-14",
+    currencies: ["PKR"],
+    demonyms: {
+      fr: {
+        m: "Pakistanais",
+        f: "Pakistanaise",
+      },
+      en: {
+        m: "Pakistani",
+        f: "Pakistani",
+      },
+    },
   },
   PAN: {
     continent: "north_america",
@@ -5782,6 +7402,18 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     formerSovereigns: ["spain"],
     sovereigntyYear: 1903,
     sovereigntyKind: "independence",
+    sovereigntyDate: "1903-11-03",
+    currencies: ["PAB", "USD"],
+    demonyms: {
+      fr: {
+        m: "Panaméen",
+        f: "Panaméenne",
+      },
+      en: {
+        m: "Panamanian",
+        f: "Panamanian",
+      },
+    },
   },
   PER: {
     continent: "south_america",
@@ -5831,6 +7463,18 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     formerSovereigns: ["spain"],
     sovereigntyYear: 1821,
     sovereigntyKind: "independence",
+    sovereigntyDate: "1821-07-28",
+    currencies: ["PEN"],
+    demonyms: {
+      fr: {
+        m: "Péruvien",
+        f: "Péruvienne",
+      },
+      en: {
+        m: "Peruvian",
+        f: "Peruvian",
+      },
+    },
   },
   PHL: {
     continent: "asia",
@@ -5874,6 +7518,18 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     formerSovereigns: ["united_states"],
     sovereigntyYear: 1946,
     sovereigntyKind: "independence",
+    sovereigntyDate: "1946-07-04",
+    currencies: ["PHP"],
+    demonyms: {
+      fr: {
+        m: "Philippin",
+        f: "Philippine",
+      },
+      en: {
+        m: "Filipino",
+        f: "Filipino",
+      },
+    },
   },
   PLW: {
     continent: "oceania",
@@ -5915,6 +7571,18 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     formerSovereigns: ["united_states"],
     sovereigntyYear: 1994,
     sovereigntyKind: "independence",
+    sovereigntyDate: "1994-10-01",
+    currencies: ["USD"],
+    demonyms: {
+      fr: {
+        m: "Paluan",
+        f: "Paluane",
+      },
+      en: {
+        m: "Palauan",
+        f: "Palauan",
+      },
+    },
   },
   PNG: {
     continent: "oceania",
@@ -5956,6 +7624,18 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     formerSovereigns: [],
     sovereigntyYear: 1975,
     sovereigntyKind: "independence",
+    sovereigntyDate: "1975-09-16",
+    currencies: ["PGK"],
+    demonyms: {
+      fr: {
+        m: "Papouasien",
+        f: "Papouasienne",
+      },
+      en: {
+        m: "Papua New Guinean",
+        f: "Papua New Guinean",
+      },
+    },
   },
   POL: {
     continent: "europe",
@@ -5997,6 +7677,18 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     formerSovereigns: [],
     sovereigntyYear: 1918,
     sovereigntyKind: "foundation",
+    sovereigntyDate: "1918-11-11",
+    currencies: ["PLN"],
+    demonyms: {
+      fr: {
+        m: "Polonais",
+        f: "Polonaise",
+      },
+      en: {
+        m: "Polish",
+        f: "Polish",
+      },
+    },
   },
   PRK: {
     continent: "asia",
@@ -6038,6 +7730,18 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     formerSovereigns: [],
     sovereigntyYear: 1945,
     sovereigntyKind: "independence",
+    sovereigntyDate: "1945-08-15",
+    currencies: ["KPW"],
+    demonyms: {
+      fr: {
+        m: "Nord-Coréen",
+        f: "Nord-Coréenne",
+      },
+      en: {
+        m: "North Korean",
+        f: "North Korean",
+      },
+    },
   },
   PRT: {
     continent: "europe",
@@ -6079,6 +7783,18 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     formerSovereigns: [],
     sovereigntyYear: 1640,
     sovereigntyKind: "independence",
+    sovereigntyDate: "1640-12-01",
+    currencies: ["EUR"],
+    demonyms: {
+      fr: {
+        m: "Portugais",
+        f: "Portugaise",
+      },
+      en: {
+        m: "Portuguese",
+        f: "Portuguese",
+      },
+    },
   },
   PRY: {
     continent: "south_america",
@@ -6120,6 +7836,18 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     formerSovereigns: ["spain"],
     sovereigntyYear: 1811,
     sovereigntyKind: "independence",
+    sovereigntyDate: "1811-05-15",
+    currencies: ["PYG"],
+    demonyms: {
+      fr: {
+        m: "Paraguayen",
+        f: "Paraguayenne",
+      },
+      en: {
+        m: "Paraguayan",
+        f: "Paraguayan",
+      },
+    },
   },
   PSE: {
     continent: "asia",
@@ -6171,6 +7899,18 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     formerSovereigns: [],
     sovereigntyYear: null,
     sovereigntyKind: null,
+    sovereigntyDate: null,
+    currencies: ["EGP", "ILS", "JOD"],
+    demonyms: {
+      fr: {
+        m: "Palestinien",
+        f: "Palestinienne",
+      },
+      en: {
+        m: "Palestinian",
+        f: "Palestinian",
+      },
+    },
   },
   QAT: {
     continent: "asia",
@@ -6214,6 +7954,18 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     formerSovereigns: ["united_kingdom"],
     sovereigntyYear: 1971,
     sovereigntyKind: "independence",
+    sovereigntyDate: "1971-09-03",
+    currencies: ["QAR"],
+    demonyms: {
+      fr: {
+        m: "Qatarien",
+        f: "Qatarienne",
+      },
+      en: {
+        m: "Qatari",
+        f: "Qatari",
+      },
+    },
   },
   ROU: {
     continent: "europe",
@@ -6255,6 +8007,18 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     formerSovereigns: [],
     sovereigntyYear: 1877,
     sovereigntyKind: "independence",
+    sovereigntyDate: "1877-05-09",
+    currencies: ["RON"],
+    demonyms: {
+      fr: {
+        m: "Roumain",
+        f: "Roumaine",
+      },
+      en: {
+        m: "Romanian",
+        f: "Romanian",
+      },
+    },
   },
   RUS: {
     continent: "europe",
@@ -6315,6 +8079,18 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     formerSovereigns: ["soviet_union"],
     sovereigntyYear: 1991,
     sovereigntyKind: "continuation",
+    sovereigntyDate: "1991-12-25",
+    currencies: ["RUB"],
+    demonyms: {
+      fr: {
+        m: "Russe",
+        f: "Russe",
+      },
+      en: {
+        m: "Russian",
+        f: "Russian",
+      },
+    },
   },
   RWA: {
     continent: "africa",
@@ -6356,13 +8132,25 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     formerSovereigns: ["belgium"],
     sovereigntyYear: 1962,
     sovereigntyKind: "independence",
+    sovereigntyDate: "1962-07-01",
+    currencies: ["RWF"],
+    demonyms: {
+      fr: {
+        m: "Rwandais",
+        f: "Rwandaise",
+      },
+      en: {
+        m: "Rwandan",
+        f: "Rwandan",
+      },
+    },
   },
   SAU: {
     continent: "asia",
     waterAccess: "coastal",
     borders: ["IRQ", "JOR", "KWT", "OMN", "QAT", "ARE", "YEM"],
     areaKm2: 2149690,
-    population: 33702731,
+    population: 35325004,
     officialLanguages: ["ar"],
     latitude: 25,
     subregion: "Western Asia",
@@ -6400,6 +8188,18 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     formerSovereigns: [],
     sovereigntyYear: 1932,
     sovereigntyKind: "unification",
+    sovereigntyDate: "1932-09-23",
+    currencies: ["SAR"],
+    demonyms: {
+      fr: {
+        m: "Saoudien",
+        f: "Saoudienne",
+      },
+      en: {
+        m: "Saudi Arabian",
+        f: "Saudi Arabian",
+      },
+    },
   },
   SDN: {
     continent: "africa",
@@ -6441,6 +8241,18 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     formerSovereigns: ["united_kingdom"],
     sovereigntyYear: 1956,
     sovereigntyKind: "independence",
+    sovereigntyDate: "1956-01-01",
+    currencies: ["SDG"],
+    demonyms: {
+      fr: {
+        m: "Soudanais",
+        f: "Soudanaise",
+      },
+      en: {
+        m: "Sudanese",
+        f: "Sudanese",
+      },
+    },
   },
   SEN: {
     continent: "africa",
@@ -6482,6 +8294,18 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     formerSovereigns: ["france"],
     sovereigntyYear: 1960,
     sovereigntyKind: "independence",
+    sovereigntyDate: "1960-04-04",
+    currencies: ["XOF"],
+    demonyms: {
+      fr: {
+        m: "Sénégalais",
+        f: "Sénégalaise",
+      },
+      en: {
+        m: "Senegalese",
+        f: "Senegalese",
+      },
+    },
   },
   SGP: {
     continent: "asia",
@@ -6523,6 +8347,18 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     formerSovereigns: [],
     sovereigntyYear: 1965,
     sovereigntyKind: "independence",
+    sovereigntyDate: "1965-08-09",
+    currencies: ["SGD"],
+    demonyms: {
+      fr: {
+        m: "Singapourien",
+        f: "Singapourienne",
+      },
+      en: {
+        m: "Singaporean",
+        f: "Singaporean",
+      },
+    },
   },
   SLB: {
     continent: "oceania",
@@ -6564,6 +8400,18 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     formerSovereigns: ["united_kingdom"],
     sovereigntyYear: 1978,
     sovereigntyKind: "independence",
+    sovereigntyDate: "1978-07-07",
+    currencies: ["SBD"],
+    demonyms: {
+      fr: {
+        m: "Salomonien",
+        f: "Salomonienne",
+      },
+      en: {
+        m: "Solomon Islander",
+        f: "Solomon Islander",
+      },
+    },
   },
   SLE: {
     continent: "africa",
@@ -6605,6 +8453,18 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     formerSovereigns: ["united_kingdom"],
     sovereigntyYear: 1961,
     sovereigntyKind: "independence",
+    sovereigntyDate: "1961-04-27",
+    currencies: ["SLE"],
+    demonyms: {
+      fr: {
+        m: "Sierra-Léonais",
+        f: "Sierra-Léonaise",
+      },
+      en: {
+        m: "Sierra Leonean",
+        f: "Sierra Leonean",
+      },
+    },
   },
   SLV: {
     continent: "north_america",
@@ -6646,6 +8506,18 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     formerSovereigns: ["spain"],
     sovereigntyYear: 1821,
     sovereigntyKind: "independence",
+    sovereigntyDate: "1821-09-15",
+    currencies: ["USD"],
+    demonyms: {
+      fr: {
+        m: "Salvadorien",
+        f: "Salvadorienne",
+      },
+      en: {
+        m: "Salvadoran",
+        f: "Salvadoran",
+      },
+    },
   },
   SMR: {
     continent: "europe",
@@ -6687,6 +8559,18 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     formerSovereigns: [],
     sovereigntyYear: null,
     sovereigntyKind: null,
+    sovereigntyDate: null,
+    currencies: ["EUR"],
+    demonyms: {
+      fr: {
+        m: "Saint-Marinais",
+        f: "Saint-Marinaise",
+      },
+      en: {
+        m: "Sammarinese",
+        f: "Sammarinese",
+      },
+    },
   },
   SOM: {
     continent: "africa",
@@ -6728,6 +8612,18 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     formerSovereigns: ["united_kingdom"],
     sovereigntyYear: 1960,
     sovereigntyKind: "independence",
+    sovereigntyDate: "1960-07-01",
+    currencies: ["SOS"],
+    demonyms: {
+      fr: {
+        m: "Somalien",
+        f: "Somalienne",
+      },
+      en: {
+        m: "Somali",
+        f: "Somali",
+      },
+    },
   },
   SRB: {
     continent: "europe",
@@ -6769,6 +8665,18 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     formerSovereigns: [],
     sovereigntyYear: 2006,
     sovereigntyKind: "independence",
+    sovereigntyDate: "2006-06-05",
+    currencies: ["RSD"],
+    demonyms: {
+      fr: {
+        m: "Serbe",
+        f: "Serbe",
+      },
+      en: {
+        m: "Serbian",
+        f: "Serbian",
+      },
+    },
   },
   SSD: {
     continent: "africa",
@@ -6810,6 +8718,18 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     formerSovereigns: [],
     sovereigntyYear: 2011,
     sovereigntyKind: "independence",
+    sovereigntyDate: "2011-07-09",
+    currencies: ["SSP"],
+    demonyms: {
+      fr: {
+        m: "Sud-Soudanais",
+        f: "Sud-Soudanaise",
+      },
+      en: {
+        m: "South Sudanese",
+        f: "South Sudanese",
+      },
+    },
   },
   STP: {
     continent: "africa",
@@ -6851,6 +8771,18 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     formerSovereigns: ["portugal"],
     sovereigntyYear: 1975,
     sovereigntyKind: "independence",
+    sovereigntyDate: "1975-07-12",
+    currencies: ["STN"],
+    demonyms: {
+      fr: {
+        m: "Santoméen",
+        f: "Santoméenne",
+      },
+      en: {
+        m: "Sao Tomean",
+        f: "Sao Tomean",
+      },
+    },
   },
   SUR: {
     continent: "south_america",
@@ -6892,6 +8824,18 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     formerSovereigns: ["netherlands"],
     sovereigntyYear: 1975,
     sovereigntyKind: "independence",
+    sovereigntyDate: "1975-11-25",
+    currencies: ["SRD"],
+    demonyms: {
+      fr: {
+        m: "Surinamais",
+        f: "Surinamaise",
+      },
+      en: {
+        m: "Surinamer",
+        f: "Surinamer",
+      },
+    },
   },
   SVK: {
     continent: "europe",
@@ -6933,6 +8877,18 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     formerSovereigns: [],
     sovereigntyYear: 1993,
     sovereigntyKind: "dissolution_successor",
+    sovereigntyDate: "1993-01-01",
+    currencies: ["EUR"],
+    demonyms: {
+      fr: {
+        m: "Slovaque",
+        f: "Slovaque",
+      },
+      en: {
+        m: "Slovak",
+        f: "Slovak",
+      },
+    },
   },
   SVN: {
     continent: "europe",
@@ -6974,6 +8930,18 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     formerSovereigns: ["yugoslavia"],
     sovereigntyYear: 1991,
     sovereigntyKind: "independence",
+    sovereigntyDate: "1991-06-25",
+    currencies: ["EUR"],
+    demonyms: {
+      fr: {
+        m: "Slovène",
+        f: "Slovène",
+      },
+      en: {
+        m: "Slovene",
+        f: "Slovene",
+      },
+    },
   },
   SWE: {
     continent: "europe",
@@ -7015,6 +8983,18 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     formerSovereigns: [],
     sovereigntyYear: 1523,
     sovereigntyKind: "foundation",
+    sovereigntyDate: "1523-06-06",
+    currencies: ["SEK"],
+    demonyms: {
+      fr: {
+        m: "Suédois",
+        f: "Suédoise",
+      },
+      en: {
+        m: "Swedish",
+        f: "Swedish",
+      },
+    },
   },
   SWZ: {
     continent: "africa",
@@ -7066,6 +9046,18 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     formerSovereigns: ["united_kingdom"],
     sovereigntyYear: 1968,
     sovereigntyKind: "independence",
+    sovereigntyDate: "1968-09-06",
+    currencies: ["SZL", "ZAR"],
+    demonyms: {
+      fr: {
+        m: "Swazie",
+        f: "Swazie",
+      },
+      en: {
+        m: "Swazi",
+        f: "Swazi",
+      },
+    },
   },
   SYC: {
     continent: "africa",
@@ -7107,6 +9099,18 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     formerSovereigns: ["united_kingdom"],
     sovereigntyYear: 1976,
     sovereigntyKind: "independence",
+    sovereigntyDate: "1976-06-29",
+    currencies: ["SCR"],
+    demonyms: {
+      fr: {
+        m: "Seychellois",
+        f: "Seychelloise",
+      },
+      en: {
+        m: "Seychellois",
+        f: "Seychellois",
+      },
+    },
   },
   SYR: {
     continent: "asia",
@@ -7148,6 +9152,18 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     formerSovereigns: ["france"],
     sovereigntyYear: 1946,
     sovereigntyKind: "independence",
+    sovereigntyDate: "1946-04-17",
+    currencies: ["SYP"],
+    demonyms: {
+      fr: {
+        m: "Syrien",
+        f: "Syrienne",
+      },
+      en: {
+        m: "Syrian",
+        f: "Syrian",
+      },
+    },
   },
   TCD: {
     continent: "africa",
@@ -7189,6 +9205,18 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     formerSovereigns: ["france"],
     sovereigntyYear: 1960,
     sovereigntyKind: "independence",
+    sovereigntyDate: "1960-08-11",
+    currencies: ["XAF"],
+    demonyms: {
+      fr: {
+        m: "Tchadien",
+        f: "Tchadienne",
+      },
+      en: {
+        m: "Chadian",
+        f: "Chadian",
+      },
+    },
   },
   TGO: {
     continent: "africa",
@@ -7230,6 +9258,18 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     formerSovereigns: ["france"],
     sovereigntyYear: 1960,
     sovereigntyKind: "independence",
+    sovereigntyDate: "1960-04-27",
+    currencies: ["XOF"],
+    demonyms: {
+      fr: {
+        m: "Togolais",
+        f: "Togolaise",
+      },
+      en: {
+        m: "Togolese",
+        f: "Togolese",
+      },
+    },
   },
   THA: {
     continent: "asia",
@@ -7273,6 +9313,18 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     formerSovereigns: [],
     sovereigntyYear: 1238,
     sovereigntyKind: "foundation",
+    sovereigntyDate: null,
+    currencies: ["THB"],
+    demonyms: {
+      fr: {
+        m: "Thaïlandais",
+        f: "Thaïlandaise",
+      },
+      en: {
+        m: "Thai",
+        f: "Thai",
+      },
+    },
   },
   TJK: {
     continent: "asia",
@@ -7314,6 +9366,18 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     formerSovereigns: ["soviet_union"],
     sovereigntyYear: 1991,
     sovereigntyKind: "independence",
+    sovereigntyDate: "1991-09-09",
+    currencies: ["TJS"],
+    demonyms: {
+      fr: {
+        m: "Tadjike",
+        f: "Tadjike",
+      },
+      en: {
+        m: "Tadzhik",
+        f: "Tadzhik",
+      },
+    },
   },
   TKM: {
     continent: "asia",
@@ -7357,6 +9421,18 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     formerSovereigns: ["soviet_union"],
     sovereigntyYear: 1991,
     sovereigntyKind: "independence",
+    sovereigntyDate: "1991-10-27",
+    currencies: ["TMT"],
+    demonyms: {
+      fr: {
+        m: "Turkmène",
+        f: "Turkmène",
+      },
+      en: {
+        m: "Turkmen",
+        f: "Turkmen",
+      },
+    },
   },
   TLS: {
     continent: "asia",
@@ -7398,6 +9474,18 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     formerSovereigns: ["portugal"],
     sovereigntyYear: 2002,
     sovereigntyKind: "restoration",
+    sovereigntyDate: "2002-05-20",
+    currencies: ["USD"],
+    demonyms: {
+      fr: {
+        m: "Est-Timorais",
+        f: "Est-Timoraise",
+      },
+      en: {
+        m: "East Timorese",
+        f: "East Timorese",
+      },
+    },
   },
   TON: {
     continent: "oceania",
@@ -7439,6 +9527,18 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     formerSovereigns: ["united_kingdom"],
     sovereigntyYear: 1970,
     sovereigntyKind: "independence",
+    sovereigntyDate: "1970-06-04",
+    currencies: ["TOP"],
+    demonyms: {
+      fr: {
+        m: "Tonguien",
+        f: "Tonguienne",
+      },
+      en: {
+        m: "Tongan",
+        f: "Tongan",
+      },
+    },
   },
   TTO: {
     continent: "north_america",
@@ -7480,6 +9580,18 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     formerSovereigns: ["united_kingdom"],
     sovereigntyYear: 1962,
     sovereigntyKind: "independence",
+    sovereigntyDate: "1962-08-31",
+    currencies: ["TTD"],
+    demonyms: {
+      fr: {
+        m: "Trinidadien",
+        f: "Trinidadienne",
+      },
+      en: {
+        m: "Trinidadian",
+        f: "Trinidadian",
+      },
+    },
   },
   TUN: {
     continent: "africa",
@@ -7521,6 +9633,18 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     formerSovereigns: ["france"],
     sovereigntyYear: 1956,
     sovereigntyKind: "independence",
+    sovereigntyDate: "1956-03-20",
+    currencies: ["TND"],
+    demonyms: {
+      fr: {
+        m: "Tunisien",
+        f: "Tunisienne",
+      },
+      en: {
+        m: "Tunisian",
+        f: "Tunisian",
+      },
+    },
   },
   TUR: {
     continent: "asia",
@@ -7562,6 +9686,18 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     formerSovereigns: [],
     sovereigntyYear: 1923,
     sovereigntyKind: "foundation",
+    sovereigntyDate: "1923-10-29",
+    currencies: ["TRY"],
+    demonyms: {
+      fr: {
+        m: "Turc",
+        f: "Turque",
+      },
+      en: {
+        m: "Turkish",
+        f: "Turkish",
+      },
+    },
   },
   TUV: {
     continent: "oceania",
@@ -7603,6 +9739,18 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     formerSovereigns: ["united_kingdom"],
     sovereigntyYear: 1978,
     sovereigntyKind: "independence",
+    sovereigntyDate: "1978-10-01",
+    currencies: ["AUD"],
+    demonyms: {
+      fr: {
+        m: "Tuvaluan",
+        f: "Tuvaluane",
+      },
+      en: {
+        m: "Tuvaluan",
+        f: "Tuvaluan",
+      },
+    },
   },
   TWN: {
     continent: "asia",
@@ -7644,6 +9792,18 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     formerSovereigns: [],
     sovereigntyYear: null,
     sovereigntyKind: null,
+    sovereigntyDate: null,
+    currencies: ["TWD"],
+    demonyms: {
+      fr: {
+        m: "Taïwanais",
+        f: "Taïwanaise",
+      },
+      en: {
+        m: "Taiwanese",
+        f: "Taiwanese",
+      },
+    },
   },
   TZA: {
     continent: "africa",
@@ -7685,6 +9845,18 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     formerSovereigns: ["united_kingdom"],
     sovereigntyYear: 1964,
     sovereigntyKind: "independence",
+    sovereigntyDate: "1964-04-26",
+    currencies: ["TZS"],
+    demonyms: {
+      fr: {
+        m: "Tanzanien",
+        f: "Tanzanienne",
+      },
+      en: {
+        m: "Tanzanian",
+        f: "Tanzanian",
+      },
+    },
   },
   UGA: {
     continent: "africa",
@@ -7728,6 +9900,18 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     formerSovereigns: ["united_kingdom"],
     sovereigntyYear: 1962,
     sovereigntyKind: "independence",
+    sovereigntyDate: "1962-10-09",
+    currencies: ["UGX"],
+    demonyms: {
+      fr: {
+        m: "Ougandais",
+        f: "Ougandaise",
+      },
+      en: {
+        m: "Ugandan",
+        f: "Ugandan",
+      },
+    },
   },
   UKR: {
     continent: "europe",
@@ -7771,6 +9955,18 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     formerSovereigns: ["soviet_union"],
     sovereigntyYear: 1991,
     sovereigntyKind: "independence",
+    sovereigntyDate: "1991-08-24",
+    currencies: ["UAH"],
+    demonyms: {
+      fr: {
+        m: "Ukrainien",
+        f: "Ukrainienne",
+      },
+      en: {
+        m: "Ukrainian",
+        f: "Ukrainian",
+      },
+    },
   },
   URY: {
     continent: "south_america",
@@ -7812,6 +10008,18 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     formerSovereigns: [],
     sovereigntyYear: 1825,
     sovereigntyKind: "independence",
+    sovereigntyDate: "1825-08-25",
+    currencies: ["UYU"],
+    demonyms: {
+      fr: {
+        m: "Uruguayen",
+        f: "Uruguayenne",
+      },
+      en: {
+        m: "Uruguayan",
+        f: "Uruguayan",
+      },
+    },
   },
   USA: {
     continent: "north_america",
@@ -7864,6 +10072,18 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     formerSovereigns: ["united_kingdom"],
     sovereigntyYear: 1776,
     sovereigntyKind: "independence",
+    sovereigntyDate: "1776-07-04",
+    currencies: ["USD"],
+    demonyms: {
+      fr: {
+        m: "Américain",
+        f: "Américaine",
+      },
+      en: {
+        m: "American",
+        f: "American",
+      },
+    },
   },
   UZB: {
     continent: "asia",
@@ -7905,6 +10125,18 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     formerSovereigns: ["soviet_union"],
     sovereigntyYear: 1991,
     sovereigntyKind: "independence",
+    sovereigntyDate: "1991-09-01",
+    currencies: ["UZS"],
+    demonyms: {
+      fr: {
+        m: "Ouzbèke",
+        f: "Ouzbèke",
+      },
+      en: {
+        m: "Uzbekistani",
+        f: "Uzbekistani",
+      },
+    },
   },
   VAT: {
     continent: "europe",
@@ -7946,6 +10178,18 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     formerSovereigns: [],
     sovereigntyYear: 1929,
     sovereigntyKind: "foundation",
+    sovereigntyDate: "1929-02-11",
+    currencies: ["EUR"],
+    demonyms: {
+      fr: {
+        m: "Vatican",
+        f: "Vaticane",
+      },
+      en: {
+        m: "Vatican",
+        f: "Vatican",
+      },
+    },
   },
   VCT: {
     continent: "north_america",
@@ -7987,6 +10231,18 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     formerSovereigns: ["united_kingdom"],
     sovereigntyYear: 1979,
     sovereigntyKind: "independence",
+    sovereigntyDate: "1979-10-27",
+    currencies: ["XCD"],
+    demonyms: {
+      fr: {
+        m: "Vincentais",
+        f: "Vincentaise",
+      },
+      en: {
+        m: "Saint Vincentian",
+        f: "Saint Vincentian",
+      },
+    },
   },
   VEN: {
     continent: "south_america",
@@ -8028,6 +10284,18 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     formerSovereigns: ["spain"],
     sovereigntyYear: 1811,
     sovereigntyKind: "independence",
+    sovereigntyDate: "1811-07-05",
+    currencies: ["VES"],
+    demonyms: {
+      fr: {
+        m: "Vénézuélien",
+        f: "Vénézuélienne",
+      },
+      en: {
+        m: "Venezuelan",
+        f: "Venezuelan",
+      },
+    },
   },
   VNM: {
     continent: "asia",
@@ -8072,6 +10340,18 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     formerSovereigns: ["france"],
     sovereigntyYear: 1945,
     sovereigntyKind: "independence",
+    sovereigntyDate: "1945-09-02",
+    currencies: ["VND"],
+    demonyms: {
+      fr: {
+        m: "Vietnamien",
+        f: "Vietnamienne",
+      },
+      en: {
+        m: "Vietnamese",
+        f: "Vietnamese",
+      },
+    },
   },
   VUT: {
     continent: "oceania",
@@ -8113,6 +10393,18 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     formerSovereigns: ["france", "united_kingdom"],
     sovereigntyYear: 1980,
     sovereigntyKind: "independence",
+    sovereigntyDate: "1980-07-30",
+    currencies: ["VUV"],
+    demonyms: {
+      fr: {
+        m: "Vanuatuan",
+        f: "Vanuatuane",
+      },
+      en: {
+        m: "Ni-Vanuatu",
+        f: "Ni-Vanuatu",
+      },
+    },
   },
   WSM: {
     continent: "oceania",
@@ -8154,6 +10446,18 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     formerSovereigns: [],
     sovereigntyYear: 1962,
     sovereigntyKind: "independence",
+    sovereigntyDate: "1962-01-01",
+    currencies: ["WST"],
+    demonyms: {
+      fr: {
+        m: "Samoan",
+        f: "Samoane",
+      },
+      en: {
+        m: "Samoan",
+        f: "Samoan",
+      },
+    },
   },
   XKX: {
     continent: "europe",
@@ -8195,6 +10499,18 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     formerSovereigns: [],
     sovereigntyYear: 2008,
     sovereigntyKind: "independence",
+    sovereigntyDate: "2008-02-17",
+    currencies: ["EUR"],
+    demonyms: {
+      fr: {
+        m: "Kosovar",
+        f: "Kosovare",
+      },
+      en: {
+        m: "Kosovar",
+        f: "Kosovar",
+      },
+    },
   },
   YEM: {
     continent: "asia",
@@ -8236,6 +10552,18 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     formerSovereigns: ["united_kingdom"],
     sovereigntyYear: 1990,
     sovereigntyKind: "unification",
+    sovereigntyDate: "1990-05-22",
+    currencies: ["YER"],
+    demonyms: {
+      fr: {
+        m: "Yéménite",
+        f: "Yéménite",
+      },
+      en: {
+        m: "Yemeni",
+        f: "Yemeni",
+      },
+    },
   },
   ZAF: {
     continent: "africa",
@@ -8309,6 +10637,18 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     formerSovereigns: ["united_kingdom"],
     sovereigntyYear: 1910,
     sovereigntyKind: "independence",
+    sovereigntyDate: "1910-05-31",
+    currencies: ["ZAR"],
+    demonyms: {
+      fr: {
+        m: "Sud-Africain",
+        f: "Sud-Africaine",
+      },
+      en: {
+        m: "South African",
+        f: "South African",
+      },
+    },
   },
   ZMB: {
     continent: "africa",
@@ -8350,6 +10690,18 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     formerSovereigns: ["united_kingdom"],
     sovereigntyYear: 1964,
     sovereigntyKind: "independence",
+    sovereigntyDate: "1964-10-24",
+    currencies: ["ZMW"],
+    demonyms: {
+      fr: {
+        m: "Zambien",
+        f: "Zambienne",
+      },
+      en: {
+        m: "Zambian",
+        f: "Zambian",
+      },
+    },
   },
   ZWE: {
     continent: "africa",
@@ -8407,5 +10759,17 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     formerSovereigns: ["united_kingdom"],
     sovereigntyYear: 1980,
     sovereigntyKind: "independence",
+    sovereigntyDate: "1980-04-18",
+    currencies: ["ZWG", "USD"],
+    demonyms: {
+      fr: {
+        m: "Zimbabwéen",
+        f: "Zimbabwéenne",
+      },
+      en: {
+        m: "Zimbabwean",
+        f: "Zimbabwean",
+      },
+    },
   },
 };

@@ -239,7 +239,28 @@ export type CountryFacts = Readonly<{
    * Toujours défini si et seulement si `sovereigntyYear` l'est.
    */
   sovereigntyKind: SovereigntyKind | null;
+  /**
+   * Date complète (`YYYY-MM-DD`) de cet événement (CIA World Factbook). `null`
+   * quand la source ne donne que l'année ou ne couvre pas le pays — jamais une
+   * date inventée. Son année égale toujours `sovereigntyYear`.
+   */
+  sovereigntyDate: string | null;
+  /**
+   * Codes ISO 4217 des monnaies ayant cours (world-countries, corrigé par
+   * `currencyCorrectionsByIso3`). Jamais vide.
+   */
+  currencies: readonly string[];
+  /**
+   * Gentilé au masculin et au féminin, par langue (world-countries, corrigé par
+   * `demonymCorrectionsByIso3`). Une forme identique n'est pas dédoublée à
+   * l'affichage.
+   */
+  demonyms: Demonyms;
 }>;
+
+export type DemonymForms = Readonly<{ m: string; f: string }>;
+
+export type Demonyms = Readonly<{ fr: DemonymForms; en: DemonymForms }>;
 
 /**
  * Provenance légère : date/version globale du snapshot de faits. Pas d'objet
@@ -295,6 +316,9 @@ export type CountryRecord = {
   formerSovereigns: FormerSovereign[];
   sovereigntyYear: number | null;
   sovereigntyKind: SovereigntyKind | null;
+  sovereigntyDate: string | null;
+  currencies: string[];
+  demonyms: Demonyms;
 };
 
 // ─── Snapshot de popularité ─────────────────────────────────────────────────

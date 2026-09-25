@@ -27,6 +27,7 @@
  */
 import { existsSync, readdirSync, readFileSync, statSync } from "node:fs";
 import { resolve } from "node:path";
+import rawWorldCountries from "world-countries";
 import {
   ARCHIVED_CONSTRAINT_IDS,
   answersForConstraint,
@@ -44,6 +45,8 @@ import {
   ARCHIVED_CONSTRAINTS,
   CONSTRAINTS,
 } from "../../src/features/game/logic/constraints";
+import type { WcCurrencyDemonymRow } from "../countries/buildCountriesLib";
+import { countryPatches } from "../countries/countryPatches";
 import { CAPITAL_LABELS } from "../countries/data/capitalLabels";
 import { QUANTITATIVE_DATASETS } from "../countries/data/datasets";
 import { validateHarvestVintage } from "../countries/harvest/capitalLabelsLib";
@@ -53,6 +56,7 @@ import {
 } from "../countries/validateCountryCatalog";
 import {
   validateCapitalLabels,
+  validateCurrencyDemonymFacts,
   validateDatasetFacts,
 } from "../countries/validateDatasetFacts";
 import { validateSovereigntySources } from "../countries/validateSovereigntySources";
@@ -93,6 +97,21 @@ function checkCountries(errors: string[]): void {
   );
   errors.push(
     ...validateCapitalLabels(COUNTRY_FACTS, CAPITAL_LABELS, COUNTRY_CODES),
+  );
+  errors.push(
+    ...validateCurrencyDemonymFacts(
+      COUNTRY_FACTS,
+      Object.fromEntries(
+        (
+          rawWorldCountries as unknown as (WcCurrencyDemonymRow & {
+            cca3: string;
+          })[]
+        ).map((row) => [row.cca3, row]),
+      ),
+      countryPatches.currencyCorrectionsByIso3,
+      countryPatches.demonymCorrectionsByIso3,
+      COUNTRY_CODES,
+    ),
   );
   errors.push(
     ...validateHarvestVintage(
