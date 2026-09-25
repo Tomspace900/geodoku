@@ -44,6 +44,8 @@ export type SheetRowId =
   | "population"
   | "areaKm2"
   | "officialLanguages"
+  | "currencies"
+  | "demonyms"
   | "continent"
   | "middleEast"
   | "waterAccess"
@@ -80,6 +82,12 @@ export const FACT_PROVENANCE: { readonly [K in SheetRowId]: FactProvenance } = {
   population: { basis: "source", sources: ["rest_countries"] },
   areaKm2: { basis: "source", sources: ["world_countries"] },
   officialLanguages: { basis: "source", sources: ["world_countries"] },
+  // world-countries, corrigé pays par pays (`currencyCorrectionsByIso3` /
+  // `demonymCorrectionsByIso3`, motif et date par entrée) : la correction ne
+  // change pas la source citée. La liste de la CNT, consultée pour les
+  // gentilés, n'est pas citée : elle n'alimente aucune valeur telle quelle.
+  currencies: { basis: "source", sources: ["world_countries"] },
+  demonyms: { basis: "source", sources: ["world_countries"] },
   // Même provenance que `continent_*` : convention éditoriale de découpage,
   // alignée sur la nomenclature ONU M49.
   continent: { basis: "convention", sources: ["un_m49"] },

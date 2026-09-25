@@ -155,14 +155,18 @@ les langues vers `mul` : ces cas (Oslo…) sont des overrides.
   correspond plus ;
 - **fraîcheur des faits dérivés** : l'étage du dessus — re-fusionne les datasets
   de `scripts/countries/data/` et échoue (« lancer pnpm build:countries ») si
-  l'un des dix champs qu'ils produisent (`utcOffsetCount`, `lastVolcanicEruptionYear`,
+  l'un des onze champs qu'ils produisent (`utcOffsetCount`, `lastVolcanicEruptionYear`,
   `mountainAreaShare`, `forestCoverShare`, `urbanCentresOver1M`,
   `productionRanks`, `coalElectricityShare`, `formerSovereigns`,
-  `sovereigntyYear`, `sovereigntyKind`) ne correspond plus à `facts.ts` : dataset
+  `sovereigntyYear`, `sovereigntyKind`, `sovereigntyDate`) ne correspond plus à `facts.ts` : dataset
   révisé sans regen, ou `facts.ts` édité à la main malgré son en-tête
   `@generated`. Les **libellés des capitales** sont vérifiés de même contre
   `capitalLabels.ts` (`validateCapitalLabels`), qui signale aussi toute entrée
-  orpheline — capitale ajoutée ou retirée par rapport à REST Countries. Le
+  orpheline — capitale ajoutée ou retirée par rapport à REST Countries. Les
+  **monnaies et gentilés** (world-countries corrigé par `currencyCorrectionsByIso3`
+  / `demonymCorrectionsByIso3`, motif et date par entrée) sont rejoués hors-ligne
+  de même (`validateCurrencyDemonymFacts`), et chaque code de monnaie doit avoir
+  un nom `Intl` fr et en sans année (`validateCurrencyCode`). Le
   millésime affiché de la source Wikidata (`content/sources.ts`, écrit à la main)
   doit dire la même date que `harvestedAt` : `validateHarvestVintage` échoue
   sinon, et `pnpm harvest:capitals` imprime la valeur à reporter. Les

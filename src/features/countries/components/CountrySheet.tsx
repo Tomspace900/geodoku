@@ -9,6 +9,8 @@ import type {
   CountrySheetValue,
 } from "../logic/countrySheet";
 import {
+  formatCurrency,
+  formatDemonym,
   formatInteger,
   formatLanguageName,
   formatList,
@@ -75,6 +77,13 @@ function renderValue(
         value.codes.map((code) => formatLanguageName(code, locale)),
         locale,
       );
+    case "currencies":
+      return formatList(
+        value.codes.map((code) => formatCurrency(code, locale)),
+        locale,
+      );
+    case "demonym":
+      return formatDemonym(value.demonyms, locale);
     case "capitals":
       return formatList(
         value.capitals.map((capital) =>

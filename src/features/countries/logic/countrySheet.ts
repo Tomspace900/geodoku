@@ -5,7 +5,10 @@ import {
   FACT_PROVENANCE,
   PRODUCTION_PROVENANCE,
 } from "../../../../content/countries/factProvenance";
-import type { CountryFacts } from "../../../../content/countries/type";
+import type {
+  CountryFacts,
+  Demonyms,
+} from "../../../../content/countries/type";
 import type { SourceId } from "../../../../content/sources";
 import type { ContentBasis, LocalizedString } from "../../../../content/type";
 import type { PhysicalFeature } from "../types";
@@ -56,6 +59,8 @@ export type CountrySheetValue =
       emptyLabelKey?: TKey;
     }
   | { kind: "languages"; codes: readonly string[] }
+  | { kind: "currencies"; codes: readonly string[] }
+  | { kind: "demonym"; demonyms: Demonyms }
   | {
       kind: "capitals";
       capitals: readonly CountrySheetCapital[];
@@ -162,6 +167,23 @@ function buildLandmarksRows(facts: CountryFacts): CountrySheetRow[] {
       sources: FACT_PROVENANCE.officialLanguages.sources,
     });
   }
+
+  rows.push({
+    labelKey:
+      facts.currencies.length > 1
+        ? "countrySheet.field.currencies"
+        : "countrySheet.field.currency",
+    value: { kind: "currencies", codes: facts.currencies },
+    basis: FACT_PROVENANCE.currencies.basis,
+    sources: FACT_PROVENANCE.currencies.sources,
+  });
+
+  rows.push({
+    labelKey: "countrySheet.field.demonym",
+    value: { kind: "demonym", demonyms: facts.demonyms },
+    basis: FACT_PROVENANCE.demonyms.basis,
+    sources: FACT_PROVENANCE.demonyms.sources,
+  });
 
   return rows;
 }

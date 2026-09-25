@@ -1,4 +1,5 @@
 import type { Locale } from "@/i18n/types";
+import type { Demonyms } from "../../../../content/countries/type";
 import { SOURCES, type SourceId } from "../../../../content/sources";
 import type { LocalizedString } from "../../../../content/type";
 
@@ -131,4 +132,27 @@ export function formatLanguageName(code: string, locale: Locale): string {
     // Sous-étiquette non reconnue par l'ICU embarquée — repli ci-dessous.
   }
   return LANGUAGE_NAME_FALLBACKS[code]?.[locale] ?? code;
+}
+
+/**
+ * « Euro (EUR) » : le nom localisé suivi du code, pour lever l'ambiguïté des
+ * dollars et des francs. Une monnaie récente que l'ICU embarquée ne connaît pas
+ * encore (`DisplayNames` renvoie le code) s'affiche par son seul code.
+ */
+export function formatCurrency(code: string, locale: Locale): string {
+  try {
+    const name = new Intl.DisplayNames([locale], { type: "currency" }).of(code);
+    if (name && name !== code) {
+      return `${name.charAt(0).toLocaleUpperCase(locale)}${name.slice(1)} (${code})`;
+    }
+  } catch {
+    // Code non reconnu par l'ICU embarquée — repli ci-dessous.
+  }
+  return code;
+}
+
+/** « Français, Française » ; une seule forme quand le masculin égale le féminin. */
+export function formatDemonym(demonyms: Demonyms, locale: Locale): string {
+  const { m, f } = demonyms[locale];
+  return m === f ? m : `${m}, ${f}`;
 }

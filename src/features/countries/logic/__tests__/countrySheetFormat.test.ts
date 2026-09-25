@@ -1,6 +1,8 @@
 import { describe, expect, it } from "vitest";
 import {
   computeDensity,
+  formatCurrency,
+  formatDemonym,
   formatLanguageName,
   formatList,
   formatOrdinal,
@@ -123,5 +125,34 @@ describe("sourceReferences", () => {
         vintage: "2022–2024 average",
       },
     ]);
+  });
+});
+
+describe("formatDemonym", () => {
+  const french = {
+    fr: { m: "Français", f: "Française" },
+    en: { m: "French", f: "French" },
+  };
+
+  it("lists both forms in French when they differ", () => {
+    expect(formatDemonym(french, "fr")).toBe("Français, Française");
+  });
+
+  it("shows a single form when masculine equals feminine", () => {
+    expect(formatDemonym(french, "en")).toBe("French");
+  });
+});
+
+describe("formatCurrency", () => {
+  it("shows the localized name then the code", () => {
+    expect(formatCurrency("EUR", "en")).toBe("Euro (EUR)");
+  });
+
+  it("capitalizes the French name", () => {
+    expect(formatCurrency("EUR", "fr")).toBe("Euro (EUR)");
+  });
+
+  it("falls back to the bare code when Intl has no name for it", () => {
+    expect(formatCurrency("XXZ", "en")).toBe("XXZ");
   });
 });

@@ -41,6 +41,27 @@ describe("buildCountrySheet", () => {
     });
   });
 
+  it("places the currency and the demonym in the landmarks category", () => {
+    const rows = rowsOf(
+      buildCountrySheet("FRA", COUNTRY_FACTS.FRA),
+      "countrySheet.category.landmarks",
+    ).map((row) => row.labelKey);
+    expect(rows).toEqual(
+      expect.arrayContaining([
+        "countrySheet.field.currency",
+        "countrySheet.field.demonym",
+      ]),
+    );
+  });
+
+  it("uses the plural currency label above one currency (Zimbabwe)", () => {
+    const model = buildCountrySheet("ZWE", COUNTRY_FACTS.ZWE);
+    expect(rowByLabel(model, "countrySheet.field.currencies")?.value).toEqual({
+      kind: "currencies",
+      codes: ["ZWG", "USD"],
+    });
+  });
+
   it("omits list-based rows (events, memberships, former powers) when empty", () => {
     const model = buildCountrySheet("XKX", COUNTRY_FACTS.XKX);
     expect(rowByLabel(model, "countrySheet.field.events")).toBeUndefined();
