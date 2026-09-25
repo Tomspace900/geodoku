@@ -161,15 +161,32 @@ export function formatDemonym(demonyms: Demonyms, locale: Locale): string {
 }
 
 /**
- * « 5 juillet 1962 » / « July 5, 1962 » : date complète localisée, lue en UTC
- * pour qu'un fuseau négatif ne la décale jamais d'un jour. Les dates du
- * Factbook sont postérieures à l'an 1000 : `Date.UTC` ne les confond pas avec
- * le siècle.
+ * Style des dates longues de la fiche, aligné sur les millésimes écrits dans
+ * `content/sources.ts` (« 23 September 2026 », pas « September 23, 2026 »).
+ */
+const LONG_DATE_LOCALES: Readonly<Record<Locale, string>> = {
+  fr: "fr-FR",
+  en: "en-GB",
+};
+
+/**
+ * « 5 juillet 1962 » / « 5 July 1962 » : date complète localisée, lue en UTC
+ * pour qu'un fuseau négatif ne la décale jamais d'un jour. L'ICU écrit
+ * « 1 juillet » : le français veut « 1er juillet » (22 dates de souveraineté
+ * tombent un 1er du mois). Les dates du Factbook sont postérieures à l'an
+ * 1000 : `Date.UTC` ne les confond pas avec le siècle.
  */
 export function formatFullDate(isoDate: string, locale: Locale): string {
   const [year, month, day] = isoDate.split("-").map(Number);
-  return new Intl.DateTimeFormat(locale, {
+  return new Intl.DateTimeFormat(LONG_DATE_LOCALES[locale], {
     dateStyle: "long",
     timeZone: "UTC",
-  }).format(new Date(Date.UTC(year, month - 1, day)));
+  })
+    .formatToParts(new Date(Date.UTC(year, month - 1, day)))
+    .map((part) =>
+      part.type === "day" && locale === "fr" && day === 1
+        ? formatOrdinal(day, locale)
+        : part.value,
+    )
+    .join("");
 }

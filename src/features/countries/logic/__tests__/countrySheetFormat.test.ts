@@ -163,7 +163,15 @@ describe("formatFullDate", () => {
     expect(formatFullDate("1962-07-05", "fr")).toBe("5 juillet 1962");
   });
 
-  it("writes the day in English", () => {
-    expect(formatFullDate("1962-07-05", "en")).toBe("July 5, 1962");
+  it("writes the day in English, day first like the source vintages", () => {
+    expect(formatFullDate("1962-07-05", "en")).toBe("5 July 1962");
+  });
+
+  it("writes the first of the month « 1er » in French", () => {
+    expect(formatFullDate("1867-07-01", "fr")).toBe("1er juillet 1867");
+  });
+
+  it("keeps a plain 1 in English", () => {
+    expect(formatFullDate("1867-07-01", "en")).toBe("1 July 1867");
   });
 });
