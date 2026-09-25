@@ -26,5 +26,6 @@ export type {
   PoliticalGroup,
   ProductionRankKey,
   Regime,
+  SovereigntyKind,
   WaterAccess,
 } from "../../../content/countries/type";

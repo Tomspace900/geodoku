@@ -11,6 +11,7 @@ import type {
 import {
   formatCurrency,
   formatDemonym,
+  formatFullDate,
   formatInteger,
   formatLanguageName,
   formatList,
@@ -82,6 +83,13 @@ function renderValue(
         value.codes.map((code) => formatCurrency(code, locale)),
         locale,
       );
+    case "sovereignty":
+      return t("countrySheet.value.sovereignty", {
+        kind: t(value.kindLabelKey),
+        when: value.date
+          ? formatFullDate(value.date, locale)
+          : formatYear(value.year, locale),
+      });
     case "demonym":
       return formatDemonym(value.demonyms, locale);
     case "capitals":

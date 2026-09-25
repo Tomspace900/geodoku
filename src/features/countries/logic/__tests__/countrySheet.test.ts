@@ -73,9 +73,34 @@ describe("buildCountrySheet", () => {
     expect(rowByLabel(model, "countrySheet.field.regime")).toBeDefined();
   });
 
-  it("never builds a sovereignty row — masked until lot 4 (sourceDescription not reviewed pre-1990)", () => {
+  it("hides the sovereignty row of a country the dataset masks (France)", () => {
     const model = buildCountrySheet("FRA", COUNTRY_FACTS.FRA);
     expect(rowByLabel(model, "countrySheet.field.sovereignty")).toBeUndefined();
+  });
+
+  it("has no sovereignty row for a country without an entry (Taiwan)", () => {
+    const model = buildCountrySheet("TWN", COUNTRY_FACTS.TWN);
+    expect(rowByLabel(model, "countrySheet.field.sovereignty")).toBeUndefined();
+  });
+
+  it("shows the full date of a dated sovereignty event (Poland)", () => {
+    const model = buildCountrySheet("POL", COUNTRY_FACTS.POL);
+    expect(rowByLabel(model, "countrySheet.field.sovereignty")?.value).toEqual({
+      kind: "sovereignty",
+      kindLabelKey: "countrySheet.enum.sovereigntyKind.restoration",
+      year: 1918,
+      date: "1918-11-11",
+    });
+  });
+
+  it("falls back to the year alone when the source gives no date (Thailand)", () => {
+    const model = buildCountrySheet("THA", COUNTRY_FACTS.THA);
+    expect(
+      rowByLabel(model, "countrySheet.field.sovereignty")?.value,
+    ).toMatchObject({
+      year: 1238,
+      date: null,
+    });
   });
 
   it("omits an entire category once all of its rows are masked (no production for Kosovo)", () => {

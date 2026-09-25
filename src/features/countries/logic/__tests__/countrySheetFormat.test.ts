@@ -3,6 +3,7 @@ import {
   computeDensity,
   formatCurrency,
   formatDemonym,
+  formatFullDate,
   formatLanguageName,
   formatList,
   formatOrdinal,
@@ -154,5 +155,15 @@ describe("formatCurrency", () => {
 
   it("falls back to the bare code when Intl has no name for it", () => {
     expect(formatCurrency("XXZ", "en")).toBe("XXZ");
+  });
+});
+
+describe("formatFullDate", () => {
+  it("writes the day in French", () => {
+    expect(formatFullDate("1962-07-05", "fr")).toBe("5 juillet 1962");
+  });
+
+  it("writes the day in English", () => {
+    expect(formatFullDate("1962-07-05", "en")).toBe("July 5, 1962");
   });
 });

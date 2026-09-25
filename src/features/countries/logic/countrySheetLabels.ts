@@ -11,6 +11,7 @@ import type {
   PoliticalGroup,
   ProductionRankKey,
   Regime,
+  SovereigntyKind,
   WaterAccess,
 } from "../types";
 
@@ -176,6 +177,17 @@ export const FORMER_SOVEREIGN_LABELS: Record<FormerSovereign, TKey> = {
   united_kingdom: "countrySheet.enum.formerSovereign.unitedKingdom",
   united_states: "countrySheet.enum.formerSovereign.unitedStates",
   yugoslavia: "countrySheet.enum.formerSovereign.yugoslavia",
+};
+
+export const SOVEREIGNTY_KIND_LABELS: Record<SovereigntyKind, TKey> = {
+  independence: "countrySheet.enum.sovereigntyKind.independence",
+  restoration: "countrySheet.enum.sovereigntyKind.restoration",
+  separation: "countrySheet.enum.sovereigntyKind.separation",
+  dissolution_successor:
+    "countrySheet.enum.sovereigntyKind.dissolution_successor",
+  continuation: "countrySheet.enum.sovereigntyKind.continuation",
+  foundation: "countrySheet.enum.sovereigntyKind.foundation",
+  unification: "countrySheet.enum.sovereigntyKind.unification",
 };
 
 export const PRODUCTION_LABELS: Record<ProductionRankKey, TKey> = {

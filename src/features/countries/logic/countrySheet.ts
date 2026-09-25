@@ -29,6 +29,7 @@ import {
   PRODUCTION_LABELS,
   PRODUCTION_ORDER,
   REGIME_LABELS,
+  SOVEREIGNTY_KIND_LABELS,
   SUBREGION_LABELS,
   WATER_ACCESS_LABELS,
 } from "./countrySheetLabels";
@@ -60,6 +61,13 @@ export type CountrySheetValue =
     }
   | { kind: "languages"; codes: readonly string[] }
   | { kind: "currencies"; codes: readonly string[] }
+  | {
+      kind: "sovereignty";
+      kindLabelKey: TKey;
+      year: number;
+      /** `YYYY-MM-DD` ; `null` quand la source ne donne que l'année. */
+      date: string | null;
+    }
   | { kind: "demonym"; demonyms: Demonyms }
   | {
       kind: "capitals";
@@ -391,13 +399,25 @@ function buildHistoryRows(facts: CountryFacts): CountrySheetRow[] {
     sources: FACT_PROVENANCE.regime.sources,
   });
 
-  // La ligne « Souveraineté » (nature + année) reste masquée jusqu'au lot 4 :
-  // `sovereigntyKind` n'a jamais été relu avant 1990 (il ne servait qu'à
-  // dériver `history_sovereignty_since_1990`), et plusieurs entrées sont
-  // fausses une fois affichées telles quelles (France « Indépendance (1789) »,
-  // Royaume-Uni « Indépendance (1284) »…) — cf. lot 2, annexe A du dossier de
-  // corrections. `formerSovereigns` reste affiché : c'est une liste de slugs
-  // relue à la main, indépendante de `sovereigntyKind`/`sovereigntyYear`.
+  // Nature + date de l'événement de souveraineté, sauf quand le dataset la
+  // masque (`sheetHidden`, cf. revue du lot 4) ou n'a pas d'entrée du pays.
+  if (
+    facts.sovereigntyKind !== null &&
+    facts.sovereigntyYear !== null &&
+    !facts.sovereigntySheetHidden
+  ) {
+    rows.push({
+      labelKey: "countrySheet.field.sovereignty",
+      value: {
+        kind: "sovereignty",
+        kindLabelKey: SOVEREIGNTY_KIND_LABELS[facts.sovereigntyKind],
+        year: facts.sovereigntyYear,
+        date: facts.sovereigntyDate,
+      },
+      basis: FACT_PROVENANCE.sovereignty.basis,
+      sources: FACT_PROVENANCE.sovereignty.sources,
+    });
+  }
 
   if (facts.formerSovereigns.length > 0) {
     rows.push({

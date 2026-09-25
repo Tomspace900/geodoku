@@ -159,3 +159,17 @@ export function formatDemonym(demonyms: Demonyms, locale: Locale): string {
   const { m, f } = demonyms[locale];
   return m === f ? m : `${m}, ${f}`;
 }
+
+/**
+ * « 5 juillet 1962 » / « July 5, 1962 » : date complète localisée, lue en UTC
+ * pour qu'un fuseau négatif ne la décale jamais d'un jour. Les dates du
+ * Factbook sont postérieures à l'an 1000 : `Date.UTC` ne les confond pas avec
+ * le siècle.
+ */
+export function formatFullDate(isoDate: string, locale: Locale): string {
+  const [year, month, day] = isoDate.split("-").map(Number);
+  return new Intl.DateTimeFormat(locale, {
+    dateStyle: "long",
+    timeZone: "UTC",
+  }).format(new Date(Date.UTC(year, month - 1, day)));
+}
