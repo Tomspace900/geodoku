@@ -12,6 +12,7 @@ ENTRÉES DE CURATION (éditées à la main)
   scripts/countries/data/capitalLabels.ts # libellés fr/en des capitales — RÉCOLTÉ (pnpm harvest:capitals, Wikidata)
   scripts/countries/data/highestPoints.ts # points culminants — RÉCOLTÉ (pnpm harvest:highest-points, Factbook + Wikidata)
   scripts/countries/data/worldBankIndicators.ts # PIB par habitant, espérance de vie — RÉCOLTÉ (pnpm harvest:world-bank, WDI)
+  scripts/countries/data/humanDevelopmentIndex.ts # indice de développement humain — RÉCOLTÉ (pnpm harvest:hdi, PNUD)
         │  pnpm build:countries   (RÉSEAU — world-countries npm + REST Countries v5 + Wikimedia)
         ▼
 SNAPSHOT (content/countries/ — généré, committé, daté par FACTS_SNAPSHOT.date)
@@ -176,6 +177,24 @@ la plage d'années retenues, calculée à la récolte, imprimée par le script e
 comparée exactement par `validateYearRangeVintage` (`check:content`). Aucune
 valeur calculée (catégorie de revenu…) n'est stockée.
 
+**Indice de développement humain** (`pnpm harvest:hdi`) : le fichier CSV « composite
+indices complete time series » du data center du PNUD. L'**édition** (2025),
+l'**année des données** (2023, la dernière de l'édition) et l'**URL exacte** sont
+des constantes de `humanDevelopmentIndexLib.ts` : on ne scrape pas la page du data
+center, et une nouvelle édition est un changement de constantes relu en diff. Le
+fichier est en **latin-1** (décodage explicite) et ses champs contiennent des
+virgules entre guillemets (analyse RFC 4180). La récolte échoue si le fichier
+publie une colonne `hdi_*` plus récente que l'année épinglée. Les agrégats du PNUD
+(`ZZA.VHHD`…) et Hong Kong, hors catalogue, sont écartés ; un pays absent du fichier
+(`not_in_report` : Taïwan, Vatican, Kosovo) ou présent sans valeur
+(`no_value_published`, catégorie « Other Countries or Territories » : Monaco,
+Corée du Nord) vaut `null` et la fiche n'affiche pas la ligne. Le dataset garde la
+catégorie publiée (`hdicode`) : `check:content` recalcule la catégorie depuis la
+valeur avec les seuils de `content/countries/humanDevelopment.ts` (*Technical note
+1* du rapport) et échoue au moindre écart — seuils périmés après une nouvelle
+édition. Le millésime de `sources.ts` (« Rapport 2025 (données 2023) ») est comparé
+exactement à l'édition et à l'année du dataset (`validateEditionVintage`).
+
 ### Contrôles automatiques
 
 `pnpm check:content` (job CI `quality`) vérifie :
@@ -191,7 +210,7 @@ valeur calculée (catégorie de revenu…) n'est stockée.
   l'un des champs qu'ils produisent (`utcOffsetCount`, `lastVolcanicEruptionYear`,
   `mountainAreaShare`, `forestCoverShare`, `urbanCentresOver1M`,
   `productionRanks`, `coalElectricityShare`, `formerSovereigns`,
-  `sovereigntyYear`, `sovereigntyKind`, `sovereigntyDate`, `sovereigntySheetHidden`, `highestPoint`, `gdpPerCapitaUsd`, `lifeExpectancyYears`) ne correspond plus à `facts.ts` : dataset
+  `sovereigntyYear`, `sovereigntyKind`, `sovereigntyDate`, `sovereigntySheetHidden`, `highestPoint`, `gdpPerCapitaUsd`, `lifeExpectancyYears`, `humanDevelopmentIndex`) ne correspond plus à `facts.ts` : dataset
   révisé sans regen, ou `facts.ts` édité à la main malgré son en-tête
   `@generated`. Les **libellés des capitales** sont vérifiés de même contre
   `capitalLabels.ts` (`validateCapitalLabels`), qui signale aussi toute entrée
@@ -210,7 +229,7 @@ valeur calculée (catégorie de revenu…) n'est stockée.
   motivés dans `ACCEPTED_PEAK_GAPS`). Les indicateurs WDI sont gardés de même :
   chaque pays est soit dans `values`, soit dans `missing`
   (`validateWorldBankIndicator`), valeur > 0, espérance de vie entre 30 et 95 ans,
-  et la plage d'années du millésime de `sources.ts` doit être celle du dataset. Les
+  et la plage d'années du millésime de `sources.ts` doit être celle du dataset. L'IDH est gardé de même (`validateHumanDevelopmentIndex` : partage valeurs / manquants, valeur dans ]0, 1], catégorie calculée = catégorie publiée, millésime = édition). Les
   champs venus du réseau (population, **liste** des capitales, adhésions,
   pageviews) restent hors de portée — seule une regen les vérifie ;
 - **seam terminal** : aucun module de `content/` n'importe via l'alias `@/` ni

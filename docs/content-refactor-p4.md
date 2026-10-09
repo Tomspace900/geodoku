@@ -1234,3 +1234,45 @@ case (A–D).
   - L'entrée de changelog se rédige à la mise en prod (#50), pas dans le lot.
   - Un `refreshPool` n'est pas requis par ce lot (aucune liste ne change) ; celui
     de l'issue #50 reste à faire après publication des lots 1 à 6.
+
+### Lot 7 — Indice de développement humain (branche p4-lot7, 2026-10-09)
+
+- Ligne de base / après : tests 732 → 767 · chargement initial 258,8 → 259,1 KiB gzip ·
+  chunk fiche pays 40,6 → 41,7 KiB gzip
+- Commits : voir `git log develop..p4-lot7` (rien de poussé). `Closes #49` sur le
+  commit de la fiche.
+- Écarts au plan et au brief :
+  - **Édition épinglée, pas découverte** : édition (2025), année des données (2023)
+    et URL du CSV sont des constantes de `humanDevelopmentIndexLib.ts`. La récolte
+    échoue si le fichier porte une colonne `hdi_*` plus récente que l'année épinglée.
+  - **Pas de « cas du Kosovo » à faire correspondre** : XKX, TWN et VAT sont absents
+    du fichier (`not_in_report`), MCO et PRK présents sans valeur
+    (`no_value_published`). Chaque pays est dans `values` ou `missing`, jamais dans
+    les deux ni dans aucun (`validateHumanDevelopmentIndex`).
+  - **Catégorie** : le dataset garde la catégorie publiée (`hdicode`) ; la fiche la
+    **recalcule** (`content/countries/humanDevelopment.ts`, seul endroit où vivent les
+    seuils, lu aussi par la garde) et `check:content` échoue au moindre écart.
+    Seuils lus dans la *Technical note 1* du HDR 2025 (`hdr2025_technical_notes.pdf`).
+  - **Valeur brute** (`0.92`), affichée à trois décimales par `Intl` (« 0,920 »).
+  - **Millésime** « Rapport 2025 (données 2023) » comparé exactement à l'édition et à
+    l'année du dataset (`validateEditionVintage`), la récolte imprime la valeur à coller.
+  - **Source** `undp_hdr` : page « documentation and downloads » du data center.
+  - Analyse CSV RFC 4180 faite à la main (champs entre guillemets contenant des
+    virgules), décodage latin-1 explicite : aucune dépendance ajoutée.
+  - **Regen sans autre changement** : `facts.ts` ne gagne que `humanDevelopmentIndex`
+    (773 lignes ajoutées, 0 supprimée = 192 × 4 + 5 × 1) ; `popularity.ts`, le catalogue
+    et tous les `answers.ts` sont inchangés. Pas de `simulate:scheduling` : aucune
+    liste ne bouge.
+  - La ligne suit l'espérance de vie dans « Société et économie », avec sa légende
+    d'une ligne (`RowCaption`, motif des légendes existantes).
+- Gardes : lint (2 avertissements préexistants, fichiers Convex non touchés) · 767 tests ·
+  `check:content` (77 contraintes actives, 12 archivées, 8 en réserve, 197 pays) ·
+  `check:design-system` (14 règles, aucune violation) · `check:bundle` · 141 e2e passés
+  (lancés seuls).
+- Couverture mesurée : 192/197. `null` : TWN, VAT, XKX (absents du fichier), MCO, PRK
+  (sans valeur). Catégorie calculée = catégorie publiée pour les 192.
+- Décisions (gate) : à venir.
+- Points ouverts :
+  - Le rapport final de P4 se rédige après le gate.
+  - Le nom de source suivi du millésime donne des parenthèses imbriquées dans la légende
+    (« … (Rapport 2025 (données 2023)) »), le format du millésime étant celui du brief.
