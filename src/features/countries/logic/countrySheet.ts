@@ -5,6 +5,7 @@ import {
   FACT_PROVENANCE,
   PRODUCTION_PROVENANCE,
 } from "../../../../content/countries/factProvenance";
+import { humanDevelopmentCategory } from "../../../../content/countries/humanDevelopment";
 import type {
   CountryFacts,
   Demonyms,
@@ -23,6 +24,7 @@ import {
   FLAG_LAYOUT_LABELS,
   FLAG_SYMBOL_LABELS,
   FORMER_SOVEREIGN_LABELS,
+  HUMAN_DEVELOPMENT_CATEGORY_LABELS,
   PHYSICAL_FEATURE_LABELS,
   POLITICAL_GROUP_LABELS,
   POLITICAL_GROUP_ORDER,
@@ -71,6 +73,13 @@ export type CountrySheetValue =
   | { kind: "demonym"; demonyms: Demonyms }
   | { kind: "gdpPerCapita"; usd: number; year: number }
   | { kind: "lifeExpectancy"; years: number; year: number }
+  | {
+      kind: "humanDevelopmentIndex";
+      value: number;
+      year: number;
+      /** Calculée depuis la valeur, jamais stockée (`humanDevelopmentCategory`). */
+      categoryLabelKey: TKey;
+    }
   | {
       kind: "highestPoint";
       /** `null` : point sans nom, rendu par un libellé i18n unique. */
@@ -361,6 +370,22 @@ function buildSocietyRows(facts: CountryFacts): CountrySheetRow[] {
       },
       basis: FACT_PROVENANCE.lifeExpectancy.basis,
       sources: FACT_PROVENANCE.lifeExpectancy.sources,
+    });
+  }
+
+  if (facts.humanDevelopmentIndex !== null) {
+    const { value, year } = facts.humanDevelopmentIndex;
+    rows.push({
+      labelKey: "countrySheet.field.humanDevelopmentIndex",
+      value: {
+        kind: "humanDevelopmentIndex",
+        value,
+        year,
+        categoryLabelKey:
+          HUMAN_DEVELOPMENT_CATEGORY_LABELS[humanDevelopmentCategory(value)],
+      },
+      basis: FACT_PROVENANCE.humanDevelopmentIndex.basis,
+      sources: FACT_PROVENANCE.humanDevelopmentIndex.sources,
     });
   }
 

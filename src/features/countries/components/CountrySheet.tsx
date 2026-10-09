@@ -13,6 +13,7 @@ import {
   formatCurrency,
   formatDemonym,
   formatFullDate,
+  formatHumanDevelopmentIndex,
   formatInteger,
   formatLanguageName,
   formatList,
@@ -105,6 +106,12 @@ function renderValue(
         value: formatOneDecimal(value.years, locale),
         year: formatYear(value.year, locale),
       });
+    case "humanDevelopmentIndex":
+      return t("countrySheet.value.humanDevelopmentIndex", {
+        value: formatHumanDevelopmentIndex(value.value, locale),
+        category: t(value.categoryLabelKey),
+        year: formatYear(value.year, locale),
+      });
     case "highestPoint":
       return t("countrySheet.value.highestPoint", {
         name: value.names
@@ -152,6 +159,14 @@ function CapitalNotLargestCaption({
           ? "countrySheet.value.capitalNotLargestPlural"
           : "countrySheet.value.capitalNotLargestSingular",
       )}
+    </RowCaption>
+  );
+}
+
+function HumanDevelopmentCaption({ t }: { t: TranslateFn }) {
+  return (
+    <RowCaption>
+      {t("countrySheet.value.humanDevelopmentIndexCaption")}
     </RowCaption>
   );
 }
@@ -228,6 +243,9 @@ function CategorySection({
                   t={t}
                 />
               )}
+            {row.value.kind === "humanDevelopmentIndex" && (
+              <HumanDevelopmentCaption t={t} />
+            )}
             {row.basis === "convention" && <ConventionCaption t={t} />}
           </div>
         ))}

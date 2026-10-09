@@ -13,12 +13,31 @@ export function formatInteger(value: number, locale: Locale): string {
   return new Intl.NumberFormat(locale).format(Math.round(value));
 }
 
+function formatFixedDecimals(
+  value: number,
+  locale: Locale,
+  digits: number,
+): string {
+  return new Intl.NumberFormat(locale, {
+    minimumFractionDigits: digits,
+    maximumFractionDigits: digits,
+  }).format(value);
+}
+
 /** Une décimale fixe (« 83,0 » / « 83.0 ») : l'espérance de vie n'est pas arrondie à l'entier. */
 export function formatOneDecimal(value: number, locale: Locale): string {
-  return new Intl.NumberFormat(locale, {
-    minimumFractionDigits: 1,
-    maximumFractionDigits: 1,
-  }).format(value);
+  return formatFixedDecimals(value, locale, 1);
+}
+
+/**
+ * Trois décimales fixes comme le rapport du PNUD (« 0,920 » / « 0.920 ») : le
+ * fichier écrit `0.92`, mais l'IDH se lit toujours au millième.
+ */
+export function formatHumanDevelopmentIndex(
+  value: number,
+  locale: Locale,
+): string {
+  return formatFixedDecimals(value, locale, 3);
 }
 
 /**

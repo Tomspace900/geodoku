@@ -1,4 +1,5 @@
 import type { TKey } from "@/i18n/types";
+import type { HumanDevelopmentCategory } from "../../../../content/countries/humanDevelopment";
 import type {
   CapitalRole,
   Continent,
@@ -177,6 +178,16 @@ export const FORMER_SOVEREIGN_LABELS: Record<FormerSovereign, TKey> = {
   united_kingdom: "countrySheet.enum.formerSovereign.unitedKingdom",
   united_states: "countrySheet.enum.formerSovereign.unitedStates",
   yugoslavia: "countrySheet.enum.formerSovereign.yugoslavia",
+};
+
+export const HUMAN_DEVELOPMENT_CATEGORY_LABELS: Record<
+  HumanDevelopmentCategory,
+  TKey
+> = {
+  very_high: "countrySheet.enum.humanDevelopmentCategory.very_high",
+  high: "countrySheet.enum.humanDevelopmentCategory.high",
+  medium: "countrySheet.enum.humanDevelopmentCategory.medium",
+  low: "countrySheet.enum.humanDevelopmentCategory.low",
 };
 
 export const SOVEREIGNTY_KIND_LABELS: Record<SovereigntyKind, TKey> = {

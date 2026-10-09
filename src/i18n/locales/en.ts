@@ -434,6 +434,7 @@ export const en = {
       highestPoint: "Highest point",
       gdpPerCapita: "GDP per capita",
       lifeExpectancy: "Life expectancy",
+      humanDevelopmentIndex: "HDI",
       mountainAreaShare: "Mountainous area",
       forestCoverShare: "Forest cover",
       biomes: "Biomes",
@@ -462,6 +463,9 @@ export const en = {
       highestPoint: "{name} ({value} m)",
       gdpPerCapita: "{value} ({year})",
       lifeExpectancy: "{value} years ({year})",
+      humanDevelopmentIndex: "{value} · {category} ({year})",
+      humanDevelopmentIndexCaption:
+        "Health, education and income, from 0 to 1.",
       unnamedHighestPoint: "Unnamed point",
       densityUnit: "{value} people/km²",
       utcOffsetsCountSingular: "{count} distinct UTC offset",
@@ -562,6 +566,12 @@ export const en = {
         opec: "OPEC",
         schengen: "Schengen Area",
         africanUnion: "African Union",
+      },
+      humanDevelopmentCategory: {
+        very_high: "very high",
+        high: "high",
+        medium: "medium",
+        low: "low",
       },
       sovereigntyKind: {
         independence: "Independence",

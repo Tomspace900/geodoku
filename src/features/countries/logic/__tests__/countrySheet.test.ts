@@ -97,6 +97,62 @@ describe("buildCountrySheet", () => {
     ).toBeUndefined();
   });
 
+  it("shows the HDI with its calculated category and year (France: very high)", () => {
+    const model = buildCountrySheet("FRA", COUNTRY_FACTS.FRA);
+    expect(
+      rowByLabel(model, "countrySheet.field.humanDevelopmentIndex"),
+    ).toMatchObject({
+      value: {
+        kind: "humanDevelopmentIndex",
+        value: 0.92,
+        year: 2023,
+        categoryLabelKey:
+          "countrySheet.enum.humanDevelopmentCategory.very_high",
+      },
+      sources: ["undp_hdr"],
+    });
+  });
+
+  it("calculates the HDI category from the value (China 0.797: high, South Sudan: low)", () => {
+    expect(
+      rowByLabel(
+        buildCountrySheet("CHN", COUNTRY_FACTS.CHN),
+        "countrySheet.field.humanDevelopmentIndex",
+      )?.value,
+    ).toMatchObject({
+      categoryLabelKey: "countrySheet.enum.humanDevelopmentCategory.high",
+    });
+    expect(
+      rowByLabel(
+        buildCountrySheet("SSD", COUNTRY_FACTS.SSD),
+        "countrySheet.field.humanDevelopmentIndex",
+      )?.value,
+    ).toMatchObject({
+      categoryLabelKey: "countrySheet.enum.humanDevelopmentCategory.low",
+    });
+  });
+
+  it("omits the HDI row for Kosovo and Monaco, which the UNDP file does not rate", () => {
+    [
+      buildCountrySheet("XKX", COUNTRY_FACTS.XKX),
+      buildCountrySheet("MCO", COUNTRY_FACTS.MCO),
+    ].forEach((model) => {
+      expect(
+        rowByLabel(model, "countrySheet.field.humanDevelopmentIndex"),
+      ).toBeUndefined();
+    });
+  });
+
+  it("places the HDI right after life expectancy, in society and economy", () => {
+    const labels = rowsOf(
+      buildCountrySheet("FRA", COUNTRY_FACTS.FRA),
+      "countrySheet.category.societyEconomy",
+    ).map((row) => row.labelKey);
+    expect(labels.indexOf("countrySheet.field.humanDevelopmentIndex")).toBe(
+      labels.indexOf("countrySheet.field.lifeExpectancy") + 1,
+    );
+  });
+
   it("places the currency and the demonym in the landmarks category", () => {
     const rows = rowsOf(
       buildCountrySheet("FRA", COUNTRY_FACTS.FRA),

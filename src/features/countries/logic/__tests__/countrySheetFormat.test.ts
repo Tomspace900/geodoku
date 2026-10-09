@@ -5,6 +5,7 @@ import {
   formatCurrency,
   formatDemonym,
   formatFullDate,
+  formatHumanDevelopmentIndex,
   formatLanguageName,
   formatList,
   formatOneDecimal,
@@ -204,5 +205,12 @@ describe("formatOneDecimal", () => {
   it("garde la décimale zéro (83,0 / 83.0)", () => {
     expect(formatOneDecimal(83.0243, "fr")).toBe("83,0");
     expect(formatOneDecimal(83.0243, "en")).toBe("83.0");
+  });
+});
+
+describe("formatHumanDevelopmentIndex", () => {
+  it("garde trois décimales (0,920 / 0.920) même quand le fichier écrit 0.92", () => {
+    expect(formatHumanDevelopmentIndex(0.92, "fr")).toBe("0,920");
+    expect(formatHumanDevelopmentIndex(0.92, "en")).toBe("0.920");
   });
 });
