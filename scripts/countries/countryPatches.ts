@@ -62,7 +62,7 @@ export const sourceCorrectionsByIso3: Record<Iso3, SourceCorrection> = {
    * Elle s'étend de 5,4°N à 13,5°S, sa capitale est à -4,32° et son centroïde à
    * -2,88° : sud à l'unanimité des trois lectures.
    *
-   * Les 12 autres `equatorCrosser` tombent déjà du bon côté sans patch.
+   * Les 10 autres `equatorCrosser` tombent déjà du bon côté sans patch.
    */
   COD: { latitude: -2.88 },
   FRA: {
@@ -92,9 +92,13 @@ export const sourceCorrectionsByIso3: Record<Iso3, SourceCorrection> = {
   ARE: { membershipsRemove: ["opec"] },
 
   /**
-   * Langues officielles **nationales de jure**. REST Countries confond statut
-   * officiel et langue de travail / statut spécial / usage administratif : ces
-   * corrections rétablissent la définition retenue par `language_*`.
+   * Langues officielles : une langue compte si une loi la rend officielle, ou si
+   * elle est de fait la langue de l'État là où aucune loi n'en désigne (anglais
+   * au Royaume-Uni, aux États-Unis, en Australie ; espagnol au Mexique…). Ne
+   * comptent pas les statuts secondaires : langue de travail à côté d'une langue
+   * officielle désignée, langue de communication interethnique, statut spécial,
+   * usage administratif. REST Countries les confond : ces corrections
+   * rétablissent la règle (tranchée le 2026-10-09).
    */
   /** Mali — constitution de 2023 : le français passe de langue officielle à langue de travail. */
   MLI: { officialLanguages: ["bm"] },
@@ -110,6 +114,16 @@ export const sourceCorrectionsByIso3: Record<Iso3, SourceCorrection> = {
   MYS: { officialLanguages: ["ms"] },
   /** Liban — l'arabe est seule langue officielle ; le français a un statut d'usage, pas officiel. */
   LBN: { officialLanguages: ["ar"] },
+  /** Belize — l'anglais est la langue de l'État ; l'espagnol et le kriol sont d'usage courant, sans statut. */
+  BLZ: { officialLanguages: ["en"] },
+  /** Azerbaïdjan — constitution, art. 21 : l'azerbaïdjanais est seule langue d'État ; le russe n'a aucun statut. */
+  AZE: { officialLanguages: ["az"] },
+  /** Tadjikistan — constitution, art. 2 : le tadjik est langue d'État ; le russe n'est que « langue de communication interethnique ». */
+  TJK: { officialLanguages: ["tg"] },
+  /** Turkménistan — le turkmène est seule langue d'État ; le russe n'a aucun statut officiel. */
+  TKM: { officialLanguages: ["tk"] },
+  /** Ouzbékistan — l'ouzbek est seule langue d'État ; le russe n'a aucun statut officiel. */
+  UZB: { officialLanguages: ["uz"] },
 };
 
 // ─── Search aliases (player variants beyond names + REST alternates) ────────────
@@ -299,8 +313,6 @@ export const gameplayClassifications: GameplayClassifications = {
     "KEN",
     "SOM",
     "IDN",
-    "MDV",
-    "KIR",
   ],
   mediterraneanCoast: [
     "ESP",
@@ -413,6 +425,12 @@ export const gameplayClassifications: GameplayClassifications = {
     "GMB",
     "GNQ",
     "SWZ",
+    // Revue #122 (2026-10-09) : la ville la plus peuplée n'est pas la capitale —
+    // Nouveau Taipei, Serravalle, Schaan, St. Paul's Bay.
+    "TWN",
+    "SMR",
+    "LIE",
+    "MLT",
   ],
   desert: [
     "DZA",
@@ -566,7 +584,6 @@ export const gameplayClassifications: GameplayClassifications = {
     "DOM",
     "GRD",
     "HTI",
-    "JAM",
     "KNA",
     "LCA",
     "TTO",

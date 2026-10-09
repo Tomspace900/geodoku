@@ -29,3 +29,5 @@ Un motif stylisé, minuscule ou intégré à des armoiries relève d'une décisi
 Revue 2026-09-11 — même règle (drapeau d'État, armoiries comprises). Ajouts : **HRV**, **MDA**, **GNQ** (six étoiles à six branches au-dessus du fromager, lui déjà compté comme `plant`), **CRI** (sept étoiles du drapeau d'État).
 
 Procédure commune : [SOURCES.md](../SOURCES.md#procédure-de-révision).
+
+Revue 2026-10-09 (#122) — **BOL** ajoutée : l'ovale des armoiries du drapeau d'État porte dix étoiles d'or. La Roumanie, signalée par la vérification, n'a pas d'armoiries sur son drapeau.

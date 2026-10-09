@@ -29,3 +29,5 @@ Un motif stylisé, minuscule ou intégré à des armoiries relève d'une décisi
 Revue 2026-09-11 — même règle. Ajout : **SRB** (croix serbe cantonnée de quatre briquets, dans les armoiries qui fournissaient déjà l'aigle compté comme `animal`).
 
 Procédure commune : [SOURCES.md](../SOURCES.md#procédure-de-révision).
+
+Revue 2026-10-09 (#122) — **MDA** ajoutée : l'aigle des armoiries, déjà compté comme `animal`, tient une croix dans son bec. Même cas que la Croatie en 2026-09-11 : un blason ne fournit pas un élément sans l'autre.

@@ -28,3 +28,5 @@ Seul le statut officiel **national** compte : une langue régionale, co-officiel
 ## Révision
 
 Procédure commune : [SOURCES.md](../SOURCES.md#procédure-de-révision).
+
+Revue 2026-10-09 (#122) — règle des langues officielles (cf. [SOURCES.md](../SOURCES.md#géographie-administrative-et-quantitative)) : le russe n'a aucun statut en **Azerbaïdjan**, au **Turkménistan** et en **Ouzbékistan**, et n'est que « langue de communication interethnique » au **Tadjikistan**. Retraits : AZE, TKM, UZB, TJK. Restent RUS, BLR, KAZ, KGZ. Conséquence : la contrainte ne fournit plus que 3 grilles sur 12 comme graine (12/12 avant, en 59 tentatives) — à suivre comme `density_less_canada` (#121).

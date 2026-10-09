@@ -27,3 +27,5 @@ Le décompte ne retient que les voisins **jouables**. La liste est courte : tout
 ## Révision
 
 Procédure commune : [SOURCES.md](../SOURCES.md#procédure-de-révision).
+
+Revue 2026-10-09 (#122) — la dérivation comptait tous les voisins de world-countries, territoires hors catalogue compris, contrairement à la règle ci-dessus. Elle ne compte plus que les voisins jouables (`playableBorderCount`, commun à `borders_solo` / `borders_min_5` / `borders_min_7`). Retrait : **DZA** (7 voisins dont le Sahara occidental, 6 jouables). Seuls DZA, MAR, MRT (Sahara occidental) et CHN (Hong Kong, Macao) ont un voisin hors catalogue ; aucune autre liste ne bouge.

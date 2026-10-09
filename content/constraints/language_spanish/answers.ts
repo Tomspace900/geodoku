@@ -3,7 +3,6 @@ import { defineAnswerSet } from "../defineAnswerSet";
 
 export default defineAnswerSet("language_spanish", [
   "ARG",
-  "BLZ",
   "BOL",
   "CHL",
   "COL",

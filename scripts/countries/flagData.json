@@ -111,7 +111,7 @@
   },
   "BOL": {
     "flagColors": ["red", "green", "yellow"],
-    "flagSymbols": ["animal"],
+    "flagSymbols": ["animal", "star"],
     "flagLayout": ["horizontal_stripes"]
   },
   "BRA": {
@@ -541,7 +541,7 @@
   },
   "MDA": {
     "flagColors": ["red", "blue", "yellow"],
-    "flagSymbols": ["animal", "crescent", "star"],
+    "flagSymbols": ["animal", "crescent", "cross", "star"],
     "flagLayout": ["vertical_stripes"]
   },
   "MDG": {

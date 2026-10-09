@@ -29,3 +29,5 @@ La **Guinée équatoriale** reste exclue (arbitrage 2026-08-28) : aucune terre �
 ## Révision
 
 Procédure commune : [SOURCES.md](../SOURCES.md#procédure-de-révision).
+
+Revue 2026-10-09 (#122) — même règle que la Guinée équatoriale : la ligne ne coupe aucune terre émergée des **Maldives** (chenal Addu Kandu, entre Huvadhu et Addu) ni de **Kiribati** (entre Aranuka et Nonouti). Retraits : MDV, KIR. Restent les onze États dont la ligne coupe la terre (Wikipédia, *Equator*).

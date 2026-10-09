@@ -108,13 +108,25 @@ jouées restent lisibles.
 
 ## Géographie administrative et quantitative
 
-- Continents et sous-régions : [ONU M49](https://unstats.un.org/unsd/methodology/m49/).
+- Continents et sous-régions : [ONU M49](https://unstats.un.org/unsd/methodology/m49/), comme
+  référence d'un découpage Geodoku : **Chypre est en Europe** (membre de l'UE, attente du
+  joueur) alors que M49 la place en Asie occidentale (tranché le 2026-10-09).
 - Frontières et enclavement : [World Bank Official Boundaries](https://datacatalog.worldbank.org/search/dataset/0038272/world-bank-official-boundaries).
 - Population, superficie et densité : [World Development Indicators](https://datacatalog.worldbank.org/search/dataset/0037712/world-development-indicators)
   et [UN World Population Prospects 2024](https://www.un.org/development/desa/pd/world-population-prospects-2024).
 
 Une comparaison quantitative emploie un même millésime et un même périmètre.
 Une valeur absente n'est jamais assimilée à zéro ou à `false`.
+
+**Langues officielles (tranché le 2026-10-09).** Une langue compte si une loi la
+rend officielle, ou si elle est **de fait** la langue de l'État là où aucune loi
+n'en désigne : l'anglais au Royaume-Uni, aux États-Unis, en Australie ou en
+Nouvelle-Zélande, l'espagnol au Mexique, au Chili ou en Argentine. Ne comptent
+pas les statuts secondaires : langue de travail à côté d'une langue officielle
+désignée (français au Mali), langue de communication interethnique (russe au
+Tadjikistan), statut spécial (arabe en Israël), usage courant sans statut
+(espagnol au Belize). Le russe reste au Kazakhstan et au Kirghizistan, où la
+constitution le rend co-officiel. Corrections : `countryPatches.ts`.
 
 ## Drapeaux
 
@@ -140,6 +152,13 @@ quatre symboles de son blason, la Croatie sa martre de la couronne — mais de
 façon incohérente : le même blason croate fournissait l'animal et pas le croissant
 ni l'étoile. La revue 2026-09-11 a rattrapé HRV, MDA, GNQ, AND, SRB, CRI, BOL,
 VEN et PRY.
+
+**Quel drapeau d'État (précisé le 2026-10-09).** La version à armoiries compte
+quand elle est la forme officielle **du drapeau national** portée par l'État
+(Espagne, Bolivie, Costa Rica, Venezuela, Paraguay). Un drapeau de service ou
+d'État **distinct** du drapeau national ne compte pas : la Finlande garde sa
+seule croix (pas le lion du drapeau d'État), la Pologne, l'Allemagne et
+l'Autriche n'en tirent aucun symbole.
 
 Restent **hors** convention faute d'élément identifiable à l'œil sur le drapeau
 rendu : la croix au sommet de la couronne espagnole, l'orbe crucifère de l'aigle
@@ -241,7 +260,10 @@ sont rattachées à aucun bassin : ce sont des mers intérieures, pas des océan
 Conséquence assumée — SWE, FIN, POL, EST, LVA, LTU (Baltique) et BGR, ROU, UKR,
 GEO (mer Noire) sont `coastal` sans satisfaire aucune contrainte `ocean_*`. Le
 contraste avec DEU et DNK, qui ont l'Atlantique par la mer du Nord, est voulu :
-la mer du Nord est un bras ouvert de l'Atlantique, la Baltique non.
+la mer du Nord est un bras ouvert de l'Atlantique, la Baltique non. Le
+**Skagerrak et le Kattegat** sont lus comme des abords de la Baltique : la Suède
+reste sans façade atlantique, comme le joueur se la figure (tranché le
+2026-10-09).
 
 La **Finlande n'a pas de façade arctique** : elle a perdu Petsamo en 1944 et
 n'atteint plus l'océan Glacial. Aucun État jouable ne borde l'océan Austral —

@@ -30,3 +30,5 @@ Un pays à plusieurs capitales est jugé sur sa capitale **politique**. La compa
 Revue 2026-09-11 — trois oublis rattrapés : **GMB** (Banjul ≈ 31 000 hab. contre Serekunda ≈ 340 000), **GNQ** (Malabo capitale, Bata plus peuplée) et **SWZ** (Mbabane capitale administrative, Manzini plus peuplée).
 
 Procédure commune : [SOURCES.md](../SOURCES.md#procédure-de-révision).
+
+Revue 2026-10-09 (#122) — quatre oublis rattrapés, la comparaison portant sur la ville et non l'aire urbaine : **TWN** (Nouveau Taipei, plus peuplée que Taipei), **SMR** (Serravalle contre la Cité de Saint-Marin), **LIE** (Schaan contre Vaduz), **MLT** (St. Paul's Bay et Birkirkara contre La Valette).

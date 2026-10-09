@@ -9,7 +9,7 @@
  *
  * `content/` est terminal : ce module n'importe que des types de `content/`.
  */
-import type { CountryCode } from "../countries/countryCodes";
+import { type CountryCode, isCountryCode } from "../countries/countryCodes";
 import type { CountryFacts } from "../countries/type";
 import type { ActiveConstraintId } from "./index";
 
@@ -29,6 +29,15 @@ type Derivation = (facts: CountryFacts, ctx: DerivationContext) => boolean;
 const BORDERS_SOLO = 1;
 const BORDERS_MIN_5 = 5;
 const BORDERS_MIN_7 = 7;
+
+/**
+ * Voisins **jouables** : un territoire hors catalogue (Sahara occidental, Hong
+ * Kong, Macao) ne compte pas dans un décompte de frontières — sans quoi
+ * l'Algérie passait à 7 voisins par le Sahara occidental.
+ */
+function playableBorderCount(facts: CountryFacts): number {
+  return facts.borders.filter(isCountryCode).length;
+}
 
 const TIME_ZONES_MULTIPLE = 2;
 /**
@@ -106,9 +115,9 @@ export const DERIVATIONS = {
   water_landlocked: (f) => f.waterAccess === "landlocked",
 
   // ── Frontières — nombre ────────────────────────────────────────────────────
-  borders_solo: (f) => f.borders.length === BORDERS_SOLO,
-  borders_min_5: (f) => f.borders.length >= BORDERS_MIN_5,
-  borders_min_7: (f) => f.borders.length >= BORDERS_MIN_7,
+  borders_solo: (f) => playableBorderCount(f) === BORDERS_SOLO,
+  borders_min_5: (f) => playableBorderCount(f) >= BORDERS_MIN_5,
+  borders_min_7: (f) => playableBorderCount(f) >= BORDERS_MIN_7,
 
   // ── Frontières — pivot ─────────────────────────────────────────────────────
   borders_russia: (f) => f.borders.includes(CODE_RUS),

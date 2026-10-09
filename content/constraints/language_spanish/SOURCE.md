@@ -28,3 +28,5 @@ Seul le statut officiel **national** compte : une langue régionale, co-officiel
 ## Révision
 
 Procédure commune : [SOURCES.md](../SOURCES.md#procédure-de-révision).
+
+Revue 2026-10-09 (#122) — au **Belize**, l'espagnol est d'usage courant mais sans statut ; l'anglais est la langue de l'État. Retrait : BLZ.

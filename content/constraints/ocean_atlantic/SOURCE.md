@@ -36,3 +36,5 @@ pas bordé par l'Atlantique » ne se défend pas.
 Revue 2026-09-11 — la convention « mer des Caraïbes repliée sur l'Atlantique » (cf. `oceanBasinCount`) n'était pas appliquée à cette liste. Règle retenue : **un pays continental dont la seule façade est caraïbe n'a pas de façade atlantique** (BLZ, GTM, HND, NIC, PAN, CRI, COL restent exclus) ; **une île des Caraïbes a les deux façades**, sa côte est donnant sur l'Atlantique ouvert. 12 ajouts : ATG, BRB, CUB, DMA, DOM, GRD, HTI, JAM, KNA, LCA, TTO, VCT. MEX et VEN conservent leur façade atlantique propre (golfe du Mexique, littoral à l'est du delta de l'Orénoque).
 
 Procédure commune : [SOURCES.md](../SOURCES.md#procédure-de-révision).
+
+Revue 2026-10-09 (#122) — la règle « une île des Caraïbes a les deux façades » supposait une côte est sur l'Atlantique ouvert. La **Jamaïque** n'en a pas : Cuba et Hispaniola ferment la mer des Caraïbes au nord et à l'est. Retrait : JAM. La **Suède** reste dehors (Skagerrak et Kattegat lus comme abords de la Baltique, cf. [SOURCES.md](../SOURCES.md#océans)).

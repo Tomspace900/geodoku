@@ -4,7 +4,7 @@ export default defineAbout("language_portuguese", {
   sources: ["world_countries"],
   basis: "source",
   clarification: {
-    fr: "Seul le statut de langue officielle nationale compte, pas un usage régional ou de fait.",
-    en: "Only official national language status counts, not regional or de facto use.",
+    fr: "Langue officielle de droit, ou de fait là où aucune loi n'en désigne. Une langue de travail ou d'usage courant, sans statut, ne compte pas.",
+    en: "Official by law, or de facto where no law names one. A working language, or one in common use without status, does not count.",
   },
 });
