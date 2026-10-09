@@ -11,6 +11,7 @@
  * quantitatifs dérivés ») et les `SOURCE.md` des contraintes concernées.
  */
 
+import type { HumanDevelopmentCategory } from "../../../content/countries/humanDevelopment.ts";
 import type {
   FormerSovereign,
   ProductionRankKey,
@@ -259,4 +260,36 @@ export type WorldBankIndicatorsSnapshot = {
   harvestedAt: string;
   gdpPerCapita: WorldBankIndicator;
   lifeExpectancy: WorldBankIndicator;
+};
+
+/** Pourquoi un pays n'a aucune valeur d'IDH dans l'édition retenue. */
+export type HumanDevelopmentMissingCause =
+  /** Aucune ligne pour ce code dans le fichier (Taïwan, Vatican, Kosovo). */
+  | "not_in_report"
+  /** Une ligne existe mais sans valeur : catégorie « Other Countries or Territories ». */
+  | "no_value_published";
+
+/** IDH d'un pays, avec la catégorie que le PNUD publie pour lui (`hdicode`). */
+export type HumanDevelopmentValue = {
+  value: number;
+  category: HumanDevelopmentCategory;
+};
+
+/**
+ * Indice de développement humain du PNUD, tel que récolté. Chaque pays du
+ * catalogue est soit dans `values`, soit dans `missing` avec sa cause. La
+ * catégorie publiée n'est conservée que pour la garde de `check:content` : la
+ * fiche la recalcule depuis la valeur.
+ */
+export type HumanDevelopmentIndexSnapshot = {
+  /** Année du *Human Development Report* (« Rapport 2025 »). */
+  edition: number;
+  /** Année des données : la dernière de l'édition (« données 2023 »). */
+  dataYear: number;
+  /** URL exacte du fichier récolté. */
+  sourceUrl: string;
+  /** Date de récolte (`YYYY-MM-DD`). */
+  harvestedAt: string;
+  values: Record<string, HumanDevelopmentValue>;
+  missing: Record<string, HumanDevelopmentMissingCause>;
 };
