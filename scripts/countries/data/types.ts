@@ -171,3 +171,42 @@ export type CapitalLabelsSnapshot = {
   labels: Record<string, Record<string, CapitalLabel>>;
   overrides: Record<string, Record<string, CapitalLabelOverride>>;
 };
+
+/** Libellés d'un point culminant, dans les deux langues du jeu. */
+export type HighestPointLabel = { fr: string; en: string };
+
+/**
+ * Point culminant d'un pays. L'altitude et le nom viennent du CIA World
+ * Factbook (*Elevation › highest point*) ; `label` est le libellé fr/en
+ * Wikidata du même sommet, reconnu par l'altitude (le Factbook retire les
+ * diacritiques). `label` vaut `null` pour un point sans nom : l'affichage
+ * porte alors une convention unique.
+ */
+export type HighestPointEntry = {
+  /** Texte du Factbook, nettoyé des notes et parenthèses, sans l'altitude. */
+  sourceName: string;
+  /** Altitude du Factbook, en mètres. */
+  elevationM: number;
+  label: HighestPointLabel | null;
+  /** Identifiant Wikidata du sommet reconnu ; `null` si sans nom. */
+  wikidata: string | null;
+};
+
+/** Libellé posé à la main : le motif dit pourquoi la récolte ne suffit pas. */
+export type HighestPointOverride = {
+  label: HighestPointLabel | null;
+  reason: string;
+};
+
+/**
+ * Points culminants par ISO3. `points` est écrit par `harvest/highestPoints.ts` ;
+ * `overrides` est curé, préservé à chaque récolte, et l'emporte sur `points[].label`.
+ */
+export type HighestPointsSnapshot = {
+  /** Commit du miroir `factbook.json` — le même que `sovereignty.sourceCommit`. */
+  factbookCommit: string;
+  /** Date de récolte (`YYYY-MM-DD`) des libellés Wikidata (état courant). */
+  harvestedAt: string;
+  points: Record<string, HighestPointEntry>;
+  overrides: Record<string, HighestPointOverride>;
+};
