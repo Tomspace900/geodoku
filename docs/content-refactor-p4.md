@@ -1162,6 +1162,26 @@ case (A–D).
   commandes lourdes de la machine, a échoué en masse (timeouts) ; relancé seul : 141/141.
 - Cohérence 5 000 m : 27 pays ≥ 5 000 m, 27 marqués `peak_over_5000m`, aucun écart
   (NLD, PSE, XKX compris). `ACCEPTED_PEAK_GAPS` vide.
-- Décisions en attente (voir dossier de gate) : ISR et USA (provisoires dans le
-  dataset), SAU, BWA/GNB/LUX/FSM/QAT/PSE (suivre le Factbook contre Wikidata),
-  convention des points sans nom.
+- Décisions utilisateur (gate du 2026-10-09) :
+  1. ISR : mont Méron (1 208 m), dans les frontières reconnues, et non le
+     Mitspe Shlagim du Factbook, dans le Golan — même logique que SRB (Midžor,
+     hors Kosovo).
+  2. USA : Denali, nom de l'usage courant.
+  3. SAU : Jabal Sawda (3 133 m) au lieu de la chaîne « As Sarawat ».
+  4. BWA, GNB, LUX, FSM, QAT, PSE : nom et altitude du Factbook, comme proposé.
+  5. Points sans nom : « Point sans nom (X m) » / « Unnamed point (X m) ».
+- Revue (`105cd74`) : ISR et SAU retiennent un **autre sommet** que le
+  Factbook, avec une altitude Wikidata (`P2044`). `HighestPointOverride`
+  devient une union `label` (renommage, altitude du Factbook) / `peak` (autre
+  sommet, source de l'altitude dans le motif). Millésime de
+  `cia_factbook_elevation` mis à `null`, comme Indépendance et Nationalité
+  (le hash du commit était affiché au joueur). Clé
+  `countrySheet.field.peakOver5000m` retirée, sa ligne n'existant plus.
+- Merge : fast-forward sur `develop`, re-signé par l'utilisateur.
+- Points ouverts :
+  - **Rafraîchissement réseau mis de côté** : la regen du lot a mis à jour 9
+    populations et la popularité, et sorti BWA de `density_less_canada`.
+    Isolé et écarté pour tenir l'invariant du lot. Décision utilisateur
+    (2026-10-09) : pas de regen hors-ligne — le rafraîchissement part sur
+    `develop` dans un commit séparé et ira en prod avec les lots 1 à 5, pool
+    de prod régénéré après le merge (issue #50).
