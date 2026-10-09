@@ -19,6 +19,9 @@
  *     (un par contrainte) et des trois documents de socle ;
  *   - **sources des contraintes** : un `about.ts` par contrainte active/archivée,
  *     clarifications conformes — cf. `validateConstraintAbouts` ;
+ *   - **libellés chiffrés** : le chiffre d'un libellé calculé sur un pays de
+ *     référence (« plus dense que le Japon (320 hab./km²) ») est la valeur du
+ *     snapshot arrondie à 2 chiffres significatifs — cf. `validateReferenceLabels` ;
  *   - **sources référencées** : chaque `SourceId` de `content/sources.ts` (about.ts
  *     des contraintes + `factProvenance.ts` des faits pays, lot 2) est cité au
  *     moins une fois, et chaque URL de source est en `https://`.
@@ -82,6 +85,7 @@ import {
 import { validateContentSeam } from "./validateContentSeam";
 import { validateDerivationFreshness } from "./validateDerivationFreshness";
 import { referencedSourcesFromFactProvenance } from "./validateFactProvenance";
+import { validateReferenceLabels } from "./validateReferenceLabels";
 
 const EXPECTED_COUNTRY_COUNT = 197;
 const EXPECTED_ACTIVE_COUNT = 77;
@@ -365,6 +369,7 @@ function main(): void {
   errors.push(...validateContentSeam(resolve(".")));
   checkConstraintSources(errors);
   errors.push(...validateConstraintAbouts());
+  errors.push(...validateReferenceLabels());
 
   const referencedSources = new Set([
     ...referencedSourcesFromAbouts(),

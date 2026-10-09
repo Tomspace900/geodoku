@@ -340,12 +340,12 @@ export const fr = {
     area_larger_india: "Plus grand que l'Inde (3,3\u00A0M\u00A0km²)",
     area_larger_mexico: "Plus grand que le Mexique (2\u00A0M\u00A0km²)",
     area_larger_france: "Plus grand que la France (550\u00A0000\u00A0km²)",
-    area_smaller_belgium: "Plus petit que la Belgique (30\u00A0000\u00A0km²)",
+    area_smaller_belgium: "Plus petit que la Belgique (31\u00A0000\u00A0km²)",
     area_smaller_luxembourg:
       "Plus petit que le Luxembourg (2\u00A0600\u00A0km²)",
     population_more_germany:
       "Plus peuplé que l'Allemagne (83\u00A0M\u00A0hab.)",
-    population_more_canada: "Plus peuplé que le Canada (40\u00A0M\u00A0hab.)",
+    population_more_canada: "Plus peuplé que le Canada (42\u00A0M\u00A0hab.)",
     population_less_iceland:
       "Moins peuplé que l'Islande (400\u00A0000\u00A0hab.)",
     language_french: "Langue officielle\u00A0: français",
@@ -381,13 +381,13 @@ export const fr = {
     density_more_netherlands:
       "Plus densément peuplé que les Pays-Bas (430\u00A0hab./km²)",
     density_more_japan:
-      "Plus densément peuplé que le Japon (330\u00A0hab./km²)",
+      "Plus densément peuplé que le Japon (320\u00A0hab./km²)",
     density_less_russia:
-      "Moins densément peuplé que la Russie (9\u00A0hab./km²)",
+      "Moins densément peuplé que la Russie (8,5\u00A0hab./km²)",
     density_less_canada:
-      "Moins densément peuplé que le Canada (4\u00A0hab./km²)",
+      "Moins densément peuplé que le Canada (4,2\u00A0hab./km²)",
     nature_desert: "Possède un désert",
-    nature_rainforest: "Abrite une forêt tropicale",
+    nature_rainforest: "Abrite une forêt tropicale humide",
     nature_active_volcano:
       "Possède un volcan en activité (éruption depuis 1500)",
     nature_mountain_area_majority: "Plus de 50\u00A0% du territoire montagneux",
