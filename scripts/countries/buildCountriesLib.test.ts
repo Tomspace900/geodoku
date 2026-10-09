@@ -61,6 +61,8 @@ function minimalCountry(code: string): CountryRecord {
     sovereigntyDate: null,
     sovereigntySheetHidden: false,
     highestPoint: { elevationM: 100, names: null },
+    gdpPerCapitaUsd: null,
+    lifeExpectancyYears: null,
     currencies: ["EUR"],
     demonyms: { fr: { m: "X", f: "X" }, en: { m: "X", f: "X" } },
   };
@@ -451,6 +453,23 @@ describe("quantitativeFactsForCode", () => {
         },
       },
     },
+    worldBank: {
+      harvestedAt: "2026-10-09",
+      gdpPerCapita: {
+        code: "NY.GDP.PCAP.CD",
+        sourceUpdatedAt: "2026-10-08",
+        window: { from: 2021, to: 2025 },
+        values: { FRA: { value: 48986.4, year: 2025 } },
+        missing: { RUS: "no_value_in_window" },
+      },
+      lifeExpectancy: {
+        code: "SP.DYN.LE00.IN",
+        sourceUpdatedAt: "2026-10-08",
+        window: { from: 2021, to: 2025 },
+        values: { FRA: { value: 83.04, year: 2024 } },
+        missing: { RUS: "not_in_wdi" },
+      },
+    },
     sovereignty: {
       sourceCommit: "x",
       countries: {
@@ -483,6 +502,8 @@ describe("quantitativeFactsForCode", () => {
         elevationM: 100,
         names: { fr: "Elbrouz", en: "Mount Elbrus" },
       },
+      gdpPerCapitaUsd: null,
+      lifeExpectancyYears: null,
     });
     expect(quantitativeFactsForCode("CHE", datasets).mountainAreaShare).toBe(
       0.654,
@@ -577,6 +598,15 @@ describe("quantitativeFactsForCode", () => {
       elevationM: 1208,
       names: { fr: "autre", en: "other" },
     });
+  });
+
+  it("keeps the raw WDI value and its year, and null when the WDI has none", () => {
+    const fra = quantitativeFactsForCode("FRA", datasets);
+    expect(fra.gdpPerCapitaUsd).toEqual({ value: 48986.4, year: 2025 });
+    expect(fra.lifeExpectancyYears).toEqual({ value: 83.04, year: 2024 });
+    expect(
+      quantitativeFactsForCode("RUS", datasets).gdpPerCapitaUsd,
+    ).toBeNull();
   });
 
   it("fails loudly for a country without a highest point", () => {

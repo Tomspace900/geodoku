@@ -28,6 +28,7 @@ import type {
   ProductionRankKey,
   SovereigntySnapshot,
   UrbanCentresSnapshot,
+  WorldBankIndicatorsSnapshot,
 } from "./data/types.ts";
 
 /** Explicit source fixes — only fields where world-countries / REST need gameplay correction. */
@@ -511,6 +512,7 @@ export type QuantitativeDatasets = {
   coalElectricity: CoalElectricitySnapshot;
   sovereignty: SovereigntySnapshot;
   highestPoints: HighestPointsSnapshot;
+  worldBank: WorldBankIndicatorsSnapshot;
 };
 
 type QuantitativeFacts = Pick<
@@ -528,6 +530,8 @@ type QuantitativeFacts = Pick<
   | "sovereigntyDate"
   | "sovereigntySheetHidden"
   | "highestPoint"
+  | "gdpPerCapitaUsd"
+  | "lifeExpectancyYears"
 >;
 
 /**
@@ -636,6 +640,8 @@ export function quantitativeFactsForCode(
     sovereigntyDate: sovereignty?.date ?? null,
     sovereigntySheetHidden: sovereignty?.sheetHidden !== undefined,
     highestPoint: highestPointForCode(code, datasets.highestPoints),
+    gdpPerCapitaUsd: datasets.worldBank.gdpPerCapita.values[code] ?? null,
+    lifeExpectancyYears: datasets.worldBank.lifeExpectancy.values[code] ?? null,
   };
 }
 

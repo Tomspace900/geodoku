@@ -50,7 +50,9 @@ import { countryPatches } from "../countries/countryPatches";
 import { CAPITAL_LABELS } from "../countries/data/capitalLabels";
 import { QUANTITATIVE_DATASETS } from "../countries/data/datasets";
 import { HIGHEST_POINTS } from "../countries/data/highestPoints";
+import { WORLD_BANK_INDICATORS } from "../countries/data/worldBankIndicators";
 import { validateHarvestVintage } from "../countries/harvest/capitalLabelsLib";
+import { validateYearRangeVintage } from "../countries/harvest/worldBankIndicatorsLib";
 import {
   validateCountryCatalog,
   validateCountryFacts,
@@ -62,6 +64,7 @@ import {
   validateDatasetFacts,
   validateHighestPoints,
   validatePeakCoherence,
+  validateWorldBankIndicator,
 } from "../countries/validateDatasetFacts";
 import { validateSovereigntySources } from "../countries/validateSovereigntySources";
 import {
@@ -140,6 +143,26 @@ function checkCountries(errors: string[]): void {
   );
   errors.push(
     ...validatePeakCoherence(COUNTRY_FACTS, ACCEPTED_PEAK_GAPS, COUNTRY_CODES),
+  );
+  errors.push(
+    ...validateWorldBankIndicator(
+      WORLD_BANK_INDICATORS.gdpPerCapita,
+      COUNTRY_CODES,
+    ),
+    ...validateWorldBankIndicator(
+      WORLD_BANK_INDICATORS.lifeExpectancy,
+      COUNTRY_CODES,
+    ),
+    ...validateYearRangeVintage(
+      "world_bank_gdp_per_capita",
+      SOURCES.world_bank_gdp_per_capita.vintage,
+      WORLD_BANK_INDICATORS.gdpPerCapita,
+    ),
+    ...validateYearRangeVintage(
+      "world_bank_life_expectancy",
+      SOURCES.world_bank_life_expectancy.vintage,
+      WORLD_BANK_INDICATORS.lifeExpectancy,
+    ),
   );
   errors.push(...validateSovereigntySources(QUANTITATIVE_DATASETS.sovereignty));
 

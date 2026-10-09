@@ -58,6 +58,14 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
         en: "Noshaq",
       },
     },
+    gdpPerCapitaUsd: {
+      value: 416.871146273728,
+      year: 2024,
+    },
+    lifeExpectancyYears: {
+      value: 66.289,
+      year: 2024,
+    },
     currencies: ["AFN"],
     demonyms: {
       fr: {
@@ -118,6 +126,14 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
         fr: "Morro de Môco",
         en: "Mount Moco",
       },
+    },
+    gdpPerCapitaUsd: {
+      value: 3129.47662331063,
+      year: 2025,
+    },
+    lifeExpectancyYears: {
+      value: 64.805,
+      year: 2024,
     },
     currencies: ["AOA"],
     demonyms: {
@@ -180,6 +196,14 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
         en: "Korab",
       },
     },
+    gdpPerCapitaUsd: {
+      value: 12998.147869552,
+      year: 2025,
+    },
+    lifeExpectancyYears: {
+      value: 79.776,
+      year: 2024,
+    },
     currencies: ["ALL"],
     demonyms: {
       fr: {
@@ -240,6 +264,14 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
         fr: "pic de Coma Pedrosa",
         en: "Coma Pedrosa",
       },
+    },
+    gdpPerCapitaUsd: {
+      value: 54291.5026031052,
+      year: 2025,
+    },
+    lifeExpectancyYears: {
+      value: 84.188,
+      year: 2024,
     },
     currencies: ["EUR"],
     demonyms: {
@@ -305,6 +337,14 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
         en: "Jebel Jais",
       },
     },
+    gdpPerCapitaUsd: {
+      value: 50273.5126243239,
+      year: 2024,
+    },
+    lifeExpectancyYears: {
+      value: 83.069,
+      year: 2024,
+    },
     currencies: ["AED"],
     demonyms: {
       fr: {
@@ -365,6 +405,14 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
         fr: "Aconcagua",
         en: "Aconcagua",
       },
+    },
+    gdpPerCapitaUsd: {
+      value: 14898.0885943842,
+      year: 2025,
+    },
+    lifeExpectancyYears: {
+      value: 77.543,
+      year: 2024,
     },
     currencies: ["ARS"],
     demonyms: {
@@ -427,6 +475,14 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
         en: "Mount Aragats",
       },
     },
+    gdpPerCapitaUsd: {
+      value: 9474.01849300368,
+      year: 2025,
+    },
+    lifeExpectancyYears: {
+      value: 78.319512195122,
+      year: 2024,
+    },
     currencies: ["AMD"],
     demonyms: {
       fr: {
@@ -487,6 +543,14 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
         fr: "mont Obama",
         en: "Mount Obama",
       },
+    },
+    gdpPerCapitaUsd: {
+      value: 24819.2454680158,
+      year: 2025,
+    },
+    lifeExpectancyYears: {
+      value: 77.766,
+      year: 2024,
     },
     currencies: ["XCD"],
     demonyms: {
@@ -557,6 +621,14 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
         en: "Mount Kosciuszko",
       },
     },
+    gdpPerCapitaUsd: {
+      value: 65129.7227990563,
+      year: 2025,
+    },
+    lifeExpectancyYears: {
+      value: 83.0512195121951,
+      year: 2024,
+    },
     currencies: ["AUD"],
     demonyms: {
       fr: {
@@ -617,6 +689,14 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
         fr: "Grossglockner",
         en: "Grossglockner",
       },
+    },
+    gdpPerCapitaUsd: {
+      value: 62930.0351324599,
+      year: 2025,
+    },
+    lifeExpectancyYears: {
+      value: 81.9951219512195,
+      year: 2024,
     },
     currencies: ["EUR"],
     demonyms: {
@@ -679,6 +759,14 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
         en: "Mount Bazardüzü",
       },
     },
+    gdpPerCapitaUsd: {
+      value: 7410.72281660142,
+      year: 2025,
+    },
+    lifeExpectancyYears: {
+      value: 74.576,
+      year: 2024,
+    },
     currencies: ["AZN"],
     demonyms: {
       fr: {
@@ -736,6 +824,14 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     highestPoint: {
       elevationM: 2685,
       names: null,
+    },
+    gdpPerCapitaUsd: {
+      value: 233.823013385395,
+      year: 2025,
+    },
+    lifeExpectancyYears: {
+      value: 63.818,
+      year: 2024,
     },
     currencies: ["BIF"],
     demonyms: {
@@ -798,6 +894,14 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
         en: "Signal de Botrange",
       },
     },
+    gdpPerCapitaUsd: {
+      value: 60750.2735864647,
+      year: 2025,
+    },
+    lifeExpectancyYears: {
+      value: 82.3,
+      year: 2024,
+    },
     currencies: ["EUR"],
     demonyms: {
       fr: {
@@ -855,6 +959,14 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     highestPoint: {
       elevationM: 675,
       names: null,
+    },
+    gdpPerCapitaUsd: {
+      value: 1658.27312662991,
+      year: 2025,
+    },
+    lifeExpectancyYears: {
+      value: 60.961,
+      year: 2024,
     },
     currencies: ["XOF"],
     demonyms: {
@@ -916,6 +1028,14 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
         fr: "Tenakourou",
         en: "Mount Tenakourou",
       },
+    },
+    gdpPerCapitaUsd: {
+      value: 1147.57131635601,
+      year: 2025,
+    },
+    lifeExpectancyYears: {
+      value: 61.292,
+      year: 2024,
     },
     currencies: ["XOF"],
     demonyms: {
@@ -980,6 +1100,14 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
         en: "Mowdok tiang",
       },
     },
+    gdpPerCapitaUsd: {
+      value: 2597.34352335275,
+      year: 2025,
+    },
+    lifeExpectancyYears: {
+      value: 74.93,
+      year: 2024,
+    },
     currencies: ["BDT"],
     demonyms: {
       fr: {
@@ -1040,6 +1168,14 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
         fr: "Moussala",
         en: "Musala",
       },
+    },
+    gdpPerCapitaUsd: {
+      value: 20328.1667065538,
+      year: 2025,
+    },
+    lifeExpectancyYears: {
+      value: 75.7609756097561,
+      year: 2024,
     },
     currencies: ["BGN"],
     demonyms: {
@@ -1102,6 +1238,14 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
         en: "Mountain of Smoke",
       },
     },
+    gdpPerCapitaUsd: {
+      value: 30596.5794898885,
+      year: 2025,
+    },
+    lifeExpectancyYears: {
+      value: 81.423,
+      year: 2024,
+    },
     currencies: ["BHD"],
     demonyms: {
       fr: {
@@ -1162,6 +1306,14 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
         fr: "mont Alvernia",
         en: "Mount Alvernia",
       },
+    },
+    gdpPerCapitaUsd: {
+      value: 39455.4466548546,
+      year: 2024,
+    },
+    lifeExpectancyYears: {
+      value: 74.71,
+      year: 2024,
     },
     currencies: ["BSD", "USD"],
     demonyms: {
@@ -1224,6 +1376,14 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
         en: "Maglić",
       },
     },
+    gdpPerCapitaUsd: {
+      value: 10381.8460703874,
+      year: 2025,
+    },
+    lifeExpectancyYears: {
+      value: 78.044,
+      year: 2024,
+    },
     currencies: ["BAM"],
     demonyms: {
       fr: {
@@ -1285,6 +1445,14 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
         en: "Dziaržynkaja hara",
       },
     },
+    gdpPerCapitaUsd: {
+      value: 10279.2547190723,
+      year: 2025,
+    },
+    lifeExpectancyYears: {
+      value: 74.3653414634147,
+      year: 2024,
+    },
     currencies: ["BYN"],
     demonyms: {
       fr: {
@@ -1345,6 +1513,14 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
         fr: "Doyle's Delight",
         en: "Doyle's Delight",
       },
+    },
+    gdpPerCapitaUsd: {
+      value: 7865.47937690933,
+      year: 2025,
+    },
+    lifeExpectancyYears: {
+      value: 73.739,
+      year: 2024,
     },
     currencies: ["BZD"],
     demonyms: {
@@ -1416,6 +1592,14 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
         fr: "Nevado Sajama",
         en: "Nevado Sajama",
       },
+    },
+    gdpPerCapitaUsd: {
+      value: 5147.81081955367,
+      year: 2025,
+    },
+    lifeExpectancyYears: {
+      value: 68.739,
+      year: 2024,
     },
     currencies: ["BOB"],
     demonyms: {
@@ -1493,6 +1677,14 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
         en: "Pico da Neblina",
       },
     },
+    gdpPerCapitaUsd: {
+      value: 10713.2856869511,
+      year: 2025,
+    },
+    lifeExpectancyYears: {
+      value: 76.023,
+      year: 2024,
+    },
     currencies: ["BRL"],
     demonyms: {
       fr: {
@@ -1553,6 +1745,14 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
         fr: "mont Hillaby",
         en: "Mount Hillaby",
       },
+    },
+    gdpPerCapitaUsd: {
+      value: 28364.8181499736,
+      year: 2025,
+    },
+    lifeExpectancyYears: {
+      value: 76.332,
+      year: 2024,
     },
     currencies: ["BBD"],
     demonyms: {
@@ -1615,6 +1815,14 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
         en: "Bukit Pagon",
       },
     },
+    gdpPerCapitaUsd: {
+      value: 32234.6428368582,
+      year: 2025,
+    },
+    lifeExpectancyYears: {
+      value: 75.501,
+      year: 2024,
+    },
     currencies: ["BND", "SGD"],
     demonyms: {
       fr: {
@@ -1675,6 +1883,14 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
         fr: "Gangkhar Puensum",
         en: "Gangkhar Puensum",
       },
+    },
+    gdpPerCapitaUsd: {
+      value: 4492.78400306618,
+      year: 2025,
+    },
+    lifeExpectancyYears: {
+      value: 73.262,
+      year: 2024,
     },
     currencies: ["BTN", "INR"],
     demonyms: {
@@ -1737,6 +1953,14 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
         en: "Manyelanong Hill",
       },
     },
+    gdpPerCapitaUsd: {
+      value: 7778.1151090571,
+      year: 2025,
+    },
+    lifeExpectancyYears: {
+      value: 69.293,
+      year: 2024,
+    },
     currencies: ["BWP"],
     demonyms: {
       fr: {
@@ -1797,6 +2021,14 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
         fr: "mont Ngaoui",
         en: "Mont Ngaoui",
       },
+    },
+    gdpPerCapitaUsd: {
+      value: 556.131398031455,
+      year: 2025,
+    },
+    lifeExpectancyYears: {
+      value: 57.671,
+      year: 2024,
     },
     currencies: ["XAF"],
     demonyms: {
@@ -1868,6 +2100,14 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
         en: "Mount Logan",
       },
     },
+    gdpPerCapitaUsd: {
+      value: 55697.6639660837,
+      year: 2025,
+    },
+    lifeExpectancyYears: {
+      value: 82.1080487804878,
+      year: 2024,
+    },
     currencies: ["CAD"],
     demonyms: {
       fr: {
@@ -1929,6 +2169,14 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
         en: "Dufourspitze",
       },
     },
+    gdpPerCapitaUsd: {
+      value: 114769.012314293,
+      year: 2025,
+    },
+    lifeExpectancyYears: {
+      value: 84.4073170731707,
+      year: 2024,
+    },
     currencies: ["CHF"],
     demonyms: {
       fr: {
@@ -1989,6 +2237,14 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
         fr: "Nevado Ojos del Salado",
         en: "Ojos del Salado",
       },
+    },
+    gdpPerCapitaUsd: {
+      value: 17994.5911957485,
+      year: 2025,
+    },
+    lifeExpectancyYears: {
+      value: 81.359,
+      year: 2024,
     },
     currencies: ["CLP"],
     demonyms: {
@@ -2073,6 +2329,14 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
         en: "Mount Everest",
       },
     },
+    gdpPerCapitaUsd: {
+      value: 13861.970224368,
+      year: 2025,
+    },
+    lifeExpectancyYears: {
+      value: 78.017,
+      year: 2024,
+    },
     currencies: ["CNY"],
     demonyms: {
       fr: {
@@ -2136,6 +2400,14 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
         en: "Mount Nimba",
       },
     },
+    gdpPerCapitaUsd: {
+      value: 3050.10202257321,
+      year: 2025,
+    },
+    lifeExpectancyYears: {
+      value: 62.11,
+      year: 2024,
+    },
     currencies: ["XOF"],
     demonyms: {
       fr: {
@@ -2198,6 +2470,14 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
         fr: "mont Cameroun",
         en: "Mount Cameroon",
       },
+    },
+    gdpPerCapitaUsd: {
+      value: 1972.3815800786,
+      year: 2025,
+    },
+    lifeExpectancyYears: {
+      value: 63.968,
+      year: 2024,
     },
     currencies: ["XAF"],
     demonyms: {
@@ -2265,6 +2545,14 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
         en: "Mount Stanley",
       },
     },
+    gdpPerCapitaUsd: {
+      value: 806.776000708534,
+      year: 2025,
+    },
+    lifeExpectancyYears: {
+      value: 62.074,
+      year: 2024,
+    },
     currencies: ["CDF"],
     demonyms: {
       fr: {
@@ -2325,6 +2613,14 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
         fr: "mont Nabemba",
         en: "Mont Nabemba",
       },
+    },
+    gdpPerCapitaUsd: {
+      value: 2514.73393584747,
+      year: 2025,
+    },
+    lifeExpectancyYears: {
+      value: 66.001,
+      year: 2024,
     },
     currencies: ["XAF"],
     demonyms: {
@@ -2397,6 +2693,14 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
         en: "Pico Cristóbal Colón",
       },
     },
+    gdpPerCapitaUsd: {
+      value: 8561.62091854449,
+      year: 2025,
+    },
+    lifeExpectancyYears: {
+      value: 77.913,
+      year: 2024,
+    },
     currencies: ["COP"],
     demonyms: {
       fr: {
@@ -2457,6 +2761,14 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
         fr: "Karthala",
         en: "Mount Karthala",
       },
+    },
+    gdpPerCapitaUsd: {
+      value: 2055.75921566281,
+      year: 2025,
+    },
+    lifeExpectancyYears: {
+      value: 67.023,
+      year: 2024,
     },
     currencies: ["KMF"],
     demonyms: {
@@ -2519,6 +2831,14 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
         en: "Pico do Fogo",
       },
     },
+    gdpPerCapitaUsd: {
+      value: 5796.47207860911,
+      year: 2025,
+    },
+    lifeExpectancyYears: {
+      value: 76.224,
+      year: 2024,
+    },
     currencies: ["CVE"],
     demonyms: {
       fr: {
@@ -2579,6 +2899,14 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
         fr: "Cerro Chirripó",
         en: "Cerro Chirripó",
       },
+    },
+    gdpPerCapitaUsd: {
+      value: 19970.0989059622,
+      year: 2025,
+    },
+    lifeExpectancyYears: {
+      value: 80.996,
+      year: 2024,
     },
     currencies: ["CRC"],
     demonyms: {
@@ -2641,6 +2969,11 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
         en: "Pico Turquino",
       },
     },
+    gdpPerCapitaUsd: null,
+    lifeExpectancyYears: {
+      value: 78.264,
+      year: 2024,
+    },
     currencies: ["CUP"],
     demonyms: {
       fr: {
@@ -2702,6 +3035,14 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
         en: "Mount Olympus",
       },
     },
+    gdpPerCapitaUsd: {
+      value: 41783.08984375,
+      year: 2025,
+    },
+    lifeExpectancyYears: {
+      value: 81.821,
+      year: 2024,
+    },
     currencies: ["EUR"],
     demonyms: {
       fr: {
@@ -2762,6 +3103,14 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
         fr: "Sniejka",
         en: "Sněžka",
       },
+    },
+    gdpPerCapitaUsd: {
+      value: 35917.2724081665,
+      year: 2025,
+    },
+    lifeExpectancyYears: {
+      value: 79.9780487804878,
+      year: 2024,
     },
     currencies: ["CZK"],
     demonyms: {
@@ -2826,6 +3175,14 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
         en: "Zugspitze",
       },
     },
+    gdpPerCapitaUsd: {
+      value: 60496.4350820414,
+      year: 2025,
+    },
+    lifeExpectancyYears: {
+      value: 80.7926829268293,
+      year: 2024,
+    },
     currencies: ["EUR"],
     demonyms: {
       fr: {
@@ -2886,6 +3243,14 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
         fr: "Mousa Alli",
         en: "Mousa Ali",
       },
+    },
+    gdpPerCapitaUsd: {
+      value: 3905.604954681,
+      year: 2025,
+    },
+    lifeExpectancyYears: {
+      value: 66.202,
+      year: 2024,
     },
     currencies: ["DJF"],
     demonyms: {
@@ -2948,6 +3313,14 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
         en: "Morne Diablotins",
       },
     },
+    gdpPerCapitaUsd: {
+      value: 10989.0431185083,
+      year: 2025,
+    },
+    lifeExpectancyYears: {
+      value: 71.294,
+      year: 2024,
+    },
     currencies: ["XCD"],
     demonyms: {
       fr: {
@@ -3008,6 +3381,14 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
         fr: "Møllehøj",
         en: "Møllehøj",
       },
+    },
+    gdpPerCapitaUsd: {
+      value: 76970.1535217919,
+      year: 2025,
+    },
+    lifeExpectancyYears: {
+      value: 82.2536585365854,
+      year: 2024,
     },
     currencies: ["DKK"],
     demonyms: {
@@ -3072,6 +3453,14 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
         en: "Pico Duarte",
       },
     },
+    gdpPerCapitaUsd: {
+      value: 11059.2081531834,
+      year: 2025,
+    },
+    lifeExpectancyYears: {
+      value: 73.868,
+      year: 2024,
+    },
     currencies: ["DOP"],
     demonyms: {
       fr: {
@@ -3134,6 +3523,14 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
         fr: "Tahat",
         en: "Mount Tahat",
       },
+    },
+    gdpPerCapitaUsd: {
+      value: 6051.00322704182,
+      year: 2025,
+    },
+    lifeExpectancyYears: {
+      value: 76.475,
+      year: 2024,
     },
     currencies: ["DZD"],
     demonyms: {
@@ -3203,6 +3600,14 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
         en: "Chimborazo",
       },
     },
+    gdpPerCapitaUsd: {
+      value: 7125.27618527738,
+      year: 2025,
+    },
+    lifeExpectancyYears: {
+      value: 77.579,
+      year: 2024,
+    },
     currencies: ["USD"],
     demonyms: {
       fr: {
@@ -3266,6 +3671,14 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
         en: "Mount Catherine",
       },
     },
+    gdpPerCapitaUsd: {
+      value: 3085.80712036204,
+      year: 2025,
+    },
+    lifeExpectancyYears: {
+      value: 71.806,
+      year: 2024,
+    },
     currencies: ["EGP"],
     demonyms: {
       fr: {
@@ -3326,6 +3739,11 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
         fr: "mont Soira",
         en: "Emba Soira",
       },
+    },
+    gdpPerCapitaUsd: null,
+    lifeExpectancyYears: {
+      value: 68.893,
+      year: 2024,
     },
     currencies: ["ERN"],
     demonyms: {
@@ -3388,6 +3806,14 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
         en: "Teide",
       },
     },
+    gdpPerCapitaUsd: {
+      value: 38627.2472148623,
+      year: 2025,
+    },
+    lifeExpectancyYears: {
+      value: 83.8878048780488,
+      year: 2024,
+    },
     currencies: ["EUR"],
     demonyms: {
       fr: {
@@ -3448,6 +3874,14 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
         fr: "Suur Munamägi",
         en: "Suur Munamägi",
       },
+    },
+    gdpPerCapitaUsd: {
+      value: 34417.6320815138,
+      year: 2025,
+    },
+    lifeExpectancyYears: {
+      value: 79.2951219512195,
+      year: 2024,
     },
     currencies: ["EUR"],
     demonyms: {
@@ -3512,6 +3946,14 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
         en: "Ras Dashen",
       },
     },
+    gdpPerCapitaUsd: {
+      value: 932.729352775179,
+      year: 2025,
+    },
+    lifeExpectancyYears: {
+      value: 67.603,
+      year: 2024,
+    },
     currencies: ["ETB"],
     demonyms: {
       fr: {
@@ -3573,6 +4015,14 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
         en: "Halti",
       },
     },
+    gdpPerCapitaUsd: {
+      value: 56148.580949046,
+      year: 2025,
+    },
+    lifeExpectancyYears: {
+      value: 82.3365853658537,
+      year: 2024,
+    },
     currencies: ["EUR"],
     demonyms: {
       fr: {
@@ -3633,6 +4083,14 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
         fr: "mont Tomanivi",
         en: "Mount Tomanivi",
       },
+    },
+    gdpPerCapitaUsd: {
+      value: 6642.00449450523,
+      year: 2025,
+    },
+    lifeExpectancyYears: {
+      value: 67.463,
+      year: 2024,
     },
     currencies: ["FJD"],
     demonyms: {
@@ -3714,6 +4172,14 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
         en: "Mont Blanc",
       },
     },
+    gdpPerCapitaUsd: {
+      value: 48985.7307807924,
+      year: 2025,
+    },
+    lifeExpectancyYears: {
+      value: 82.9804878048781,
+      year: 2024,
+    },
     currencies: ["EUR"],
     demonyms: {
       fr: {
@@ -3774,6 +4240,14 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
         fr: "Nanlaud",
         en: "Nanlaud",
       },
+    },
+    gdpPerCapitaUsd: {
+      value: 4414.00737137479,
+      year: 2025,
+    },
+    lifeExpectancyYears: {
+      value: 67.357,
+      year: 2024,
     },
     currencies: ["USD"],
     demonyms: {
@@ -3836,6 +4310,14 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
         en: "Mont Bengoué",
       },
     },
+    gdpPerCapitaUsd: {
+      value: 8263.03321595,
+      year: 2025,
+    },
+    lifeExpectancyYears: {
+      value: 68.511,
+      year: 2024,
+    },
     currencies: ["XAF"],
     demonyms: {
       fr: {
@@ -3897,6 +4379,14 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
         en: "Ben Nevis",
       },
     },
+    gdpPerCapitaUsd: {
+      value: 57601.9621201954,
+      year: 2025,
+    },
+    lifeExpectancyYears: {
+      value: 81.3868536585366,
+      year: 2024,
+    },
     currencies: ["GBP"],
     demonyms: {
       fr: {
@@ -3957,6 +4447,14 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
         fr: "Chkhara",
         en: "Shkhara",
       },
+    },
+    gdpPerCapitaUsd: {
+      value: 9691.53472415196,
+      year: 2025,
+    },
+    lifeExpectancyYears: {
+      value: 74.657,
+      year: 2024,
     },
     currencies: ["GEL"],
     demonyms: {
@@ -4021,6 +4519,14 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
         en: "Mount Afadja",
       },
     },
+    gdpPerCapitaUsd: {
+      value: 3257.1588903576,
+      year: 2025,
+    },
+    lifeExpectancyYears: {
+      value: 65.695,
+      year: 2024,
+    },
     currencies: ["GHS"],
     demonyms: {
       fr: {
@@ -4082,6 +4588,14 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
         en: "Mount Richard-Molard",
       },
     },
+    gdpPerCapitaUsd: {
+      value: 1877.2541220972,
+      year: 2025,
+    },
+    lifeExpectancyYears: {
+      value: 60.904,
+      year: 2024,
+    },
     currencies: ["GNF"],
     demonyms: {
       fr: {
@@ -4139,6 +4653,14 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     highestPoint: {
       elevationM: 63,
       names: null,
+    },
+    gdpPerCapitaUsd: {
+      value: 919.060423427951,
+      year: 2025,
+    },
+    lifeExpectancyYears: {
+      value: 66.057,
+      year: 2024,
     },
     currencies: ["GMD"],
     demonyms: {
@@ -4201,6 +4723,14 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
         en: "Dongol Ronde",
       },
     },
+    gdpPerCapitaUsd: {
+      value: 1123.76679992349,
+      year: 2025,
+    },
+    lifeExpectancyYears: {
+      value: 64.254,
+      year: 2024,
+    },
     currencies: ["XOF"],
     demonyms: {
       fr: {
@@ -4261,6 +4791,14 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
         fr: "Pico Basilé",
         en: "Pico Basilé",
       },
+    },
+    gdpPerCapitaUsd: {
+      value: 6615.25245207167,
+      year: 2025,
+    },
+    lifeExpectancyYears: {
+      value: 63.906,
+      year: 2024,
     },
     currencies: ["XAF"],
     demonyms: {
@@ -4323,6 +4861,14 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
         en: "Mount Olympus",
       },
     },
+    gdpPerCapitaUsd: {
+      value: 26948.0070432791,
+      year: 2025,
+    },
+    lifeExpectancyYears: {
+      value: 81.8390243902439,
+      year: 2024,
+    },
     currencies: ["EUR"],
     demonyms: {
       fr: {
@@ -4383,6 +4929,14 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
         fr: "mont Sainte-Catherine",
         en: "Mount Saint Catherine",
       },
+    },
+    gdpPerCapitaUsd: {
+      value: 12106.8790105068,
+      year: 2025,
+    },
+    lifeExpectancyYears: {
+      value: 75.367,
+      year: 2024,
     },
     currencies: ["XCD"],
     demonyms: {
@@ -4445,6 +4999,14 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
         en: "Volcán Tajumulco",
       },
     },
+    gdpPerCapitaUsd: {
+      value: 6598.18032988711,
+      year: 2025,
+    },
+    lifeExpectancyYears: {
+      value: 72.746,
+      year: 2024,
+    },
     currencies: ["GTQ"],
     demonyms: {
       fr: {
@@ -4505,6 +5067,14 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
         fr: "mont Roraima",
         en: "Mount Roraima",
       },
+    },
+    gdpPerCapitaUsd: {
+      value: 32413.7930757518,
+      year: 2025,
+    },
+    lifeExpectancyYears: {
+      value: 70.319,
+      year: 2024,
     },
     currencies: ["GYD"],
     demonyms: {
@@ -4569,6 +5139,14 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
         en: "Cerro Las Minas",
       },
     },
+    gdpPerCapitaUsd: {
+      value: 3598.21450440452,
+      year: 2025,
+    },
+    lifeExpectancyYears: {
+      value: 73.044,
+      year: 2024,
+    },
     currencies: ["HNL"],
     demonyms: {
       fr: {
@@ -4629,6 +5207,14 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
         fr: "Dinara",
         en: "Dinara",
       },
+    },
+    gdpPerCapitaUsd: {
+      value: 27103.9116109268,
+      year: 2025,
+    },
+    lifeExpectancyYears: {
+      value: 78.9292682926829,
+      year: 2024,
     },
     currencies: ["EUR"],
     demonyms: {
@@ -4691,6 +5277,14 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
         en: "Peak la Selle",
       },
     },
+    gdpPerCapitaUsd: {
+      value: 2694.18969101404,
+      year: 2025,
+    },
+    lifeExpectancyYears: {
+      value: 65.119,
+      year: 2024,
+    },
     currencies: ["HTG"],
     demonyms: {
       fr: {
@@ -4751,6 +5345,14 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
         fr: "Kékes",
         en: "Kékes",
       },
+    },
+    gdpPerCapitaUsd: {
+      value: 25907.4743259406,
+      year: 2025,
+    },
+    lifeExpectancyYears: {
+      value: 76.7243902439025,
+      year: 2024,
     },
     currencies: ["HUF"],
     demonyms: {
@@ -4823,6 +5425,14 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
         en: "Puncak Jaya",
       },
     },
+    gdpPerCapitaUsd: {
+      value: 5059.62596411213,
+      year: 2025,
+    },
+    lifeExpectancyYears: {
+      value: 71.288,
+      year: 2024,
+    },
     currencies: ["IDR"],
     demonyms: {
       fr: {
@@ -4893,6 +5503,14 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
         en: "Kanchenjunga",
       },
     },
+    gdpPerCapitaUsd: {
+      value: 2702.47987141553,
+      year: 2025,
+    },
+    lifeExpectancyYears: {
+      value: 72.235,
+      year: 2024,
+    },
     currencies: ["INR"],
     demonyms: {
       fr: {
@@ -4953,6 +5571,14 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
         fr: "Carrauntuohill",
         en: "Carrauntoohil",
       },
+    },
+    gdpPerCapitaUsd: {
+      value: 131592.462547877,
+      year: 2025,
+    },
+    lifeExpectancyYears: {
+      value: 83.009756097561,
+      year: 2024,
     },
     currencies: ["EUR"],
     demonyms: {
@@ -5018,6 +5644,14 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
         en: "Damavand",
       },
     },
+    gdpPerCapitaUsd: {
+      value: 3924.38017821898,
+      year: 2025,
+    },
+    lifeExpectancyYears: {
+      value: 77.854,
+      year: 2024,
+    },
     currencies: ["IRR"],
     demonyms: {
       fr: {
@@ -5081,6 +5715,14 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
         en: "Cheekha Dar",
       },
     },
+    gdpPerCapitaUsd: {
+      value: 5409.67899716967,
+      year: 2025,
+    },
+    lifeExpectancyYears: {
+      value: 72.424,
+      year: 2024,
+    },
     currencies: ["IQD"],
     demonyms: {
       fr: {
@@ -5141,6 +5783,14 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
         fr: "Hvannadalshnjúkur",
         en: "Hvannadalshnúkur",
       },
+    },
+    gdpPerCapitaUsd: {
+      value: 98323.4849517418,
+      year: 2025,
+    },
+    lifeExpectancyYears: {
+      value: 82.809756097561,
+      year: 2024,
     },
     currencies: ["ISK"],
     demonyms: {
@@ -5203,6 +5853,14 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
         en: "Mount Meron",
       },
     },
+    gdpPerCapitaUsd: {
+      value: 60336.8477964194,
+      year: 2025,
+    },
+    lifeExpectancyYears: {
+      value: 83.1975609756098,
+      year: 2024,
+    },
     currencies: ["ILS"],
     demonyms: {
       fr: {
@@ -5263,6 +5921,14 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
         fr: "Mont Blanc de Courmayeur",
         en: "Mont Blanc de Courmayeur",
       },
+    },
+    gdpPerCapitaUsd: {
+      value: 43308.6403060733,
+      year: 2025,
+    },
+    lifeExpectancyYears: {
+      value: 83.9512195121951,
+      year: 2024,
     },
     currencies: ["EUR"],
     demonyms: {
@@ -5325,6 +5991,14 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
         en: "Blue Mountain Peak",
       },
     },
+    gdpPerCapitaUsd: {
+      value: 8002.92104076242,
+      year: 2025,
+    },
+    lifeExpectancyYears: {
+      value: 71.606,
+      year: 2024,
+    },
     currencies: ["JMD"],
     demonyms: {
       fr: {
@@ -5386,6 +6060,14 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
         en: "Jabal Umm ad Dami",
       },
     },
+    gdpPerCapitaUsd: {
+      value: 5347.77731384797,
+      year: 2025,
+    },
+    lifeExpectancyYears: {
+      value: 77.981,
+      year: 2024,
+    },
     currencies: ["JOD"],
     demonyms: {
       fr: {
@@ -5446,6 +6128,14 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
         fr: "mont Fuji",
         en: "Mount Fuji",
       },
+    },
+    gdpPerCapitaUsd: {
+      value: 35951.0449549304,
+      year: 2025,
+    },
+    lifeExpectancyYears: {
+      value: 84.0363414634146,
+      year: 2024,
     },
     currencies: ["JPY"],
     demonyms: {
@@ -5509,6 +6199,14 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
         fr: "Khan Tengri",
         en: "Khan Tengri",
       },
+    },
+    gdpPerCapitaUsd: {
+      value: 14692.1331757237,
+      year: 2025,
+    },
+    lifeExpectancyYears: {
+      value: 74.531,
+      year: 2024,
     },
     currencies: ["KZT"],
     demonyms: {
@@ -5576,6 +6274,14 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
         en: "Mount Kenya",
       },
     },
+    gdpPerCapitaUsd: {
+      value: 2362.86091198611,
+      year: 2025,
+    },
+    lifeExpectancyYears: {
+      value: 63.834,
+      year: 2024,
+    },
     currencies: ["KES"],
     demonyms: {
       fr: {
@@ -5636,6 +6342,14 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
         fr: "Jengish Chokusu",
         en: "Jengish Chokusu",
       },
+    },
+    gdpPerCapitaUsd: {
+      value: 3080.96893823359,
+      year: 2025,
+    },
+    lifeExpectancyYears: {
+      value: 72.4,
+      year: 2024,
     },
     currencies: ["KGS"],
     demonyms: {
@@ -5700,6 +6414,14 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
         en: "Phnom Aural",
       },
     },
+    gdpPerCapitaUsd: {
+      value: 2872.42926639909,
+      year: 2025,
+    },
+    lifeExpectancyYears: {
+      value: 70.817,
+      year: 2024,
+    },
     currencies: ["KHR", "USD"],
     demonyms: {
       fr: {
@@ -5757,6 +6479,14 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     highestPoint: {
       elevationM: 81,
       names: null,
+    },
+    gdpPerCapitaUsd: {
+      value: 2558.66636011102,
+      year: 2025,
+    },
+    lifeExpectancyYears: {
+      value: 66.6,
+      year: 2024,
     },
     currencies: ["AUD"],
     demonyms: {
@@ -5819,6 +6549,14 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
         en: "Mount Liamuiga",
       },
     },
+    gdpPerCapitaUsd: {
+      value: 25223.0257622185,
+      year: 2025,
+    },
+    lifeExpectancyYears: {
+      value: 72.281,
+      year: 2024,
+    },
     currencies: ["XCD"],
     demonyms: {
       fr: {
@@ -5880,6 +6618,14 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
         en: "Hallasan",
       },
     },
+    gdpPerCapitaUsd: {
+      value: 36226.9663637512,
+      year: 2025,
+    },
+    lifeExpectancyYears: {
+      value: 83.6292682926829,
+      year: 2024,
+    },
     currencies: ["KRW"],
     demonyms: {
       fr: {
@@ -5939,6 +6685,14 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     highestPoint: {
       elevationM: 300,
       names: null,
+    },
+    gdpPerCapitaUsd: {
+      value: 32312.3119953634,
+      year: 2025,
+    },
+    lifeExpectancyYears: {
+      value: 84.580487804878,
+      year: 2024,
     },
     currencies: ["KWD"],
     demonyms: {
@@ -6001,6 +6755,14 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
         en: "Phou Bia",
       },
     },
+    gdpPerCapitaUsd: {
+      value: 2324.76353098791,
+      year: 2025,
+    },
+    lifeExpectancyYears: {
+      value: 69.225,
+      year: 2024,
+    },
     currencies: ["LAK"],
     demonyms: {
       fr: {
@@ -6062,6 +6824,14 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
         en: "Qurnat as Sawda'",
       },
     },
+    gdpPerCapitaUsd: {
+      value: 4473.27134441128,
+      year: 2024,
+    },
+    lifeExpectancyYears: {
+      value: 77.945,
+      year: 2024,
+    },
     currencies: ["LBP"],
     demonyms: {
       fr: {
@@ -6122,6 +6892,14 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
         fr: "mont Wuteve",
         en: "Mount Wuteve",
       },
+    },
+    gdpPerCapitaUsd: {
+      value: 915.328972645548,
+      year: 2025,
+    },
+    lifeExpectancyYears: {
+      value: 62.324,
+      year: 2024,
     },
     currencies: ["LRD"],
     demonyms: {
@@ -6186,6 +6964,14 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
         en: "Bikku Bitti",
       },
     },
+    gdpPerCapitaUsd: {
+      value: 6448.82415074121,
+      year: 2025,
+    },
+    lifeExpectancyYears: {
+      value: 71.121,
+      year: 2024,
+    },
     currencies: ["LYD"],
     demonyms: {
       fr: {
@@ -6246,6 +7032,14 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
         fr: "mont Gimie",
         en: "Mount Gimie",
       },
+    },
+    gdpPerCapitaUsd: {
+      value: 14745.8184305461,
+      year: 2025,
+    },
+    lifeExpectancyYears: {
+      value: 72.846,
+      year: 2024,
     },
     currencies: ["XCD"],
     demonyms: {
@@ -6308,6 +7102,14 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
         en: "Grauspitz",
       },
     },
+    gdpPerCapitaUsd: {
+      value: 220167.225473557,
+      year: 2024,
+    },
+    lifeExpectancyYears: {
+      value: 84.2,
+      year: 2024,
+    },
     currencies: ["CHF"],
     demonyms: {
       fr: {
@@ -6368,6 +7170,14 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
         fr: "Pidurutalagala",
         en: "Pidurutalagala",
       },
+    },
+    gdpPerCapitaUsd: {
+      value: 5002.07904353724,
+      year: 2025,
+    },
+    lifeExpectancyYears: {
+      value: 77.672,
+      year: 2024,
     },
     currencies: ["LKR"],
     demonyms: {
@@ -6430,6 +7240,14 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
         en: "Thabana Ntlenyana",
       },
     },
+    gdpPerCapitaUsd: {
+      value: 1088.96276223185,
+      year: 2025,
+    },
+    lifeExpectancyYears: {
+      value: 57.798,
+      year: 2024,
+    },
     currencies: ["LSL", "ZAR"],
     demonyms: {
       fr: {
@@ -6490,6 +7308,14 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
         fr: "Aukštojas",
         en: "Aukštojas Hill",
       },
+    },
+    gdpPerCapitaUsd: {
+      value: 32958.6706396386,
+      year: 2025,
+    },
+    lifeExpectancyYears: {
+      value: 77.1951219512195,
+      year: 2024,
     },
     currencies: ["EUR"],
     demonyms: {
@@ -6552,6 +7378,14 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
         en: "Buurgplaatz",
       },
     },
+    gdpPerCapitaUsd: {
+      value: 147252.179121515,
+      year: 2025,
+    },
+    lifeExpectancyYears: {
+      value: 83.1951219512195,
+      year: 2024,
+    },
     currencies: ["EUR"],
     demonyms: {
       fr: {
@@ -6612,6 +7446,14 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
         fr: "Gaiziņkalns",
         en: "Gaiziņkalns",
       },
+    },
+    gdpPerCapitaUsd: {
+      value: 26311.9730706362,
+      year: 2025,
+    },
+    lifeExpectancyYears: {
+      value: 76.4292682926829,
+      year: 2024,
     },
     currencies: ["EUR"],
     demonyms: {
@@ -6674,6 +7516,14 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
         en: "Jbel Toubkal",
       },
     },
+    gdpPerCapitaUsd: {
+      value: 4672.46826171875,
+      year: 2025,
+    },
+    lifeExpectancyYears: {
+      value: 75.493,
+      year: 2024,
+    },
     currencies: ["MAD"],
     demonyms: {
       fr: {
@@ -6734,6 +7584,14 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
         fr: "chemin des Révoires",
         en: "Chemin des Révoires",
       },
+    },
+    gdpPerCapitaUsd: {
+      value: 288001.574856495,
+      year: 2024,
+    },
+    lifeExpectancyYears: {
+      value: 86.497,
+      year: 2024,
     },
     currencies: ["EUR"],
     demonyms: {
@@ -6796,6 +7654,14 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
         en: "Bălănești Hill",
       },
     },
+    gdpPerCapitaUsd: {
+      value: 8621.71721623786,
+      year: 2025,
+    },
+    lifeExpectancyYears: {
+      value: 71.332,
+      year: 2024,
+    },
     currencies: ["MDL"],
     demonyms: {
       fr: {
@@ -6857,6 +7723,14 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
         en: "Maromokotro",
       },
     },
+    gdpPerCapitaUsd: {
+      value: 599.265294255357,
+      year: 2025,
+    },
+    lifeExpectancyYears: {
+      value: 63.835,
+      year: 2024,
+    },
     currencies: ["MGA"],
     demonyms: {
       fr: {
@@ -6914,6 +7788,14 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     highestPoint: {
       elevationM: 5,
       names: null,
+    },
+    gdpPerCapitaUsd: {
+      value: 14614.7208116541,
+      year: 2025,
+    },
+    lifeExpectancyYears: {
+      value: 81.285,
+      year: 2024,
     },
     currencies: ["MVR"],
     demonyms: {
@@ -6986,6 +7868,14 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
         en: "Pico de Orizaba",
       },
     },
+    gdpPerCapitaUsd: {
+      value: 13889.2339628708,
+      year: 2025,
+    },
+    lifeExpectancyYears: {
+      value: 75.264,
+      year: 2024,
+    },
     currencies: ["MXN"],
     demonyms: {
       fr: {
@@ -7043,6 +7933,14 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     highestPoint: {
       elevationM: 14,
       names: null,
+    },
+    gdpPerCapitaUsd: {
+      value: 8489.05793506422,
+      year: 2025,
+    },
+    lifeExpectancyYears: {
+      value: 67.075,
+      year: 2024,
     },
     currencies: ["USD"],
     demonyms: {
@@ -7105,6 +8003,14 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
         en: "Korab",
       },
     },
+    gdpPerCapitaUsd: {
+      value: 10489.9255355525,
+      year: 2025,
+    },
+    lifeExpectancyYears: {
+      value: 76.6165853658537,
+      year: 2024,
+    },
     currencies: ["MKD"],
     demonyms: {
       fr: {
@@ -7166,6 +8072,14 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
         en: "Hombori Tondo",
       },
     },
+    gdpPerCapitaUsd: {
+      value: 1193.27601004701,
+      year: 2025,
+    },
+    lifeExpectancyYears: {
+      value: 60.675,
+      year: 2024,
+    },
     currencies: ["XOF"],
     demonyms: {
       fr: {
@@ -7226,6 +8140,14 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
         fr: "Ta' Dmejrek",
         en: "Ta' Dmejrek",
       },
+    },
+    gdpPerCapitaUsd: {
+      value: 47906.9000057635,
+      year: 2025,
+    },
+    lifeExpectancyYears: {
+      value: 82.9560975609756,
+      year: 2024,
     },
     currencies: ["EUR"],
     demonyms: {
@@ -7290,6 +8212,14 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
         en: "Gamlang Razi",
       },
     },
+    gdpPerCapitaUsd: {
+      value: 1488.87527836542,
+      year: 2025,
+    },
+    lifeExpectancyYears: {
+      value: 67.095,
+      year: 2024,
+    },
     currencies: ["MMK"],
     demonyms: {
       fr: {
@@ -7350,6 +8280,14 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
         fr: "Zla Kolata",
         en: "Zla Kolata",
       },
+    },
+    gdpPerCapitaUsd: {
+      value: 14816.8380299947,
+      year: 2025,
+    },
+    lifeExpectancyYears: {
+      value: 77.890243902439,
+      year: 2024,
     },
     currencies: ["EUR"],
     demonyms: {
@@ -7412,6 +8350,14 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
         en: "Hüiten Peak",
       },
     },
+    gdpPerCapitaUsd: {
+      value: 7108.22743246244,
+      year: 2025,
+    },
+    lifeExpectancyYears: {
+      value: 72.3980487804878,
+      year: 2024,
+    },
     currencies: ["MNT"],
     demonyms: {
       fr: {
@@ -7472,6 +8418,14 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
         fr: "mont Binga",
         en: "Monte Binga",
       },
+    },
+    gdpPerCapitaUsd: {
+      value: 626.914419215727,
+      year: 2025,
+    },
+    lifeExpectancyYears: {
+      value: 63.797,
+      year: 2024,
     },
     currencies: ["MZN"],
     demonyms: {
@@ -7534,6 +8488,14 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
         en: "Kediet ej Jill",
       },
     },
+    gdpPerCapitaUsd: {
+      value: 2197.51046251309,
+      year: 2025,
+    },
+    lifeExpectancyYears: {
+      value: 68.713,
+      year: 2024,
+    },
     currencies: ["MRU"],
     demonyms: {
       fr: {
@@ -7595,6 +8557,14 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
         en: "Piton de la Petite Rivière Noire",
       },
     },
+    gdpPerCapitaUsd: {
+      value: 12991.2935987166,
+      year: 2025,
+    },
+    lifeExpectancyYears: {
+      value: 73.7890243902439,
+      year: 2024,
+    },
     currencies: ["MUR"],
     demonyms: {
       fr: {
@@ -7655,6 +8625,14 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
         fr: "Sapitwa",
         en: "Sapitwa",
       },
+    },
+    gdpPerCapitaUsd: {
+      value: 671.506847203876,
+      year: 2025,
+    },
+    lifeExpectancyYears: {
+      value: 67.561,
+      year: 2024,
     },
     currencies: ["MWK"],
     demonyms: {
@@ -7718,6 +8696,14 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
         fr: "mont Kinabalu",
         en: "Mount Kinabalu",
       },
+    },
+    gdpPerCapitaUsd: {
+      value: 13124.5554178269,
+      year: 2025,
+    },
+    lifeExpectancyYears: {
+      value: 76.821,
+      year: 2024,
     },
     currencies: ["MYR"],
     demonyms: {
@@ -7790,6 +8776,14 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
         en: "Königstein",
       },
     },
+    gdpPerCapitaUsd: {
+      value: 4875.92558158247,
+      year: 2025,
+    },
+    lifeExpectancyYears: {
+      value: 67.516,
+      year: 2024,
+    },
     currencies: ["NAD", "ZAR"],
     demonyms: {
       fr: {
@@ -7850,6 +8844,14 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
         fr: "mont Indoukat-n-Taglès",
         en: "Mont Idoukal-n-Taghès",
       },
+    },
+    gdpPerCapitaUsd: {
+      value: 775.353622143879,
+      year: 2025,
+    },
+    lifeExpectancyYears: {
+      value: 61.433,
+      year: 2024,
     },
     currencies: ["XOF"],
     demonyms: {
@@ -7915,6 +8917,14 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
         en: "Chappal Waddi",
       },
     },
+    gdpPerCapitaUsd: {
+      value: 1224.25410237743,
+      year: 2025,
+    },
+    lifeExpectancyYears: {
+      value: 54.635,
+      year: 2024,
+    },
     currencies: ["NGN"],
     demonyms: {
       fr: {
@@ -7976,6 +8986,14 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
         en: "Cerro Mogotón",
       },
     },
+    gdpPerCapitaUsd: {
+      value: 3173.33724815085,
+      year: 2025,
+    },
+    lifeExpectancyYears: {
+      value: 75.1,
+      year: 2024,
+    },
     currencies: ["NIO"],
     demonyms: {
       fr: {
@@ -8036,6 +9054,14 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
         fr: "mont Scenery",
         en: "Mount Scenery",
       },
+    },
+    gdpPerCapitaUsd: {
+      value: 73683.917132794,
+      year: 2025,
+    },
+    lifeExpectancyYears: {
+      value: 81.9658536585366,
+      year: 2024,
     },
     currencies: ["EUR"],
     demonyms: {
@@ -8101,6 +9127,14 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
         en: "Galdhøpiggen",
       },
     },
+    gdpPerCapitaUsd: {
+      value: 94594.1929573987,
+      year: 2025,
+    },
+    lifeExpectancyYears: {
+      value: 83.1609756097561,
+      year: 2024,
+    },
     currencies: ["NOK"],
     demonyms: {
       fr: {
@@ -8161,6 +9195,14 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
         fr: "Everest",
         en: "Mount Everest",
       },
+    },
+    gdpPerCapitaUsd: {
+      value: 1535.87781246307,
+      year: 2025,
+    },
+    lifeExpectancyYears: {
+      value: 70.636,
+      year: 2024,
     },
     currencies: ["NPR"],
     demonyms: {
@@ -8223,6 +9265,14 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
         en: "Command Ridge",
       },
     },
+    gdpPerCapitaUsd: {
+      value: 14639.5046929186,
+      year: 2025,
+    },
+    lifeExpectancyYears: {
+      value: 62.279,
+      year: 2024,
+    },
     currencies: ["AUD"],
     demonyms: {
       fr: {
@@ -8284,6 +9334,14 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
         en: "Aoraki / Mount Cook",
       },
     },
+    gdpPerCapitaUsd: {
+      value: 49591.0405731713,
+      year: 2025,
+    },
+    lifeExpectancyYears: {
+      value: 82.009756097561,
+      year: 2024,
+    },
     currencies: ["NZD"],
     demonyms: {
       fr: {
@@ -8344,6 +9402,14 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
         fr: "djebel Shams",
         en: "Jebel Shams",
       },
+    },
+    gdpPerCapitaUsd: {
+      value: 19947.3966227092,
+      year: 2025,
+    },
+    lifeExpectancyYears: {
+      value: 80.246,
+      year: 2024,
     },
     currencies: ["OMR"],
     demonyms: {
@@ -8409,6 +9475,14 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
         en: "K2",
       },
     },
+    gdpPerCapitaUsd: {
+      value: 1595.90912252837,
+      year: 2025,
+    },
+    lifeExpectancyYears: {
+      value: 67.799,
+      year: 2024,
+    },
     currencies: ["PKR"],
     demonyms: {
       fr: {
@@ -8469,6 +9543,14 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
         fr: "Barú",
         en: "Volcan Baru",
       },
+    },
+    gdpPerCapitaUsd: {
+      value: 19789.7308555826,
+      year: 2025,
+    },
+    lifeExpectancyYears: {
+      value: 79.775,
+      year: 2024,
     },
     currencies: ["PAB", "USD"],
     demonyms: {
@@ -8539,6 +9621,14 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
         en: "Huascarán",
       },
     },
+    gdpPerCapitaUsd: {
+      value: 9684.41170314988,
+      year: 2025,
+    },
+    lifeExpectancyYears: {
+      value: 77.941,
+      year: 2024,
+    },
     currencies: ["PEN"],
     demonyms: {
       fr: {
@@ -8602,6 +9692,14 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
         en: "Mount Apo",
       },
     },
+    gdpPerCapitaUsd: {
+      value: 4170.72347271451,
+      year: 2025,
+    },
+    lifeExpectancyYears: {
+      value: 69.946,
+      year: 2024,
+    },
     currencies: ["PHP"],
     demonyms: {
       fr: {
@@ -8662,6 +9760,14 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
         fr: "mont Ngerchelchuus",
         en: "Mount Ngerchelchuus",
       },
+    },
+    gdpPerCapitaUsd: {
+      value: 19532.3557719527,
+      year: 2025,
+    },
+    lifeExpectancyYears: {
+      value: 69.383,
+      year: 2024,
     },
     currencies: ["USD"],
     demonyms: {
@@ -8724,6 +9830,14 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
         en: "Mount Wilhelm",
       },
     },
+    gdpPerCapitaUsd: {
+      value: 3019.5309140573,
+      year: 2025,
+    },
+    lifeExpectancyYears: {
+      value: 66.256,
+      year: 2024,
+    },
     currencies: ["PGK"],
     demonyms: {
       fr: {
@@ -8784,6 +9898,14 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
         fr: "Rysy",
         en: "Rysy",
       },
+    },
+    gdpPerCapitaUsd: {
+      value: 28419.5777395638,
+      year: 2025,
+    },
+    lifeExpectancyYears: {
+      value: 78.409756097561,
+      year: 2024,
     },
     currencies: ["PLN"],
     demonyms: {
@@ -8846,6 +9968,11 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
         en: "Baekdu Mountain",
       },
     },
+    gdpPerCapitaUsd: null,
+    lifeExpectancyYears: {
+      value: 73.743,
+      year: 2024,
+    },
     currencies: ["KPW"],
     demonyms: {
       fr: {
@@ -8907,6 +10034,14 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
         en: "Mount Pico",
       },
     },
+    gdpPerCapitaUsd: {
+      value: 32081.8106150292,
+      year: 2025,
+    },
+    lifeExpectancyYears: {
+      value: 82.3829268292683,
+      year: 2024,
+    },
     currencies: ["EUR"],
     demonyms: {
       fr: {
@@ -8967,6 +10102,14 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
         fr: "Cerro Peró",
         en: "Cerro Tres Kandú",
       },
+    },
+    gdpPerCapitaUsd: {
+      value: 7026.61906146401,
+      year: 2025,
+    },
+    lifeExpectancyYears: {
+      value: 73.982,
+      year: 2024,
     },
     currencies: ["PYG"],
     demonyms: {
@@ -9039,6 +10182,14 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
         en: "Khallat al Batrakh",
       },
     },
+    gdpPerCapitaUsd: {
+      value: 3171.10844621579,
+      year: 2025,
+    },
+    lifeExpectancyYears: {
+      value: 69.213,
+      year: 2024,
+    },
     currencies: ["EGP", "ILS", "JOD"],
     demonyms: {
       fr: {
@@ -9102,6 +10253,14 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
         en: "Tuwayyir al Hamir",
       },
     },
+    gdpPerCapitaUsd: {
+      value: 72524.9066385222,
+      year: 2025,
+    },
+    lifeExpectancyYears: {
+      value: 82.522,
+      year: 2024,
+    },
     currencies: ["QAR"],
     demonyms: {
       fr: {
@@ -9162,6 +10321,14 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
         fr: "Moldoveanu",
         en: "Moldoveanu Peak",
       },
+    },
+    gdpPerCapitaUsd: {
+      value: 22537.9532108047,
+      year: 2025,
+    },
+    lifeExpectancyYears: {
+      value: 76.4585365853659,
+      year: 2024,
     },
     currencies: ["RON"],
     demonyms: {
@@ -9243,6 +10410,14 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
         en: "Mount Elbrus",
       },
     },
+    gdpPerCapitaUsd: {
+      value: 17546.609375,
+      year: 2025,
+    },
+    lifeExpectancyYears: {
+      value: 73.4404878048781,
+      year: 2024,
+    },
     currencies: ["RUB"],
     demonyms: {
       fr: {
@@ -9303,6 +10478,14 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
         fr: "mont Karisimbi",
         en: "Mount Karisimbi",
       },
+    },
+    gdpPerCapitaUsd: {
+      value: 1123.73874633225,
+      year: 2025,
+    },
+    lifeExpectancyYears: {
+      value: 68.017,
+      year: 2024,
     },
     currencies: ["RWF"],
     demonyms: {
@@ -9368,6 +10551,14 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
         en: "Jabal Sawda",
       },
     },
+    gdpPerCapitaUsd: {
+      value: 34536.6555456551,
+      year: 2025,
+    },
+    lifeExpectancyYears: {
+      value: 78.982,
+      year: 2024,
+    },
     currencies: ["SAR"],
     demonyms: {
       fr: {
@@ -9429,6 +10620,14 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
         en: "Jebel Marra",
       },
     },
+    gdpPerCapitaUsd: {
+      value: 1164.53991699219,
+      year: 2025,
+    },
+    lifeExpectancyYears: {
+      value: 66.521,
+      year: 2024,
+    },
     currencies: ["SDG"],
     demonyms: {
       fr: {
@@ -9486,6 +10685,14 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     highestPoint: {
       elevationM: 648,
       names: null,
+    },
+    gdpPerCapitaUsd: {
+      value: 1954.71174194867,
+      year: 2025,
+    },
+    lifeExpectancyYears: {
+      value: 68.924,
+      year: 2024,
     },
     currencies: ["XOF"],
     demonyms: {
@@ -9548,6 +10755,14 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
         en: "Bukit Timah",
       },
     },
+    gdpPerCapitaUsd: {
+      value: 98813.9788172877,
+      year: 2025,
+    },
+    lifeExpectancyYears: {
+      value: 83.3463414634146,
+      year: 2024,
+    },
     currencies: ["SGD"],
     demonyms: {
       fr: {
@@ -9608,6 +10823,14 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
         fr: "mont Popomanaseu",
         en: "Mount Popomanaseu",
       },
+    },
+    gdpPerCapitaUsd: {
+      value: 2086.18955928928,
+      year: 2025,
+    },
+    lifeExpectancyYears: {
+      value: 70.694,
+      year: 2024,
     },
     currencies: ["SBD"],
     demonyms: {
@@ -9670,6 +10893,14 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
         en: "Mount Bintumani",
       },
     },
+    gdpPerCapitaUsd: {
+      value: 846.296172499617,
+      year: 2025,
+    },
+    lifeExpectancyYears: {
+      value: 61.964,
+      year: 2024,
+    },
     currencies: ["SLE"],
     demonyms: {
       fr: {
@@ -9730,6 +10961,14 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
         fr: "Cerro El Pital",
         en: "Cerro El Pital",
       },
+    },
+    gdpPerCapitaUsd: {
+      value: 5766.72574029107,
+      year: 2025,
+    },
+    lifeExpectancyYears: {
+      value: 72.302,
+      year: 2024,
     },
     currencies: ["USD"],
     demonyms: {
@@ -9792,6 +11031,14 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
         en: "Monte Titano",
       },
     },
+    gdpPerCapitaUsd: {
+      value: 59871.3288101478,
+      year: 2023,
+    },
+    lifeExpectancyYears: {
+      value: 85.817,
+      year: 2024,
+    },
     currencies: ["EUR"],
     demonyms: {
       fr: {
@@ -9852,6 +11099,14 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
         fr: "Shimbiris",
         en: "Shimbiris",
       },
+    },
+    gdpPerCapitaUsd: {
+      value: 661.173877723116,
+      year: 2025,
+    },
+    lifeExpectancyYears: {
+      value: 58.967,
+      year: 2024,
     },
     currencies: ["SOS"],
     demonyms: {
@@ -9914,6 +11169,14 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
         en: "Midžor",
       },
     },
+    gdpPerCapitaUsd: {
+      value: 15262.0464193413,
+      year: 2025,
+    },
+    lifeExpectancyYears: {
+      value: 75.9682926829268,
+      year: 2024,
+    },
     currencies: ["RSD"],
     demonyms: {
       fr: {
@@ -9974,6 +11237,11 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
         fr: "Kinyeti",
         en: "Kinyeti",
       },
+    },
+    gdpPerCapitaUsd: null,
+    lifeExpectancyYears: {
+      value: 57.738,
+      year: 2024,
     },
     currencies: ["SSP"],
     demonyms: {
@@ -10036,6 +11304,14 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
         en: "Pico de São Tomé",
       },
     },
+    gdpPerCapitaUsd: {
+      value: 4084.40062145233,
+      year: 2025,
+    },
+    lifeExpectancyYears: {
+      value: 69.905,
+      year: 2024,
+    },
     currencies: ["STN"],
     demonyms: {
       fr: {
@@ -10096,6 +11372,14 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
         fr: "Juliana Top",
         en: "Julianatop",
       },
+    },
+    gdpPerCapitaUsd: {
+      value: 7069.87230892274,
+      year: 2025,
+    },
+    lifeExpectancyYears: {
+      value: 73.757,
+      year: 2024,
     },
     currencies: ["SRD"],
     demonyms: {
@@ -10158,6 +11442,14 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
         en: "Gerlachovský štít",
       },
     },
+    gdpPerCapitaUsd: {
+      value: 28543.6653439813,
+      year: 2025,
+    },
+    lifeExpectancyYears: {
+      value: 78.3707317073171,
+      year: 2024,
+    },
     currencies: ["EUR"],
     demonyms: {
       fr: {
@@ -10219,6 +11511,14 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
         en: "Triglav",
       },
     },
+    gdpPerCapitaUsd: {
+      value: 37376.2216079138,
+      year: 2025,
+    },
+    lifeExpectancyYears: {
+      value: 82.2853658536585,
+      year: 2024,
+    },
     currencies: ["EUR"],
     demonyms: {
       fr: {
@@ -10279,6 +11579,14 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
         fr: "Kebnekaise",
         en: "Kebnekaise",
       },
+    },
+    gdpPerCapitaUsd: {
+      value: 63133.2126736715,
+      year: 2025,
+    },
+    lifeExpectancyYears: {
+      value: 84.0634146341463,
+      year: 2024,
     },
     currencies: ["SEK"],
     demonyms: {
@@ -10351,6 +11659,14 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
         en: "Emlembe",
       },
     },
+    gdpPerCapitaUsd: {
+      value: 4108.25221093363,
+      year: 2025,
+    },
+    lifeExpectancyYears: {
+      value: 64.264,
+      year: 2024,
+    },
     currencies: ["SZL", "ZAR"],
     demonyms: {
       fr: {
@@ -10411,6 +11727,14 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
         fr: "Morne Seychellois",
         en: "Morne Seychellois",
       },
+    },
+    gdpPerCapitaUsd: {
+      value: 19449.3836346926,
+      year: 2025,
+    },
+    lifeExpectancyYears: {
+      value: 76.2951219512195,
+      year: 2024,
     },
     currencies: ["SCR"],
     demonyms: {
@@ -10473,6 +11797,14 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
         en: "Mount Hermon",
       },
     },
+    gdpPerCapitaUsd: {
+      value: 1056.78264718197,
+      year: 2022,
+    },
+    lifeExpectancyYears: {
+      value: 72.56,
+      year: 2024,
+    },
     currencies: ["SYP"],
     demonyms: {
       fr: {
@@ -10534,6 +11866,14 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
         en: "Emi Koussi",
       },
     },
+    gdpPerCapitaUsd: {
+      value: 1022.33559390754,
+      year: 2025,
+    },
+    lifeExpectancyYears: {
+      value: 55.238,
+      year: 2024,
+    },
     currencies: ["XAF"],
     demonyms: {
       fr: {
@@ -10594,6 +11934,14 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
         fr: "mont Agou",
         en: "Mount Agou",
       },
+    },
+    gdpPerCapitaUsd: {
+      value: 1383.89974929887,
+      year: 2025,
+    },
+    lifeExpectancyYears: {
+      value: 62.935,
+      year: 2024,
     },
     currencies: ["XOF"],
     demonyms: {
@@ -10658,6 +12006,14 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
         en: "Doi Inthanon",
       },
     },
+    gdpPerCapitaUsd: {
+      value: 8056.56359761558,
+      year: 2025,
+    },
+    lifeExpectancyYears: {
+      value: 76.564,
+      year: 2024,
+    },
     currencies: ["THB"],
     demonyms: {
       fr: {
@@ -10718,6 +12074,14 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
         fr: "pic Ismail Samani",
         en: "Ismoil Somoni Peak",
       },
+    },
+    gdpPerCapitaUsd: {
+      value: 1637.2542942547,
+      year: 2025,
+    },
+    lifeExpectancyYears: {
+      value: 71.927,
+      year: 2024,
     },
     currencies: ["TJS"],
     demonyms: {
@@ -10782,6 +12146,14 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
         en: "Aýrybaba",
       },
     },
+    gdpPerCapitaUsd: {
+      value: 6540.17876401136,
+      year: 2025,
+    },
+    lifeExpectancyYears: {
+      value: 70.201,
+      year: 2024,
+    },
     currencies: ["TMT"],
     demonyms: {
       fr: {
@@ -10842,6 +12214,14 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
         fr: "mont Ramelau",
         en: "Tatamailau",
       },
+    },
+    gdpPerCapitaUsd: {
+      value: 1340.9640193437,
+      year: 2025,
+    },
+    lifeExpectancyYears: {
+      value: 67.904,
+      year: 2024,
     },
     currencies: ["USD"],
     demonyms: {
@@ -10904,6 +12284,14 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
         en: "Kao",
       },
     },
+    gdpPerCapitaUsd: {
+      value: 6547.18646814228,
+      year: 2025,
+    },
+    lifeExpectancyYears: {
+      value: 73.07,
+      year: 2024,
+    },
     currencies: ["TOP"],
     demonyms: {
       fr: {
@@ -10964,6 +12352,14 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
         fr: "Cerro del Aripo",
         en: "El Cerro del Aripo",
       },
+    },
+    gdpPerCapitaUsd: {
+      value: 18967.2704636681,
+      year: 2025,
+    },
+    lifeExpectancyYears: {
+      value: 73.617,
+      year: 2024,
     },
     currencies: ["TTD"],
     demonyms: {
@@ -11026,6 +12422,14 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
         en: "Jebel ech Chambi",
       },
     },
+    gdpPerCapitaUsd: {
+      value: 4656.63818386852,
+      year: 2025,
+    },
+    lifeExpectancyYears: {
+      value: 76.711,
+      year: 2024,
+    },
     currencies: ["TND"],
     demonyms: {
       fr: {
@@ -11087,6 +12491,14 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
         en: "Mount Ararat",
       },
     },
+    gdpPerCapitaUsd: {
+      value: 18599.4420922378,
+      year: 2025,
+    },
+    lifeExpectancyYears: {
+      value: 77.421,
+      year: 2024,
+    },
     currencies: ["TRY"],
     demonyms: {
       fr: {
@@ -11144,6 +12556,14 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     highestPoint: {
       elevationM: 5,
       names: null,
+    },
+    gdpPerCapitaUsd: {
+      value: 6041.44908591428,
+      year: 2025,
+    },
+    lifeExpectancyYears: {
+      value: 67.259,
+      year: 2024,
     },
     currencies: ["AUD"],
     demonyms: {
@@ -11206,6 +12626,8 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
         en: "Yushan Main Peak",
       },
     },
+    gdpPerCapitaUsd: null,
+    lifeExpectancyYears: null,
     currencies: ["TWD"],
     demonyms: {
       fr: {
@@ -11266,6 +12688,14 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
         fr: "Kilimandjaro",
         en: "Kilimanjaro",
       },
+    },
+    gdpPerCapitaUsd: {
+      value: 1318.81921386719,
+      year: 2025,
+    },
+    lifeExpectancyYears: {
+      value: 67.212,
+      year: 2024,
     },
     currencies: ["TZS"],
     demonyms: {
@@ -11330,6 +12760,14 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
         en: "Mount Stanley",
       },
     },
+    gdpPerCapitaUsd: {
+      value: 1206.30450825002,
+      year: 2025,
+    },
+    lifeExpectancyYears: {
+      value: 68.487,
+      year: 2024,
+    },
     currencies: ["UGX"],
     demonyms: {
       fr: {
@@ -11393,6 +12831,14 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
         en: "Hoverla",
       },
     },
+    gdpPerCapitaUsd: {
+      value: 5865.884765625,
+      year: 2025,
+    },
+    lifeExpectancyYears: {
+      value: 74.692,
+      year: 2024,
+    },
     currencies: ["UAH"],
     demonyms: {
       fr: {
@@ -11453,6 +12899,14 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
         fr: "Cerro Catedral",
         en: "Cerro Catedral",
       },
+    },
+    gdpPerCapitaUsd: {
+      value: 25215.8238152781,
+      year: 2025,
+    },
+    lifeExpectancyYears: {
+      value: 78.287,
+      year: 2024,
     },
     currencies: ["UYU"],
     demonyms: {
@@ -11526,6 +12980,14 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
         en: "Denali",
       },
     },
+    gdpPerCapitaUsd: {
+      value: 90026.5163005744,
+      year: 2025,
+    },
+    lifeExpectancyYears: {
+      value: 78.890243902439,
+      year: 2024,
+    },
     currencies: ["USD"],
     demonyms: {
       fr: {
@@ -11586,6 +13048,14 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
         fr: "Khazret Sultan",
         en: "Khazret Sultan",
       },
+    },
+    gdpPerCapitaUsd: {
+      value: 3968.2720079072,
+      year: 2025,
+    },
+    lifeExpectancyYears: {
+      value: 72.528,
+      year: 2024,
     },
     currencies: ["UZS"],
     demonyms: {
@@ -11648,6 +13118,8 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
         en: "Vatican Hill",
       },
     },
+    gdpPerCapitaUsd: null,
+    lifeExpectancyYears: null,
     currencies: ["EUR"],
     demonyms: {
       fr: {
@@ -11709,6 +13181,14 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
         en: "La Soufrière",
       },
     },
+    gdpPerCapitaUsd: {
+      value: 12561.769166789,
+      year: 2025,
+    },
+    lifeExpectancyYears: {
+      value: 71.382,
+      year: 2024,
+    },
     currencies: ["XCD"],
     demonyms: {
       fr: {
@@ -11769,6 +13249,14 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
         fr: "Pico Bolívar",
         en: "Pico Bolívar",
       },
+    },
+    gdpPerCapitaUsd: {
+      value: 3494.8138870244,
+      year: 2025,
+    },
+    lifeExpectancyYears: {
+      value: 72.673,
+      year: 2024,
     },
     currencies: ["VES"],
     demonyms: {
@@ -11834,6 +13322,14 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
         en: "Fansipan",
       },
     },
+    gdpPerCapitaUsd: {
+      value: 5065.99091899299,
+      year: 2025,
+    },
+    lifeExpectancyYears: {
+      value: 74.736,
+      year: 2024,
+    },
     currencies: ["VND"],
     demonyms: {
       fr: {
@@ -11894,6 +13390,14 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
         fr: "mont Tabwemasana",
         en: "Mount Tabwemasana",
       },
+    },
+    gdpPerCapitaUsd: {
+      value: 4038.73520713411,
+      year: 2025,
+    },
+    lifeExpectancyYears: {
+      value: 71.654,
+      year: 2024,
     },
     currencies: ["VUV"],
     demonyms: {
@@ -11956,6 +13460,14 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
         en: "Silisili",
       },
     },
+    gdpPerCapitaUsd: {
+      value: 5872.78333308796,
+      year: 2025,
+    },
+    lifeExpectancyYears: {
+      value: 71.826,
+      year: 2024,
+    },
     currencies: ["WST"],
     demonyms: {
       fr: {
@@ -12017,6 +13529,14 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
         en: "Gjeravica",
       },
     },
+    gdpPerCapitaUsd: {
+      value: 7899.41841135202,
+      year: 2025,
+    },
+    lifeExpectancyYears: {
+      value: 78.222,
+      year: 2024,
+    },
     currencies: ["EUR"],
     demonyms: {
       fr: {
@@ -12077,6 +13597,11 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
         fr: "Jabal an Nabi Shu'ayb",
         en: "Jabal an Nabi Shu'ayb",
       },
+    },
+    gdpPerCapitaUsd: null,
+    lifeExpectancyYears: {
+      value: 69.439,
+      year: 2024,
     },
     currencies: ["YER"],
     demonyms: {
@@ -12171,6 +13696,14 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
         en: "Mafadi",
       },
     },
+    gdpPerCapitaUsd: {
+      value: 6597.71450918774,
+      year: 2025,
+    },
+    lifeExpectancyYears: {
+      value: 66.312,
+      year: 2024,
+    },
     currencies: ["ZAR"],
     demonyms: {
       fr: {
@@ -12231,6 +13764,14 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
         fr: "Mafinga Central",
         en: "Mafinga Central",
       },
+    },
+    gdpPerCapitaUsd: {
+      value: 1317.87771619597,
+      year: 2025,
+    },
+    lifeExpectancyYears: {
+      value: 66.528,
+      year: 2024,
     },
     currencies: ["ZMW"],
     demonyms: {
@@ -12308,6 +13849,14 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
         fr: "Inyangani",
         en: "Mount Nyangani",
       },
+    },
+    gdpPerCapitaUsd: {
+      value: 3021.43019873632,
+      year: 2025,
+    },
+    lifeExpectancyYears: {
+      value: 63.064,
+      year: 2024,
     },
     currencies: ["ZWG", "USD"],
     demonyms: {

@@ -18,6 +18,7 @@ import { HOLOCENE_VOLCANOES } from "./holoceneVolcanoes";
 import { MOUNTAIN_AREAS } from "./mountainArea";
 import { SOVEREIGNTY } from "./sovereignty";
 import { URBAN_CENTRES } from "./urbanCentres";
+import { WORLD_BANK_INDICATORS } from "./worldBankIndicators";
 
 export const QUANTITATIVE_DATASETS: QuantitativeDatasets = {
   civilTimeOffsets: CIVIL_TIME_OFFSETS,
@@ -30,4 +31,5 @@ export const QUANTITATIVE_DATASETS: QuantitativeDatasets = {
   coalElectricity: COAL_ELECTRICITY,
   sovereignty: SOVEREIGNTY,
   highestPoints: HIGHEST_POINTS,
+  worldBank: WORLD_BANK_INDICATORS,
 };

@@ -258,6 +258,18 @@ export type CountryFacts = Readonly<{
    */
   highestPoint: HighestPoint;
   /**
+   * PIB par habitant en dollars US courants (Banque mondiale, WDI), avec
+   * l'année de la valeur ; `null` quand la WDI n'a aucune valeur sur la
+   * fenêtre de récolte. Valeur brute : l'arrondi est un choix d'affichage.
+   */
+  gdpPerCapitaUsd: WorldBankMeasure | null;
+  /**
+   * Espérance de vie à la naissance, en années (Banque mondiale, WDI), avec
+   * l'année de la valeur ; `null` quand la WDI n'a aucune valeur sur la
+   * fenêtre de récolte.
+   */
+  lifeExpectancyYears: WorldBankMeasure | null;
+  /**
    * Codes ISO 4217 des monnaies ayant cours (world-countries, corrigé par
    * `currencyCorrectionsByIso3`). Jamais vide.
    */
@@ -283,6 +295,9 @@ export type CountryFactsSnapshot = Readonly<{
   date: string;
   note: string;
 }>;
+
+/** Valeur d'un indicateur WDI et année de cette valeur (la plus récente de la fenêtre). */
+export type WorldBankMeasure = Readonly<{ value: number; year: number }>;
 
 /**
  * Point culminant du pays (CIA World Factbook pour l'altitude et le nom, Wikidata
@@ -345,6 +360,8 @@ export type CountryRecord = {
   sovereigntyDate: string | null;
   sovereigntySheetHidden: boolean;
   highestPoint: HighestPoint;
+  gdpPerCapitaUsd: WorldBankMeasure | null;
+  lifeExpectancyYears: WorldBankMeasure | null;
   currencies: string[];
   demonyms: Demonyms;
 };

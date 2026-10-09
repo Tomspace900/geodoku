@@ -1,4 +1,8 @@
-import type { Country, CountryFacts } from "../../content/countries/type";
+import type {
+  Country,
+  CountryFacts,
+  WorldBankMeasure,
+} from "../../content/countries/type";
 import { PRODUCTION_RANK_CAP } from "./buildCountriesLib";
 
 const COUNTRY_CODE = /^[A-Z]{3}$/;
@@ -33,6 +37,10 @@ const SOVEREIGNTY_DATE = /^\d{4}-\d{2}-\d{2}$/;
 
 /** Altitude du mont Everest (CIA World Factbook) : aucun point culminant ne la dépasse. */
 export const MAX_HIGHEST_POINT_M = 8849;
+
+/** Bornes plausibles de l'espérance de vie à la naissance, en années (WDI 2021–2025 : ~53 à ~86). */
+export const LIFE_EXPECTANCY_MIN_YEARS = 30;
+export const LIFE_EXPECTANCY_MAX_YEARS = 95;
 
 /**
  * Codes récents dont l'ICU embarquée peut ne pas encore avoir le nom dans
@@ -95,6 +103,29 @@ export function validateCountryCatalog(
       errors.push(`${prefix}: alias invalides`);
   });
 
+  return errors;
+}
+
+/**
+ * Invariants d'une mesure WDI (`null` = pas de valeur, accepté) : valeur finie,
+ * strictement positive et dans `[min, max]`, année entière plausible.
+ */
+function validateWorldBankMeasure(
+  code: string,
+  field: string,
+  measure: WorldBankMeasure | null,
+  min: number,
+  max: number,
+): string[] {
+  if (measure === null) return [];
+  const errors: string[] = [];
+  const { value, year } = measure;
+  if (!Number.isFinite(value) || value <= 0 || value < min || value > max) {
+    errors.push(`${code}: ${field}.value hors bornes (${value})`);
+  }
+  if (!Number.isInteger(year) || year < 1960 || year > 2100) {
+    errors.push(`${code}: ${field}.year invalide (${year})`);
+  }
   return errors;
 }
 
@@ -282,6 +313,24 @@ export function validateCountryFacts(
     if (names !== null && (!names.fr?.trim() || !names.en?.trim())) {
       errors.push(`${code}: highestPoint.names fr/en incomplet`);
     }
+    errors.push(
+      ...validateWorldBankMeasure(
+        code,
+        "gdpPerCapitaUsd",
+        facts.gdpPerCapitaUsd,
+        0,
+        Number.POSITIVE_INFINITY,
+      ),
+    );
+    errors.push(
+      ...validateWorldBankMeasure(
+        code,
+        "lifeExpectancyYears",
+        facts.lifeExpectancyYears,
+        LIFE_EXPECTANCY_MIN_YEARS,
+        LIFE_EXPECTANCY_MAX_YEARS,
+      ),
+    );
     if (facts.sovereigntySheetHidden && facts.sovereigntyKind === null) {
       errors.push(
         `${code}: sovereigntySheetHidden sans événement de souveraineté`,

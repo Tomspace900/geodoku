@@ -63,6 +63,22 @@ export const SOURCES = {
     url: "https://www.cia.gov/the-world-factbook/field/elevation/",
     vintage: null,
   },
+  world_bank_gdp_per_capita: {
+    name: {
+      fr: "Banque mondiale — PIB par habitant (WDI)",
+      en: "World Bank — GDP per capita (WDI)",
+    },
+    url: "https://data.worldbank.org/indicator/NY.GDP.PCAP.CD",
+    vintage: { fr: "2022–2025", en: "2022–2025" },
+  },
+  world_bank_life_expectancy: {
+    name: {
+      fr: "Banque mondiale — Espérance de vie à la naissance (WDI)",
+      en: "World Bank — Life expectancy at birth (WDI)",
+    },
+    url: "https://data.worldbank.org/indicator/SP.DYN.LE00.IN",
+    vintage: { fr: "2024", en: "2024" },
+  },
   un_flags: {
     name: { fr: "Drapeaux officiels — ONU", en: "Official flags — UN" },
     url: "https://www.un.org/en/about-us/member-states",

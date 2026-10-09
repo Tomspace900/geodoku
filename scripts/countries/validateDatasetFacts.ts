@@ -27,6 +27,7 @@ import type {
   CapitalLabelsSnapshot,
   HighestPointsSnapshot,
   SovereigntySnapshot,
+  WorldBankIndicator,
 } from "./data/types";
 
 /** Les champs de `CountryFacts` que la fusion des datasets produit intégralement. */
@@ -44,6 +45,8 @@ const DATASET_DERIVED_KEYS = [
   "sovereigntyDate",
   "sovereigntySheetHidden",
   "highestPoint",
+  "gdpPerCapitaUsd",
+  "lifeExpectancyYears",
 ] as const;
 
 function isPlainRecord(value: unknown): value is Record<string, unknown> {
@@ -296,5 +299,44 @@ export function validatePeakCoherence(
     .forEach((code) => {
       errors.push(`${code}: écart 5 000 m accepté sans pays du catalogue`);
     });
+  return errors;
+}
+
+/**
+ * Cohérence d'un indicateur WDI avec le catalogue : chaque pays est soit dans
+ * `values`, soit dans `missing`, jamais dans les deux ni dans aucun ; chaque
+ * année retenue tient dans la fenêtre demandée. Un `null` n'est donc jamais un
+ * oubli de la récolte.
+ */
+export function validateWorldBankIndicator(
+  indicator: WorldBankIndicator,
+  codes: readonly string[],
+): string[] {
+  const errors: string[] = [];
+  const label = `worldBank ${indicator.code}`;
+  codes.forEach((code) => {
+    const hasValue = code in indicator.values;
+    const isMissing = code in indicator.missing;
+    if (hasValue && isMissing) {
+      errors.push(`${code}: ${label} à la fois valeur et manquant`);
+    }
+    if (!hasValue && !isMissing) {
+      errors.push(
+        `${code}: ${label} ni valeur ni manquant — lancer pnpm harvest:world-bank`,
+      );
+    }
+  });
+  [...Object.keys(indicator.values), ...Object.keys(indicator.missing)]
+    .filter((code) => !codes.includes(code))
+    .forEach((code) => {
+      errors.push(`${code}: ${label} sans pays du catalogue`);
+    });
+  Object.entries(indicator.values).forEach(([code, { year }]) => {
+    if (year < indicator.window.from || year > indicator.window.to) {
+      errors.push(
+        `${code}: ${label} année ${year} hors de la fenêtre ${indicator.window.from}–${indicator.window.to}`,
+      );
+    }
+  });
   return errors;
 }

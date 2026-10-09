@@ -63,6 +63,8 @@ const FACT_KEYS = [
   "sovereigntyDate",
   "sovereigntySheetHidden",
   "highestPoint",
+  "gdpPerCapitaUsd",
+  "lifeExpectancyYears",
   "currencies",
   "demonyms",
 ] as const;
