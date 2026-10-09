@@ -34,6 +34,7 @@
     "check:content": "tsx scripts/content/check-content.ts",
     "harvest:capitals": "tsx scripts/countries/harvest/capitalLabels.ts",
     "harvest:highest-points": "tsx scripts/countries/harvest/highestPoints.ts",
+    "harvest:world-bank": "tsx scripts/countries/harvest/worldBankIndicators.ts",
     "build:answers": "tsx scripts/content/build-answers.ts",
     "check:bundle": "vite build && tsx scripts/ci/check-bundle-size.ts",
     "check:design-system": "tsx scripts/ci/check-design-system.ts",

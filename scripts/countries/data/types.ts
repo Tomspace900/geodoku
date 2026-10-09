@@ -222,3 +222,41 @@ export type HighestPointsSnapshot = {
   points: Record<string, HighestPointEntry>;
   overrides: Record<string, HighestPointOverride>;
 };
+
+/** Pourquoi un pays n'a aucune valeur d'un indicateur WDI. */
+export type WorldBankMissingCause =
+  /** Aucune ligne pour ce code dans la réponse (Taïwan, Vatican). */
+  | "not_in_wdi"
+  /** Des lignes existent, mais aucune valeur non nulle dans la fenêtre. */
+  | "no_value_in_window";
+
+/** Valeur retenue d'un indicateur WDI : l'année non nulle la plus récente de la fenêtre. */
+export type WorldBankValue = { value: number; year: number };
+
+/**
+ * Un indicateur de la Banque mondiale (WDI), tel que récolté. Chaque pays du
+ * catalogue est soit dans `values`, soit dans `missing` avec sa cause — jamais
+ * dans les deux, jamais dans aucun.
+ */
+export type WorldBankIndicator = {
+  /** Code WDI (`NY.GDP.PCAP.CD`, `SP.DYN.LE00.IN`). */
+  code: string;
+  /** `meta.lastupdated` de la réponse : la WDI révise ses séries passées. */
+  sourceUpdatedAt: string;
+  /** Fenêtre demandée (années incluses) ; au-delà, un pays vaut `null`. */
+  window: { from: number; to: number };
+  values: Record<string, WorldBankValue>;
+  missing: Record<string, WorldBankMissingCause>;
+};
+
+/**
+ * PIB par habitant et espérance de vie, récoltés par
+ * `harvest/worldBankIndicators.ts`. Aucune valeur calculée n'est stockée
+ * (catégorie de revenu…) : elle se calcule à l'affichage.
+ */
+export type WorldBankIndicatorsSnapshot = {
+  /** Date de récolte (`YYYY-MM-DD`). */
+  harvestedAt: string;
+  gdpPerCapita: WorldBankIndicator;
+  lifeExpectancy: WorldBankIndicator;
+};
