@@ -10,6 +10,7 @@ ENTRÉES DE CURATION (éditées à la main)
   scripts/countries/countryPatches.ts    # corrections, alias, classifications gameplay
   scripts/countries/flagData.json        # table de vérité drapeaux (couleurs, symboles, disposition)
   scripts/countries/data/capitalLabels.ts # libellés fr/en des capitales — RÉCOLTÉ (pnpm harvest:capitals, Wikidata)
+  scripts/countries/data/highestPoints.ts # points culminants — RÉCOLTÉ (pnpm harvest:highest-points, Factbook + Wikidata)
         │  pnpm build:countries   (RÉSEAU — world-countries npm + REST Countries v5 + Wikimedia)
         ▼
 SNAPSHOT (content/countries/ — généré, committé, daté par FACTS_SNAPSHOT.date)
@@ -143,6 +144,20 @@ sans libellé fr **et** en exploitable passe en override, jamais en repli
 silencieux sur l'anglais). Wikidata migre les libellés identiques dans toutes
 les langues vers `mul` : ces cas (Oslo…) sont des overrides.
 
+**Points culminants** (`pnpm harvest:highest-points`) : l'**altitude et le nom**
+sont ceux du CIA World Factbook (*Elevation › highest point*), lus dans le
+miroir `factbook.json` **au même commit** que `sovereignty.ts` (garde :
+`validateHighestPoints`). Le texte est plus sale qu'un « Mont Blanc 4,810 m »
+(unité absente, parenthèses, notes après `;` ou `<br>`, « unnamed elevation »,
+position au lieu d'un nom) : `parseHighestPointText`. Le Factbook retire les
+diacritiques, donc les **libellés fr/en viennent de Wikidata** (`P610`), le
+sommet étant reconnu par l'**altitude** (tolérance de 25 m,
+`ELEVATION_TOLERANCE_M`) plutôt que par le nom ; un sommet non reconnu, ou dont
+le libellé fr/en manque, passe en override motivé. L'altitude reste celle du
+Factbook dans tous les cas. `label: null` = point sans nom, rendu par un
+libellé i18n unique. Le code GEC (FIPS 10-4) de chaque pays vient de `P901`,
+avec `GEC_FALLBACK` pour NLD, XKX et PSE (Cisjordanie et Gaza : le plus haut).
+
 ### Contrôles automatiques
 
 `pnpm check:content` (job CI `quality`) vérifie :
@@ -155,10 +170,10 @@ les langues vers `mul` : ces cas (Oslo…) sont des overrides.
   correspond plus ;
 - **fraîcheur des faits dérivés** : l'étage du dessus — re-fusionne les datasets
   de `scripts/countries/data/` et échoue (« lancer pnpm build:countries ») si
-  l'un des douze champs qu'ils produisent (`utcOffsetCount`, `lastVolcanicEruptionYear`,
+  l'un des champs qu'ils produisent (`utcOffsetCount`, `lastVolcanicEruptionYear`,
   `mountainAreaShare`, `forestCoverShare`, `urbanCentresOver1M`,
   `productionRanks`, `coalElectricityShare`, `formerSovereigns`,
-  `sovereigntyYear`, `sovereigntyKind`, `sovereigntyDate`, `sovereigntySheetHidden`) ne correspond plus à `facts.ts` : dataset
+  `sovereigntyYear`, `sovereigntyKind`, `sovereigntyDate`, `sovereigntySheetHidden`, `highestPoint`) ne correspond plus à `facts.ts` : dataset
   révisé sans regen, ou `facts.ts` édité à la main malgré son en-tête
   `@generated`. Les **libellés des capitales** sont vérifiés de même contre
   `capitalLabels.ts` (`validateCapitalLabels`), qui signale aussi toute entrée
@@ -169,7 +184,12 @@ les langues vers `mul` : ces cas (Oslo…) sont des overrides.
   un nom `Intl` fr et en sans année (`validateCurrencyCode`). Le
   millésime affiché de la source Wikidata (`content/sources.ts`, écrit à la main)
   doit dire la même date que `harvestedAt` : `validateHarvestVintage` échoue
-  sinon, et `pnpm harvest:capitals` imprime la valeur à reporter. Les
+  sinon, et `pnpm harvest:capitals` / `pnpm harvest:highest-points` impriment la
+  valeur à reporter (une entrée de `sources.ts` par récolte Wikidata). Le
+  **point culminant** (`highestPoint`) rejoint la liste ci-dessus ; son altitude
+  est de plus bornée à ]0, 8 849] m, et `elevationM >= 5000` doit concorder avec
+  `physicalFeatures` ∋ `peak_over_5000m` (`validatePeakCoherence`, écarts
+  motivés dans `ACCEPTED_PEAK_GAPS`). Les
   champs venus du réseau (population, **liste** des capitales, adhésions,
   pageviews) restent hors de portée — seule une regen les vérifie ;
 - **seam terminal** : aucun module de `content/` n'importe via l'alias `@/` ni

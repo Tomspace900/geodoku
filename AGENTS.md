@@ -99,7 +99,7 @@ e2e/                      # Playwright — helpers.ts + *.shared|desktop|mobile.
 - `formerSovereigns` est une lecture **à la main** du texte libre du Factbook, et deux revues successives l'ont faite à l'œil en ratant des cas. [`validateSovereigntySources.ts`](scripts/countries/validateSovereigntySources.ts) (`check:content`) échoue si une `sourceDescription` nomme une des neuf puissances tracées sans la porter dans `formerSovereigns` : compléter la curation, ou inscrire le cas dans `ACCEPTED_OMISSIONS` **avec son motif**. Y verser un échec sans motif viderait la garde de son sens.
 - Après un levier : `pnpm build:answers` → relire le diff ISO3 → `pnpm simulate:scheduling` → régénération du pool via `/admin` si OK.
 - Le snapshot `content/countries/` (identité, faits, popularité) est régénéré par `pnpm build:countries` (réseau), qui enchaîne `build:answers`.
-- **Récoltes réseau** (`scripts/countries/harvest/`, ex. `pnpm harvest:capitals` pour les libellés fr/en des capitales, Wikidata) : un script par source, séparé de `build-countries`, qui écrit un dataset de `scripts/countries/data/` relu en diff puis committé ; `build:countries` le fusionne hors-ligne. Le dataset porte un bloc `overrides` curé (motif obligatoire), préservé à chaque récolte. La récolte **traduit** une liste qui reste celle de REST Countries : jamais d'ajout ni de retrait de capitale, jamais de repli silencieux sur l'anglais ; une nouvelle récolte imprime le millésime à reporter à la main dans `content/sources.ts`, que `check:content` compare exactement à `harvestedAt` — [`validateCapitalLabels`](scripts/countries/validateDatasetFacts.ts) (`check:content`) échoue sur un libellé obsolète ou une entrée orpheline.
+- **Récoltes réseau** (`scripts/countries/harvest/`, ex. `pnpm harvest:capitals` pour les libellés fr/en des capitales, `pnpm harvest:highest-points` pour les points culminants — Factbook + Wikidata) : un script par source, séparé de `build-countries`, qui écrit un dataset de `scripts/countries/data/` relu en diff puis committé ; `build:countries` le fusionne hors-ligne. Le dataset porte un bloc `overrides` curé (motif obligatoire), préservé à chaque récolte. La récolte **traduit** une liste qui reste celle de REST Countries : jamais d'ajout ni de retrait de capitale, jamais de repli silencieux sur l'anglais ; une nouvelle récolte imprime le millésime à reporter à la main dans `content/sources.ts`, que `check:content` compare exactement à `harvestedAt` (une entrée de `sources.ts` par récolte Wikidata, `validateHarvestVintage`) — [`validateCapitalLabels`](scripts/countries/validateDatasetFacts.ts) (`check:content`) échoue sur un libellé obsolète ou une entrée orpheline.
 - Drapeaux → [`scripts/countries/flagData.json`](scripts/countries/flagData.json) curé, pas d'heuristique.
 
 Détail complet : [`docs/content-pipeline.md`](docs/content-pipeline.md).
@@ -288,6 +288,7 @@ Source de vérité détaillée : grep `posthog?.capture` dans le code.
 **Toujours**
 
 - `pnpm lint` et `pnpm test` (aussi exécutés au pre-commit Husky)
+- Issue référencée (`Closes #N` dans le commit) et statut à jour dans le Project (cf. §12)
 
 **Selon le périmètre**
 
@@ -314,3 +315,29 @@ re-dérivée ou un fait corrigé **ne parviennent donc à aucun joueur** tant qu
 Aucune garde ne le signale : `getGridContentIssue` vérifie la validité des grilles
 futures, pas leur fraîcheur éditoriale. Les grilles déjà publiées restent
 protégées par `gridAnswers`.
+
+## 12. Suivi des tâches (issues GitHub)
+
+Le suivi vit dans les **issues GitHub** du repo et dans le Project
+[Geodoku](https://github.com/users/Tomspace900/projects/1) (privé). Plus de Kanban
+Markdown : un bug, une idée ou un chantier sans issue n'est pas suivi. Un correctif
+trivial peut s'en passer.
+
+- **Une tâche = une issue**, avec un label de type : `bug`, `feature`, `ux`,
+  `contenu`, `tech`, `admin`, `analytics`, `release`, `idée`. Un gros chantier est
+  une issue `epic` découpée en **sous-issues**, avec un **milestone** s'il avance par
+  lots (refonte du contenu #38 → P4 #42, milestone « P4 — Fiches pays », un lot par
+  sous-issue).
+- **Champs du Project** : `Status` (Backlog · Prêt · En cours · Sur develop · En prod ·
+  Abandonné) et `Priorité` (🔴 Haute · 🟠 Moyenne · 🟢 Basse). Une issue ouverte entre
+  seule dans le Project, en Backlog ; la priorité se pose à la main.
+- **Cycle de vie** : « En cours » au démarrage, « Sur develop » au merge sur `develop`
+  (à la main). `Closes #N` dans le message de commit ferme l'issue **quand le commit
+  atteint `main`**, donc à la mise en prod (flux `develop → main`, §8) ; le Project la
+  passe alors en « En prod ». Abandon : fermer en « not planned » et passer en
+  « Abandonné ».
+- **Plans longs** : un plan d'exécution (`docs/content-refactor-p4.md`…) reste un doc
+  versionné, dont l'issue est le point d'entrée. Une décision durable va dans
+  `AGENTS.md` ou dans le doc, jamais seulement dans un commentaire d'issue.
+- **Repo public** : rien de privé dans une issue ni un commentaire. Pas de chiffres du
+  sondage joueurs (ses docs sont gitignorés), pas de données de prod, pas de secrets.

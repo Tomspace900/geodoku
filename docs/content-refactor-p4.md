@@ -1122,3 +1122,46 @@ case (A–D).
 - Points ouverts : vérification visuelle mobile des valeurs longues (ZWE, PSE,
   BIH) toujours à faire ; `history_sovereignty_since_1990` inchangée (aucun
   `answers.ts` modifié).
+
+### Lot 5 — Point culminant (branche p4-lot5, 2026-10-09)
+
+- Ligne de base / après : tests 665 → 705 (665 = journal du lot 4, avant les
+  correctifs qui ont suivi) · chargement initial 258,3 → 258,5 KiB gzip · chunk
+  fiche pays 32,7 → 36,7 KiB gzip
+- Commits : voir `git log develop..p4-lot5` (rien de poussé)
+- Écarts au plan et au brief :
+  - **Correspondance par altitude**, pas par nom (le Factbook retire les
+    diacritiques) : tolérance de 25 m (`ELEVATION_TOLERANCE_M`). Résultat mesuré
+    sur les 197 : 96 libellés identiques au nom Factbook, 67 simples graphies,
+    28 overrides motivés, 6 sans nom (BDI, BEN, GMB, KIR, SEN, TUV). 4 overrides
+    à libellé `null` (KWT, MDV, MHL position au lieu d'un nom ; SAU chaîne) portent
+    à 10 les points rendus « sans nom ».
+  - **Point sans nom** : `names: null` dans `facts.ts`, libellé i18n unique
+    « Point sans nom » / « Unnamed point » (`countrySheet.value.unnamedHighestPoint`).
+  - **Casse** : Wikidata écrit « mont Blanc » ; la fiche met la majuscule
+    initiale à l'affichage (`capitalizeFirst`), la donnée reste celle de Wikidata.
+  - **Faux positifs de l'altitude relevés à la revue** : MHL (l'atoll de Likiep
+    tombait à 14 m), BWA, GNB, LUX, FSM, QAT, PSE, CIV, MLI, NAM, SDN, MEX, TZA,
+    MWI (autre sommet ou libellé de massif) — tous en override motivé. Le
+    sondage de BHS (« 1.3 km NE of Old Bight ») donne bien le mont Alvernia :
+    correspondance conservée.
+  - `peakOver5000m` retiré de `SheetRowId`/`FACT_PROVENANCE` (ligne remplacée par
+    `highestPoint`) ; la clé i18n `countrySheet.field.peakOver5000m` reste, orpheline,
+    faute de pouvoir supprimer une ligne i18n (consigne du lot).
+  - `validateHarvestVintage` prend désormais l'id de la source ; deux entrées de
+    `sources.ts` couvertes (`wikidata_capital_labels`, `wikidata_highest_point_labels`).
+    Nouvelle entrée `cia_factbook_elevation` : millésime = commit `8662a8b`.
+  - **Rafraîchissement réseau isolé et écarté** : la regen a fait bouger 9
+    populations (BWA, FIN, HRV, JPN, KAZ, NLD, SGP, SWE, ZWE), le snapshot de
+    popularité, et **`density_less_canada` (BWA sort de la liste)**. Invariant « aucun
+    `answers.ts` ne change » violé par la regen brute → `facts.ts` restauré aux
+    populations et à la date du 2026-09-25 (diff de `facts.ts` en pure insertion),
+    `popularity.ts` et l'`answers.ts` restaurés. À traiter hors lot.
+- Gardes : lint · 705 tests · `check:content` · `check:design-system` ·
+  `check:bundle` · 141 e2e passés. Un premier passage e2e, lancé pendant d'autres
+  commandes lourdes de la machine, a échoué en masse (timeouts) ; relancé seul : 141/141.
+- Cohérence 5 000 m : 27 pays ≥ 5 000 m, 27 marqués `peak_over_5000m`, aucun écart
+  (NLD, PSE, XKX compris). `ACCEPTED_PEAK_GAPS` vide.
+- Décisions en attente (voir dossier de gate) : ISR et USA (provisoires dans le
+  dataset), SAU, BWA/GNB/LUX/FSM/QAT/PSE (suivre le Factbook contre Wikidata),
+  convention des points sans nom.

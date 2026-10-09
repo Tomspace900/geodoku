@@ -18,7 +18,8 @@ ENTRÉES DE CURATION (éditées à la main)
   scripts/countries/countryPatches.ts    # corrections, alias, classifications
   scripts/countries/flagData.json        # table de vérité drapeaux
   scripts/countries/data/*.ts            # datasets de faits quantitatifs datés
-        ▲  pnpm harvest:capitals  (réseau — Wikidata) → data/capitalLabels.ts, committé
+        ▲  pnpm harvest:capitals / harvest:highest-points  (réseau — Wikidata, Factbook)
+        │    → data/capitalLabels.ts, data/highestPoints.ts, committés
         │  (scripts/countries/harvest/ : récolte réseau isolée, dataset relu en diff)
         │  pnpm build:countries  (réseau — world-countries + REST Countries + Wikimedia)
         ▼
@@ -101,7 +102,9 @@ des datasets datés dans `scripts/countries/data/`, fusionnés en scalaires par
 libellés fr/en des capitales sont un dataset **récolté** (Wikidata) par
 `scripts/countries/harvest/` : `pnpm harvest:capitals` écrit
 `data/capitalLabels.ts`, relu en diff et committé, puis `build:countries` le
-fusionne hors-ligne.
+fusionne hors-ligne. Les points culminants suivent le même chemin
+(`pnpm harvest:highest-points` → `data/highestPoints.ts`) : altitude et nom du
+CIA World Factbook, libellés Wikidata reconnus par l'altitude.
 
 `constraints/derivations.ts` — un prédicat pur par contrainte active, porté des
 prédicats runtime historiques. `constraints/SOURCES.md` porte le principe, la
