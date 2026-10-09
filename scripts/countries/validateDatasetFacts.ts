@@ -26,6 +26,7 @@ import {
 import type {
   CapitalLabelsSnapshot,
   HighestPointsSnapshot,
+  HumanDevelopmentIndexSnapshot,
   SovereigntySnapshot,
   WorldBankIndicator,
 } from "./data/types";
@@ -47,6 +48,7 @@ const DATASET_DERIVED_KEYS = [
   "highestPoint",
   "gdpPerCapitaUsd",
   "lifeExpectancyYears",
+  "humanDevelopmentIndex",
 ] as const;
 
 function isPlainRecord(value: unknown): value is Record<string, unknown> {
@@ -336,6 +338,42 @@ export function validateWorldBankIndicator(
       errors.push(
         `${code}: ${label} année ${year} hors de la fenêtre ${indicator.window.from}–${indicator.window.to}`,
       );
+    }
+  });
+  return errors;
+}
+
+/**
+ * Cohérence du dataset d'IDH avec le catalogue : chaque pays est soit dans
+ * `values`, soit dans `missing`, jamais dans les deux ni dans aucun ; chaque
+ * valeur est comprise entre 0 et 1 (exclu 0). La catégorie publiée par le PNUD
+ * est vérifiée à part (`validateCategoryAgainstPublished`).
+ */
+export function validateHumanDevelopmentIndex(
+  dataset: HumanDevelopmentIndexSnapshot,
+  codes: readonly string[],
+): string[] {
+  const errors: string[] = [];
+  codes.forEach((code) => {
+    const hasValue = code in dataset.values;
+    const isMissing = code in dataset.missing;
+    if (hasValue && isMissing) {
+      errors.push(`${code}: IDH à la fois valeur et manquant`);
+    }
+    if (!hasValue && !isMissing) {
+      errors.push(
+        `${code}: IDH ni valeur ni manquant — lancer pnpm harvest:hdi`,
+      );
+    }
+  });
+  [...Object.keys(dataset.values), ...Object.keys(dataset.missing)]
+    .filter((code) => !codes.includes(code))
+    .forEach((code) => {
+      errors.push(`${code}: IDH sans pays du catalogue`);
+    });
+  Object.entries(dataset.values).forEach(([code, { value }]) => {
+    if (!Number.isFinite(value) || value <= 0 || value > 1) {
+      errors.push(`${code}: IDH hors de ]0, 1] (${value})`);
     }
   });
   return errors;

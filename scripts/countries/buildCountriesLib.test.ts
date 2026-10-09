@@ -63,6 +63,7 @@ function minimalCountry(code: string): CountryRecord {
     highestPoint: { elevationM: 100, names: null },
     gdpPerCapitaUsd: null,
     lifeExpectancyYears: null,
+    humanDevelopmentIndex: null,
     currencies: ["EUR"],
     demonyms: { fr: { m: "X", f: "X" }, en: { m: "X", f: "X" } },
   };
@@ -470,6 +471,14 @@ describe("quantitativeFactsForCode", () => {
         missing: { RUS: "not_in_wdi" },
       },
     },
+    humanDevelopment: {
+      edition: 2025,
+      dataYear: 2023,
+      sourceUrl: "https://example.test/hdr.csv",
+      harvestedAt: "2026-10-09",
+      values: { FRA: { value: 0.92, category: "very_high" } },
+      missing: { RUS: "not_in_report" },
+    },
     sovereignty: {
       sourceCommit: "x",
       countries: {
@@ -504,6 +513,7 @@ describe("quantitativeFactsForCode", () => {
       },
       gdpPerCapitaUsd: null,
       lifeExpectancyYears: null,
+      humanDevelopmentIndex: null,
     });
     expect(quantitativeFactsForCode("CHE", datasets).mountainAreaShare).toBe(
       0.654,
@@ -606,6 +616,15 @@ describe("quantitativeFactsForCode", () => {
     expect(fra.lifeExpectancyYears).toEqual({ value: 83.04, year: 2024 });
     expect(
       quantitativeFactsForCode("RUS", datasets).gdpPerCapitaUsd,
+    ).toBeNull();
+  });
+
+  it("keeps the HDI with the data year of the edition, and null when absent", () => {
+    expect(
+      quantitativeFactsForCode("FRA", datasets).humanDevelopmentIndex,
+    ).toEqual({ value: 0.92, year: 2023 });
+    expect(
+      quantitativeFactsForCode("RUS", datasets).humanDevelopmentIndex,
     ).toBeNull();
   });
 

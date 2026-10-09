@@ -24,6 +24,7 @@ import type {
   ForestCoverSnapshot,
   HighestPointsSnapshot,
   HoloceneVolcanoSnapshot,
+  HumanDevelopmentIndexSnapshot,
   MountainAreaSnapshot,
   ProductionRankKey,
   SovereigntySnapshot,
@@ -513,6 +514,7 @@ export type QuantitativeDatasets = {
   sovereignty: SovereigntySnapshot;
   highestPoints: HighestPointsSnapshot;
   worldBank: WorldBankIndicatorsSnapshot;
+  humanDevelopment: HumanDevelopmentIndexSnapshot;
 };
 
 type QuantitativeFacts = Pick<
@@ -532,6 +534,7 @@ type QuantitativeFacts = Pick<
   | "highestPoint"
   | "gdpPerCapitaUsd"
   | "lifeExpectancyYears"
+  | "humanDevelopmentIndex"
 >;
 
 /**
@@ -611,6 +614,15 @@ function highestPointForCode(
   };
 }
 
+/** IDH du pays avec l'année des données de l'édition, `null` sans valeur au fichier. */
+function humanDevelopmentForCode(
+  code: string,
+  dataset: HumanDevelopmentIndexSnapshot,
+): CountryRecord["humanDevelopmentIndex"] {
+  const entry = dataset.values[code];
+  return entry ? { value: entry.value, year: dataset.dataYear } : null;
+}
+
 /**
  * Fusionne les datasets quantitatifs curés en scalaires dérivés par pays.
  * Les parts sont ramenées en fraction 0–1 ; une source qui ne couvre pas le
@@ -642,6 +654,10 @@ export function quantitativeFactsForCode(
     highestPoint: highestPointForCode(code, datasets.highestPoints),
     gdpPerCapitaUsd: datasets.worldBank.gdpPerCapita.values[code] ?? null,
     lifeExpectancyYears: datasets.worldBank.lifeExpectancy.values[code] ?? null,
+    humanDevelopmentIndex: humanDevelopmentForCode(
+      code,
+      datasets.humanDevelopment,
+    ),
   };
 }
 

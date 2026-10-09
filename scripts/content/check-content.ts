@@ -50,8 +50,13 @@ import { countryPatches } from "../countries/countryPatches";
 import { CAPITAL_LABELS } from "../countries/data/capitalLabels";
 import { QUANTITATIVE_DATASETS } from "../countries/data/datasets";
 import { HIGHEST_POINTS } from "../countries/data/highestPoints";
+import { HUMAN_DEVELOPMENT_INDEX } from "../countries/data/humanDevelopmentIndex";
 import { WORLD_BANK_INDICATORS } from "../countries/data/worldBankIndicators";
 import { validateHarvestVintage } from "../countries/harvest/capitalLabelsLib";
+import {
+  validateCategoryAgainstPublished,
+  validateEditionVintage,
+} from "../countries/harvest/humanDevelopmentIndexLib";
 import { validateYearRangeVintage } from "../countries/harvest/worldBankIndicatorsLib";
 import {
   validateCountryCatalog,
@@ -63,6 +68,7 @@ import {
   validateCurrencyDemonymFacts,
   validateDatasetFacts,
   validateHighestPoints,
+  validateHumanDevelopmentIndex,
   validatePeakCoherence,
   validateWorldBankIndicator,
 } from "../countries/validateDatasetFacts";
@@ -162,6 +168,15 @@ function checkCountries(errors: string[]): void {
       "world_bank_life_expectancy",
       SOURCES.world_bank_life_expectancy.vintage,
       WORLD_BANK_INDICATORS.lifeExpectancy,
+    ),
+  );
+  errors.push(
+    ...validateHumanDevelopmentIndex(HUMAN_DEVELOPMENT_INDEX, COUNTRY_CODES),
+    ...validateCategoryAgainstPublished(HUMAN_DEVELOPMENT_INDEX),
+    ...validateEditionVintage(
+      "undp_hdr",
+      SOURCES.undp_hdr.vintage,
+      HUMAN_DEVELOPMENT_INDEX,
     ),
   );
   errors.push(...validateSovereigntySources(QUANTITATIVE_DATASETS.sovereignty));

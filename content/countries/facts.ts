@@ -66,6 +66,10 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
       value: 66.289,
       year: 2024,
     },
+    humanDevelopmentIndex: {
+      value: 0.496,
+      year: 2023,
+    },
     currencies: ["AFN"],
     demonyms: {
       fr: {
@@ -134,6 +138,10 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     lifeExpectancyYears: {
       value: 64.805,
       year: 2024,
+    },
+    humanDevelopmentIndex: {
+      value: 0.616,
+      year: 2023,
     },
     currencies: ["AOA"],
     demonyms: {
@@ -204,6 +212,10 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
       value: 79.776,
       year: 2024,
     },
+    humanDevelopmentIndex: {
+      value: 0.81,
+      year: 2023,
+    },
     currencies: ["ALL"],
     demonyms: {
       fr: {
@@ -272,6 +284,10 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     lifeExpectancyYears: {
       value: 84.188,
       year: 2024,
+    },
+    humanDevelopmentIndex: {
+      value: 0.913,
+      year: 2023,
     },
     currencies: ["EUR"],
     demonyms: {
@@ -345,6 +361,10 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
       value: 83.069,
       year: 2024,
     },
+    humanDevelopmentIndex: {
+      value: 0.94,
+      year: 2023,
+    },
     currencies: ["AED"],
     demonyms: {
       fr: {
@@ -413,6 +433,10 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     lifeExpectancyYears: {
       value: 77.543,
       year: 2024,
+    },
+    humanDevelopmentIndex: {
+      value: 0.865,
+      year: 2023,
     },
     currencies: ["ARS"],
     demonyms: {
@@ -483,6 +507,10 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
       value: 78.319512195122,
       year: 2024,
     },
+    humanDevelopmentIndex: {
+      value: 0.811,
+      year: 2023,
+    },
     currencies: ["AMD"],
     demonyms: {
       fr: {
@@ -551,6 +579,10 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     lifeExpectancyYears: {
       value: 77.766,
       year: 2024,
+    },
+    humanDevelopmentIndex: {
+      value: 0.851,
+      year: 2023,
     },
     currencies: ["XCD"],
     demonyms: {
@@ -629,6 +661,10 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
       value: 83.0512195121951,
       year: 2024,
     },
+    humanDevelopmentIndex: {
+      value: 0.958,
+      year: 2023,
+    },
     currencies: ["AUD"],
     demonyms: {
       fr: {
@@ -697,6 +733,10 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     lifeExpectancyYears: {
       value: 81.9951219512195,
       year: 2024,
+    },
+    humanDevelopmentIndex: {
+      value: 0.93,
+      year: 2023,
     },
     currencies: ["EUR"],
     demonyms: {
@@ -767,6 +807,10 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
       value: 74.576,
       year: 2024,
     },
+    humanDevelopmentIndex: {
+      value: 0.789,
+      year: 2023,
+    },
     currencies: ["AZN"],
     demonyms: {
       fr: {
@@ -832,6 +876,10 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     lifeExpectancyYears: {
       value: 63.818,
       year: 2024,
+    },
+    humanDevelopmentIndex: {
+      value: 0.439,
+      year: 2023,
     },
     currencies: ["BIF"],
     demonyms: {
@@ -902,6 +950,10 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
       value: 82.3,
       year: 2024,
     },
+    humanDevelopmentIndex: {
+      value: 0.951,
+      year: 2023,
+    },
     currencies: ["EUR"],
     demonyms: {
       fr: {
@@ -967,6 +1019,10 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     lifeExpectancyYears: {
       value: 60.961,
       year: 2024,
+    },
+    humanDevelopmentIndex: {
+      value: 0.515,
+      year: 2023,
     },
     currencies: ["XOF"],
     demonyms: {
@@ -1036,6 +1092,10 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     lifeExpectancyYears: {
       value: 61.292,
       year: 2024,
+    },
+    humanDevelopmentIndex: {
+      value: 0.459,
+      year: 2023,
     },
     currencies: ["XOF"],
     demonyms: {
@@ -1108,6 +1168,10 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
       value: 74.93,
       year: 2024,
     },
+    humanDevelopmentIndex: {
+      value: 0.685,
+      year: 2023,
+    },
     currencies: ["BDT"],
     demonyms: {
       fr: {
@@ -1176,6 +1240,10 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     lifeExpectancyYears: {
       value: 75.7609756097561,
       year: 2024,
+    },
+    humanDevelopmentIndex: {
+      value: 0.845,
+      year: 2023,
     },
     currencies: ["BGN"],
     demonyms: {
@@ -1246,6 +1314,10 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
       value: 81.423,
       year: 2024,
     },
+    humanDevelopmentIndex: {
+      value: 0.899,
+      year: 2023,
+    },
     currencies: ["BHD"],
     demonyms: {
       fr: {
@@ -1314,6 +1386,10 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     lifeExpectancyYears: {
       value: 74.71,
       year: 2024,
+    },
+    humanDevelopmentIndex: {
+      value: 0.82,
+      year: 2023,
     },
     currencies: ["BSD", "USD"],
     demonyms: {
@@ -1384,6 +1460,10 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
       value: 78.044,
       year: 2024,
     },
+    humanDevelopmentIndex: {
+      value: 0.804,
+      year: 2023,
+    },
     currencies: ["BAM"],
     demonyms: {
       fr: {
@@ -1453,6 +1533,10 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
       value: 74.3653414634147,
       year: 2024,
     },
+    humanDevelopmentIndex: {
+      value: 0.824,
+      year: 2023,
+    },
     currencies: ["BYN"],
     demonyms: {
       fr: {
@@ -1521,6 +1605,10 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     lifeExpectancyYears: {
       value: 73.739,
       year: 2024,
+    },
+    humanDevelopmentIndex: {
+      value: 0.721,
+      year: 2023,
     },
     currencies: ["BZD"],
     demonyms: {
@@ -1600,6 +1688,10 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     lifeExpectancyYears: {
       value: 68.739,
       year: 2024,
+    },
+    humanDevelopmentIndex: {
+      value: 0.733,
+      year: 2023,
     },
     currencies: ["BOB"],
     demonyms: {
@@ -1685,6 +1777,10 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
       value: 76.023,
       year: 2024,
     },
+    humanDevelopmentIndex: {
+      value: 0.786,
+      year: 2023,
+    },
     currencies: ["BRL"],
     demonyms: {
       fr: {
@@ -1753,6 +1849,10 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     lifeExpectancyYears: {
       value: 76.332,
       year: 2024,
+    },
+    humanDevelopmentIndex: {
+      value: 0.811,
+      year: 2023,
     },
     currencies: ["BBD"],
     demonyms: {
@@ -1823,6 +1923,10 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
       value: 75.501,
       year: 2024,
     },
+    humanDevelopmentIndex: {
+      value: 0.837,
+      year: 2023,
+    },
     currencies: ["BND", "SGD"],
     demonyms: {
       fr: {
@@ -1891,6 +1995,10 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     lifeExpectancyYears: {
       value: 73.262,
       year: 2024,
+    },
+    humanDevelopmentIndex: {
+      value: 0.698,
+      year: 2023,
     },
     currencies: ["BTN", "INR"],
     demonyms: {
@@ -1961,6 +2069,10 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
       value: 69.293,
       year: 2024,
     },
+    humanDevelopmentIndex: {
+      value: 0.731,
+      year: 2023,
+    },
     currencies: ["BWP"],
     demonyms: {
       fr: {
@@ -2029,6 +2141,10 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     lifeExpectancyYears: {
       value: 57.671,
       year: 2024,
+    },
+    humanDevelopmentIndex: {
+      value: 0.414,
+      year: 2023,
     },
     currencies: ["XAF"],
     demonyms: {
@@ -2108,6 +2224,10 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
       value: 82.1080487804878,
       year: 2024,
     },
+    humanDevelopmentIndex: {
+      value: 0.939,
+      year: 2023,
+    },
     currencies: ["CAD"],
     demonyms: {
       fr: {
@@ -2177,6 +2297,10 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
       value: 84.4073170731707,
       year: 2024,
     },
+    humanDevelopmentIndex: {
+      value: 0.97,
+      year: 2023,
+    },
     currencies: ["CHF"],
     demonyms: {
       fr: {
@@ -2245,6 +2369,10 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     lifeExpectancyYears: {
       value: 81.359,
       year: 2024,
+    },
+    humanDevelopmentIndex: {
+      value: 0.878,
+      year: 2023,
     },
     currencies: ["CLP"],
     demonyms: {
@@ -2337,6 +2465,10 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
       value: 78.017,
       year: 2024,
     },
+    humanDevelopmentIndex: {
+      value: 0.797,
+      year: 2023,
+    },
     currencies: ["CNY"],
     demonyms: {
       fr: {
@@ -2408,6 +2540,10 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
       value: 62.11,
       year: 2024,
     },
+    humanDevelopmentIndex: {
+      value: 0.582,
+      year: 2023,
+    },
     currencies: ["XOF"],
     demonyms: {
       fr: {
@@ -2478,6 +2614,10 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     lifeExpectancyYears: {
       value: 63.968,
       year: 2024,
+    },
+    humanDevelopmentIndex: {
+      value: 0.588,
+      year: 2023,
     },
     currencies: ["XAF"],
     demonyms: {
@@ -2553,6 +2693,10 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
       value: 62.074,
       year: 2024,
     },
+    humanDevelopmentIndex: {
+      value: 0.522,
+      year: 2023,
+    },
     currencies: ["CDF"],
     demonyms: {
       fr: {
@@ -2621,6 +2765,10 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     lifeExpectancyYears: {
       value: 66.001,
       year: 2024,
+    },
+    humanDevelopmentIndex: {
+      value: 0.649,
+      year: 2023,
     },
     currencies: ["XAF"],
     demonyms: {
@@ -2701,6 +2849,10 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
       value: 77.913,
       year: 2024,
     },
+    humanDevelopmentIndex: {
+      value: 0.788,
+      year: 2023,
+    },
     currencies: ["COP"],
     demonyms: {
       fr: {
@@ -2769,6 +2921,10 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     lifeExpectancyYears: {
       value: 67.023,
       year: 2024,
+    },
+    humanDevelopmentIndex: {
+      value: 0.603,
+      year: 2023,
     },
     currencies: ["KMF"],
     demonyms: {
@@ -2839,6 +2995,10 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
       value: 76.224,
       year: 2024,
     },
+    humanDevelopmentIndex: {
+      value: 0.668,
+      year: 2023,
+    },
     currencies: ["CVE"],
     demonyms: {
       fr: {
@@ -2908,6 +3068,10 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
       value: 80.996,
       year: 2024,
     },
+    humanDevelopmentIndex: {
+      value: 0.833,
+      year: 2023,
+    },
     currencies: ["CRC"],
     demonyms: {
       fr: {
@@ -2973,6 +3137,10 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     lifeExpectancyYears: {
       value: 78.264,
       year: 2024,
+    },
+    humanDevelopmentIndex: {
+      value: 0.762,
+      year: 2023,
     },
     currencies: ["CUP"],
     demonyms: {
@@ -3043,6 +3211,10 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
       value: 81.821,
       year: 2024,
     },
+    humanDevelopmentIndex: {
+      value: 0.913,
+      year: 2023,
+    },
     currencies: ["EUR"],
     demonyms: {
       fr: {
@@ -3111,6 +3283,10 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     lifeExpectancyYears: {
       value: 79.9780487804878,
       year: 2024,
+    },
+    humanDevelopmentIndex: {
+      value: 0.915,
+      year: 2023,
     },
     currencies: ["CZK"],
     demonyms: {
@@ -3183,6 +3359,10 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
       value: 80.7926829268293,
       year: 2024,
     },
+    humanDevelopmentIndex: {
+      value: 0.959,
+      year: 2023,
+    },
     currencies: ["EUR"],
     demonyms: {
       fr: {
@@ -3251,6 +3431,10 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     lifeExpectancyYears: {
       value: 66.202,
       year: 2024,
+    },
+    humanDevelopmentIndex: {
+      value: 0.513,
+      year: 2023,
     },
     currencies: ["DJF"],
     demonyms: {
@@ -3321,6 +3505,10 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
       value: 71.294,
       year: 2024,
     },
+    humanDevelopmentIndex: {
+      value: 0.761,
+      year: 2023,
+    },
     currencies: ["XCD"],
     demonyms: {
       fr: {
@@ -3389,6 +3577,10 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     lifeExpectancyYears: {
       value: 82.2536585365854,
       year: 2024,
+    },
+    humanDevelopmentIndex: {
+      value: 0.962,
+      year: 2023,
     },
     currencies: ["DKK"],
     demonyms: {
@@ -3461,6 +3653,10 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
       value: 73.868,
       year: 2024,
     },
+    humanDevelopmentIndex: {
+      value: 0.776,
+      year: 2023,
+    },
     currencies: ["DOP"],
     demonyms: {
       fr: {
@@ -3531,6 +3727,10 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     lifeExpectancyYears: {
       value: 76.475,
       year: 2024,
+    },
+    humanDevelopmentIndex: {
+      value: 0.763,
+      year: 2023,
     },
     currencies: ["DZD"],
     demonyms: {
@@ -3608,6 +3808,10 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
       value: 77.579,
       year: 2024,
     },
+    humanDevelopmentIndex: {
+      value: 0.777,
+      year: 2023,
+    },
     currencies: ["USD"],
     demonyms: {
       fr: {
@@ -3679,6 +3883,10 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
       value: 71.806,
       year: 2024,
     },
+    humanDevelopmentIndex: {
+      value: 0.754,
+      year: 2023,
+    },
     currencies: ["EGP"],
     demonyms: {
       fr: {
@@ -3744,6 +3952,10 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     lifeExpectancyYears: {
       value: 68.893,
       year: 2024,
+    },
+    humanDevelopmentIndex: {
+      value: 0.503,
+      year: 2023,
     },
     currencies: ["ERN"],
     demonyms: {
@@ -3814,6 +4026,10 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
       value: 83.8878048780488,
       year: 2024,
     },
+    humanDevelopmentIndex: {
+      value: 0.918,
+      year: 2023,
+    },
     currencies: ["EUR"],
     demonyms: {
       fr: {
@@ -3882,6 +4098,10 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     lifeExpectancyYears: {
       value: 79.2951219512195,
       year: 2024,
+    },
+    humanDevelopmentIndex: {
+      value: 0.905,
+      year: 2023,
     },
     currencies: ["EUR"],
     demonyms: {
@@ -3954,6 +4174,10 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
       value: 67.603,
       year: 2024,
     },
+    humanDevelopmentIndex: {
+      value: 0.497,
+      year: 2023,
+    },
     currencies: ["ETB"],
     demonyms: {
       fr: {
@@ -4023,6 +4247,10 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
       value: 82.3365853658537,
       year: 2024,
     },
+    humanDevelopmentIndex: {
+      value: 0.948,
+      year: 2023,
+    },
     currencies: ["EUR"],
     demonyms: {
       fr: {
@@ -4091,6 +4319,10 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     lifeExpectancyYears: {
       value: 67.463,
       year: 2024,
+    },
+    humanDevelopmentIndex: {
+      value: 0.731,
+      year: 2023,
     },
     currencies: ["FJD"],
     demonyms: {
@@ -4180,6 +4412,10 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
       value: 82.9804878048781,
       year: 2024,
     },
+    humanDevelopmentIndex: {
+      value: 0.92,
+      year: 2023,
+    },
     currencies: ["EUR"],
     demonyms: {
       fr: {
@@ -4248,6 +4484,10 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     lifeExpectancyYears: {
       value: 67.357,
       year: 2024,
+    },
+    humanDevelopmentIndex: {
+      value: 0.615,
+      year: 2023,
     },
     currencies: ["USD"],
     demonyms: {
@@ -4318,6 +4558,10 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
       value: 68.511,
       year: 2024,
     },
+    humanDevelopmentIndex: {
+      value: 0.733,
+      year: 2023,
+    },
     currencies: ["XAF"],
     demonyms: {
       fr: {
@@ -4387,6 +4631,10 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
       value: 81.3868536585366,
       year: 2024,
     },
+    humanDevelopmentIndex: {
+      value: 0.946,
+      year: 2023,
+    },
     currencies: ["GBP"],
     demonyms: {
       fr: {
@@ -4455,6 +4703,10 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     lifeExpectancyYears: {
       value: 74.657,
       year: 2024,
+    },
+    humanDevelopmentIndex: {
+      value: 0.844,
+      year: 2023,
     },
     currencies: ["GEL"],
     demonyms: {
@@ -4527,6 +4779,10 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
       value: 65.695,
       year: 2024,
     },
+    humanDevelopmentIndex: {
+      value: 0.628,
+      year: 2023,
+    },
     currencies: ["GHS"],
     demonyms: {
       fr: {
@@ -4596,6 +4852,10 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
       value: 60.904,
       year: 2024,
     },
+    humanDevelopmentIndex: {
+      value: 0.5,
+      year: 2023,
+    },
     currencies: ["GNF"],
     demonyms: {
       fr: {
@@ -4661,6 +4921,10 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     lifeExpectancyYears: {
       value: 66.057,
       year: 2024,
+    },
+    humanDevelopmentIndex: {
+      value: 0.524,
+      year: 2023,
     },
     currencies: ["GMD"],
     demonyms: {
@@ -4731,6 +4995,10 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
       value: 64.254,
       year: 2024,
     },
+    humanDevelopmentIndex: {
+      value: 0.514,
+      year: 2023,
+    },
     currencies: ["XOF"],
     demonyms: {
       fr: {
@@ -4799,6 +5067,10 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     lifeExpectancyYears: {
       value: 63.906,
       year: 2024,
+    },
+    humanDevelopmentIndex: {
+      value: 0.674,
+      year: 2023,
     },
     currencies: ["XAF"],
     demonyms: {
@@ -4869,6 +5141,10 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
       value: 81.8390243902439,
       year: 2024,
     },
+    humanDevelopmentIndex: {
+      value: 0.908,
+      year: 2023,
+    },
     currencies: ["EUR"],
     demonyms: {
       fr: {
@@ -4937,6 +5213,10 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     lifeExpectancyYears: {
       value: 75.367,
       year: 2024,
+    },
+    humanDevelopmentIndex: {
+      value: 0.791,
+      year: 2023,
     },
     currencies: ["XCD"],
     demonyms: {
@@ -5007,6 +5287,10 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
       value: 72.746,
       year: 2024,
     },
+    humanDevelopmentIndex: {
+      value: 0.662,
+      year: 2023,
+    },
     currencies: ["GTQ"],
     demonyms: {
       fr: {
@@ -5075,6 +5359,10 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     lifeExpectancyYears: {
       value: 70.319,
       year: 2024,
+    },
+    humanDevelopmentIndex: {
+      value: 0.776,
+      year: 2023,
     },
     currencies: ["GYD"],
     demonyms: {
@@ -5147,6 +5435,10 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
       value: 73.044,
       year: 2024,
     },
+    humanDevelopmentIndex: {
+      value: 0.645,
+      year: 2023,
+    },
     currencies: ["HNL"],
     demonyms: {
       fr: {
@@ -5215,6 +5507,10 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     lifeExpectancyYears: {
       value: 78.9292682926829,
       year: 2024,
+    },
+    humanDevelopmentIndex: {
+      value: 0.889,
+      year: 2023,
     },
     currencies: ["EUR"],
     demonyms: {
@@ -5285,6 +5581,10 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
       value: 65.119,
       year: 2024,
     },
+    humanDevelopmentIndex: {
+      value: 0.554,
+      year: 2023,
+    },
     currencies: ["HTG"],
     demonyms: {
       fr: {
@@ -5353,6 +5653,10 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     lifeExpectancyYears: {
       value: 76.7243902439025,
       year: 2024,
+    },
+    humanDevelopmentIndex: {
+      value: 0.87,
+      year: 2023,
     },
     currencies: ["HUF"],
     demonyms: {
@@ -5433,6 +5737,10 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
       value: 71.288,
       year: 2024,
     },
+    humanDevelopmentIndex: {
+      value: 0.728,
+      year: 2023,
+    },
     currencies: ["IDR"],
     demonyms: {
       fr: {
@@ -5511,6 +5819,10 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
       value: 72.235,
       year: 2024,
     },
+    humanDevelopmentIndex: {
+      value: 0.685,
+      year: 2023,
+    },
     currencies: ["INR"],
     demonyms: {
       fr: {
@@ -5579,6 +5891,10 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     lifeExpectancyYears: {
       value: 83.009756097561,
       year: 2024,
+    },
+    humanDevelopmentIndex: {
+      value: 0.949,
+      year: 2023,
     },
     currencies: ["EUR"],
     demonyms: {
@@ -5652,6 +5968,10 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
       value: 77.854,
       year: 2024,
     },
+    humanDevelopmentIndex: {
+      value: 0.799,
+      year: 2023,
+    },
     currencies: ["IRR"],
     demonyms: {
       fr: {
@@ -5723,6 +6043,10 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
       value: 72.424,
       year: 2024,
     },
+    humanDevelopmentIndex: {
+      value: 0.695,
+      year: 2023,
+    },
     currencies: ["IQD"],
     demonyms: {
       fr: {
@@ -5791,6 +6115,10 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     lifeExpectancyYears: {
       value: 82.809756097561,
       year: 2024,
+    },
+    humanDevelopmentIndex: {
+      value: 0.972,
+      year: 2023,
     },
     currencies: ["ISK"],
     demonyms: {
@@ -5861,6 +6189,10 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
       value: 83.1975609756098,
       year: 2024,
     },
+    humanDevelopmentIndex: {
+      value: 0.919,
+      year: 2023,
+    },
     currencies: ["ILS"],
     demonyms: {
       fr: {
@@ -5929,6 +6261,10 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     lifeExpectancyYears: {
       value: 83.9512195121951,
       year: 2024,
+    },
+    humanDevelopmentIndex: {
+      value: 0.915,
+      year: 2023,
     },
     currencies: ["EUR"],
     demonyms: {
@@ -5999,6 +6335,10 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
       value: 71.606,
       year: 2024,
     },
+    humanDevelopmentIndex: {
+      value: 0.72,
+      year: 2023,
+    },
     currencies: ["JMD"],
     demonyms: {
       fr: {
@@ -6068,6 +6408,10 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
       value: 77.981,
       year: 2024,
     },
+    humanDevelopmentIndex: {
+      value: 0.754,
+      year: 2023,
+    },
     currencies: ["JOD"],
     demonyms: {
       fr: {
@@ -6136,6 +6480,10 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     lifeExpectancyYears: {
       value: 84.0363414634146,
       year: 2024,
+    },
+    humanDevelopmentIndex: {
+      value: 0.925,
+      year: 2023,
     },
     currencies: ["JPY"],
     demonyms: {
@@ -6207,6 +6555,10 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     lifeExpectancyYears: {
       value: 74.531,
       year: 2024,
+    },
+    humanDevelopmentIndex: {
+      value: 0.837,
+      year: 2023,
     },
     currencies: ["KZT"],
     demonyms: {
@@ -6282,6 +6634,10 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
       value: 63.834,
       year: 2024,
     },
+    humanDevelopmentIndex: {
+      value: 0.628,
+      year: 2023,
+    },
     currencies: ["KES"],
     demonyms: {
       fr: {
@@ -6350,6 +6706,10 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     lifeExpectancyYears: {
       value: 72.4,
       year: 2024,
+    },
+    humanDevelopmentIndex: {
+      value: 0.72,
+      year: 2023,
     },
     currencies: ["KGS"],
     demonyms: {
@@ -6422,6 +6782,10 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
       value: 70.817,
       year: 2024,
     },
+    humanDevelopmentIndex: {
+      value: 0.606,
+      year: 2023,
+    },
     currencies: ["KHR", "USD"],
     demonyms: {
       fr: {
@@ -6487,6 +6851,10 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     lifeExpectancyYears: {
       value: 66.6,
       year: 2024,
+    },
+    humanDevelopmentIndex: {
+      value: 0.644,
+      year: 2023,
     },
     currencies: ["AUD"],
     demonyms: {
@@ -6557,6 +6925,10 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
       value: 72.281,
       year: 2024,
     },
+    humanDevelopmentIndex: {
+      value: 0.84,
+      year: 2023,
+    },
     currencies: ["XCD"],
     demonyms: {
       fr: {
@@ -6626,6 +6998,10 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
       value: 83.6292682926829,
       year: 2024,
     },
+    humanDevelopmentIndex: {
+      value: 0.937,
+      year: 2023,
+    },
     currencies: ["KRW"],
     demonyms: {
       fr: {
@@ -6693,6 +7069,10 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     lifeExpectancyYears: {
       value: 84.580487804878,
       year: 2024,
+    },
+    humanDevelopmentIndex: {
+      value: 0.852,
+      year: 2023,
     },
     currencies: ["KWD"],
     demonyms: {
@@ -6763,6 +7143,10 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
       value: 69.225,
       year: 2024,
     },
+    humanDevelopmentIndex: {
+      value: 0.617,
+      year: 2023,
+    },
     currencies: ["LAK"],
     demonyms: {
       fr: {
@@ -6832,6 +7216,10 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
       value: 77.945,
       year: 2024,
     },
+    humanDevelopmentIndex: {
+      value: 0.752,
+      year: 2023,
+    },
     currencies: ["LBP"],
     demonyms: {
       fr: {
@@ -6900,6 +7288,10 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     lifeExpectancyYears: {
       value: 62.324,
       year: 2024,
+    },
+    humanDevelopmentIndex: {
+      value: 0.51,
+      year: 2023,
     },
     currencies: ["LRD"],
     demonyms: {
@@ -6972,6 +7364,10 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
       value: 71.121,
       year: 2024,
     },
+    humanDevelopmentIndex: {
+      value: 0.721,
+      year: 2023,
+    },
     currencies: ["LYD"],
     demonyms: {
       fr: {
@@ -7040,6 +7436,10 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     lifeExpectancyYears: {
       value: 72.846,
       year: 2024,
+    },
+    humanDevelopmentIndex: {
+      value: 0.748,
+      year: 2023,
     },
     currencies: ["XCD"],
     demonyms: {
@@ -7110,6 +7510,10 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
       value: 84.2,
       year: 2024,
     },
+    humanDevelopmentIndex: {
+      value: 0.938,
+      year: 2023,
+    },
     currencies: ["CHF"],
     demonyms: {
       fr: {
@@ -7178,6 +7582,10 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     lifeExpectancyYears: {
       value: 77.672,
       year: 2024,
+    },
+    humanDevelopmentIndex: {
+      value: 0.776,
+      year: 2023,
     },
     currencies: ["LKR"],
     demonyms: {
@@ -7248,6 +7656,10 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
       value: 57.798,
       year: 2024,
     },
+    humanDevelopmentIndex: {
+      value: 0.55,
+      year: 2023,
+    },
     currencies: ["LSL", "ZAR"],
     demonyms: {
       fr: {
@@ -7316,6 +7728,10 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     lifeExpectancyYears: {
       value: 77.1951219512195,
       year: 2024,
+    },
+    humanDevelopmentIndex: {
+      value: 0.895,
+      year: 2023,
     },
     currencies: ["EUR"],
     demonyms: {
@@ -7386,6 +7802,10 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
       value: 83.1951219512195,
       year: 2024,
     },
+    humanDevelopmentIndex: {
+      value: 0.922,
+      year: 2023,
+    },
     currencies: ["EUR"],
     demonyms: {
       fr: {
@@ -7454,6 +7874,10 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     lifeExpectancyYears: {
       value: 76.4292682926829,
       year: 2024,
+    },
+    humanDevelopmentIndex: {
+      value: 0.889,
+      year: 2023,
     },
     currencies: ["EUR"],
     demonyms: {
@@ -7524,6 +7948,10 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
       value: 75.493,
       year: 2024,
     },
+    humanDevelopmentIndex: {
+      value: 0.71,
+      year: 2023,
+    },
     currencies: ["MAD"],
     demonyms: {
       fr: {
@@ -7593,6 +8021,7 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
       value: 86.497,
       year: 2024,
     },
+    humanDevelopmentIndex: null,
     currencies: ["EUR"],
     demonyms: {
       fr: {
@@ -7661,6 +8090,10 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     lifeExpectancyYears: {
       value: 71.332,
       year: 2024,
+    },
+    humanDevelopmentIndex: {
+      value: 0.785,
+      year: 2023,
     },
     currencies: ["MDL"],
     demonyms: {
@@ -7731,6 +8164,10 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
       value: 63.835,
       year: 2024,
     },
+    humanDevelopmentIndex: {
+      value: 0.487,
+      year: 2023,
+    },
     currencies: ["MGA"],
     demonyms: {
       fr: {
@@ -7796,6 +8233,10 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     lifeExpectancyYears: {
       value: 81.285,
       year: 2024,
+    },
+    humanDevelopmentIndex: {
+      value: 0.766,
+      year: 2023,
     },
     currencies: ["MVR"],
     demonyms: {
@@ -7876,6 +8317,10 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
       value: 75.264,
       year: 2024,
     },
+    humanDevelopmentIndex: {
+      value: 0.789,
+      year: 2023,
+    },
     currencies: ["MXN"],
     demonyms: {
       fr: {
@@ -7941,6 +8386,10 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     lifeExpectancyYears: {
       value: 67.075,
       year: 2024,
+    },
+    humanDevelopmentIndex: {
+      value: 0.733,
+      year: 2023,
     },
     currencies: ["USD"],
     demonyms: {
@@ -8011,6 +8460,10 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
       value: 76.6165853658537,
       year: 2024,
     },
+    humanDevelopmentIndex: {
+      value: 0.815,
+      year: 2023,
+    },
     currencies: ["MKD"],
     demonyms: {
       fr: {
@@ -8080,6 +8533,10 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
       value: 60.675,
       year: 2024,
     },
+    humanDevelopmentIndex: {
+      value: 0.419,
+      year: 2023,
+    },
     currencies: ["XOF"],
     demonyms: {
       fr: {
@@ -8148,6 +8605,10 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     lifeExpectancyYears: {
       value: 82.9560975609756,
       year: 2024,
+    },
+    humanDevelopmentIndex: {
+      value: 0.924,
+      year: 2023,
     },
     currencies: ["EUR"],
     demonyms: {
@@ -8220,6 +8681,10 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
       value: 67.095,
       year: 2024,
     },
+    humanDevelopmentIndex: {
+      value: 0.609,
+      year: 2023,
+    },
     currencies: ["MMK"],
     demonyms: {
       fr: {
@@ -8288,6 +8753,10 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     lifeExpectancyYears: {
       value: 77.890243902439,
       year: 2024,
+    },
+    humanDevelopmentIndex: {
+      value: 0.862,
+      year: 2023,
     },
     currencies: ["EUR"],
     demonyms: {
@@ -8358,6 +8827,10 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
       value: 72.3980487804878,
       year: 2024,
     },
+    humanDevelopmentIndex: {
+      value: 0.747,
+      year: 2023,
+    },
     currencies: ["MNT"],
     demonyms: {
       fr: {
@@ -8426,6 +8899,10 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     lifeExpectancyYears: {
       value: 63.797,
       year: 2024,
+    },
+    humanDevelopmentIndex: {
+      value: 0.493,
+      year: 2023,
     },
     currencies: ["MZN"],
     demonyms: {
@@ -8496,6 +8973,10 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
       value: 68.713,
       year: 2024,
     },
+    humanDevelopmentIndex: {
+      value: 0.563,
+      year: 2023,
+    },
     currencies: ["MRU"],
     demonyms: {
       fr: {
@@ -8565,6 +9046,10 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
       value: 73.7890243902439,
       year: 2024,
     },
+    humanDevelopmentIndex: {
+      value: 0.806,
+      year: 2023,
+    },
     currencies: ["MUR"],
     demonyms: {
       fr: {
@@ -8633,6 +9118,10 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     lifeExpectancyYears: {
       value: 67.561,
       year: 2024,
+    },
+    humanDevelopmentIndex: {
+      value: 0.517,
+      year: 2023,
     },
     currencies: ["MWK"],
     demonyms: {
@@ -8704,6 +9193,10 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     lifeExpectancyYears: {
       value: 76.821,
       year: 2024,
+    },
+    humanDevelopmentIndex: {
+      value: 0.819,
+      year: 2023,
     },
     currencies: ["MYR"],
     demonyms: {
@@ -8784,6 +9277,10 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
       value: 67.516,
       year: 2024,
     },
+    humanDevelopmentIndex: {
+      value: 0.665,
+      year: 2023,
+    },
     currencies: ["NAD", "ZAR"],
     demonyms: {
       fr: {
@@ -8852,6 +9349,10 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     lifeExpectancyYears: {
       value: 61.433,
       year: 2024,
+    },
+    humanDevelopmentIndex: {
+      value: 0.419,
+      year: 2023,
     },
     currencies: ["XOF"],
     demonyms: {
@@ -8925,6 +9426,10 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
       value: 54.635,
       year: 2024,
     },
+    humanDevelopmentIndex: {
+      value: 0.56,
+      year: 2023,
+    },
     currencies: ["NGN"],
     demonyms: {
       fr: {
@@ -8994,6 +9499,10 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
       value: 75.1,
       year: 2024,
     },
+    humanDevelopmentIndex: {
+      value: 0.706,
+      year: 2023,
+    },
     currencies: ["NIO"],
     demonyms: {
       fr: {
@@ -9062,6 +9571,10 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     lifeExpectancyYears: {
       value: 81.9658536585366,
       year: 2024,
+    },
+    humanDevelopmentIndex: {
+      value: 0.955,
+      year: 2023,
     },
     currencies: ["EUR"],
     demonyms: {
@@ -9135,6 +9648,10 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
       value: 83.1609756097561,
       year: 2024,
     },
+    humanDevelopmentIndex: {
+      value: 0.97,
+      year: 2023,
+    },
     currencies: ["NOK"],
     demonyms: {
       fr: {
@@ -9203,6 +9720,10 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     lifeExpectancyYears: {
       value: 70.636,
       year: 2024,
+    },
+    humanDevelopmentIndex: {
+      value: 0.622,
+      year: 2023,
     },
     currencies: ["NPR"],
     demonyms: {
@@ -9273,6 +9794,10 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
       value: 62.279,
       year: 2024,
     },
+    humanDevelopmentIndex: {
+      value: 0.703,
+      year: 2023,
+    },
     currencies: ["AUD"],
     demonyms: {
       fr: {
@@ -9342,6 +9867,10 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
       value: 82.009756097561,
       year: 2024,
     },
+    humanDevelopmentIndex: {
+      value: 0.938,
+      year: 2023,
+    },
     currencies: ["NZD"],
     demonyms: {
       fr: {
@@ -9410,6 +9939,10 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     lifeExpectancyYears: {
       value: 80.246,
       year: 2024,
+    },
+    humanDevelopmentIndex: {
+      value: 0.858,
+      year: 2023,
     },
     currencies: ["OMR"],
     demonyms: {
@@ -9483,6 +10016,10 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
       value: 67.799,
       year: 2024,
     },
+    humanDevelopmentIndex: {
+      value: 0.544,
+      year: 2023,
+    },
     currencies: ["PKR"],
     demonyms: {
       fr: {
@@ -9551,6 +10088,10 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     lifeExpectancyYears: {
       value: 79.775,
       year: 2024,
+    },
+    humanDevelopmentIndex: {
+      value: 0.839,
+      year: 2023,
     },
     currencies: ["PAB", "USD"],
     demonyms: {
@@ -9629,6 +10170,10 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
       value: 77.941,
       year: 2024,
     },
+    humanDevelopmentIndex: {
+      value: 0.794,
+      year: 2023,
+    },
     currencies: ["PEN"],
     demonyms: {
       fr: {
@@ -9700,6 +10245,10 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
       value: 69.946,
       year: 2024,
     },
+    humanDevelopmentIndex: {
+      value: 0.72,
+      year: 2023,
+    },
     currencies: ["PHP"],
     demonyms: {
       fr: {
@@ -9768,6 +10317,10 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     lifeExpectancyYears: {
       value: 69.383,
       year: 2024,
+    },
+    humanDevelopmentIndex: {
+      value: 0.786,
+      year: 2023,
     },
     currencies: ["USD"],
     demonyms: {
@@ -9838,6 +10391,10 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
       value: 66.256,
       year: 2024,
     },
+    humanDevelopmentIndex: {
+      value: 0.576,
+      year: 2023,
+    },
     currencies: ["PGK"],
     demonyms: {
       fr: {
@@ -9907,6 +10464,10 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
       value: 78.409756097561,
       year: 2024,
     },
+    humanDevelopmentIndex: {
+      value: 0.906,
+      year: 2023,
+    },
     currencies: ["PLN"],
     demonyms: {
       fr: {
@@ -9973,6 +10534,7 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
       value: 73.743,
       year: 2024,
     },
+    humanDevelopmentIndex: null,
     currencies: ["KPW"],
     demonyms: {
       fr: {
@@ -10042,6 +10604,10 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
       value: 82.3829268292683,
       year: 2024,
     },
+    humanDevelopmentIndex: {
+      value: 0.89,
+      year: 2023,
+    },
     currencies: ["EUR"],
     demonyms: {
       fr: {
@@ -10110,6 +10676,10 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     lifeExpectancyYears: {
       value: 73.982,
       year: 2024,
+    },
+    humanDevelopmentIndex: {
+      value: 0.756,
+      year: 2023,
     },
     currencies: ["PYG"],
     demonyms: {
@@ -10190,6 +10760,10 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
       value: 69.213,
       year: 2024,
     },
+    humanDevelopmentIndex: {
+      value: 0.674,
+      year: 2023,
+    },
     currencies: ["EGP", "ILS", "JOD"],
     demonyms: {
       fr: {
@@ -10261,6 +10835,10 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
       value: 82.522,
       year: 2024,
     },
+    humanDevelopmentIndex: {
+      value: 0.886,
+      year: 2023,
+    },
     currencies: ["QAR"],
     demonyms: {
       fr: {
@@ -10329,6 +10907,10 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     lifeExpectancyYears: {
       value: 76.4585365853659,
       year: 2024,
+    },
+    humanDevelopmentIndex: {
+      value: 0.845,
+      year: 2023,
     },
     currencies: ["RON"],
     demonyms: {
@@ -10418,6 +11000,10 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
       value: 73.4404878048781,
       year: 2024,
     },
+    humanDevelopmentIndex: {
+      value: 0.832,
+      year: 2023,
+    },
     currencies: ["RUB"],
     demonyms: {
       fr: {
@@ -10486,6 +11072,10 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     lifeExpectancyYears: {
       value: 68.017,
       year: 2024,
+    },
+    humanDevelopmentIndex: {
+      value: 0.578,
+      year: 2023,
     },
     currencies: ["RWF"],
     demonyms: {
@@ -10559,6 +11149,10 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
       value: 78.982,
       year: 2024,
     },
+    humanDevelopmentIndex: {
+      value: 0.9,
+      year: 2023,
+    },
     currencies: ["SAR"],
     demonyms: {
       fr: {
@@ -10628,6 +11222,10 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
       value: 66.521,
       year: 2024,
     },
+    humanDevelopmentIndex: {
+      value: 0.511,
+      year: 2023,
+    },
     currencies: ["SDG"],
     demonyms: {
       fr: {
@@ -10693,6 +11291,10 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     lifeExpectancyYears: {
       value: 68.924,
       year: 2024,
+    },
+    humanDevelopmentIndex: {
+      value: 0.53,
+      year: 2023,
     },
     currencies: ["XOF"],
     demonyms: {
@@ -10763,6 +11365,10 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
       value: 83.3463414634146,
       year: 2024,
     },
+    humanDevelopmentIndex: {
+      value: 0.946,
+      year: 2023,
+    },
     currencies: ["SGD"],
     demonyms: {
       fr: {
@@ -10831,6 +11437,10 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     lifeExpectancyYears: {
       value: 70.694,
       year: 2024,
+    },
+    humanDevelopmentIndex: {
+      value: 0.584,
+      year: 2023,
     },
     currencies: ["SBD"],
     demonyms: {
@@ -10901,6 +11511,10 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
       value: 61.964,
       year: 2024,
     },
+    humanDevelopmentIndex: {
+      value: 0.467,
+      year: 2023,
+    },
     currencies: ["SLE"],
     demonyms: {
       fr: {
@@ -10969,6 +11583,10 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     lifeExpectancyYears: {
       value: 72.302,
       year: 2024,
+    },
+    humanDevelopmentIndex: {
+      value: 0.678,
+      year: 2023,
     },
     currencies: ["USD"],
     demonyms: {
@@ -11039,6 +11657,10 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
       value: 85.817,
       year: 2024,
     },
+    humanDevelopmentIndex: {
+      value: 0.915,
+      year: 2023,
+    },
     currencies: ["EUR"],
     demonyms: {
       fr: {
@@ -11107,6 +11729,10 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     lifeExpectancyYears: {
       value: 58.967,
       year: 2024,
+    },
+    humanDevelopmentIndex: {
+      value: 0.404,
+      year: 2023,
     },
     currencies: ["SOS"],
     demonyms: {
@@ -11177,6 +11803,10 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
       value: 75.9682926829268,
       year: 2024,
     },
+    humanDevelopmentIndex: {
+      value: 0.833,
+      year: 2023,
+    },
     currencies: ["RSD"],
     demonyms: {
       fr: {
@@ -11242,6 +11872,10 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     lifeExpectancyYears: {
       value: 57.738,
       year: 2024,
+    },
+    humanDevelopmentIndex: {
+      value: 0.388,
+      year: 2023,
     },
     currencies: ["SSP"],
     demonyms: {
@@ -11312,6 +11946,10 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
       value: 69.905,
       year: 2024,
     },
+    humanDevelopmentIndex: {
+      value: 0.637,
+      year: 2023,
+    },
     currencies: ["STN"],
     demonyms: {
       fr: {
@@ -11380,6 +12018,10 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     lifeExpectancyYears: {
       value: 73.757,
       year: 2024,
+    },
+    humanDevelopmentIndex: {
+      value: 0.722,
+      year: 2023,
     },
     currencies: ["SRD"],
     demonyms: {
@@ -11450,6 +12092,10 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
       value: 78.3707317073171,
       year: 2024,
     },
+    humanDevelopmentIndex: {
+      value: 0.88,
+      year: 2023,
+    },
     currencies: ["EUR"],
     demonyms: {
       fr: {
@@ -11519,6 +12165,10 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
       value: 82.2853658536585,
       year: 2024,
     },
+    humanDevelopmentIndex: {
+      value: 0.931,
+      year: 2023,
+    },
     currencies: ["EUR"],
     demonyms: {
       fr: {
@@ -11587,6 +12237,10 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     lifeExpectancyYears: {
       value: 84.0634146341463,
       year: 2024,
+    },
+    humanDevelopmentIndex: {
+      value: 0.959,
+      year: 2023,
     },
     currencies: ["SEK"],
     demonyms: {
@@ -11667,6 +12321,10 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
       value: 64.264,
       year: 2024,
     },
+    humanDevelopmentIndex: {
+      value: 0.695,
+      year: 2023,
+    },
     currencies: ["SZL", "ZAR"],
     demonyms: {
       fr: {
@@ -11735,6 +12393,10 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     lifeExpectancyYears: {
       value: 76.2951219512195,
       year: 2024,
+    },
+    humanDevelopmentIndex: {
+      value: 0.848,
+      year: 2023,
     },
     currencies: ["SCR"],
     demonyms: {
@@ -11805,6 +12467,10 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
       value: 72.56,
       year: 2024,
     },
+    humanDevelopmentIndex: {
+      value: 0.564,
+      year: 2023,
+    },
     currencies: ["SYP"],
     demonyms: {
       fr: {
@@ -11874,6 +12540,10 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
       value: 55.238,
       year: 2024,
     },
+    humanDevelopmentIndex: {
+      value: 0.416,
+      year: 2023,
+    },
     currencies: ["XAF"],
     demonyms: {
       fr: {
@@ -11942,6 +12612,10 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     lifeExpectancyYears: {
       value: 62.935,
       year: 2024,
+    },
+    humanDevelopmentIndex: {
+      value: 0.571,
+      year: 2023,
     },
     currencies: ["XOF"],
     demonyms: {
@@ -12014,6 +12688,10 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
       value: 76.564,
       year: 2024,
     },
+    humanDevelopmentIndex: {
+      value: 0.798,
+      year: 2023,
+    },
     currencies: ["THB"],
     demonyms: {
       fr: {
@@ -12082,6 +12760,10 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     lifeExpectancyYears: {
       value: 71.927,
       year: 2024,
+    },
+    humanDevelopmentIndex: {
+      value: 0.691,
+      year: 2023,
     },
     currencies: ["TJS"],
     demonyms: {
@@ -12154,6 +12836,10 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
       value: 70.201,
       year: 2024,
     },
+    humanDevelopmentIndex: {
+      value: 0.764,
+      year: 2023,
+    },
     currencies: ["TMT"],
     demonyms: {
       fr: {
@@ -12222,6 +12908,10 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     lifeExpectancyYears: {
       value: 67.904,
       year: 2024,
+    },
+    humanDevelopmentIndex: {
+      value: 0.634,
+      year: 2023,
     },
     currencies: ["USD"],
     demonyms: {
@@ -12292,6 +12982,10 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
       value: 73.07,
       year: 2024,
     },
+    humanDevelopmentIndex: {
+      value: 0.769,
+      year: 2023,
+    },
     currencies: ["TOP"],
     demonyms: {
       fr: {
@@ -12360,6 +13054,10 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     lifeExpectancyYears: {
       value: 73.617,
       year: 2024,
+    },
+    humanDevelopmentIndex: {
+      value: 0.807,
+      year: 2023,
     },
     currencies: ["TTD"],
     demonyms: {
@@ -12430,6 +13128,10 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
       value: 76.711,
       year: 2024,
     },
+    humanDevelopmentIndex: {
+      value: 0.746,
+      year: 2023,
+    },
     currencies: ["TND"],
     demonyms: {
       fr: {
@@ -12499,6 +13201,10 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
       value: 77.421,
       year: 2024,
     },
+    humanDevelopmentIndex: {
+      value: 0.853,
+      year: 2023,
+    },
     currencies: ["TRY"],
     demonyms: {
       fr: {
@@ -12565,6 +13271,10 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
       value: 67.259,
       year: 2024,
     },
+    humanDevelopmentIndex: {
+      value: 0.689,
+      year: 2023,
+    },
     currencies: ["AUD"],
     demonyms: {
       fr: {
@@ -12628,6 +13338,7 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     },
     gdpPerCapitaUsd: null,
     lifeExpectancyYears: null,
+    humanDevelopmentIndex: null,
     currencies: ["TWD"],
     demonyms: {
       fr: {
@@ -12696,6 +13407,10 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     lifeExpectancyYears: {
       value: 67.212,
       year: 2024,
+    },
+    humanDevelopmentIndex: {
+      value: 0.555,
+      year: 2023,
     },
     currencies: ["TZS"],
     demonyms: {
@@ -12768,6 +13483,10 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
       value: 68.487,
       year: 2024,
     },
+    humanDevelopmentIndex: {
+      value: 0.582,
+      year: 2023,
+    },
     currencies: ["UGX"],
     demonyms: {
       fr: {
@@ -12839,6 +13558,10 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
       value: 74.692,
       year: 2024,
     },
+    humanDevelopmentIndex: {
+      value: 0.779,
+      year: 2023,
+    },
     currencies: ["UAH"],
     demonyms: {
       fr: {
@@ -12907,6 +13630,10 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     lifeExpectancyYears: {
       value: 78.287,
       year: 2024,
+    },
+    humanDevelopmentIndex: {
+      value: 0.862,
+      year: 2023,
     },
     currencies: ["UYU"],
     demonyms: {
@@ -12988,6 +13715,10 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
       value: 78.890243902439,
       year: 2024,
     },
+    humanDevelopmentIndex: {
+      value: 0.938,
+      year: 2023,
+    },
     currencies: ["USD"],
     demonyms: {
       fr: {
@@ -13057,6 +13788,10 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
       value: 72.528,
       year: 2024,
     },
+    humanDevelopmentIndex: {
+      value: 0.74,
+      year: 2023,
+    },
     currencies: ["UZS"],
     demonyms: {
       fr: {
@@ -13120,6 +13855,7 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     },
     gdpPerCapitaUsd: null,
     lifeExpectancyYears: null,
+    humanDevelopmentIndex: null,
     currencies: ["EUR"],
     demonyms: {
       fr: {
@@ -13189,6 +13925,10 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
       value: 71.382,
       year: 2024,
     },
+    humanDevelopmentIndex: {
+      value: 0.798,
+      year: 2023,
+    },
     currencies: ["XCD"],
     demonyms: {
       fr: {
@@ -13257,6 +13997,10 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     lifeExpectancyYears: {
       value: 72.673,
       year: 2024,
+    },
+    humanDevelopmentIndex: {
+      value: 0.709,
+      year: 2023,
     },
     currencies: ["VES"],
     demonyms: {
@@ -13330,6 +14074,10 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
       value: 74.736,
       year: 2024,
     },
+    humanDevelopmentIndex: {
+      value: 0.766,
+      year: 2023,
+    },
     currencies: ["VND"],
     demonyms: {
       fr: {
@@ -13398,6 +14146,10 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     lifeExpectancyYears: {
       value: 71.654,
       year: 2024,
+    },
+    humanDevelopmentIndex: {
+      value: 0.621,
+      year: 2023,
     },
     currencies: ["VUV"],
     demonyms: {
@@ -13468,6 +14220,10 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
       value: 71.826,
       year: 2024,
     },
+    humanDevelopmentIndex: {
+      value: 0.708,
+      year: 2023,
+    },
     currencies: ["WST"],
     demonyms: {
       fr: {
@@ -13537,6 +14293,7 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
       value: 78.222,
       year: 2024,
     },
+    humanDevelopmentIndex: null,
     currencies: ["EUR"],
     demonyms: {
       fr: {
@@ -13602,6 +14359,10 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     lifeExpectancyYears: {
       value: 69.439,
       year: 2024,
+    },
+    humanDevelopmentIndex: {
+      value: 0.47,
+      year: 2023,
     },
     currencies: ["YER"],
     demonyms: {
@@ -13704,6 +14465,10 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
       value: 66.312,
       year: 2024,
     },
+    humanDevelopmentIndex: {
+      value: 0.741,
+      year: 2023,
+    },
     currencies: ["ZAR"],
     demonyms: {
       fr: {
@@ -13772,6 +14537,10 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     lifeExpectancyYears: {
       value: 66.528,
       year: 2024,
+    },
+    humanDevelopmentIndex: {
+      value: 0.595,
+      year: 2023,
     },
     currencies: ["ZMW"],
     demonyms: {
@@ -13857,6 +14626,10 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     lifeExpectancyYears: {
       value: 63.064,
       year: 2024,
+    },
+    humanDevelopmentIndex: {
+      value: 0.598,
+      year: 2023,
     },
     currencies: ["ZWG", "USD"],
     demonyms: {

@@ -57,6 +57,7 @@ export type SheetRowId =
   | "highestPoint"
   | "gdpPerCapita"
   | "lifeExpectancy"
+  | "humanDevelopmentIndex"
   | "mountainAreaShare"
   | "forestCoverShare"
   | "biomes"
@@ -138,6 +139,7 @@ export const FACT_PROVENANCE: { readonly [K in SheetRowId]: FactProvenance } = {
   // cite que la sienne.
   gdpPerCapita: { basis: "source", sources: ["world_bank_gdp_per_capita"] },
   lifeExpectancy: { basis: "source", sources: ["world_bank_life_expectancy"] },
+  humanDevelopmentIndex: { basis: "source", sources: ["undp_hdr"] },
   regime: { basis: "convention", sources: ["cia_factbook_government_type"] },
   formerSovereigns: {
     basis: "source",

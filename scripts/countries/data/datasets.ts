@@ -15,6 +15,7 @@ import { ENERGY_PRODUCTION } from "./energyProduction";
 import { FOREST_COVER } from "./forestCover";
 import { HIGHEST_POINTS } from "./highestPoints";
 import { HOLOCENE_VOLCANOES } from "./holoceneVolcanoes";
+import { HUMAN_DEVELOPMENT_INDEX } from "./humanDevelopmentIndex";
 import { MOUNTAIN_AREAS } from "./mountainArea";
 import { SOVEREIGNTY } from "./sovereignty";
 import { URBAN_CENTRES } from "./urbanCentres";
@@ -32,4 +33,5 @@ export const QUANTITATIVE_DATASETS: QuantitativeDatasets = {
   sovereignty: SOVEREIGNTY,
   highestPoints: HIGHEST_POINTS,
   worldBank: WORLD_BANK_INDICATORS,
+  humanDevelopment: HUMAN_DEVELOPMENT_INDEX,
 };

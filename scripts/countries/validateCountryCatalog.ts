@@ -1,8 +1,4 @@
-import type {
-  Country,
-  CountryFacts,
-  WorldBankMeasure,
-} from "../../content/countries/type";
+import type { Country, CountryFacts } from "../../content/countries/type";
 import { PRODUCTION_RANK_CAP } from "./buildCountriesLib";
 
 const COUNTRY_CODE = /^[A-Z]{3}$/;
@@ -107,13 +103,13 @@ export function validateCountryCatalog(
 }
 
 /**
- * Invariants d'une mesure WDI (`null` = pas de valeur, accepté) : valeur finie,
+ * Invariants d'une mesure datée WDI ou PNUD (`null` = pas de valeur, accepté) : valeur finie,
  * strictement positive et dans `[min, max]`, année entière plausible.
  */
-function validateWorldBankMeasure(
+function validateDatedMeasure(
   code: string,
   field: string,
-  measure: WorldBankMeasure | null,
+  measure: { readonly value: number; readonly year: number } | null,
   min: number,
   max: number,
 ): string[] {
@@ -314,7 +310,7 @@ export function validateCountryFacts(
       errors.push(`${code}: highestPoint.names fr/en incomplet`);
     }
     errors.push(
-      ...validateWorldBankMeasure(
+      ...validateDatedMeasure(
         code,
         "gdpPerCapitaUsd",
         facts.gdpPerCapitaUsd,
@@ -323,12 +319,21 @@ export function validateCountryFacts(
       ),
     );
     errors.push(
-      ...validateWorldBankMeasure(
+      ...validateDatedMeasure(
         code,
         "lifeExpectancyYears",
         facts.lifeExpectancyYears,
         LIFE_EXPECTANCY_MIN_YEARS,
         LIFE_EXPECTANCY_MAX_YEARS,
+      ),
+    );
+    errors.push(
+      ...validateDatedMeasure(
+        code,
+        "humanDevelopmentIndex",
+        facts.humanDevelopmentIndex,
+        0,
+        1,
       ),
     );
     if (facts.sovereigntySheetHidden && facts.sovereigntyKind === null) {

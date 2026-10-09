@@ -65,6 +65,7 @@ const FACT_KEYS = [
   "highestPoint",
   "gdpPerCapitaUsd",
   "lifeExpectancyYears",
+  "humanDevelopmentIndex",
   "currencies",
   "demonyms",
 ] as const;

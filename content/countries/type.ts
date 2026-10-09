@@ -270,6 +270,13 @@ export type CountryFacts = Readonly<{
    */
   lifeExpectancyYears: WorldBankMeasure | null;
   /**
+   * Indice de développement humain (PNUD), de 0 à 1, avec l'année des données
+   * (la dernière de l'édition retenue) ; `null` pour un pays que le fichier ne
+   * couvre pas ou sans valeur (Taïwan, Vatican, Kosovo, Monaco, Corée du Nord).
+   * Valeur brute : la catégorie (très élevé…) se calcule à l'affichage.
+   */
+  humanDevelopmentIndex: HumanDevelopmentMeasure | null;
+  /**
    * Codes ISO 4217 des monnaies ayant cours (world-countries, corrigé par
    * `currencyCorrectionsByIso3`). Jamais vide.
    */
@@ -295,6 +302,9 @@ export type CountryFactsSnapshot = Readonly<{
   date: string;
   note: string;
 }>;
+
+/** IDH et année de ses données (la dernière de l'édition du rapport). */
+export type HumanDevelopmentMeasure = Readonly<{ value: number; year: number }>;
 
 /** Valeur d'un indicateur WDI et année de cette valeur (la plus récente de la fenêtre). */
 export type WorldBankMeasure = Readonly<{ value: number; year: number }>;
@@ -362,6 +372,7 @@ export type CountryRecord = {
   highestPoint: HighestPoint;
   gdpPerCapitaUsd: WorldBankMeasure | null;
   lifeExpectancyYears: WorldBankMeasure | null;
+  humanDevelopmentIndex: HumanDevelopmentMeasure | null;
   currencies: string[];
   demonyms: Demonyms;
 };

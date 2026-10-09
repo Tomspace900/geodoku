@@ -79,6 +79,17 @@ export const SOURCES = {
     url: "https://data.worldbank.org/indicator/SP.DYN.LE00.IN",
     vintage: { fr: "2024", en: "2024" },
   },
+  undp_hdr: {
+    name: {
+      fr: "PNUD — Indice de développement humain",
+      en: "UNDP — Human Development Index",
+    },
+    url: "https://hdr.undp.org/data-center/documentation-and-downloads",
+    vintage: {
+      fr: "Rapport 2025 (données 2023)",
+      en: "2025 Report (2023 data)",
+    },
+  },
   un_flags: {
     name: { fr: "Drapeaux officiels — ONU", en: "Official flags — UN" },
     url: "https://www.un.org/en/about-us/member-states",
