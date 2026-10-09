@@ -1254,7 +1254,7 @@ case (A–D).
     seuils, lu aussi par la garde) et `check:content` échoue au moindre écart.
     Seuils lus dans la *Technical note 1* du HDR 2025 (`hdr2025_technical_notes.pdf`).
   - **Valeur brute** (`0.92`), affichée à trois décimales par `Intl` (« 0,920 »).
-  - **Millésime** « Rapport 2025 (données 2023) » comparé exactement à l'édition et à
+  - **Millésime** « Rapport 2025, données 2023 » comparé exactement à l'édition et à
     l'année du dataset (`validateEditionVintage`), la récolte imprime la valeur à coller.
   - **Source** `undp_hdr` : page « documentation and downloads » du data center.
   - Analyse CSV RFC 4180 faite à la main (champs entre guillemets contenant des
@@ -1271,8 +1271,10 @@ case (A–D).
   (lancés seuls).
 - Couverture mesurée : 192/197. `null` : TWN, VAT, XKX (absents du fichier), MCO, PRK
   (sans valeur). Catégorie calculée = catégorie publiée pour les 192.
-- Décisions (gate) : à venir.
-- Points ouverts :
-  - Le rapport final de P4 se rédige après le gate.
-  - Le nom de source suivi du millésime donne des parenthèses imbriquées dans la légende
-    (« … (Rapport 2025 (données 2023)) »), le format du millésime étant celui du brief.
+- Revue : le millésime du brief, « Rapport 2025 (données 2023) », donnait des
+  parenthèses imbriquées dans la légende de la fiche (« … (Rapport 2025 (données
+  2023)) ») ; il devient « Rapport 2025, données 2023 » / « 2025 Report, 2023 data ».
+- Décisions (gate du 2026-10-09) : seuils et rendu validés tels que présentés ;
+  changelog rédigé à la mise en prod (#50).
+- Merge : fast-forward sur `develop`, re-signé par l'utilisateur.
+- Points ouverts : le rapport final de P4 se rédige après le merge.

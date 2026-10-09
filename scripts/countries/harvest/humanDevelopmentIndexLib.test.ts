@@ -128,8 +128,8 @@ describe("validateEditionVintage", () => {
 
   it("écrit l'édition et l'année des données dans les deux langues", () => {
     expect(editionVintageLabel(snapshot)).toEqual({
-      fr: "Rapport 2025 (données 2023)",
-      en: "2025 Report (2023 data)",
+      fr: "Rapport 2025, données 2023",
+      en: "2025 Report, 2023 data",
     });
   });
 

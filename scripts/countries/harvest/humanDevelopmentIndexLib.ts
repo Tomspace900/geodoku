@@ -180,13 +180,16 @@ export function buildSnapshot(
   };
 }
 
-/** Millésime de `content/sources.ts` : « Rapport 2025 (données 2023) ». */
+/**
+ * Millésime de `content/sources.ts` : « Rapport 2025, données 2023 ». Sans
+ * parenthèses : la légende de la fiche l'écrit déjà entre parenthèses après le nom.
+ */
 export function editionVintageLabel(
   snapshot: Pick<HumanDevelopmentIndexSnapshot, "edition" | "dataYear">,
 ): LocalizedString {
   return {
-    fr: `Rapport ${snapshot.edition} (données ${snapshot.dataYear})`,
-    en: `${snapshot.edition} Report (${snapshot.dataYear} data)`,
+    fr: `Rapport ${snapshot.edition}, données ${snapshot.dataYear}`,
+    en: `${snapshot.edition} Report, ${snapshot.dataYear} data`,
   };
 }
 

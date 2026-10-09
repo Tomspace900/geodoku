@@ -192,7 +192,7 @@ Corée du Nord) vaut `null` et la fiche n'affiche pas la ligne. Le dataset garde
 catégorie publiée (`hdicode`) : `check:content` recalcule la catégorie depuis la
 valeur avec les seuils de `content/countries/humanDevelopment.ts` (*Technical note
 1* du rapport) et échoue au moindre écart — seuils périmés après une nouvelle
-édition. Le millésime de `sources.ts` (« Rapport 2025 (données 2023) ») est comparé
+édition. Le millésime de `sources.ts` (« Rapport 2025, données 2023 ») est comparé
 exactement à l'édition et à l'année du dataset (`validateEditionVintage`).
 
 ### Contrôles automatiques

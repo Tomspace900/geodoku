@@ -86,8 +86,8 @@ export const SOURCES = {
     },
     url: "https://hdr.undp.org/data-center/documentation-and-downloads",
     vintage: {
-      fr: "Rapport 2025 (données 2023)",
-      en: "2025 Report (2023 data)",
+      fr: "Rapport 2025, données 2023",
+      en: "2025 Report, 2023 data",
     },
   },
   un_flags: {
