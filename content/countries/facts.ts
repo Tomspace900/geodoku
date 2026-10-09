@@ -12881,7 +12881,7 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     drivingSide: "left",
     geoTags: ["drives_on_left"],
     regime: "republic",
-    physicalFeatures: ["pacific_coast"],
+    physicalFeatures: [],
     utcOffsetCount: 1,
     lastVolcanicEruptionYear: null,
     mountainAreaShare: 0.6192012908430818,

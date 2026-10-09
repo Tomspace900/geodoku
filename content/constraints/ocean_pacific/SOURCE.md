@@ -26,4 +26,12 @@ Les mers marginales (mer de Chine, mer du Japon, mer de Corail) sont rattachées
 
 ## Révision
 
+Revue 2026-10-09 — **Timor-Leste sort de la liste** (42 → 41 pays). Ses côtes ne
+donnent que sur les mers de Banda (48 g), de Timor (48 i) et de Savu (48 o), toutes
+trois dans l'« East Indian Archipelago (48) » de l'IHO S-23 (3ᵉ éd., 1953, p. 24-30),
+entrée distincte de l'océan Indien (45) et du Pacifique. Le rattachement au Pacifique
+« par la mer de Banda » n'avait aucune base dans S-23 : voir
+[SOURCES.md](../SOURCES.md#océans). La convention « mers marginales » ci-dessus vise
+les mers de Chine, du Japon et de Corail, pas l'archipel indonésien.
+
 Procédure commune : [SOURCES.md](../SOURCES.md#procédure-de-révision).

@@ -251,8 +251,8 @@ export const DERIVATIONS = {
 } satisfies Record<ActiveConstraintId, Derivation>;
 
 /**
- * Nombre d'océans distincts bordant le pays. **Une mer fermée n'est pas un
- * océan** (arbitrage 2026-09-11) : Méditerranée, mer des Caraïbes, mer Rouge,
+ * Nombre d'océans distincts bordant le pays. **Une mer semi-fermée n'est pas
+ * un océan** (arbitrage 2026-09-11) : Méditerranée, mer des Caraïbes, mer Rouge,
  * golfe Persique, Baltique et mer Noire ne comptent pas, seule une façade sur
  * l'océan lui-même le fait. Un pays qui a les deux — la côte est atlantique
  * ouverte des Petites Antilles, la côte pacifique d'un pays d'Amérique

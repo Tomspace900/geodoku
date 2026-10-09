@@ -589,6 +589,11 @@ export const gameplayClassifications: GameplayClassifications = {
     "TTO",
     "VCT",
   ],
+  /**
+   * Timor-Leste est volontairement absent : ses mers (Banda, Timor, Savu)
+   * relèvent de l'« East Indian Archipelago » de l'IHO S-23, qui n'est
+   * rattaché à aucun océan (cf. SOURCES.md § Océans, revue #122).
+   */
   pacificCoast: [
     "CAN",
     "USA",
@@ -617,7 +622,6 @@ export const gameplayClassifications: GameplayClassifications = {
     "SGP",
     "THA",
     "KHM",
-    "TLS",
     "AUS",
     "NZL",
     "PNG",
