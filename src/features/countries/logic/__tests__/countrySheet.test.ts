@@ -41,6 +41,31 @@ describe("buildCountrySheet", () => {
     });
   });
 
+  it("shows the highest point with its Factbook elevation, in place of the 5 000 m flag", () => {
+    const model = buildCountrySheet("FRA", COUNTRY_FACTS.FRA);
+    expect(rowByLabel(model, "countrySheet.field.highestPoint")?.value).toEqual(
+      {
+        kind: "highestPoint",
+        names: { fr: "mont Blanc", en: "Mont Blanc" },
+        elevationM: 4810,
+      },
+    );
+    expect(
+      rowByLabel(model, "countrySheet.field.peakOver5000m"),
+    ).toBeUndefined();
+  });
+
+  it("carries a null name for an unnamed highest point (Burundi)", () => {
+    const model = buildCountrySheet("BDI", COUNTRY_FACTS.BDI);
+    expect(rowByLabel(model, "countrySheet.field.highestPoint")?.value).toEqual(
+      {
+        kind: "highestPoint",
+        names: null,
+        elevationM: 2685,
+      },
+    );
+  });
+
   it("places the currency and the demonym in the landmarks category", () => {
     const rows = rowsOf(
       buildCountrySheet("FRA", COUNTRY_FACTS.FRA),
@@ -176,20 +201,18 @@ describe("buildCountrySheet", () => {
   });
 
   it("drops an entire category when every row is masked", () => {
-    // Un pays sans aucun fait de relief notable ne doit pas laisser une
-    // catégorie "Relief et nature" vide à l'affichage.
-    const noNatureFacts = {
+    // Un pays sans aucun fait de drapeau ne doit pas laisser une catégorie
+    // "Drapeau" vide à l'affichage. (« Relief et nature » ne se vide plus : le
+    // point culminant est défini pour les 197 pays.)
+    const noFlagFacts = {
       ...COUNTRY_FACTS.XKX,
-      mountainAreaShare: null,
-      forestCoverShare: null,
-      physicalFeatures: [],
-      lastVolcanicEruptionYear: null,
+      flagColors: [],
+      flagSymbols: [],
+      flagLayout: [],
     };
-    const model = buildCountrySheet("XKX", noNatureFacts);
+    const model = buildCountrySheet("XKX", noFlagFacts);
     expect(
-      model.categories.some(
-        (c) => c.titleKey === "countrySheet.category.natureRelief",
-      ),
+      model.categories.some((c) => c.titleKey === "countrySheet.category.flag"),
     ).toBe(false);
   });
 

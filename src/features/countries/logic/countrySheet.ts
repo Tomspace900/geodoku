@@ -70,6 +70,12 @@ export type CountrySheetValue =
     }
   | { kind: "demonym"; demonyms: Demonyms }
   | {
+      kind: "highestPoint";
+      /** `null` : point sans nom, rendu par un libellé i18n unique. */
+      names: LocalizedString | null;
+      elevationM: number;
+    }
+  | {
       kind: "capitals";
       capitals: readonly CountrySheetCapital[];
       capitalNotLargestCity: boolean;
@@ -275,14 +281,16 @@ function buildGeographyRows(facts: CountryFacts): CountrySheetRow[] {
 function buildNatureRows(facts: CountryFacts): CountrySheetRow[] {
   const rows: CountrySheetRow[] = [];
 
-  if (facts.physicalFeatures.includes("peak_over_5000m")) {
-    rows.push({
-      labelKey: "countrySheet.field.peakOver5000m",
-      value: { kind: "enum", labelKey: "countrySheet.value.yes" },
-      basis: FACT_PROVENANCE.peakOver5000m.basis,
-      sources: FACT_PROVENANCE.peakOver5000m.sources,
-    });
-  }
+  rows.push({
+    labelKey: "countrySheet.field.highestPoint",
+    value: {
+      kind: "highestPoint",
+      names: facts.highestPoint.names,
+      elevationM: facts.highestPoint.elevationM,
+    },
+    basis: FACT_PROVENANCE.highestPoint.basis,
+    sources: FACT_PROVENANCE.highestPoint.sources,
+  });
 
   if (facts.mountainAreaShare !== null) {
     rows.push({

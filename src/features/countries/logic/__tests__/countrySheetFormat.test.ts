@@ -1,5 +1,6 @@
 import { describe, expect, it } from "vitest";
 import {
+  capitalizeFirst,
   computeDensity,
   formatCurrency,
   formatDemonym,
@@ -173,5 +174,16 @@ describe("formatFullDate", () => {
 
   it("keeps a plain 1 in English", () => {
     expect(formatFullDate("1867-07-01", "en")).toBe("1 July 1867");
+  });
+});
+
+describe("capitalizeFirst", () => {
+  it("met la majuscule initiale d'un nom commun de Wikidata", () => {
+    expect(capitalizeFirst("mont Blanc", "fr")).toBe("Mont Blanc");
+    expect(capitalizeFirst("pic d'Orizaba", "fr")).toBe("Pic d'Orizaba");
+  });
+
+  it("laisse un libellé déjà capitalisé", () => {
+    expect(capitalizeFirst("Mount Scenery", "en")).toBe("Mount Scenery");
   });
 });

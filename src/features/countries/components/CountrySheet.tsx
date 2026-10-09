@@ -9,6 +9,7 @@ import type {
   CountrySheetValue,
 } from "../logic/countrySheet";
 import {
+  capitalizeFirst,
   formatCurrency,
   formatDemonym,
   formatFullDate,
@@ -92,6 +93,13 @@ function renderValue(
       });
     case "demonym":
       return formatDemonym(value.demonyms, locale);
+    case "highestPoint":
+      return t("countrySheet.value.highestPoint", {
+        name: value.names
+          ? capitalizeFirst(value.names[locale], locale)
+          : t("countrySheet.value.unnamedHighestPoint"),
+        value: formatInteger(value.elevationM, locale),
+      });
     case "capitals":
       return formatList(
         value.capitals.map((capital) =>

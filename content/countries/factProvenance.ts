@@ -17,7 +17,7 @@
  * Chaque ligne qui recoupe une contrainte du lot 1 reprend **exactement** la
  * même provenance que son `about.ts` (façades → `ocean_*`/`physical_*_coast`,
  * équateur → `physical_crosses_equator`, milieux → `nature_desert`/
- * `nature_rainforest`, sommet → `physical_peak_over_5000m`, Moyen-Orient →
+ * `nature_rainforest`, Moyen-Orient →
  * `subregion_middle_east`, sous-région → `subregion_caribbean`/
  * `subregion_southeast_asia`, continent → `continent_*`, capitale pas plus
  * grande ville → `society_capital_not_largest`, chaque événement → son
@@ -54,7 +54,7 @@ export type SheetRowId =
   | "coastlines"
   | "equatorCrosser"
   | "timezones"
-  | "peakOver5000m"
+  | "highestPoint"
   | "mountainAreaShare"
   | "forestCoverShare"
   | "biomes"
@@ -110,9 +110,14 @@ export const FACT_PROVENANCE: { readonly [K in SheetRowId]: FactProvenance } = {
   // Même provenance que `physical_crosses_equator`.
   equatorCrosser: { basis: "convention", sources: ["natural_earth"] },
   timezones: { basis: "source", sources: ["iana_tz"] },
-  // Même provenance que `physical_peak_over_5000m` : revue éditoriale sans
-  // dataset unique nommé.
-  peakOver5000m: { basis: "convention", sources: [] },
+  // Altitude et nom du Factbook, libellés fr/en de Wikidata. Remplace la ligne
+  // « Sommet de plus de 5 000 m » (lot 5) : la contrainte
+  // `physical_peak_over_5000m` garde sa propre provenance (revue éditoriale),
+  // la cohérence des deux est gardée par `check:content`.
+  highestPoint: {
+    basis: "source",
+    sources: ["cia_factbook_elevation", "wikidata_highest_point_labels"],
+  },
   mountainAreaShare: { basis: "source", sources: ["un_sdg_mountain_area"] },
   forestCoverShare: { basis: "source", sources: ["fao_forest_resources"] },
   // Même provenance que `nature_desert`/`nature_rainforest`.

@@ -38,13 +38,6 @@ describe("FACT_PROVENANCE — cohérence avec les about.ts de contraintes", () =
     );
   });
 
-  it("sommet de plus de 5 000 m : physical_peak_over_5000m", () => {
-    expectSameProvenance(
-      FACT_PROVENANCE.peakOver5000m,
-      aboutForConstraint("physical_peak_over_5000m"),
-    );
-  });
-
   it("Moyen-Orient : subregion_middle_east", () => {
     expectSameProvenance(
       FACT_PROVENANCE.middleEast,

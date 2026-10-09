@@ -154,6 +154,15 @@ export function formatCurrency(code: string, locale: Locale): string {
   return code;
 }
 
+/**
+ * Majuscule initiale d'un libellé en début de valeur : Wikidata écrit « mont
+ * Blanc », « pic d'Orizaba » (typographie française des noms communs), qui
+ * jurerait en tête de ligne.
+ */
+export function capitalizeFirst(text: string, locale: Locale): string {
+  return text.charAt(0).toLocaleUpperCase(locale) + text.slice(1);
+}
+
 /** « Français, Française » ; une seule forme quand le masculin égale le féminin. */
 export function formatDemonym(demonyms: Demonyms, locale: Locale): string {
   const { m, f } = demonyms[locale];
