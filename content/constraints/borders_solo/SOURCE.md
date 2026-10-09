@@ -13,7 +13,7 @@ Pays n'ayant qu'un seul voisin terrestre.
 
 ## Sources
 
-- Référence de révision : [géographie quantitative](../SOURCES.md#géographie-administrative-et-quantitative) (frontières officielles).
+- Référence de révision (comparaison, jamais importée) : [géographie quantitative](../SOURCES.md#géographie-administrative-et-quantitative) (frontières officielles).
 - Liste établie depuis le champ `borders` de world-countries, corrigé par `scripts/countries/countryPatches.ts`.
 
 ## Dérivation

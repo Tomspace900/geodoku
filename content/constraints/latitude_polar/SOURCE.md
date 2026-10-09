@@ -13,7 +13,7 @@ Pays dont le centre approximatif dépasse le 55ᵉ parallèle (Scandinavie, Cana
 
 ## Sources
 
-- Référence de révision : [géographie quantitative](../SOURCES.md#géographie-administrative-et-quantitative) (coordonnées centrales officielles).
+- Référence de révision (comparaison, jamais importée) : [géographie quantitative](../SOURCES.md#géographie-administrative-et-quantitative) (coordonnées centrales officielles).
 - Liste établie depuis les coordonnées `latlng` de world-countries, avec le seuil Geodoku de 55°.
 
 ## Dérivation

@@ -13,7 +13,7 @@ Pays dont la densité de population est supérieure à celle des Pays-Bas.
 
 ## Sources
 
-- Référence de révision : [géographie quantitative](../SOURCES.md#géographie-administrative-et-quantitative) (population et superficie du même millésime).
+- Référence de révision (comparaison, jamais importée) : [géographie quantitative](../SOURCES.md#géographie-administrative-et-quantitative) (population et superficie du même millésime).
 - Liste établie depuis la population divisée par la superficie du catalogue.
 
 ## Dérivation

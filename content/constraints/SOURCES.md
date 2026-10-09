@@ -108,12 +108,28 @@ jouées restent lisibles.
 
 ## Géographie administrative et quantitative
 
-- Continents et sous-régions : [ONU M49](https://unstats.un.org/unsd/methodology/m49/), comme
-  référence d'un découpage Geodoku : **Chypre est en Europe** (membre de l'UE, attente du
-  joueur) alors que M49 la place en Asie occidentale (tranché le 2026-10-09).
-- Frontières et enclavement : [World Bank Official Boundaries](https://datacatalog.worldbank.org/search/dataset/0038272/world-bank-official-boundaries).
-- Population, superficie et densité : [World Development Indicators](https://datacatalog.worldbank.org/search/dataset/0037712/world-development-indicators)
-  et [UN World Population Prospects 2024](https://www.un.org/development/desa/pd/world-population-prospects-2024).
+Ce qui est **importé** et ce qui n'est qu'une **référence de révision** (jamais
+importée, consultée pour comparer) sont distingués :
+
+- Continents et sous-régions : champs `region` / `subregion` de
+  [world-countries](https://github.com/mledoze/countries), arbitrés par Geodoku ;
+  [ONU M49](https://unstats.un.org/unsd/methodology/m49/) en référence de révision.
+  **Chypre est en Europe** (membre de l'UE, attente du joueur) alors que M49 la place
+  en Asie occidentale (tranché le 2026-10-09) ; l'Amérique centrale et les Caraïbes
+  sont rattachées à l'Amérique du Nord, ce que M49 ne fait pas (il les range sous
+  « Amérique latine et Caraïbes ») : c'est un découpage Geodoku, pas du M49.
+- Frontières et enclavement : `borders` / `landlocked` de world-countries et REST
+  Countries v5, corrigés par `countryPatches.ts` (voisins non jouables écartés,
+  cf. `playableBorderCount`). [World Bank Official Boundaries](https://datacatalog.worldbank.org/search/dataset/0038272/world-bank-official-boundaries)
+  est la référence de révision, non importée.
+- Superficie : `area` de world-countries — superficie **totale**, eau intérieure
+  comprise, pas la surface terrestre. Population : REST Countries v5, sans millésime
+  consigné. Latitude : `latlng[0]` de world-countries (centroïde), corrigée pour
+  la RD Congo (`COD: -2.88`, cf. `latitude_south_hemisphere`).
+  [WDI](https://datacatalog.worldbank.org/search/dataset/0037712/world-development-indicators)
+  et [UN WPP 2024](https://www.un.org/development/desa/pd/world-population-prospects-2024)
+  sont les références de révision, non importées : leurs valeurs diffèrent, d'où
+  les contraintes proches d'un seuil documentées une à une dans leur `SOURCE.md`.
 
 Une comparaison quantitative emploie un même millésime et un même périmètre.
 Une valeur absente n'est jamais assimilée à zéro ou à `false`.
@@ -199,13 +215,16 @@ tant qu'elle n'a pas eu lieu.
 ## Nature et relief
 
 - Équateur et côtes : [Natural Earth 5.1.2](https://github.com/nvkelso/natural-earth-vector/tree/v5.1.2/geojson).
-- Déserts et forêts tropicales : [NASA MODIS MCD12Q1](https://doi.org/10.5067/MODIS/MCD12Q1.061),
-  complété par une revue éditoriale des biomes nommés.
+- Déserts et forêts tropicales : listes **établies à la main**, biome par biome
+  (`countryPatches.ts`). [NASA MODIS MCD12Q1](https://doi.org/10.5067/MODIS/MCD12Q1.061)
+  ne sert que de repère de relecture : aucune valeur n'en est calculée, un pixel aride
+  ou forestier ne suffit pas à prouver un biome.
 - Volcans actifs à l'Holocène : [Smithsonian Global Volcanism Program](https://volcano.si.edu/).
 - Part de territoire montagneux : indicateur [ODD 15.4.2](https://unstats.un.org/sdgs/metadata/?Text=&Goal=15&Target=15.4)
   (méthode FAO/UNEP-WCMC).
-- Part de superficie forestière : FAO Forest Resources Assessment (World Bank
-  `AG.LND.FRST.ZS`).
+- Part de superficie forestière : Banque mondiale `AG.LND.FRST.ZS` (d'après la FAO),
+  import du 2026-07-17 ; la série WDI a été révisée le 2026-10-08, cf.
+  `forest_cover_majority/SOURCE.md` (décision du 2026-10-09 : on garde l'import).
 
 Une part quantitative absente de la source vaut `null`, jamais 0 : le pays est
 alors hors liste sans être compté comme « 0 % ».
@@ -221,9 +240,11 @@ alors hors liste sans être compté comme « 0 % ».
 
 ## Production et énergie
 
-- Production agricole (cacao, café, riz, blé) : [FAOSTAT](https://www.fao.org/faostat/),
+- Production agricole (cacao, riz, blé) : [FAOSTAT](https://www.fao.org/faostat/),
   production territoriale, moyenne triennale 2022-2024. Items « Cocoa beans »,
-  « Coffee, green », « Rice, paddy », « Wheat ».
+  « Rice, paddy », « Wheat ».
+- Café : [USDA FAS, *Coffee: World Markets and Trade*](https://apps.fas.usda.gov/psdonline/circulars/coffee.pdf),
+  production des campagnes 2023/24 à 2025/26 (revue du 2026-09-10) — pas FAOSTAT.
 - Production d'énergie (pétrole brut, gaz naturel sec) :
   [U.S. EIA International](https://www.eia.gov/international/data/world).
   Datasets curés : `top 18` par produit, la longue traîne de producteurs
@@ -239,10 +260,12 @@ les réserves. Un pays absent d'une source vaut `null`, jamais 0.
 
 La convention Geodoku part de l'[IHO S-23](https://iho.int/uploads/user/pubs/standards/s-23/S-23_Ed3_1953_EN.pdf).
 
-**Une mer fermée n'est pas un océan (tranché le 2026-09-11).** Méditerranée, mer
-des Caraïbes, mer Rouge, golfe Persique, Baltique et mer Noire ne valent pas
-façade océanique : seule une côte sur l'océan lui-même compte, pour `ocean_*`
-comme pour `ocean_multiple_basins`. Un pays qui a les deux — la côte est
+**Une mer semi-fermée n'est pas un océan (tranché le 2026-09-11).** Méditerranée, mer
+des Caraïbes, mer Rouge, golfe Persique, Baltique et mer Noire — des mers
+**semi-fermées**, reliées à l'océan par des passages plus ou moins étroits, et non
+« fermées » (seule la Caspienne l'est vraiment) — ne valent pas façade océanique :
+seule une côte sur l'océan lui-même compte, pour `ocean_*` comme pour
+`ocean_multiple_basins`. Un pays qui a les deux — la côte est
 atlantique ouverte des Petites Antilles, la côte pacifique d'un pays d'Amérique
 centrale — porte le tag correspondant et compte par lui.
 
@@ -255,7 +278,7 @@ qu'à `ocean_multiple_basins`. Les dépendances ne sont pas automatiquement
 repliées sur leur État souverain — mais les territoires ultramarins d'un État
 jouable comptent pour lui.
 
-**Mers fermées (tranché le 2026-09-11).** La **Baltique** et la **mer Noire** ne
+**Baltique et mer Noire (tranché le 2026-09-11).** La **Baltique** et la **mer Noire** ne
 sont rattachées à aucun bassin : ce sont des mers intérieures, pas des océans.
 Conséquence assumée — SWE, FIN, POL, EST, LVA, LTU (Baltique) et BGR, ROU, UKR,
 GEO (mer Noire) sont `coastal` sans satisfaire aucune contrainte `ocean_*`. Le
@@ -264,6 +287,15 @@ la mer du Nord est un bras ouvert de l'Atlantique, la Baltique non. Le
 **Skagerrak et le Kattegat** sont lus comme des abords de la Baltique : la Suède
 reste sans façade atlantique, comme le joueur se la figure (tranché le
 2026-10-09).
+
+**Archipel indonésien (tranché le 2026-10-09).** L'IHO S-23 (3ᵉ éd., 1953, p. 24-30)
+range les mers de Banda (48 g), de Timor (48 i) et de Savu (48 o) dans l'« East
+Indian Archipelago (48) », entrée distincte de l'océan Indien (45) et du
+Pacifique : aucune des trois n'est rattachée à un océan. Timor-Leste, dont les
+côtes (nord, sud, enclave d'Oecusse) ne donnent que sur ces mers, n'a donc **aucune
+façade océanique** et n'entre dans aucune contrainte `ocean_*`, comme les
+riverains de la Baltique. Il n'était pas non plus fondé dans le Pacifique, où il
+figurait par défaut.
 
 La **Finlande n'a pas de façade arctique** : elle a perdu Petsamo en 1944 et
 n'atteint plus l'océan Glacial. Aucun État jouable ne borde l'océan Austral —

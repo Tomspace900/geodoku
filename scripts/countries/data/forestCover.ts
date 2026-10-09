@@ -5,8 +5,15 @@ import type { ForestCoverSnapshot } from "./types";
  *
  * Millésime 2023, extrait sans modification du champ `forestCoverPercent` du
  * snapshot `country-core` de la branche `constraint-explorer` (commit 221b42d),
- * lui-même issu de la FAO (Forest Resources Assessment / World Bank
- * `AG.LND.FRST.ZS`). Couverture complète des 197 pays jouables.
+ * lui-même importé le 2026-07-17 de la série WDI `AG.LND.FRST.ZS` (Banque
+ * mondiale, d'après la FAO). Taïwan, le Saint-Siège et le Kosovo, absents de la
+ * série, ont des valeurs d'autres sources. Couverture complète des 197 pays
+ * jouables.
+ *
+ * **La série WDI a été révisée le 2026-10-08** (`lastupdated` de l'API) : ses
+ * valeurs actuelles ne reproduisent plus ce jeu (voir
+ * `content/constraints/forest_cover_majority/SOURCE.md`). Ce jeu est gardé tel
+ * qu'importé, par décision du 2026-10-09 (#122).
  *
  * Révision : reprendre la même définition FAO de « forêt » (couvert > 10 % sur
  * > 0,5 ha, hors usage agricole ou urbain dominant), convertir en ISO3 et

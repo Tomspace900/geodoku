@@ -13,8 +13,8 @@ Pays dont la population est supérieure à celle du Canada.
 
 ## Sources
 
-- Référence de révision : [géographie quantitative](../SOURCES.md#géographie-administrative-et-quantitative) (World Bank `SP.POP.TOTL`, UN WPP 2024).
-- Liste établie depuis les populations exposées par REST Countries v5.
+- Référence de révision (comparaison, jamais importée) : [géographie quantitative](../SOURCES.md#géographie-administrative-et-quantitative) (World Bank `SP.POP.TOTL`, UN WPP 2024).
+- Liste établie depuis les populations exposées par REST Countries v5 (sans millésime consigné).
 
 ## Dérivation
 

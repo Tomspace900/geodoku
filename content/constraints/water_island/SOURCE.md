@@ -13,7 +13,7 @@ Pays insulaires : le territoire principal est entouré d'eau et ne partage aucun
 
 ## Sources
 
-- Référence de révision : [géographie quantitative](../SOURCES.md#géographie-administrative-et-quantitative) (enclavement et frontières officielles).
+- Référence de révision (comparaison, jamais importée) : [géographie quantitative](../SOURCES.md#géographie-administrative-et-quantitative) (enclavement et frontières officielles).
 - Liste établie depuis `landlocked` et le décompte de frontières de world-countries.
 
 ## Dérivation
