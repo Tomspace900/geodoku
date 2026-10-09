@@ -1222,9 +1222,15 @@ case (A–D).
   `null` : CUB, ERI, PRK, SSD, YEM sans valeur sur 5 ans, TWN et VAT absents) ;
   espérance de vie 195/197 (2024 pour tous ; `null` : TWN, VAT). Extrêmes : PIB
   de 234 $ (BDI) à 288 002 $ (MCO), espérance de vie de 54,6 (NGA) à 86,5 ans (MCO).
-- Décisions utilisateur : à venir (gate).
-- Merge : à venir.
+- Revue (`d9deda7`) : noms des deux sources sans « (WDI) », la légende de la
+  fiche écrivant « nom (millésime) » (« … (WDI) (2022–2025) ») ; `formatUsd`
+  fixe `minimumFractionDigits: 0`, sans quoi un moteur antérieur à
+  Intl.NumberFormat v3 (Safari < 15.4) lève une RangeError sur la fiche.
+- Décisions (gate du 2026-10-09) : les deux lignes ouvrent « Société et
+  économie » ; formats « 48 986 $US (2025) » / « 83,0 ans (2024) » retenus tels
+  que l'ICU les écrit.
+- Merge : fast-forward sur `develop`, re-signé par l'utilisateur.
 - Points ouverts :
-  - Entrée de changelog à proposer au gate.
+  - L'entrée de changelog se rédige à la mise en prod (#50), pas dans le lot.
   - Un `refreshPool` n'est pas requis par ce lot (aucune liste ne change) ; celui
     de l'issue #50 reste à faire après publication des lots 1 à 6.
