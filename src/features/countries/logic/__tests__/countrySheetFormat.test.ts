@@ -7,8 +7,10 @@ import {
   formatFullDate,
   formatLanguageName,
   formatList,
+  formatOneDecimal,
   formatOrdinal,
   formatPercent,
+  formatUsd,
   formatYear,
   sourceReferences,
 } from "../countrySheetFormat";
@@ -185,5 +187,22 @@ describe("capitalizeFirst", () => {
 
   it("laisse un libellé déjà capitalisé", () => {
     expect(capitalizeFirst("Mount Scenery", "en")).toBe("Mount Scenery");
+  });
+});
+
+describe("formatUsd", () => {
+  it("arrondit à l'entier et préfixe US$ en anglais", () => {
+    expect(formatUsd(48986.4, "en")).toBe("US$48,986");
+  });
+
+  it("groupe par espaces insécables en français", () => {
+    expect(formatUsd(48986.4, "fr")).toBe("48\u202f986\u00a0$US");
+  });
+});
+
+describe("formatOneDecimal", () => {
+  it("garde la décimale zéro (83,0 / 83.0)", () => {
+    expect(formatOneDecimal(83.0243, "fr")).toBe("83,0");
+    expect(formatOneDecimal(83.0243, "en")).toBe("83.0");
   });
 });

@@ -55,6 +55,8 @@ export type SheetRowId =
   | "equatorCrosser"
   | "timezones"
   | "highestPoint"
+  | "gdpPerCapita"
+  | "lifeExpectancy"
   | "mountainAreaShare"
   | "forestCoverShare"
   | "biomes"
@@ -132,6 +134,10 @@ export const FACT_PROVENANCE: { readonly [K in SheetRowId]: FactProvenance } = {
   },
   drivingSide: { basis: "source", sources: ["rest_countries"] },
   coalElectricityShare: { basis: "source", sources: ["ember_electricity"] },
+  // Une source par indicateur (plages d'années différentes) : chaque ligne ne
+  // cite que la sienne.
+  gdpPerCapita: { basis: "source", sources: ["world_bank_gdp_per_capita"] },
+  lifeExpectancy: { basis: "source", sources: ["world_bank_life_expectancy"] },
   regime: { basis: "convention", sources: ["cia_factbook_government_type"] },
   formerSovereigns: {
     basis: "source",

@@ -63,6 +63,40 @@ describe("buildCountrySheet", () => {
     );
   });
 
+  it("shows the latest WDI GDP per capita and life expectancy with their year (France)", () => {
+    const model = buildCountrySheet("FRA", COUNTRY_FACTS.FRA);
+    expect(rowByLabel(model, "countrySheet.field.gdpPerCapita")).toMatchObject({
+      value: { kind: "gdpPerCapita", year: 2025 },
+      sources: ["world_bank_gdp_per_capita"],
+    });
+    expect(
+      rowByLabel(model, "countrySheet.field.lifeExpectancy"),
+    ).toMatchObject({
+      value: { kind: "lifeExpectancy", year: 2024 },
+      sources: ["world_bank_life_expectancy"],
+    });
+  });
+
+  it("omits the GDP row for South Sudan but keeps its life expectancy", () => {
+    const model = buildCountrySheet("SSD", COUNTRY_FACTS.SSD);
+    expect(
+      rowByLabel(model, "countrySheet.field.gdpPerCapita"),
+    ).toBeUndefined();
+    expect(
+      rowByLabel(model, "countrySheet.field.lifeExpectancy"),
+    ).toBeDefined();
+  });
+
+  it("omits both rows for the Vatican, absent from the WDI", () => {
+    const model = buildCountrySheet("VAT", COUNTRY_FACTS.VAT);
+    expect(
+      rowByLabel(model, "countrySheet.field.gdpPerCapita"),
+    ).toBeUndefined();
+    expect(
+      rowByLabel(model, "countrySheet.field.lifeExpectancy"),
+    ).toBeUndefined();
+  });
+
   it("places the currency and the demonym in the landmarks category", () => {
     const rows = rowsOf(
       buildCountrySheet("FRA", COUNTRY_FACTS.FRA),

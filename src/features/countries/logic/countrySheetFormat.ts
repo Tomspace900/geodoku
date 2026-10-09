@@ -13,6 +13,14 @@ export function formatInteger(value: number, locale: Locale): string {
   return new Intl.NumberFormat(locale).format(Math.round(value));
 }
 
+/** Une décimale fixe (« 83,0 » / « 83.0 ») : l'espérance de vie n'est pas arrondie à l'entier. */
+export function formatOneDecimal(value: number, locale: Locale): string {
+  return new Intl.NumberFormat(locale, {
+    minimumFractionDigits: 1,
+    maximumFractionDigits: 1,
+  }).format(value);
+}
+
 /**
  * Un entier au-delà de 10 %, une décimale en-deçà — une valeur non nulle
  * (l'électricité au charbon française, 0,18 %) ne s'affiche jamais « 0 % »,
@@ -170,10 +178,13 @@ export function formatDemonym(demonyms: Demonyms, locale: Locale): string {
 }
 
 /**
- * Style des dates longues de la fiche, aligné sur les millésimes écrits dans
- * `content/sources.ts` (« 23 September 2026 », pas « September 23, 2026 »).
+ * Style régional de la fiche, aligné sur les millésimes écrits dans
+ * `content/sources.ts` (« 23 September 2026 », pas « September 23, 2026 ») et
+ * sur la monnaie : seul l'anglais britannique écrit « US$48,986 » là où
+ * l'anglais américain écrit « $48,986 », ambigu pour qui lit un dollar
+ * canadien ou australien.
  */
-const LONG_DATE_LOCALES: Readonly<Record<Locale, string>> = {
+const SHEET_REGION_LOCALES: Readonly<Record<Locale, string>> = {
   fr: "fr-FR",
   en: "en-GB",
 };
@@ -187,7 +198,7 @@ const LONG_DATE_LOCALES: Readonly<Record<Locale, string>> = {
  */
 export function formatFullDate(isoDate: string, locale: Locale): string {
   const [year, month, day] = isoDate.split("-").map(Number);
-  return new Intl.DateTimeFormat(LONG_DATE_LOCALES[locale], {
+  return new Intl.DateTimeFormat(SHEET_REGION_LOCALES[locale], {
     dateStyle: "long",
     timeZone: "UTC",
   })
@@ -198,4 +209,17 @@ export function formatFullDate(isoDate: string, locale: Locale): string {
         : part.value,
     )
     .join("");
+}
+
+/**
+ * Dollars US courants, arrondis à l'entier (« 48 986 $US » / « US$48,986 »).
+ * Les espaces insécables du français viennent de l'ICU, pas d'une chaîne
+ * écrite à la main.
+ */
+export function formatUsd(value: number, locale: Locale): string {
+  return new Intl.NumberFormat(SHEET_REGION_LOCALES[locale], {
+    style: "currency",
+    currency: "USD",
+    maximumFractionDigits: 0,
+  }).format(value);
 }

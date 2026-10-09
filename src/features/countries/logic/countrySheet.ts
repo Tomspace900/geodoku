@@ -69,6 +69,8 @@ export type CountrySheetValue =
       date: string | null;
     }
   | { kind: "demonym"; demonyms: Demonyms }
+  | { kind: "gdpPerCapita"; usd: number; year: number }
+  | { kind: "lifeExpectancy"; years: number; year: number }
   | {
       kind: "highestPoint";
       /** `null` : point sans nom, rendu par un libellé i18n unique. */
@@ -334,6 +336,33 @@ function buildNatureRows(facts: CountryFacts): CountrySheetRow[] {
 
 function buildSocietyRows(facts: CountryFacts): CountrySheetRow[] {
   const rows: CountrySheetRow[] = [];
+
+  // Valeurs `null` (Taïwan, Vatican, pays sans donnée récente) : pas de ligne.
+  if (facts.gdpPerCapitaUsd !== null) {
+    rows.push({
+      labelKey: "countrySheet.field.gdpPerCapita",
+      value: {
+        kind: "gdpPerCapita",
+        usd: facts.gdpPerCapitaUsd.value,
+        year: facts.gdpPerCapitaUsd.year,
+      },
+      basis: FACT_PROVENANCE.gdpPerCapita.basis,
+      sources: FACT_PROVENANCE.gdpPerCapita.sources,
+    });
+  }
+
+  if (facts.lifeExpectancyYears !== null) {
+    rows.push({
+      labelKey: "countrySheet.field.lifeExpectancy",
+      value: {
+        kind: "lifeExpectancy",
+        years: facts.lifeExpectancyYears.value,
+        year: facts.lifeExpectancyYears.year,
+      },
+      basis: FACT_PROVENANCE.lifeExpectancy.basis,
+      sources: FACT_PROVENANCE.lifeExpectancy.sources,
+    });
+  }
 
   rows.push({
     labelKey: "countrySheet.field.urbanCentres",

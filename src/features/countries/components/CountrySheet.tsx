@@ -16,8 +16,10 @@ import {
   formatInteger,
   formatLanguageName,
   formatList,
+  formatOneDecimal,
   formatOrdinal,
   formatPercent,
+  formatUsd,
   formatYear,
   sourceReferences,
 } from "../logic/countrySheetFormat";
@@ -93,6 +95,16 @@ function renderValue(
       });
     case "demonym":
       return formatDemonym(value.demonyms, locale);
+    case "gdpPerCapita":
+      return t("countrySheet.value.gdpPerCapita", {
+        value: formatUsd(value.usd, locale),
+        year: formatYear(value.year, locale),
+      });
+    case "lifeExpectancy":
+      return t("countrySheet.value.lifeExpectancy", {
+        value: formatOneDecimal(value.years, locale),
+        year: formatYear(value.year, locale),
+      });
     case "highestPoint":
       return t("countrySheet.value.highestPoint", {
         name: value.names
