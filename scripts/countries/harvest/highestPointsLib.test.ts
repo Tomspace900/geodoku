@@ -216,7 +216,11 @@ describe("buildHighestPoints", () => {
     ).toEqual(["SRB"]);
     expect(
       buildHighestPoints(factbook, wikidata, {
-        SRB: { label: { fr: "Midžor", en: "Midžor" }, reason: "test" },
+        SRB: {
+          kind: "label",
+          label: { fr: "Midžor", en: "Midžor" },
+          reason: "test",
+        },
       }).unresolved,
     ).toEqual([]);
   });

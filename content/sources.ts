@@ -61,10 +61,7 @@ export const SOURCES = {
       en: "CIA World Factbook — Elevation",
     },
     url: "https://www.cia.gov/the-world-factbook/field/elevation/",
-    vintage: {
-      fr: "miroir factbook.json, commit 8662a8b",
-      en: "factbook.json mirror, commit 8662a8b",
-    },
+    vintage: null,
   },
   un_flags: {
     name: { fr: "Drapeaux officiels — ONU", en: "Official flags — UN" },

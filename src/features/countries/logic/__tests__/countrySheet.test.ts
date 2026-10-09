@@ -50,9 +50,6 @@ describe("buildCountrySheet", () => {
         elevationM: 4810,
       },
     );
-    expect(
-      rowByLabel(model, "countrySheet.field.peakOver5000m"),
-    ).toBeUndefined();
   });
 
   it("carries a null name for an unnamed highest point (Burundi)", () => {

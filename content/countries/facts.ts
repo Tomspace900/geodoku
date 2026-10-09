@@ -5197,10 +5197,10 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     sovereigntyDate: "1948-05-14",
     sovereigntySheetHidden: false,
     highestPoint: {
-      elevationM: 2224,
+      elevationM: 1208,
       names: {
-        fr: "Mitspe Shlagim",
-        en: "Mitspe Shlagim",
+        fr: "mont Méron",
+        en: "Mount Meron",
       },
     },
     currencies: ["ILS"],
@@ -9362,8 +9362,11 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     sovereigntyDate: "1932-09-23",
     sovereigntySheetHidden: false,
     highestPoint: {
-      elevationM: 3000,
-      names: null,
+      elevationM: 3133,
+      names: {
+        fr: "Jabal Sawda",
+        en: "Jabal Sawda",
+      },
     },
     currencies: ["SAR"],
     demonyms: {

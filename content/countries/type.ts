@@ -290,7 +290,10 @@ export type CountryFactsSnapshot = Readonly<{
  * porte alors une convention unique, jamais un nom inventé.
  */
 export type HighestPoint = Readonly<{
-  /** Altitude du Factbook, en mètres : > 0 et ≤ 8 849. */
+  /**
+   * Altitude en mètres, > 0 et ≤ 8 849 : celle du Factbook, sauf quand un
+   * override curé retient un autre sommet (ISR, SAU).
+   */
   elevationM: number;
   names: LocalizedString | null;
 }>;

@@ -192,15 +192,27 @@ export type HighestPointEntry = {
   wikidata: string | null;
 };
 
-/** Libellé posé à la main : le motif dit pourquoi la récolte ne suffit pas. */
-export type HighestPointOverride = {
-  label: HighestPointLabel | null;
-  reason: string;
-};
+/**
+ * Correction curée, le motif disant pourquoi la récolte ne suffit pas :
+ * - `label` renomme le sommet du Factbook (ou le déclare sans nom), altitude
+ *   du Factbook inchangée ;
+ * - `peak` retient **un autre sommet** que celui du Factbook (périmètre
+ *   territorial, chaîne au lieu d'un sommet) : le motif nomme alors la source
+ *   de son altitude.
+ */
+export type HighestPointOverride =
+  | { kind: "label"; label: HighestPointLabel | null; reason: string }
+  | {
+      kind: "peak";
+      label: HighestPointLabel;
+      elevationM: number;
+      reason: string;
+    };
 
 /**
  * Points culminants par ISO3. `points` est écrit par `harvest/highestPoints.ts` ;
- * `overrides` est curé, préservé à chaque récolte, et l'emporte sur `points[].label`.
+ * `overrides` est curé, préservé à chaque récolte, et l'emporte sur `points[].label`
+ * (et sur l'altitude pour un override `peak`).
  */
 export type HighestPointsSnapshot = {
   /** Commit du miroir `factbook.json` — le même que `sovereignty.sourceCommit`. */

@@ -445,6 +445,7 @@ describe("quantitativeFactsForCode", () => {
       ),
       overrides: {
         RUS: {
+          kind: "label",
           label: { fr: "Elbrouz", en: "Mount Elbrus" },
           reason: "test",
         },
@@ -554,6 +555,27 @@ describe("quantitativeFactsForCode", () => {
     expect(quantitativeFactsForCode("RUS", datasets).highestPoint).toEqual({
       elevationM: 100,
       names: { fr: "Elbrouz", en: "Mount Elbrus" },
+    });
+  });
+
+  it("takes the elevation of a peak override, which names another summit", () => {
+    const withPeak: QuantitativeDatasets = {
+      ...datasets,
+      highestPoints: {
+        ...datasets.highestPoints,
+        overrides: {
+          RUS: {
+            kind: "peak",
+            label: { fr: "autre", en: "other" },
+            elevationM: 1208,
+            reason: "test",
+          },
+        },
+      },
+    };
+    expect(quantitativeFactsForCode("RUS", withPeak).highestPoint).toEqual({
+      elevationM: 1208,
+      names: { fr: "autre", en: "other" },
     });
   });
 

@@ -56,8 +56,8 @@ describe("validateHighestPoints", () => {
   it("signale un override orphelin et un override sans motif", () => {
     const errors = validateHighestPoints(
       dataset({
-        ZZZ: { label: null, reason: "x" },
-        FRA: { label: null, reason: " " },
+        ZZZ: { kind: "label", label: null, reason: "x" },
+        FRA: { kind: "label", label: null, reason: " " },
       }),
       SOVEREIGNTY,
       ["FRA"],

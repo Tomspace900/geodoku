@@ -447,7 +447,6 @@ export const fr = {
       coastlines: "Façades maritimes",
       equatorCrosser: "Traversé par l'équateur",
       timezones: "Décalages horaires",
-      peakOver5000m: "Sommet de plus de 5 000 m",
       highestPoint: "Point culminant",
       mountainAreaShare: "Part montagneuse",
       forestCoverShare: "Couverture forestière",

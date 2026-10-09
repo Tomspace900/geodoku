@@ -431,7 +431,6 @@ export const en = {
       coastlines: "Coastlines",
       equatorCrosser: "Crossed by the equator",
       timezones: "UTC offsets",
-      peakOver5000m: "Peak over 5,000 m",
       highestPoint: "Highest point",
       mountainAreaShare: "Mountainous area",
       forestCoverShare: "Forest cover",

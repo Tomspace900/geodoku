@@ -583,8 +583,9 @@ function lastVolcanicEruptionYearForCode(
 }
 
 /**
- * Point culminant d'un pays : altitude du Factbook, libellés de l'override curé
- * s'il existe, de la récolte sinon. Un pays absent du dataset échoue bruyamment
+ * Point culminant d'un pays : altitude du Factbook (de l'override `peak` quand
+ * il retient un autre sommet), libellés de l'override curé s'il existe, de la
+ * récolte sinon. Un pays absent du dataset échoue bruyamment
  * (les 197 sont couverts) — jamais d'altitude inventée.
  */
 function highestPointForCode(
@@ -600,7 +601,8 @@ function highestPointForCode(
   const override = snapshot.overrides[code];
   const label = override ? override.label : entry.label;
   return {
-    elevationM: entry.elevationM,
+    elevationM:
+      override?.kind === "peak" ? override.elevationM : entry.elevationM,
     names: label ? { fr: label.fr, en: label.en } : null,
   };
 }

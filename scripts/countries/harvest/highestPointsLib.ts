@@ -302,7 +302,8 @@ export function renderHighestPointsModule(
  *
  * \`points\` est **généré** : ne pas l'éditer à la main. \`overrides\` est curé,
  * chaque entrée avec son motif ; il est préservé à chaque récolte et l'emporte
- * sur \`points[].label\`. L'altitude reste toujours celle du Factbook.
+ * sur \`points[].label\`. L'altitude est celle du Factbook, sauf override \`peak\`
+ * (autre sommet retenu, source de l'altitude dans le motif).
  *
  * \`label: null\` = point sans nom (ou donné par une position, pas un nom).
  */

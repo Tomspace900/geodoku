@@ -10,7 +10,8 @@ import type { HighestPointsSnapshot } from "./types";
  *
  * `points` est **généré** : ne pas l'éditer à la main. `overrides` est curé,
  * chaque entrée avec son motif ; il est préservé à chaque récolte et l'emporte
- * sur `points[].label`. L'altitude reste toujours celle du Factbook.
+ * sur `points[].label`. L'altitude est celle du Factbook, sauf override `peak`
+ * (autre sommet retenu, source de l'altitude dans le motif).
  *
  * `label: null` = point sans nom (ou donné par une position, pas un nom).
  */
@@ -1737,6 +1738,7 @@ export const HIGHEST_POINTS: HighestPointsSnapshot = {
   },
   overrides: {
     AUS: {
+      kind: "label",
       label: {
         fr: "mont Kosciuszko",
         en: "Mount Kosciuszko",
@@ -1745,6 +1747,7 @@ export const HIGHEST_POINTS: HighestPointsSnapshot = {
         "Wikidata P610 donne le pic Mawson (île Heard), exclue du périmètre territorial ; le Factbook donne le Kosciuszko, point culminant du territoire intégré.",
     },
     SRB: {
+      kind: "label",
       label: {
         fr: "Midžor",
         en: "Midžor",
@@ -1753,6 +1756,7 @@ export const HIGHEST_POINTS: HighestPointsSnapshot = {
         "Wikidata P610 donne la Velika Rudoka, située au Kosovo (jouable à part) ; le Factbook donne le Midžor, point culminant de la Serbie.",
     },
     MMR: {
+      kind: "label",
       label: {
         fr: "Gamlang Razi",
         en: "Gamlang Razi",
@@ -1761,6 +1765,7 @@ export const HIGHEST_POINTS: HighestPointsSnapshot = {
         "Mesure disputée : le Factbook donne le Gamlang Razi (5 870 m), Wikidata le Hkakabo Razi (5 881 m). Le Factbook reste la source de l'altitude et du nom.",
     },
     ITA: {
+      kind: "label",
       label: {
         fr: "Mont Blanc de Courmayeur",
         en: "Mont Blanc de Courmayeur",
@@ -1769,6 +1774,7 @@ export const HIGHEST_POINTS: HighestPointsSnapshot = {
         "Wikidata P610 donne le Mont Blanc (sommet franco-italien, 4 808 m) ; le Factbook donne le Mont Blanc de Courmayeur (4 748 m), point culminant strictement italien.",
     },
     CMR: {
+      kind: "label",
       label: {
         fr: "mont Cameroun",
         en: "Mount Cameroon",
@@ -1777,6 +1783,7 @@ export const HIGHEST_POINTS: HighestPointsSnapshot = {
         "Même sommet (Fako sur le mont Cameroun) : le Factbook donne 4 045 m, Wikidata 4 095 m, au-delà de la tolérance de 25 m. L'altitude reste celle du Factbook.",
     },
     GUY: {
+      kind: "label",
       label: {
         fr: "mont Roraima",
         en: "Mount Roraima",
@@ -1785,6 +1792,7 @@ export const HIGHEST_POINTS: HighestPointsSnapshot = {
         "Même sommet (Laberintos del Norte sur le Roraima) : le Factbook donne 2 775 m, Wikidata 2 810 m. L'altitude reste celle du Factbook.",
     },
     FIN: {
+      kind: "label",
       label: {
         fr: "Halti",
         en: "Halti",
@@ -1793,6 +1801,7 @@ export const HIGHEST_POINTS: HighestPointsSnapshot = {
         "Le Factbook donne le point finlandais du Halti (1 328 m) ; Wikidata mesure le sommet du Halti, situé en Norvège (1 361 m). L'altitude reste celle du Factbook.",
     },
     COL: {
+      kind: "label",
       label: {
         fr: "pic Cristóbal Colón",
         en: "Pico Cristóbal Colón",
@@ -1801,6 +1810,7 @@ export const HIGHEST_POINTS: HighestPointsSnapshot = {
         "Wikidata porte deux sommets à 5 775 m (Simón Bolívar, Cristóbal Colón) ; le Factbook donne le Cristóbal Colón à 5 730 m, hors tolérance.",
     },
     SUR: {
+      kind: "label",
       label: {
         fr: "Juliana Top",
         en: "Julianatop",
@@ -1809,6 +1819,7 @@ export const HIGHEST_POINTS: HighestPointsSnapshot = {
         "Même sommet : le Factbook donne 1 230 m, Wikidata 1 280 m, hors tolérance. L'altitude reste celle du Factbook ; le libellé fr est celui de Wikidata.",
     },
     BWA: {
+      kind: "label",
       label: {
         fr: "Manyelanong Hill",
         en: "Manyelanong Hill",
@@ -1817,6 +1828,7 @@ export const HIGHEST_POINTS: HighestPointsSnapshot = {
         "Wikidata P610 donne l'Otse Hill ; le Factbook donne le Manyelanong Hill (1 495 m). On suit le Factbook.",
     },
     GNB: {
+      kind: "label",
       label: {
         fr: "Dongol Ronde",
         en: "Dongol Ronde",
@@ -1825,26 +1837,35 @@ export const HIGHEST_POINTS: HighestPointsSnapshot = {
         "Wikidata P610 donne le mont Torin (Monte Torin, 262 m) ; le Factbook donne le Dongol Ronde (277 m). On suit le Factbook, sans libellé Wikidata.",
     },
     KWT: {
+      kind: "label",
       label: null,
       reason:
         "Le Factbook donne une position (« 3.6 km W. of Al-Salmi Border Post »), pas un nom ; Wikidata P610 donne la crête de Mutla (140 m), incompatible avec les 300 m du Factbook.",
     },
     MDV: {
+      kind: "label",
       label: null,
       reason:
         "Le Factbook donne une position (« 8th tee, golf course, Villingi Island »), pas un nom ; Wikidata porte deux îles (Addu City, Villingili), pas un sommet.",
     },
     MHL: {
+      kind: "label",
       label: null,
       reason:
         "Le Factbook donne une position (« East-central Airik Island, Maloelap Atoll ») ; la correspondance par altitude tombait sur l'atoll de Likiep, qui n'est pas ce point.",
     },
     SAU: {
-      label: null,
+      kind: "peak",
+      label: {
+        fr: "Jabal Sawda",
+        en: "Jabal Sawda",
+      },
+      elevationM: 3133,
       reason:
-        "Le Factbook désigne une chaîne (« As Sarawat range, 3,000 m »), pas un sommet. Alternative au gate : Jabal Sawda, 3 133 m selon Wikidata (altitude différente du Factbook).",
+        "Décision du gate du lot 5 (2026-10-09) : le Factbook désigne une chaîne (« As Sarawat range, 3,000 m »), pas un sommet. Jabal Sawda, sommet de cette chaîne ; altitude : Wikidata (Q1261892, P2044).",
     },
     FSM: {
+      kind: "label",
       label: {
         fr: "Nanlaud",
         en: "Nanlaud",
@@ -1853,6 +1874,7 @@ export const HIGHEST_POINTS: HighestPointsSnapshot = {
         "Wikidata P610 donne le Dolohmwar ; le Factbook donne le Nanlaud (782 m), sur Pohnpei. On suit le Factbook.",
     },
     LUX: {
+      kind: "label",
       label: {
         fr: "Buurgplaatz",
         en: "Buurgplaatz",
@@ -1861,6 +1883,7 @@ export const HIGHEST_POINTS: HighestPointsSnapshot = {
         "Wikidata P610 donne le Kneiff (560 m), voisin immédiat ; le Factbook donne le Buurgplaatz (559 m). On suit le Factbook.",
     },
     QAT: {
+      kind: "label",
       label: {
         fr: "Tuwayyir al Hamir",
         en: "Tuwayyir al Hamir",
@@ -1869,6 +1892,7 @@ export const HIGHEST_POINTS: HighestPointsSnapshot = {
         "Wikidata P610 donne le Qurayn Abu al Bawl (103 m) ; le Factbook donne le Tuwayyir al Hamir (103 m). On suit le Factbook.",
     },
     PSE: {
+      kind: "label",
       label: {
         fr: "Khallat al Batrakh",
         en: "Khallat al Batrakh",
@@ -1877,6 +1901,7 @@ export const HIGHEST_POINTS: HighestPointsSnapshot = {
         "Le Factbook découpe la Palestine : on retient le plus haut des deux points (Cisjordanie 1 020 m, Gaza 105 m). Wikidata P610 donne le mont Nabi Yunis ; on suit le nom du Factbook.",
     },
     CIV: {
+      kind: "label",
       label: {
         fr: "mont Nimba",
         en: "Mount Nimba",
@@ -1885,6 +1910,7 @@ export const HIGHEST_POINTS: HighestPointsSnapshot = {
         "Même sommet partagé avec la Guinée : le libellé Wikidata en (Mount Richard-Molard) n'est pas le nom usuel, le Factbook dit Monts Nimba.",
     },
     TZA: {
+      kind: "label",
       label: {
         fr: "Kilimandjaro",
         en: "Kilimanjaro",
@@ -1893,6 +1919,7 @@ export const HIGHEST_POINTS: HighestPointsSnapshot = {
         "Wikidata P610 donne le Kibo, sommet du massif ; le nom usuel du point culminant de la Tanzanie est le Kilimandjaro (nom du Factbook).",
     },
     MWI: {
+      kind: "label",
       label: {
         fr: "Sapitwa",
         en: "Sapitwa",
@@ -1901,6 +1928,7 @@ export const HIGHEST_POINTS: HighestPointsSnapshot = {
         "Wikidata P610 donne le massif du Mulanje ; le sommet est le Sapitwa (nom du Factbook).",
     },
     SDN: {
+      kind: "label",
       label: {
         fr: "djebel Marra",
         en: "Jebel Marra",
@@ -1909,6 +1937,7 @@ export const HIGHEST_POINTS: HighestPointsSnapshot = {
         "Wikidata P610 donne la caldeira Deriba (lac Marra Deriba), pas le sommet ; le Factbook dit Jabal Marrah.",
     },
     MEX: {
+      kind: "label",
       label: {
         fr: "pic d'Orizaba",
         en: "Pico de Orizaba",
@@ -1917,6 +1946,7 @@ export const HIGHEST_POINTS: HighestPointsSnapshot = {
         "Le libellé Wikidata en est Citlaltepetl ; le nom usuel anglais est Pico de Orizaba (nom du Factbook).",
     },
     MLI: {
+      kind: "label",
       label: {
         fr: "Hombori Tondo",
         en: "Hombori Tondo",
@@ -1925,6 +1955,7 @@ export const HIGHEST_POINTS: HighestPointsSnapshot = {
         "Les libellés Wikidata désignent le massif des monts Hombori ; le point culminant est le Hombori Tondo (nom du Factbook).",
     },
     NAM: {
+      kind: "label",
       label: {
         fr: "Königstein",
         en: "Königstein",
@@ -1933,20 +1964,23 @@ export const HIGHEST_POINTS: HighestPointsSnapshot = {
         "Les libellés Wikidata désignent le massif du Brandberg ; le point culminant est le Königstein (nom du Factbook).",
     },
     ISR: {
+      kind: "peak",
       label: {
-        fr: "Mitspe Shlagim",
-        en: "Mitspe Shlagim",
+        fr: "mont Méron",
+        en: "Mount Meron",
       },
+      elevationM: 1208,
       reason:
-        "PROVISOIRE — arbitrage en attente au gate du lot 5. Le Factbook donne le Mitspe Shlagim (2 224 m), sur le mont Hermon, dans le Golan ; Wikidata P610 donne le mont Méron (1 208 m), dans les frontières reconnues.",
+        "Décision du gate du lot 5 (2026-10-09) : sommet du territoire reconnu. Le Factbook donne le Mitspe Shlagim (2 224 m), sur le mont Hermon, dans le Golan, hors du périmètre « territoire pleinement intégré ». Altitude du mont Méron : Wikidata (Q540520, P2044).",
     },
     USA: {
+      kind: "label",
       label: {
         fr: "Denali",
         en: "Denali",
       },
       reason:
-        "PROVISOIRE — arbitrage en attente au gate du lot 5. Le Factbook (commit figé) dit Mount McKinley ; Wikidata dit Denali (sans libellé en).",
+        "Décision du gate du lot 5 (2026-10-09) : Denali, le nom de l'usage courant et cartographique. Le Factbook (commit figé) dit Mount McKinley, nom fédéral rétabli en 2025 ; Wikidata dit Denali (sans libellé en).",
     },
   },
 };
