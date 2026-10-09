@@ -229,9 +229,11 @@ export function harvestVintage(harvestedAt: string): LocalizedString {
 /**
  * Garde : le millésime de `content/sources.ts` (écrit à la main, affiché au
  * joueur) doit dire la même date que `harvestedAt`, que seule la récolte met à
- * jour. Comparaison exacte.
+ * jour. Comparaison exacte. Partagée par les récoltes Wikidata (capitales,
+ * points culminants) : `sourceId` n'est là que pour nommer l'entrée fautive.
  */
 export function validateHarvestVintage(
+  sourceId: string,
   sourceVintage: LocalizedString | null,
   harvestedAt: string,
 ): string[] {
@@ -240,6 +242,6 @@ export function validateHarvestVintage(
     return [];
   }
   return [
-    `sources.wikidata_capital_labels: millésime ${JSON.stringify(sourceVintage)} désaccordé de la récolte (harvestedAt ${harvestedAt}, attendu ${JSON.stringify(expected)}) — mettre à jour content/sources.ts`,
+    `sources.${sourceId}: millésime ${JSON.stringify(sourceVintage)} désaccordé de la récolte (harvestedAt ${harvestedAt}, attendu ${JSON.stringify(expected)}) — mettre à jour content/sources.ts`,
   ];
 }

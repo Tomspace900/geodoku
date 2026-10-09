@@ -253,6 +253,11 @@ export type CountryFacts = Readonly<{
    */
   sovereigntySheetHidden: boolean;
   /**
+   * Point culminant du pays, restreint à son territoire pleinement intégré
+   * (`SOURCES.md`). Toujours défini : les 197 pays sont couverts.
+   */
+  highestPoint: HighestPoint;
+  /**
    * Codes ISO 4217 des monnaies ayant cours (world-countries, corrigé par
    * `currencyCorrectionsByIso3`). Jamais vide.
    */
@@ -277,6 +282,17 @@ export type Demonyms = Readonly<{ fr: DemonymForms; en: DemonymForms }>;
 export type CountryFactsSnapshot = Readonly<{
   date: string;
   note: string;
+}>;
+
+/**
+ * Point culminant du pays (CIA World Factbook pour l'altitude et le nom, Wikidata
+ * pour les libellés). `names` vaut `null` pour un point sans nom : l'affichage
+ * porte alors une convention unique, jamais un nom inventé.
+ */
+export type HighestPoint = Readonly<{
+  /** Altitude du Factbook, en mètres : > 0 et ≤ 8 849. */
+  elevationM: number;
+  names: LocalizedString | null;
 }>;
 
 /**
@@ -325,6 +341,7 @@ export type CountryRecord = {
   sovereigntyKind: SovereigntyKind | null;
   sovereigntyDate: string | null;
   sovereigntySheetHidden: boolean;
+  highestPoint: HighestPoint;
   currencies: string[];
   demonyms: Demonyms;
 };

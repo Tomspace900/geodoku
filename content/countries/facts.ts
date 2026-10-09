@@ -51,6 +51,13 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     sovereigntyKind: "independence",
     sovereigntyDate: "1919-08-19",
     sovereigntySheetHidden: false,
+    highestPoint: {
+      elevationM: 7492,
+      names: {
+        fr: "Nowshak",
+        en: "Noshaq",
+      },
+    },
     currencies: ["AFN"],
     demonyms: {
       fr: {
@@ -105,6 +112,13 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     sovereigntyKind: "independence",
     sovereigntyDate: "1975-11-11",
     sovereigntySheetHidden: false,
+    highestPoint: {
+      elevationM: 2620,
+      names: {
+        fr: "Morro de Môco",
+        en: "Mount Moco",
+      },
+    },
     currencies: ["AOA"],
     demonyms: {
       fr: {
@@ -159,6 +173,13 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     sovereigntyKind: "independence",
     sovereigntyDate: "1912-11-28",
     sovereigntySheetHidden: false,
+    highestPoint: {
+      elevationM: 2764,
+      names: {
+        fr: "mont Korab",
+        en: "Korab",
+      },
+    },
     currencies: ["ALL"],
     demonyms: {
       fr: {
@@ -213,6 +234,13 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     sovereigntyKind: "foundation",
     sovereigntyDate: null,
     sovereigntySheetHidden: false,
+    highestPoint: {
+      elevationM: 2946,
+      names: {
+        fr: "pic de Coma Pedrosa",
+        en: "Coma Pedrosa",
+      },
+    },
     currencies: ["EUR"],
     demonyms: {
       fr: {
@@ -270,6 +298,13 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     sovereigntyKind: "independence",
     sovereigntyDate: "1971-12-02",
     sovereigntySheetHidden: false,
+    highestPoint: {
+      elevationM: 1905,
+      names: {
+        fr: "Jabal Bil Ays",
+        en: "Jebel Jais",
+      },
+    },
     currencies: ["AED"],
     demonyms: {
       fr: {
@@ -324,6 +359,13 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     sovereigntyKind: "independence",
     sovereigntyDate: "1816-07-09",
     sovereigntySheetHidden: false,
+    highestPoint: {
+      elevationM: 6962,
+      names: {
+        fr: "Aconcagua",
+        en: "Aconcagua",
+      },
+    },
     currencies: ["ARS"],
     demonyms: {
       fr: {
@@ -378,6 +420,13 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     sovereigntyKind: "independence",
     sovereigntyDate: "1991-09-21",
     sovereigntySheetHidden: false,
+    highestPoint: {
+      elevationM: 4090,
+      names: {
+        fr: "Aragats",
+        en: "Mount Aragats",
+      },
+    },
     currencies: ["AMD"],
     demonyms: {
       fr: {
@@ -432,6 +481,13 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     sovereigntyKind: "independence",
     sovereigntyDate: "1981-11-01",
     sovereigntySheetHidden: false,
+    highestPoint: {
+      elevationM: 402,
+      names: {
+        fr: "mont Obama",
+        en: "Mount Obama",
+      },
+    },
     currencies: ["XCD"],
     demonyms: {
       fr: {
@@ -494,6 +550,13 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     sovereigntyKind: "independence",
     sovereigntyDate: "1901-01-01",
     sovereigntySheetHidden: false,
+    highestPoint: {
+      elevationM: 2228,
+      names: {
+        fr: "mont Kosciuszko",
+        en: "Mount Kosciuszko",
+      },
+    },
     currencies: ["AUD"],
     demonyms: {
       fr: {
@@ -548,6 +611,13 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     sovereigntyKind: "independence",
     sovereigntyDate: "1156-09-17",
     sovereigntySheetHidden: true,
+    highestPoint: {
+      elevationM: 3798,
+      names: {
+        fr: "Grossglockner",
+        en: "Grossglockner",
+      },
+    },
     currencies: ["EUR"],
     demonyms: {
       fr: {
@@ -602,6 +672,13 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     sovereigntyKind: "independence",
     sovereigntyDate: "1991-08-30",
     sovereigntySheetHidden: false,
+    highestPoint: {
+      elevationM: 4466,
+      names: {
+        fr: "Bazardüzü",
+        en: "Mount Bazardüzü",
+      },
+    },
     currencies: ["AZN"],
     demonyms: {
       fr: {
@@ -656,6 +733,10 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     sovereigntyKind: "independence",
     sovereigntyDate: "1962-07-01",
     sovereigntySheetHidden: false,
+    highestPoint: {
+      elevationM: 2685,
+      names: null,
+    },
     currencies: ["BIF"],
     demonyms: {
       fr: {
@@ -710,6 +791,13 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     sovereigntyKind: "independence",
     sovereigntyDate: "1830-10-04",
     sovereigntySheetHidden: false,
+    highestPoint: {
+      elevationM: 694,
+      names: {
+        fr: "signal de Botrange",
+        en: "Signal de Botrange",
+      },
+    },
     currencies: ["EUR"],
     demonyms: {
       fr: {
@@ -764,6 +852,10 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     sovereigntyKind: "independence",
     sovereigntyDate: "1960-08-01",
     sovereigntySheetHidden: false,
+    highestPoint: {
+      elevationM: 675,
+      names: null,
+    },
     currencies: ["XOF"],
     demonyms: {
       fr: {
@@ -818,6 +910,13 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     sovereigntyKind: "independence",
     sovereigntyDate: "1960-08-05",
     sovereigntySheetHidden: false,
+    highestPoint: {
+      elevationM: 749,
+      names: {
+        fr: "Tenakourou",
+        en: "Mount Tenakourou",
+      },
+    },
     currencies: ["XOF"],
     demonyms: {
       fr: {
@@ -874,6 +973,13 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     sovereigntyKind: "independence",
     sovereigntyDate: "1971-12-16",
     sovereigntySheetHidden: false,
+    highestPoint: {
+      elevationM: 1060,
+      names: {
+        fr: "Mowdok Mual",
+        en: "Mowdok tiang",
+      },
+    },
     currencies: ["BDT"],
     demonyms: {
       fr: {
@@ -928,6 +1034,13 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     sovereigntyKind: "independence",
     sovereigntyDate: "1878-03-03",
     sovereigntySheetHidden: false,
+    highestPoint: {
+      elevationM: 2925,
+      names: {
+        fr: "Moussala",
+        en: "Musala",
+      },
+    },
     currencies: ["BGN"],
     demonyms: {
       fr: {
@@ -982,6 +1095,13 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     sovereigntyKind: "independence",
     sovereigntyDate: "1971-08-15",
     sovereigntySheetHidden: false,
+    highestPoint: {
+      elevationM: 135,
+      names: {
+        fr: "Djébel ad Dukhan",
+        en: "Mountain of Smoke",
+      },
+    },
     currencies: ["BHD"],
     demonyms: {
       fr: {
@@ -1036,6 +1156,13 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     sovereigntyKind: "independence",
     sovereigntyDate: "1973-07-10",
     sovereigntySheetHidden: false,
+    highestPoint: {
+      elevationM: 64,
+      names: {
+        fr: "mont Alvernia",
+        en: "Mount Alvernia",
+      },
+    },
     currencies: ["BSD", "USD"],
     demonyms: {
       fr: {
@@ -1090,6 +1217,13 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     sovereigntyKind: "independence",
     sovereigntyDate: "1992-03-01",
     sovereigntySheetHidden: false,
+    highestPoint: {
+      elevationM: 2386,
+      names: {
+        fr: "Maglić",
+        en: "Maglić",
+      },
+    },
     currencies: ["BAM"],
     demonyms: {
       fr: {
@@ -1144,6 +1278,13 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     sovereigntyKind: "independence",
     sovereigntyDate: "1991-08-25",
     sovereigntySheetHidden: false,
+    highestPoint: {
+      elevationM: 346,
+      names: {
+        fr: "Mont Dzerjinski",
+        en: "Dziaržynkaja hara",
+      },
+    },
     currencies: ["BYN"],
     demonyms: {
       fr: {
@@ -1198,6 +1339,13 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     sovereigntyKind: "independence",
     sovereigntyDate: "1981-09-21",
     sovereigntySheetHidden: false,
+    highestPoint: {
+      elevationM: 1124,
+      names: {
+        fr: "Doyle's Delight",
+        en: "Doyle's Delight",
+      },
+    },
     currencies: ["BZD"],
     demonyms: {
       fr: {
@@ -1262,6 +1410,13 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     sovereigntyKind: "independence",
     sovereigntyDate: "1825-08-06",
     sovereigntySheetHidden: false,
+    highestPoint: {
+      elevationM: 6542,
+      names: {
+        fr: "Nevado Sajama",
+        en: "Nevado Sajama",
+      },
+    },
     currencies: ["BOB"],
     demonyms: {
       fr: {
@@ -1331,6 +1486,13 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     sovereigntyKind: "independence",
     sovereigntyDate: "1822-09-07",
     sovereigntySheetHidden: false,
+    highestPoint: {
+      elevationM: 2994,
+      names: {
+        fr: "Pico da Neblina",
+        en: "Pico da Neblina",
+      },
+    },
     currencies: ["BRL"],
     demonyms: {
       fr: {
@@ -1385,6 +1547,13 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     sovereigntyKind: "independence",
     sovereigntyDate: "1966-11-30",
     sovereigntySheetHidden: false,
+    highestPoint: {
+      elevationM: 336,
+      names: {
+        fr: "mont Hillaby",
+        en: "Mount Hillaby",
+      },
+    },
     currencies: ["BBD"],
     demonyms: {
       fr: {
@@ -1439,6 +1608,13 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     sovereigntyKind: "independence",
     sovereigntyDate: "1984-01-01",
     sovereigntySheetHidden: false,
+    highestPoint: {
+      elevationM: 1850,
+      names: {
+        fr: "Bukit Pagon",
+        en: "Bukit Pagon",
+      },
+    },
     currencies: ["BND", "SGD"],
     demonyms: {
       fr: {
@@ -1493,6 +1669,13 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     sovereigntyKind: "independence",
     sovereigntyDate: "1907-12-17",
     sovereigntySheetHidden: false,
+    highestPoint: {
+      elevationM: 7570,
+      names: {
+        fr: "Gangkhar Puensum",
+        en: "Gangkhar Puensum",
+      },
+    },
     currencies: ["BTN", "INR"],
     demonyms: {
       fr: {
@@ -1547,6 +1730,13 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     sovereigntyKind: "independence",
     sovereigntyDate: "1966-09-30",
     sovereigntySheetHidden: false,
+    highestPoint: {
+      elevationM: 1495,
+      names: {
+        fr: "Manyelanong Hill",
+        en: "Manyelanong Hill",
+      },
+    },
     currencies: ["BWP"],
     demonyms: {
       fr: {
@@ -1601,6 +1791,13 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     sovereigntyKind: "independence",
     sovereigntyDate: "1960-08-13",
     sovereigntySheetHidden: false,
+    highestPoint: {
+      elevationM: 1410,
+      names: {
+        fr: "mont Ngaoui",
+        en: "Mont Ngaoui",
+      },
+    },
     currencies: ["XAF"],
     demonyms: {
       fr: {
@@ -1664,6 +1861,13 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     sovereigntyKind: "foundation",
     sovereigntyDate: "1867-07-01",
     sovereigntySheetHidden: false,
+    highestPoint: {
+      elevationM: 5959,
+      names: {
+        fr: "mont Logan",
+        en: "Mount Logan",
+      },
+    },
     currencies: ["CAD"],
     demonyms: {
       fr: {
@@ -1718,6 +1922,13 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     sovereigntyKind: "foundation",
     sovereigntyDate: "1291-08-01",
     sovereigntySheetHidden: false,
+    highestPoint: {
+      elevationM: 4634,
+      names: {
+        fr: "pointe Dufour",
+        en: "Dufourspitze",
+      },
+    },
     currencies: ["CHF"],
     demonyms: {
       fr: {
@@ -1772,6 +1983,13 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     sovereigntyKind: "independence",
     sovereigntyDate: "1810-09-18",
     sovereigntySheetHidden: false,
+    highestPoint: {
+      elevationM: 6893,
+      names: {
+        fr: "Nevado Ojos del Salado",
+        en: "Ojos del Salado",
+      },
+    },
     currencies: ["CLP"],
     demonyms: {
       fr: {
@@ -1848,6 +2066,13 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     sovereigntyKind: "unification",
     sovereigntyDate: "1949-10-01",
     sovereigntySheetHidden: true,
+    highestPoint: {
+      elevationM: 8849,
+      names: {
+        fr: "Everest",
+        en: "Mount Everest",
+      },
+    },
     currencies: ["CNY"],
     demonyms: {
       fr: {
@@ -1904,6 +2129,13 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     sovereigntyKind: "independence",
     sovereigntyDate: "1960-08-07",
     sovereigntySheetHidden: false,
+    highestPoint: {
+      elevationM: 1752,
+      names: {
+        fr: "mont Nimba",
+        en: "Mount Nimba",
+      },
+    },
     currencies: ["XOF"],
     demonyms: {
       fr: {
@@ -1960,6 +2192,13 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     sovereigntyKind: "independence",
     sovereigntyDate: "1960-01-01",
     sovereigntySheetHidden: false,
+    highestPoint: {
+      elevationM: 4045,
+      names: {
+        fr: "mont Cameroun",
+        en: "Mount Cameroon",
+      },
+    },
     currencies: ["XAF"],
     demonyms: {
       fr: {
@@ -2019,6 +2258,13 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     sovereigntyKind: "independence",
     sovereigntyDate: "1960-06-30",
     sovereigntySheetHidden: false,
+    highestPoint: {
+      elevationM: 5110,
+      names: {
+        fr: "mont Stanley",
+        en: "Mount Stanley",
+      },
+    },
     currencies: ["CDF"],
     demonyms: {
       fr: {
@@ -2073,6 +2319,13 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     sovereigntyKind: "independence",
     sovereigntyDate: "1960-08-15",
     sovereigntySheetHidden: false,
+    highestPoint: {
+      elevationM: 1020,
+      names: {
+        fr: "mont Nabemba",
+        en: "Mont Nabemba",
+      },
+    },
     currencies: ["XAF"],
     demonyms: {
       fr: {
@@ -2137,6 +2390,13 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     sovereigntyKind: "independence",
     sovereigntyDate: "1810-07-20",
     sovereigntySheetHidden: false,
+    highestPoint: {
+      elevationM: 5730,
+      names: {
+        fr: "pic Cristóbal Colón",
+        en: "Pico Cristóbal Colón",
+      },
+    },
     currencies: ["COP"],
     demonyms: {
       fr: {
@@ -2191,6 +2451,13 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     sovereigntyKind: "independence",
     sovereigntyDate: "1975-07-06",
     sovereigntySheetHidden: false,
+    highestPoint: {
+      elevationM: 2360,
+      names: {
+        fr: "Karthala",
+        en: "Mount Karthala",
+      },
+    },
     currencies: ["KMF"],
     demonyms: {
       fr: {
@@ -2245,6 +2512,13 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     sovereigntyKind: "independence",
     sovereigntyDate: "1975-07-05",
     sovereigntySheetHidden: false,
+    highestPoint: {
+      elevationM: 2829,
+      names: {
+        fr: "Pico do Fogo",
+        en: "Pico do Fogo",
+      },
+    },
     currencies: ["CVE"],
     demonyms: {
       fr: {
@@ -2299,6 +2573,13 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     sovereigntyKind: "independence",
     sovereigntyDate: "1821-09-15",
     sovereigntySheetHidden: false,
+    highestPoint: {
+      elevationM: 3819,
+      names: {
+        fr: "Cerro Chirripó",
+        en: "Cerro Chirripó",
+      },
+    },
     currencies: ["CRC"],
     demonyms: {
       fr: {
@@ -2353,6 +2634,13 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     sovereigntyKind: "independence",
     sovereigntyDate: "1902-05-20",
     sovereigntySheetHidden: false,
+    highestPoint: {
+      elevationM: 1974,
+      names: {
+        fr: "Pico Turquino",
+        en: "Pico Turquino",
+      },
+    },
     currencies: ["CUP"],
     demonyms: {
       fr: {
@@ -2407,6 +2695,13 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     sovereigntyKind: "independence",
     sovereigntyDate: "1960-08-16",
     sovereigntySheetHidden: false,
+    highestPoint: {
+      elevationM: 1951,
+      names: {
+        fr: "mont Olympe",
+        en: "Mount Olympus",
+      },
+    },
     currencies: ["EUR"],
     demonyms: {
       fr: {
@@ -2461,6 +2756,13 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     sovereigntyKind: "dissolution_successor",
     sovereigntyDate: "1993-01-01",
     sovereigntySheetHidden: false,
+    highestPoint: {
+      elevationM: 1602,
+      names: {
+        fr: "Sniejka",
+        en: "Sněžka",
+      },
+    },
     currencies: ["CZK"],
     demonyms: {
       fr: {
@@ -2517,6 +2819,13 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     sovereigntyKind: "unification",
     sovereigntyDate: "1871-01-18",
     sovereigntySheetHidden: false,
+    highestPoint: {
+      elevationM: 2963,
+      names: {
+        fr: "Zugspitze",
+        en: "Zugspitze",
+      },
+    },
     currencies: ["EUR"],
     demonyms: {
       fr: {
@@ -2571,6 +2880,13 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     sovereigntyKind: "independence",
     sovereigntyDate: "1977-06-27",
     sovereigntySheetHidden: false,
+    highestPoint: {
+      elevationM: 2021,
+      names: {
+        fr: "Mousa Alli",
+        en: "Mousa Ali",
+      },
+    },
     currencies: ["DJF"],
     demonyms: {
       fr: {
@@ -2625,6 +2941,13 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     sovereigntyKind: "independence",
     sovereigntyDate: "1978-11-03",
     sovereigntySheetHidden: false,
+    highestPoint: {
+      elevationM: 1447,
+      names: {
+        fr: "Morne Diablotins",
+        en: "Morne Diablotins",
+      },
+    },
     currencies: ["XCD"],
     demonyms: {
       fr: {
@@ -2679,6 +3002,13 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     sovereigntyKind: "foundation",
     sovereigntyDate: "1849-06-05",
     sovereigntySheetHidden: true,
+    highestPoint: {
+      elevationM: 171,
+      names: {
+        fr: "Møllehøj",
+        en: "Møllehøj",
+      },
+    },
     currencies: ["DKK"],
     demonyms: {
       fr: {
@@ -2735,6 +3065,13 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     sovereigntyKind: "independence",
     sovereigntyDate: "1844-02-27",
     sovereigntySheetHidden: false,
+    highestPoint: {
+      elevationM: 3098,
+      names: {
+        fr: "Pico Duarte",
+        en: "Pico Duarte",
+      },
+    },
     currencies: ["DOP"],
     demonyms: {
       fr: {
@@ -2791,6 +3128,13 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     sovereigntyKind: "independence",
     sovereigntyDate: "1962-07-05",
     sovereigntySheetHidden: false,
+    highestPoint: {
+      elevationM: 2908,
+      names: {
+        fr: "Tahat",
+        en: "Mount Tahat",
+      },
+    },
     currencies: ["DZD"],
     demonyms: {
       fr: {
@@ -2852,6 +3196,13 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     sovereigntyKind: "independence",
     sovereigntyDate: "1822-05-24",
     sovereigntySheetHidden: false,
+    highestPoint: {
+      elevationM: 6267,
+      names: {
+        fr: "Chimborazo",
+        en: "Chimborazo",
+      },
+    },
     currencies: ["USD"],
     demonyms: {
       fr: {
@@ -2908,6 +3259,13 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     sovereigntyKind: "independence",
     sovereigntyDate: "1922-02-28",
     sovereigntySheetHidden: false,
+    highestPoint: {
+      elevationM: 2629,
+      names: {
+        fr: "mont Sainte-Catherine",
+        en: "Mount Catherine",
+      },
+    },
     currencies: ["EGP"],
     demonyms: {
       fr: {
@@ -2962,6 +3320,13 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     sovereigntyKind: "independence",
     sovereigntyDate: "1993-05-24",
     sovereigntySheetHidden: false,
+    highestPoint: {
+      elevationM: 3018,
+      names: {
+        fr: "mont Soira",
+        en: "Emba Soira",
+      },
+    },
     currencies: ["ERN"],
     demonyms: {
       fr: {
@@ -3016,6 +3381,13 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     sovereigntyKind: "foundation",
     sovereigntyDate: null,
     sovereigntySheetHidden: true,
+    highestPoint: {
+      elevationM: 3718,
+      names: {
+        fr: "Teide",
+        en: "Teide",
+      },
+    },
     currencies: ["EUR"],
     demonyms: {
       fr: {
@@ -3070,6 +3442,13 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     sovereigntyKind: "restoration",
     sovereigntyDate: "1991-08-20",
     sovereigntySheetHidden: false,
+    highestPoint: {
+      elevationM: 318,
+      names: {
+        fr: "Suur Munamägi",
+        en: "Suur Munamägi",
+      },
+    },
     currencies: ["EUR"],
     demonyms: {
       fr: {
@@ -3126,6 +3505,13 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     sovereigntyKind: null,
     sovereigntyDate: null,
     sovereigntySheetHidden: false,
+    highestPoint: {
+      elevationM: 4550,
+      names: {
+        fr: "Ras Dashan",
+        en: "Ras Dashen",
+      },
+    },
     currencies: ["ETB"],
     demonyms: {
       fr: {
@@ -3180,6 +3566,13 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     sovereigntyKind: "independence",
     sovereigntyDate: "1917-12-06",
     sovereigntySheetHidden: false,
+    highestPoint: {
+      elevationM: 1328,
+      names: {
+        fr: "Halti",
+        en: "Halti",
+      },
+    },
     currencies: ["EUR"],
     demonyms: {
       fr: {
@@ -3234,6 +3627,13 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     sovereigntyKind: "independence",
     sovereigntyDate: "1970-10-10",
     sovereigntySheetHidden: false,
+    highestPoint: {
+      elevationM: 1324,
+      names: {
+        fr: "mont Tomanivi",
+        en: "Mount Tomanivi",
+      },
+    },
     currencies: ["FJD"],
     demonyms: {
       fr: {
@@ -3307,6 +3707,13 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     sovereigntyKind: "independence",
     sovereigntyDate: "1789-07-14",
     sovereigntySheetHidden: true,
+    highestPoint: {
+      elevationM: 4810,
+      names: {
+        fr: "mont Blanc",
+        en: "Mont Blanc",
+      },
+    },
     currencies: ["EUR"],
     demonyms: {
       fr: {
@@ -3361,6 +3768,13 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     sovereigntyKind: "independence",
     sovereigntyDate: "1986-11-03",
     sovereigntySheetHidden: false,
+    highestPoint: {
+      elevationM: 782,
+      names: {
+        fr: "Nanlaud",
+        en: "Nanlaud",
+      },
+    },
     currencies: ["USD"],
     demonyms: {
       fr: {
@@ -3415,6 +3829,13 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     sovereigntyKind: "independence",
     sovereigntyDate: "1960-08-17",
     sovereigntySheetHidden: false,
+    highestPoint: {
+      elevationM: 1050,
+      names: {
+        fr: "mont Bengoué",
+        en: "Mont Bengoué",
+      },
+    },
     currencies: ["XAF"],
     demonyms: {
       fr: {
@@ -3469,6 +3890,13 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     sovereigntyKind: "independence",
     sovereigntyDate: "1284-03-03",
     sovereigntySheetHidden: true,
+    highestPoint: {
+      elevationM: 1345,
+      names: {
+        fr: "Ben Nevis",
+        en: "Ben Nevis",
+      },
+    },
     currencies: ["GBP"],
     demonyms: {
       fr: {
@@ -3523,6 +3951,13 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     sovereigntyKind: "independence",
     sovereigntyDate: "1991-04-09",
     sovereigntySheetHidden: false,
+    highestPoint: {
+      elevationM: 5193,
+      names: {
+        fr: "Chkhara",
+        en: "Shkhara",
+      },
+    },
     currencies: ["GEL"],
     demonyms: {
       fr: {
@@ -3579,6 +4014,13 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     sovereigntyKind: "independence",
     sovereigntyDate: "1957-03-06",
     sovereigntySheetHidden: false,
+    highestPoint: {
+      elevationM: 885,
+      names: {
+        fr: "mont Afadjato",
+        en: "Mount Afadja",
+      },
+    },
     currencies: ["GHS"],
     demonyms: {
       fr: {
@@ -3633,6 +4075,13 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     sovereigntyKind: "independence",
     sovereigntyDate: "1958-10-02",
     sovereigntySheetHidden: false,
+    highestPoint: {
+      elevationM: 1752,
+      names: {
+        fr: "mont Nimba",
+        en: "Mount Richard-Molard",
+      },
+    },
     currencies: ["GNF"],
     demonyms: {
       fr: {
@@ -3687,6 +4136,10 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     sovereigntyKind: "independence",
     sovereigntyDate: "1965-02-18",
     sovereigntySheetHidden: false,
+    highestPoint: {
+      elevationM: 63,
+      names: null,
+    },
     currencies: ["GMD"],
     demonyms: {
       fr: {
@@ -3741,6 +4194,13 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     sovereigntyKind: "independence",
     sovereigntyDate: "1973-09-24",
     sovereigntySheetHidden: false,
+    highestPoint: {
+      elevationM: 277,
+      names: {
+        fr: "Dongol Ronde",
+        en: "Dongol Ronde",
+      },
+    },
     currencies: ["XOF"],
     demonyms: {
       fr: {
@@ -3795,6 +4255,13 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     sovereigntyKind: "independence",
     sovereigntyDate: "1968-10-12",
     sovereigntySheetHidden: false,
+    highestPoint: {
+      elevationM: 3008,
+      names: {
+        fr: "Pico Basilé",
+        en: "Pico Basilé",
+      },
+    },
     currencies: ["XAF"],
     demonyms: {
       fr: {
@@ -3849,6 +4316,13 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     sovereigntyKind: "independence",
     sovereigntyDate: "1830-02-03",
     sovereigntySheetHidden: false,
+    highestPoint: {
+      elevationM: 2917,
+      names: {
+        fr: "mont Olympe",
+        en: "Mount Olympus",
+      },
+    },
     currencies: ["EUR"],
     demonyms: {
       fr: {
@@ -3903,6 +4377,13 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     sovereigntyKind: "independence",
     sovereigntyDate: "1974-02-07",
     sovereigntySheetHidden: false,
+    highestPoint: {
+      elevationM: 840,
+      names: {
+        fr: "mont Sainte-Catherine",
+        en: "Mount Saint Catherine",
+      },
+    },
     currencies: ["XCD"],
     demonyms: {
       fr: {
@@ -3957,6 +4438,13 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     sovereigntyKind: "independence",
     sovereigntyDate: "1821-09-15",
     sovereigntySheetHidden: false,
+    highestPoint: {
+      elevationM: 4220,
+      names: {
+        fr: "Tajumulco",
+        en: "Volcán Tajumulco",
+      },
+    },
     currencies: ["GTQ"],
     demonyms: {
       fr: {
@@ -4011,6 +4499,13 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     sovereigntyKind: "independence",
     sovereigntyDate: "1966-05-26",
     sovereigntySheetHidden: false,
+    highestPoint: {
+      elevationM: 2775,
+      names: {
+        fr: "mont Roraima",
+        en: "Mount Roraima",
+      },
+    },
     currencies: ["GYD"],
     demonyms: {
       fr: {
@@ -4067,6 +4562,13 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     sovereigntyKind: "independence",
     sovereigntyDate: "1821-09-15",
     sovereigntySheetHidden: false,
+    highestPoint: {
+      elevationM: 2870,
+      names: {
+        fr: "Cerro Las Minas",
+        en: "Cerro Las Minas",
+      },
+    },
     currencies: ["HNL"],
     demonyms: {
       fr: {
@@ -4121,6 +4623,13 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     sovereigntyKind: "independence",
     sovereigntyDate: "1991-06-25",
     sovereigntySheetHidden: false,
+    highestPoint: {
+      elevationM: 1831,
+      names: {
+        fr: "Dinara",
+        en: "Dinara",
+      },
+    },
     currencies: ["EUR"],
     demonyms: {
       fr: {
@@ -4175,6 +4684,13 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     sovereigntyKind: "independence",
     sovereigntyDate: "1804-01-01",
     sovereigntySheetHidden: false,
+    highestPoint: {
+      elevationM: 2674,
+      names: {
+        fr: "pic la Selle",
+        en: "Peak la Selle",
+      },
+    },
     currencies: ["HTG"],
     demonyms: {
       fr: {
@@ -4229,6 +4745,13 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     sovereigntyKind: "foundation",
     sovereigntyDate: "1918-11-16",
     sovereigntySheetHidden: true,
+    highestPoint: {
+      elevationM: 1014,
+      names: {
+        fr: "Kékes",
+        en: "Kékes",
+      },
+    },
     currencies: ["HUF"],
     demonyms: {
       fr: {
@@ -4293,6 +4816,13 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     sovereigntyKind: "independence",
     sovereigntyDate: "1945-08-17",
     sovereigntySheetHidden: false,
+    highestPoint: {
+      elevationM: 4884,
+      names: {
+        fr: "Puncak Jaya",
+        en: "Puncak Jaya",
+      },
+    },
     currencies: ["IDR"],
     demonyms: {
       fr: {
@@ -4356,6 +4886,13 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     sovereigntyKind: "independence",
     sovereigntyDate: "1947-08-15",
     sovereigntySheetHidden: false,
+    highestPoint: {
+      elevationM: 8586,
+      names: {
+        fr: "Kangchenjunga",
+        en: "Kanchenjunga",
+      },
+    },
     currencies: ["INR"],
     demonyms: {
       fr: {
@@ -4410,6 +4947,13 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     sovereigntyKind: "independence",
     sovereigntyDate: "1921-12-06",
     sovereigntySheetHidden: false,
+    highestPoint: {
+      elevationM: 1041,
+      names: {
+        fr: "Carrauntuohill",
+        en: "Carrauntoohil",
+      },
+    },
     currencies: ["EUR"],
     demonyms: {
       fr: {
@@ -4467,6 +5011,13 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     sovereigntyKind: "unification",
     sovereigntyDate: "1979-04-01",
     sovereigntySheetHidden: true,
+    highestPoint: {
+      elevationM: 5625,
+      names: {
+        fr: "mont Damavand",
+        en: "Damavand",
+      },
+    },
     currencies: ["IRR"],
     demonyms: {
       fr: {
@@ -4523,6 +5074,13 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     sovereigntyKind: "independence",
     sovereigntyDate: "1932-10-03",
     sovereigntySheetHidden: false,
+    highestPoint: {
+      elevationM: 3611,
+      names: {
+        fr: "Cheekha Dar",
+        en: "Cheekha Dar",
+      },
+    },
     currencies: ["IQD"],
     demonyms: {
       fr: {
@@ -4577,6 +5135,13 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     sovereigntyKind: "independence",
     sovereigntyDate: "1918-12-01",
     sovereigntySheetHidden: false,
+    highestPoint: {
+      elevationM: 2110,
+      names: {
+        fr: "Hvannadalshnjúkur",
+        en: "Hvannadalshnúkur",
+      },
+    },
     currencies: ["ISK"],
     demonyms: {
       fr: {
@@ -4631,6 +5196,13 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     sovereigntyKind: "independence",
     sovereigntyDate: "1948-05-14",
     sovereigntySheetHidden: false,
+    highestPoint: {
+      elevationM: 2224,
+      names: {
+        fr: "Mitspe Shlagim",
+        en: "Mitspe Shlagim",
+      },
+    },
     currencies: ["ILS"],
     demonyms: {
       fr: {
@@ -4685,6 +5257,13 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     sovereigntyKind: "unification",
     sovereigntyDate: "1861-03-17",
     sovereigntySheetHidden: false,
+    highestPoint: {
+      elevationM: 4748,
+      names: {
+        fr: "Mont Blanc de Courmayeur",
+        en: "Mont Blanc de Courmayeur",
+      },
+    },
     currencies: ["EUR"],
     demonyms: {
       fr: {
@@ -4739,6 +5318,13 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     sovereigntyKind: "independence",
     sovereigntyDate: "1962-08-06",
     sovereigntySheetHidden: false,
+    highestPoint: {
+      elevationM: 2256,
+      names: {
+        fr: "pic Blue Mountain",
+        en: "Blue Mountain Peak",
+      },
+    },
     currencies: ["JMD"],
     demonyms: {
       fr: {
@@ -4793,6 +5379,13 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     sovereigntyKind: "independence",
     sovereigntyDate: "1946-05-25",
     sovereigntySheetHidden: false,
+    highestPoint: {
+      elevationM: 1854,
+      names: {
+        fr: "djebel Umm ad Dami",
+        en: "Jabal Umm ad Dami",
+      },
+    },
     currencies: ["JOD"],
     demonyms: {
       fr: {
@@ -4847,6 +5440,13 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     sovereigntyKind: "foundation",
     sovereigntyDate: "1947-05-03",
     sovereigntySheetHidden: true,
+    highestPoint: {
+      elevationM: 3776,
+      names: {
+        fr: "mont Fuji",
+        en: "Mount Fuji",
+      },
+    },
     currencies: ["JPY"],
     demonyms: {
       fr: {
@@ -4903,6 +5503,13 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     sovereigntyKind: "independence",
     sovereigntyDate: "1991-12-16",
     sovereigntySheetHidden: false,
+    highestPoint: {
+      elevationM: 7010,
+      names: {
+        fr: "Khan Tengri",
+        en: "Khan Tengri",
+      },
+    },
     currencies: ["KZT"],
     demonyms: {
       fr: {
@@ -4962,6 +5569,13 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     sovereigntyKind: "independence",
     sovereigntyDate: "1963-12-12",
     sovereigntySheetHidden: false,
+    highestPoint: {
+      elevationM: 5199,
+      names: {
+        fr: "mont Kenya",
+        en: "Mount Kenya",
+      },
+    },
     currencies: ["KES"],
     demonyms: {
       fr: {
@@ -5016,6 +5630,13 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     sovereigntyKind: "independence",
     sovereigntyDate: "1991-08-31",
     sovereigntySheetHidden: false,
+    highestPoint: {
+      elevationM: 7439,
+      names: {
+        fr: "Jengish Chokusu",
+        en: "Jengish Chokusu",
+      },
+    },
     currencies: ["KGS"],
     demonyms: {
       fr: {
@@ -5072,6 +5693,13 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     sovereigntyKind: "independence",
     sovereigntyDate: "1953-11-09",
     sovereigntySheetHidden: false,
+    highestPoint: {
+      elevationM: 1810,
+      names: {
+        fr: "Phnum Aoral",
+        en: "Phnom Aural",
+      },
+    },
     currencies: ["KHR", "USD"],
     demonyms: {
       fr: {
@@ -5126,6 +5754,10 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     sovereigntyKind: "independence",
     sovereigntyDate: "1979-07-12",
     sovereigntySheetHidden: false,
+    highestPoint: {
+      elevationM: 81,
+      names: null,
+    },
     currencies: ["AUD"],
     demonyms: {
       fr: {
@@ -5180,6 +5812,13 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     sovereigntyKind: "independence",
     sovereigntyDate: "1983-09-19",
     sovereigntySheetHidden: false,
+    highestPoint: {
+      elevationM: 1156,
+      names: {
+        fr: "mont Liamuiga",
+        en: "Mount Liamuiga",
+      },
+    },
     currencies: ["XCD"],
     demonyms: {
       fr: {
@@ -5234,6 +5873,13 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     sovereigntyKind: "independence",
     sovereigntyDate: "1945-08-15",
     sovereigntySheetHidden: false,
+    highestPoint: {
+      elevationM: 1950,
+      names: {
+        fr: "Hallasan",
+        en: "Hallasan",
+      },
+    },
     currencies: ["KRW"],
     demonyms: {
       fr: {
@@ -5290,6 +5936,10 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     sovereigntyKind: "independence",
     sovereigntyDate: "1961-06-19",
     sovereigntySheetHidden: false,
+    highestPoint: {
+      elevationM: 300,
+      names: null,
+    },
     currencies: ["KWD"],
     demonyms: {
       fr: {
@@ -5344,6 +5994,13 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     sovereigntyKind: "independence",
     sovereigntyDate: "1949-07-19",
     sovereigntySheetHidden: false,
+    highestPoint: {
+      elevationM: 2817,
+      names: {
+        fr: "Phou Bia",
+        en: "Phou Bia",
+      },
+    },
     currencies: ["LAK"],
     demonyms: {
       fr: {
@@ -5398,6 +6055,13 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     sovereigntyKind: "independence",
     sovereigntyDate: "1943-11-22",
     sovereigntySheetHidden: false,
+    highestPoint: {
+      elevationM: 3088,
+      names: {
+        fr: "Qurnat as Sawda'",
+        en: "Qurnat as Sawda'",
+      },
+    },
     currencies: ["LBP"],
     demonyms: {
       fr: {
@@ -5452,6 +6116,13 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     sovereigntyKind: "independence",
     sovereigntyDate: "1847-07-26",
     sovereigntySheetHidden: false,
+    highestPoint: {
+      elevationM: 1447,
+      names: {
+        fr: "mont Wuteve",
+        en: "Mount Wuteve",
+      },
+    },
     currencies: ["LRD"],
     demonyms: {
       fr: {
@@ -5508,6 +6179,13 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     sovereigntyKind: "independence",
     sovereigntyDate: "1951-12-24",
     sovereigntySheetHidden: false,
+    highestPoint: {
+      elevationM: 2267,
+      names: {
+        fr: "Bikku Bitti",
+        en: "Bikku Bitti",
+      },
+    },
     currencies: ["LYD"],
     demonyms: {
       fr: {
@@ -5562,6 +6240,13 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     sovereigntyKind: "independence",
     sovereigntyDate: "1979-02-22",
     sovereigntySheetHidden: false,
+    highestPoint: {
+      elevationM: 948,
+      names: {
+        fr: "mont Gimie",
+        en: "Mount Gimie",
+      },
+    },
     currencies: ["XCD"],
     demonyms: {
       fr: {
@@ -5616,6 +6301,13 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     sovereigntyKind: "independence",
     sovereigntyDate: "1806-07-12",
     sovereigntySheetHidden: false,
+    highestPoint: {
+      elevationM: 2599,
+      names: {
+        fr: "Grauspitz",
+        en: "Grauspitz",
+      },
+    },
     currencies: ["CHF"],
     demonyms: {
       fr: {
@@ -5670,6 +6362,13 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     sovereigntyKind: "independence",
     sovereigntyDate: "1948-02-04",
     sovereigntySheetHidden: false,
+    highestPoint: {
+      elevationM: 2524,
+      names: {
+        fr: "Pidurutalagala",
+        en: "Pidurutalagala",
+      },
+    },
     currencies: ["LKR"],
     demonyms: {
       fr: {
@@ -5724,6 +6423,13 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     sovereigntyKind: "independence",
     sovereigntyDate: "1966-10-04",
     sovereigntySheetHidden: false,
+    highestPoint: {
+      elevationM: 3482,
+      names: {
+        fr: "Thabana Ntlenyana",
+        en: "Thabana Ntlenyana",
+      },
+    },
     currencies: ["LSL", "ZAR"],
     demonyms: {
       fr: {
@@ -5778,6 +6484,13 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     sovereigntyKind: "restoration",
     sovereigntyDate: "1990-03-11",
     sovereigntySheetHidden: false,
+    highestPoint: {
+      elevationM: 294,
+      names: {
+        fr: "Aukštojas",
+        en: "Aukštojas Hill",
+      },
+    },
     currencies: ["EUR"],
     demonyms: {
       fr: {
@@ -5832,6 +6545,13 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     sovereigntyKind: "independence",
     sovereigntyDate: null,
     sovereigntySheetHidden: false,
+    highestPoint: {
+      elevationM: 559,
+      names: {
+        fr: "Buurgplaatz",
+        en: "Buurgplaatz",
+      },
+    },
     currencies: ["EUR"],
     demonyms: {
       fr: {
@@ -5886,6 +6606,13 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     sovereigntyKind: "restoration",
     sovereigntyDate: "1990-05-04",
     sovereigntySheetHidden: false,
+    highestPoint: {
+      elevationM: 312,
+      names: {
+        fr: "Gaiziņkalns",
+        en: "Gaiziņkalns",
+      },
+    },
     currencies: ["EUR"],
     demonyms: {
       fr: {
@@ -5940,6 +6667,13 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     sovereigntyKind: "independence",
     sovereigntyDate: "1956-03-02",
     sovereigntySheetHidden: false,
+    highestPoint: {
+      elevationM: 4165,
+      names: {
+        fr: "djebel Toubkal",
+        en: "Jbel Toubkal",
+      },
+    },
     currencies: ["MAD"],
     demonyms: {
       fr: {
@@ -5994,6 +6728,13 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     sovereigntyKind: "foundation",
     sovereigntyDate: null,
     sovereigntySheetHidden: false,
+    highestPoint: {
+      elevationM: 162,
+      names: {
+        fr: "chemin des Révoires",
+        en: "Chemin des Révoires",
+      },
+    },
     currencies: ["EUR"],
     demonyms: {
       fr: {
@@ -6048,6 +6789,13 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     sovereigntyKind: "independence",
     sovereigntyDate: "1991-08-27",
     sovereigntySheetHidden: false,
+    highestPoint: {
+      elevationM: 430,
+      names: {
+        fr: "Dealul Bălănești",
+        en: "Bălănești Hill",
+      },
+    },
     currencies: ["MDL"],
     demonyms: {
       fr: {
@@ -6102,6 +6850,13 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     sovereigntyKind: "independence",
     sovereigntyDate: "1960-06-26",
     sovereigntySheetHidden: false,
+    highestPoint: {
+      elevationM: 2876,
+      names: {
+        fr: "Maromokotro",
+        en: "Maromokotro",
+      },
+    },
     currencies: ["MGA"],
     demonyms: {
       fr: {
@@ -6156,6 +6911,10 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     sovereigntyKind: "independence",
     sovereigntyDate: "1965-07-26",
     sovereigntySheetHidden: false,
+    highestPoint: {
+      elevationM: 5,
+      names: null,
+    },
     currencies: ["MVR"],
     demonyms: {
       fr: {
@@ -6220,6 +6979,13 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     sovereigntyKind: "independence",
     sovereigntyDate: "1810-09-16",
     sovereigntySheetHidden: false,
+    highestPoint: {
+      elevationM: 5636,
+      names: {
+        fr: "pic d'Orizaba",
+        en: "Pico de Orizaba",
+      },
+    },
     currencies: ["MXN"],
     demonyms: {
       fr: {
@@ -6274,6 +7040,10 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     sovereigntyKind: "independence",
     sovereigntyDate: "1986-10-21",
     sovereigntySheetHidden: false,
+    highestPoint: {
+      elevationM: 14,
+      names: null,
+    },
     currencies: ["USD"],
     demonyms: {
       fr: {
@@ -6328,6 +7098,13 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     sovereigntyKind: "independence",
     sovereigntyDate: "1991-09-08",
     sovereigntySheetHidden: false,
+    highestPoint: {
+      elevationM: 2764,
+      names: {
+        fr: "mont Korab",
+        en: "Korab",
+      },
+    },
     currencies: ["MKD"],
     demonyms: {
       fr: {
@@ -6382,6 +7159,13 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     sovereigntyKind: "independence",
     sovereigntyDate: "1960-09-22",
     sovereigntySheetHidden: false,
+    highestPoint: {
+      elevationM: 1155,
+      names: {
+        fr: "Hombori Tondo",
+        en: "Hombori Tondo",
+      },
+    },
     currencies: ["XOF"],
     demonyms: {
       fr: {
@@ -6436,6 +7220,13 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     sovereigntyKind: "independence",
     sovereigntyDate: "1964-09-21",
     sovereigntySheetHidden: false,
+    highestPoint: {
+      elevationM: 253,
+      names: {
+        fr: "Ta' Dmejrek",
+        en: "Ta' Dmejrek",
+      },
+    },
     currencies: ["EUR"],
     demonyms: {
       fr: {
@@ -6492,6 +7283,13 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     sovereigntyKind: "independence",
     sovereigntyDate: "1948-01-04",
     sovereigntySheetHidden: false,
+    highestPoint: {
+      elevationM: 5870,
+      names: {
+        fr: "Gamlang Razi",
+        en: "Gamlang Razi",
+      },
+    },
     currencies: ["MMK"],
     demonyms: {
       fr: {
@@ -6546,6 +7344,13 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     sovereigntyKind: "independence",
     sovereigntyDate: "2006-06-03",
     sovereigntySheetHidden: false,
+    highestPoint: {
+      elevationM: 2534,
+      names: {
+        fr: "Zla Kolata",
+        en: "Zla Kolata",
+      },
+    },
     currencies: ["EUR"],
     demonyms: {
       fr: {
@@ -6600,6 +7405,13 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     sovereigntyKind: "independence",
     sovereigntyDate: "1911-12-29",
     sovereigntySheetHidden: false,
+    highestPoint: {
+      elevationM: 4374,
+      names: {
+        fr: "Kujten Uul",
+        en: "Hüiten Peak",
+      },
+    },
     currencies: ["MNT"],
     demonyms: {
       fr: {
@@ -6654,6 +7466,13 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     sovereigntyKind: "independence",
     sovereigntyDate: "1975-06-25",
     sovereigntySheetHidden: false,
+    highestPoint: {
+      elevationM: 2436,
+      names: {
+        fr: "mont Binga",
+        en: "Monte Binga",
+      },
+    },
     currencies: ["MZN"],
     demonyms: {
       fr: {
@@ -6708,6 +7527,13 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     sovereigntyKind: "independence",
     sovereigntyDate: "1960-11-28",
     sovereigntySheetHidden: false,
+    highestPoint: {
+      elevationM: 915,
+      names: {
+        fr: "Kedia d'Idjil",
+        en: "Kediet ej Jill",
+      },
+    },
     currencies: ["MRU"],
     demonyms: {
       fr: {
@@ -6762,6 +7588,13 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     sovereigntyKind: "independence",
     sovereigntyDate: "1968-03-12",
     sovereigntySheetHidden: false,
+    highestPoint: {
+      elevationM: 828,
+      names: {
+        fr: "piton de la Petite Rivière Noire",
+        en: "Piton de la Petite Rivière Noire",
+      },
+    },
     currencies: ["MUR"],
     demonyms: {
       fr: {
@@ -6816,6 +7649,13 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     sovereigntyKind: "independence",
     sovereigntyDate: "1964-07-06",
     sovereigntySheetHidden: false,
+    highestPoint: {
+      elevationM: 3002,
+      names: {
+        fr: "Sapitwa",
+        en: "Sapitwa",
+      },
+    },
     currencies: ["MWK"],
     demonyms: {
       fr: {
@@ -6872,6 +7712,13 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     sovereigntyKind: "independence",
     sovereigntyDate: "1957-08-31",
     sovereigntySheetHidden: false,
+    highestPoint: {
+      elevationM: 4095,
+      names: {
+        fr: "mont Kinabalu",
+        en: "Mount Kinabalu",
+      },
+    },
     currencies: ["MYR"],
     demonyms: {
       fr: {
@@ -6936,6 +7783,13 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     sovereigntyKind: "independence",
     sovereigntyDate: "1990-03-21",
     sovereigntySheetHidden: false,
+    highestPoint: {
+      elevationM: 2573,
+      names: {
+        fr: "Königstein",
+        en: "Königstein",
+      },
+    },
     currencies: ["NAD", "ZAR"],
     demonyms: {
       fr: {
@@ -6990,6 +7844,13 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     sovereigntyKind: "independence",
     sovereigntyDate: "1960-08-03",
     sovereigntySheetHidden: false,
+    highestPoint: {
+      elevationM: 2022,
+      names: {
+        fr: "mont Indoukat-n-Taglès",
+        en: "Mont Idoukal-n-Taghès",
+      },
+    },
     currencies: ["XOF"],
     demonyms: {
       fr: {
@@ -7047,6 +7908,13 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     sovereigntyKind: "independence",
     sovereigntyDate: "1960-10-01",
     sovereigntySheetHidden: false,
+    highestPoint: {
+      elevationM: 2419,
+      names: {
+        fr: "Chappal Waddi",
+        en: "Chappal Waddi",
+      },
+    },
     currencies: ["NGN"],
     demonyms: {
       fr: {
@@ -7101,6 +7969,13 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     sovereigntyKind: "independence",
     sovereigntyDate: "1821-09-15",
     sovereigntySheetHidden: false,
+    highestPoint: {
+      elevationM: 2085,
+      names: {
+        fr: "Cerro Mogotón",
+        en: "Cerro Mogotón",
+      },
+    },
     currencies: ["NIO"],
     demonyms: {
       fr: {
@@ -7155,6 +8030,13 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     sovereigntyKind: "independence",
     sovereigntyDate: "1581-07-26",
     sovereigntySheetHidden: false,
+    highestPoint: {
+      elevationM: 862,
+      names: {
+        fr: "mont Scenery",
+        en: "Mount Scenery",
+      },
+    },
     currencies: ["EUR"],
     demonyms: {
       fr: {
@@ -7212,6 +8094,13 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     sovereigntyKind: "independence",
     sovereigntyDate: "1905-06-07",
     sovereigntySheetHidden: false,
+    highestPoint: {
+      elevationM: 2469,
+      names: {
+        fr: "Galdhøpiggen",
+        en: "Galdhøpiggen",
+      },
+    },
     currencies: ["NOK"],
     demonyms: {
       fr: {
@@ -7266,6 +8155,13 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     sovereigntyKind: "unification",
     sovereigntyDate: null,
     sovereigntySheetHidden: false,
+    highestPoint: {
+      elevationM: 8849,
+      names: {
+        fr: "Everest",
+        en: "Mount Everest",
+      },
+    },
     currencies: ["NPR"],
     demonyms: {
       fr: {
@@ -7320,6 +8216,13 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     sovereigntyKind: "independence",
     sovereigntyDate: "1968-01-31",
     sovereigntySheetHidden: false,
+    highestPoint: {
+      elevationM: 70,
+      names: {
+        fr: "Command Ridge",
+        en: "Command Ridge",
+      },
+    },
     currencies: ["AUD"],
     demonyms: {
       fr: {
@@ -7374,6 +8277,13 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     sovereigntyKind: "independence",
     sovereigntyDate: "1907-09-26",
     sovereigntySheetHidden: false,
+    highestPoint: {
+      elevationM: 3724,
+      names: {
+        fr: "Aoraki/Mont Cook",
+        en: "Aoraki / Mount Cook",
+      },
+    },
     currencies: ["NZD"],
     demonyms: {
       fr: {
@@ -7428,6 +8338,13 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     sovereigntyKind: "foundation",
     sovereigntyDate: null,
     sovereigntySheetHidden: false,
+    highestPoint: {
+      elevationM: 3004,
+      names: {
+        fr: "djebel Shams",
+        en: "Jebel Shams",
+      },
+    },
     currencies: ["OMR"],
     demonyms: {
       fr: {
@@ -7485,6 +8402,13 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     sovereigntyKind: "independence",
     sovereigntyDate: "1947-08-14",
     sovereigntySheetHidden: false,
+    highestPoint: {
+      elevationM: 8611,
+      names: {
+        fr: "K2",
+        en: "K2",
+      },
+    },
     currencies: ["PKR"],
     demonyms: {
       fr: {
@@ -7539,6 +8463,13 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     sovereigntyKind: "independence",
     sovereigntyDate: "1903-11-03",
     sovereigntySheetHidden: false,
+    highestPoint: {
+      elevationM: 3475,
+      names: {
+        fr: "Barú",
+        en: "Volcan Baru",
+      },
+    },
     currencies: ["PAB", "USD"],
     demonyms: {
       fr: {
@@ -7601,6 +8532,13 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     sovereigntyKind: "independence",
     sovereigntyDate: "1821-07-28",
     sovereigntySheetHidden: false,
+    highestPoint: {
+      elevationM: 6746,
+      names: {
+        fr: "Huascarán",
+        en: "Huascarán",
+      },
+    },
     currencies: ["PEN"],
     demonyms: {
       fr: {
@@ -7657,6 +8595,13 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     sovereigntyKind: "independence",
     sovereigntyDate: "1946-07-04",
     sovereigntySheetHidden: false,
+    highestPoint: {
+      elevationM: 2954,
+      names: {
+        fr: "mont Apo",
+        en: "Mount Apo",
+      },
+    },
     currencies: ["PHP"],
     demonyms: {
       fr: {
@@ -7711,6 +8656,13 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     sovereigntyKind: "independence",
     sovereigntyDate: "1994-10-01",
     sovereigntySheetHidden: false,
+    highestPoint: {
+      elevationM: 242,
+      names: {
+        fr: "mont Ngerchelchuus",
+        en: "Mount Ngerchelchuus",
+      },
+    },
     currencies: ["USD"],
     demonyms: {
       fr: {
@@ -7765,6 +8717,13 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     sovereigntyKind: "independence",
     sovereigntyDate: "1975-09-16",
     sovereigntySheetHidden: false,
+    highestPoint: {
+      elevationM: 4509,
+      names: {
+        fr: "mont Wilhelm",
+        en: "Mount Wilhelm",
+      },
+    },
     currencies: ["PGK"],
     demonyms: {
       fr: {
@@ -7819,6 +8778,13 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     sovereigntyKind: "restoration",
     sovereigntyDate: "1918-11-11",
     sovereigntySheetHidden: false,
+    highestPoint: {
+      elevationM: 2499,
+      names: {
+        fr: "Rysy",
+        en: "Rysy",
+      },
+    },
     currencies: ["PLN"],
     demonyms: {
       fr: {
@@ -7873,6 +8839,13 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     sovereigntyKind: "independence",
     sovereigntyDate: "1945-08-15",
     sovereigntySheetHidden: false,
+    highestPoint: {
+      elevationM: 2744,
+      names: {
+        fr: "mont Paektu",
+        en: "Baekdu Mountain",
+      },
+    },
     currencies: ["KPW"],
     demonyms: {
       fr: {
@@ -7927,6 +8900,13 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     sovereigntyKind: "restoration",
     sovereigntyDate: "1640-12-01",
     sovereigntySheetHidden: false,
+    highestPoint: {
+      elevationM: 2351,
+      names: {
+        fr: "Ponta do Pico",
+        en: "Mount Pico",
+      },
+    },
     currencies: ["EUR"],
     demonyms: {
       fr: {
@@ -7981,6 +8961,13 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     sovereigntyKind: "independence",
     sovereigntyDate: "1811-05-15",
     sovereigntySheetHidden: false,
+    highestPoint: {
+      elevationM: 842,
+      names: {
+        fr: "Cerro Peró",
+        en: "Cerro Tres Kandú",
+      },
+    },
     currencies: ["PYG"],
     demonyms: {
       fr: {
@@ -8045,6 +9032,13 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     sovereigntyKind: null,
     sovereigntyDate: null,
     sovereigntySheetHidden: false,
+    highestPoint: {
+      elevationM: 1020,
+      names: {
+        fr: "Khallat al Batrakh",
+        en: "Khallat al Batrakh",
+      },
+    },
     currencies: ["EGP", "ILS", "JOD"],
     demonyms: {
       fr: {
@@ -8101,6 +9095,13 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     sovereigntyKind: "independence",
     sovereigntyDate: "1971-09-03",
     sovereigntySheetHidden: false,
+    highestPoint: {
+      elevationM: 103,
+      names: {
+        fr: "Tuwayyir al Hamir",
+        en: "Tuwayyir al Hamir",
+      },
+    },
     currencies: ["QAR"],
     demonyms: {
       fr: {
@@ -8155,6 +9156,13 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     sovereigntyKind: "independence",
     sovereigntyDate: "1877-05-09",
     sovereigntySheetHidden: false,
+    highestPoint: {
+      elevationM: 2544,
+      names: {
+        fr: "Moldoveanu",
+        en: "Moldoveanu Peak",
+      },
+    },
     currencies: ["RON"],
     demonyms: {
       fr: {
@@ -8228,6 +9236,13 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     sovereigntyKind: "continuation",
     sovereigntyDate: "1991-12-25",
     sovereigntySheetHidden: false,
+    highestPoint: {
+      elevationM: 5642,
+      names: {
+        fr: "Elbrouz",
+        en: "Mount Elbrus",
+      },
+    },
     currencies: ["RUB"],
     demonyms: {
       fr: {
@@ -8282,6 +9297,13 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     sovereigntyKind: "independence",
     sovereigntyDate: "1962-07-01",
     sovereigntySheetHidden: false,
+    highestPoint: {
+      elevationM: 4519,
+      names: {
+        fr: "mont Karisimbi",
+        en: "Mount Karisimbi",
+      },
+    },
     currencies: ["RWF"],
     demonyms: {
       fr: {
@@ -8339,6 +9361,10 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     sovereigntyKind: "unification",
     sovereigntyDate: "1932-09-23",
     sovereigntySheetHidden: false,
+    highestPoint: {
+      elevationM: 3000,
+      names: null,
+    },
     currencies: ["SAR"],
     demonyms: {
       fr: {
@@ -8393,6 +9419,13 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     sovereigntyKind: "independence",
     sovereigntyDate: "1956-01-01",
     sovereigntySheetHidden: false,
+    highestPoint: {
+      elevationM: 3042,
+      names: {
+        fr: "djebel Marra",
+        en: "Jebel Marra",
+      },
+    },
     currencies: ["SDG"],
     demonyms: {
       fr: {
@@ -8447,6 +9480,10 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     sovereigntyKind: "independence",
     sovereigntyDate: "1960-04-04",
     sovereigntySheetHidden: false,
+    highestPoint: {
+      elevationM: 648,
+      names: null,
+    },
     currencies: ["XOF"],
     demonyms: {
       fr: {
@@ -8501,6 +9538,13 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     sovereigntyKind: "independence",
     sovereigntyDate: "1965-08-09",
     sovereigntySheetHidden: false,
+    highestPoint: {
+      elevationM: 166,
+      names: {
+        fr: "Bukit Timah",
+        en: "Bukit Timah",
+      },
+    },
     currencies: ["SGD"],
     demonyms: {
       fr: {
@@ -8555,6 +9599,13 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     sovereigntyKind: "independence",
     sovereigntyDate: "1978-07-07",
     sovereigntySheetHidden: false,
+    highestPoint: {
+      elevationM: 2335,
+      names: {
+        fr: "mont Popomanaseu",
+        en: "Mount Popomanaseu",
+      },
+    },
     currencies: ["SBD"],
     demonyms: {
       fr: {
@@ -8609,6 +9660,13 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     sovereigntyKind: "independence",
     sovereigntyDate: "1961-04-27",
     sovereigntySheetHidden: false,
+    highestPoint: {
+      elevationM: 1948,
+      names: {
+        fr: "Loma Mansa",
+        en: "Mount Bintumani",
+      },
+    },
     currencies: ["SLE"],
     demonyms: {
       fr: {
@@ -8663,6 +9721,13 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     sovereigntyKind: "independence",
     sovereigntyDate: "1821-09-15",
     sovereigntySheetHidden: false,
+    highestPoint: {
+      elevationM: 2730,
+      names: {
+        fr: "Cerro El Pital",
+        en: "Cerro El Pital",
+      },
+    },
     currencies: ["USD"],
     demonyms: {
       fr: {
@@ -8717,6 +9782,13 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     sovereigntyKind: null,
     sovereigntyDate: null,
     sovereigntySheetHidden: false,
+    highestPoint: {
+      elevationM: 739,
+      names: {
+        fr: "mont Titano",
+        en: "Monte Titano",
+      },
+    },
     currencies: ["EUR"],
     demonyms: {
       fr: {
@@ -8771,6 +9843,13 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     sovereigntyKind: "independence",
     sovereigntyDate: "1960-07-01",
     sovereigntySheetHidden: false,
+    highestPoint: {
+      elevationM: 2460,
+      names: {
+        fr: "Shimbiris",
+        en: "Shimbiris",
+      },
+    },
     currencies: ["SOS"],
     demonyms: {
       fr: {
@@ -8825,6 +9904,13 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     sovereigntyKind: "independence",
     sovereigntyDate: "2006-06-05",
     sovereigntySheetHidden: false,
+    highestPoint: {
+      elevationM: 2169,
+      names: {
+        fr: "Midžor",
+        en: "Midžor",
+      },
+    },
     currencies: ["RSD"],
     demonyms: {
       fr: {
@@ -8879,6 +9965,13 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     sovereigntyKind: "independence",
     sovereigntyDate: "2011-07-09",
     sovereigntySheetHidden: false,
+    highestPoint: {
+      elevationM: 3187,
+      names: {
+        fr: "Kinyeti",
+        en: "Kinyeti",
+      },
+    },
     currencies: ["SSP"],
     demonyms: {
       fr: {
@@ -8933,6 +10026,13 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     sovereigntyKind: "independence",
     sovereigntyDate: "1975-07-12",
     sovereigntySheetHidden: false,
+    highestPoint: {
+      elevationM: 2024,
+      names: {
+        fr: "Pico de São Tomé",
+        en: "Pico de São Tomé",
+      },
+    },
     currencies: ["STN"],
     demonyms: {
       fr: {
@@ -8987,6 +10087,13 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     sovereigntyKind: "independence",
     sovereigntyDate: "1975-11-25",
     sovereigntySheetHidden: false,
+    highestPoint: {
+      elevationM: 1230,
+      names: {
+        fr: "Juliana Top",
+        en: "Julianatop",
+      },
+    },
     currencies: ["SRD"],
     demonyms: {
       fr: {
@@ -9041,6 +10148,13 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     sovereigntyKind: "dissolution_successor",
     sovereigntyDate: "1993-01-01",
     sovereigntySheetHidden: false,
+    highestPoint: {
+      elevationM: 2655,
+      names: {
+        fr: "Gerlachovský štít",
+        en: "Gerlachovský štít",
+      },
+    },
     currencies: ["EUR"],
     demonyms: {
       fr: {
@@ -9095,6 +10209,13 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     sovereigntyKind: "independence",
     sovereigntyDate: "1991-06-25",
     sovereigntySheetHidden: false,
+    highestPoint: {
+      elevationM: 2864,
+      names: {
+        fr: "Triglav",
+        en: "Triglav",
+      },
+    },
     currencies: ["EUR"],
     demonyms: {
       fr: {
@@ -9149,6 +10270,13 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     sovereigntyKind: "foundation",
     sovereigntyDate: "1523-06-06",
     sovereigntySheetHidden: false,
+    highestPoint: {
+      elevationM: 2100,
+      names: {
+        fr: "Kebnekaise",
+        en: "Kebnekaise",
+      },
+    },
     currencies: ["SEK"],
     demonyms: {
       fr: {
@@ -9213,6 +10341,13 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     sovereigntyKind: "independence",
     sovereigntyDate: "1968-09-06",
     sovereigntySheetHidden: false,
+    highestPoint: {
+      elevationM: 1862,
+      names: {
+        fr: "Emlembe",
+        en: "Emlembe",
+      },
+    },
     currencies: ["SZL", "ZAR"],
     demonyms: {
       fr: {
@@ -9267,6 +10402,13 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     sovereigntyKind: "independence",
     sovereigntyDate: "1976-06-29",
     sovereigntySheetHidden: false,
+    highestPoint: {
+      elevationM: 905,
+      names: {
+        fr: "Morne Seychellois",
+        en: "Morne Seychellois",
+      },
+    },
     currencies: ["SCR"],
     demonyms: {
       fr: {
@@ -9321,6 +10463,13 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     sovereigntyKind: "independence",
     sovereigntyDate: "1946-04-17",
     sovereigntySheetHidden: false,
+    highestPoint: {
+      elevationM: 2814,
+      names: {
+        fr: "mont Hermon",
+        en: "Mount Hermon",
+      },
+    },
     currencies: ["SYP"],
     demonyms: {
       fr: {
@@ -9375,6 +10524,13 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     sovereigntyKind: "independence",
     sovereigntyDate: "1960-08-11",
     sovereigntySheetHidden: false,
+    highestPoint: {
+      elevationM: 3445,
+      names: {
+        fr: "Emi Koussi",
+        en: "Emi Koussi",
+      },
+    },
     currencies: ["XAF"],
     demonyms: {
       fr: {
@@ -9429,6 +10585,13 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     sovereigntyKind: "independence",
     sovereigntyDate: "1960-04-27",
     sovereigntySheetHidden: false,
+    highestPoint: {
+      elevationM: 986,
+      names: {
+        fr: "mont Agou",
+        en: "Mount Agou",
+      },
+    },
     currencies: ["XOF"],
     demonyms: {
       fr: {
@@ -9485,6 +10648,13 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     sovereigntyKind: "foundation",
     sovereigntyDate: null,
     sovereigntySheetHidden: false,
+    highestPoint: {
+      elevationM: 2565,
+      names: {
+        fr: "Doi Inthanon",
+        en: "Doi Inthanon",
+      },
+    },
     currencies: ["THB"],
     demonyms: {
       fr: {
@@ -9539,6 +10709,13 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     sovereigntyKind: "independence",
     sovereigntyDate: "1991-09-09",
     sovereigntySheetHidden: false,
+    highestPoint: {
+      elevationM: 7495,
+      names: {
+        fr: "pic Ismail Samani",
+        en: "Ismoil Somoni Peak",
+      },
+    },
     currencies: ["TJS"],
     demonyms: {
       fr: {
@@ -9595,6 +10772,13 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     sovereigntyKind: "independence",
     sovereigntyDate: "1991-10-27",
     sovereigntySheetHidden: false,
+    highestPoint: {
+      elevationM: 3139,
+      names: {
+        fr: "Aýrybaba",
+        en: "Aýrybaba",
+      },
+    },
     currencies: ["TMT"],
     demonyms: {
       fr: {
@@ -9649,6 +10833,13 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     sovereigntyKind: "restoration",
     sovereigntyDate: "2002-05-20",
     sovereigntySheetHidden: false,
+    highestPoint: {
+      elevationM: 2963,
+      names: {
+        fr: "mont Ramelau",
+        en: "Tatamailau",
+      },
+    },
     currencies: ["USD"],
     demonyms: {
       fr: {
@@ -9703,6 +10894,13 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     sovereigntyKind: "independence",
     sovereigntyDate: "1970-06-04",
     sovereigntySheetHidden: false,
+    highestPoint: {
+      elevationM: 1046,
+      names: {
+        fr: "Kao",
+        en: "Kao",
+      },
+    },
     currencies: ["TOP"],
     demonyms: {
       fr: {
@@ -9757,6 +10955,13 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     sovereigntyKind: "independence",
     sovereigntyDate: "1962-08-31",
     sovereigntySheetHidden: false,
+    highestPoint: {
+      elevationM: 940,
+      names: {
+        fr: "Cerro del Aripo",
+        en: "El Cerro del Aripo",
+      },
+    },
     currencies: ["TTD"],
     demonyms: {
       fr: {
@@ -9811,6 +11016,13 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     sovereigntyKind: "independence",
     sovereigntyDate: "1956-03-20",
     sovereigntySheetHidden: false,
+    highestPoint: {
+      elevationM: 1544,
+      names: {
+        fr: "djebel Chambi",
+        en: "Jebel ech Chambi",
+      },
+    },
     currencies: ["TND"],
     demonyms: {
       fr: {
@@ -9865,6 +11077,13 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     sovereigntyKind: "foundation",
     sovereigntyDate: "1923-10-29",
     sovereigntySheetHidden: true,
+    highestPoint: {
+      elevationM: 5137,
+      names: {
+        fr: "mont Ararat",
+        en: "Mount Ararat",
+      },
+    },
     currencies: ["TRY"],
     demonyms: {
       fr: {
@@ -9919,6 +11138,10 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     sovereigntyKind: "independence",
     sovereigntyDate: "1978-10-01",
     sovereigntySheetHidden: false,
+    highestPoint: {
+      elevationM: 5,
+      names: null,
+    },
     currencies: ["AUD"],
     demonyms: {
       fr: {
@@ -9973,6 +11196,13 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     sovereigntyKind: null,
     sovereigntyDate: null,
     sovereigntySheetHidden: false,
+    highestPoint: {
+      elevationM: 3952,
+      names: {
+        fr: "Yu Shan",
+        en: "Yushan Main Peak",
+      },
+    },
     currencies: ["TWD"],
     demonyms: {
       fr: {
@@ -10027,6 +11257,13 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     sovereigntyKind: "independence",
     sovereigntyDate: "1964-04-26",
     sovereigntySheetHidden: false,
+    highestPoint: {
+      elevationM: 5895,
+      names: {
+        fr: "Kilimandjaro",
+        en: "Kilimanjaro",
+      },
+    },
     currencies: ["TZS"],
     demonyms: {
       fr: {
@@ -10083,6 +11320,13 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     sovereigntyKind: "independence",
     sovereigntyDate: "1962-10-09",
     sovereigntySheetHidden: false,
+    highestPoint: {
+      elevationM: 5110,
+      names: {
+        fr: "mont Stanley",
+        en: "Mount Stanley",
+      },
+    },
     currencies: ["UGX"],
     demonyms: {
       fr: {
@@ -10139,6 +11383,13 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     sovereigntyKind: "independence",
     sovereigntyDate: "1991-08-24",
     sovereigntySheetHidden: false,
+    highestPoint: {
+      elevationM: 2061,
+      names: {
+        fr: "Hoverla",
+        en: "Hoverla",
+      },
+    },
     currencies: ["UAH"],
     demonyms: {
       fr: {
@@ -10193,6 +11444,13 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     sovereigntyKind: "independence",
     sovereigntyDate: "1825-08-25",
     sovereigntySheetHidden: false,
+    highestPoint: {
+      elevationM: 514,
+      names: {
+        fr: "Cerro Catedral",
+        en: "Cerro Catedral",
+      },
+    },
     currencies: ["UYU"],
     demonyms: {
       fr: {
@@ -10258,6 +11516,13 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     sovereigntyKind: "independence",
     sovereigntyDate: "1776-07-04",
     sovereigntySheetHidden: false,
+    highestPoint: {
+      elevationM: 6190,
+      names: {
+        fr: "Denali",
+        en: "Denali",
+      },
+    },
     currencies: ["USD"],
     demonyms: {
       fr: {
@@ -10312,6 +11577,13 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     sovereigntyKind: "independence",
     sovereigntyDate: "1991-09-01",
     sovereigntySheetHidden: false,
+    highestPoint: {
+      elevationM: 4643,
+      names: {
+        fr: "Khazret Sultan",
+        en: "Khazret Sultan",
+      },
+    },
     currencies: ["UZS"],
     demonyms: {
       fr: {
@@ -10366,6 +11638,13 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     sovereigntyKind: "foundation",
     sovereigntyDate: "1929-02-11",
     sovereigntySheetHidden: false,
+    highestPoint: {
+      elevationM: 78,
+      names: {
+        fr: "colline du Vatican",
+        en: "Vatican Hill",
+      },
+    },
     currencies: ["EUR"],
     demonyms: {
       fr: {
@@ -10420,6 +11699,13 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     sovereigntyKind: "independence",
     sovereigntyDate: "1979-10-27",
     sovereigntySheetHidden: false,
+    highestPoint: {
+      elevationM: 1234,
+      names: {
+        fr: "la Soufrière",
+        en: "La Soufrière",
+      },
+    },
     currencies: ["XCD"],
     demonyms: {
       fr: {
@@ -10474,6 +11760,13 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     sovereigntyKind: "independence",
     sovereigntyDate: "1811-07-05",
     sovereigntySheetHidden: false,
+    highestPoint: {
+      elevationM: 4978,
+      names: {
+        fr: "Pico Bolívar",
+        en: "Pico Bolívar",
+      },
+    },
     currencies: ["VES"],
     demonyms: {
       fr: {
@@ -10531,6 +11824,13 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     sovereigntyKind: "independence",
     sovereigntyDate: "1945-09-02",
     sovereigntySheetHidden: false,
+    highestPoint: {
+      elevationM: 3144,
+      names: {
+        fr: "Fansipan",
+        en: "Fansipan",
+      },
+    },
     currencies: ["VND"],
     demonyms: {
       fr: {
@@ -10585,6 +11885,13 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     sovereigntyKind: "independence",
     sovereigntyDate: "1980-07-30",
     sovereigntySheetHidden: false,
+    highestPoint: {
+      elevationM: 1877,
+      names: {
+        fr: "mont Tabwemasana",
+        en: "Mount Tabwemasana",
+      },
+    },
     currencies: ["VUV"],
     demonyms: {
       fr: {
@@ -10639,6 +11946,13 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     sovereigntyKind: "independence",
     sovereigntyDate: "1962-01-01",
     sovereigntySheetHidden: false,
+    highestPoint: {
+      elevationM: 1857,
+      names: {
+        fr: "Mauga Silisili",
+        en: "Silisili",
+      },
+    },
     currencies: ["WST"],
     demonyms: {
       fr: {
@@ -10693,6 +12007,13 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     sovereigntyKind: "independence",
     sovereigntyDate: "2008-02-17",
     sovereigntySheetHidden: false,
+    highestPoint: {
+      elevationM: 2656,
+      names: {
+        fr: "Djeravica",
+        en: "Gjeravica",
+      },
+    },
     currencies: ["EUR"],
     demonyms: {
       fr: {
@@ -10747,6 +12068,13 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     sovereigntyKind: "unification",
     sovereigntyDate: "1990-05-22",
     sovereigntySheetHidden: false,
+    highestPoint: {
+      elevationM: 3666,
+      names: {
+        fr: "Jabal an Nabi Shu'ayb",
+        en: "Jabal an Nabi Shu'ayb",
+      },
+    },
     currencies: ["YER"],
     demonyms: {
       fr: {
@@ -10833,6 +12161,13 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     sovereigntyKind: "independence",
     sovereigntyDate: "1910-05-31",
     sovereigntySheetHidden: false,
+    highestPoint: {
+      elevationM: 3450,
+      names: {
+        fr: "Mafadi",
+        en: "Mafadi",
+      },
+    },
     currencies: ["ZAR"],
     demonyms: {
       fr: {
@@ -10887,6 +12222,13 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     sovereigntyKind: "independence",
     sovereigntyDate: "1964-10-24",
     sovereigntySheetHidden: false,
+    highestPoint: {
+      elevationM: 2330,
+      names: {
+        fr: "Mafinga Central",
+        en: "Mafinga Central",
+      },
+    },
     currencies: ["ZMW"],
     demonyms: {
       fr: {
@@ -10957,6 +12299,13 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     sovereigntyKind: "independence",
     sovereigntyDate: "1980-04-18",
     sovereigntySheetHidden: false,
+    highestPoint: {
+      elevationM: 2592,
+      names: {
+        fr: "Inyangani",
+        en: "Mount Nyangani",
+      },
+    },
     currencies: ["ZWG", "USD"],
     demonyms: {
       fr: {

@@ -60,6 +60,7 @@ function minimalCountry(code: string): CountryRecord {
     sovereigntyKind: null,
     sovereigntyDate: null,
     sovereigntySheetHidden: false,
+    highestPoint: { elevationM: 100, names: null },
     currencies: ["EUR"],
     demonyms: { fr: { m: "X", f: "X" }, en: { m: "X", f: "X" } },
   };
@@ -426,6 +427,29 @@ describe("quantitativeFactsForCode", () => {
       referenceYear: 2024,
       countries: { CHN: 57.77, FIN: 1.01 },
     },
+    highestPoints: {
+      factbookCommit: "x",
+      harvestedAt: "2026-10-09",
+      points: Object.fromEntries(
+        ["CHE", "CHN", "DEU", "DZA", "FIN", "FRA", "ISL", "RUS", "ZZZ"].map(
+          (code) => [
+            code,
+            {
+              sourceName: "x",
+              elevationM: 100,
+              label: { fr: "x", en: "x" },
+              wikidata: "Q1",
+            },
+          ],
+        ),
+      ),
+      overrides: {
+        RUS: {
+          label: { fr: "Elbrouz", en: "Mount Elbrus" },
+          reason: "test",
+        },
+      },
+    },
     sovereignty: {
       sourceCommit: "x",
       countries: {
@@ -454,6 +478,10 @@ describe("quantitativeFactsForCode", () => {
       sovereigntyKind: null,
       sovereigntyDate: null,
       sovereigntySheetHidden: false,
+      highestPoint: {
+        elevationM: 100,
+        names: { fr: "Elbrouz", en: "Mount Elbrus" },
+      },
     });
     expect(quantitativeFactsForCode("CHE", datasets).mountainAreaShare).toBe(
       0.654,
@@ -519,6 +547,19 @@ describe("quantitativeFactsForCode", () => {
     };
     expect(quantitativeFactsForCode("FRA", hidden).sovereigntySheetHidden).toBe(
       true,
+    );
+  });
+
+  it("takes the elevation from the dataset and the override label over the harvested one", () => {
+    expect(quantitativeFactsForCode("RUS", datasets).highestPoint).toEqual({
+      elevationM: 100,
+      names: { fr: "Elbrouz", en: "Mount Elbrus" },
+    });
+  });
+
+  it("fails loudly for a country without a highest point", () => {
+    expect(() => quantitativeFactsForCode("QQQ", datasets)).toThrow(
+      /QQQ: aucun point culminant/,
     );
   });
 

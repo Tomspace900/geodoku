@@ -9,6 +9,7 @@ import type {
   FlagColor,
   FlagLayout,
   FlagSymbol,
+  HighestPoint,
   PhysicalFeature,
   PoliticalGroup,
   Regime,
@@ -21,6 +22,7 @@ import type {
   CoalElectricitySnapshot,
   EnergyProductionSnapshot,
   ForestCoverSnapshot,
+  HighestPointsSnapshot,
   HoloceneVolcanoSnapshot,
   MountainAreaSnapshot,
   ProductionRankKey,
@@ -508,6 +510,7 @@ export type QuantitativeDatasets = {
   energyProduction: EnergyProductionSnapshot;
   coalElectricity: CoalElectricitySnapshot;
   sovereignty: SovereigntySnapshot;
+  highestPoints: HighestPointsSnapshot;
 };
 
 type QuantitativeFacts = Pick<
@@ -524,6 +527,7 @@ type QuantitativeFacts = Pick<
   | "sovereigntyKind"
   | "sovereigntyDate"
   | "sovereigntySheetHidden"
+  | "highestPoint"
 >;
 
 /**
@@ -579,6 +583,29 @@ function lastVolcanicEruptionYearForCode(
 }
 
 /**
+ * Point culminant d'un pays : altitude du Factbook, libellés de l'override curé
+ * s'il existe, de la récolte sinon. Un pays absent du dataset échoue bruyamment
+ * (les 197 sont couverts) — jamais d'altitude inventée.
+ */
+function highestPointForCode(
+  code: string,
+  snapshot: HighestPointsSnapshot,
+): HighestPoint {
+  const entry = snapshot.points[code];
+  if (!entry) {
+    throw new Error(
+      `${code}: aucun point culminant — lancer pnpm harvest:highest-points`,
+    );
+  }
+  const override = snapshot.overrides[code];
+  const label = override ? override.label : entry.label;
+  return {
+    elevationM: entry.elevationM,
+    names: label ? { fr: label.fr, en: label.en } : null,
+  };
+}
+
+/**
  * Fusionne les datasets quantitatifs curés en scalaires dérivés par pays.
  * Les parts sont ramenées en fraction 0–1 ; une source qui ne couvre pas le
  * pays donne `null` (jamais 0). `utcOffsetCount` retombe à 1 si absent : tout
@@ -606,6 +633,7 @@ export function quantitativeFactsForCode(
     sovereigntyKind: sovereignty?.kind ?? null,
     sovereigntyDate: sovereignty?.date ?? null,
     sovereigntySheetHidden: sovereignty?.sheetHidden !== undefined,
+    highestPoint: highestPointForCode(code, datasets.highestPoints),
   };
 }
 

@@ -62,6 +62,7 @@ const FACT_KEYS = [
   "sovereigntyKind",
   "sovereigntyDate",
   "sovereigntySheetHidden",
+  "highestPoint",
   "currencies",
   "demonyms",
 ] as const;

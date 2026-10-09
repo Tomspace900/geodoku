@@ -13,6 +13,7 @@ import { CIVIL_TIME_OFFSETS } from "./civilTimeOffsets";
 import { COAL_ELECTRICITY } from "./coalElectricity";
 import { ENERGY_PRODUCTION } from "./energyProduction";
 import { FOREST_COVER } from "./forestCover";
+import { HIGHEST_POINTS } from "./highestPoints";
 import { HOLOCENE_VOLCANOES } from "./holoceneVolcanoes";
 import { MOUNTAIN_AREAS } from "./mountainArea";
 import { SOVEREIGNTY } from "./sovereignty";
@@ -28,4 +29,5 @@ export const QUANTITATIVE_DATASETS: QuantitativeDatasets = {
   energyProduction: ENERGY_PRODUCTION,
   coalElectricity: COAL_ELECTRICITY,
   sovereignty: SOVEREIGNTY,
+  highestPoints: HIGHEST_POINTS,
 };

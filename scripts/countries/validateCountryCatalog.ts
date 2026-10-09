@@ -31,6 +31,9 @@ const SOVEREIGNTY_MIN_YEAR = 1000;
 
 const SOVEREIGNTY_DATE = /^\d{4}-\d{2}-\d{2}$/;
 
+/** Altitude du mont Everest (CIA World Factbook) : aucun point culminant ne la dépasse. */
+export const MAX_HIGHEST_POINT_M = 8849;
+
 /**
  * Codes récents dont l'ICU embarquée peut ne pas encore avoir le nom dans
  * toutes les langues : `Intl.DisplayNames` renvoie alors le code, et la fiche
@@ -265,6 +268,19 @@ export function validateCountryFacts(
           `${code}: sovereigntyDate ${facts.sovereigntyDate} incohérente avec sovereigntyYear ${facts.sovereigntyYear}`,
         );
       }
+    }
+    const { elevationM, names } = facts.highestPoint;
+    if (
+      !Number.isFinite(elevationM) ||
+      elevationM <= 0 ||
+      elevationM > MAX_HIGHEST_POINT_M
+    ) {
+      errors.push(
+        `${code}: highestPoint.elevationM hors ]0, 8849] (${elevationM})`,
+      );
+    }
+    if (names !== null && (!names.fr?.trim() || !names.en?.trim())) {
+      errors.push(`${code}: highestPoint.names fr/en incomplet`);
     }
     if (facts.sovereigntySheetHidden && facts.sovereigntyKind === null) {
       errors.push(

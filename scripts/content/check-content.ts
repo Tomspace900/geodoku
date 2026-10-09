@@ -49,15 +49,19 @@ import type { WcCurrencyDemonymRow } from "../countries/buildCountriesLib";
 import { countryPatches } from "../countries/countryPatches";
 import { CAPITAL_LABELS } from "../countries/data/capitalLabels";
 import { QUANTITATIVE_DATASETS } from "../countries/data/datasets";
+import { HIGHEST_POINTS } from "../countries/data/highestPoints";
 import { validateHarvestVintage } from "../countries/harvest/capitalLabelsLib";
 import {
   validateCountryCatalog,
   validateCountryFacts,
 } from "../countries/validateCountryCatalog";
 import {
+  ACCEPTED_PEAK_GAPS,
   validateCapitalLabels,
   validateCurrencyDemonymFacts,
   validateDatasetFacts,
+  validateHighestPoints,
+  validatePeakCoherence,
 } from "../countries/validateDatasetFacts";
 import { validateSovereigntySources } from "../countries/validateSovereigntySources";
 import {
@@ -115,9 +119,27 @@ function checkCountries(errors: string[]): void {
   );
   errors.push(
     ...validateHarvestVintage(
+      "wikidata_capital_labels",
       SOURCES.wikidata_capital_labels.vintage,
       CAPITAL_LABELS.harvestedAt,
     ),
+  );
+  errors.push(
+    ...validateHarvestVintage(
+      "wikidata_highest_point_labels",
+      SOURCES.wikidata_highest_point_labels.vintage,
+      HIGHEST_POINTS.harvestedAt,
+    ),
+  );
+  errors.push(
+    ...validateHighestPoints(
+      HIGHEST_POINTS,
+      QUANTITATIVE_DATASETS.sovereignty,
+      COUNTRY_CODES,
+    ),
+  );
+  errors.push(
+    ...validatePeakCoherence(COUNTRY_FACTS, ACCEPTED_PEAK_GAPS, COUNTRY_CODES),
   );
   errors.push(...validateSovereigntySources(QUANTITATIVE_DATASETS.sovereignty));
 

@@ -44,6 +44,28 @@ export const SOURCES = {
       en: "harvested 23 September 2026",
     },
   },
+  wikidata_highest_point_labels: {
+    name: {
+      fr: "Wikidata — libellés des points culminants",
+      en: "Wikidata — highest point labels",
+    },
+    url: "https://www.wikidata.org/",
+    vintage: {
+      fr: "récolte du 9 octobre 2026",
+      en: "harvested 9 October 2026",
+    },
+  },
+  cia_factbook_elevation: {
+    name: {
+      fr: "CIA World Factbook — Altitude",
+      en: "CIA World Factbook — Elevation",
+    },
+    url: "https://www.cia.gov/the-world-factbook/field/elevation/",
+    vintage: {
+      fr: "miroir factbook.json, commit 8662a8b",
+      en: "factbook.json mirror, commit 8662a8b",
+    },
+  },
   un_flags: {
     name: { fr: "Drapeaux officiels — ONU", en: "Official flags — UN" },
     url: "https://www.un.org/en/about-us/member-states",

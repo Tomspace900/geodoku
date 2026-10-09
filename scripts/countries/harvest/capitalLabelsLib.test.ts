@@ -123,17 +123,23 @@ describe("harvestVintage", () => {
 describe("validateHarvestVintage", () => {
   it("accepte un millésime accordé à la récolte", () => {
     expect(
-      validateHarvestVintage(harvestVintage("2026-09-23"), "2026-09-23"),
+      validateHarvestVintage(
+        "wikidata_capital_labels",
+        harvestVintage("2026-09-23"),
+        "2026-09-23",
+      ),
     ).toEqual([]);
   });
 
   it("signale un millésime désaccordé, valeurs et remède à l'appui", () => {
     const [error] = validateHarvestVintage(
+      "wikidata_capital_labels",
       harvestVintage("2026-09-23"),
       "2026-10-01",
     );
     expect(error).toContain("récolte du 1er octobre 2026");
     expect(error).toContain("récolte du 23 septembre 2026");
+    expect(error).toContain("sources.wikidata_capital_labels");
     expect(error).toContain("content/sources.ts");
   });
 });

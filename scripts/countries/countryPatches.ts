@@ -701,6 +701,7 @@ export const manualCountryAdditions: ManualCountryAddition[] = [
     sovereigntyKind: null,
     sovereigntyDate: null,
     sovereigntySheetHidden: false,
+    highestPoint: { elevationM: 1, names: null },
     // Monnaie et gentilé : placeholders, fixés par les tables de correction
     // (currencyCorrectionsByIso3 / demonymCorrectionsByIso3) au build.
     currencies: [],
