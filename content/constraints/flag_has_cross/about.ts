@@ -4,7 +4,7 @@ export default defineAbout("flag_has_cross", {
   sources: ["un_flags"],
   basis: "convention",
   clarification: {
-    fr: "Le drapeau d'État fait foi ; tout élément visible compte, armoiries comprises.",
-    en: "The state flag is authoritative; any visible element counts, including on a coat of arms.",
+    fr: "Classement visuel du drapeau national, armoiries comprises, quelle que soit leur taille. Un drapeau de service distinct ne compte pas.",
+    en: "Visual classification of the national flag, coat of arms included, whatever its size. A separate service flag does not count.",
   },
 });

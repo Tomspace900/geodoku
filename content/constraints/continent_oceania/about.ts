@@ -1,7 +1,7 @@
 import { defineAbout } from "../defineAbout";
 
 export default defineAbout("continent_oceania", {
-  sources: ["un_m49"],
+  sources: ["world_countries", "un_m49"],
   basis: "convention",
   clarification: {
     fr: "Un pays à cheval sur deux continents n'est compté que dans un seul.",

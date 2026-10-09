@@ -42,13 +42,22 @@ import { translate } from "../../src/i18n";
 const CLARIFICATION_MAX_LENGTH = 160;
 
 /**
- * Faux positifs motivés du détecteur de noms de pays dans une clarification —
- * même rôle qu'`ACCEPTED_OMISSIONS` pour `validateSovereigntySources`. Vide
- * aujourd'hui : chaque clarification a été rédigée pour l'éviter.
+ * Mentions motivées de noms de pays dans une clarification — même rôle
+ * qu'`ACCEPTED_OMISSIONS` pour `validateSovereigntySources`. Chaque entrée
+ * porte son motif : y verser une mention sans motif viderait la garde de son
+ * sens.
+ *
+ * - `continent_europe` / `continent_asia` : Chypre est classée en Europe par
+ *   exception à l'ONU M49 (revue #122). Le joueur qui la cherche en Asie ne
+ *   peut le deviner ; le libellé « Pays d'Europe » / « Pays d'Asie » ne la
+ *   nomme pas, et aucune reformulation sans nom ne dit la même chose.
  */
 export const ACCEPTED_COUNTRY_MENTIONS: Readonly<
   Partial<Record<ConstraintId, readonly string[]>>
-> = {};
+> = {
+  continent_europe: ["Chypre", "Cyprus"],
+  continent_asia: ["Chypre", "Cyprus"],
+};
 
 function stripAccents(value: string): string {
   return value.normalize("NFD").replace(/[̀-ͯ]/g, "");

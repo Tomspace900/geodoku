@@ -19,7 +19,7 @@
  * équateur → `physical_crosses_equator`, milieux → `nature_desert`/
  * `nature_rainforest`, Moyen-Orient →
  * `subregion_middle_east`, sous-région → `subregion_caribbean`/
- * `subregion_southeast_asia`, continent → `continent_*`, capitale pas plus
+ * `subregion_southeast_asia`, continent → les six `continent_*`, capitale pas plus
  * grande ville → `society_capital_not_largest`, chaque événement → son
  * `event_*_host`, chaque produit → son `production_*`) — vérifié par
  * `content/countries/__tests__/factProvenance.test.ts`.
@@ -100,9 +100,10 @@ export const FACT_PROVENANCE: { readonly [K in SheetRowId]: FactProvenance } = {
   // Nature, année et date complète de l'événement de souveraineté : même
   // provenance que `formerSovereigns`.
   sovereignty: { basis: "source", sources: ["cia_factbook_independence"] },
-  // Même provenance que `continent_*` : convention éditoriale de découpage,
-  // alignée sur la nomenclature ONU M49.
-  continent: { basis: "convention", sources: ["un_m49"] },
+  // Même provenance que `continent_*` : champ `region` de world-countries,
+  // arbitré par la convention Geodoku (Chypre en Europe, Amérique centrale et
+  // Caraïbes en Amérique du Nord), avec la nomenclature ONU M49 en référence.
+  continent: { basis: "convention", sources: ["world_countries", "un_m49"] },
   // Même provenance que `subregion_middle_east` : Moyen-Orient au sens
   // courant, pas la sous-région ONU — aucune source à citer.
   middleEast: { basis: "convention", sources: [] },
@@ -150,8 +151,9 @@ export const FACT_PROVENANCE: { readonly [K in SheetRowId]: FactProvenance } = {
   flagSymbols: { basis: "convention", sources: ["un_flags"] },
   flagLayout: { basis: "convention", sources: ["un_flags"] },
   // Même provenance que `subregion_caribbean`/`subregion_southeast_asia` :
-  // sous-région ONU M49 brute (à ne pas confondre avec `middleEast`, curée).
-  subregion: { basis: "source", sources: ["un_m49"] },
+  // champ `subregion` de world-countries (sous-régions ONU M49), à ne pas
+  // confondre avec `middleEast`, curée.
+  subregion: { basis: "source", sources: ["world_countries", "un_m49"] },
 };
 
 /**

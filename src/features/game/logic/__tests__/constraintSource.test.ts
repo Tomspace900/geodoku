@@ -45,7 +45,7 @@ describe("constraintSourceView", () => {
   });
 
   it("une convention peut n'avoir aucune source externe", () => {
-    const view = constraintSourceView("physical_peak_over_5000m", "fr");
+    const view = constraintSourceView("society_capital_not_largest", "fr");
     expect(view.sources).toEqual([]);
     expect(view.isConvention).toBe(true);
   });

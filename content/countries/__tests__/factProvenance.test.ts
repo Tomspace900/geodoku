@@ -79,11 +79,15 @@ describe("FACT_PROVENANCE — cohérence avec les about.ts de contraintes", () =
     );
   });
 
-  it("continent : continent_africa", () => {
-    expectSameProvenance(
-      FACT_PROVENANCE.continent,
-      aboutForConstraint("continent_africa"),
-    );
+  it.each([
+    "continent_africa",
+    "continent_asia",
+    "continent_europe",
+    "continent_north_america",
+    "continent_oceania",
+    "continent_south_america",
+  ] as const)("continent : %s", (id) => {
+    expectSameProvenance(FACT_PROVENANCE.continent, aboutForConstraint(id));
   });
 
   it("sous-région : subregion_caribbean et subregion_southeast_asia", () => {

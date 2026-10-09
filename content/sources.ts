@@ -173,11 +173,14 @@ export const SOURCES = {
   },
   fao_forest_resources: {
     name: {
-      fr: "FAO — Évaluation des ressources forestières",
-      en: "FAO Forest Resources Assessment",
+      fr: "Banque mondiale (FAO) — Surface forestière",
+      en: "World Bank (FAO) — Forest area",
     },
-    url: "https://datacatalog.worldbank.org/search/dataset/0037712/world-development-indicators",
-    vintage: { fr: "2023", en: "2023" },
+    url: "https://data.worldbank.org/indicator/AG.LND.FRST.ZS",
+    vintage: {
+      fr: "2023, import du 17 juillet 2026",
+      en: "2023, imported 17 July 2026",
+    },
   },
   faostat_2022_2024: {
     name: { fr: "FAOSTAT", en: "FAOSTAT" },
