@@ -220,6 +220,9 @@ export function formatUsd(value: number, locale: Locale): string {
   return new Intl.NumberFormat(SHEET_REGION_LOCALES[locale], {
     style: "currency",
     currency: "USD",
+    // Explicite : avant Intl.NumberFormat v3 (Safari < 15.4), un maximum sous
+    // le minimum par défaut d'une monnaie (2) levait une RangeError.
+    minimumFractionDigits: 0,
     maximumFractionDigits: 0,
   }).format(value);
 }
