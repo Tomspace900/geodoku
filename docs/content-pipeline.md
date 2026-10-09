@@ -11,6 +11,7 @@ ENTRÉES DE CURATION (éditées à la main)
   scripts/countries/flagData.json        # table de vérité drapeaux (couleurs, symboles, disposition)
   scripts/countries/data/capitalLabels.ts # libellés fr/en des capitales — RÉCOLTÉ (pnpm harvest:capitals, Wikidata)
   scripts/countries/data/highestPoints.ts # points culminants — RÉCOLTÉ (pnpm harvest:highest-points, Factbook + Wikidata)
+  scripts/countries/data/worldBankIndicators.ts # PIB par habitant, espérance de vie — RÉCOLTÉ (pnpm harvest:world-bank, WDI)
         │  pnpm build:countries   (RÉSEAU — world-countries npm + REST Countries v5 + Wikimedia)
         ▼
 SNAPSHOT (content/countries/ — généré, committé, daté par FACTS_SNAPSHOT.date)
@@ -158,6 +159,23 @@ Factbook dans tous les cas. `label: null` = point sans nom, rendu par un
 libellé i18n unique. Le code GEC (FIPS 10-4) de chaque pays vient de `P901`,
 avec `GEC_FALLBACK` pour NLD, XKX et PSE (Cisjordanie et Gaza : le plus haut).
 
+**PIB par habitant et espérance de vie** (`pnpm harvest:world-bank`) : l'API WDI
+(`api.worldbank.org/v2/country/all/indicator/<code>?format=json&per_page=20000&date=<fenêtre>`)
+répond en **une seule page** pour `NY.GDP.PCAP.CD` et `SP.DYN.LE00.IN`, mais
+lentement (35 à 40 s par indicateur) : le script lance les deux requêtes en
+parallèle, avec un délai large, trois tentatives, et vérifie `meta.pages === 1`
+(une page tronquée ferait passer des pays pour « absents »). La fenêtre est
+celle des **cinq années révolues** avant la récolte ; pour chaque ISO3 du
+catalogue (les agrégats régionaux sont écartés), on garde l'année non nulle la
+plus récente. Un pays sans valeur est dans `missing` avec sa cause — `not_in_wdi`
+(aucune ligne : Taïwan, Vatican) ou `no_value_in_window` (des lignes, toutes
+nulles ou trop anciennes) — et la fiche n'affiche alors pas la ligne. Le dataset
+garde le `lastupdated` de la WDI, qui révise ses séries : une nouvelle récolte
+peut changer une valeur passée. Le millésime de chaque source de `sources.ts` est
+la plage d'années retenues, calculée à la récolte, imprimée par le script et
+comparée exactement par `validateYearRangeVintage` (`check:content`). Aucune
+valeur calculée (catégorie de revenu…) n'est stockée.
+
 ### Contrôles automatiques
 
 `pnpm check:content` (job CI `quality`) vérifie :
@@ -173,7 +191,7 @@ avec `GEC_FALLBACK` pour NLD, XKX et PSE (Cisjordanie et Gaza : le plus haut).
   l'un des champs qu'ils produisent (`utcOffsetCount`, `lastVolcanicEruptionYear`,
   `mountainAreaShare`, `forestCoverShare`, `urbanCentresOver1M`,
   `productionRanks`, `coalElectricityShare`, `formerSovereigns`,
-  `sovereigntyYear`, `sovereigntyKind`, `sovereigntyDate`, `sovereigntySheetHidden`, `highestPoint`) ne correspond plus à `facts.ts` : dataset
+  `sovereigntyYear`, `sovereigntyKind`, `sovereigntyDate`, `sovereigntySheetHidden`, `highestPoint`, `gdpPerCapitaUsd`, `lifeExpectancyYears`) ne correspond plus à `facts.ts` : dataset
   révisé sans regen, ou `facts.ts` édité à la main malgré son en-tête
   `@generated`. Les **libellés des capitales** sont vérifiés de même contre
   `capitalLabels.ts` (`validateCapitalLabels`), qui signale aussi toute entrée
@@ -189,7 +207,10 @@ avec `GEC_FALLBACK` pour NLD, XKX et PSE (Cisjordanie et Gaza : le plus haut).
   **point culminant** (`highestPoint`) rejoint la liste ci-dessus ; son altitude
   est de plus bornée à ]0, 8 849] m, et `elevationM >= 5000` doit concorder avec
   `physicalFeatures` ∋ `peak_over_5000m` (`validatePeakCoherence`, écarts
-  motivés dans `ACCEPTED_PEAK_GAPS`). Les
+  motivés dans `ACCEPTED_PEAK_GAPS`). Les indicateurs WDI sont gardés de même :
+  chaque pays est soit dans `values`, soit dans `missing`
+  (`validateWorldBankIndicator`), valeur > 0, espérance de vie entre 30 et 95 ans,
+  et la plage d'années du millésime de `sources.ts` doit être celle du dataset. Les
   champs venus du réseau (population, **liste** des capitales, adhésions,
   pageviews) restent hors de portée — seule une regen les vérifie ;
 - **seam terminal** : aucun module de `content/` n'importe via l'alias `@/` ni

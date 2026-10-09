@@ -1185,3 +1185,46 @@ case (A–D).
     (2026-10-09) : pas de regen hors-ligne — le rafraîchissement part sur
     `develop` dans un commit séparé et ira en prod avec les lots 1 à 5, pool
     de prod régénéré après le merge (issue #50).
+
+### Lot 6 — PIB par habitant et espérance de vie (branche p4-lot6, 2026-10-09)
+
+- Ligne de base / après : tests 706 → 732 (706 mesuré sur `develop` à `f45c722`) ·
+  chargement initial 258,5 → 258,8 KiB gzip · chunk fiche pays 36,7 → 40,6 KiB gzip
+- Commits : voir `git log develop..p4-lot6` (rien de poussé). `Closes #48` sur le
+  commit de la fiche.
+- Écarts au plan et au brief :
+  - **Deux sources, pas une** : `world_bank_gdp_per_capita` (2022–2025) et
+    `world_bank_life_expectancy` (2024) au lieu de `world_bank_wdi`, les plages
+    différant (règle d'en-tête de `sources.ts`). Chaque ligne ne cite que la sienne.
+  - **Plage du millésime gardée par `check:content`** : `validateYearRangeVintage`
+    compare exactement la plage écrite à la main à celle du dataset ; la récolte
+    imprime la valeur à coller. Une seule année s'écrit « 2024 ».
+  - **Dataset** : chaque pays est dans `values` ou dans `missing` avec sa cause
+    (`not_in_wdi` / `no_value_in_window`), jamais dans les deux ni dans aucun
+    (`validateWorldBankIndicator`). `lastupdated` de la WDI conservé
+    (`sourceUpdatedAt` : 2026-10-08). Fenêtre = les cinq années révolues avant la
+    récolte (2021–2025) ; `meta.pages === 1` vérifié par la récolte.
+  - **Absents de la WDI : TWN et VAT** (le plan ne citait que Taïwan).
+  - **Valeur brute stockée**, l'arrondi est à l'affichage. Monnaie formatée par
+    `Intl` en `fr-FR` / `en-GB` (seul l'anglais britannique écrit « US$ ») :
+    « 48 986 $US (2025) » en français — l'ICU écrit « $US » sans espace, pas
+    « $ US » comme dans le brief — et « US$48,986 (2025) » en anglais, identique
+    sous Chromium, Firefox et WebKit.
+  - **Regen sans autre changement** : le rafraîchissement réseau est déjà sur
+    `develop` (`f45c722`), donc `facts.ts` ne gagne que les deux champs (1 549
+    lignes ajoutées, 0 supprimée), `popularity.ts` et tous les `answers.ts`
+    sont inchangés. Pas de `simulate:scheduling` : aucune liste ne bouge.
+  - Les deux lignes ouvrent « Société et économie », avant les centres urbains.
+- Gardes : lint · 732 tests · `check:content` (77 contraintes actives, 12
+  archivées, 8 en réserve, 197 pays) · `check:design-system` (14 règles, aucune
+  violation) · `check:bundle` · 141 e2e passés (lancés seuls).
+- Couverture mesurée : PIB 190/197 (182 en 2025, 6 en 2024, 1 en 2023, 1 en 2022 ;
+  `null` : CUB, ERI, PRK, SSD, YEM sans valeur sur 5 ans, TWN et VAT absents) ;
+  espérance de vie 195/197 (2024 pour tous ; `null` : TWN, VAT). Extrêmes : PIB
+  de 234 $ (BDI) à 288 002 $ (MCO), espérance de vie de 54,6 (NGA) à 86,5 ans (MCO).
+- Décisions utilisateur : à venir (gate).
+- Merge : à venir.
+- Points ouverts :
+  - Entrée de changelog à proposer au gate.
+  - Un `refreshPool` n'est pas requis par ce lot (aucune liste ne change) ; celui
+    de l'issue #50 reste à faire après publication des lots 1 à 6.
