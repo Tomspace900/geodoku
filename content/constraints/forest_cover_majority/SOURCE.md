@@ -17,12 +17,14 @@ Pays dont **plus de la moitié** de la superficie terrestre est couverte de for�
 - Banque mondiale, indicateur
   [`AG.LND.FRST.ZS`](https://data.worldbank.org/indicator/AG.LND.FRST.ZS) (surface
   forestière en % du territoire terrestre, d'après la FAO).
-- Dataset curé : `scripts/countries/data/forestCover.ts` — 197 valeurs, millésime
-  2023, extraites du champ `forestCoverPercent` du snapshot `country-core` de
-  `constraint-explorer` (couverture complète, pas de trou). Provenance déclarée à
-  l'époque (commit 221b42d, `knowledge.ts`) : import `verified` de la série WDI le
-  **2026-07-17**, sauf Taïwan (étude forestière nationale 2008-2014), le Saint-Siège
-  (FAO FRA 2010) et le Kosovo (stratégie forestière 2022-2030), absents de la série.
+- Dataset récolté : `scripts/countries/data/forestCover.ts`, écrit par `pnpm
+  harvest:forest` (`scripts/countries/harvest/forestCover.ts`) — 197 valeurs pour une
+  **année unique**, la plus récente où la WDI couvre tout le catalogue (2023 au
+  2026-10-10 ; 2024 laisse MCO, NIC et NRU sans valeur). Taïwan (étude forestière
+  nationale 2008-2014), le Saint-Siège (FAO FRA 2010) et le Kosovo (stratégie
+  forestière 2022-2030), absents de la série, prennent une valeur motivée
+  (`NON_WDI_FOREST_COVER`, `forestCoverLib.ts`). Le millésime de `content/sources.ts`
+  est comparé à l'année du dataset par `check:content`.
 
 ## Dérivation
 
@@ -53,5 +55,12 @@ pays (RUS, IDN, BOL) ne passent le seuil que de 0,4 à 0,7 point. La liste reste
 47 pays. À reprendre à la prochaine revue : relire la série (`pnpm
 harvest:world-bank` récolte déjà d'autres indicateurs WDI) et décider avec les sept
 pays en regard.
+
+Revue 2026-10-10 (#122) — **décision inverse, prise par l'utilisateur** : les données
+partent à jour en prod. La série révisée est récoltée par `pnpm harvest:forest`
+(année 2023, WDI mise à jour le 2026-10-08), qui remplace l'import du 2026-07-17. Les
+sept pays entrent : BOL, CAF, IDN, LCA, PRK, RUS, VUT (47 → 54). La Tanzanie reste
+au-dessus du seuil (50,16 %). Pays à moins d'un point du seuil, à surveiller à chaque
+récolte : BHS 50,9 · BOL 50,4 · IDN 50,6 · RUS 50,7 · TZA 50,2 · ECU 49,8.
 
 Procédure commune : [SOURCES.md](../SOURCES.md#procédure-de-révision).

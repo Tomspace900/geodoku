@@ -56,6 +56,7 @@ import { HIGHEST_POINTS } from "../countries/data/highestPoints";
 import { HUMAN_DEVELOPMENT_INDEX } from "../countries/data/humanDevelopmentIndex";
 import { WORLD_BANK_INDICATORS } from "../countries/data/worldBankIndicators";
 import { validateHarvestVintage } from "../countries/harvest/capitalLabelsLib";
+import { validateForestVintage } from "../countries/harvest/forestCoverLib";
 import {
   validateCategoryAgainstPublished,
   validateEditionVintage,
@@ -135,6 +136,12 @@ function checkCountries(errors: string[]): void {
       "wikidata_capital_labels",
       SOURCES.wikidata_capital_labels.vintage,
       CAPITAL_LABELS.harvestedAt,
+    ),
+  );
+  errors.push(
+    ...validateForestVintage(
+      SOURCES.fao_forest_resources.vintage,
+      QUANTITATIVE_DATASETS.forestCover,
     ),
   );
   errors.push(

@@ -36,6 +36,7 @@
     "harvest:highest-points": "tsx scripts/countries/harvest/highestPoints.ts",
     "harvest:world-bank": "tsx scripts/countries/harvest/worldBankIndicators.ts",
     "harvest:hdi": "tsx scripts/countries/harvest/humanDevelopmentIndex.ts",
+    "harvest:forest": "tsx scripts/countries/harvest/forestCover.ts",
     "build:answers": "tsx scripts/content/build-answers.ts",
     "check:bundle": "vite build && tsx scripts/ci/check-bundle-size.ts",
     "check:design-system": "tsx scripts/ci/check-design-system.ts",

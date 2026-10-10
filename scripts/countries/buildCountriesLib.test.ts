@@ -384,6 +384,7 @@ describe("quantitativeFactsForCode", () => {
     forestCover: {
       source: "x",
       referenceYear: 2023,
+      sourceUpdatedAt: "2026-10-08",
       countries: { FIN: 73.7 },
     },
     urbanCentres: {

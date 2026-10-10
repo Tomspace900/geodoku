@@ -72,6 +72,8 @@ export type UrbanCentresSnapshot = {
 export type ForestCoverSnapshot = {
   source: string;
   referenceYear: number;
+  /** `lastupdated` de la WDI : la série est révisée, une récolte peut changer une valeur passée. */
+  sourceUpdatedAt: string;
   /** Pourcentage 0–100 par ISO3 ; couverture complète des 197 pays jouables. */
   countries: Record<string, number>;
 };

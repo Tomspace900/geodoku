@@ -177,10 +177,7 @@ export const SOURCES = {
       en: "World Bank (FAO) — Forest area",
     },
     url: "https://data.worldbank.org/indicator/AG.LND.FRST.ZS",
-    vintage: {
-      fr: "2023, import du 17 juillet 2026",
-      en: "2023, imported 17 July 2026",
-    },
+    vintage: { fr: "2023", en: "2023" },
   },
   faostat_2022_2024: {
     name: { fr: "FAOSTAT", en: "FAOSTAT" },

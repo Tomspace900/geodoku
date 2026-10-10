@@ -13,6 +13,7 @@ import { writeFileSync } from "node:fs";
 import { resolve } from "node:path";
 import { COUNTRY_FACTS } from "../../../content/countries/facts.ts";
 import type { WorldBankIndicatorsSnapshot } from "../data/types.ts";
+import { fetchWdiJson } from "./wdiFetch.ts";
 import {
   buildIndicator,
   buildIndicatorUrl,
@@ -28,25 +29,6 @@ const OUTPUT_PATH = resolve(
   import.meta.dirname,
   "../data/worldBankIndicators.ts",
 );
-const REQUEST_TIMEOUT_MS = 180_000;
-const MAX_ATTEMPTS = 3;
-
-async function fetchJson(url: string): Promise<unknown> {
-  for (let attempt = 1; ; attempt += 1) {
-    try {
-      const response = await fetch(url, {
-        signal: AbortSignal.timeout(REQUEST_TIMEOUT_MS),
-      });
-      if (!response.ok) throw new Error(`HTTP ${response.status}`);
-      return await response.json();
-    } catch (error) {
-      if (attempt >= MAX_ATTEMPTS) throw new Error(`${url}: ${error}`);
-      console.error(
-        `[worldBank] tentative ${attempt} échouée (${error}), reprise…`,
-      );
-    }
-  }
-}
 
 async function main(): Promise<void> {
   const codes = Object.keys(COUNTRY_FACTS);
@@ -55,7 +37,7 @@ async function main(): Promise<void> {
 
   const [gdpJson, lifeJson] = await Promise.all(
     [GDP_PER_CAPITA_CODE, LIFE_EXPECTANCY_CODE].map((code) =>
-      fetchJson(buildIndicatorUrl(code, window)),
+      fetchWdiJson(buildIndicatorUrl(code, window)),
     ),
   );
   const snapshot: WorldBankIndicatorsSnapshot = {
