@@ -42,7 +42,7 @@ export const fr = {
     resultDialogDescription:
       "Résultat de la partie, détail du score et actions de fin de partie.",
     searchResultUsed: "Déjà utilisé",
-    surveyPrompt: "Pssst, j'ai besoin de ton avis (5 min)",
+    surveyPrompt: "Stats, comptes, ligues… ton avis pour la suite (4 min)",
   },
   footer: {
     loveCreditPre: "Fait avec amour ❤️, inspiré par ",

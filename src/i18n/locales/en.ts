@@ -40,7 +40,7 @@ export const en = {
     resultDialogDescription:
       "Game result, score breakdown, and end-of-game actions.",
     searchResultUsed: "Already used",
-    surveyPrompt: "Pssst, I need your feedback (5 min)",
+    surveyPrompt: "Stats, accounts, leagues… your take on what's next (4 min)",
   },
   footer: {
     loveCreditPre: "Made with love ❤️, inspired by ",

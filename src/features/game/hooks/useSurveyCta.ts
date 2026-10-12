@@ -8,6 +8,7 @@ import {
   markSurveyClicked,
   markSurveyDismissed,
   SURVEY_FLAG,
+  SURVEY_ID,
   subscribeSurveyDone,
   surveyUrl,
 } from "@/lib/survey";
@@ -18,7 +19,8 @@ export type SurveySource = "result_screen" | "solution_screen" | "footer";
  * État du CTA sondage : visibilité (feature flag PostHog `survey_active` +
  * masquage via `geodoku:survey-done`), URL localisée et handlers qui tracent
  * l'event puis mémorisent l'interaction. Un clic masque définitivement ; une
- * fermeture ne masque que pour le jour courant (cf. `isSurveyDone`).
+ * fermeture ne masque que pour le jour courant, dans la limite de
+ * `MAX_SURVEY_DISMISSALS` (cf. `isSurveyDone`).
  */
 export function useSurveyCta(source: SurveySource) {
   const { locale } = useLocale();
@@ -33,12 +35,20 @@ export function useSurveyCta(source: SurveySource) {
 
   function onClick() {
     markSurveyClicked();
-    posthog?.capture("survey_link_clicked", { source, locale });
+    posthog?.capture("survey_link_clicked", {
+      source,
+      locale,
+      survey_id: SURVEY_ID,
+    });
   }
 
   function onDismiss() {
     markSurveyDismissed(todayUTC());
-    posthog?.capture("survey_dismissed", { source, locale });
+    posthog?.capture("survey_dismissed", {
+      source,
+      locale,
+      survey_id: SURVEY_ID,
+    });
   }
 
   return {
