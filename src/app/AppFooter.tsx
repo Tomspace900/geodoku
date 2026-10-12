@@ -5,7 +5,12 @@ import { KOFI_URL, METRODOKU_URL, SUPPORT_EMAIL } from "@/app/links";
 import { isChangelogNewBadgeVisible } from "@/features/legal/logic/changelog";
 import { LocaleSwitcher } from "@/i18n/components/LocaleSwitcher";
 import { useLocale, useT } from "@/i18n/LocaleContext";
-import { markSurveyClicked, SURVEY_FLAG, surveyUrl } from "@/lib/survey";
+import {
+  markSurveyClicked,
+  SURVEY_FLAG,
+  SURVEY_ID,
+  surveyUrl,
+} from "@/lib/survey";
 import { cn } from "@/lib/utils";
 
 type FooterLink = "metrodoku" | "support" | "contact" | "privacy" | "changelog";
@@ -33,7 +38,11 @@ export default function AppFooter({ className }: { className?: string }) {
     // Un clic vaut réponse/décision prise : masque le CTA banderole partout,
     // comme un clic depuis la banderole elle-même (cf. useSurveyCta).
     markSurveyClicked();
-    posthog?.capture("survey_link_clicked", { source: "footer", locale });
+    posthog?.capture("survey_link_clicked", {
+      source: "footer",
+      locale,
+      survey_id: SURVEY_ID,
+    });
   }
 
   const linkClass =

@@ -45,7 +45,7 @@ export const fr = {
     resultDialogDescription:
       "Résultat de la partie, détail du score et actions de fin de partie.",
     searchResultUsed: "Déjà utilisé",
-    surveyPrompt: "Pssst, j'ai besoin de ton avis (5 min)",
+    surveyPrompt: "Stats, comptes, ligues… ton avis pour la suite (4 min)",
     solutionCellAriaLabel:
       "Case ligne {row} colonne {col} : {rowConstraint} × {colConstraint}. {count} réponses possibles.",
     constraintAnswerCount: "{count} pays",

@@ -87,7 +87,3 @@ export function safeRemove(key: string, kind: StorageArea = "local"): void {
 // « ne plus afficher » à re-choisir une fois, `clientId` régénéré (simple
 // nouveau seau de rate-limit). La partie, elle, n'était de toute façon plus
 // récupérable — la garde de date écarte tout ce qui n'est pas du jour.
-//
-// Seul reliquat assumé : `isSurveyDone` sait encore lire le flag brut « 1 »
-// (cf. `survey.ts`), ce qui ne coûte qu'une ligne et évite d'afficher le CTA à
-// un joueur qui l'avait déjà écarté.
