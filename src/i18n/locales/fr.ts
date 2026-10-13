@@ -345,7 +345,7 @@ export const fr = {
       "Plus peuplé que l'Allemagne (83\u00A0M\u00A0hab.)",
     population_more_canada: "Plus peuplé que le Canada (42\u00A0M\u00A0hab.)",
     population_less_iceland:
-      "Moins peuplé que l'Islande (400\u00A0000\u00A0hab.)",
+      "Moins peuplé que l'Islande (397\u00A0000\u00A0hab.)",
     language_french: "Langue officielle\u00A0: français",
     language_arabic: "Langue officielle\u00A0: arabe",
     language_spanish: "Langue officielle\u00A0: espagnol",

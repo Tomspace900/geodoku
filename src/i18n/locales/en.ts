@@ -334,7 +334,7 @@ export const en = {
     area_smaller_luxembourg: "Smaller than Luxembourg (2,600\u00A0km²)",
     population_more_germany: "More populous than Germany (83M)",
     population_more_canada: "More populous than Canada (42M)",
-    population_less_iceland: "Less populous than Iceland (400,000)",
+    population_less_iceland: "Less populous than Iceland (397,000)",
     language_french: "Official language:\u00A0French",
     language_arabic: "Official language:\u00A0Arabic",
     language_spanish: "Official language:\u00A0Spanish",

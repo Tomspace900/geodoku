@@ -94,6 +94,23 @@ describe("constraintValueFor", () => {
     ).toBeNull();
   });
 
+  it("shows no value on an archived constraint — its frozen list would contradict the current facts", () => {
+    const withValue = ARCHIVED_CONSTRAINT_IDS.flatMap((id) =>
+      Object.values(COUNTRY_FACTS).some(
+        (facts) => constraintValueFor(id, facts) !== null,
+      )
+        ? [id]
+        : [],
+    );
+    expect(withValue).toEqual([]);
+  });
+
+  it("shows no independence date when the retained event is a unification (South Yemen left in 1967, not 1990)", () => {
+    expect(
+      constraintValueFor("history_from_united_kingdom", COUNTRY_FACTS.YEM),
+    ).toBeNull();
+  });
+
   it("gives the independence event of a former colony, with its year", () => {
     expect(
       constraintValueFor("history_from_france", COUNTRY_FACTS.DZA),

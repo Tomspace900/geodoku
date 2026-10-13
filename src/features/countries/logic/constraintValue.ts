@@ -5,7 +5,6 @@ import type { CountryFacts } from "../../../../content/countries/type";
 import type { LocalizedString } from "../../../../content/type";
 import type { PhysicalFeature, ProductionRankKey } from "../types";
 import {
-  FLAG_COLOR_LABELS,
   PHYSICAL_FEATURE_LABELS,
   PRODUCTION_LABELS,
   SOVEREIGNTY_KIND_LABELS,
@@ -153,6 +152,23 @@ const sovereigntyEvent: ConstraintValueExtractor = (facts) =>
         date: facts.sovereigntyDate,
       };
 
+/**
+ * Natures d'événement qui ne sont pas un départ de l'ancienne puissance : une
+ * unification (Yémen, 22 mai 1990 — l'indépendance du Sud date de 1967) ou une
+ * fondation datée d'après la tutelle. L'afficher en face de « sous domination
+ * britannique » donnerait la mauvaise date.
+ */
+const NOT_A_DEPARTURE: ReadonlySet<string> = new Set([
+  "unification",
+  "foundation",
+  "continuation",
+]);
+
+const departureFromFormerSovereign: ConstraintValueExtractor = (facts) =>
+  facts.sovereigntyKind !== null && NOT_A_DEPARTURE.has(facts.sovereigntyKind)
+    ? null
+    : sovereigntyEvent(facts);
+
 /** Le voisin unique n'est pas dans le libellé (« Un seul voisin terrestre ») : c'est l'information. */
 const soleNeighbor: ConstraintValueExtractor = (facts) => {
   const iso3 = facts.borders.filter(isCountryCode);
@@ -173,7 +189,12 @@ const capitals: ConstraintValueExtractor = (facts) =>
     : { kind: "capitals", names: facts.capitals.map((c) => c.names) };
 
 /**
- * Extracteur par contrainte. `satisfies` verrouille la bijection avec
+ * Extracteur par contrainte. Une contrainte **archivée** n'a jamais de valeur :
+ * sa liste est figée à la main alors que les faits sont régénérés (le Salvador à
+ * 287 hab./km² dans « > 300 », l'Ukraine à 28,7 M dans « > 30 M ») — lire la
+ * valeur courante à côté d'une liste du passé la ferait contredire son libellé.
+ *
+ * `satisfies` verrouille la bijection avec
  * `ConstraintId` (actives **et** archivées, rejouables en entraînement) : une
  * contrainte ajoutée sans décision sur sa valeur ne compile pas.
  */
@@ -205,18 +226,18 @@ const EXTRACTORS = {
   area_larger_france: area,
   area_smaller_belgium: area,
   area_smaller_luxembourg: area,
-  area_gt_2M: area,
-  area_gt_500k: area,
-  area_lt_1k: area,
+  area_gt_2M: NO_VALUE,
+  area_gt_500k: NO_VALUE,
+  area_lt_1k: NO_VALUE,
 
   // ── Population ─────────────────────────────────────────────────────────────
   population_more_germany: population,
   population_more_canada: population,
   population_less_iceland: population,
-  population_gt_100M: population,
-  population_gt_30M: population,
-  population_lt_1M: population,
-  population_lt_2_5M: population,
+  population_gt_100M: NO_VALUE,
+  population_gt_30M: NO_VALUE,
+  population_lt_1M: NO_VALUE,
+  population_lt_2_5M: NO_VALUE,
 
   // ── Langue ─────────────────────────────────────────────────────────────────
   language_french: officialLanguages,
@@ -225,15 +246,14 @@ const EXTRACTORS = {
   language_english: officialLanguages,
   language_portuguese: officialLanguages,
   language_russian: officialLanguages,
-  language_multilingual: officialLanguages,
+  language_multilingual: NO_VALUE,
 
   // ── Drapeau ────────────────────────────────────────────────────────────────
   flag_has_star: NO_VALUE,
   flag_has_crescent: NO_VALUE,
   flag_has_cross: NO_VALUE,
   flag_has_animal: NO_VALUE,
-  flag_two_colors: (facts) =>
-    listWhenSeveral(facts.flagColors.map((color) => FLAG_COLOR_LABELS[color])),
+  flag_two_colors: NO_VALUE,
 
   // ── Latitude, sous-région, fuseaux ─────────────────────────────────────────
   latitude_south_hemisphere: latitude,
@@ -268,14 +288,14 @@ const EXTRACTORS = {
   density_more_japan: density,
   density_less_russia: density,
   density_less_canada: density,
-  density_high: density,
-  density_low: density,
+  density_high: NO_VALUE,
+  density_low: NO_VALUE,
 
   // ── Nature ─────────────────────────────────────────────────────────────────
   nature_desert: NO_VALUE,
   nature_rainforest: NO_VALUE,
   nature_active_volcano: lastEruption,
-  nature_holocene_volcano: lastEruption,
+  nature_holocene_volcano: NO_VALUE,
   nature_mountain_area_majority: share(
     "mountain",
     (facts) => facts.mountainAreaShare,
@@ -306,8 +326,8 @@ const EXTRACTORS = {
 
   // ── Histoire ───────────────────────────────────────────────────────────────
   history_sovereignty_since_1990: sovereigntyEvent,
-  history_from_france: sovereigntyEvent,
-  history_from_united_kingdom: sovereigntyEvent,
+  history_from_france: departureFromFormerSovereign,
+  history_from_united_kingdom: departureFromFormerSovereign,
 } satisfies Record<ConstraintId, ConstraintValueExtractor>;
 
 /**

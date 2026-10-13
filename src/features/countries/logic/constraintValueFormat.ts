@@ -8,6 +8,7 @@ import {
   formatList,
   formatOrdinal,
   formatPercent,
+  formatSurface,
   formatYear,
 } from "./countrySheetFormat";
 import { getCountryByIso3 } from "./search";
@@ -56,7 +57,7 @@ export function formatConstraintValue(
       });
     case "area":
       return t("countrySheet.value.areaUnit", {
-        value: formatInteger(value.km2, locale),
+        value: formatSurface(value.km2, locale),
       });
     case "density":
       return t("countrySheet.value.densityUnit", {

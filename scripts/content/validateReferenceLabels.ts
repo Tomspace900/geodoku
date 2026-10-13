@@ -10,6 +10,11 @@
  * en. Une regen qui déplace la référence fait échouer la garde et force à relire
  * le libellé.
  *
+ * Exception : si un pays se situe **entre** la référence et le chiffre arrondi
+ * (les Bahamas à 398 k entre l'Islande à 396,5 k et « 400 000 »), le joueur le
+ * voit sous le chiffre affiché et le trouve refusé. Le libellé prend alors un
+ * chiffre significatif de plus, jusqu'à ce que l'écart soit vide.
+ *
  * Les fonctions sont pures (données injectées, testables dans les deux sens) ;
  * `validateReferenceLabels` les câble sur le contenu réel, sur le patron de
  * `validateConstraintAbouts`.
@@ -50,12 +55,38 @@ export const REFERENCE_LABELS: Readonly<
 };
 
 const SIGNIFICANT_DIGITS = 2;
+const MAX_SIGNIFICANT_DIGITS = 6;
 const RELATIVE_TOLERANCE = 1e-9;
 const MILLION = 1_000_000;
 
-/** Arrondi à 2 chiffres significatifs (`30 528` → `31 000`, `4,19` → `4,2`). */
-export function roundToSignificantDigits(value: number): number {
-  return Number(value.toPrecision(SIGNIFICANT_DIGITS));
+/** Arrondi à `digits` chiffres significatifs (2 par défaut : `30 528` → `31 000`, `4,19` → `4,2`). */
+export function roundToSignificantDigits(
+  value: number,
+  digits: number = SIGNIFICANT_DIGITS,
+): number {
+  return Number(value.toPrecision(digits));
+}
+
+/**
+ * Chiffre que le libellé doit afficher : la référence arrondie au plus petit
+ * nombre de chiffres significatifs (≥ 2) qui ne laisse aucune autre valeur
+ * strictement entre la référence et le chiffre arrondi.
+ */
+export function expectedLabelFigure(
+  reference: number,
+  others: readonly number[],
+): number {
+  for (
+    let digits = SIGNIFICANT_DIGITS;
+    digits <= MAX_SIGNIFICANT_DIGITS;
+    digits += 1
+  ) {
+    const rounded = roundToSignificantDigits(reference, digits);
+    const low = Math.min(reference, rounded);
+    const high = Math.max(reference, rounded);
+    if (!others.some((value) => value > low && value < high)) return rounded;
+  }
+  return reference;
 }
 
 /**
@@ -88,27 +119,27 @@ export function referenceLabelErrors(params: {
   locale: "fr" | "en";
   label: string;
   reference: number;
+  /** Valeurs des autres pays pour la même mesure ; vide : 2 chiffres significatifs. */
+  others?: readonly number[];
 }): string[] {
-  const { id, locale, label, reference } = params;
+  const { id, locale, label, reference, others = [] } = params;
   const figure = labelFigure(label, locale);
   if (figure === null) {
     return [`${id}: libellé ${locale} sans chiffre lisible entre parenthèses`];
   }
-  const expected = roundToSignificantDigits(reference);
+  const expected = expectedLabelFigure(reference, others);
   if (sameFigure(figure, expected)) return [];
   return [
-    `${id}: libellé ${locale} affiche ${figure}, la référence vaut ${reference} soit ${expected} à ${SIGNIFICANT_DIGITS} chiffres significatifs — corriger le libellé`,
+    `${id}: libellé ${locale} affiche ${figure}, la référence vaut ${reference} soit ${expected} (${SIGNIFICANT_DIGITS} chiffres significatifs, davantage si un pays tombe entre la référence et le chiffre affiché) — corriger le libellé`,
   ];
 }
 
-function referenceValue(
-  reference: ReferenceLabel,
-  facts: Readonly<Record<CountryCode, { areaKm2: number; population: number }>>,
-): number {
-  const { areaKm2, population } = facts[reference.country];
-  if (reference.metric === "areaKm2") return areaKm2;
-  if (reference.metric === "population") return population;
-  return population / areaKm2;
+type MetricFacts = { areaKm2: number; population: number };
+
+function metricValue(metric: ReferenceMetric, facts: MetricFacts): number {
+  if (metric === "areaKm2") return facts.areaKm2;
+  if (metric === "population") return facts.population;
+  return facts.population / facts.areaKm2;
 }
 
 export function validateReferenceLabels(): string[] {
@@ -121,7 +152,15 @@ export function validateReferenceLabels(): string[] {
       errors.push(`${id}: contrainte inconnue du catalogue runtime`);
       return;
     }
-    const value = referenceValue(reference, COUNTRY_FACTS);
+    const value = metricValue(
+      reference.metric,
+      COUNTRY_FACTS[reference.country],
+    );
+    const others = (
+      Object.entries(COUNTRY_FACTS) as [CountryCode, MetricFacts][]
+    )
+      .filter(([code]) => code !== reference.country)
+      .map(([, facts]) => metricValue(reference.metric, facts));
     (["fr", "en"] as const).forEach((locale) => {
       errors.push(
         ...referenceLabelErrors({
@@ -129,6 +168,7 @@ export function validateReferenceLabels(): string[] {
           locale,
           label: translate(locale, constraint.labelKey),
           reference: value,
+          others,
         }),
       );
     });

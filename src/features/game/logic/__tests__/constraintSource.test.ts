@@ -14,7 +14,7 @@ describe("constraintSourceView", () => {
     ]);
     expect(view.isConvention).toBe(false);
     expect(view.clarification).toBe(
-      "Au moins une éruption documentée depuis 1500.",
+      "Au moins une éruption documentée depuis 1500. Outre-mer intégré compris.",
     );
   });
 
@@ -22,7 +22,7 @@ describe("constraintSourceView", () => {
     const view = constraintSourceView("nature_active_volcano", "en");
     expect(view.sources[0].name).toBe("Smithsonian Global Volcanism Program");
     expect(view.clarification).toBe(
-      "At least one documented eruption since 1500.",
+      "At least one documented eruption since 1500. Integrated overseas territories included.",
     );
   });
 

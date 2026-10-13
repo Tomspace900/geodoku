@@ -1,5 +1,6 @@
 import { describe, expect, it } from "vitest";
 import {
+  expectedLabelFigure,
   labelFigure,
   REFERENCE_LABELS,
   referenceLabelErrors,
@@ -80,5 +81,16 @@ describe("REFERENCE_LABELS", () => {
 describe("validateReferenceLabels", () => {
   it("est vert sur le contenu réel", () => {
     expect(validateReferenceLabels()).toEqual([]);
+  });
+});
+
+describe("expectedLabelFigure", () => {
+  it("garde 2 chiffres significatifs quand aucun pays ne tombe dans l'écart", () => {
+    expect(expectedLabelFigure(30_528, [28_000, 33_000])).toBe(31_000);
+  });
+
+  it("ajoute un chiffre significatif quand un pays tombe entre la référence et le chiffre arrondi", () => {
+    // Islande 396 500 → « 400 000 » ; les Bahamas (398 165) seraient sous le chiffre affiché, mais refusés.
+    expect(expectedLabelFigure(396_500, [398_165, 120_000])).toBe(397_000);
   });
 });

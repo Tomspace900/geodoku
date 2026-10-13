@@ -1,4 +1,5 @@
 import { describe, expect, it } from "vitest";
+import { COUNTRY_FACTS } from "../../../../../content/countries/facts";
 import {
   capitalizeFirst,
   formatFullDate,
@@ -6,6 +7,7 @@ import {
   formatList,
   formatOrdinal,
   formatPercent,
+  formatSurface,
   formatYear,
 } from "../countrySheetFormat";
 
@@ -45,10 +47,10 @@ describe("formatLanguageName", () => {
   });
 
   it.each([
-    ["ber", "fr", "Langues berbères"],
+    ["ber", "fr", "langues berbères"],
     ["bjz", "en", "Belize Kriol English"],
     ["nzs", "en", "New Zealand Sign Language"],
-    ["pov", "fr", "Créole de Guinée-Bissau"],
+    ["pov", "fr", "créole de Guinée-Bissau"],
     ["zdj", "en", "Ngazidja Comorian"],
   ] as const)(
     "falls back to a curated label for %s not resolved by Intl (%s)",
@@ -121,5 +123,43 @@ describe("capitalizeFirst", () => {
 
   it("laisse un libellé déjà capitalisé", () => {
     expect(capitalizeFirst("Mount Scenery", "en")).toBe("Mount Scenery");
+  });
+});
+
+describe("formatLanguageName on the real snapshot", () => {
+  const codes = [
+    ...new Set(
+      Object.values(COUNTRY_FACTS).flatMap((facts) => facts.officialLanguages),
+    ),
+  ];
+
+  it.each(["fr", "en"] as const)(
+    "never renders a raw ISO code (%s)",
+    (locale) => {
+      const raw = codes.filter(
+        (code) => formatLanguageName(code, locale) === code,
+      );
+      expect(raw).toEqual([]);
+    },
+  );
+
+  it("writes every French language name in lowercase, as the ICU does", () => {
+    const capitalized = codes.filter((code) => {
+      const name = formatLanguageName(code, "fr");
+      return name.charAt(0) !== name.charAt(0).toLocaleLowerCase("fr");
+    });
+    expect(capitalized).toEqual([]);
+  });
+});
+
+describe("formatSurface", () => {
+  it("keeps whole km² at or above 1", () => {
+    expect(formatSurface(30528, "en")).toBe("30,528");
+    expect(formatSurface(2.02, "fr")).toBe("2");
+  });
+
+  it("never rounds a sub-km² territory down to 0 (Vatican City)", () => {
+    expect(formatSurface(0.44, "fr")).toBe("0,44");
+    expect(formatSurface(0.44, "en")).toBe("0.44");
   });
 });
