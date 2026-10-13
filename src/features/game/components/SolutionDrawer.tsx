@@ -1,25 +1,18 @@
-import { ChevronLeft } from "lucide-react";
-import { useEffect, useRef, useState } from "react";
-import { Button } from "@/components/ui/button";
+import { useRef, useState } from "react";
 import {
   Drawer,
   DrawerContent,
   DrawerHeader,
   DrawerTitle,
 } from "@/components/ui/drawer";
-import { CountrySheet } from "@/features/countries/components/CountrySheet";
 import {
   type ConstraintValuesByCountry,
   useConstraintValues,
 } from "@/features/countries/hooks/useConstraintValues";
-import { useCountrySheetData } from "@/features/countries/hooks/useCountrySheetData";
 import { formatConstraintValue } from "@/features/countries/logic/constraintValueFormat";
 import { getCountryByIso3 } from "@/features/countries/logic/search";
 import { ConstraintSourceInfo } from "@/features/game/components/ConstraintSourceInfo";
-import type {
-  SolutionDrawerView,
-  useSolutionDrawer,
-} from "@/features/game/hooks/useSolutionDrawer";
+import type { useSolutionDrawer } from "@/features/game/hooks/useSolutionDrawer";
 import {
   RARITY_STYLES,
   UI_ANIMATION_MS,
@@ -192,71 +185,11 @@ function ConstraintListView({
   );
 }
 
-function SheetView({
-  iso3,
-  backButtonRef,
-  onBack,
-}: {
-  iso3: string;
-  backButtonRef: React.RefObject<HTMLButtonElement>;
-  onBack: () => void;
-}) {
-  const { locale, t } = useLocale();
-  const state = useCountrySheetData(iso3);
-  const country = getCountryByIso3(iso3);
-
-  return (
-    <div className="flex flex-col gap-3 overflow-y-auto px-4 pb-4">
-      <div className="flex items-center gap-2">
-        <Button
-          ref={backButtonRef}
-          type="button"
-          variant="ghost"
-          size="auto"
-          onClick={onBack}
-          aria-label={t("ui.backToAnswers")}
-          className="shrink-0 rounded-full p-1.5 text-on-surface-variant hover:text-on-surface"
-        >
-          <ChevronLeft size={18} />
-        </Button>
-        <DrawerTitle className="min-w-0 truncate font-serif text-lg font-medium text-on-surface">
-          {country ? country.names[locale] : iso3}
-        </DrawerTitle>
-      </div>
-
-      {state.status === "loading" && (
-        <div className="flex flex-col gap-3" aria-hidden="true">
-          {[0, 1, 2].map((i) => (
-            <div
-              key={i}
-              className="h-4 w-2/3 animate-pulse rounded bg-surface-low"
-            />
-          ))}
-        </div>
-      )}
-
-      {state.status === "error" && (
-        <div className="flex flex-col items-start gap-2 py-4">
-          <p className="text-sm text-on-surface-variant">
-            {t("ui.errorUnknown")}
-          </p>
-          <Button type="button" variant="secondary" onClick={state.retry}>
-            {t("ui.feedbackRetry")}
-          </Button>
-        </div>
-      )}
-
-      {state.status === "ready" && <CountrySheet model={state.data} />}
-    </div>
-  );
-}
-
 /**
  * Drawer de la grille solution : réponses d'une case, ou pays d'une
- * contrainte entière (tap sur un en-tête) → fiche pays, en pile, avec un
- * bouton retour. Reprend la coque `DrawerContent` de `GuessModal`. Se referme
- * quand `drawer.target` devient `null` (fermeture pilotée par le parent, qui
- * démonte alors ce composant).
+ * contrainte entière (tap sur un en-tête). Reprend la coque `DrawerContent`
+ * de `GuessModal`. Se referme quand `drawer.target` devient `null`
+ * (fermeture pilotée par le parent, qui démonte alors ce composant).
  */
 export function SolutionDrawer({
   state,
@@ -266,15 +199,11 @@ export function SolutionDrawer({
 }: Props) {
   const { locale, t } = useLocale();
   const [open, setOpen] = useState(true);
-  const rowRefs = useRef(new Map<string, HTMLButtonElement>());
-  const backButtonRef = useRef<HTMLButtonElement>(null);
   const openerRef = useRef<HTMLElement | null>(
     document.activeElement instanceof HTMLElement
       ? document.activeElement
       : null,
   );
-  const previousViewRef = useRef<SolutionDrawerView>(drawer.view);
-  const lastOpenedIsoRef = useRef<string | null>(null);
 
   const target = drawer.target;
   const cell = target?.kind === "cell" ? target.cell : null;
@@ -319,26 +248,6 @@ export function SolutionDrawer({
     setTimeout(drawer.close, UI_ANIMATION_MS.drawerClose);
   }
 
-  // Focus : entrée dans la fiche → bouton retour ; retour à la liste → ligne du pays.
-  useEffect(() => {
-    if (
-      previousViewRef.current.kind === "list" &&
-      drawer.view.kind === "sheet"
-    ) {
-      lastOpenedIsoRef.current = drawer.view.iso3;
-      focusWithoutVisibleRing(backButtonRef.current);
-    } else if (
-      previousViewRef.current.kind === "sheet" &&
-      drawer.view.kind === "list" &&
-      lastOpenedIsoRef.current
-    ) {
-      focusWithoutVisibleRing(
-        rowRefs.current.get(lastOpenedIsoRef.current) ?? null,
-      );
-    }
-    previousViewRef.current = drawer.view;
-  }, [drawer.view]);
-
   if (!target) return null;
 
   return (
@@ -355,53 +264,45 @@ export function SolutionDrawer({
           focusWithoutVisibleRing(openerRef.current);
         }}
       >
-        {drawer.view.kind === "list" ? (
-          target.kind === "cell" ? (
-            <>
-              <DrawerHeader className="text-left px-4 pb-2 pt-3 sm:pt-4">
-                <DrawerTitle className="font-serif text-lg font-medium text-on-surface leading-snug">
-                  {rowLabel} × {colLabel}
-                </DrawerTitle>
-              </DrawerHeader>
-              <CellListView
-                codes={cellCodes}
-                cellDist={cellDist}
-                values={constraintValues}
-              />
-            </>
-          ) : (
-            <>
-              <DrawerHeader className="text-left px-4 pb-0 pt-3 sm:pt-4">
-                <DrawerTitle className="font-serif text-lg font-medium text-on-surface leading-snug">
-                  {constraintLabel}
-                </DrawerTitle>
-              </DrawerHeader>
-              <div className="px-4 pb-2">
-                {constraintId && (
-                  <ConstraintSourceInfo
-                    constraintId={constraintId}
-                    locale={locale}
-                    t={t}
-                  />
-                )}
-                <p className="mt-2 text-xs text-on-surface-variant">
-                  {t("ui.constraintAnswerCount", {
-                    count: constraintCountries.length,
-                  })}
-                </p>
-              </div>
-              <ConstraintListView
-                countries={constraintCountries}
-                values={constraintValues}
-              />
-            </>
-          )
+        {target.kind === "cell" ? (
+          <>
+            <DrawerHeader className="text-left px-4 pb-2 pt-3 sm:pt-4">
+              <DrawerTitle className="font-serif text-lg font-medium text-on-surface leading-snug">
+                {rowLabel} × {colLabel}
+              </DrawerTitle>
+            </DrawerHeader>
+            <CellListView
+              codes={cellCodes}
+              cellDist={cellDist}
+              values={constraintValues}
+            />
+          </>
         ) : (
-          <SheetView
-            iso3={drawer.view.iso3}
-            backButtonRef={backButtonRef}
-            onBack={drawer.backToList}
-          />
+          <>
+            <DrawerHeader className="text-left px-4 pb-0 pt-3 sm:pt-4">
+              <DrawerTitle className="font-serif text-lg font-medium text-on-surface leading-snug">
+                {constraintLabel}
+              </DrawerTitle>
+            </DrawerHeader>
+            <div className="px-4 pb-2">
+              {constraintId && (
+                <ConstraintSourceInfo
+                  constraintId={constraintId}
+                  locale={locale}
+                  t={t}
+                />
+              )}
+              <p className="mt-2 text-xs text-on-surface-variant">
+                {t("ui.constraintAnswerCount", {
+                  count: constraintCountries.length,
+                })}
+              </p>
+            </div>
+            <ConstraintListView
+              countries={constraintCountries}
+              values={constraintValues}
+            />
+          </>
         )}
       </DrawerContent>
     </Drawer>

@@ -15,8 +15,8 @@ import {
 
 /**
  * Valeur d'un pays pour une contrainte : ce que le fait dit **en plus** du
- * libellé. Modèle pur et locale-agnostique, comme `buildCountrySheet` — le
- * rendu texte vit dans `constraintValueFormat.ts`.
+ * libellé. Modèle pur et locale-agnostique — le rendu texte vit dans
+ * `constraintValueFormat.ts`.
  *
  * Une contrainte dont la valeur ne ferait que répéter son libellé (« Pays
  * d'Asie » → « Asie », « Enclavé » → « enclavé ») n'a pas de valeur : `null`.
@@ -149,10 +149,10 @@ const oceanBasins: ConstraintValueExtractor = (facts) =>
   );
 
 /**
- * Événement de souveraineté du pays (nature + date), le même que sur la fiche :
- * il masque la valeur là où la fiche la masque (`sovereigntySheetHidden`), sa
- * nature serait fausse une fois affichée. Pour `history_from_*`, c'est
- * l'événement d'où sort l'ancienne puissance — la date de l'indépendance.
+ * Événement de souveraineté du pays (nature + date). Masqué là où le dataset
+ * le masque (`sovereigntySheetHidden`) : sa nature serait fausse une fois
+ * affichée. Pour `history_from_*`, c'est l'événement d'où sort l'ancienne
+ * puissance — la date de l'indépendance.
  */
 const sovereigntyEvent: ConstraintValueExtractor = (facts) =>
   facts.sovereigntyKind === null ||
@@ -325,8 +325,9 @@ const EXTRACTORS = {
 
 /**
  * Valeur d'un pays pour une contrainte, ou `null` quand elle répéterait le
- * libellé (ou que la donnée manque). `facts` vient du chunk lazy de la fiche
- * pays : ce module n'importe jamais `content/countries/facts`.
+ * libellé (ou que la donnée manque). `facts` vient du chunk lazy des faits
+ * (`countrySheetData.ts`) : ce module n'importe jamais
+ * `content/countries/facts`.
  */
 export function constraintValueFor(
   constraintId: ConstraintId,

@@ -1,19 +1,12 @@
 import { describe, expect, it } from "vitest";
 import {
   capitalizeFirst,
-  computeDensity,
-  formatCurrency,
-  formatDemonym,
   formatFullDate,
-  formatHumanDevelopmentIndex,
   formatLanguageName,
   formatList,
-  formatOneDecimal,
   formatOrdinal,
   formatPercent,
-  formatUsd,
   formatYear,
-  sourceReferences,
 } from "../countrySheetFormat";
 
 describe("formatOrdinal", () => {
@@ -65,16 +58,6 @@ describe("formatLanguageName", () => {
   );
 });
 
-describe("computeDensity", () => {
-  it("divides population by area", () => {
-    expect(computeDensity(1000, 10)).toBe(100);
-  });
-
-  it("returns 0 for a zero area rather than dividing by zero", () => {
-    expect(computeDensity(1000, 0)).toBe(0);
-  });
-});
-
 describe("formatPercent", () => {
   it("rounds to the nearest integer percent at or above 10%", () => {
     expect(formatPercent(0.213, "en")).toBe("21%");
@@ -112,56 +95,6 @@ describe("formatList", () => {
   });
 });
 
-describe("sourceReferences", () => {
-  it("resolves source ids to their localized name, url and vintage", () => {
-    expect(
-      sourceReferences(["rest_countries", "faostat_2022_2024"], "en"),
-    ).toEqual([
-      {
-        id: "rest_countries",
-        name: "REST Countries",
-        url: "https://restcountries.com/",
-        vintage: null,
-      },
-      {
-        id: "faostat_2022_2024",
-        name: "FAOSTAT",
-        url: "https://www.fao.org/faostat/",
-        vintage: "2022–2024 average",
-      },
-    ]);
-  });
-});
-
-describe("formatDemonym", () => {
-  const french = {
-    fr: { m: "Français", f: "Française" },
-    en: { m: "French", f: "French" },
-  };
-
-  it("lists both forms in French when they differ", () => {
-    expect(formatDemonym(french, "fr")).toBe("Français, Française");
-  });
-
-  it("shows a single form when masculine equals feminine", () => {
-    expect(formatDemonym(french, "en")).toBe("French");
-  });
-});
-
-describe("formatCurrency", () => {
-  it("shows the localized name then the code", () => {
-    expect(formatCurrency("EUR", "en")).toBe("Euro (EUR)");
-  });
-
-  it("keeps the ICU casing in French, like language names", () => {
-    expect(formatCurrency("EUR", "fr")).toBe("euro (EUR)");
-  });
-
-  it("falls back to the bare code when Intl has no name for it", () => {
-    expect(formatCurrency("XXZ", "en")).toBe("XXZ");
-  });
-});
-
 describe("formatFullDate", () => {
   it("writes the day in French", () => {
     expect(formatFullDate("1962-07-05", "fr")).toBe("5 juillet 1962");
@@ -188,29 +121,5 @@ describe("capitalizeFirst", () => {
 
   it("laisse un libellé déjà capitalisé", () => {
     expect(capitalizeFirst("Mount Scenery", "en")).toBe("Mount Scenery");
-  });
-});
-
-describe("formatUsd", () => {
-  it("arrondit à l'entier et préfixe US$ en anglais", () => {
-    expect(formatUsd(48986.4, "en")).toBe("US$48,986");
-  });
-
-  it("groupe par espaces insécables en français", () => {
-    expect(formatUsd(48986.4, "fr")).toBe("48\u202f986\u00a0$US");
-  });
-});
-
-describe("formatOneDecimal", () => {
-  it("garde la décimale zéro (83,0 / 83.0)", () => {
-    expect(formatOneDecimal(83.0243, "fr")).toBe("83,0");
-    expect(formatOneDecimal(83.0243, "en")).toBe("83.0");
-  });
-});
-
-describe("formatHumanDevelopmentIndex", () => {
-  it("garde trois décimales (0,920 / 0.920) même quand le fichier écrit 0.92", () => {
-    expect(formatHumanDevelopmentIndex(0.92, "fr")).toBe("0,920");
-    expect(formatHumanDevelopmentIndex(0.92, "en")).toBe("0.920");
   });
 });

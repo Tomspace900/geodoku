@@ -8,7 +8,7 @@ const MODULE_MANIFEST = "dist/.bundle-modules.json";
 // Depuis le 2026-08-09, l'archive et l'entraînement sont lazy eux aussi (cf.
 // `LAZY_ROUTE_MODULES`). React Router rend les navigations publiques
 // instantanées, au prix assumé d'un entry plus gros. Depuis le 2026-09-16
-// (P4 lot 2), le chunk de fiche pays (`LAZY_FEATURE_MODULES`) suit le même
+// (P4 lot 2), le chunk des faits (`LAZY_FEATURE_MODULES`) suit le même
 // principe : hors chemin critique, chargé à la demande. Les chunks non
 // initiaux gardent leur budget anti-monolithe.
 const MAX_NON_INITIAL_CHUNK_GZIP_BYTES = 150 * 1024;
@@ -109,7 +109,7 @@ const LAZY_ROUTE_MODULES = [
   "/src/features/archive/TrainingPage.tsx",
 ];
 
-// Entrées dynamiques hors routes : le chunk de fiche pays (P4 lot 2), seul
+// Entrées dynamiques hors routes : le chunk des faits (P4 lot 2), seul
 // module qui importe `content/countries/facts` — cf. `countrySheetData.ts`.
 // Chargé via `import()` depuis `loadCountrySheetData.ts`, préchargé au montage
 // de la grille solution, jamais importé statiquement par `src/`.
@@ -151,11 +151,11 @@ if (dynamicEntries.length !== EXPECTED_DYNAMIC_MODULES.length) {
 }
 
 // `content/countries/facts` (le snapshot de faits pays, ~197 pays) ne doit
-// jamais rentrer dans le graphe initial : seul le chunk de fiche l'importe.
+// jamais rentrer dans le graphe initial : seul le chunk des faits l'importe.
 const countrySheetDataEntry = dynamicEntryByModule.get(
   "/src/features/countries/logic/countrySheetData.ts",
 );
-if (!countrySheetDataEntry) throw new Error("Chunk de fiche pays introuvable");
+if (!countrySheetDataEntry) throw new Error("Chunk des faits introuvable");
 const factsOwner = moduleChunks.find((chunk) =>
   chunk.modules.some((moduleId) =>
     moduleId.endsWith("/content/countries/facts.ts"),
@@ -163,7 +163,7 @@ const factsOwner = moduleChunks.find((chunk) =>
 );
 if (!factsOwner || initialFiles.has(factsOwner.fileName)) {
   throw new Error(
-    "content/countries/facts.ts doit rester hors du chargement initial (chunk de fiche pays uniquement)",
+    "content/countries/facts.ts doit rester hors du chargement initial (chunk des faits uniquement)",
   );
 }
 

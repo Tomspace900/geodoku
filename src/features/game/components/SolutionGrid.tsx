@@ -56,8 +56,9 @@ export function SolutionGrid({
 }: Props) {
   const { locale, t } = useLocale();
 
-  // Précharge le chunk de fiche pays dès le montage de la grille solution,
-  // pour qu'il soit déjà arrivé au premier tap sur une case ou un en-tête.
+  // Précharge le chunk des faits dès le montage de la grille solution, pour
+  // que les valeurs de contrainte soient déjà là au premier tap sur une case
+  // ou un en-tête.
   useEffect(() => {
     void loadCountrySheetData();
   }, []);

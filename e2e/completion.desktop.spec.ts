@@ -219,9 +219,9 @@ test("rating the difficulty acknowledges the feedback", async ({ page }) => {
   });
 });
 
-// ── Grille solution — Drawer et fiche pays ───────────────────────────────────
+// ── Grille solution — Drawers de case et de contrainte ───────────────────────
 
-test("opening a solution cell lists its answers, and picking one opens the country sheet", async ({
+test("opening a solution cell lists its answers as plain rows, not buttons", async ({
   page,
 }) => {
   test.setTimeout(60_000);
@@ -236,32 +236,21 @@ test("opening a solution cell lists its answers, and picking one opens the count
   const openerCell = page.getByRole("button", { name: /^Row 1 column 1:/ });
   await openerCell.click();
 
-  const countryRow = page
-    .getByRole("button", { name: new RegExp(pick.name) })
+  // A country is an information row: listed, but nothing to tap — no sheet
+  // to open, so no button (and no chevron) behind it.
+  const drawer = page.getByRole("dialog");
+  const countryRow = drawer
+    .getByRole("listitem")
+    .filter({ hasText: pick.name })
     .first();
   await expect(countryRow).toBeVisible({ timeout: 5_000 });
-  await countryRow.click();
-
-  // The country sheet replaces the list in place: back button focused, the
-  // country's name as heading, and at least one always-present category
-  // (every country carries landmarks/population facts).
-  const backButton = page.getByRole("button", { name: "Back to answers" });
-  await expect(backButton).toBeVisible({ timeout: 5_000 });
-  await expect(backButton).toBeFocused();
   await expect(
-    page.getByRole("heading", { name: pick.name, exact: true }),
-  ).toBeVisible();
-  await expect(page.getByText("Landmarks")).toBeVisible();
-  await expect(page.getByText("Population")).toBeVisible();
-
-  // Back to the list restores focus on the row that was opened.
-  await backButton.click();
-  await expect(countryRow).toBeVisible();
-  await expect(countryRow).toBeFocused();
+    drawer.getByRole("button", { name: new RegExp(pick.name) }),
+  ).toHaveCount(0);
 
   // Closing the drawer returns focus to the cell that opened it.
   await page.keyboard.press("Escape");
-  await expect(backButton).toBeHidden({ timeout: 3_000 });
+  await expect(countryRow).toBeHidden({ timeout: 3_000 });
   await expect(openerCell).toBeFocused();
 });
 
@@ -296,24 +285,14 @@ test("tapping a header on the solution grid opens the constraint drawer with its
   ).toBeVisible({ timeout: 5_000 });
 
   const countryRow = page
-    .getByRole("button", { name: new RegExp(expectedCountry.name) })
+    .getByRole("dialog")
+    .getByRole("listitem")
+    .filter({ hasText: expectedCountry.name })
     .first();
   await expect(countryRow).toBeVisible({ timeout: 5_000 });
-  await countryRow.click();
-
-  const backButton = page.getByRole("button", { name: "Back to answers" });
-  await expect(backButton).toBeVisible({ timeout: 5_000 });
-  await expect(
-    page.getByRole("heading", { name: expectedCountry.name, exact: true }),
-  ).toBeVisible();
-
-  // Back to the list restores focus on the row that was opened.
-  await backButton.click();
-  await expect(countryRow).toBeVisible();
-  await expect(countryRow).toBeFocused();
 
   // Closing the drawer returns focus to the header that opened it.
   await page.keyboard.press("Escape");
-  await expect(backButton).toBeHidden({ timeout: 3_000 });
+  await expect(countryRow).toBeHidden({ timeout: 3_000 });
   await expect(headerButton).toBeFocused();
 });

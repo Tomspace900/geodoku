@@ -1,43 +1,14 @@
 import type { Locale } from "@/i18n/types";
-import type { Demonyms } from "../../../../content/countries/type";
-import { SOURCES, type SourceId } from "../../../../content/sources";
 import type { LocalizedString } from "../../../../content/type";
 
 /**
- * Formateurs purs de la fiche pays — nombres, pourcentages, ordinaux, années
- * négatives, noms de langue. Seul module de la feature à appeler `Intl.*` ;
- * `countrySheet.ts` (le modèle) n'en appelle aucun, pour rester locale-agnostique.
+ * Formateurs purs — nombres, pourcentages, ordinaux, années négatives, dates,
+ * noms de langue. Seul module de la feature à appeler `Intl.*` : les modèles
+ * (`constraintValue.ts`) n'en appellent aucun, pour rester locale-agnostiques.
  */
 
 export function formatInteger(value: number, locale: Locale): string {
   return new Intl.NumberFormat(locale).format(Math.round(value));
-}
-
-function formatFixedDecimals(
-  value: number,
-  locale: Locale,
-  digits: number,
-): string {
-  return new Intl.NumberFormat(locale, {
-    minimumFractionDigits: digits,
-    maximumFractionDigits: digits,
-  }).format(value);
-}
-
-/** Une décimale fixe (« 83,0 » / « 83.0 ») : l'espérance de vie n'est pas arrondie à l'entier. */
-export function formatOneDecimal(value: number, locale: Locale): string {
-  return formatFixedDecimals(value, locale, 1);
-}
-
-/**
- * Trois décimales fixes comme le rapport du PNUD (« 0,920 » / « 0.920 ») : le
- * fichier écrit `0.92`, mais l'IDH se lit toujours au millième.
- */
-export function formatHumanDevelopmentIndex(
-  value: number,
-  locale: Locale,
-): string {
-  return formatFixedDecimals(value, locale, 3);
 }
 
 /**
@@ -62,10 +33,6 @@ export function formatPercent(fraction: number, locale: Locale): string {
     minimumFractionDigits: digits,
     maximumFractionDigits: digits,
   }).format(fraction);
-}
-
-export function computeDensity(population: number, areaKm2: number): number {
-  return areaKm2 > 0 ? population / areaKm2 : 0;
 }
 
 /** « 1er » en français (seul cas irrégulier), « 1st »/« 2nd »/« 3rd »/« Nth » en anglais. */
@@ -121,34 +88,6 @@ const LANGUAGE_NAME_FALLBACKS: Readonly<Record<string, LocalizedString>> = {
   zdj: { fr: "Comorien ngazidja", en: "Ngazidja Comorian" },
 };
 
-export type CountrySheetSourceReference = Readonly<{
-  id: SourceId;
-  name: string;
-  url: string;
-  vintage: string | null;
-}>;
-
-/**
- * Résout des `SourceId` vers leur fiche localisée (nom, URL, millésime),
- * sur le même patron que `constraintSourceView` (toast de source, lot 1) —
- * la légende de catégorie de la fiche pays affiche « Sources : nom
- * (millésime), … » avec des liens, pas seulement des noms.
- */
-export function sourceReferences(
-  sourceIds: readonly SourceId[],
-  locale: Locale,
-): readonly CountrySheetSourceReference[] {
-  return sourceIds.map((id) => {
-    const source = SOURCES[id];
-    return {
-      id,
-      name: source.name[locale],
-      url: source.url,
-      vintage: source.vintage ? source.vintage[locale] : null,
-    };
-  });
-}
-
 export function formatLanguageName(code: string, locale: Locale): string {
   try {
     const displayName = new Intl.DisplayNames([locale], {
@@ -162,26 +101,6 @@ export function formatLanguageName(code: string, locale: Locale): string {
 }
 
 /**
- * « euro (EUR) » : le nom localisé suivi du code, pour lever l'ambiguïté des
- * dollars et des francs. La casse est celle de l'ICU, comme pour les langues
- * (« français », « euro ») : une majuscule forcée donnait « … et Dollar des
- * États-Unis » au milieu d'une liste. Une monnaie récente que l'ICU embarquée
- * ne connaît pas encore (`DisplayNames` renvoie le code) s'affiche par son seul
- * code.
- */
-export function formatCurrency(code: string, locale: Locale): string {
-  try {
-    const name = new Intl.DisplayNames([locale], { type: "currency" }).of(code);
-    if (name && name !== code) {
-      return `${name} (${code})`;
-    }
-  } catch {
-    // Code non reconnu par l'ICU embarquée — repli ci-dessous.
-  }
-  return code;
-}
-
-/**
  * Majuscule initiale d'un libellé en début de valeur : Wikidata écrit « mont
  * Blanc », « pic d'Orizaba » (typographie française des noms communs), qui
  * jurerait en tête de ligne.
@@ -190,18 +109,9 @@ export function capitalizeFirst(text: string, locale: Locale): string {
   return text.charAt(0).toLocaleUpperCase(locale) + text.slice(1);
 }
 
-/** « Français, Française » ; une seule forme quand le masculin égale le féminin. */
-export function formatDemonym(demonyms: Demonyms, locale: Locale): string {
-  const { m, f } = demonyms[locale];
-  return m === f ? m : `${m}, ${f}`;
-}
-
 /**
- * Style régional de la fiche, aligné sur les millésimes écrits dans
- * `content/sources.ts` (« 23 September 2026 », pas « September 23, 2026 ») et
- * sur la monnaie : seul l'anglais britannique écrit « US$48,986 » là où
- * l'anglais américain écrit « $48,986 », ambigu pour qui lit un dollar
- * canadien ou australien.
+ * Style régional des dates, aligné sur les millésimes écrits dans
+ * `content/sources.ts` (« 23 September 2026 », pas « September 23, 2026 »).
  */
 const SHEET_REGION_LOCALES: Readonly<Record<Locale, string>> = {
   fr: "fr-FR",
@@ -228,20 +138,4 @@ export function formatFullDate(isoDate: string, locale: Locale): string {
         : part.value,
     )
     .join("");
-}
-
-/**
- * Dollars US courants, arrondis à l'entier (« 48 986 $US » / « US$48,986 »).
- * Les espaces insécables du français viennent de l'ICU, pas d'une chaîne
- * écrite à la main.
- */
-export function formatUsd(value: number, locale: Locale): string {
-  return new Intl.NumberFormat(SHEET_REGION_LOCALES[locale], {
-    style: "currency",
-    currency: "USD",
-    // Explicite : avant Intl.NumberFormat v3 (Safari < 15.4), un maximum sous
-    // le minimum par défaut d'une monnaie (2) levait une RangeError.
-    minimumFractionDigits: 0,
-    maximumFractionDigits: 0,
-  }).format(value);
 }

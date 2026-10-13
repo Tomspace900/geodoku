@@ -19,7 +19,7 @@ type TranslateFn = (
 
 /**
  * Trois chiffres significatifs (« 241 M », « 1,43 Md ») : un drawer de liste
- * n'a pas la place du nombre exact de la fiche pays.
+ * n'a pas la place du nombre exact.
  */
 function formatCompact(value: number, locale: Locale): string {
   return new Intl.NumberFormat(locale, {
@@ -39,8 +39,8 @@ const SHARE_LABEL_KEYS = {
 
 /**
  * Texte court d'une valeur de contrainte, pour la ligne d'un pays dans le
- * drawer de la grille solution. Les unités et les noms réutilisent la fiche
- * pays (`countrySheet.value.*`) ; le rang et les fuseaux sont écrits plus court
+ * drawer de la grille solution. Les unités et les noms réutilisent les
+ * libellés `countrySheet.value.*` ; le rang et les fuseaux sont écrits plus court
  * ici — la ligne partage la place avec une seconde valeur — et suivent le
  * vocabulaire du libellé de contrainte (« fuseaux horaires »).
  */

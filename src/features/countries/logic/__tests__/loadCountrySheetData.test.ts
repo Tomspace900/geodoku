@@ -6,7 +6,7 @@ vi.mock("../countrySheetData", () => {
   if (shouldFail.current) {
     throw new Error("network error");
   }
-  return { getCountrySheetData: () => null };
+  return { getConstraintValues: () => [] };
 });
 
 describe("loadCountrySheetData", () => {
@@ -22,7 +22,7 @@ describe("loadCountrySheetData", () => {
 
     shouldFail.current = false;
     await expect(loadCountrySheetData()).resolves.toHaveProperty(
-      "getCountrySheetData",
+      "getConstraintValues",
     );
   });
 });

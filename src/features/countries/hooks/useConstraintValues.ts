@@ -12,7 +12,7 @@ const NO_VALUES: ConstraintValuesByCountry = new Map();
 
 /**
  * Valeurs de contrainte de chaque pays (`constraintIds`, dans l'ordre), lues
- * dans le chunk lazy de la fiche pays. Tant que le chunk n'est pas là — ou s'il
+ * dans le chunk lazy des faits. Tant que le chunk n'est pas là — ou s'il
  * échoue — la map est vide : le drawer affiche ses lignes sans valeur plutôt
  * que de bloquer, la valeur n'étant qu'un complément d'information.
  */
