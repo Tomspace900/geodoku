@@ -275,8 +275,8 @@ littéralement exact. La façade
 arctique (`arctic_coast`) est une convention curée, restreinte aux quatre États à
 côte arctique continue (Canada, Norvège, Russie, États-Unis) ; elle ne sert
 qu'à `ocean_multiple_basins`. Les dépendances ne sont pas automatiquement
-repliées sur leur État souverain — mais les territoires ultramarins d'un État
-jouable comptent pour lui.
+repliées sur leur État souverain — mais ses territoires ultramarins pleinement
+intégrés comptent pour un État jouable ([périmètre territorial](#périmètre-territorial-dun-pays)).
 
 **Baltique et mer Noire (tranché le 2026-09-11).** La **Baltique** et la **mer Noire** ne
 sont rattachées à aucun bassin : ce sont des mers intérieures, pas des océans.

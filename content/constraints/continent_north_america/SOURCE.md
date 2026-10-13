@@ -22,7 +22,7 @@ Pays dont le continent Geodoku est **Amérique du Nord**.
 
 ## Cas limites
 
-L'Amérique centrale et les Caraïbes sont rattachées à l'Amérique du Nord par **convention Geodoku** : M49 les range sous « Amérique latine et Caraïbes », hors de l'Amérique septentrionale. Le libellé et la clarification joueur le disent (« Amérique centrale et Caraïbes comprises »).
+L'Amérique centrale et les Caraïbes sont rattachées à l'Amérique du Nord par **convention Geodoku** : M49 les range sous « Amérique latine et Caraïbes », hors de l'Amérique septentrionale. La clarification joueur le dit (« Comprend l'Amérique centrale et les Caraïbes »).
 
 ## Révision
 
