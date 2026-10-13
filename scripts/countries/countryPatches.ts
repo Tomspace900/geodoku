@@ -63,8 +63,11 @@ export const sourceCorrectionsByIso3: Record<Iso3, SourceCorrection> = {
    * -2,88° : sud à l'unanimité des trois lectures.
    *
    * Les 10 autres `equatorCrosser` tombent déjà du bon côté sans patch.
+   *
+   * Langues (règle plus bas) — Constitution, art. 1 : le français est la langue
+   * officielle ; kikongo, lingala, swahili et tshiluba sont « langues nationales ».
    */
-  COD: { latitude: -2.88 },
+  COD: { latitude: -2.88, officialLanguages: ["fr"] },
   FRA: {
     borders: [
       "AND",
@@ -124,6 +127,25 @@ export const sourceCorrectionsByIso3: Record<Iso3, SourceCorrection> = {
   TKM: { officialLanguages: ["tk"] },
   /** Ouzbékistan — l'ouzbek est seule langue d'État ; le russe n'a aucun statut officiel. */
   UZB: { officialLanguages: ["uz"] },
+  /** Suisse — Constitution, art. 4 : la langue nationale est l'allemand, pas le suisse allemand (`gsw`) que liste la source. */
+  CHE: { officialLanguages: ["fr", "de", "it", "rm"] },
+  /** Argentine — aucune loi nationale ; l'espagnol l'est de fait. Le guarani n'est co-officiel que dans la province de Corrientes. */
+  ARG: { officialLanguages: ["es"] },
+  /** Inde — langues officielles de l'Union : hindi et anglais. Le tamoul est officiel au Tamil Nadu, pas à l'échelle nationale. */
+  IND: { officialLanguages: ["en", "hi"] },
+  /** Irak — Constitution, art. 4 : arabe et kurde. Le syriaque (araméen) n'est officiel que dans les unités administratives où il est parlé. */
+  IRQ: { officialLanguages: ["ar", "ckb"] },
+  /** Namibie — Constitution, art. 3 : l'anglais est la seule langue officielle ; les autres sont reconnues, sans statut officiel. */
+  NAM: { officialLanguages: ["en"] },
+  // RD Congo : entrée partagée avec la latitude, plus haut.
+  /** Congo — Constitution : le français est la langue officielle ; le lingala et le kituba sont « langues nationales véhiculaires ». */
+  COG: { officialLanguages: ["fr"] },
+  /** Pérou — Constitution, art. 48 : le quechua et l'aymara ne sont officiels que « dans les zones où ils prédominent ». */
+  PER: { officialLanguages: ["es"] },
+  /** Jamaïque — l'anglais est la langue de l'État ; le créole jamaïcain n'a aucun statut. */
+  JAM: { officialLanguages: ["en"] },
+  /** Guinée-Bissau — le portugais est la seule langue officielle ; le créole n'a aucun statut. */
+  GNB: { officialLanguages: ["pt"] },
 };
 
 // ─── Search aliases (player variants beyond names + REST alternates) ────────────
