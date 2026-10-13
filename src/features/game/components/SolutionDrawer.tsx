@@ -8,7 +8,12 @@ import {
   DrawerTitle,
 } from "@/components/ui/drawer";
 import { CountrySheet } from "@/features/countries/components/CountrySheet";
+import {
+  type ConstraintValuesByCountry,
+  useConstraintValues,
+} from "@/features/countries/hooks/useConstraintValues";
 import { useCountrySheetData } from "@/features/countries/hooks/useCountrySheetData";
+import { formatConstraintValue } from "@/features/countries/logic/constraintValueFormat";
 import { getCountryByIso3 } from "@/features/countries/logic/search";
 import { ConstraintSourceInfo } from "@/features/game/components/ConstraintSourceInfo";
 import type {
@@ -31,6 +36,7 @@ import type {
   GameState,
 } from "@/features/game/types";
 import { useLocale } from "@/i18n/LocaleContext";
+import type { Locale } from "@/i18n/types";
 import { focusWithoutVisibleRing } from "@/lib/focus";
 import { cn } from "@/lib/utils";
 
@@ -41,19 +47,69 @@ type Props = {
   drawer: ReturnType<typeof useSolutionDrawer>;
 };
 
+/**
+ * Ligne d'un pays, partagée par les deux listes : drapeau, nom, éventuelle
+ * ligne de valeur, puis le contenu de queue (rareté ou valeur). Une ligne
+ * d'information, pas un bouton — la liste (`ul`/`li`) en porte la sémantique.
+ */
+function AnswerRow({
+  iso,
+  subline,
+  trailing,
+}: {
+  iso: string;
+  subline?: string | null;
+  trailing?: React.ReactNode;
+}) {
+  const { locale } = useLocale();
+  const country = getCountryByIso3(iso);
+
+  return (
+    <li className="flex w-full items-center gap-2 rounded-lg px-2 py-2">
+      <span aria-hidden="true" className="shrink-0 text-base">
+        {country?.flagEmoji ?? "🏳️"}
+      </span>
+      <span className="flex min-w-0 flex-1 flex-col">
+        <span className="truncate text-sm font-medium text-on-surface">
+          {country ? country.names[locale] : iso}
+        </span>
+        {subline && (
+          <span className="text-xs font-normal text-on-surface-variant">
+            {subline}
+          </span>
+        )}
+      </span>
+      {trailing}
+    </li>
+  );
+}
+
+/**
+ * Valeurs des contraintes de la case pour un pays, jointes en une ligne
+ * (« 2ᵉ producteur mondial de cacao · 51 % de forêt »). Vide quand aucune
+ * contrainte n'apporte plus que son libellé.
+ */
+function cellSubline(
+  values: ConstraintValuesByCountry,
+  iso: string,
+  locale: Locale,
+  t: ReturnType<typeof useLocale>["t"],
+): string | null {
+  const parts = (values.get(iso) ?? []).flatMap((value) =>
+    value ? [formatConstraintValue(value, locale, t)] : [],
+  );
+  return parts.length > 0 ? parts.join(" · ") : null;
+}
+
 /** Réponses d'une case : rareté de la cohorte, ordre du plus rare au plus commun. */
 function CellListView({
   codes,
   cellDist,
-  userPickIso,
-  onSelectCountry,
-  rowRefs,
+  values,
 }: {
   codes: readonly string[];
   cellDist: CellGuessDistribution | undefined;
-  userPickIso: string | null;
-  onSelectCountry: (iso3: string) => void;
-  rowRefs: React.MutableRefObject<Map<string, HTMLButtonElement>>;
+  values: ConstraintValuesByCountry;
 }) {
   const { locale, t } = useLocale();
   const totalGuesses = cellDist?.totalGuesses ?? 0;
@@ -72,66 +128,42 @@ function CellListView({
 
   return (
     <ul className="flex flex-col gap-1 overflow-y-auto px-4 pb-4">
-      {ordered.map(({ iso, tier }) => {
-        const country = getCountryByIso3(iso);
-        const isUserPick = iso === userPickIso;
-        const share = rarityByCountry[iso] ?? 0;
-        return (
-          <li key={iso}>
-            <Button
-              type="button"
-              variant="ghost"
-              size="auto"
-              ref={(el) => {
-                if (el) rowRefs.current.set(iso, el);
-                else rowRefs.current.delete(iso);
-              }}
-              onClick={() => onSelectCountry(iso)}
-              className={cn(
-                "flex w-full items-center gap-2 rounded-lg px-2 py-2 text-left",
-                isUserPick && "ring-1 ring-inset ring-on-surface/40",
-              )}
-            >
-              <span aria-hidden="true" className="shrink-0 text-base">
-                {country?.flagEmoji ?? "🏳️"}
+      {ordered.map(({ iso, tier }) => (
+        <AnswerRow
+          key={iso}
+          iso={iso}
+          subline={cellSubline(values, iso, locale, t)}
+          trailing={
+            hasData && (
+              <span
+                className={cn(
+                  "shrink-0 rounded-full px-2 py-0.5 text-[10px] font-medium",
+                  tier ? RARITY_STYLES[tier] : "text-on-surface-variant",
+                )}
+              >
+                {formatRarityPercent(rarityByCountry[iso] ?? 0)}
               </span>
-              <span className="min-w-0 flex-1 truncate text-sm font-medium text-on-surface">
-                {country ? country.names[locale] : iso}
-              </span>
-              {isUserPick && (
-                <span className="shrink-0 text-[10px] font-medium uppercase tracking-wide text-on-surface-variant">
-                  {t("ui.yourPick")}
-                </span>
-              )}
-              {hasData && (
-                <span
-                  className={cn(
-                    "shrink-0 rounded-full px-2 py-0.5 text-[10px] font-medium",
-                    tier ? RARITY_STYLES[tier] : "text-on-surface-variant",
-                  )}
-                >
-                  {formatRarityPercent(share)}
-                </span>
-              )}
-            </Button>
-          </li>
-        );
-      })}
+            )
+          }
+        />
+      ))}
     </ul>
   );
 }
 
-/** Tous les pays d'une contrainte (active ou archivée) : nom localisé, sans % ni tier. */
+/**
+ * Tous les pays d'une contrainte (active ou archivée), par ordre alphabétique :
+ * nom localisé et, quand elle apporte quelque chose, la valeur de la
+ * contrainte — pas de rareté, la liste dépasse la case.
+ */
 function ConstraintListView({
   countries,
-  onSelectCountry,
-  rowRefs,
+  values,
 }: {
   countries: readonly string[];
-  onSelectCountry: (iso3: string) => void;
-  rowRefs: React.MutableRefObject<Map<string, HTMLButtonElement>>;
+  values: ConstraintValuesByCountry;
 }) {
-  const { locale } = useLocale();
+  const { locale, t } = useLocale();
   const ordered = [...countries].sort((a, b) => {
     const na = getCountryByIso3(a)?.names[locale] ?? a;
     const nb = getCountryByIso3(b)?.names[locale] ?? b;
@@ -141,28 +173,19 @@ function ConstraintListView({
   return (
     <ul className="flex flex-col gap-1 overflow-y-auto px-4 pb-4">
       {ordered.map((iso) => {
-        const country = getCountryByIso3(iso);
+        const value = cellSubline(values, iso, locale, t);
         return (
-          <li key={iso}>
-            <Button
-              type="button"
-              variant="ghost"
-              size="auto"
-              ref={(el) => {
-                if (el) rowRefs.current.set(iso, el);
-                else rowRefs.current.delete(iso);
-              }}
-              onClick={() => onSelectCountry(iso)}
-              className="flex w-full items-center gap-2 rounded-lg px-2 py-2 text-left"
-            >
-              <span aria-hidden="true" className="shrink-0 text-base">
-                {country?.flagEmoji ?? "🏳️"}
-              </span>
-              <span className="min-w-0 flex-1 truncate text-sm font-medium text-on-surface">
-                {country ? country.names[locale] : iso}
-              </span>
-            </Button>
-          </li>
+          <AnswerRow
+            key={iso}
+            iso={iso}
+            trailing={
+              value && (
+                <span className="max-w-[50%] text-right text-xs font-normal text-on-surface-variant">
+                  {value}
+                </span>
+              )
+            }
+          />
         );
       })}
     </ul>
@@ -258,9 +281,6 @@ export function SolutionDrawer({
   const cellKey = cell ? (`${cell.row},${cell.col}` as CellKey) : null;
   const cellCodes = cellKey ? (validAnswers[cellKey] ?? []) : [];
   const cellDist = cellKey ? distribution?.[cellKey] : undefined;
-  const userCell = cellKey ? state.cells[cellKey] : undefined;
-  const userPickIso =
-    userCell?.status === "filled" ? userCell.countryCode : null;
 
   const rowConstraint = cell
     ? CONSTRAINT_BY_ID.get(state.rows[cell.row])
@@ -280,6 +300,19 @@ export function SolutionDrawer({
   const constraintCountries = constraintId
     ? [...constraintAnswers(constraintId)]
     : [];
+
+  // Les valeurs viennent du chunk lazy des faits : les deux contraintes d'une
+  // case, ou la contrainte seule d'un en-tête. Jamais appelé conditionnellement.
+  const listedCountries = cell ? cellCodes : constraintCountries;
+  const valueConstraintIds = cell
+    ? [state.rows[cell.row], state.cols[cell.col]]
+    : constraintId
+      ? [constraintId]
+      : [];
+  const constraintValues = useConstraintValues(
+    listedCountries,
+    valueConstraintIds,
+  );
 
   function handleClose() {
     setOpen(false);
@@ -333,9 +366,7 @@ export function SolutionDrawer({
               <CellListView
                 codes={cellCodes}
                 cellDist={cellDist}
-                userPickIso={userPickIso}
-                onSelectCountry={drawer.openCountry}
-                rowRefs={rowRefs}
+                values={constraintValues}
               />
             </>
           ) : (
@@ -361,8 +392,7 @@ export function SolutionDrawer({
               </div>
               <ConstraintListView
                 countries={constraintCountries}
-                onSelectCountry={drawer.openCountry}
-                rowRefs={rowRefs}
+                values={constraintValues}
               />
             </>
           )

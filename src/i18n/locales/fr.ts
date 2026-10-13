@@ -49,7 +49,6 @@ export const fr = {
     solutionCellAriaLabel:
       "Case ligne {row} colonne {col} : {rowConstraint} × {colConstraint}. {count} réponses possibles.",
     constraintAnswerCount: "{count} pays",
-    yourPick: "Ton choix",
     backToAnswers: "Retour aux réponses",
   },
   footer: {
@@ -421,6 +420,21 @@ export const fr = {
     population_gt_30M: "Population supérieure à 30\u00A0millions",
     population_lt_1M: "Population inférieure à 1\u00A0million",
     population_lt_2_5M: "Population inférieure à 2,5\u00A0millions",
+  },
+  constraintValue: {
+    population: "{value} hab.",
+    utcOffsets: "{count} fuseaux horaires",
+    rank: "{rank} producteur de {product}",
+    borderCount: "{count} voisins",
+    latitudeNorth: "{value}\u00A0° N",
+    latitudeSouth: "{value}\u00A0° S",
+    forestShare: "{value} de forêt",
+    mountainShare: "{value} de montagnes",
+    coalShare: "{value} d'électricité au charbon",
+    lastEruption: "Dernière éruption\u00A0: {year}",
+    soleNeighbor: "Voisin\u00A0: {names}",
+    capitalSingular: "Capitale\u00A0: {names}",
+    capitalPlural: "Capitales\u00A0: {names}",
   },
   countrySheet: {
     category: {

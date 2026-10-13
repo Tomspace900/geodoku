@@ -47,7 +47,6 @@ export const en = {
     solutionCellAriaLabel:
       "Row {row} column {col}: {rowConstraint} × {colConstraint}. {count} possible answers.",
     constraintAnswerCount: "{count} countries",
-    yourPick: "Your pick",
     backToAnswers: "Back to answers",
   },
   footer: {
@@ -405,6 +404,21 @@ export const en = {
     population_gt_30M: "Population over 30\u00A0million",
     population_lt_1M: "Population under 1\u00A0million",
     population_lt_2_5M: "Population under 2.5\u00A0million",
+  },
+  constraintValue: {
+    population: "{value} people",
+    utcOffsets: "{count} time zones",
+    rank: "{rank} world producer of {product}",
+    borderCount: "{count} neighbors",
+    latitudeNorth: "{value}° N",
+    latitudeSouth: "{value}° S",
+    forestShare: "{value} forest",
+    mountainShare: "{value} mountainous",
+    coalShare: "{value} of electricity from coal",
+    lastEruption: "Last eruption: {year}",
+    soleNeighbor: "Neighbor: {names}",
+    capitalSingular: "Capital: {names}",
+    capitalPlural: "Capitals: {names}",
   },
   countrySheet: {
     category: {
