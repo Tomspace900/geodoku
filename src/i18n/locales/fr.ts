@@ -11,7 +11,6 @@ export const fr = {
     searchPlaceholder: "Chercher un pays…",
     typeAtLeast: "Saisis au moins\u00A03 caractères",
     noResults: "Aucun pays trouvé.",
-    errorUnknown: "Erreur inconnue.",
     rarityEvolvesHint: "Les raretés évoluent au fil des parties du jour.",
     constraintSourceConvention: "Classification Geodoku",
     constraintSourcePrefix: "Source :",

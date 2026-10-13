@@ -9,7 +9,6 @@ export const en = {
     searchPlaceholder: "Search for a country…",
     typeAtLeast: "Type at least\u00A03 characters",
     noResults: "No country found.",
-    errorUnknown: "Unknown error.",
     rarityEvolvesHint: "Rarities keep shifting as more people play today.",
     constraintSourceConvention: "Geodoku classification",
     constraintSourcePrefix: "Source:",
