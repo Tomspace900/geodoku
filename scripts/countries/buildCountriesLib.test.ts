@@ -64,6 +64,7 @@ function minimalCountry(code: string): CountryRecord {
     gdpPerCapitaUsd: null,
     lifeExpectancyYears: null,
     humanDevelopmentIndex: null,
+    eventEditions: {},
     currencies: ["EUR"],
     demonyms: { fr: { m: "X", f: "X" }, en: { m: "X", f: "X" } },
   };
@@ -492,6 +493,18 @@ describe("quantitativeFactsForCode", () => {
         },
       },
     },
+    eventEditions: {
+      checkedAt: "2026-10-13",
+      events: {
+        fifa_wc_host: [
+          { year: 2006, hosts: ["DEU"] },
+          { year: 1974, hosts: ["DEU"] },
+          { year: 2002, hosts: ["CHE", "FIN"] },
+        ],
+        summer_olympics_host: [{ year: 1972, hosts: ["DEU"] }],
+        winter_olympics_host: [],
+      },
+    },
   };
 
   it("reduces datasets to per-country scalars, shares as 0–1 fractions", () => {
@@ -515,6 +528,7 @@ describe("quantitativeFactsForCode", () => {
       gdpPerCapitaUsd: null,
       lifeExpectancyYears: null,
       humanDevelopmentIndex: null,
+      eventEditions: {},
     });
     expect(quantitativeFactsForCode("CHE", datasets).mountainAreaShare).toBe(
       0.654,
@@ -627,6 +641,16 @@ describe("quantitativeFactsForCode", () => {
     expect(
       quantitativeFactsForCode("RUS", datasets).humanDevelopmentIndex,
     ).toBeNull();
+  });
+
+  it("gives each hosted event its years in ascending order, a co-host included", () => {
+    expect(quantitativeFactsForCode("DEU", datasets).eventEditions).toEqual({
+      fifa_wc_host: [1974, 2006],
+      summer_olympics_host: [1972],
+    });
+    expect(quantitativeFactsForCode("FIN", datasets).eventEditions).toEqual({
+      fifa_wc_host: [2002],
+    });
   });
 
   it("fails loudly for a country without a highest point", () => {

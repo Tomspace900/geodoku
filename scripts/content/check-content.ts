@@ -71,6 +71,7 @@ import {
   validateCapitalLabels,
   validateCurrencyDemonymFacts,
   validateDatasetFacts,
+  validateEventEditions,
   validateHighestPoints,
   validateHumanDevelopmentIndex,
   validatePeakCoherence,
@@ -115,6 +116,13 @@ function checkCountries(errors: string[]): void {
   );
   errors.push(
     ...validateCapitalLabels(COUNTRY_FACTS, CAPITAL_LABELS, COUNTRY_CODES),
+  );
+  errors.push(
+    ...validateEventEditions(
+      COUNTRY_FACTS,
+      QUANTITATIVE_DATASETS.eventEditions,
+      COUNTRY_CODES,
+    ),
   );
   errors.push(
     ...validateCurrencyDemonymFacts(

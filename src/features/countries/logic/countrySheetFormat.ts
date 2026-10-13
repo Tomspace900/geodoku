@@ -85,26 +85,22 @@ export function formatList(items: readonly string[], locale: Locale): string {
 /**
  * Codes de langue que l'ICU embarquée par Node/les navigateurs ne résout pas
  * (`Intl.DisplayNames` renvoie le code tel quel, ou lève) : tous des codes
- * ISO 639-3 hors CLDR. Relevé le 2026-10-13 sur les `officialLanguages` du
- * snapshot — 13 codes en défaut (5 le 2026-09-16, 8 de plus depuis la
- * correction des langues de la Namibie et du Zimbabwe). Les noms français sont
+ * ISO 639-3 hors CLDR. Relevé le 2026-10-14 sur les `officialLanguages` du
+ * snapshot — 9 codes en défaut, après le retrait des langues sans statut
+ * national (Namibie, Guinée-Bissau, Belize). Les noms français sont
  * en minuscules, comme ceux de l'ICU (« français »), puisqu'ils se lisent au
  * milieu d'une liste ; un test garde que plus aucun code n'est rendu brut.
  */
 const LANGUAGE_NAME_FALLBACKS: Readonly<Record<string, LocalizedString>> = {
   ber: { fr: "langues berbères", en: "Berber languages" },
-  bjz: { fr: "créole du Belize", en: "Belize Kriol English" },
   bwg: { fr: "barwe", en: "Barwe" },
-  hgm: { fr: "haillom", en: "Haillom" },
   kck: { fr: "kalanga", en: "Kalanga" },
   khi: { fr: "langues khoïsan", en: "Khoisan languages" },
-  kwn: { fr: "kwangali", en: "Kwangali" },
   ndc: { fr: "ndau", en: "Ndau" },
   nzs: {
     fr: "langue des signes néo-zélandaise",
     en: "New Zealand Sign Language",
   },
-  pov: { fr: "créole de Guinée-Bissau", en: "Upper Guinea Crioulo" },
   toi: { fr: "tonga", en: "Tonga" },
   zdj: { fr: "comorien ngazidja", en: "Ngazidja Comorian" },
   zib: { fr: "langue des signes zimbabwéenne", en: "Zimbabwean Sign Language" },

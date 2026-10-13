@@ -44,6 +44,7 @@ const FACT_KEYS = [
   "flagSymbols",
   "flagLayout",
   "events",
+  "eventEditions",
   "memberships",
   "capitals",
   "drivingSide",

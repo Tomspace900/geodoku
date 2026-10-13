@@ -8,7 +8,7 @@ export const COUNTRY_POPULARITY: CountryPopularitySnapshot = {
     startMonth: "2025-10",
     endMonth: "2026-09",
   },
-  collectedAt: "2026-10-10",
+  collectedAt: "2026-10-13",
   metric: "average_monthly_pageviews_all_access_user",
   algorithmVersion: "assignPopularity",
   fallbackPercentile: 0.5,

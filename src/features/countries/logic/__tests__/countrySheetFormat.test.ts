@@ -48,9 +48,9 @@ describe("formatLanguageName", () => {
 
   it.each([
     ["ber", "fr", "langues berbères"],
-    ["bjz", "en", "Belize Kriol English"],
+    ["kck", "en", "Kalanga"],
     ["nzs", "en", "New Zealand Sign Language"],
-    ["pov", "fr", "créole de Guinée-Bissau"],
+    ["zib", "fr", "langue des signes zimbabwéenne"],
     ["zdj", "en", "Ngazidja Comorian"],
   ] as const)(
     "falls back to a curated label for %s not resolved by Intl (%s)",

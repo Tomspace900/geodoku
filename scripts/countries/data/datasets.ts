@@ -12,6 +12,7 @@ import { AGRICULTURAL_PRODUCTION } from "./agriculturalProduction";
 import { CIVIL_TIME_OFFSETS } from "./civilTimeOffsets";
 import { COAL_ELECTRICITY } from "./coalElectricity";
 import { ENERGY_PRODUCTION } from "./energyProduction";
+import { EVENT_EDITIONS } from "./eventEditions";
 import { FOREST_COVER } from "./forestCover";
 import { HIGHEST_POINTS } from "./highestPoints";
 import { HOLOCENE_VOLCANOES } from "./holoceneVolcanoes";
@@ -34,4 +35,5 @@ export const QUANTITATIVE_DATASETS: QuantitativeDatasets = {
   highestPoints: HIGHEST_POINTS,
   worldBank: WORLD_BANK_INDICATORS,
   humanDevelopment: HUMAN_DEVELOPMENT_INDEX,
+  eventEditions: EVENT_EDITIONS,
 };

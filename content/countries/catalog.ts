@@ -1444,9 +1444,10 @@ export const COUNTRY_CATALOG: CountryCatalog = [
       en: "Nauru",
     },
     aliases: [
-      "Republic of Nauru",
-      "Naoero",
+      "Republic of Naoero",
+      "Nauru",
       "Pleasant Island",
+      "Republic of Nauru",
       "Ripublik Naoero",
     ],
     flagEmoji: "🇳🇷",

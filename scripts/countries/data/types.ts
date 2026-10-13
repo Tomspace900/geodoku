@@ -13,12 +13,18 @@
 
 import type { HumanDevelopmentCategory } from "../../../content/countries/humanDevelopment.ts";
 import type {
+  CountryEvent,
   FormerSovereign,
   ProductionRankKey,
   SovereigntyKind,
 } from "../../../content/countries/type.ts";
 
-export type { FormerSovereign, ProductionRankKey, SovereigntyKind };
+export type {
+  CountryEvent,
+  FormerSovereign,
+  ProductionRankKey,
+  SovereigntyKind,
+};
 
 /** Décalages UTC civils distincts observés simultanément à `referenceDate`. */
 export type CivilTimeOffsetsSnapshot = Record<
@@ -295,3 +301,20 @@ export type HumanDevelopmentIndexSnapshot = {
   values: Record<string, HumanDevelopmentValue>;
   missing: Record<string, HumanDevelopmentMissingCause>;
 };
+
+/**
+ * Une édition d'un événement accueilli : son année et ses pays hôtes (ISO3),
+ * rattachés au pays qui contient **aujourd'hui** la ville ou le territoire hôte.
+ * `note` dit ce qui ne se lit pas dans la ligne (édition décalée, hôte partagé).
+ */
+export type EventEdition = Readonly<{
+  year: number;
+  hosts: readonly string[];
+  note?: string;
+}>;
+
+/** Éditions passées des événements de `CountryEvent`, par ordre chronologique. */
+export type EventEditionsSnapshot = Readonly<{
+  checkedAt: string;
+  events: Readonly<Record<CountryEvent, readonly EventEdition[]>>;
+}>;

@@ -4,7 +4,7 @@ import type { CountryCode } from "./countryCodes";
 import type { CountryFacts, CountryFactsSnapshot } from "./type";
 
 export const FACTS_SNAPSHOT: CountryFactsSnapshot = {
-  date: "2026-10-10",
+  date: "2026-10-13",
   note: "régénéré par pnpm build:countries",
 };
 
@@ -22,6 +22,7 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     flagSymbols: [],
     flagLayout: [],
     events: [],
+    eventEditions: {},
     memberships: [],
     capitals: [
       {
@@ -95,6 +96,7 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     flagSymbols: ["star"],
     flagLayout: ["horizontal_stripes"],
     events: [],
+    eventEditions: {},
     memberships: ["african_union"],
     capitals: [
       {
@@ -168,6 +170,7 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     flagSymbols: ["animal"],
     flagLayout: [],
     events: [],
+    eventEditions: {},
     memberships: ["nato"],
     capitals: [
       {
@@ -241,6 +244,7 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     flagSymbols: ["animal"],
     flagLayout: ["vertical_stripes"],
     events: [],
+    eventEditions: {},
     memberships: [],
     capitals: [
       {
@@ -314,6 +318,7 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     flagSymbols: [],
     flagLayout: ["horizontal_stripes"],
     events: [],
+    eventEditions: {},
     memberships: ["arab_league", "brics"],
     capitals: [
       {
@@ -383,13 +388,16 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     borders: ["BOL", "BRA", "CHL", "PRY", "URY"],
     areaKm2: 2780400,
     population: 46466688,
-    officialLanguages: ["gn", "es"],
+    officialLanguages: ["es"],
     latitude: -34,
     subregion: "South America",
     flagColors: ["blue", "yellow", "white"],
     flagSymbols: ["sun"],
     flagLayout: ["horizontal_stripes"],
     events: ["fifa_wc_host"],
+    eventEditions: {
+      fifa_wc_host: [1978],
+    },
     memberships: ["g20"],
     capitals: [
       {
@@ -463,6 +471,7 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     flagSymbols: [],
     flagLayout: ["horizontal_stripes"],
     events: [],
+    eventEditions: {},
     memberships: [],
     capitals: [
       {
@@ -536,6 +545,7 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     flagSymbols: ["sun", "triangle"],
     flagLayout: [],
     events: [],
+    eventEditions: {},
     memberships: ["commonwealth"],
     capitals: [
       {
@@ -605,10 +615,13 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     officialLanguages: ["en"],
     latitude: -27,
     subregion: "Australia and New Zealand",
-    flagColors: ["blue", "white"],
+    flagColors: ["red", "blue", "white"],
     flagSymbols: ["star", "cross"],
     flagLayout: [],
     events: ["summer_olympics_host"],
+    eventEditions: {
+      summer_olympics_host: [1956, 2000],
+    },
     memberships: ["commonwealth", "g20", "oecd"],
     capitals: [
       {
@@ -690,6 +703,9 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     flagSymbols: [],
     flagLayout: ["horizontal_stripes"],
     events: ["winter_olympics_host"],
+    eventEditions: {
+      winter_olympics_host: [1964, 1976],
+    },
     memberships: ["eu", "eurozone", "oecd", "schengen"],
     capitals: [
       {
@@ -763,6 +779,7 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     flagSymbols: ["star", "crescent"],
     flagLayout: ["horizontal_stripes"],
     events: [],
+    eventEditions: {},
     memberships: [],
     capitals: [
       {
@@ -836,6 +853,7 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     flagSymbols: ["star", "cross", "circle", "triangle"],
     flagLayout: [],
     events: [],
+    eventEditions: {},
     memberships: ["african_union"],
     capitals: [
       {
@@ -906,6 +924,9 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     flagSymbols: [],
     flagLayout: ["vertical_stripes"],
     events: ["summer_olympics_host"],
+    eventEditions: {
+      summer_olympics_host: [1920],
+    },
     memberships: ["eu", "eurozone", "nato", "oecd", "schengen"],
     capitals: [
       {
@@ -979,6 +1000,7 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     flagSymbols: [],
     flagLayout: [],
     events: [],
+    eventEditions: {},
     memberships: ["african_union"],
     capitals: [
       {
@@ -1049,6 +1071,7 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     flagSymbols: ["star"],
     flagLayout: ["horizontal_stripes"],
     events: [],
+    eventEditions: {},
     memberships: ["african_union"],
     capitals: [
       {
@@ -1122,6 +1145,7 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     flagSymbols: ["circle"],
     flagLayout: [],
     events: [],
+    eventEditions: {},
     memberships: ["commonwealth"],
     capitals: [
       {
@@ -1197,6 +1221,7 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     flagSymbols: [],
     flagLayout: ["horizontal_stripes"],
     events: [],
+    eventEditions: {},
     memberships: ["eu", "eurozone", "nato", "schengen"],
     capitals: [
       {
@@ -1270,6 +1295,7 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     flagSymbols: [],
     flagLayout: ["vertical_stripes"],
     events: [],
+    eventEditions: {},
     memberships: ["arab_league"],
     capitals: [
       {
@@ -1343,6 +1369,7 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     flagSymbols: ["triangle"],
     flagLayout: ["horizontal_stripes"],
     events: [],
+    eventEditions: {},
     memberships: ["commonwealth"],
     capitals: [
       {
@@ -1416,6 +1443,9 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     flagSymbols: ["star", "triangle"],
     flagLayout: [],
     events: ["winter_olympics_host"],
+    eventEditions: {
+      winter_olympics_host: [1984],
+    },
     memberships: [],
     capitals: [
       {
@@ -1489,6 +1519,7 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     flagSymbols: [],
     flagLayout: [],
     events: [],
+    eventEditions: {},
     memberships: [],
     capitals: [
       {
@@ -1562,6 +1593,7 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     flagSymbols: ["plant"],
     flagLayout: ["horizontal_stripes"],
     events: [],
+    eventEditions: {},
     memberships: ["commonwealth"],
     capitals: [
       {
@@ -1635,6 +1667,7 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     flagSymbols: ["animal", "star"],
     flagLayout: ["horizontal_stripes"],
     events: [],
+    eventEditions: {},
     memberships: [],
     capitals: [
       {
@@ -1729,6 +1762,10 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     flagSymbols: ["star", "circle"],
     flagLayout: [],
     events: ["fifa_wc_host", "summer_olympics_host"],
+    eventEditions: {
+      fifa_wc_host: [1950, 2014],
+      summer_olympics_host: [2016],
+    },
     memberships: ["brics", "g20"],
     capitals: [
       {
@@ -1806,6 +1843,7 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     flagSymbols: [],
     flagLayout: ["vertical_stripes"],
     events: [],
+    eventEditions: {},
     memberships: ["commonwealth"],
     capitals: [
       {
@@ -1879,6 +1917,7 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     flagSymbols: ["crescent"],
     flagLayout: [],
     events: [],
+    eventEditions: {},
     memberships: ["asean", "commonwealth"],
     capitals: [
       {
@@ -1952,6 +1991,7 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     flagSymbols: ["triangle", "animal"],
     flagLayout: [],
     events: [],
+    eventEditions: {},
     memberships: [],
     capitals: [
       {
@@ -2025,6 +2065,7 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     flagSymbols: [],
     flagLayout: ["horizontal_stripes"],
     events: [],
+    eventEditions: {},
     memberships: ["commonwealth", "african_union"],
     capitals: [
       {
@@ -2098,6 +2139,7 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     flagSymbols: ["star"],
     flagLayout: [],
     events: [],
+    eventEditions: {},
     memberships: ["african_union"],
     capitals: [
       {
@@ -2171,6 +2213,11 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     flagSymbols: ["plant"],
     flagLayout: ["vertical_stripes"],
     events: ["fifa_wc_host", "summer_olympics_host", "winter_olympics_host"],
+    eventEditions: {
+      fifa_wc_host: [2026],
+      summer_olympics_host: [1976],
+      winter_olympics_host: [1988, 2010],
+    },
     memberships: ["commonwealth", "g20", "g7", "nato", "oecd"],
     capitals: [
       {
@@ -2246,13 +2293,17 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     borders: ["AUT", "FRA", "ITA", "LIE", "DEU"],
     areaKm2: 41284,
     population: 9154896,
-    officialLanguages: ["fr", "gsw", "it", "rm"],
+    officialLanguages: ["fr", "de", "it", "rm"],
     latitude: 47,
     subregion: "Western Europe",
     flagColors: ["red", "white"],
     flagSymbols: ["cross"],
     flagLayout: [],
     events: ["fifa_wc_host", "winter_olympics_host"],
+    eventEditions: {
+      fifa_wc_host: [1954],
+      winter_olympics_host: [1928, 1948],
+    },
     memberships: ["oecd", "schengen"],
     capitals: [
       {
@@ -2326,6 +2377,9 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     flagSymbols: ["star"],
     flagLayout: ["horizontal_stripes"],
     events: ["fifa_wc_host"],
+    eventEditions: {
+      fifa_wc_host: [1962],
+    },
     memberships: ["oecd"],
     capitals: [
       {
@@ -2416,6 +2470,10 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     flagSymbols: ["star"],
     flagLayout: [],
     events: ["summer_olympics_host", "winter_olympics_host"],
+    eventEditions: {
+      summer_olympics_host: [2008],
+      winter_olympics_host: [2022],
+    },
     memberships: ["brics", "g20"],
     capitals: [
       {
@@ -2494,6 +2552,7 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     flagSymbols: [],
     flagLayout: ["vertical_stripes"],
     events: [],
+    eventEditions: {},
     memberships: ["african_union"],
     capitals: [
       {
@@ -2569,6 +2628,7 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     flagSymbols: ["star"],
     flagLayout: ["vertical_stripes"],
     events: [],
+    eventEditions: {},
     memberships: ["commonwealth", "african_union"],
     capitals: [
       {
@@ -2637,13 +2697,14 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     borders: ["AGO", "BDI", "CAF", "COG", "RWA", "SSD", "TZA", "UGA", "ZMB"],
     areaKm2: 2344858,
     population: 116452000,
-    officialLanguages: ["fr", "kg", "ln", "lua", "sw"],
+    officialLanguages: ["fr"],
     latitude: -2.88,
     subregion: "Middle Africa",
     flagColors: ["red", "blue", "yellow"],
     flagSymbols: ["star"],
     flagLayout: [],
     events: [],
+    eventEditions: {},
     memberships: ["african_union"],
     capitals: [
       {
@@ -2715,13 +2776,14 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     borders: ["AGO", "CMR", "CAF", "COD", "GAB"],
     areaKm2: 342000,
     population: 6332961,
-    officialLanguages: ["fr", "kg", "ln"],
+    officialLanguages: ["fr"],
     latitude: -1,
     subregion: "Middle Africa",
     flagColors: ["red", "green", "yellow"],
     flagSymbols: ["triangle"],
     flagLayout: [],
     events: [],
+    eventEditions: {},
     memberships: ["opec", "african_union"],
     capitals: [
       {
@@ -2795,6 +2857,7 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     flagSymbols: [],
     flagLayout: ["horizontal_stripes"],
     events: [],
+    eventEditions: {},
     memberships: ["oecd"],
     capitals: [
       {
@@ -2878,6 +2941,7 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     flagSymbols: ["star", "crescent", "triangle"],
     flagLayout: ["horizontal_stripes"],
     events: [],
+    eventEditions: {},
     memberships: ["arab_league", "african_union"],
     capitals: [
       {
@@ -2951,6 +3015,7 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     flagSymbols: ["star"],
     flagLayout: ["horizontal_stripes"],
     events: [],
+    eventEditions: {},
     memberships: ["african_union"],
     capitals: [
       {
@@ -3024,6 +3089,7 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     flagSymbols: ["circle", "star"],
     flagLayout: ["horizontal_stripes"],
     events: [],
+    eventEditions: {},
     memberships: ["oecd"],
     capitals: [
       {
@@ -3097,6 +3163,7 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     flagSymbols: ["star", "triangle"],
     flagLayout: ["horizontal_stripes"],
     events: [],
+    eventEditions: {},
     memberships: [],
     capitals: [
       {
@@ -3167,6 +3234,7 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     flagSymbols: ["plant"],
     flagLayout: [],
     events: [],
+    eventEditions: {},
     memberships: ["commonwealth", "eu", "eurozone"],
     capitals: [
       {
@@ -3240,6 +3308,7 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     flagSymbols: ["triangle"],
     flagLayout: ["horizontal_stripes"],
     events: [],
+    eventEditions: {},
     memberships: ["eu", "nato", "oecd", "schengen"],
     capitals: [
       {
@@ -3313,6 +3382,11 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     flagSymbols: [],
     flagLayout: ["horizontal_stripes"],
     events: ["fifa_wc_host", "summer_olympics_host", "winter_olympics_host"],
+    eventEditions: {
+      fifa_wc_host: [1974, 2006],
+      summer_olympics_host: [1936, 1972],
+      winter_olympics_host: [1936],
+    },
     memberships: ["eu", "eurozone", "g20", "g7", "nato", "oecd", "schengen"],
     capitals: [
       {
@@ -3388,6 +3462,7 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     flagSymbols: ["star", "triangle"],
     flagLayout: ["horizontal_stripes"],
     events: [],
+    eventEditions: {},
     memberships: ["arab_league", "african_union"],
     capitals: [
       {
@@ -3461,6 +3536,7 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     flagSymbols: ["star", "cross", "circle", "animal"],
     flagLayout: [],
     events: [],
+    eventEditions: {},
     memberships: ["commonwealth"],
     capitals: [
       {
@@ -3534,6 +3610,7 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     flagSymbols: ["cross"],
     flagLayout: [],
     events: [],
+    eventEditions: {},
     memberships: ["eu", "nato", "oecd", "schengen"],
     capitals: [
       {
@@ -3607,6 +3684,7 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     flagSymbols: ["cross"],
     flagLayout: [],
     events: [],
+    eventEditions: {},
     memberships: [],
     capitals: [
       {
@@ -3682,6 +3760,7 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     flagSymbols: ["star", "crescent"],
     flagLayout: ["vertical_stripes"],
     events: [],
+    eventEditions: {},
     memberships: ["arab_league", "opec", "african_union"],
     capitals: [
       {
@@ -3757,6 +3836,7 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     flagSymbols: ["animal"],
     flagLayout: ["horizontal_stripes"],
     events: [],
+    eventEditions: {},
     memberships: [],
     capitals: [
       {
@@ -3837,6 +3917,7 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     flagSymbols: ["animal"],
     flagLayout: ["horizontal_stripes"],
     events: [],
+    eventEditions: {},
     memberships: ["arab_league", "brics", "african_union"],
     capitals: [
       {
@@ -3912,6 +3993,7 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     flagSymbols: ["triangle", "plant"],
     flagLayout: [],
     events: [],
+    eventEditions: {},
     memberships: ["african_union"],
     capitals: [
       {
@@ -3982,6 +4064,10 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     flagSymbols: ["animal"],
     flagLayout: ["horizontal_stripes"],
     events: ["fifa_wc_host", "summer_olympics_host"],
+    eventEditions: {
+      fifa_wc_host: [1982],
+      summer_olympics_host: [1992],
+    },
     memberships: ["eu", "eurozone", "nato", "oecd", "schengen"],
     capitals: [
       {
@@ -4055,6 +4141,7 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     flagSymbols: [],
     flagLayout: ["horizontal_stripes"],
     events: [],
+    eventEditions: {},
     memberships: ["eu", "eurozone", "nato", "oecd", "schengen"],
     capitals: [
       {
@@ -4128,6 +4215,7 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     flagSymbols: ["circle", "star"],
     flagLayout: ["horizontal_stripes"],
     events: [],
+    eventEditions: {},
     memberships: ["brics", "african_union"],
     capitals: [
       {
@@ -4203,6 +4291,9 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     flagSymbols: ["cross"],
     flagLayout: [],
     events: ["summer_olympics_host"],
+    eventEditions: {
+      summer_olympics_host: [1952],
+    },
     memberships: ["eu", "eurozone", "nato", "oecd", "schengen"],
     capitals: [
       {
@@ -4276,6 +4367,7 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     flagSymbols: ["cross", "animal"],
     flagLayout: [],
     events: [],
+    eventEditions: {},
     memberships: ["commonwealth"],
     capitals: [
       {
@@ -4360,6 +4452,11 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     flagSymbols: [],
     flagLayout: ["vertical_stripes"],
     events: ["fifa_wc_host", "summer_olympics_host", "winter_olympics_host"],
+    eventEditions: {
+      fifa_wc_host: [1938, 1998],
+      summer_olympics_host: [1900, 1924, 2024],
+      winter_olympics_host: [1924, 1968, 1992],
+    },
     memberships: ["eu", "eurozone", "g20", "g7", "nato", "oecd", "schengen"],
     capitals: [
       {
@@ -4441,6 +4538,7 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     flagSymbols: ["star"],
     flagLayout: [],
     events: [],
+    eventEditions: {},
     memberships: [],
     capitals: [
       {
@@ -4514,6 +4612,7 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     flagSymbols: [],
     flagLayout: ["horizontal_stripes"],
     events: [],
+    eventEditions: {},
     memberships: ["commonwealth", "opec", "african_union"],
     capitals: [
       {
@@ -4587,6 +4686,10 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     flagSymbols: ["cross"],
     flagLayout: [],
     events: ["fifa_wc_host", "summer_olympics_host"],
+    eventEditions: {
+      fifa_wc_host: [1966],
+      summer_olympics_host: [1908, 1948, 2012],
+    },
     memberships: ["commonwealth", "g20", "g7", "nato", "oecd"],
     capitals: [
       {
@@ -4660,6 +4763,7 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     flagSymbols: ["cross"],
     flagLayout: [],
     events: [],
+    eventEditions: {},
     memberships: [],
     capitals: [
       {
@@ -4733,6 +4837,7 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     flagSymbols: ["star"],
     flagLayout: ["horizontal_stripes"],
     events: [],
+    eventEditions: {},
     memberships: ["commonwealth", "african_union"],
     capitals: [
       {
@@ -4808,6 +4913,7 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     flagSymbols: [],
     flagLayout: ["vertical_stripes"],
     events: [],
+    eventEditions: {},
     memberships: ["african_union"],
     capitals: [
       {
@@ -4881,6 +4987,7 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     flagSymbols: [],
     flagLayout: ["horizontal_stripes"],
     events: [],
+    eventEditions: {},
     memberships: ["commonwealth", "african_union"],
     capitals: [
       {
@@ -4944,13 +5051,14 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     borders: ["GIN", "SEN"],
     areaKm2: 36125,
     population: 1890252,
-    officialLanguages: ["pt", "pov"],
+    officialLanguages: ["pt"],
     latitude: 12,
     subregion: "Western Africa",
     flagColors: ["red", "green", "yellow", "black"],
     flagSymbols: ["star"],
     flagLayout: [],
     events: [],
+    eventEditions: {},
     memberships: ["african_union"],
     capitals: [
       {
@@ -5024,6 +5132,7 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     flagSymbols: ["triangle", "plant", "star"],
     flagLayout: ["horizontal_stripes"],
     events: [],
+    eventEditions: {},
     memberships: ["opec", "african_union"],
     capitals: [
       {
@@ -5097,6 +5206,9 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     flagSymbols: ["cross"],
     flagLayout: ["horizontal_stripes"],
     events: ["summer_olympics_host"],
+    eventEditions: {
+      summer_olympics_host: [1896, 2004],
+    },
     memberships: ["eu", "eurozone", "nato", "oecd", "schengen"],
     capitals: [
       {
@@ -5170,6 +5282,7 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     flagSymbols: ["star", "circle", "triangle"],
     flagLayout: [],
     events: [],
+    eventEditions: {},
     memberships: ["commonwealth"],
     capitals: [
       {
@@ -5243,6 +5356,7 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     flagSymbols: ["plant", "animal"],
     flagLayout: ["vertical_stripes"],
     events: [],
+    eventEditions: {},
     memberships: [],
     capitals: [
       {
@@ -5316,6 +5430,7 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     flagSymbols: ["triangle"],
     flagLayout: [],
     events: [],
+    eventEditions: {},
     memberships: ["commonwealth"],
     capitals: [
       {
@@ -5389,6 +5504,7 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     flagSymbols: ["star"],
     flagLayout: ["horizontal_stripes"],
     events: [],
+    eventEditions: {},
     memberships: [],
     capitals: [
       {
@@ -5464,6 +5580,7 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     flagSymbols: ["animal", "crescent", "star"],
     flagLayout: ["horizontal_stripes"],
     events: [],
+    eventEditions: {},
     memberships: ["eu", "eurozone", "nato", "schengen"],
     capitals: [
       {
@@ -5537,6 +5654,7 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     flagSymbols: ["plant"],
     flagLayout: ["horizontal_stripes"],
     events: [],
+    eventEditions: {},
     memberships: [],
     capitals: [
       {
@@ -5610,6 +5728,7 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     flagSymbols: [],
     flagLayout: ["horizontal_stripes"],
     events: [],
+    eventEditions: {},
     memberships: ["eu", "nato", "oecd", "schengen"],
     capitals: [
       {
@@ -5683,6 +5802,7 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     flagSymbols: [],
     flagLayout: ["horizontal_stripes"],
     events: [],
+    eventEditions: {},
     memberships: ["asean", "g20", "brics"],
     capitals: [
       {
@@ -5759,13 +5879,14 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     borders: ["BGD", "BTN", "MMR", "CHN", "NPL", "PAK"],
     areaKm2: 3287590,
     population: 1429404000,
-    officialLanguages: ["en", "hi", "ta"],
+    officialLanguages: ["en", "hi"],
     latitude: 20,
     subregion: "Southern Asia",
     flagColors: ["orange", "white", "green", "blue"],
     flagSymbols: ["circle"],
     flagLayout: ["horizontal_stripes"],
     events: [],
+    eventEditions: {},
     memberships: ["brics", "commonwealth", "g20"],
     capitals: [
       {
@@ -5848,6 +5969,7 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     flagSymbols: [],
     flagLayout: ["vertical_stripes"],
     events: [],
+    eventEditions: {},
     memberships: ["eu", "eurozone", "oecd"],
     capitals: [
       {
@@ -5921,6 +6043,7 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     flagSymbols: [],
     flagLayout: ["horizontal_stripes"],
     events: [],
+    eventEditions: {},
     memberships: ["brics", "opec"],
     capitals: [
       {
@@ -5990,13 +6113,14 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     borders: ["IRN", "JOR", "KWT", "SAU", "SYR", "TUR"],
     areaKm2: 438317,
     population: 46118793,
-    officialLanguages: ["ar", "arc", "ckb"],
+    officialLanguages: ["ar", "ckb"],
     latitude: 33,
     subregion: "Western Asia",
     flagColors: ["red", "green", "white", "black"],
     flagSymbols: [],
     flagLayout: ["horizontal_stripes"],
     events: [],
+    eventEditions: {},
     memberships: ["arab_league", "opec"],
     capitals: [
       {
@@ -6072,6 +6196,7 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     flagSymbols: ["cross"],
     flagLayout: [],
     events: [],
+    eventEditions: {},
     memberships: ["nato", "oecd", "schengen"],
     capitals: [
       {
@@ -6145,6 +6270,7 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     flagSymbols: ["star"],
     flagLayout: ["horizontal_stripes"],
     events: [],
+    eventEditions: {},
     memberships: ["oecd"],
     capitals: [
       {
@@ -6218,6 +6344,11 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     flagSymbols: [],
     flagLayout: ["vertical_stripes"],
     events: ["fifa_wc_host", "summer_olympics_host", "winter_olympics_host"],
+    eventEditions: {
+      fifa_wc_host: [1934, 1990],
+      summer_olympics_host: [1960],
+      winter_olympics_host: [1956, 2006, 2026],
+    },
     memberships: ["eu", "eurozone", "g20", "g7", "nato", "oecd", "schengen"],
     capitals: [
       {
@@ -6284,13 +6415,14 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     borders: [],
     areaKm2: 10991,
     population: 2774538,
-    officialLanguages: ["en", "jam"],
+    officialLanguages: ["en"],
     latitude: 18.25,
     subregion: "Caribbean",
     flagColors: ["green", "yellow", "black"],
     flagSymbols: ["cross"],
     flagLayout: [],
     events: [],
+    eventEditions: {},
     memberships: ["commonwealth"],
     capitals: [
       {
@@ -6364,6 +6496,7 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     flagSymbols: ["star", "triangle"],
     flagLayout: ["horizontal_stripes"],
     events: [],
+    eventEditions: {},
     memberships: ["arab_league"],
     capitals: [
       {
@@ -6437,6 +6570,11 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     flagSymbols: ["circle"],
     flagLayout: [],
     events: ["fifa_wc_host", "summer_olympics_host", "winter_olympics_host"],
+    eventEditions: {
+      fifa_wc_host: [2002],
+      summer_olympics_host: [1964, 2020],
+      winter_olympics_host: [1972, 1998],
+    },
     memberships: ["g20", "g7", "oecd"],
     capitals: [
       {
@@ -6510,6 +6648,7 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     flagSymbols: ["sun", "animal"],
     flagLayout: [],
     events: [],
+    eventEditions: {},
     memberships: [],
     capitals: [
       {
@@ -6585,6 +6724,7 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     flagSymbols: [],
     flagLayout: ["horizontal_stripes"],
     events: [],
+    eventEditions: {},
     memberships: ["commonwealth", "african_union"],
     capitals: [
       {
@@ -6663,6 +6803,7 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     flagSymbols: ["sun"],
     flagLayout: [],
     events: [],
+    eventEditions: {},
     memberships: [],
     capitals: [
       {
@@ -6736,6 +6877,7 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     flagSymbols: [],
     flagLayout: ["horizontal_stripes"],
     events: [],
+    eventEditions: {},
     memberships: ["asean"],
     capitals: [
       {
@@ -6811,6 +6953,7 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     flagSymbols: ["sun", "animal"],
     flagLayout: ["horizontal_stripes"],
     events: [],
+    eventEditions: {},
     memberships: ["commonwealth"],
     capitals: [
       {
@@ -6881,6 +7024,7 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     flagSymbols: ["star", "triangle"],
     flagLayout: [],
     events: [],
+    eventEditions: {},
     memberships: ["commonwealth"],
     capitals: [
       {
@@ -6954,6 +7098,11 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     flagSymbols: ["circle"],
     flagLayout: [],
     events: ["fifa_wc_host", "summer_olympics_host", "winter_olympics_host"],
+    eventEditions: {
+      fifa_wc_host: [2002],
+      summer_olympics_host: [1988],
+      winter_olympics_host: [2018],
+    },
     memberships: ["g20", "oecd"],
     capitals: [
       {
@@ -7027,6 +7176,7 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     flagSymbols: [],
     flagLayout: ["horizontal_stripes"],
     events: [],
+    eventEditions: {},
     memberships: ["arab_league", "opec"],
     capitals: [
       {
@@ -7099,6 +7249,7 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     flagSymbols: ["circle"],
     flagLayout: ["horizontal_stripes"],
     events: [],
+    eventEditions: {},
     memberships: ["asean"],
     capitals: [
       {
@@ -7172,6 +7323,7 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     flagSymbols: ["plant"],
     flagLayout: ["horizontal_stripes"],
     events: [],
+    eventEditions: {},
     memberships: ["arab_league"],
     capitals: [
       {
@@ -7245,6 +7397,7 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     flagSymbols: ["star"],
     flagLayout: ["horizontal_stripes"],
     events: [],
+    eventEditions: {},
     memberships: ["african_union"],
     capitals: [
       {
@@ -7318,6 +7471,7 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     flagSymbols: ["star", "crescent"],
     flagLayout: ["horizontal_stripes"],
     events: [],
+    eventEditions: {},
     memberships: ["arab_league", "opec", "african_union"],
     capitals: [
       {
@@ -7393,6 +7547,7 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     flagSymbols: ["triangle"],
     flagLayout: [],
     events: [],
+    eventEditions: {},
     memberships: ["commonwealth"],
     capitals: [
       {
@@ -7466,6 +7621,7 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     flagSymbols: [],
     flagLayout: ["horizontal_stripes"],
     events: [],
+    eventEditions: {},
     memberships: ["schengen"],
     capitals: [
       {
@@ -7539,6 +7695,7 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     flagSymbols: ["animal"],
     flagLayout: [],
     events: [],
+    eventEditions: {},
     memberships: ["commonwealth"],
     capitals: [
       {
@@ -7612,6 +7769,7 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     flagSymbols: [],
     flagLayout: ["horizontal_stripes"],
     events: [],
+    eventEditions: {},
     memberships: ["commonwealth", "african_union"],
     capitals: [
       {
@@ -7685,6 +7843,7 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     flagSymbols: [],
     flagLayout: ["horizontal_stripes"],
     events: [],
+    eventEditions: {},
     memberships: ["eu", "eurozone", "nato", "oecd", "schengen"],
     capitals: [
       {
@@ -7758,6 +7917,7 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     flagSymbols: [],
     flagLayout: ["horizontal_stripes"],
     events: [],
+    eventEditions: {},
     memberships: ["eu", "eurozone", "nato", "oecd", "schengen"],
     capitals: [
       {
@@ -7831,6 +7991,7 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     flagSymbols: [],
     flagLayout: ["horizontal_stripes"],
     events: [],
+    eventEditions: {},
     memberships: ["eu", "eurozone", "nato", "oecd", "schengen"],
     capitals: [
       {
@@ -7904,6 +8065,7 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     flagSymbols: ["star"],
     flagLayout: [],
     events: [],
+    eventEditions: {},
     memberships: ["arab_league", "african_union"],
     capitals: [
       {
@@ -7977,6 +8139,7 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     flagSymbols: [],
     flagLayout: ["horizontal_stripes"],
     events: [],
+    eventEditions: {},
     memberships: [],
     capitals: [
       {
@@ -8047,6 +8210,7 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     flagSymbols: ["animal", "crescent", "cross", "star"],
     flagLayout: ["vertical_stripes"],
     events: [],
+    eventEditions: {},
     memberships: [],
     capitals: [
       {
@@ -8120,6 +8284,7 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     flagSymbols: [],
     flagLayout: [],
     events: [],
+    eventEditions: {},
     memberships: ["african_union"],
     capitals: [
       {
@@ -8193,6 +8358,7 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     flagSymbols: ["crescent"],
     flagLayout: [],
     events: [],
+    eventEditions: {},
     memberships: ["commonwealth"],
     capitals: [
       {
@@ -8263,6 +8429,10 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     flagSymbols: ["animal", "plant"],
     flagLayout: ["vertical_stripes"],
     events: ["fifa_wc_host", "summer_olympics_host"],
+    eventEditions: {
+      fifa_wc_host: [1970, 1986, 2026],
+      summer_olympics_host: [1968],
+    },
     memberships: ["g20", "oecd"],
     capitals: [
       {
@@ -8346,6 +8516,7 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     flagSymbols: ["star"],
     flagLayout: [],
     events: [],
+    eventEditions: {},
     memberships: [],
     capitals: [
       {
@@ -8416,6 +8587,7 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     flagSymbols: ["sun"],
     flagLayout: [],
     events: [],
+    eventEditions: {},
     memberships: ["nato"],
     capitals: [
       {
@@ -8489,6 +8661,7 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     flagSymbols: [],
     flagLayout: ["vertical_stripes"],
     events: [],
+    eventEditions: {},
     memberships: ["african_union"],
     capitals: [
       {
@@ -8562,6 +8735,7 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     flagSymbols: ["cross"],
     flagLayout: ["vertical_stripes"],
     events: [],
+    eventEditions: {},
     memberships: ["commonwealth", "eu", "eurozone", "schengen"],
     capitals: [
       {
@@ -8635,6 +8809,7 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     flagSymbols: ["star"],
     flagLayout: ["horizontal_stripes"],
     events: [],
+    eventEditions: {},
     memberships: ["asean"],
     capitals: [
       {
@@ -8710,6 +8885,7 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     flagSymbols: ["animal"],
     flagLayout: [],
     events: [],
+    eventEditions: {},
     memberships: ["nato"],
     capitals: [
       {
@@ -8783,6 +8959,7 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     flagSymbols: ["sun", "crescent"],
     flagLayout: ["vertical_stripes"],
     events: [],
+    eventEditions: {},
     memberships: [],
     capitals: [
       {
@@ -8856,6 +9033,7 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     flagSymbols: ["star", "triangle"],
     flagLayout: ["horizontal_stripes"],
     events: [],
+    eventEditions: {},
     memberships: ["commonwealth", "african_union"],
     capitals: [
       {
@@ -8929,6 +9107,7 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     flagSymbols: ["star", "crescent"],
     flagLayout: ["horizontal_stripes"],
     events: [],
+    eventEditions: {},
     memberships: ["arab_league", "african_union"],
     capitals: [
       {
@@ -9002,6 +9181,7 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     flagSymbols: [],
     flagLayout: ["horizontal_stripes"],
     events: [],
+    eventEditions: {},
     memberships: ["commonwealth", "african_union"],
     capitals: [
       {
@@ -9075,6 +9255,7 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     flagSymbols: ["sun"],
     flagLayout: ["horizontal_stripes"],
     events: [],
+    eventEditions: {},
     memberships: ["commonwealth", "african_union"],
     capitals: [
       {
@@ -9148,6 +9329,7 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     flagSymbols: ["star", "crescent"],
     flagLayout: ["horizontal_stripes"],
     events: [],
+    eventEditions: {},
     memberships: ["asean", "commonwealth"],
     capitals: [
       {
@@ -9216,23 +9398,14 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     borders: ["AGO", "BWA", "ZAF", "ZMB"],
     areaKm2: 825615,
     population: 3022401,
-    officialLanguages: [
-      "af",
-      "de",
-      "en",
-      "hz",
-      "hgm",
-      "kwn",
-      "loz",
-      "ng",
-      "tn",
-    ],
+    officialLanguages: ["en"],
     latitude: -22,
     subregion: "Southern Africa",
     flagColors: ["red", "blue", "green", "yellow", "white"],
     flagSymbols: ["sun", "triangle"],
     flagLayout: [],
     events: [],
+    eventEditions: {},
     memberships: ["commonwealth", "african_union"],
     capitals: [
       {
@@ -9306,6 +9479,7 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     flagSymbols: ["circle"],
     flagLayout: ["horizontal_stripes"],
     events: [],
+    eventEditions: {},
     memberships: ["african_union"],
     capitals: [
       {
@@ -9379,6 +9553,7 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     flagSymbols: [],
     flagLayout: ["vertical_stripes"],
     events: [],
+    eventEditions: {},
     memberships: ["commonwealth", "opec", "african_union"],
     capitals: [
       {
@@ -9455,6 +9630,7 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     flagSymbols: ["triangle"],
     flagLayout: ["horizontal_stripes"],
     events: [],
+    eventEditions: {},
     memberships: [],
     capitals: [
       {
@@ -9528,6 +9704,9 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     flagSymbols: [],
     flagLayout: ["horizontal_stripes"],
     events: ["summer_olympics_host"],
+    eventEditions: {
+      summer_olympics_host: [1928],
+    },
     memberships: ["eu", "eurozone", "nato", "oecd", "schengen"],
     capitals: [
       {
@@ -9601,6 +9780,9 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     flagSymbols: ["cross"],
     flagLayout: [],
     events: ["winter_olympics_host"],
+    eventEditions: {
+      winter_olympics_host: [1952, 1994],
+    },
     memberships: ["nato", "oecd", "schengen"],
     capitals: [
       {
@@ -9677,6 +9859,7 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     flagSymbols: ["crescent", "sun", "triangle"],
     flagLayout: [],
     events: [],
+    eventEditions: {},
     memberships: [],
     capitals: [
       {
@@ -9750,6 +9933,7 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     flagSymbols: ["star"],
     flagLayout: ["horizontal_stripes"],
     events: [],
+    eventEditions: {},
     memberships: ["commonwealth"],
     capitals: [
       {
@@ -9823,6 +10007,7 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     flagSymbols: ["star", "cross"],
     flagLayout: [],
     events: [],
+    eventEditions: {},
     memberships: ["commonwealth", "oecd"],
     capitals: [
       {
@@ -9896,6 +10081,7 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     flagSymbols: [],
     flagLayout: [],
     events: [],
+    eventEditions: {},
     memberships: ["arab_league"],
     capitals: [
       {
@@ -9969,6 +10155,7 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     flagSymbols: ["star", "crescent"],
     flagLayout: ["vertical_stripes"],
     events: [],
+    eventEditions: {},
     memberships: ["commonwealth"],
     capitals: [
       {
@@ -10045,6 +10232,7 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     flagSymbols: ["star"],
     flagLayout: [],
     events: [],
+    eventEditions: {},
     memberships: [],
     capitals: [
       {
@@ -10111,13 +10299,14 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     borders: ["BOL", "BRA", "CHL", "COL", "ECU"],
     areaKm2: 1285216,
     population: 34157732,
-    officialLanguages: ["ay", "qu", "es"],
+    officialLanguages: ["es"],
     latitude: -10,
     subregion: "South America",
     flagColors: ["red", "white"],
     flagSymbols: ["plant", "animal"],
     flagLayout: ["vertical_stripes"],
     events: [],
+    eventEditions: {},
     memberships: [],
     capitals: [
       {
@@ -10199,6 +10388,7 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     flagSymbols: ["star", "sun", "triangle"],
     flagLayout: ["horizontal_stripes"],
     events: [],
+    eventEditions: {},
     memberships: ["asean"],
     capitals: [
       {
@@ -10274,6 +10464,7 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     flagSymbols: ["circle"],
     flagLayout: [],
     events: [],
+    eventEditions: {},
     memberships: [],
     capitals: [
       {
@@ -10347,6 +10538,7 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     flagSymbols: ["star", "animal"],
     flagLayout: [],
     events: [],
+    eventEditions: {},
     memberships: ["commonwealth"],
     capitals: [
       {
@@ -10420,6 +10612,7 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     flagSymbols: [],
     flagLayout: ["horizontal_stripes"],
     events: [],
+    eventEditions: {},
     memberships: ["eu", "nato", "oecd", "schengen"],
     capitals: [
       {
@@ -10493,6 +10686,7 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     flagSymbols: ["star", "circle"],
     flagLayout: ["horizontal_stripes"],
     events: [],
+    eventEditions: {},
     memberships: [],
     capitals: [
       {
@@ -10560,6 +10754,7 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     flagSymbols: ["circle"],
     flagLayout: ["vertical_stripes"],
     events: [],
+    eventEditions: {},
     memberships: ["eu", "eurozone", "nato", "oecd", "schengen"],
     capitals: [
       {
@@ -10633,6 +10828,7 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     flagSymbols: ["star", "circle", "plant", "animal"],
     flagLayout: ["horizontal_stripes"],
     events: [],
+    eventEditions: {},
     memberships: [],
     capitals: [
       {
@@ -10706,6 +10902,7 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     flagSymbols: ["triangle"],
     flagLayout: ["horizontal_stripes"],
     events: [],
+    eventEditions: {},
     memberships: ["arab_league"],
     capitals: [
       {
@@ -10789,6 +10986,9 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     flagSymbols: [],
     flagLayout: ["vertical_stripes"],
     events: ["fifa_wc_host"],
+    eventEditions: {
+      fifa_wc_host: [2022],
+    },
     memberships: ["arab_league"],
     capitals: [
       {
@@ -10864,6 +11064,7 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     flagSymbols: [],
     flagLayout: ["vertical_stripes"],
     events: [],
+    eventEditions: {},
     memberships: ["eu", "nato", "schengen"],
     capitals: [
       {
@@ -10952,6 +11153,11 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     flagSymbols: [],
     flagLayout: ["horizontal_stripes"],
     events: ["fifa_wc_host", "summer_olympics_host", "winter_olympics_host"],
+    eventEditions: {
+      fifa_wc_host: [2018],
+      summer_olympics_host: [1980],
+      winter_olympics_host: [2014],
+    },
     memberships: ["brics", "g20"],
     capitals: [
       {
@@ -11029,6 +11235,7 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     flagSymbols: ["sun"],
     flagLayout: ["horizontal_stripes"],
     events: [],
+    eventEditions: {},
     memberships: ["commonwealth", "african_union"],
     capitals: [
       {
@@ -11102,6 +11309,7 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     flagSymbols: [],
     flagLayout: [],
     events: [],
+    eventEditions: {},
     memberships: ["arab_league", "g20", "opec"],
     capitals: [
       {
@@ -11178,6 +11386,7 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     flagSymbols: ["triangle"],
     flagLayout: ["horizontal_stripes"],
     events: [],
+    eventEditions: {},
     memberships: ["arab_league", "african_union"],
     capitals: [
       {
@@ -11251,6 +11460,7 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     flagSymbols: ["star"],
     flagLayout: ["vertical_stripes"],
     events: [],
+    eventEditions: {},
     memberships: ["african_union"],
     capitals: [
       {
@@ -11321,6 +11531,7 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     flagSymbols: ["star", "crescent"],
     flagLayout: ["horizontal_stripes"],
     events: [],
+    eventEditions: {},
     memberships: ["asean", "commonwealth"],
     capitals: [
       {
@@ -11394,6 +11605,7 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     flagSymbols: ["star", "triangle"],
     flagLayout: [],
     events: [],
+    eventEditions: {},
     memberships: ["commonwealth"],
     capitals: [
       {
@@ -11467,6 +11679,7 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     flagSymbols: [],
     flagLayout: ["horizontal_stripes"],
     events: [],
+    eventEditions: {},
     memberships: ["commonwealth", "african_union"],
     capitals: [
       {
@@ -11540,6 +11753,7 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     flagSymbols: ["triangle", "plant"],
     flagLayout: ["horizontal_stripes"],
     events: [],
+    eventEditions: {},
     memberships: [],
     capitals: [
       {
@@ -11613,6 +11827,7 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     flagSymbols: ["plant"],
     flagLayout: ["horizontal_stripes"],
     events: [],
+    eventEditions: {},
     memberships: [],
     capitals: [
       {
@@ -11686,6 +11901,7 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     flagSymbols: ["star"],
     flagLayout: [],
     events: [],
+    eventEditions: {},
     memberships: ["arab_league", "african_union"],
     capitals: [
       {
@@ -11759,6 +11975,7 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     flagSymbols: ["animal", "cross"],
     flagLayout: ["horizontal_stripes"],
     events: [],
+    eventEditions: {},
     memberships: [],
     capitals: [
       {
@@ -11832,6 +12049,7 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     flagSymbols: ["star", "triangle"],
     flagLayout: ["horizontal_stripes"],
     events: [],
+    eventEditions: {},
     memberships: ["african_union"],
     capitals: [
       {
@@ -11902,6 +12120,7 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     flagSymbols: ["star", "triangle"],
     flagLayout: ["horizontal_stripes"],
     events: [],
+    eventEditions: {},
     memberships: ["african_union"],
     capitals: [
       {
@@ -11975,6 +12194,7 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     flagSymbols: ["star"],
     flagLayout: ["horizontal_stripes"],
     events: [],
+    eventEditions: {},
     memberships: [],
     capitals: [
       {
@@ -12048,6 +12268,7 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     flagSymbols: ["cross"],
     flagLayout: ["horizontal_stripes"],
     events: [],
+    eventEditions: {},
     memberships: ["eu", "eurozone", "nato", "oecd", "schengen"],
     capitals: [
       {
@@ -12121,6 +12342,7 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     flagSymbols: ["star"],
     flagLayout: ["horizontal_stripes"],
     events: [],
+    eventEditions: {},
     memberships: ["eu", "eurozone", "nato", "oecd", "schengen"],
     capitals: [
       {
@@ -12194,6 +12416,10 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     flagSymbols: ["cross"],
     flagLayout: [],
     events: ["fifa_wc_host", "summer_olympics_host"],
+    eventEditions: {
+      fifa_wc_host: [1958],
+      summer_olympics_host: [1912, 1956],
+    },
     memberships: ["eu", "nato", "oecd", "schengen"],
     capitals: [
       {
@@ -12267,6 +12493,7 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     flagSymbols: [],
     flagLayout: ["horizontal_stripes"],
     events: [],
+    eventEditions: {},
     memberships: ["commonwealth", "african_union"],
     capitals: [
       {
@@ -12350,6 +12577,7 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     flagSymbols: [],
     flagLayout: [],
     events: [],
+    eventEditions: {},
     memberships: ["commonwealth", "african_union"],
     capitals: [
       {
@@ -12423,6 +12651,7 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     flagSymbols: ["star"],
     flagLayout: ["horizontal_stripes"],
     events: [],
+    eventEditions: {},
     memberships: ["arab_league"],
     capitals: [
       {
@@ -12496,6 +12725,7 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     flagSymbols: [],
     flagLayout: ["vertical_stripes"],
     events: [],
+    eventEditions: {},
     memberships: ["african_union"],
     capitals: [
       {
@@ -12569,6 +12799,7 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     flagSymbols: ["star"],
     flagLayout: ["horizontal_stripes"],
     events: [],
+    eventEditions: {},
     memberships: ["commonwealth", "african_union"],
     capitals: [
       {
@@ -12642,6 +12873,7 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     flagSymbols: [],
     flagLayout: ["horizontal_stripes"],
     events: [],
+    eventEditions: {},
     memberships: ["asean"],
     capitals: [
       {
@@ -12717,6 +12949,7 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     flagSymbols: ["star"],
     flagLayout: ["horizontal_stripes"],
     events: [],
+    eventEditions: {},
     memberships: [],
     capitals: [
       {
@@ -12790,6 +13023,7 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     flagSymbols: ["star", "crescent"],
     flagLayout: [],
     events: [],
+    eventEditions: {},
     memberships: [],
     capitals: [
       {
@@ -12865,6 +13099,7 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     flagSymbols: ["star", "triangle"],
     flagLayout: [],
     events: [],
+    eventEditions: {},
     memberships: ["asean"],
     capitals: [
       {
@@ -12938,6 +13173,7 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     flagSymbols: ["cross"],
     flagLayout: [],
     events: [],
+    eventEditions: {},
     memberships: ["commonwealth"],
     capitals: [
       {
@@ -13011,6 +13247,7 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     flagSymbols: [],
     flagLayout: [],
     events: [],
+    eventEditions: {},
     memberships: ["commonwealth"],
     capitals: [
       {
@@ -13084,6 +13321,7 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     flagSymbols: ["star", "crescent", "circle"],
     flagLayout: [],
     events: [],
+    eventEditions: {},
     memberships: ["arab_league", "african_union"],
     capitals: [
       {
@@ -13157,6 +13395,7 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     flagSymbols: ["star", "crescent"],
     flagLayout: [],
     events: [],
+    eventEditions: {},
     memberships: ["g20", "nato", "oecd"],
     capitals: [
       {
@@ -13226,10 +13465,11 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     officialLanguages: ["en", "tvl"],
     latitude: -8,
     subregion: "Polynesia",
-    flagColors: ["blue", "yellow"],
+    flagColors: ["red", "blue", "yellow", "white"],
     flagSymbols: ["star", "cross"],
     flagLayout: [],
     events: [],
+    eventEditions: {},
     memberships: ["commonwealth"],
     capitals: [
       {
@@ -13300,6 +13540,7 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     flagSymbols: ["sun"],
     flagLayout: [],
     events: [],
+    eventEditions: {},
     memberships: [],
     capitals: [
       {
@@ -13364,6 +13605,7 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     flagSymbols: ["triangle"],
     flagLayout: [],
     events: [],
+    eventEditions: {},
     memberships: ["commonwealth", "african_union"],
     capitals: [
       {
@@ -13437,6 +13679,7 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     flagSymbols: ["circle", "animal"],
     flagLayout: ["horizontal_stripes"],
     events: [],
+    eventEditions: {},
     memberships: ["commonwealth", "african_union"],
     capitals: [
       {
@@ -13512,6 +13755,7 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     flagSymbols: [],
     flagLayout: ["horizontal_stripes"],
     events: [],
+    eventEditions: {},
     memberships: [],
     capitals: [
       {
@@ -13587,6 +13831,9 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     flagSymbols: ["sun"],
     flagLayout: ["horizontal_stripes"],
     events: ["fifa_wc_host"],
+    eventEditions: {
+      fifa_wc_host: [1930],
+    },
     memberships: [],
     capitals: [
       {
@@ -13660,6 +13907,11 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     flagSymbols: ["star"],
     flagLayout: ["horizontal_stripes"],
     events: ["fifa_wc_host", "summer_olympics_host", "winter_olympics_host"],
+    eventEditions: {
+      fifa_wc_host: [1994, 2026],
+      summer_olympics_host: [1904, 1932, 1984, 1996],
+      winter_olympics_host: [1932, 1960, 1980, 2002],
+    },
     memberships: ["g20", "g7", "nato", "oecd"],
     capitals: [
       {
@@ -13744,6 +13996,7 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     flagSymbols: ["star", "crescent"],
     flagLayout: ["horizontal_stripes"],
     events: [],
+    eventEditions: {},
     memberships: [],
     capitals: [
       {
@@ -13817,6 +14070,7 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     flagSymbols: ["cross"],
     flagLayout: ["vertical_stripes"],
     events: [],
+    eventEditions: {},
     memberships: [],
     capitals: [
       {
@@ -13881,6 +14135,7 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     flagSymbols: [],
     flagLayout: ["vertical_stripes"],
     events: [],
+    eventEditions: {},
     memberships: ["commonwealth"],
     capitals: [
       {
@@ -13954,6 +14209,7 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     flagSymbols: ["star", "animal"],
     flagLayout: ["horizontal_stripes"],
     events: [],
+    eventEditions: {},
     memberships: ["opec"],
     capitals: [
       {
@@ -14027,6 +14283,7 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     flagSymbols: ["star"],
     flagLayout: [],
     events: [],
+    eventEditions: {},
     memberships: ["asean"],
     capitals: [
       {
@@ -14103,6 +14360,7 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     flagSymbols: ["triangle"],
     flagLayout: [],
     events: [],
+    eventEditions: {},
     memberships: ["commonwealth"],
     capitals: [
       {
@@ -14176,6 +14434,7 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     flagSymbols: ["star"],
     flagLayout: [],
     events: [],
+    eventEditions: {},
     memberships: ["commonwealth"],
     capitals: [
       {
@@ -14249,6 +14508,7 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     flagSymbols: ["star"],
     flagLayout: [],
     events: [],
+    eventEditions: {},
     memberships: [],
     capitals: [
       {
@@ -14319,6 +14579,7 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     flagSymbols: [],
     flagLayout: ["horizontal_stripes"],
     events: [],
+    eventEditions: {},
     memberships: ["arab_league"],
     capitals: [
       {
@@ -14401,6 +14662,9 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     flagSymbols: ["triangle"],
     flagLayout: [],
     events: ["fifa_wc_host"],
+    eventEditions: {
+      fifa_wc_host: [2010],
+    },
     memberships: ["brics", "commonwealth", "g20", "african_union"],
     capitals: [
       {
@@ -14494,6 +14758,7 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     flagSymbols: ["animal"],
     flagLayout: [],
     events: [],
+    eventEditions: {},
     memberships: ["commonwealth", "african_union"],
     capitals: [
       {
@@ -14583,6 +14848,7 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     flagSymbols: ["star", "triangle", "animal"],
     flagLayout: ["horizontal_stripes"],
     events: [],
+    eventEditions: {},
     memberships: ["african_union"],
     capitals: [
       {

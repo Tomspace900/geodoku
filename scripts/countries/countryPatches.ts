@@ -748,6 +748,7 @@ export const manualCountryAdditions: ManualCountryAddition[] = [
     gdpPerCapitaUsd: null,
     lifeExpectancyYears: null,
     humanDevelopmentIndex: null,
+    eventEditions: {},
     // Monnaie et gentilé : placeholders, fixés par les tables de correction
     // (currencyCorrectionsByIso3 / demonymCorrectionsByIso3) au build.
     currencies: [],

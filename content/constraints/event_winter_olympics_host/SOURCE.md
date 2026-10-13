@@ -1,8 +1,8 @@
 ---
 constraint_id: event_winter_olympics_host
 status: active
-checked_at: 2026-08-28
-review_after: 2027-02-28
+checked_at: 2026-10-13
+review_after: 2027-04-13
 ---
 
 # event_winter_olympics_host
@@ -14,6 +14,7 @@ Pays ayant accueilli au moins une édition des **Jeux olympiques d'hiver**.
 ## Sources
 
 - Référence de révision : [événements sportifs](../SOURCES.md#événements-sportifs).
+- Éditions (années affichées dans le Drawer) : `scripts/countries/data/eventEditions.ts`, accord avec la liste gardé par `pnpm check:content`.
 - CIO, *Olympic Hosts 1896–2034* (bibliothèque olympique).
 - Liste établie par compilation éditoriale, édition par édition, du bucket `eventWinterOlympicsHost` de `scripts/countries/countryPatches.ts`.
 

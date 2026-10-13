@@ -109,7 +109,7 @@ la liste jouable / noms / langues / superficie / frontières / centroïde, REST
 Countries v5 pour population / capitales / conduite / adhésions, Wikimedia pour
 les pageviews. Le script **valide en mémoire avant d'écrire** ce qu'il a lui-même
 lu du réseau (197 pays, invariants de champ, `MAX_MISSING_PAGEVIEWS`) — un échec
-réseau n'écrit rien. Les dix champs dérivés des datasets échappent à cette passe :
+réseau n'écrit rien. Les champs dérivés des datasets échappent à cette passe :
 ils sont jugés après coup par `check:content` (cf. plus bas).
 Il réécrit les quatre fichiers `content/countries/`, met `FACTS_SNAPSHOT.date`
 au jour, enchaîne `pnpm build:answers`, puis **normalise tout `content/` avec
@@ -258,7 +258,7 @@ et le seam dans [`scripts/content/validateContentSeam.ts`](../scripts/content/va
 deux sens (vert sur le contenu committé, rouge sur une divergence injectée).
 
 ⚠️ **`build:countries` ne rejoue pas ces validateurs** : il a sa propre passe
-inline sur les champs réseau, et les dix champs dérivés des datasets ne sont
+inline sur les champs réseau, et les champs dérivés des datasets ne sont
 jugés qu'ensuite, par `check:content`. On écrit, puis on vérifie.
 
 ## Difficulté et facilité

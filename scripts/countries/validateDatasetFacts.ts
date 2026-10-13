@@ -25,6 +25,7 @@ import {
 } from "./buildCountriesLib";
 import type {
   CapitalLabelsSnapshot,
+  EventEditionsSnapshot,
   HighestPointsSnapshot,
   HumanDevelopmentIndexSnapshot,
   SovereigntySnapshot,
@@ -49,6 +50,7 @@ const DATASET_DERIVED_KEYS = [
   "gdpPerCapitaUsd",
   "lifeExpectancyYears",
   "humanDevelopmentIndex",
+  "eventEditions",
 ] as const;
 
 function isPlainRecord(value: unknown): value is Record<string, unknown> {
@@ -375,6 +377,50 @@ export function validateHumanDevelopmentIndex(
     if (!Number.isFinite(value) || value <= 0 || value > 1) {
       errors.push(`${code}: IDH hors de ]0, 1] (${value})`);
     }
+  });
+  return errors;
+}
+
+/**
+ * Accord des éditions d'événements avec la liste des pays hôtes. La liste vient
+ * de `gameplayClassifications` (`events`), les années du dataset
+ * `eventEditions` (`eventEditions`) : chaque événement de `events` a au moins
+ * une année, et aucune année n'existe sans son événement — sans quoi le Drawer
+ * afficherait des années sous un pays refusé, ou rien sous un pays accepté.
+ * Un hôte du dataset hors catalogue est signalé aussi.
+ */
+export function validateEventEditions(
+  factsByCode: Readonly<Record<string, CountryFacts>>,
+  dataset: EventEditionsSnapshot,
+  codes: readonly string[],
+): string[] {
+  const errors: string[] = [];
+  codes.forEach((code) => {
+    const facts = factsByCode[code];
+    if (!facts) return;
+    facts.events
+      .filter((event) => (facts.eventEditions[event]?.length ?? 0) === 0)
+      .forEach((event) => {
+        errors.push(
+          `${code}: ${event} sans aucune édition — compléter scripts/countries/data/eventEditions.ts`,
+        );
+      });
+    Object.keys(facts.eventEditions)
+      .filter((event) => !(facts.events as readonly string[]).includes(event))
+      .forEach((event) => {
+        errors.push(
+          `${code}: éditions de ${event} sans l'événement dans events — compléter gameplayClassifications`,
+        );
+      });
+  });
+  Object.entries(dataset.events).forEach(([event, editions]) => {
+    editions.forEach(({ year, hosts }) => {
+      hosts
+        .filter((host) => !codes.includes(host))
+        .forEach((host) => {
+          errors.push(`${event} ${year}: hôte ${host} hors catalogue`);
+        });
+    });
   });
   return errors;
 }

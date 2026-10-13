@@ -96,6 +96,11 @@ export function formatConstraintValue(
       return t("constraintValue.lastEruption", {
         year: formatYear(value.year, locale),
       });
+    case "editions":
+      return formatList(
+        value.years.map((year) => formatYear(year, locale)),
+        locale,
+      );
     case "highestPoint":
       return t("countrySheet.value.highestPoint", {
         name: value.names

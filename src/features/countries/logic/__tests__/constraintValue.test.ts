@@ -104,10 +104,17 @@ describe("constraintValueFor", () => {
     expect(constraintValueFor("flag_has_star", COUNTRY_FACTS.USA)).toBeNull();
   });
 
-  it("shows nothing for a hosted event, until editions are known", () => {
-    expect(
-      constraintValueFor("event_fifa_wc_host", COUNTRY_FACTS.DEU),
-    ).toBeNull();
+  it("lists the years a country hosted that event, and only that one", () => {
+    expect(frText("event_fifa_wc_host", "DEU")).toBe("1974 et 2006");
+    expect(frText("event_summer_olympics_host", "DEU")).toBe("1936 et 1972");
+  });
+
+  it("counts a co-hosted edition for each host", () => {
+    expect(frText("event_fifa_wc_host", "MEX")).toBe("1970, 1986 et 2026");
+  });
+
+  it("dates Tokyo by its official name, 2020", () => {
+    expect(frText("event_summer_olympics_host", "JPN")).toBe("1964 et 2020");
   });
 
   it("shows no value on an archived constraint — its frozen list would contradict the current facts", () => {

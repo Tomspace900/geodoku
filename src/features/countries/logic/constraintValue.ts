@@ -1,7 +1,10 @@
 import type { TKey } from "@/i18n/types";
 import type { ConstraintId } from "../../../../content/constraints";
 import { isCountryCode } from "../../../../content/countries/countryCodes";
-import type { CountryFacts } from "../../../../content/countries/type";
+import type {
+  CountryEvent,
+  CountryFacts,
+} from "../../../../content/countries/type";
 import type { LocalizedString } from "../../../../content/type";
 import type { PhysicalFeature, ProductionRankKey } from "../types";
 import {
@@ -30,6 +33,8 @@ export type ConstraintValue =
   | { kind: "share"; share: "forest" | "mountain" | "coal"; fraction: number }
   | { kind: "rank"; rank: number; productLabelKey: TKey }
   | { kind: "lastEruption"; year: number }
+  /** Années des éditions accueillies, croissantes. */
+  | { kind: "editions"; years: readonly number[] }
   /** `null` : point sans nom, rendu par un libellé i18n unique. */
   | { kind: "highestPoint"; names: LocalizedString | null; elevationM: number }
   /** ISO3 des voisins jouables ; une seule valeur pour `borders_solo`. */
@@ -111,6 +116,17 @@ const lastEruption: ConstraintValueExtractor = (facts) =>
   facts.lastVolcanicEruptionYear === null
     ? null
     : { kind: "lastEruption", year: facts.lastVolcanicEruptionYear };
+
+/**
+ * Les années où le pays a accueilli **cet** événement : le libellé dit qu'il
+ * l'a accueilli, pas quand ni combien de fois.
+ */
+function editions(event: CountryEvent): ConstraintValueExtractor {
+  return (facts) => {
+    const years = facts.eventEditions[event];
+    return years && years.length > 0 ? { kind: "editions", years } : null;
+  };
+}
 
 /**
  * Une liste n'apporte rien tant qu'elle se réduit à l'élément que la
@@ -279,9 +295,9 @@ const EXTRACTORS = {
   }),
 
   // ── Événements, politique, régime ──────────────────────────────────────────
-  event_fifa_wc_host: NO_VALUE,
-  event_summer_olympics_host: NO_VALUE,
-  event_winter_olympics_host: NO_VALUE,
+  event_fifa_wc_host: editions("fifa_wc_host"),
+  event_summer_olympics_host: editions("summer_olympics_host"),
+  event_winter_olympics_host: editions("winter_olympics_host"),
   political_eu: NO_VALUE,
   political_g20: NO_VALUE,
   political_nato: NO_VALUE,

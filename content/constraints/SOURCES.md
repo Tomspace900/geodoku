@@ -212,6 +212,17 @@ hôte de l'édition (Sarajevo 1984 → Bosnie-Herzégovine). Une co-organisation
 compte pour chaque pays hôte ; une édition future déjà attribuée ne compte pas
 tant qu'elle n'a pas eu lieu.
 
+**Éditions (tranché le 2026-10-13).** Les années affichées sous chaque pays dans
+le Drawer viennent de `scripts/countries/data/eventEditions.ts`, une ligne par
+édition. L'année est celle du **nom officiel** : Tokyo compte pour 2020, bien que
+tenus en 2021. Les éditions 2026 (Mondial États-Unis–Canada–Mexique,
+Milan-Cortina) sont tenues, donc comptées. Seules les éditions reconnues par le
+CIO et leurs hôtes officiels comptent : **Stockholm 1956**, hôte des épreuves
+équestres des Jeux de Melbourne, compte pour la Suède à côté de l'Australie ;
+les Jeux intercalaires d'Athènes 1906 et les épreuves simplement délocalisées
+(voile d'Anvers 1920 à Amsterdam, équitation de Pékin 2008 à Hong Kong, surf de
+Paris 2024 à Tahiti) ne comptent pas.
+
 ## Nature et relief
 
 - Équateur et côtes : [Natural Earth 5.1.2](https://github.com/nvkelso/natural-earth-vector/tree/v5.1.2/geojson).

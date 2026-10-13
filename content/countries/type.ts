@@ -179,6 +179,12 @@ export type CountryFacts = Readonly<{
   flagSymbols: readonly FlagSymbol[];
   flagLayout: readonly FlagLayout[];
   events: readonly CountryEvent[];
+  /**
+   * Années des éditions accueillies, par événement de `events`, en ordre
+   * croissant (dataset `scripts/countries/data/eventEditions.ts`). Une clé par
+   * événement de `events`, aucune autre — gardé par `check:content`.
+   */
+  eventEditions: Readonly<Partial<Record<CountryEvent, readonly number[]>>>;
   memberships: readonly PoliticalGroup[];
   capitals: readonly CountryCapital[];
   drivingSide: DrivingSide;
@@ -351,6 +357,7 @@ export type CountryRecord = {
   flagSymbols: FlagSymbol[];
   flagLayout: FlagLayout[];
   events: CountryEvent[];
+  eventEditions: Partial<Record<CountryEvent, number[]>>;
   memberships: PoliticalGroup[];
   capitals: CountryCapital[];
   drivingSide: DrivingSide;

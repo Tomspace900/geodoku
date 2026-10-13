@@ -3,6 +3,7 @@
  */
 import type {
   CountryCapital,
+  CountryEvent,
   CountryRecord,
   Demonyms,
   DrivingSide,
@@ -21,6 +22,7 @@ import type {
   CivilTimeOffsetsSnapshot,
   CoalElectricitySnapshot,
   EnergyProductionSnapshot,
+  EventEditionsSnapshot,
   ForestCoverSnapshot,
   HighestPointsSnapshot,
   HoloceneVolcanoSnapshot,
@@ -515,6 +517,7 @@ export type QuantitativeDatasets = {
   highestPoints: HighestPointsSnapshot;
   worldBank: WorldBankIndicatorsSnapshot;
   humanDevelopment: HumanDevelopmentIndexSnapshot;
+  eventEditions: EventEditionsSnapshot;
 };
 
 type QuantitativeFacts = Pick<
@@ -535,6 +538,7 @@ type QuantitativeFacts = Pick<
   | "gdpPerCapitaUsd"
   | "lifeExpectancyYears"
   | "humanDevelopmentIndex"
+  | "eventEditions"
 >;
 
 /**
@@ -624,6 +628,30 @@ function humanDevelopmentForCode(
 }
 
 /**
+ * Années des éditions accueillies par le pays, par événement, en ordre
+ * croissant. Un événement sans édition pour ce pays n'a pas de clé.
+ */
+function eventEditionsForCode(
+  code: string,
+  snapshot: EventEditionsSnapshot,
+): CountryRecord["eventEditions"] {
+  const editions: CountryRecord["eventEditions"] = {};
+  (
+    Object.entries(snapshot.events) as [
+      CountryEvent,
+      EventEditionsSnapshot["events"][CountryEvent],
+    ][]
+  ).forEach(([event, list]) => {
+    const years = list
+      .filter(({ hosts }) => hosts.includes(code))
+      .map(({ year }) => year)
+      .sort((a, b) => a - b);
+    if (years.length > 0) editions[event] = years;
+  });
+  return editions;
+}
+
+/**
  * Fusionne les datasets quantitatifs curés en scalaires dérivés par pays.
  * Les parts sont ramenées en fraction 0–1 ; une source qui ne couvre pas le
  * pays donne `null` (jamais 0). `utcOffsetCount` retombe à 1 si absent : tout
@@ -658,6 +686,7 @@ export function quantitativeFactsForCode(
       code,
       datasets.humanDevelopment,
     ),
+    eventEditions: eventEditionsForCode(code, datasets.eventEditions),
   };
 }
 
