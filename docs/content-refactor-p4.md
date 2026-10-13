@@ -88,6 +88,12 @@ consigner au journal : `pnpm test` (nombre de tests), `pnpm check:content`
 | 7 | Indice de développement humain | PNUD |
 
 Chaque lot est mergeable seul et enrichit la fiche dès son merge.
+
+> **Décision du 2026-10-13 — la fiche pays ne part pas avec P4.** P4 livre les
+> sources des contraintes, la grille solution cliquable et ses Drawers enrichis
+> (#123), et les **données** des lots 3 à 7. L'écran de fiche est retiré de
+> `develop` et conservé sur la branche locale `fiches-pays` (`30b61ee`), pour une
+> version mieux conçue (#125). Voir le bilan en fin de document.
 **Recommandation de publication** (décision de l'utilisateur) : ne pas publier
 les fiches sur `main` avant le lot 3, sans quoi une fiche française afficherait
 « Vienna ».
@@ -1278,3 +1284,97 @@ case (A–D).
   changelog rédigé à la mise en prod (#50).
 - Merge : fast-forward sur `develop`, re-signé par l'utilisateur.
 - Points ouverts : le rapport final de P4 se rédige après le merge.
+
+## 7. Bilan de P4 (2026-10-13)
+
+### Ce qui part en prod
+
+- **Sources des contraintes** (lot 1) : registre `content/sources.ts`, un `about.ts`
+  par contrainte, toast de source au tap sur un en-tête **en jeu**.
+- **Grille solution cliquable** (lot 2, puis #123) : un tap sur une case ou un
+  en-tête ouvre un Drawer qui liste les pays solutions, avec sous chacun la **valeur**
+  de sa contrainte (« 2ᵉ producteur de cacao », « 59 % de forêt ») et sa rareté. La
+  case garde son design d'avant P4, anneau « ton choix » compris.
+- **Données pays des lots 3 à 7**, récoltées, gardées par `check:content` et
+  documentées ligne par ligne (`factProvenance.ts`) : capitales fr/en, monnaies,
+  gentilés, date et nature de souveraineté, point culminant, PIB par habitant,
+  espérance de vie, IDH. Elles nourrissent les valeurs des Drawers et serviront la
+  future fiche.
+- **Revue du contenu** (#122), **couverture forestière** reprise sur la série révisée
+  de la Banque mondiale, **rafraîchissement réseau** des populations.
+
+### Ce qui ne part pas
+
+- **La fiche pays** : retirée de `develop` le 2026-10-13 (`[REFACTO] Retrait de la
+  fiche pays`), code complet sur la branche locale `fiches-pays` (`30b61ee`), suite
+  dans #125. L'event `country_sheet_opened` revient avec elle.
+
+### Listes changées depuis la dernière mise en prod
+
+Onze contraintes, trente entrées — d'où la régénération du pool de prod :
+
+| Contrainte | Changement | Origine |
+| --- | --- | --- |
+| `borders_min_7` | −DZA | voisins jouables seulement (#122) |
+| `density_less_canada` | −BWA | population 2026-10-09 |
+| `flag_has_cross` | +MDA | armoiries (#122) |
+| `flag_has_star` | +BOL | armoiries (#122) |
+| `forest_cover_majority` | +BOL +CAF +IDN +LCA +PRK +RUS +VUT | série WDI révisée |
+| `language_russian` | −AZE −TJK −TKM −UZB | règle des langues (#122) |
+| `language_spanish` | −BLZ | règle des langues (#122) |
+| `ocean_atlantic` | −JAM | aucune côte sur l'Atlantique ouvert (#122) |
+| `ocean_pacific` | −TLS | mers de l'archipel des Indes orientales (#122) |
+| `physical_crosses_equator` | −KIR −MDV | terre émergée seulement (#122) |
+| `society_capital_not_largest` | +LIE +MLT +SMR +TWN | la ville, pas l'aire urbaine (#122) |
+
+`pnpm simulate:scheduling` : 14/14. Deux contraintes deviennent rares
+(`density_less_canada`, `language_russian`) : #121.
+
+### Décisions durables
+
+Écrites dans `content/constraints/SOURCES.md`, les `SOURCE.md` et les journaux
+ci-dessus :
+
+- **Langues officielles** : de droit, ou de fait là où aucune loi n'en désigne, sans
+  les statuts secondaires.
+- **Drapeaux** : version à armoiries du drapeau national, pas un drapeau de service.
+- **Continents et mers** : Chypre en Europe par exception à M49. Une mer
+  semi-fermée n'est pas un océan ; le Skagerrak et le Kattegat sont des abords de la
+  Baltique.
+- **Équateur et Jeux olympiques** : l'équateur ne compte que sur la terre émergée.
+  Une édition des Jeux compte pour le pays où se trouve aujourd'hui la ville hôte.
+- **Capitales et points culminants** : Kyiv, Sri Jayawardenapura Kotte, Jérusalem
+  pour PSE comme pour ISR, Malabo. Mont Méron pour ISR, Denali, Jabal Sawda.
+- **Textes joueur** : aucun nom de pays dans un toast, qui s'affiche en pleine partie.
+- **Chiffres des libellés** : valeur de référence à deux chiffres significatifs,
+  gardée par `check:content`.
+- **Données réseau** : les données partent à jour en prod. Pas de regen hors-ligne ;
+  chaque récolte imprime le millésime à reporter, que `check:content` compare.
+
+### Chiffres
+
+- Tests : 624 (fin du lot 2) → 767 après retrait des tests de la fiche.
+- Chargement joueur initial : 257,7 → 257,0 KiB gzip, budget 280.
+- Chunk des faits : 39,9 KiB.
+
+### Points ouverts
+
+- #121 : `density_less_canada` (5 pays) et `language_russian` (4 pays) à retravailler.
+- #125 : la fiche pays, avec les vérifications visuelles qu'elle n'a pas eues.
+- Cas limites à écrire dans les `SOURCE.md` concernés, une fois chaque fait vérifié :
+  Gabon et le Commonwealth, Grenade et son volcan sous-marin, Samoa, Groenland,
+  Géorgie et Russie, Maurice.
+- **MODIS** est cité comme repère pour les biomes : à confirmer qu'il a bien été
+  consulté, sinon le retirer.
+- **Marges fines**, à surveiller à chaque récolte : six pays à moins d'un point du
+  seuil de forêt (BHS, BOL, IDN, RUS, TZA, ECU), BWA autour de la densité du Canada.
+- `ui.errorUnknown` n'est plus utilisée ; elle est antérieure à P4.
+
+### Étapes de publication
+
+1. Entrée de changelog et `LATEST_CHANGELOG_UPDATE_DATE`, le jour de la PR.
+2. PR `develop` → `main` ; les e2e tournent en CI sur tous les moteurs.
+3. En prod : `pnpm simulate:scheduling`, puis « Regénérer le pool » dans `/admin`.
+4. Le merge ferme #47, #48, #49 et #123 (`Closes`). Restent à cocher à la main dans
+   #50 ; statuts du Project à mettre à jour.
+
