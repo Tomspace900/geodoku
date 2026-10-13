@@ -20,6 +20,7 @@
     "simulate:scheduling": "tsx scripts/local/simulate-scheduling.ts",
     "simulate:players": "tsx --env-file-if-exists=.env.local scripts/local/simulate-players.ts",
     "export:analytics": "tsx --env-file=.env.local scripts/local/export-analytics.ts",
+    "review:constraint-values": "tsx scripts/local/review-constraint-values.ts",
     "dump:prod": "tsx --env-file-if-exists=.env.local scripts/local/copy-convex-data.ts prod-to-dev",
     "dump:develop": "tsx --env-file-if-exists=.env.local scripts/local/copy-convex-data.ts develop-to-dev",
     "dump:prod-to-develop": "tsx --env-file-if-exists=.env.local scripts/local/copy-convex-data.ts prod-to-develop",

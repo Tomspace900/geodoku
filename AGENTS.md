@@ -195,6 +195,7 @@ pnpm simulate:scheduling          # validateur changement contraintes
 pnpm simulate:players             # dry-run par défaut ; --execute pour écrire (develop/dev)
 pnpm analyze:observed
 pnpm export:analytics             # écrit par défaut dans docs/reports/ (gitignored)
+pnpm review:constraint-values     # relecture « à propos » + valeur du Drawer par pays → docs/reports/ (gitignored)
 
 # Reproduire / observer prod (ou develop) en local — LE workflow par défaut
 pnpm dump:prod                    # copie l'état prod → cloud dev local
