@@ -4,7 +4,7 @@ export default defineAbout("regime_monarchy", {
   sources: ["cia_factbook_government_type"],
   basis: "convention",
   clarification: {
-    fr: "Monarchies constitutionnelles comprises, même quand le souverain est celui d'un autre État.",
-    en: "Constitutional monarchies included, even when the monarch is another state's sovereign.",
+    fr: "Monarchies constitutionnelles incluses (y compris royaumes du Commonwealth).",
+    en: "Constitutional monarchies included (Commonwealth realms too).",
   },
 });

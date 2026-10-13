@@ -4,7 +4,7 @@ export default defineAbout("water_island", {
   sources: ["world_countries"],
   basis: "source",
   clarification: {
-    fr: "Le territoire principal est entouré d'eau, sans aucune frontière terrestre jouable.",
-    en: "The main territory is surrounded by water, with no playable land border.",
+    fr: "Territoire principal entouré d'eau, sans frontière terrestre.",
+    en: "Main territory surrounded by water, with no land border.",
   },
 });

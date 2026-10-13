@@ -5,9 +5,7 @@ import type { CountryFacts } from "../../../../content/countries/type";
 import type { LocalizedString } from "../../../../content/type";
 import type { PhysicalFeature, ProductionRankKey } from "../types";
 import {
-  EVENT_LABELS,
   FLAG_COLOR_LABELS,
-  FLAG_SYMBOL_LABELS,
   PHYSICAL_FEATURE_LABELS,
   PRODUCTION_LABELS,
   SOVEREIGNTY_KIND_LABELS,
@@ -124,22 +122,11 @@ function listWhenSeveral(labelKeys: readonly TKey[]): ConstraintValue | null {
   return labelKeys.length > 1 ? { kind: "enumList", labelKeys } : null;
 }
 
+/** La langue elle-même, même unique : « France — français » dit au joueur ce qui a été retenu. */
 const officialLanguages: ConstraintValueExtractor = (facts) =>
-  facts.officialLanguages.length > 1
+  facts.officialLanguages.length > 0
     ? { kind: "languages", codes: facts.officialLanguages }
     : null;
-
-const flagSymbols: ConstraintValueExtractor = (facts) =>
-  listWhenSeveral(
-    facts.flagSymbols.map((symbol) => FLAG_SYMBOL_LABELS[symbol]),
-  );
-
-const hostedEvents: ConstraintValueExtractor = (facts) =>
-  listWhenSeveral(
-    facts.events.flatMap((event) =>
-      EVENT_LABELS[event] ? [EVENT_LABELS[event]] : [],
-    ),
-  );
 
 const oceanBasins: ConstraintValueExtractor = (facts) =>
   listWhenSeveral(
@@ -241,10 +228,10 @@ const EXTRACTORS = {
   language_multilingual: officialLanguages,
 
   // ── Drapeau ────────────────────────────────────────────────────────────────
-  flag_has_star: flagSymbols,
-  flag_has_crescent: flagSymbols,
-  flag_has_cross: flagSymbols,
-  flag_has_animal: flagSymbols,
+  flag_has_star: NO_VALUE,
+  flag_has_crescent: NO_VALUE,
+  flag_has_cross: NO_VALUE,
+  flag_has_animal: NO_VALUE,
   flag_two_colors: (facts) =>
     listWhenSeveral(facts.flagColors.map((color) => FLAG_COLOR_LABELS[color])),
 
@@ -260,9 +247,9 @@ const EXTRACTORS = {
   }),
 
   // ── Événements, politique, régime ──────────────────────────────────────────
-  event_fifa_wc_host: hostedEvents,
-  event_summer_olympics_host: hostedEvents,
-  event_winter_olympics_host: hostedEvents,
+  event_fifa_wc_host: NO_VALUE,
+  event_summer_olympics_host: NO_VALUE,
+  event_winter_olympics_host: NO_VALUE,
   political_eu: NO_VALUE,
   political_g20: NO_VALUE,
   political_nato: NO_VALUE,

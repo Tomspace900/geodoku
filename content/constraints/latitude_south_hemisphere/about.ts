@@ -4,7 +4,7 @@ export default defineAbout("latitude_south_hemisphere", {
   sources: ["world_countries"],
   basis: "source",
   clarification: {
-    fr: "D'après le centre approximatif du pays, pas son extension territoriale.",
-    en: "Based on the country's approximate centre, not its full extent.",
+    fr: "Basé sur le centre géographique du territoire.",
+    en: "Based on the geographic centre of the territory.",
   },
 });

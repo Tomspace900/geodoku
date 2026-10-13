@@ -74,11 +74,24 @@ describe("constraintValueFor", () => {
     ).toBeNull();
   });
 
-  it("shows official languages only when there are several", () => {
-    expect(constraintValueFor("language_french", COUNTRY_FACTS.FRA)).toBeNull();
+  it("shows the official language even when there is only one", () => {
+    expect(frText("language_french", "FRA")).toBe("français");
+  });
+
+  it("lists every official language of a multilingual country", () => {
     expect(
       constraintValueFor("language_french", COUNTRY_FACTS.CHE),
     ).toMatchObject({ kind: "languages" });
+  });
+
+  it("shows nothing for a flag symbol, which the label already names", () => {
+    expect(constraintValueFor("flag_has_star", COUNTRY_FACTS.USA)).toBeNull();
+  });
+
+  it("shows nothing for a hosted event, until editions are known", () => {
+    expect(
+      constraintValueFor("event_fifa_wc_host", COUNTRY_FACTS.DEU),
+    ).toBeNull();
   });
 
   it("gives the independence event of a former colony, with its year", () => {

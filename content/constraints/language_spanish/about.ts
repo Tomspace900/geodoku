@@ -4,7 +4,7 @@ export default defineAbout("language_spanish", {
   sources: ["world_countries"],
   basis: "source",
   clarification: {
-    fr: "Langue officielle de droit, ou de fait là où aucune loi n'en désigne. Une langue de travail ou d'usage courant, sans statut, ne compte pas.",
-    en: "Official by law, or de facto where no law names one. A working language, or one in common use without status, does not count.",
+    fr: "Langue officielle de droit ou d'usage national prédominant. Langues régionales ou de travail exclues.",
+    en: "Official by law, or predominant in national use. Regional or working languages excluded.",
   },
 });

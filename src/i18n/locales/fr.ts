@@ -465,21 +465,6 @@ export const fr = {
         black: "noir",
         orange: "orange",
       },
-      flagSymbol: {
-        star: "étoile",
-        crescent: "croissant",
-        cross: "croix",
-        sun: "soleil",
-        circle: "cercle",
-        triangle: "triangle",
-        animal: "animal",
-        plant: "plante",
-      },
-      event: {
-        fifaWcHost: "Coupe du monde de football",
-        summerOlympicsHost: "Jeux olympiques d'été",
-        winterOlympicsHost: "Jeux olympiques d'hiver",
-      },
       sovereigntyKind: {
         independence: "Indépendance",
         restoration: "Restauration",

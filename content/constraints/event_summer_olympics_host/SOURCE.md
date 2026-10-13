@@ -1,8 +1,8 @@
 ---
 constraint_id: event_summer_olympics_host
 status: active
-checked_at: 2026-07-21
-review_after: 2027-01-21
+checked_at: 2026-10-13
+review_after: 2027-04-13
 ---
 
 # event_summer_olympics_host
@@ -22,7 +22,7 @@ Pays ayant accueilli des Jeux olympiques d'été.
 
 ## Cas limites
 
-Le pays retenu est celui de la ville hôte au moment de l'édition, entité politique de l'époque comprise. Les éditions futures attribuées ne comptent pas.
+Le pays retenu est celui qui contient aujourd'hui la ville hôte (Moscou 1980, Union soviétique à l'époque, compte pour la Russie). Les éditions futures attribuées ne comptent pas.
 
 ## Révision
 

@@ -4,7 +4,7 @@ export default defineAbout("area_larger_france", {
   sources: ["world_countries"],
   basis: "source",
   clarification: {
-    fr: "Superficie de la France métropolitaine seule : l'outre-mer n'est pas compté (exception assumée à la règle territoriale).",
-    en: "Area of metropolitan France alone: overseas territories are not counted (a deliberate exception to the territorial rule).",
+    fr: "France métropolitaine uniquement (~550\u00A0000\u00A0km²).",
+    en: "Metropolitan France only (~550,000 km²).",
   },
 });

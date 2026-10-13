@@ -4,7 +4,7 @@ export default defineAbout("ocean_multiple_basins", {
   sources: ["iho_s23"],
   basis: "convention",
   clarification: {
-    fr: "Bordé par au moins deux bassins parmi Atlantique, Pacifique, Indien et Arctique ; les mers semi-fermées ne comptent pas.",
-    en: "Bordered by at least two basins among Atlantic, Pacific, Indian and Arctic; semi-enclosed seas don't count.",
+    fr: "Accès direct à au moins deux océans (mers semi-fermées exclues).",
+    en: "Direct access to at least two oceans (semi-enclosed seas excluded).",
   },
 });

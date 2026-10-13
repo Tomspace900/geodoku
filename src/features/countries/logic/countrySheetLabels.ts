@@ -1,7 +1,6 @@
 import type { TKey } from "@/i18n/types";
 import type {
   FlagColor,
-  FlagSymbol,
   PhysicalFeature,
   ProductionRankKey,
   SovereigntyKind,
@@ -36,23 +35,6 @@ export const FLAG_COLOR_LABELS: Record<FlagColor, TKey> = {
   white: "countrySheet.enum.flagColor.white",
   black: "countrySheet.enum.flagColor.black",
   orange: "countrySheet.enum.flagColor.orange",
-};
-
-export const FLAG_SYMBOL_LABELS: Record<FlagSymbol, TKey> = {
-  star: "countrySheet.enum.flagSymbol.star",
-  crescent: "countrySheet.enum.flagSymbol.crescent",
-  cross: "countrySheet.enum.flagSymbol.cross",
-  sun: "countrySheet.enum.flagSymbol.sun",
-  circle: "countrySheet.enum.flagSymbol.circle",
-  triangle: "countrySheet.enum.flagSymbol.triangle",
-  animal: "countrySheet.enum.flagSymbol.animal",
-  plant: "countrySheet.enum.flagSymbol.plant",
-};
-
-export const EVENT_LABELS: Record<string, TKey> = {
-  fifa_wc_host: "countrySheet.enum.event.fifaWcHost",
-  summer_olympics_host: "countrySheet.enum.event.summerOlympicsHost",
-  winter_olympics_host: "countrySheet.enum.event.winterOlympicsHost",
 };
 
 export const SOVEREIGNTY_KIND_LABELS: Record<SovereigntyKind, TKey> = {

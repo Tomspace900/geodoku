@@ -4,7 +4,7 @@ export default defineAbout("ocean_atlantic", {
   sources: ["iho_s23"],
   basis: "convention",
   clarification: {
-    fr: "Une mer semi-fermée (Méditerranée, Caraïbes, mer Rouge…) ne compte pas comme façade océanique.",
-    en: "A semi-enclosed sea (Mediterranean, Caribbean, Red Sea…) does not count as an ocean coastline.",
+    fr: "Façade directe. Mers semi-fermées (Méditerranée, Caraïbes, mer Rouge…) exclues.",
+    en: "Direct coastline. Semi-enclosed seas (Mediterranean, Caribbean, Red Sea…) excluded.",
   },
 });
