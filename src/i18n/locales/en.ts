@@ -417,6 +417,7 @@ export const en = {
     soleNeighbor: "Neighbor: {names}",
     capitalSingular: "Capital: {names}",
     capitalPlural: "Capitals: {names}",
+    moreLanguages: "{count} more",
   },
   countrySheet: {
     value: {

@@ -84,6 +84,22 @@ describe("constraintValueFor", () => {
     ).toMatchObject({ kind: "languages" });
   });
 
+  it("names the constraint's language first, so a shortened list still shows it (Spanish is 4th in Bolivia)", () => {
+    expect(frText("language_spanish", "BOL")).toBe(
+      "espagnol, aymara, guarani et quechua",
+    );
+  });
+
+  it("names three languages, then counts the rest", () => {
+    expect(frText("language_english", "ZAF")).toBe(
+      "anglais, afrikaans, ndébélé du Sud et 8 autres",
+    );
+  });
+
+  it("names a fourth language rather than writing « et 1 autre »", () => {
+    expect(frText("language_french", "CHE")).toMatch(/ et romanche$/);
+  });
+
   it("shows nothing for a flag symbol, which the label already names", () => {
     expect(constraintValueFor("flag_has_star", COUNTRY_FACTS.USA)).toBeNull();
   });

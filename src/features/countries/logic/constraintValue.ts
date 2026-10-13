@@ -121,11 +121,23 @@ function listWhenSeveral(labelKeys: readonly TKey[]): ConstraintValue | null {
   return labelKeys.length > 1 ? { kind: "enumList", labelKeys } : null;
 }
 
-/** La langue elle-même, même unique : « France — français » dit au joueur ce qui a été retenu. */
-const officialLanguages: ConstraintValueExtractor = (facts) =>
-  facts.officialLanguages.length > 0
-    ? { kind: "languages", codes: facts.officialLanguages }
-    : null;
+/**
+ * Les langues officielles, même une seule : « France — français » dit au joueur
+ * ce qui a été retenu. Celle de la contrainte passe en tête, pour rester visible
+ * quand la liste est abrégée (l'espagnol est 4ᵉ en Bolivie).
+ */
+function officialLanguages(code: string): ConstraintValueExtractor {
+  return (facts) =>
+    facts.officialLanguages.length > 0
+      ? {
+          kind: "languages",
+          codes: [
+            ...facts.officialLanguages.filter((language) => language === code),
+            ...facts.officialLanguages.filter((language) => language !== code),
+          ],
+        }
+      : null;
+}
 
 const oceanBasins: ConstraintValueExtractor = (facts) =>
   listWhenSeveral(
@@ -240,12 +252,12 @@ const EXTRACTORS = {
   population_lt_2_5M: NO_VALUE,
 
   // ── Langue ─────────────────────────────────────────────────────────────────
-  language_french: officialLanguages,
-  language_arabic: officialLanguages,
-  language_spanish: officialLanguages,
-  language_english: officialLanguages,
-  language_portuguese: officialLanguages,
-  language_russian: officialLanguages,
+  language_french: officialLanguages("fr"),
+  language_arabic: officialLanguages("ar"),
+  language_spanish: officialLanguages("es"),
+  language_english: officialLanguages("en"),
+  language_portuguese: officialLanguages("pt"),
+  language_russian: officialLanguages("ru"),
   language_multilingual: NO_VALUE,
 
   // ── Drapeau ────────────────────────────────────────────────────────────────

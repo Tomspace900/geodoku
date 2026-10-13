@@ -433,6 +433,7 @@ export const fr = {
     soleNeighbor: "Voisin\u00A0: {names}",
     capitalSingular: "Capitale\u00A0: {names}",
     capitalPlural: "Capitales\u00A0: {names}",
+    moreLanguages: "{count} autres",
   },
   countrySheet: {
     value: {
