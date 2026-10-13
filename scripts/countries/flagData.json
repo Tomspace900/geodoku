@@ -40,7 +40,7 @@
     "flagLayout": []
   },
   "AUS": {
-    "flagColors": ["blue", "white"],
+    "flagColors": ["red", "blue", "white"],
     "flagSymbols": ["star", "cross"],
     "flagLayout": []
   },
@@ -890,7 +890,7 @@
     "flagLayout": []
   },
   "TUV": {
-    "flagColors": ["blue", "yellow"],
+    "flagColors": ["red", "blue", "yellow", "white"],
     "flagSymbols": ["star", "cross"],
     "flagLayout": []
   },
