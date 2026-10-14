@@ -21,7 +21,7 @@ Trois fichiers, trois rôles :
 | Donnée | Source | Statut |
 | --- | --- | --- |
 | Liste jouable, `region`/`subregion` bruts | [world-countries](https://github.com/mledoze/countries) (npm) | importé |
-| Noms `fr` / `en` | world-countries (`translations.fra`, `name.common`) | importé |
+| Noms `fr` / `en` | world-countries (`translations.fra`, `name.common`) ; le nom `fr` est corrigé par `nameCorrectionsByIso3` (`countryPatches.ts`, motif et date par entrée : CPV, PLW, MUS, SUR) sur la liste de référence de l'administration française — [INSEE, COG 2026](https://www.insee.fr/fr/statistiques/fichier/8740222/v_pays_territoire_2026.csv) et [CNT, Pays, territoires et villes du monde](https://cnig.gouv.fr/IMG/pdf/7__liste_pays_territoires_et_villes_du_monde.pdf) — l'ancien nom restant alias de recherche | importé + curé |
 | ISO2 / ISO3 | world-countries + [REST Countries v5](https://restcountries.com/) | importé |
 | Alias de recherche | `scripts/countries/countryPatches.ts` (`searchAliasesByIso3`) | curé |
 | Emoji drapeau | world-countries | importé |
@@ -57,7 +57,7 @@ Documenté **par famille de champs** de `CountryFacts` (voir
 | `lifeExpectancyYears` (`value`, `year`, ou `null`) | [Banque mondiale, WDI](https://data.worldbank.org/indicator/SP.DYN.LE00.IN), indicateur `SP.DYN.LE00.IN` (années), même récolte et même règle d'année que `gdpPerCapitaUsd`. `null` pour Taïwan et le Vatican, absents de la WDI | importé |
 | `humanDevelopmentIndex` (`value`, `year`, ou `null`) | [PNUD, *Human Development Report* 2025](https://hdr.undp.org/data-center/documentation-and-downloads), fichier « composite indices complete time series » (URL exacte et encodage latin-1 dans `harvest/humanDevelopmentIndexLib.ts`), colonne `hdi_2023`, **dernière année de l'édition**, lue par `pnpm harvest:hdi`. Valeur brute (0 à 1) ; la catégorie (très élevé ≥ 0,800 ; élevé 0,700–0,799 ; moyen 0,550–0,699 ; faible < 0,550, *Technical note 1* du rapport) est **calculée à l'affichage** et confrontée par `check:content` à la catégorie publiée (`hdicode`) pour chaque pays. `null` : Taïwan, Vatican et Kosovo, absents du fichier ; Monaco et la Corée du Nord, présents sans valeur. Aucun repli sur une année plus ancienne | importé |
 | `drivingSide` (`left` / `right`) | REST Countries v5 `cars.driving_side` | importé |
-| `geoTags` : `middle_east`, `capital_not_largest` | classification éditoriale (`countryPatches.ts`) | curé |
+| `geoTags` : `middle_east`, `capital_not_largest`, `shared_island` | classification éditoriale (`countryPatches.ts`) ; `shared_island` : État dont tout le territoire est insulaire sur une île partagée (BRN, DOM, GBR, HTI, IDN, IRL, PNG, TLS), que `waterAccess` laisse `coastal` | curé |
 | `geoTags` : `drives_on_left` | copie mécanique de `drivingSide` (REST Countries v5 `cars.driving_side`, `buildCountriesLib.ts`) | importé |
 | `regime` (`monarchy` / `republic`) | classification binaire éditoriale, réf. [CIA World Factbook — government type](https://www.cia.gov/the-world-factbook/field/government-type/) | curé |
 | `physicalFeatures` (`equator_crosser`, `mediterranean_coast`, `caribbean_coast`, `peak_over_5000m`, `has_desert`, `rainforest`, `atlantic_coast`, `pacific_coast`, `indian_ocean_coast`, `arctic_coast`) | revue éditoriale cartographique / biomes nommés (`countryPatches.ts`) | curé |

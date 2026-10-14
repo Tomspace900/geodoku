@@ -1,7 +1,7 @@
 ---
 constraint_id: time_zones_multiple
 status: active
-checked_at: 2026-09-11
+checked_at: 2026-10-14
 review_after: 2027-03-11
 ---
 
@@ -49,16 +49,6 @@ constitutifs non intégrés.
 Le **Royaume-Uni** et le **Danemark** restent à 1 : aucun territoire intégré
 décalé — les territoires britanniques d'outre-mer, le Groenland et les Féroé sont
 hors périmètre. C'est la règle, pas un oubli.
-
-**Cas ouvert — l'Ukraine.** Elle compte 2 décalages uniquement parce qu'IANA
-maintient `Europe/Simferopol` à UTC+03:00 depuis l'annexion russe de la Crimée en
-2014 ; le temps civil légal ukrainien est unique. La donnée est conservée telle
-quelle faute d'arbitrage, mais le jeu affirme ici une conséquence de
-l'occupation.
-
-**Cas ouvert — la Chine.** IANA expose `Asia/Urumqi` (UTC+06:00), mais l'heure de
-Pékin est la seule heure civile officielle de la République populaire. Au sens
-strict de la définition ci-dessus, la Chine ne devrait pas qualifier.
 
 ## Révision
 

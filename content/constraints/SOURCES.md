@@ -120,7 +120,11 @@ importée, consultée pour comparer) sont distingués :
   « Amérique latine et Caraïbes ») : c'est un découpage Geodoku, pas du M49.
 - Frontières et enclavement : `borders` / `landlocked` de world-countries et REST
   Countries v5, corrigés par `countryPatches.ts` (voisins non jouables écartés,
-  cf. `playableBorderCount`). [World Bank Official Boundaries](https://datacatalog.worldbank.org/search/dataset/0038272/world-bank-official-boundaries)
+  cf. `playableBorderCount`). **Île partagée** : `waterAccess` ne vaut `island` que
+  sans frontière terrestre ; un État dont tout le territoire est insulaire mais
+  dont l'île est partagée (Irlande, Haïti, Timor oriental…) reste `coastal` et
+  entre dans `water_island` par une classification curée distincte
+  (`sharedIslandState`, #129). [World Bank Official Boundaries](https://datacatalog.worldbank.org/search/dataset/0038272/world-bank-official-boundaries)
   est la référence de révision, non importée.
 - Superficie : `area` de world-countries — superficie **totale**, eau intérieure
   comprise, pas la surface terrestre. Population : REST Countries v5, sans millésime
@@ -226,6 +230,11 @@ Paris 2024 à Tahiti) ne comptent pas.
 ## Nature et relief
 
 - Équateur et côtes : [Natural Earth 5.1.2](https://github.com/nvkelso/natural-earth-vector/tree/v5.1.2/geojson).
+  **L'équateur traverse un pays** quand la ligne coupe une terre émergée **ou** les
+  eaux entre les îles d'un même archipel du pays (Maldives, Kiribati) ; elle ne
+  compte pas quand une île isolée du pays s'en trouve séparée par un autre État
+  (Annobón, Guinée équatoriale). Décision du 2026-10-14 (#129), qui inverse celle
+  du 2026-10-09 (#122).
 - Déserts et forêts tropicales : listes **établies à la main**, biome par biome
   (`countryPatches.ts`). [NASA MODIS MCD12Q1](https://doi.org/10.5067/MODIS/MCD12Q1.061)
   ne sert que de repère de relecture : aucune valeur n'en est calculée, un pixel aride
@@ -234,8 +243,9 @@ Paris 2024 à Tahiti) ne comptent pas.
 - Part de territoire montagneux : indicateur [ODD 15.4.2](https://unstats.un.org/sdgs/metadata/?Text=&Goal=15&Target=15.4)
   (méthode FAO/UNEP-WCMC).
 - Part de superficie forestière : Banque mondiale `AG.LND.FRST.ZS` (d'après la FAO),
-  import du 2026-07-17 ; la série WDI a été révisée le 2026-10-08, cf.
-  `forest_cover_majority/SOURCE.md` (décision du 2026-10-09 : on garde l'import).
+  import du 2026-07-17 ; la série WDI a été révisée le 2026-10-08 et **la série
+  révisée est adoptée** (décision du 2026-10-10, qui inverse celle du 2026-10-09),
+  cf. `forest_cover_majority/SOURCE.md`.
 
 Une part quantitative absente de la source vaut `null`, jamais 0 : le pays est
 alors hors liste sans être compté comme « 0 % ».
@@ -353,36 +363,48 @@ issue #126) :
 - Fusion : `dominations` dans `facts.ts` ; les deux contraintes lisent
   l'existence d'une domination de la puissance.
 
-Règles, tranchées le 2026-10-14 — un pays entre dans la liste s'il a été **un
-jour** sous domination de la puissance :
+Règles, tranchées le 2026-10-14 et révisées le même jour (#129) — un pays entre
+dans la liste s'il a été **un jour** sous domination de la puissance :
 
 1. **Nature.** Comptent la colonie, le protectorat, l'**État protégé** dont la
    puissance dirige les affaires étrangères (Afghanistan, Bhoutan, États du
-   Golfe, Nejd de 1915 à 1927), le mandat ou la tutelle, le condominium.
+   Golfe), le mandat ou la tutelle, le condominium. Un État protégé compte
+   quand l'entité protégée **est l'État actuel, ou s'est unie à lui au moment de
+   sa formation** ; une protection sur une entité disparue avant la formation de
+   l'État actuel ne compte pas (Nejd, protégé de 1915 à 1927 ; Arabie saoudite
+   formée en 1932). Le Yémen entre au contraire par Aden, unie en 1990.
    L'influence sans traité de protectorat ne compte pas : Oman, qui concluait
    ses propres traités, ni le Népal.
 2. **Occupation militaire** suivie de restitution : exclue (Égypte 1798–1801,
-   Islande 1940, Java 1811–1816, zones d'occupation de 1945). Une conquête
-   **conservée** compte dès la conquête (Maurice 1810, Malte 1800).
-3. **Administration d'une ex-colonie ennemie** jusqu'à son indépendance :
-   comptée (Libye 1942–1951, Érythrée 1941–1952) — ce n'est pas une
-   occupation passagère.
-4. **État satellite** (royaume de Hollande, duché de Varsovie, Mexique de
+   Islande 1940, Java 1811–1816, zones d'occupation de 1945). Il en va de même de
+   l'**administration militaire provisoire** d'une ex-colonie ennemie, dans
+   l'attente d'un règlement international, sans que le territoire devienne
+   colonie, protectorat ni tutelle (Libye 1942–1951, Érythrée 1941–1952 : *British
+   Military Administration*). Une conquête **conservée** compte dès la conquête,
+   parce que le territoire devient colonie de la Couronne (Maurice 1810, Malte
+   1800).
+3. **État satellite** (royaume de Hollande, duché de Varsovie, Mexique de
    Maximilien) : exclu.
-5. **Annexion napoléonienne** : exclue, même quand elle a pris la capitale
+4. **Annexion napoléonienne** : exclue, même quand elle a pris la capitale
    (Belgique, Luxembourg, Pays-Bas, Monaco…) — la contrainte parle d'empire
    colonial.
-6. **Territoire partiel** : compte si la capitale actuelle en relevait (Canada,
+5. **Territoire partiel** : compte si la capitale actuelle en relevait (Canada,
    Ottawa en Nouvelle-France ; Saint-Kitts, Basseterre française), ou si le
    territoire dominé s'est uni à l'État au moment de la décolonisation
    (Cameroun méridional, Somaliland, Aden). Hong Kong, Pondichéry ou la
    Louisiane ne font pas entrer la Chine, l'Inde ni les États-Unis.
-7. **Passages successifs** : un pays passé d'une puissance à l'autre entre
+6. **Passages successifs** : un pays passé d'une puissance à l'autre entre
    dans les deux listes (Maurice, Seychelles, Sainte-Lucie, Grenade, Dominique).
-8. **Angleterre avant 1707** : ses colonies d'outre-mer comptent (Suriname
+7. **Angleterre avant 1707** : ses colonies d'outre-mer comptent (Suriname
    1651–1667), pas ses possessions féodales en Europe (la France médiévale).
-9. **Mandat confié à la Couronne mais exercé par un dominion** (Namibie, Samoa) :
+8. **Mandat confié à la Couronne mais exercé par un dominion** (Namibie, Samoa) :
    exclu, la domination était sud-africaine ou néo-zélandaise.
+
+Revue 2026-10-14 (#129) : la règle « administration d'une ex-colonie ennemie »,
+qui comptait la Libye et l'Érythrée, est **supprimée** (ex-règle 3) et ces deux
+cas rejoignent l'occupation militaire (règle 2) ; la règle 1 est précisée pour
+écarter l'Arabie saoudite (Nejd), sans exclure le Yémen. Le terme « État
+protégé » reste.
 
 Conventions de période : début = premier acte retenu par la source (traité,
 fondation, annexion, conquête non restituée) ; fin = indépendance, cession ou

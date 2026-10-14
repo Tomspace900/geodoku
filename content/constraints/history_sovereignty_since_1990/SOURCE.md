@@ -1,7 +1,7 @@
 ---
 constraint_id: history_sovereignty_since_1990
 status: active
-checked_at: 2026-09-09
+checked_at: 2026-10-14
 review_after: 2027-03-09
 ---
 
@@ -46,6 +46,11 @@ non).
   6 septembre 1991 pour les trois). La Lettonie portait jusqu'au lot 4 l'année
   1991 avec la date de 1918 ; corrigée le 2026-09-25, sans effet sur la liste.
 - Timor-Leste : 2002, `restoration` — inclus.
+- **Serbie** : 2006, `dissolution_successor` — incluse. Le Monténégro a fait
+  sécession le 3 juin 2006 de l'union Serbie-et-Monténégro ; la Serbie lui a
+  succédé et n'accède donc pas à l'« indépendance » au sens strict. Le `kind`
+  est passé d'`independence` à `dissolution_successor` le 2026-10-14 (#129) :
+  le Drawer affiche « Succession d'État (5 juin 2006) », la liste ne change pas.
 - Territoires et dépendances non jouables : hors liste.
 
 ## Révision

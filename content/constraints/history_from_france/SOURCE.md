@@ -40,8 +40,11 @@ affiche la nature et la période (« Colonie (1830–1962) »).
   française de 1795 à 1809), Saint-Kitts-et-Nevis (partie française de
   Saint-Christophe, Basseterre, jusqu'en 1713) et le Canada (Nouvelle-France,
   dont relevait le site d'Ottawa). Aucune sortie.
-- **Mauritanie** : colonie française, mais aucune source de référence ne date le
-  début de la domination ; le Drawer n'affiche que la fin (« jusqu'en 1960 »).
+- **Mauritanie** : colonie française, mais aucune source de référence ne fixe
+  une date unique de début entre le protectorat, le territoire civil et la
+  colonie ; `from` reste `null` — jamais d'année estimée — et le Drawer
+  n'affiche que la fin (« Colonie (jusqu'en 1960) »). Confirmé le 2026-10-14
+  (#129).
 - **Écartés** (bloc `excluded`) : les annexions napoléoniennes (Belgique,
   Luxembourg, Pays-Bas, Italie, Vatican, Slovénie, Monaco…), les États
   satellites (Mexique de Maximilien, duché de Varsovie), les territoires

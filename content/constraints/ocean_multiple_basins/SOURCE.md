@@ -1,7 +1,7 @@
 ---
 constraint_id: ocean_multiple_basins
 status: active
-checked_at: 2026-09-11
+checked_at: 2026-10-14
 review_after: 2027-03-11
 ---
 
@@ -23,19 +23,25 @@ deux océans ».
 ## Dérivation
 
 `content/constraints/derivations.ts` : `oceanBasinCount(f) >= 2`. Le décompte
-replie **Méditerranée** et **mer des Caraïbes** sur l'Atlantique (convention
-Geodoku) et lit la façade **arctique** curée (`arctic_coast`, quatre États
-riverains : Canada, Norvège, Russie, États-Unis). `pnpm build:answers`
-matérialise `answers.ts` (gardé par `pnpm check:content`).
+additionne les façades **océaniques** — Atlantique, Pacifique, Indien et
+**arctique** (`arctic_coast`, façade curée restreinte aux quatre États riverains :
+Canada, Norvège, Russie, États-Unis). Il **ne replie rien** : la Méditerranée, la
+mer des Caraïbes, la mer Rouge, le golfe Persique, la Baltique et la mer Noire,
+mers semi-fermées, ne comptent pas comme un bassin (révision du 2026-09-11,
+[océans](../SOURCES.md#océans)). `pnpm build:answers` matérialise `answers.ts`
+(gardé par `pnpm check:content`).
 
 ## Cas limites
 
 - Notre snapshot sépare `mediterranean_coast` / `caribbean_coast` de
-  `atlantic_coast` : sans le repli, l'Égypte (Méditerranée + mer Rouge) ou la
-  Colombie (Caraïbes + Pacifique) manqueraient à tort la contrainte.
-- `arctic_coast` est une façade nouvelle, curée et restreinte aux quatre États à
-  côte arctique continue : elle donne son second bassin à la **Norvège**
-  (Atlantique + Arctique) et à la **Russie** (Pacifique + Arctique).
+  `atlantic_coast`, et **le décompte ne les replie pas** : l'Égypte
+  (Méditerranée + mer Rouge) et la Colombie (Caraïbes + Pacifique) ne sont donc
+  **pas** dans la liste — un seul océan, ou aucun, derrière leurs mers
+  semi-fermées. Le repli de la Méditerranée et de la mer des Caraïbes sur
+  l'Atlantique, en vigueur avant la révision du 2026-09-11, est abandonné.
+- `arctic_coast` est une façade curée et restreinte aux quatre États à côte
+  arctique continue : elle donne son second bassin à la **Norvège** (Atlantique +
+  Arctique) et à la **Russie** (Pacifique + Arctique).
 - **Périmètre territorial** : règle commune, cf.
   [SOURCES.md](../SOURCES.md#périmètre-territorial-dun-pays). Corrigé à la revue
   métier du 2026-09-10 : ce document affirmait que la **France** était
