@@ -291,7 +291,7 @@ Source de vérité détaillée : grep `posthog?.capture` dans le code.
 **Toujours**
 
 - `pnpm lint` et `pnpm test` (aussi exécutés au pre-commit Husky)
-- Issue référencée (`Closes #N` dans le commit) et statut à jour dans le Project (cf. §12)
+- Issue référencée dans le commit, et sous-issue **fermée à l'arrivée sur `develop`** avec son statut « Sur develop » (cf. §12)
 
 **Selon le périmètre**
 
@@ -334,11 +334,14 @@ trivial peut s'en passer.
 - **Champs du Project** : `Status` (Backlog · Prêt · En cours · Sur develop · En prod ·
   Abandonné) et `Priorité` (🔴 Haute · 🟠 Moyenne · 🟢 Basse). Une issue ouverte entre
   seule dans le Project, en Backlog ; la priorité se pose à la main.
-- **Cycle de vie** : « En cours » au démarrage, « Sur develop » au merge sur `develop`
-  (à la main). `Closes #N` dans le message de commit ferme l'issue **quand le commit
-  atteint `main`**, donc à la mise en prod (flux `develop → main`, §8) ; le Project la
-  passe alors en « En prod ». Abandon : fermer en « not planned » et passer en
-  « Abandonné ».
+- **Cycle de vie** : « En cours » au démarrage. Une **sous-issue se ferme dès que son
+  travail arrive sur `develop`** (statut « Sur develop »), à la main : `gh issue close N
+  --comment "<hash>"`, car `Closes #N` ne ferme qu'au merge dans `main`, la branche
+  par défaut. L'**issue principale** du chantier (epic) et son issue de mise en prod
+  restent ouvertes jusqu'à la prod : la PR `develop → main` porte `Closes #<epic>`,
+  puis toutes les sous-issues passent en « En prod ». Le workflow « Item closed » du
+  Project doit donc poser « Sur develop », pas « En prod ». Abandon : fermer en
+  « not planned » et passer en « Abandonné ».
 - **Plans longs** : un plan d'exécution (`docs/content-refactor-p4.md`…) reste un doc
   versionné, dont l'issue est le point d'entrée. Une décision durable va dans
   `AGENTS.md` ou dans le doc, jamais seulement dans un commentaire d'issue.
