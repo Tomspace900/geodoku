@@ -43,15 +43,18 @@ const CLARIFICATION_MAX_LENGTH = 160;
 
 /**
  * Faux positifs motivés du détecteur de noms de pays dans une clarification —
- * même rôle qu'`ACCEPTED_OMISSIONS` pour `validateSovereigntySources`. Vide
- * aujourd'hui : chaque clarification a été rédigée pour l'éviter. Le toast
- * s'affiche **en pleine partie** : nommer un pays, c'est souffler une réponse
- * (« pas d'aide explicite », décision du lot 1). Le cas de Chypre, en Europe
- * par exception à M49, est écrit dans `SOURCE.md`, pas dans le toast.
+ * même rôle qu'`ACCEPTED_OMISSIONS` pour `validateSovereigntySources`. Chaque
+ * clarification est rédigée pour éviter un nom de pays : le toast s'affiche
+ * **en pleine partie**, nommer un pays c'est souffler une réponse (« pas d'aide
+ * explicite », décision du lot 1). Le cas de Chypre, en Europe par exception à
+ * M49, est écrit dans `SOURCE.md`, pas dans le toast. Seul homonyme accepté :
+ * l'équateur, la ligne, que le détecteur confond avec le pays.
  */
 export const ACCEPTED_COUNTRY_MENTIONS: Readonly<
   Partial<Record<ConstraintId, readonly string[]>>
-> = {};
+> = {
+  latitude_south_hemisphere: ["Équateur"],
+};
 
 function stripAccents(value: string): string {
   return value.normalize("NFD").replace(/[̀-ͯ]/g, "");

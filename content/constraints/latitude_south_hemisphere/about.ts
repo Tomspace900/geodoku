@@ -4,7 +4,7 @@ export default defineAbout("latitude_south_hemisphere", {
   sources: ["world_countries"],
   basis: "source",
   clarification: {
-    fr: "Basé sur le centre géographique du territoire.",
-    en: "Based on the geographic centre of the territory.",
+    fr: "Le centre géographique du pays doit se situer au sud de l'équateur.",
+    en: "The country's geographic centre must lie south of the equator.",
   },
 });

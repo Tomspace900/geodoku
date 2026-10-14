@@ -4,7 +4,7 @@ export default defineAbout("water_island", {
   sources: ["world_countries"],
   basis: "source",
   clarification: {
-    fr: "Territoire principal entouré d'eau, sans frontière terrestre.",
-    en: "Main territory surrounded by water, with no land border.",
+    fr: "État entièrement insulaire ou archipélagique (y compris sur une île partagée avec un autre pays).",
+    en: "Entirely island or archipelago state (including on an island shared with another country).",
   },
 });

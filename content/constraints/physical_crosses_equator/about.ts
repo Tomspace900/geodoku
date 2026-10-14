@@ -4,7 +4,7 @@ export default defineAbout("physical_crosses_equator", {
   sources: ["natural_earth"],
   basis: "convention",
   clarification: {
-    fr: "Le critère porte sur le territoire traversé par la ligne, pas seulement sur son centre.",
-    en: "The criterion covers the territory crossed by the line, not just the country's centre.",
+    fr: "La ligne de l'équateur doit couper les terres émergées ou traverser directement un archipel du pays.",
+    en: "The equator must cross dry land or run directly through one of the country's archipelagos.",
   },
 });

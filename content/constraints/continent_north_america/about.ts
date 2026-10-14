@@ -4,7 +4,7 @@ export default defineAbout("continent_north_america", {
   sources: ["world_countries", "un_m49"],
   basis: "convention",
   clarification: {
-    fr: "Comprend l'Amérique centrale et les Caraïbes.",
-    en: "Includes Central America and the Caribbean.",
+    fr: "Comprend l'Amérique centrale et les Caraïbes (territoires d'outre-mer exclus).",
+    en: "Includes Central America and the Caribbean (overseas territories excluded).",
   },
 });

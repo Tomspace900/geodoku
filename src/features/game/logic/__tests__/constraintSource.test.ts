@@ -32,7 +32,7 @@ describe("constraintSourceView", () => {
   });
 
   it("renvoie une clarification nulle quand la contrainte n'en a pas", () => {
-    const view = constraintSourceView("water_landlocked", "fr");
+    const view = constraintSourceView("area_gt_2M", "fr");
     expect(view.clarification).toBeNull();
   });
 
