@@ -11,9 +11,9 @@
  *
  * D'où cette garde : si une `sourceDescription` **nomme** une des puissances
  * tracées et que `formerSovereigns` ne la contient pas, il faut soit compléter la
- * curation, soit inscrire le cas dans `ACCEPTED_OMISSIONS` avec son motif. Un
- * faux négatif d'histoire coûte une vie au joueur qui a raison : c'est le pire
- * défaut possible d'une liste de réponses.
+ * curation, soit inscrire le cas dans `ACCEPTED_OMISSIONS` avec son motif.
+ * Aucune contrainte ne lit plus `formerSovereigns` (`history_from_*` lisent
+ * `dominations`) : la garde tient la donnée juste pour la fiche pays (#125).
  *
  * La garde ne contrôle **pas** l'inverse (un slug sans mention textuelle) : la
  * curation a le droit d'ajouter ce que la source dit autrement.

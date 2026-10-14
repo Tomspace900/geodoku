@@ -13,6 +13,8 @@ ENTRÉES DE CURATION (éditées à la main)
   scripts/countries/data/highestPoints.ts # points culminants — RÉCOLTÉ (pnpm harvest:highest-points, Factbook + Wikidata)
   scripts/countries/data/worldBankIndicators.ts # PIB par habitant, espérance de vie — RÉCOLTÉ (pnpm harvest:world-bank, WDI)
   scripts/countries/data/humanDevelopmentIndex.ts # indice de développement humain — RÉCOLTÉ (pnpm harvest:hdi, PNUD)
+  scripts/countries/data/forestCover.ts  # couverture forestière — RÉCOLTÉ (pnpm harvest:forest, WDI d'après la FAO)
+  scripts/countries/data/*.ts            # autres datasets de faits datés, curés à la main
         │  pnpm build:countries   (RÉSEAU — world-countries npm + REST Countries v5 + Wikimedia)
         ▼
 SNAPSHOT (content/countries/ — généré, committé, daté par FACTS_SNAPSHOT.date)
@@ -45,7 +47,7 @@ snapshot `gridAnswers`. Le contenu courant ne sert qu'à générer les candidats
 - **77 actives / 22 catégories** — [`src/features/game/logic/constraints.ts`](../src/features/game/logic/constraints.ts)
   porte l'interface (`id`, `labelKey`, `category`), **sans prédicat**. La
   dérivation vit dans [`content/constraints/derivations.ts`](../content/constraints/derivations.ts).
-- **Réserve** (6) : contraintes conçues, sourcées, puis écartées du jeu pour
+- **Réserve** (8) : contraintes conçues, sourcées, puis écartées du jeu pour
   raison éditoriale (pas assez fun, redondantes). Le dossier garde son
   `SOURCE.md` **sans** `answers.ts` et l'id sort du registre actif. Réactivation :
   réintroduire dans `CONSTRAINTS` + `derivations.ts` + i18n, puis
@@ -170,12 +172,13 @@ celle des **cinq années révolues** avant la récolte ; pour chaque ISO3 du
 catalogue (les agrégats régionaux sont écartés), on garde l'année non nulle la
 plus récente. Un pays sans valeur est dans `missing` avec sa cause — `not_in_wdi`
 (aucune ligne : Taïwan, Vatican) ou `no_value_in_window` (des lignes, toutes
-nulles ou trop anciennes) — et la fiche n'affiche alors pas la ligne. Le dataset
+nulles ou trop anciennes) — et la fiche pays (#125) n'en affichera pas la ligne. Le dataset
 garde le `lastupdated` de la WDI, qui révise ses séries : une nouvelle récolte
 peut changer une valeur passée. Le millésime de chaque source de `sources.ts` est
 la plage d'années retenues, calculée à la récolte, imprimée par le script et
-comparée exactement par `validateYearRangeVintage` (`check:content`). Aucune
-valeur calculée (catégorie de revenu…) n'est stockée.
+comparée exactement par `validateSourceVintages` (`check:content`). Aucune
+valeur calculée (catégorie de revenu…) n'est stockée. Aucune contrainte ne lit
+ces deux champs, ni l'IDH ci-dessous : ils n'attendent que la fiche pays (#125).
 
 **Indice de développement humain** (`pnpm harvest:hdi`) : le fichier CSV « composite
 indices complete time series » du data center du PNUD. L'**édition** (2025),
@@ -188,12 +191,23 @@ publie une colonne `hdi_*` plus récente que l'année épinglée. Les agrégats 
 (`ZZA.VHHD`…) et Hong Kong, hors catalogue, sont écartés ; un pays absent du fichier
 (`not_in_report` : Taïwan, Vatican, Kosovo) ou présent sans valeur
 (`no_value_published`, catégorie « Other Countries or Territories » : Monaco,
-Corée du Nord) vaut `null` et la fiche n'affiche pas la ligne. Le dataset garde la
+Corée du Nord) vaut `null` et la fiche n'en affichera pas la ligne. Le dataset garde la
 catégorie publiée (`hdicode`) : `check:content` recalcule la catégorie depuis la
 valeur avec les seuils de `content/countries/humanDevelopment.ts` (*Technical note
 1* du rapport) et échoue au moindre écart — seuils périmés après une nouvelle
 édition. Le millésime de `sources.ts` (« Rapport 2025, données 2023 ») est comparé
-exactement à l'édition et à l'année du dataset (`validateEditionVintage`).
+exactement à l'édition et à l'année du dataset (`validateSourceVintages`).
+
+**Couverture forestière** (`pnpm harvest:forest`) : WDI `AG.LND.FRST.ZS` (d'après
+la FAO), même API et même fenêtre de cinq ans que les indicateurs ci-dessus, mais
+une **année unique** pour tous les pays — une comparaison quantitative emploie un
+même millésime ([`SOURCES.md`](../content/constraints/SOURCES.md)). L'année de
+référence est la plus récente dont la couverture égale la meilleure de la fenêtre
+(`selectReferenceYear`). Les pays absents de la WDI (Taïwan, Saint-Siège, Kosovo)
+prennent une valeur d'une autre source, motivée dans `NON_WDI_FOREST_COVER` ; la
+récolte échoue si la WDI se met à couvrir l'un d'eux, ou si un pays reste sans
+valeur. Le millésime de `fao_forest_resources` est l'année de référence, gardé par
+`validateSourceVintages`.
 
 ### Contrôles automatiques
 
@@ -219,19 +233,30 @@ exactement à l'édition et à l'année du dataset (`validateEditionVintage`).
   / `demonymCorrectionsByIso3`, motif et date par entrée) sont rejoués hors-ligne
   de même (`validateCurrencyDemonymFacts`), et chaque code de monnaie doit avoir
   un nom `Intl` fr et en sans année (`validateCurrencyCode`). Le
-  millésime affiché de la source Wikidata (`content/sources.ts`, écrit à la main)
-  doit dire la même date que `harvestedAt` : `validateHarvestVintage` échoue
-  sinon, et `pnpm harvest:capitals` / `pnpm harvest:highest-points` impriment la
-  valeur à reporter (une entrée de `sources.ts` par récolte Wikidata). Le
   **point culminant** (`highestPoint`) rejoint la liste ci-dessus ; son altitude
   est de plus bornée à ]0, 8 849] m, et `elevationM >= 5000` doit concorder avec
   `physicalFeatures` ∋ `peak_over_5000m` (`validatePeakCoherence`, écarts
   motivés dans `ACCEPTED_PEAK_GAPS`). Les indicateurs WDI sont gardés de même :
   chaque pays est soit dans `values`, soit dans `missing`
   (`validateWorldBankIndicator`), valeur > 0, espérance de vie entre 30 et 95 ans,
-  et la plage d'années du millésime de `sources.ts` doit être celle du dataset. L'IDH est gardé de même (`validateHumanDevelopmentIndex` : partage valeurs / manquants, valeur dans ]0, 1], catégorie calculée = catégorie publiée, millésime = édition). Les
+  L'IDH est gardé de même (`validateHumanDevelopmentIndex` : partage valeurs /
+  manquants, valeur dans ]0, 1], catégorie calculée = catégorie publiée). Les
   champs venus du réseau (population, **liste** des capitales, adhésions,
   pageviews) restent hors de portée — seule une regen les vérifie ;
+- **millésimes récoltés** : le millésime d'une source récoltée dans
+  `content/sources.ts`, écrit à la main et affiché au joueur, doit dire
+  exactement ce que dit son dataset — date de récolte Wikidata, plage d'années
+  WDI, année de la forêt, édition de l'IDH (`validateSourceVintages`). Chaque
+  `pnpm harvest:*` imprime la valeur à reporter ;
+- **histoire** : une `sourceDescription` du Factbook qui nomme une puissance
+  tracée sans la porter dans `formerSovereigns` échoue, sauf omission motivée
+  (`validateSovereigntySources`) ; `historicalDominations.ts` est cohérent —
+  pays du catalogue, une période par puissance, sources connues, aucun cas à la
+  fois retenu et écarté (`validateHistoricalDominations`) ; les années d'accueil
+  des événements concordent avec la liste des pays hôtes (`validateEventEditions`) ;
+- **libellés chiffrés** : le chiffre d'un libellé calculé sur un pays-repère
+  (« plus dense que le Japon (320 hab./km²) ») est la valeur du snapshot arrondie
+  à 2 chiffres significatifs (`validateReferenceLabels`) ;
 - **seam terminal** : aucun module de `content/` n'importe via l'alias `@/` ni
   ne remonte hors du dossier ([`validateContentSeam.ts`](../scripts/content/validateContentSeam.ts)).
   Ni `tsx` ni Vite ne feraient échouer un `@/…` — ils résolvent les `paths` du
@@ -242,10 +267,11 @@ exactement à l'édition et à l'année du dataset (`validateEditionVintage`).
   cohérent (`constraint_id` == dossier, `status` == actif/archivé réel,
   `checked_at`/`review_after` en `YYYY-MM-DD`), et présence des trois documents
   de socle ;
-- **sources des contraintes** : un `about.ts` par contrainte active/archivée
-  (aucun en réserve), chaque `SourceId` de `content/sources.ts` référencé par au
-  moins une contrainte, URLs `https://`, clarifications ≤ 160 caractères sans
-  nom de pays hors libellé traduit — `validateConstraintAbouts`.
+- **sources** : un `about.ts` par contrainte active/archivée (aucun en réserve),
+  clarifications ≤ 160 caractères sans nom de pays hors libellé traduit
+  (`validateConstraintAbouts`) ; chaque `SourceId` de `content/sources.ts` cité
+  au moins une fois, par un `about.ts` ou par `factProvenance.ts`
+  (`validateFactProvenance`), et chaque URL en `https://`.
 
 Les invariants par pays vivent dans
 [`scripts/countries/validateCountryCatalog.ts`](../scripts/countries/validateCountryCatalog.ts)

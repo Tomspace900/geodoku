@@ -18,10 +18,11 @@ ENTRÉES DE CURATION (éditées à la main)
   scripts/countries/countryPatches.ts    # corrections, alias, classifications
   scripts/countries/flagData.json        # table de vérité drapeaux
   scripts/countries/data/*.ts            # datasets de faits quantitatifs datés
-        ▲  pnpm harvest:capitals / harvest:highest-points / harvest:world-bank / harvest:hdi
+        ▲  pnpm harvest:capitals / harvest:highest-points / harvest:world-bank /
+        │       harvest:hdi / harvest:forest
         │    (réseau — Wikidata, Factbook, Banque mondiale, PNUD)
         │    → data/capitalLabels.ts, highestPoints.ts, worldBankIndicators.ts,
-        │      humanDevelopmentIndex.ts, committés
+        │      humanDevelopmentIndex.ts, forestCover.ts, committés
         │  (scripts/countries/harvest/ : récolte réseau isolée, dataset relu en diff)
         │  pnpm build:countries  (réseau — world-countries + REST Countries + Wikimedia)
         ▼
@@ -62,11 +63,10 @@ enchaîne `pnpm build:answers`. Provenance par famille de champs :
   réellement pour un pays donné. Même union `basis: "source"/"convention"` +
   `SourceId[]` que les `about.ts` des contraintes ; une ligne qui recoupe une
   contrainte du lot 1 reprend exactement la même provenance, vérifié par
-  `content/countries/__tests__/factProvenance.test.ts`. Consommé par
-  `buildCountrySheet` (fiche pays, `src/features/countries/logic/countrySheet.ts`),
-  jamais par le snapshot lui-même : éditée à la main, elle **doit évoluer
-  avec** le tableau de [`countries/SOURCE.md`](countries/SOURCE.md) plutôt
-  qu'avec `facts.ts`. Gardée par `pnpm check:content`
+  `content/countries/__tests__/factProvenance.test.ts`. Aucun écran ne la lit
+  aujourd'hui : la fiche pays (#125) est retirée de `develop` et la reprendra.
+  Éditée à la main, elle **doit évoluer avec** le tableau de
+  [`countries/SOURCE.md`](countries/SOURCE.md) plutôt qu'avec `facts.ts`. Gardée par `pnpm check:content`
   (`validateFactProvenance.ts`), qui étend la vérification « source
   référencée » du lot 1 à ce fichier.
 
@@ -98,9 +98,10 @@ partagé par tous les `about.ts` (et, à partir de P4 lot 2, par la provenance
 des faits pays) : une entrée = une source **et** un millésime (période décrite
 par la donnée, jamais la date de regen).
 
-Les faits quantitatifs (fuseaux, volcans, relief, forêt, centres urbains) sont
-des datasets datés dans `scripts/countries/data/`, fusionnés en scalaires par
-`build:countries` — mêmes règles de curation que `countryPatches.ts`. Les
+Les faits quantitatifs (fuseaux, volcans, relief, centres urbains, production,
+souveraineté, dominations, éditions des événements…) sont des datasets datés dans
+`scripts/countries/data/`, fusionnés en scalaires par `build:countries` — mêmes
+règles de curation que `countryPatches.ts`. Les
 libellés fr/en des capitales sont un dataset **récolté** (Wikidata) par
 `scripts/countries/harvest/` : `pnpm harvest:capitals` écrit
 `data/capitalLabels.ts`, relu en diff et committé, puis `build:countries` le
@@ -111,7 +112,12 @@ habitant et l'espérance de vie viennent de l'API WDI de la Banque mondiale
 (`pnpm harvest:world-bank` → `data/worldBankIndicators.ts`). L'indice de
 développement humain vient du fichier CSV du PNUD (`pnpm harvest:hdi` →
 `data/humanDevelopmentIndex.ts`) ; sa catégorie (très élevé…) se calcule à
-l'affichage, seuils dans `countries/humanDevelopment.ts`.
+l'affichage, seuils dans `countries/humanDevelopment.ts`. Ces trois indicateurs
+n'alimentent aucune contrainte : ils attendent la fiche pays (#125). La
+couverture forestière vient de la même API WDI, sur une année unique
+(`pnpm harvest:forest` → `data/forestCover.ts`). Le millésime de chaque source
+récoltée, dans `sources.ts`, est comparé exactement à son dataset par
+`validateSourceVintages`.
 
 `constraints/derivations.ts` — un prédicat pur par contrainte active, porté des
 prédicats runtime historiques. `constraints/SOURCES.md` porte le principe, la
