@@ -27,7 +27,9 @@ export function formatSurface(km2: number, locale: Locale): string {
  * (l'électricité au charbon française, 0,18 %) ne s'affiche jamais « 0 % »,
  * ce qu'un arrondi à l'entier ferait à tort. Sous 0,1 % (Biélorussie 0,04 %,
  * forêts égyptienne et omanaise), même une décimale arrondirait à « 0,0 % » :
- * la valeur plancher « < 0,1 % » / « < 0.1% » prend le relais.
+ * la valeur plancher « < 0,1 % » / « < 0.1% » prend le relais. Une part juste
+ * au-dessus de la moitié garde aussi sa décimale : « 50 % » ne dirait pas
+ * « majorité » à qui lit « plus de 50 % » (Bolivie 50,4 %, Viêt Nam 50,3 %).
  */
 export function formatPercent(fraction: number, locale: Locale): string {
   if (fraction !== 0 && Math.abs(fraction) < 0.001) {
@@ -38,12 +40,27 @@ export function formatPercent(fraction: number, locale: Locale): string {
     }).format(0.001);
     return `< ${floor}`;
   }
-  const digits = fraction !== 0 && Math.abs(fraction) < 0.1 ? 1 : 0;
+  const barelyOverHalf = fraction > 0.5 && Math.round(fraction * 100) === 50;
+  const digits =
+    (fraction !== 0 && Math.abs(fraction) < 0.1) || barelyOverHalf ? 1 : 0;
   return new Intl.NumberFormat(locale, {
     style: "percent",
     minimumFractionDigits: digits,
     maximumFractionDigits: digits,
   }).format(fraction);
+}
+
+/**
+ * Densité en hab./km² : entière, sauf sous 10 où une décimale porte
+ * l'information (Mongolie 2,3 ; Australie 3,6 — « 2 » et « 4 » écraseraient
+ * l'écart que la contrainte demande de comparer).
+ */
+export function formatDensity(value: number, locale: Locale): string {
+  if (value >= 10) return formatInteger(value, locale);
+  return new Intl.NumberFormat(locale, {
+    minimumFractionDigits: 1,
+    maximumFractionDigits: 1,
+  }).format(value);
 }
 
 /** « 1er » en français (seul cas irrégulier), « 1st »/« 2nd »/« 3rd »/« Nth » en anglais. */
@@ -83,30 +100,68 @@ export function formatList(items: readonly string[], locale: Locale): string {
 }
 
 /**
- * Codes de langue que l'ICU embarquée par Node/les navigateurs ne résout pas
- * (`Intl.DisplayNames` renvoie le code tel quel, ou lève) : tous des codes
- * ISO 639-3 hors CLDR. Relevé le 2026-10-14 sur les `officialLanguages` du
- * snapshot — 9 codes en défaut, après le retrait des langues sans statut
- * national (Namibie, Guinée-Bissau, Belize). Les noms français sont
- * en minuscules, comme ceux de l'ICU (« français »), puisqu'ils se lisent au
- * milieu d'une liste ; un test garde que plus aucun code n'est rendu brut.
+ * Codes de langue que l'ICU embarquée ne résout pas : `Intl.DisplayNames`
+ * renvoie le code tel quel, ou lève. Deux familles : des codes ISO 639-3 hors
+ * CLDR (barwe, ndau, langues des signes…), et des langues que Node connaît mais
+ * que l'ICU allégée de Chromium ignore (relevé le 2026-10-14 dans le navigateur
+ * intégré : bislama, créoles mauricien et seychellois, dzongkha, peul,
+ * fidjien…) — le joueur y lisait « mfe » ou « crs » à la place d'un nom. Les
+ * noms français sont en minuscules, comme ceux de l'ICU (« français »),
+ * puisqu'ils se lisent au milieu d'une liste ; un test garde que plus aucun code
+ * n'est rendu brut, y compris quand l'ICU ne connaît aucune langue.
  */
 const LANGUAGE_NAME_FALLBACKS: Readonly<Record<string, LocalizedString>> = {
+  bar: { fr: "bavarois", en: "Bavarian" },
   ber: { fr: "langues berbères", en: "Berber languages" },
+  bi: { fr: "bichelamar", en: "Bislama" },
   bwg: { fr: "barwe", en: "Barwe" },
+  crs: { fr: "créole seychellois", en: "Seychellois Creole" },
+  dyu: { fr: "dioula", en: "Dyula" },
+  dz: { fr: "dzongkha", en: "Dzongkha" },
+  ff: { fr: "peul", en: "Fula" },
+  fj: { fr: "fidjien", en: "Fijian" },
+  gil: { fr: "gilbertin", en: "Gilbertese" },
+  hif: { fr: "hindi fidjien", en: "Fiji Hindi" },
   kck: { fr: "kalanga", en: "Kalanga" },
   khi: { fr: "langues khoïsan", en: "Khoisan languages" },
+  mfe: { fr: "créole mauricien", en: "Mauritian Creole" },
+  mos: { fr: "moré", en: "Mossi" },
+  na: { fr: "nauruan", en: "Nauruan" },
+  nd: { fr: "ndébélé du Nord", en: "North Ndebele" },
   ndc: { fr: "ndau", en: "Ndau" },
+  nr: { fr: "ndébélé du Sud", en: "South Ndebele" },
   nzs: {
     fr: "langue des signes néo-zélandaise",
     en: "New Zealand Sign Language",
   },
+  pau: { fr: "palau", en: "Palauan" },
+  se: { fr: "same du Nord", en: "Northern Sami" },
+  sg: { fr: "sango", en: "Sango" },
+  ss: { fr: "swati", en: "Swati" },
+  tet: { fr: "tétoum", en: "Tetum" },
   toi: { fr: "tonga", en: "Tonga" },
+  tpi: { fr: "tok pisin", en: "Tok Pisin" },
+  tvl: { fr: "tuvaluan", en: "Tuvaluan" },
+  ve: { fr: "venda", en: "Venda" },
   zdj: { fr: "comorien ngazidja", en: "Ngazidja Comorian" },
   zib: { fr: "langue des signes zimbabwéenne", en: "Zimbabwean Sign Language" },
 };
 
+/**
+ * Libellés curés, prioritaires sur `Intl.DisplayNames` : l'ICU connaît ces codes
+ * mais les nomme d'une façon que personne n'emploie (revue #129, 2026-10-14).
+ * `rn` est « roundi » en français pour l'ICU, quand la langue du Burundi se dit
+ * kirundi ; `ckb` est « sorani », la variété centrale du kurde, que la
+ * constitution irakienne désigne comme le kurde.
+ */
+const CURATED_LANGUAGE_NAMES: Readonly<Record<string, LocalizedString>> = {
+  rn: { fr: "kirundi", en: "Kirundi" },
+  ckb: { fr: "kurde", en: "Kurdish" },
+};
+
 export function formatLanguageName(code: string, locale: Locale): string {
+  const curated = CURATED_LANGUAGE_NAMES[code];
+  if (curated) return curated[locale];
   try {
     const displayName = new Intl.DisplayNames([locale], {
       type: "language",

@@ -1,7 +1,8 @@
-import { describe, expect, it } from "vitest";
+import { afterEach, describe, expect, it, vi } from "vitest";
 import { COUNTRY_FACTS } from "../../../../../content/countries/facts";
 import {
   capitalizeFirst,
+  formatDensity,
   formatFullDate,
   formatLanguageName,
   formatList,
@@ -60,10 +61,101 @@ describe("formatLanguageName", () => {
   );
 });
 
+describe("formatLanguageName with an ICU that knows no language", () => {
+  afterEach(() => {
+    vi.unstubAllGlobals();
+  });
+
+  // Codes que l'ICU de Chromium ne résout pas (relevé 2026-10-14) : aucun ne
+  // doit s'afficher brut, ni en français ni en anglais.
+  const CHROMIUM_UNRESOLVED = [
+    "bar",
+    "ber",
+    "bi",
+    "bwg",
+    "ckb",
+    "crs",
+    "dyu",
+    "dz",
+    "ff",
+    "fj",
+    "gil",
+    "hif",
+    "kck",
+    "khi",
+    "mfe",
+    "mos",
+    "na",
+    "nd",
+    "ndc",
+    "nr",
+    "nzs",
+    "pau",
+    "rn",
+    "se",
+    "sg",
+    "ss",
+    "tet",
+    "toi",
+    "tpi",
+    "tvl",
+    "ve",
+    "zdj",
+    "zib",
+  ] as const;
+
+  it.each(["fr", "en"] as const)(
+    "never renders a raw code for the Chromium gaps (%s)",
+    (locale) => {
+      class RawDisplayNames {
+        of(code: string): string {
+          return code;
+        }
+      }
+      vi.stubGlobal("Intl", { ...Intl, DisplayNames: RawDisplayNames });
+      const raw = CHROMIUM_UNRESOLVED.filter(
+        (code) => formatLanguageName(code, locale) === code,
+      );
+      expect(raw).toEqual([]);
+    },
+  );
+});
+
+describe("formatLanguageName curated labels", () => {
+  it.each([
+    ["rn", "fr", "kirundi"],
+    ["rn", "en", "Kirundi"],
+    ["ckb", "fr", "kurde"],
+    ["ckb", "en", "Kurdish"],
+  ] as const)(
+    "prefers the curated label over Intl for %s (%s)",
+    (code, locale, expected) => {
+      expect(formatLanguageName(code, locale)).toBe(expected);
+    },
+  );
+});
+
+describe("formatDensity", () => {
+  it("keeps one decimal below 10 inhabitants per km²", () => {
+    expect(formatDensity(2.3, "fr")).toBe("2,3");
+    expect(formatDensity(4.19, "en")).toBe("4.2");
+  });
+
+  it("rounds to an integer from 10 inhabitants per km²", () => {
+    expect(formatDensity(432.6, "en")).toBe("433");
+  });
+});
+
 describe("formatPercent", () => {
   it("rounds to the nearest integer percent at or above 10%", () => {
     expect(formatPercent(0.213, "en")).toBe("21%");
     expect(formatPercent(0.213, "fr")).toBe("21 %");
+  });
+
+  it("keeps one decimal just over one half so a majority never reads 50%", () => {
+    expect(formatPercent(0.5032, "fr")).toBe("50,3\u00A0%");
+    expect(formatPercent(0.5042, "en")).toBe("50.4%");
+    expect(formatPercent(0.5063, "en")).toBe("51%");
   });
 
   it("shows one decimal below 10% so a small non-zero share never reads 0%", () => {

@@ -2,6 +2,7 @@ import type { Locale, TKey } from "@/i18n/types";
 import type { ConstraintValue } from "./constraintValue";
 import {
   capitalizeFirst,
+  formatDensity,
   formatFullDate,
   formatInteger,
   formatLanguageName,
@@ -61,7 +62,7 @@ export function formatConstraintValue(
       });
     case "density":
       return t("countrySheet.value.densityUnit", {
-        value: formatInteger(value.value, locale),
+        value: formatDensity(value.value, locale),
       });
     case "borderCount":
       return t("constraintValue.borderCount", { count: value.count });
