@@ -138,9 +138,9 @@ function listWhenSeveral(labelKeys: readonly TKey[]): ConstraintValue | null {
 }
 
 /**
- * Les langues officielles, même une seule : « France — français » dit au joueur
- * ce qui a été retenu. Celle de la contrainte passe en tête, pour rester visible
- * quand la liste est abrégée (l'espagnol est 4ᵉ en Bolivie).
+ * Les langues officielles, toutes, même une seule : « France — français » dit
+ * au joueur ce qui a été retenu. Celle de la contrainte passe en tête, pour
+ * qu'on la repère d'un coup d'œil (l'espagnol est 4ᵉ en Bolivie).
  */
 function officialLanguages(code: string): ConstraintValueExtractor {
   return (facts) =>

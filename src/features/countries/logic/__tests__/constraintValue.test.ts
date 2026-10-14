@@ -90,14 +90,12 @@ describe("constraintValueFor", () => {
     );
   });
 
-  it("names three languages, then counts the rest", () => {
-    expect(frText("language_english", "ZAF")).toBe(
-      "anglais, afrikaans, ndébélé du Sud et 8 autres",
+  it("names every official language, the constraint's first", () => {
+    const text = frText("language_english", "ZAF") ?? "";
+    expect(text.startsWith("anglais, ")).toBe(true);
+    expect(text.split(/, | et /)).toHaveLength(
+      COUNTRY_FACTS.ZAF.officialLanguages.length,
     );
-  });
-
-  it("names a fourth language rather than writing « et 1 autre »", () => {
-    expect(frText("language_french", "CHE")).toMatch(/ et romanche$/);
   });
 
   it("shows nothing for a flag symbol, which the label already names", () => {

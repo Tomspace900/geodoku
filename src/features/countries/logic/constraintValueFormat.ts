@@ -29,13 +29,6 @@ function formatCompact(value: number, locale: Locale): string {
   }).format(value);
 }
 
-/**
- * Langues nommées avant « et N autres » : l'Afrique du Sud en a 11, le
- * Zimbabwe 15 — la ligne du drawer ne les tient pas. Une seule langue de trop
- * est nommée plutôt que résumée : « et 1 autre » ne gagne aucune place.
- */
-const LANGUAGES_SHOWN = 3;
-
 const SHARE_LABEL_KEYS = {
   forest: "constraintValue.forestShare",
   mountain: "constraintValue.mountainShare",
@@ -127,28 +120,12 @@ export function formatConstraintValue(
         value.labelKeys.map((key) => t(key)),
         locale,
       );
-    case "languages": {
-      const shown = value.codes
-        .slice(
-          0,
-          value.codes.length > LANGUAGES_SHOWN + 1
-            ? LANGUAGES_SHOWN
-            : value.codes.length,
-        )
-        .map((code) => formatLanguageName(code, locale));
-      const hidden = value.codes.length - shown.length;
+    case "languages":
+      // Toutes, même quinze (Zimbabwe) : la liste complète est l'information.
       return formatList(
-        hidden > 0
-          ? [
-              ...shown,
-              t("constraintValue.moreLanguages", {
-                count: formatInteger(hidden, locale),
-              }),
-            ]
-          : shown,
+        value.codes.map((code) => formatLanguageName(code, locale)),
         locale,
       );
-    }
     case "capitals":
       return t(
         value.names.length > 1
