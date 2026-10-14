@@ -23,8 +23,10 @@ Pays dont **l'espagnol** est une langue officielle nationale.
 
 ## Cas limites
 
-Seul le statut officiel **national** compte : une langue régionale, co-officielle localement ou simplement majoritaire n'ouvre pas la liste.
+Seul le statut officiel **national** compte : de droit, ou de fait là où aucune loi n'en désigne (l'anglais aux États-Unis, au Royaume-Uni, en Australie). Une langue régionale, co-officielle localement, de travail ou d'usage courant sans statut n'ouvre pas la liste (règle tranchée le 2026-10-09, corrections dans `scripts/countries/countryPatches.ts`).
 
 ## Révision
 
 Procédure commune : [SOURCES.md](../SOURCES.md#procédure-de-révision).
+
+Revue 2026-10-09 (#122) — au **Belize**, l'espagnol est d'usage courant mais sans statut ; l'anglais est la langue de l'État. Retrait : BLZ.

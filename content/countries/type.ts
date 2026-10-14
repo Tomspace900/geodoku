@@ -83,7 +83,13 @@ export type CapitalRole =
   | "primary";
 
 export type CountryCapital = {
+  /**
+   * Nom source (REST Countries) : clé de correspondance du dataset des
+   * libellés, jamais affiché. La fiche affiche `names[locale]`.
+   */
   name: string;
+  /** Libellés fr/en (Wikidata, cf. `scripts/countries/data/capitalLabels.ts`). */
+  names: LocalizedString;
   latitude: number;
   longitude: number;
   roles: CapitalRole[];
@@ -121,6 +127,43 @@ export type FormerSovereign =
   | "united_kingdom"
   | "united_states"
   | "yugoslavia";
+
+/** Puissances dont la domination passée est tracée (`history_from_*`). */
+export type DominatingPower = Extract<
+  FormerSovereign,
+  "france" | "united_kingdom"
+>;
+
+/**
+ * Statut du territoire sous cette puissance, au moment où sa domination prend
+ * fin (une colonie d'abord protectorat est une colonie). `trusteeship` est la
+ * tutelle ONU qui a succédé aux mandats de la SDN.
+ */
+export type DominationNature =
+  | "colony"
+  | "protectorate"
+  | "protected_state"
+  | "mandate"
+  | "trusteeship"
+  | "condominium"
+  | "union";
+
+/**
+ * Période de domination d'une puissance sur le pays (dataset curé
+ * `scripts/countries/data/historicalDominations.ts`). Années à la précision de
+ * la source ; `from` vaut `null` quand aucune source de référence ne date le
+ * début — jamais une année inventée.
+ */
+export type Domination = Readonly<{
+  power: DominatingPower;
+  nature: DominationNature;
+  from: number | null;
+  to: number;
+  /** Domination interrompue par celle d'une autre puissance. */
+  intermittent: boolean;
+  /** Partie du territoire actuel concernée, quand ce n'est pas le pays entier. */
+  part: LocalizedString | null;
+}>;
 
 /**
  * Nature de l'événement de souveraineté retenu pour un pays (CIA World Factbook).
@@ -173,6 +216,12 @@ export type CountryFacts = Readonly<{
   flagSymbols: readonly FlagSymbol[];
   flagLayout: readonly FlagLayout[];
   events: readonly CountryEvent[];
+  /**
+   * Années des éditions accueillies, par événement de `events`, en ordre
+   * croissant (dataset `scripts/countries/data/eventEditions.ts`). Une clé par
+   * événement de `events`, aucune autre — gardé par `check:content`.
+   */
+  eventEditions: Readonly<Partial<Record<CountryEvent, readonly number[]>>>;
   memberships: readonly PoliticalGroup[];
   capitals: readonly CountryCapital[];
   drivingSide: DrivingSide;
@@ -224,6 +273,12 @@ export type CountryFacts = Readonly<{
    */
   formerSovereigns: readonly FormerSovereign[];
   /**
+   * Dominations britannique et française passées, au plus une par puissance
+   * (`history_from_*`). Distinct de `formerSovereigns`, qui ne dit que le
+   * souverain **immédiatement antérieur** selon le Factbook. `[]` si aucune.
+   */
+  dominations: readonly Domination[];
+  /**
    * Année de l'événement de souveraineté retenu (CIA World Factbook). Donnée
    * brute, jamais masquée. `null` quand la source ne couvre pas le pays — jamais 0.
    */
@@ -233,7 +288,59 @@ export type CountryFacts = Readonly<{
    * Toujours défini si et seulement si `sovereigntyYear` l'est.
    */
   sovereigntyKind: SovereigntyKind | null;
+  /**
+   * Date complète (`YYYY-MM-DD`) de cet événement (CIA World Factbook). `null`
+   * quand la source ne donne que l'année ou ne couvre pas le pays — jamais une
+   * date inventée. Son année égale toujours `sovereigntyYear`.
+   */
+  sovereigntyDate: string | null;
+  /**
+   * `true` quand la fiche ne doit pas montrer l'événement de souveraineté : sa
+   * nature serait fausse une fois affichée (motif dans `sheetHidden` du dataset).
+   * Ne concerne que l'affichage : `history_sovereignty_since_1990` ne le lit pas.
+   * `false` quand le pays n'a pas d'entrée.
+   */
+  sovereigntySheetHidden: boolean;
+  /**
+   * Point culminant du pays, restreint à son territoire pleinement intégré
+   * (`SOURCES.md`). Toujours défini : les 197 pays sont couverts.
+   */
+  highestPoint: HighestPoint;
+  /**
+   * PIB par habitant en dollars US courants (Banque mondiale, WDI), avec
+   * l'année de la valeur ; `null` quand la WDI n'a aucune valeur sur la
+   * fenêtre de récolte. Valeur brute : l'arrondi est un choix d'affichage.
+   */
+  gdpPerCapitaUsd: WorldBankMeasure | null;
+  /**
+   * Espérance de vie à la naissance, en années (Banque mondiale, WDI), avec
+   * l'année de la valeur ; `null` quand la WDI n'a aucune valeur sur la
+   * fenêtre de récolte.
+   */
+  lifeExpectancyYears: WorldBankMeasure | null;
+  /**
+   * Indice de développement humain (PNUD), de 0 à 1, avec l'année des données
+   * (la dernière de l'édition retenue) ; `null` pour un pays que le fichier ne
+   * couvre pas ou sans valeur (Taïwan, Vatican, Kosovo, Monaco, Corée du Nord).
+   * Valeur brute : la catégorie (très élevé…) se calcule à l'affichage.
+   */
+  humanDevelopmentIndex: HumanDevelopmentMeasure | null;
+  /**
+   * Codes ISO 4217 des monnaies ayant cours (world-countries, corrigé par
+   * `currencyCorrectionsByIso3`). Jamais vide.
+   */
+  currencies: readonly string[];
+  /**
+   * Gentilé au masculin et au féminin, par langue (world-countries, corrigé par
+   * `demonymCorrectionsByIso3`). Une forme identique n'est pas dédoublée à
+   * l'affichage.
+   */
+  demonyms: Demonyms;
 }>;
+
+export type DemonymForms = Readonly<{ m: string; f: string }>;
+
+export type Demonyms = Readonly<{ fr: DemonymForms; en: DemonymForms }>;
 
 /**
  * Provenance légère : date/version globale du snapshot de faits. Pas d'objet
@@ -243,6 +350,26 @@ export type CountryFacts = Readonly<{
 export type CountryFactsSnapshot = Readonly<{
   date: string;
   note: string;
+}>;
+
+/** IDH et année de ses données (la dernière de l'édition du rapport). */
+export type HumanDevelopmentMeasure = Readonly<{ value: number; year: number }>;
+
+/** Valeur d'un indicateur WDI et année de cette valeur (la plus récente de la fenêtre). */
+export type WorldBankMeasure = Readonly<{ value: number; year: number }>;
+
+/**
+ * Point culminant du pays (CIA World Factbook pour l'altitude et le nom, Wikidata
+ * pour les libellés). `names` vaut `null` pour un point sans nom : l'affichage
+ * porte alors une convention unique, jamais un nom inventé.
+ */
+export type HighestPoint = Readonly<{
+  /**
+   * Altitude en mètres, > 0 et ≤ 8 849 : celle du Factbook, sauf quand un
+   * override curé retient un autre sommet (ISR, SAU).
+   */
+  elevationM: number;
+  names: LocalizedString | null;
 }>;
 
 /**
@@ -273,6 +400,7 @@ export type CountryRecord = {
   flagSymbols: FlagSymbol[];
   flagLayout: FlagLayout[];
   events: CountryEvent[];
+  eventEditions: Partial<Record<CountryEvent, number[]>>;
   memberships: PoliticalGroup[];
   capitals: CountryCapital[];
   drivingSide: DrivingSide;
@@ -287,8 +415,17 @@ export type CountryRecord = {
   productionRanks: Partial<Record<ProductionRankKey, number>>;
   coalElectricityShare: number | null;
   formerSovereigns: FormerSovereign[];
+  dominations: Domination[];
   sovereigntyYear: number | null;
   sovereigntyKind: SovereigntyKind | null;
+  sovereigntyDate: string | null;
+  sovereigntySheetHidden: boolean;
+  highestPoint: HighestPoint;
+  gdpPerCapitaUsd: WorldBankMeasure | null;
+  lifeExpectancyYears: WorldBankMeasure | null;
+  humanDevelopmentIndex: HumanDevelopmentMeasure | null;
+  currencies: string[];
+  demonyms: Demonyms;
 };
 
 // ─── Snapshot de popularité ─────────────────────────────────────────────────

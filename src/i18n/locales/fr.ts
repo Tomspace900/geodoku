@@ -11,8 +11,10 @@ export const fr = {
     searchPlaceholder: "Chercher un pays…",
     typeAtLeast: "Saisis au moins\u00A03 caractères",
     noResults: "Aucun pays trouvé.",
-    errorUnknown: "Erreur inconnue.",
     rarityEvolvesHint: "Les raretés évoluent au fil des parties du jour.",
+    constraintSourceConvention: "Classification Geodoku",
+    constraintSourcePrefix: "Source :",
+    constraintSourcesPrefix: "Sources :",
     feedbackQuestion: "Comment as-tu trouvé la grille\u00A0?",
     feedbackError: "La note n'a pas pu être enregistrée.",
     feedbackRetry: "Réessayer",
@@ -43,6 +45,9 @@ export const fr = {
       "Résultat de la partie, détail du score et actions de fin de partie.",
     searchResultUsed: "Déjà utilisé",
     surveyPrompt: "Stats, comptes, ligues… ton avis pour la suite (4 min)",
+    solutionCellAriaLabel:
+      "Case ligne {row} colonne {col} : {rowConstraint} × {colConstraint}. {count} réponses possibles.",
+    constraintAnswerCount: "{count} pays",
   },
   footer: {
     loveCreditPre: "Fait avec amour ❤️, inspiré par ",
@@ -87,10 +92,14 @@ export const fr = {
     contactBodyPre: "Une question\u00A0? \u00C9cris-moi \u00E0",
   },
   changelog: {
-    eyebrow: "Derni\u00E8re mise \u00E0 jour · Septembre 2026",
+    eyebrow: "Derni\u00E8re mise \u00E0 jour · Octobre 2026",
     title: "Changelog",
     backToGame: "Retour au jeu",
     entries: {
+      answerSourcesDate: "15 octobre 2026",
+      answerSourcesTitle: "D'o\u00F9 viennent les donn\u00E9es\u00A0?",
+      answerSourcesBody:
+        "Enfin un peu de clarification sur les contraintes et les r\u00E9ponses\u00A0! En pleine partie, cliquer sur une contrainte affiche ses sources dat\u00E9es, ainsi que les \u00E9ventuelles conventions retenues. \u00C0 la fin de ta partie, tu peux consulter les pays solutions de chaque case et de chaque contrainte, avec pour chacun ce qui le qualifie\u00A0: population, rang de producteur, ann\u00E9e d'ind\u00E9pendance\u2026",
       newConstraintsDate: "16 septembre 2026",
       newConstraintsTitle: "Une salve de nouvelles contraintes",
       newConstraintsBody:
@@ -160,7 +169,7 @@ export const fr = {
     roadmapTitle: "Et la suite\u00A0?",
     roadmapLead:
       "Quelques pistes que j'aimerais explorer. Rien n'est grav\u00E9 dans le marbre. Tes id\u00E9es sont les bienvenues.",
-    roadmapReplay: "Rejouer les grilles pr\u00E9c\u00E9dentes",
+    roadmapCountrySheets: "Des fiches d\u00E9taill\u00E9es pour chaque pays",
     roadmapConstraints:
       "Des grilles \u00E0 th\u00E8me ou des \u00E9ditions sp\u00E9ciales",
     roadmapLives: "Mode facile et/ou mode hardcore",
@@ -182,6 +191,7 @@ export const fr = {
     rule4Body:
       "Plus ton pays est rare parmi les choix des autres joueurs du jour, plus il rapporte de points.",
     dontShowAgain: "Ne plus afficher",
+    sourcesHint: "Touche une contrainte pour voir d'où viennent les données.",
   },
   error: {
     already_used: "Ce pays a déjà été utilisé dans une autre cellule.",
@@ -264,7 +274,6 @@ export const fr = {
     empty: "Aucune grille passée disponible pour le moment.",
     completed: "{attempts} essais",
     notPlayed: "Jamais jouée",
-    play: "Jouer",
   },
   training: {
     eyebrow: "Entraînement",
@@ -331,14 +340,14 @@ export const fr = {
     area_larger_india: "Plus grand que l'Inde (3,3\u00A0M\u00A0km²)",
     area_larger_mexico: "Plus grand que le Mexique (2\u00A0M\u00A0km²)",
     area_larger_france: "Plus grand que la France (550\u00A0000\u00A0km²)",
-    area_smaller_belgium: "Plus petit que la Belgique (30\u00A0000\u00A0km²)",
+    area_smaller_belgium: "Plus petit que la Belgique (31\u00A0000\u00A0km²)",
     area_smaller_luxembourg:
       "Plus petit que le Luxembourg (2\u00A0600\u00A0km²)",
     population_more_germany:
       "Plus peuplé que l'Allemagne (83\u00A0M\u00A0hab.)",
-    population_more_canada: "Plus peuplé que le Canada (40\u00A0M\u00A0hab.)",
+    population_more_canada: "Plus peuplé que le Canada (42\u00A0M\u00A0hab.)",
     population_less_iceland:
-      "Moins peuplé que l'Islande (400\u00A0000\u00A0hab.)",
+      "Moins peuplé que l'Islande (397\u00A0000\u00A0hab.)",
     language_french: "Langue officielle\u00A0: français",
     language_arabic: "Langue officielle\u00A0: arabe",
     language_spanish: "Langue officielle\u00A0: espagnol",
@@ -372,13 +381,13 @@ export const fr = {
     density_more_netherlands:
       "Plus densément peuplé que les Pays-Bas (430\u00A0hab./km²)",
     density_more_japan:
-      "Plus densément peuplé que le Japon (330\u00A0hab./km²)",
+      "Plus densément peuplé que le Japon (320\u00A0hab./km²)",
     density_less_russia:
-      "Moins densément peuplé que la Russie (9\u00A0hab./km²)",
+      "Moins densément peuplé que la Russie (8,5\u00A0hab./km²)",
     density_less_canada:
-      "Moins densément peuplé que le Canada (4\u00A0hab./km²)",
+      "Moins densément peuplé que le Canada (4,2\u00A0hab./km²)",
     nature_desert: "Possède un désert",
-    nature_rainforest: "Abrite une forêt tropicale",
+    nature_rainforest: "Abrite une forêt tropicale humide",
     nature_active_volcano:
       "Possède un volcan en activité (éruption depuis 1500)",
     nature_mountain_area_majority: "Plus de 50\u00A0% du territoire montagneux",
@@ -412,5 +421,68 @@ export const fr = {
     population_gt_30M: "Population supérieure à 30\u00A0millions",
     population_lt_1M: "Population inférieure à 1\u00A0million",
     population_lt_2_5M: "Population inférieure à 2,5\u00A0millions",
+  },
+  constraintValue: {
+    population: "{value} hab.",
+    utcOffsets: "{count} fuseaux horaires",
+    rank: "{rank} producteur de {product}",
+    borderCount: "{count} voisins",
+    latitudeNorth: "{value}° N",
+    latitudeSouth: "{value}° S",
+    forestShare: "{value} de forêt",
+    mountainShare: "{value} de montagnes",
+    coalShare: "{value} d'électricité au charbon",
+    lastEruption: "Dernière éruption\u00A0: {year}",
+    soleNeighbor: "Voisin\u00A0: {names}",
+    capitalSingular: "Capitale\u00A0: {names}",
+    capitalPlural: "Capitales\u00A0: {names}",
+    domination: "{nature} ({period})",
+    dominationPart: "{nature}, {part} ({period})",
+    period: "{from}–{to}",
+    periodIntermittent: "{from}–{to}, par intermittence",
+    periodUntil: "jusqu'en {to}",
+  },
+  countrySheet: {
+    value: {
+      areaUnit: "{value} km²",
+      sovereignty: "{kind} ({when})",
+      highestPoint: "{name} ({value} m)",
+      unnamedHighestPoint: "Point sans nom",
+      densityUnit: "{value} hab./km²",
+    },
+    enum: {
+      physicalFeature: {
+        atlanticCoast: "océan Atlantique",
+        pacificCoast: "océan Pacifique",
+        indianOceanCoast: "océan Indien",
+        arcticCoast: "océan Arctique",
+      },
+      sovereigntyKind: {
+        independence: "Indépendance",
+        restoration: "Restauration",
+        separation: "Séparation",
+        dissolution_successor: "Succession d'État",
+        continuation: "Continuité",
+        foundation: "Fondation",
+        unification: "Unification",
+      },
+      dominationNature: {
+        colony: "Colonie",
+        protectorate: "Protectorat",
+        protectedState: "État protégé",
+        mandate: "Mandat",
+        trusteeship: "Tutelle",
+        condominium: "Condominium",
+        union: "Union",
+      },
+      production: {
+        cocoa: "cacao",
+        coffee: "café",
+        rice: "riz",
+        wheat: "blé",
+        crudeOil: "pétrole brut",
+        naturalGas: "gaz naturel",
+      },
+    },
   },
 } as const satisfies Translations;

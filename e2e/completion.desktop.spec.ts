@@ -4,6 +4,7 @@ import {
   fetchTodayGrid,
   fillCell,
   getResultDialog,
+  pickCountry,
   playToDefeat,
   prepareSession,
   solveGrid,
@@ -216,4 +217,82 @@ test("rating the difficulty acknowledges the feedback", async ({ page }) => {
   await expect(page.getByRole("button", { name: "View answers" })).toBeVisible({
     timeout: 5_000,
   });
+});
+
+// ── Grille solution — Drawers de case et de contrainte ───────────────────────
+
+test("opening a solution cell lists its answers as plain rows, not buttons", async ({
+  page,
+}) => {
+  test.setTimeout(60_000);
+  await playToDefeat(page, grid);
+  await page.getByRole("button", { name: "Skip and view answers" }).click();
+
+  const cellKey = "0,0";
+  const pick = pickCountry(grid.validAnswers, cellKey, new Set());
+  if (!pick)
+    throw new Error(`Invariant violated: cell ${cellKey} has no answer`);
+
+  const openerCell = page.getByRole("button", { name: /^Row 1 column 1:/ });
+  await openerCell.click();
+
+  // A country is an information row: listed, but nothing to tap — no sheet
+  // to open, so no button (and no chevron) behind it.
+  const drawer = page.getByRole("dialog");
+  const countryRow = drawer
+    .getByRole("listitem")
+    .filter({ hasText: pick.name })
+    .first();
+  await expect(countryRow).toBeVisible({ timeout: 5_000 });
+  await expect(
+    drawer.getByRole("button", { name: new RegExp(pick.name) }),
+  ).toHaveCount(0);
+
+  // Closing the drawer returns focus to the cell that opened it.
+  await page.keyboard.press("Escape");
+  await expect(countryRow).toBeHidden({ timeout: 3_000 });
+  await expect(openerCell).toBeFocused();
+});
+
+test("tapping a header on the solution grid opens the constraint drawer with its sources and answers", async ({
+  page,
+}) => {
+  test.setTimeout(60_000);
+  await playToDefeat(page, grid);
+  await page.getByRole("button", { name: "Skip and view answers" }).click();
+
+  // Any valid answer for cell (0,0) is necessarily a valid answer for its
+  // column's constraint alone — the cell requires both row and column, so
+  // the column's own answer list is a superset.
+  const expectedCountry = pickCountry(grid.validAnswers, "0,0", new Set());
+  if (!expectedCountry) {
+    throw new Error("Invariant violated: cell 0,0 has no answer");
+  }
+
+  const solutionTable = page.getByRole("table", {
+    name: "Solutions for today's geography grid",
+  });
+  const headerButton = solutionTable
+    .getByRole("columnheader")
+    .first()
+    .getByRole("button");
+  await headerButton.click();
+
+  // The source (or convention) line sits right under the title, same pure
+  // view as the in-game toast (`constraintSourceView`).
+  await expect(
+    page.getByText(/Sources?:|Geodoku classification/).first(),
+  ).toBeVisible({ timeout: 5_000 });
+
+  const countryRow = page
+    .getByRole("dialog")
+    .getByRole("listitem")
+    .filter({ hasText: expectedCountry.name })
+    .first();
+  await expect(countryRow).toBeVisible({ timeout: 5_000 });
+
+  // Closing the drawer returns focus to the header that opened it.
+  await page.keyboard.press("Escape");
+  await expect(countryRow).toBeHidden({ timeout: 3_000 });
+  await expect(headerButton).toBeFocused();
 });

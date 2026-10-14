@@ -94,7 +94,10 @@ Pour une contrainte **active** — on ne touche **jamais** `answers.ts` à la ma
    bougé depuis la dernière révision.
 5. Consigner tout arbitrage nouveau dans la section « Cas limites » ; mettre à
    jour `checked_at` (et `review_after` si utile).
-6. `pnpm check:content`, `pnpm test`, `pnpm simulate:scheduling`, puis
+6. Si la source citée ou son millésime ont changé, mettre à jour l'`about.ts`
+   de la contrainte (et `content/sources.ts` si la source elle-même est
+   nouvelle) — c'est ce texte, pas le `SOURCE.md`, qu'affiche le toast joueur.
+7. `pnpm check:content`, `pnpm test`, `pnpm simulate:scheduling`, puis
    régénération du pool depuis `/admin` une fois la revue produit faite — les
    grilles déjà publiées restent protégées par `gridAnswers`.
 
@@ -105,13 +108,45 @@ jouées restent lisibles.
 
 ## Géographie administrative et quantitative
 
-- Continents et sous-régions : [ONU M49](https://unstats.un.org/unsd/methodology/m49/).
-- Frontières et enclavement : [World Bank Official Boundaries](https://datacatalog.worldbank.org/search/dataset/0038272/world-bank-official-boundaries).
-- Population, superficie et densité : [World Development Indicators](https://datacatalog.worldbank.org/search/dataset/0037712/world-development-indicators)
-  et [UN World Population Prospects 2024](https://www.un.org/development/desa/pd/world-population-prospects-2024).
+Ce qui est **importé** et ce qui n'est qu'une **référence de révision** (jamais
+importée, consultée pour comparer) sont distingués :
+
+- Continents et sous-régions : champs `region` / `subregion` de
+  [world-countries](https://github.com/mledoze/countries), arbitrés par Geodoku ;
+  [ONU M49](https://unstats.un.org/unsd/methodology/m49/) en référence de révision.
+  **Chypre est en Europe** (membre de l'UE, attente du joueur) alors que M49 la place
+  en Asie occidentale (tranché le 2026-10-09) ; l'Amérique centrale et les Caraïbes
+  sont rattachées à l'Amérique du Nord, ce que M49 ne fait pas (il les range sous
+  « Amérique latine et Caraïbes ») : c'est un découpage Geodoku, pas du M49.
+- Frontières et enclavement : `borders` / `landlocked` de world-countries et REST
+  Countries v5, corrigés par `countryPatches.ts` (voisins non jouables écartés,
+  cf. `playableBorderCount`). **Île partagée** : `waterAccess` ne vaut `island` que
+  sans frontière terrestre ; un État dont tout le territoire est insulaire mais
+  dont l'île est partagée (Irlande, Haïti, Timor oriental…) reste `coastal` et
+  entre dans `water_island` par une classification curée distincte
+  (`sharedIslandState`, #129). [World Bank Official Boundaries](https://datacatalog.worldbank.org/search/dataset/0038272/world-bank-official-boundaries)
+  est la référence de révision, non importée.
+- Superficie : `area` de world-countries — superficie **totale**, eau intérieure
+  comprise, pas la surface terrestre. Population : REST Countries v5, sans millésime
+  consigné. Latitude : `latlng[0]` de world-countries (centroïde), corrigée pour
+  la RD Congo (`COD: -2.88`, cf. `latitude_south_hemisphere`).
+  [WDI](https://datacatalog.worldbank.org/search/dataset/0037712/world-development-indicators)
+  et [UN WPP 2024](https://www.un.org/development/desa/pd/world-population-prospects-2024)
+  sont les références de révision, non importées : leurs valeurs diffèrent, d'où
+  les contraintes proches d'un seuil documentées une à une dans leur `SOURCE.md`.
 
 Une comparaison quantitative emploie un même millésime et un même périmètre.
 Une valeur absente n'est jamais assimilée à zéro ou à `false`.
+
+**Langues officielles (tranché le 2026-10-09).** Une langue compte si une loi la
+rend officielle, ou si elle est **de fait** la langue de l'État là où aucune loi
+n'en désigne : l'anglais au Royaume-Uni, aux États-Unis, en Australie ou en
+Nouvelle-Zélande, l'espagnol au Mexique, au Chili ou en Argentine. Ne comptent
+pas les statuts secondaires : langue de travail à côté d'une langue officielle
+désignée (français au Mali), langue de communication interethnique (russe au
+Tadjikistan), statut spécial (arabe en Israël), usage courant sans statut
+(espagnol au Belize). Le russe reste au Kazakhstan et au Kirghizistan, où la
+constitution le rend co-officiel. Corrections : `countryPatches.ts`.
 
 ## Drapeaux
 
@@ -138,6 +173,13 @@ façon incohérente : le même blason croate fournissait l'animal et pas le croi
 ni l'étoile. La revue 2026-09-11 a rattrapé HRV, MDA, GNQ, AND, SRB, CRI, BOL,
 VEN et PRY.
 
+**Quel drapeau d'État (précisé le 2026-10-09).** La version à armoiries compte
+quand elle est la forme officielle **du drapeau national** portée par l'État
+(Espagne, Bolivie, Costa Rica, Venezuela, Paraguay). Un drapeau de service ou
+d'État **distinct** du drapeau national ne compte pas : la Finlande garde sa
+seule croix (pas le lion du drapeau d'État), la Pologne, l'Allemagne et
+l'Autriche n'en tirent aucun symbole.
+
 Restent **hors** convention faute d'élément identifiable à l'œil sur le drapeau
 rendu : la croix au sommet de la couronne espagnole, l'orbe crucifère de l'aigle
 monténégrin, la disposition en croix des quinas portugaises, la défense de sanglier
@@ -163,6 +205,12 @@ Une adhésion ou un retrait récent (Timor-Leste à l'ASEAN, retrait émirati de
 l'OPEP, statut saoudien aux BRICS) suit le millésime du snapshot REST Countries
 et se tranche à la révision, jamais par édition manuelle de `answers.ts`.
 
+**Date affichée (2026-10-15, #129).** Le toast cite « REST Countries —
+adhésions » avec la date de l'instantané (`FACTS_SNAPSHOT.date`, « au 14 octobre
+2026 »), corrections datées de `countryPatches.ts` comprises. `build:countries`
+imprime la valeur à reporter dans `content/sources.ts`, et `check:content`
+(`validateSourceVintages`) échoue tant qu'elle n'y est pas.
+
 ## Événements sportifs
 
 - Coupe du monde de football : [éditions et hôtes FIFA](https://www.fifa.com/fifaplus/en/tournaments/mens/worldcup).
@@ -174,16 +222,41 @@ hôte de l'édition (Sarajevo 1984 → Bosnie-Herzégovine). Une co-organisation
 compte pour chaque pays hôte ; une édition future déjà attribuée ne compte pas
 tant qu'elle n'a pas eu lieu.
 
+**Éditions (tranché le 2026-10-13).** Les années affichées sous chaque pays dans
+le Drawer viennent de `scripts/countries/data/eventEditions.ts`, une ligne par
+édition. L'année est celle du **nom officiel** : Tokyo compte pour 2020, bien que
+tenus en 2021. Les éditions 2026 (Mondial États-Unis–Canada–Mexique,
+Milan-Cortina) sont tenues, donc comptées. Seules les éditions reconnues par le
+CIO et leurs hôtes officiels comptent : **Stockholm 1956**, hôte des épreuves
+équestres des Jeux de Melbourne, compte pour la Suède à côté de l'Australie ;
+les Jeux intercalaires d'Athènes 1906 et les épreuves simplement délocalisées
+(voile d'Anvers 1920 à Amsterdam, équitation de Pékin 2008 à Hong Kong, surf de
+Paris 2024 à Tahiti) ne comptent pas.
+
+**Date affichée (2026-10-15, #129).** Les sources FIFA et CIO portent « éditions
+tenues jusqu'en AAAA », l'année de la dernière édition du dataset
+`eventEditions` (été et hiver confondus pour le CIO), gardée par
+`validateSourceVintages`.
+
 ## Nature et relief
 
 - Équateur et côtes : [Natural Earth 5.1.2](https://github.com/nvkelso/natural-earth-vector/tree/v5.1.2/geojson).
-- Déserts et forêts tropicales : [NASA MODIS MCD12Q1](https://doi.org/10.5067/MODIS/MCD12Q1.061),
-  complété par une revue éditoriale des biomes nommés.
+  **L'équateur traverse un pays** quand la ligne coupe une terre émergée **ou** les
+  eaux entre les îles d'un même archipel du pays (Maldives, Kiribati) ; elle ne
+  compte pas quand une île isolée du pays s'en trouve séparée par un autre État
+  (Annobón, Guinée équatoriale). Décision du 2026-10-14 (#129), qui inverse celle
+  du 2026-10-09 (#122).
+- Déserts et forêts tropicales : listes **établies à la main**, biome par biome
+  (`countryPatches.ts`). [NASA MODIS MCD12Q1](https://doi.org/10.5067/MODIS/MCD12Q1.061)
+  ne sert que de repère de relecture : aucune valeur n'en est calculée, un pixel aride
+  ou forestier ne suffit pas à prouver un biome.
 - Volcans actifs à l'Holocène : [Smithsonian Global Volcanism Program](https://volcano.si.edu/).
 - Part de territoire montagneux : indicateur [ODD 15.4.2](https://unstats.un.org/sdgs/metadata/?Text=&Goal=15&Target=15.4)
   (méthode FAO/UNEP-WCMC).
-- Part de superficie forestière : FAO Forest Resources Assessment (World Bank
-  `AG.LND.FRST.ZS`).
+- Part de superficie forestière : Banque mondiale `AG.LND.FRST.ZS` (d'après la FAO),
+  import du 2026-07-17 ; la série WDI a été révisée le 2026-10-08 et **la série
+  révisée est adoptée** (décision du 2026-10-10, qui inverse celle du 2026-10-09),
+  cf. `forest_cover_majority/SOURCE.md`.
 
 Une part quantitative absente de la source vaut `null`, jamais 0 : le pays est
 alors hors liste sans être compté comme « 0 % ».
@@ -199,9 +272,11 @@ alors hors liste sans être compté comme « 0 % ».
 
 ## Production et énergie
 
-- Production agricole (cacao, café, riz, blé) : [FAOSTAT](https://www.fao.org/faostat/),
+- Production agricole (cacao, riz, blé) : [FAOSTAT](https://www.fao.org/faostat/),
   production territoriale, moyenne triennale 2022-2024. Items « Cocoa beans »,
-  « Coffee, green », « Rice, paddy », « Wheat ».
+  « Rice, paddy », « Wheat ».
+- Café : [USDA FAS, *Coffee: World Markets and Trade*](https://apps.fas.usda.gov/psdonline/circulars/coffee.pdf),
+  production des campagnes 2023/24 à 2025/26 (revue du 2026-09-10) — pas FAOSTAT.
 - Production d'énergie (pétrole brut, gaz naturel sec) :
   [U.S. EIA International](https://www.eia.gov/international/data/world).
   Datasets curés : `top 18` par produit, la longue traîne de producteurs
@@ -217,10 +292,12 @@ les réserves. Un pays absent d'une source vaut `null`, jamais 0.
 
 La convention Geodoku part de l'[IHO S-23](https://iho.int/uploads/user/pubs/standards/s-23/S-23_Ed3_1953_EN.pdf).
 
-**Une mer fermée n'est pas un océan (tranché le 2026-09-11).** Méditerranée, mer
-des Caraïbes, mer Rouge, golfe Persique, Baltique et mer Noire ne valent pas
-façade océanique : seule une côte sur l'océan lui-même compte, pour `ocean_*`
-comme pour `ocean_multiple_basins`. Un pays qui a les deux — la côte est
+**Une mer semi-fermée n'est pas un océan (tranché le 2026-09-11).** Méditerranée, mer
+des Caraïbes, mer Rouge, golfe Persique, Baltique et mer Noire — des mers
+**semi-fermées**, reliées à l'océan par des passages plus ou moins étroits, et non
+« fermées » (seule la Caspienne l'est vraiment) — ne valent pas façade océanique :
+seule une côte sur l'océan lui-même compte, pour `ocean_*` comme pour
+`ocean_multiple_basins`. Un pays qui a les deux — la côte est
 atlantique ouverte des Petites Antilles, la côte pacifique d'un pays d'Amérique
 centrale — porte le tag correspondant et compte par lui.
 
@@ -230,21 +307,37 @@ littéralement exact. La façade
 arctique (`arctic_coast`) est une convention curée, restreinte aux quatre États à
 côte arctique continue (Canada, Norvège, Russie, États-Unis) ; elle ne sert
 qu'à `ocean_multiple_basins`. Les dépendances ne sont pas automatiquement
-repliées sur leur État souverain — mais les territoires ultramarins d'un État
-jouable comptent pour lui.
+repliées sur leur État souverain — mais ses territoires ultramarins pleinement
+intégrés comptent pour un État jouable ([périmètre territorial](#périmètre-territorial-dun-pays)).
 
-**Mers fermées (tranché le 2026-09-11).** La **Baltique** et la **mer Noire** ne
+**Baltique et mer Noire (tranché le 2026-09-11).** La **Baltique** et la **mer Noire** ne
 sont rattachées à aucun bassin : ce sont des mers intérieures, pas des océans.
 Conséquence assumée — SWE, FIN, POL, EST, LVA, LTU (Baltique) et BGR, ROU, UKR,
 GEO (mer Noire) sont `coastal` sans satisfaire aucune contrainte `ocean_*`. Le
 contraste avec DEU et DNK, qui ont l'Atlantique par la mer du Nord, est voulu :
-la mer du Nord est un bras ouvert de l'Atlantique, la Baltique non.
+la mer du Nord est un bras ouvert de l'Atlantique, la Baltique non. Le
+**Skagerrak et le Kattegat** sont lus comme des abords de la Baltique : la Suède
+reste sans façade atlantique, comme le joueur se la figure (tranché le
+2026-10-09).
+
+**Archipel indonésien (tranché le 2026-10-09).** L'IHO S-23 (3ᵉ éd., 1953, p. 24-30)
+range les mers de Banda (48 g), de Timor (48 i) et de Savu (48 o) dans l'« East
+Indian Archipelago (48) », entrée distincte de l'océan Indien (45) et du
+Pacifique : aucune des trois n'est rattachée à un océan. Timor-Leste, dont les
+côtes (nord, sud, enclave d'Oecusse) ne donnent que sur ces mers, n'a donc **aucune
+façade océanique** et n'entre dans aucune contrainte `ocean_*`, comme les
+riverains de la Baltique. Il n'était pas non plus fondé dans le Pacifique, où il
+figurait par défaut.
 
 La **Finlande n'a pas de façade arctique** : elle a perdu Petsamo en 1944 et
 n'atteint plus l'océan Glacial. Aucun État jouable ne borde l'océan Austral —
 l'Antarctique n'est pas jouable et l'île Marion (46°S) relève de l'Indien.
 
 ## Histoire et souveraineté
+
+Deux familles de données, à ne pas confondre.
+
+**L'événement de souveraineté** (`history_sovereignty_since_1990`) :
 
 - [CIA World Factbook — champ *Independence*](https://www.cia.gov/the-world-factbook/field/independence/),
   via le miroir figé `factbook.json` (commit `8662a8b`).
@@ -257,16 +350,80 @@ actuel : indépendance, restauration de l'indépendance, séparation, succession
 après dissolution, continuité d'État, fondation ou unification. `build-countries`
 en garde trois scalaires par pays — `formerSovereigns` (slugs des anciennes
 puissances, jamais des ISO3), `sovereigntyYear`, `sovereigntyKind` — **tels
-quels**, sans masquage.
+quels**, sans masquage. `history_sovereignty_since_1990` lit `sovereigntyYear >=
+1990` **et** `sovereigntyKind ∈ { independence, restoration,
+dissolution_successor }` : les continuités d'État (Russie 1991) et unifications
+(Yémen 1990) sont écartées par le `kind`, pas par une donnée effacée.
 
-- `history_from_france` / `history_from_united_kingdom` lisent **uniquement**
-  l'appartenance à `formerSovereigns` : ni le `kind`, ni aucune éligibilité. Le
-  Yémen est ainsi dans la liste britannique (Sud-Yémen britannique) bien que son
-  événement de 1990 soit une `unification`.
-- `history_sovereignty_since_1990` lit `sovereigntyYear >= 1990` **et**
-  `sovereigntyKind ∈ { independence, restoration, dissolution_successor }` : les
-  continuités d'État (Russie 1991) et unifications (Yémen 1990) sont écartées par
-  le `kind`, pas par une donnée effacée.
+`formerSovereigns` ne nomme que le souverain **immédiatement antérieur**
+(Singapour « from Malaysian Federation », le Bangladesh « from Pakistan ») : il
+reste la lecture du Factbook, gardée par `validateSovereigntySources`, mais
+**aucune contrainte ne le lit plus** pour dire « un jour sous domination ».
+
+**Les dominations passées** (`history_from_france`, `history_from_united_kingdom`,
+issue #126) :
+
+- Dataset curé : `scripts/countries/data/historicalDominations.ts` — au plus une
+  période par puissance et par pays (nature, début, fin, partie concernée), avec
+  un motif et ses sources ; et un bloc `excluded` qui garde chaque cas écarté
+  avec la règle qui l'écarte.
+- Sources : CIA World Factbook, champs *Background* et *Independence* (même
+  miroir), et [Encyclopædia Britannica](https://www.britannica.com/), une page
+  citée par entrée. Une année qu'aucune source de référence ne donne reste
+  `null` (début de la domination française en Mauritanie) — jamais estimée.
+- Fusion : `dominations` dans `facts.ts` ; les deux contraintes lisent
+  l'existence d'une domination de la puissance.
+
+Règles, tranchées le 2026-10-14 et révisées le même jour (#129) — un pays entre
+dans la liste s'il a été **un jour** sous domination de la puissance :
+
+1. **Nature.** Comptent la colonie, le protectorat, l'**État protégé** dont la
+   puissance dirige les affaires étrangères (Afghanistan, Bhoutan, États du
+   Golfe), le mandat ou la tutelle, le condominium. Un État protégé compte
+   quand l'entité protégée **est l'État actuel, ou s'est unie à lui au moment de
+   sa formation** (le Yémen entre par Aden, unie en 1990). **Exception de
+   convention** : l'Arabie saoudite, bien que le Nejd ait été sous protection
+   britannique de 1915 à 1927 (traité de Darin) ; ni le Factbook ni l'usage
+   courant ne la comptent parmi les pays passés sous domination britannique, et
+   le joueur ne l'y attend pas (décision du 2026-10-14).
+   L'influence sans traité de protectorat ne compte pas : Oman, qui concluait
+   ses propres traités, ni le Népal.
+2. **Occupation militaire** suivie de restitution : exclue (Égypte 1798–1801,
+   Islande 1940, Java 1811–1816, zones d'occupation de 1945). Il en va de même de
+   l'**administration militaire provisoire** d'une ex-colonie ennemie, dans
+   l'attente d'un règlement international, sans que le territoire devienne
+   colonie, protectorat ni tutelle (Libye 1942–1951, Érythrée 1941–1952 : *British
+   Military Administration*). Une conquête **conservée** compte dès la conquête,
+   parce que le territoire devient colonie de la Couronne (Maurice 1810, Malte
+   1800).
+3. **État satellite** (royaume de Hollande, duché de Varsovie, Mexique de
+   Maximilien) : exclu.
+4. **Annexion napoléonienne** : exclue, même quand elle a pris la capitale
+   (Belgique, Luxembourg, Pays-Bas, Monaco…) — la contrainte parle d'empire
+   colonial.
+5. **Territoire partiel** : compte si la capitale actuelle en relevait (Canada,
+   Ottawa en Nouvelle-France ; Saint-Kitts, Basseterre française), ou si le
+   territoire dominé s'est uni à l'État au moment de la décolonisation
+   (Cameroun méridional, Somaliland, Aden). Hong Kong, Pondichéry ou la
+   Louisiane ne font pas entrer la Chine, l'Inde ni les États-Unis.
+6. **Passages successifs** : un pays passé d'une puissance à l'autre entre
+   dans les deux listes (Maurice, Seychelles, Sainte-Lucie, Grenade, Dominique).
+7. **Angleterre avant 1707** : ses colonies d'outre-mer comptent (Suriname
+   1651–1667), pas ses possessions féodales en Europe (la France médiévale).
+8. **Mandat confié à la Couronne mais exercé par un dominion** (Namibie, Samoa) :
+   exclu, la domination était sud-africaine ou néo-zélandaise.
+
+Revue 2026-10-14 (#129) : la règle « administration d'une ex-colonie ennemie »,
+qui comptait la Libye et l'Érythrée, est **supprimée** (ex-règle 3) et ces deux
+cas rejoignent l'occupation militaire (règle 2) ; l'Arabie saoudite sort par une
+exception de convention, sans toucher au Yémen. Le terme « État
+protégé » reste.
+
+Conventions de période : début = premier acte retenu par la source (traité,
+fondation, annexion, conquête non restituée) ; fin = indépendance, cession ou
+transfert, à l'année du champ *Independence* quand la domination s'achève par
+l'indépendance. Nature = statut du territoire à la fin de la domination ;
+`intermittent` = domination interrompue par une autre puissance.
 
 Un pays non couvert par la source vaut `[]` / `null`, jamais 0. Les territoires et
 dépendances non jouables n'entrent dans aucune liste.

@@ -2,6 +2,7 @@ import { readFileSync } from "node:fs";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 import { describe, expect, it } from "vitest";
+import { COUNTRY_CATALOG } from "../../content/countries/catalog.ts";
 import { COUNTRY_CODES } from "../../content/countries/countryCodes.ts";
 import { COUNTRY_FACTS } from "../../content/countries/facts.ts";
 import type { FlagData, SourceCorrection } from "./buildCountriesLib.ts";
@@ -115,6 +116,20 @@ describe("countryPatches ↔ catalogue content/", () => {
     }
     for (const k of Object.keys(countryPatches.sourceCorrectionsByIso3)) {
       expect(codes.has(k), `sourceCorrectionsByIso3: ${k}`).toBe(true);
+    }
+    for (const k of Object.keys(countryPatches.nameCorrectionsByIso3)) {
+      expect(codes.has(k), `nameCorrectionsByIso3: ${k}`).toBe(true);
+    }
+  });
+
+  it("applies each French name correction to the catalogue", () => {
+    for (const [iso3, correction] of Object.entries(
+      countryPatches.nameCorrectionsByIso3,
+    )) {
+      const entry = COUNTRY_CATALOG.find((country) => country.iso3 === iso3);
+      expect(entry?.names.fr, `nameCorrectionsByIso3: ${iso3}`).toBe(
+        correction.fr,
+      );
     }
   });
 

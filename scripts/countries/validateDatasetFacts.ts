@@ -2,7 +2,7 @@
  * Garde de fraîcheur des faits **dérivés de datasets** (`content/countries/facts.ts`).
  *
  * `checkDerivationFreshness` surveille l'étage du dessous — les `answers.ts`
- * face à `COUNTRY_FACTS`. Ici on surveille l'étage du dessus : les dix champs
+ * face à `COUNTRY_FACTS`. Ici on surveille l'étage du dessus : les champs
  * que `quantitativeFactsForCode` fusionne depuis `scripts/countries/data/` sont
  * re-calculés et confrontés au snapshot committé. Cette fusion est déterministe
  * et hors-ligne, donc rejouable en CI — ce qui permet d'attraper une édition à
@@ -16,9 +16,22 @@
  */
 import type { CountryFacts } from "../../content/countries/type";
 import {
+  type CurrencyCorrection,
+  currencyAndDemonymFacts,
+  type DemonymCorrection,
   type QuantitativeDatasets,
   quantitativeFactsForCode,
+  type WcCurrencyDemonymRow,
 } from "./buildCountriesLib";
+import type {
+  CapitalLabelsSnapshot,
+  EventEditionsSnapshot,
+  HighestPointsSnapshot,
+  HistoricalDominationsSnapshot,
+  HumanDevelopmentIndexSnapshot,
+  SovereigntySnapshot,
+  WorldBankIndicator,
+} from "./data/types";
 
 /** Les champs de `CountryFacts` que la fusion des datasets produit intégralement. */
 const DATASET_DERIVED_KEYS = [
@@ -30,8 +43,16 @@ const DATASET_DERIVED_KEYS = [
   "productionRanks",
   "coalElectricityShare",
   "formerSovereigns",
+  "dominations",
   "sovereigntyYear",
   "sovereigntyKind",
+  "sovereigntyDate",
+  "sovereigntySheetHidden",
+  "highestPoint",
+  "gdpPerCapitaUsd",
+  "lifeExpectancyYears",
+  "humanDevelopmentIndex",
+  "eventEditions",
 ] as const;
 
 function isPlainRecord(value: unknown): value is Record<string, unknown> {
@@ -39,9 +60,10 @@ function isPlainRecord(value: unknown): value is Record<string, unknown> {
 }
 
 /**
- * Égalité de surface, suffisante pour les dix champs : scalaires (`Object.is`),
- * `formerSovereigns` (ordre du dataset, donc comparé en séquence) et
- * `productionRanks` (record plat, comparé sur l'union des clés).
+ * Égalité de structure : scalaires (`Object.is`), `formerSovereigns` (ordre du
+ * dataset, donc comparé en séquence), `productionRanks` (record plat, comparé
+ * sur l'union des clés) et `highestPoint` (objet dont `names` est lui-même un
+ * record ou `null`) — d'où la récursion.
  */
 function sameFactValue(expected: unknown, actual: unknown): boolean {
   if (Array.isArray(expected) || Array.isArray(actual)) {
@@ -49,12 +71,12 @@ function sameFactValue(expected: unknown, actual: unknown): boolean {
       Array.isArray(expected) &&
       Array.isArray(actual) &&
       expected.length === actual.length &&
-      expected.every((item, index) => item === actual[index])
+      expected.every((item, index) => sameFactValue(item, actual[index]))
     );
   }
   if (isPlainRecord(expected) && isPlainRecord(actual)) {
     const keys = new Set([...Object.keys(expected), ...Object.keys(actual)]);
-    return [...keys].every((key) => expected[key] === actual[key]);
+    return [...keys].every((key) => sameFactValue(expected[key], actual[key]));
   }
   return Object.is(expected, actual);
 }
@@ -95,5 +117,371 @@ export function validateDatasetFacts(
     }
   });
 
+  return errors;
+}
+
+/**
+ * Confronte les libellés des capitales de `factsByCode` au dataset
+ * `capitalLabels` (override d'abord, récolte ensuite). Signale aussi les
+ * entrées orphelines du dataset : la liste des capitales est celle de REST
+ * Countries, le dataset ne fait que la traduire — une entrée sans capitale
+ * source correspondante signale une capitale ajoutée ou retirée.
+ */
+export function validateCapitalLabels(
+  factsByCode: Readonly<Record<string, CountryFacts>>,
+  dataset: CapitalLabelsSnapshot,
+  codes: readonly string[],
+): string[] {
+  const errors: string[] = [];
+
+  codes.forEach((code) => {
+    const facts = factsByCode[code];
+    if (!facts) return;
+    const sourceNames = new Set(facts.capitals.map((capital) => capital.name));
+
+    facts.capitals.forEach((capital) => {
+      const expected =
+        dataset.overrides[code]?.[capital.name] ??
+        dataset.labels[code]?.[capital.name];
+      if (!expected) {
+        errors.push(
+          `${code}: capitale « ${capital.name} » sans libellé dans le dataset — lancer pnpm harvest:capitals`,
+        );
+        return;
+      }
+      if (
+        capital.names.fr !== expected.fr ||
+        capital.names.en !== expected.en
+      ) {
+        errors.push(
+          `${code}: libellés de « ${capital.name} » obsolètes (attendu ${format({ fr: expected.fr, en: expected.en })}, trouvé ${format(capital.names)}) — lancer pnpm build:countries`,
+        );
+      }
+    });
+
+    [dataset.labels[code], dataset.overrides[code]].forEach((entries) => {
+      Object.keys(entries ?? {})
+        .filter((name) => !sourceNames.has(name))
+        .forEach((name) => {
+          errors.push(
+            `${code}: le dataset des capitales porte « ${name} », absente des capitales sources`,
+          );
+        });
+    });
+  });
+
+  return errors;
+}
+
+/**
+ * Confronte `currencies` et `demonyms` de `factsByCode` à world-countries (un
+ * paquet npm versionné, donc rejouable hors-ligne) corrigé par les tables
+ * `currencyCorrectionsByIso3` / `demonymCorrectionsByIso3`. Une correction
+ * orpheline (pays absent du catalogue) est signalée aussi.
+ */
+export function validateCurrencyDemonymFacts(
+  factsByCode: Readonly<Record<string, CountryFacts>>,
+  wcRows: Readonly<Record<string, WcCurrencyDemonymRow>>,
+  currencyCorrections: Readonly<Record<string, CurrencyCorrection>>,
+  demonymCorrections: Readonly<Record<string, DemonymCorrection>>,
+  codes: readonly string[],
+): string[] {
+  const errors: string[] = [];
+
+  codes.forEach((code) => {
+    const facts = factsByCode[code];
+    if (!facts) return;
+    try {
+      const expected = currencyAndDemonymFacts(
+        code,
+        wcRows[code],
+        currencyCorrections[code],
+        demonymCorrections[code],
+      );
+      (["currencies", "demonyms"] as const).forEach((key) => {
+        if (JSON.stringify(expected[key]) !== JSON.stringify(facts[key])) {
+          errors.push(
+            `${code}: ${key} obsolète (attendu ${format(expected[key])}, trouvé ${format(facts[key])}) — lancer pnpm build:countries`,
+          );
+        }
+      });
+    } catch (error) {
+      errors.push(error instanceof Error ? error.message : String(error));
+    }
+  });
+
+  [...Object.keys(currencyCorrections), ...Object.keys(demonymCorrections)]
+    .filter((code) => !codes.includes(code))
+    .forEach((code) => {
+      errors.push(
+        `${code}: correction de monnaie/gentilé sans pays du catalogue`,
+      );
+    });
+
+  return errors;
+}
+
+/**
+ * Cohérence du dataset des points culminants avec le catalogue et avec le
+ * dataset de souveraineté : mêmes ISO3, même commit du miroir Factbook (« au
+ * même commit »), pas d'override orphelin ni redondant, et un point sans nom
+ * uniquement quand rien n'en propose.
+ */
+export function validateHighestPoints(
+  dataset: HighestPointsSnapshot,
+  sovereignty: SovereigntySnapshot,
+  codes: readonly string[],
+): string[] {
+  const errors: string[] = [];
+  if (dataset.factbookCommit !== sovereignty.sourceCommit) {
+    errors.push(
+      `highestPoints: commit Factbook ${dataset.factbookCommit} ≠ sovereignty ${sovereignty.sourceCommit} — les deux datasets lisent le même miroir`,
+    );
+  }
+  codes
+    .filter((code) => !dataset.points[code])
+    .forEach((code) => {
+      errors.push(
+        `${code}: sans point culminant — lancer pnpm harvest:highest-points`,
+      );
+    });
+  Object.keys(dataset.points)
+    .filter((code) => !codes.includes(code))
+    .forEach((code) => {
+      errors.push(`${code}: point culminant sans pays du catalogue`);
+    });
+  Object.entries(dataset.overrides).forEach(([code, override]) => {
+    if (!dataset.points[code]) {
+      errors.push(`${code}: override de point culminant orphelin`);
+    }
+    if (!override.reason.trim()) {
+      errors.push(`${code}: override de point culminant sans motif`);
+    }
+  });
+  return errors;
+}
+
+/**
+ * Écarts acceptés entre `elevationM >= 5000` et `peak_over_5000m`, par ISO3,
+ * **chacun avec son motif**. Vide : le sondage du 2026-09-25 n'en trouve aucun.
+ * Y verser un écart sans motif viderait la garde de son sens.
+ */
+export const ACCEPTED_PEAK_GAPS: Readonly<Record<string, string>> = {};
+
+/** Seuil du critère « sommet de plus de 5 000 m » (`peak_over_5000m`). */
+export const PEAK_THRESHOLD_M = 5000;
+
+/**
+ * Cohérence de `highestPoint.elevationM >= 5000` avec `physicalFeatures`
+ * ∋ `peak_over_5000m` : la liste de `physical_peak_over_5000m` ne change pas en
+ * P4, donc un écart arrête le lot. Les écarts acceptés sont des entrées
+ * motivées (`accepted`) ; une entrée devenue sans objet est signalée aussi.
+ */
+export function validatePeakCoherence(
+  factsByCode: Readonly<Record<string, CountryFacts>>,
+  accepted: Readonly<Record<string, string>>,
+  codes: readonly string[],
+): string[] {
+  const errors: string[] = [];
+  codes.forEach((code) => {
+    const facts = factsByCode[code];
+    if (!facts) return;
+    const overThreshold = facts.highestPoint.elevationM >= PEAK_THRESHOLD_M;
+    const flagged = facts.physicalFeatures.includes("peak_over_5000m");
+    const diverges = overThreshold !== flagged;
+    if (diverges && !accepted[code]) {
+      errors.push(
+        `${code}: point culminant ${facts.highestPoint.elevationM} m ${overThreshold ? "≥" : "<"} 5 000 m mais peak_over_5000m ${flagged ? "présent" : "absent"} — écart à trancher (la liste physical_peak_over_5000m ne change pas en P4)`,
+      );
+    }
+    if (!diverges && accepted[code]) {
+      errors.push(
+        `${code}: écart 5 000 m accepté mais sans objet — le retirer`,
+      );
+    }
+  });
+  Object.keys(accepted)
+    .filter((code) => !codes.includes(code))
+    .forEach((code) => {
+      errors.push(`${code}: écart 5 000 m accepté sans pays du catalogue`);
+    });
+  return errors;
+}
+
+/**
+ * Cohérence d'un indicateur WDI avec le catalogue : chaque pays est soit dans
+ * `values`, soit dans `missing`, jamais dans les deux ni dans aucun ; chaque
+ * année retenue tient dans la fenêtre demandée. Un `null` n'est donc jamais un
+ * oubli de la récolte.
+ */
+export function validateWorldBankIndicator(
+  indicator: WorldBankIndicator,
+  codes: readonly string[],
+): string[] {
+  const errors: string[] = [];
+  const label = `worldBank ${indicator.code}`;
+  codes.forEach((code) => {
+    const hasValue = code in indicator.values;
+    const isMissing = code in indicator.missing;
+    if (hasValue && isMissing) {
+      errors.push(`${code}: ${label} à la fois valeur et manquant`);
+    }
+    if (!hasValue && !isMissing) {
+      errors.push(
+        `${code}: ${label} ni valeur ni manquant — lancer pnpm harvest:world-bank`,
+      );
+    }
+  });
+  [...Object.keys(indicator.values), ...Object.keys(indicator.missing)]
+    .filter((code) => !codes.includes(code))
+    .forEach((code) => {
+      errors.push(`${code}: ${label} sans pays du catalogue`);
+    });
+  Object.entries(indicator.values).forEach(([code, { year }]) => {
+    if (year < indicator.window.from || year > indicator.window.to) {
+      errors.push(
+        `${code}: ${label} année ${year} hors de la fenêtre ${indicator.window.from}–${indicator.window.to}`,
+      );
+    }
+  });
+  return errors;
+}
+
+/**
+ * Cohérence du dataset d'IDH avec le catalogue : chaque pays est soit dans
+ * `values`, soit dans `missing`, jamais dans les deux ni dans aucun ; chaque
+ * valeur est comprise entre 0 et 1 (exclu 0). La catégorie publiée par le PNUD
+ * est vérifiée à part (`validateCategoryAgainstPublished`).
+ */
+export function validateHumanDevelopmentIndex(
+  dataset: HumanDevelopmentIndexSnapshot,
+  codes: readonly string[],
+): string[] {
+  const errors: string[] = [];
+  codes.forEach((code) => {
+    const hasValue = code in dataset.values;
+    const isMissing = code in dataset.missing;
+    if (hasValue && isMissing) {
+      errors.push(`${code}: IDH à la fois valeur et manquant`);
+    }
+    if (!hasValue && !isMissing) {
+      errors.push(
+        `${code}: IDH ni valeur ni manquant — lancer pnpm harvest:hdi`,
+      );
+    }
+  });
+  [...Object.keys(dataset.values), ...Object.keys(dataset.missing)]
+    .filter((code) => !codes.includes(code))
+    .forEach((code) => {
+      errors.push(`${code}: IDH sans pays du catalogue`);
+    });
+  Object.entries(dataset.values).forEach(([code, { value }]) => {
+    if (!Number.isFinite(value) || value <= 0 || value > 1) {
+      errors.push(`${code}: IDH hors de ]0, 1] (${value})`);
+    }
+  });
+  return errors;
+}
+
+/**
+ * Accord des éditions d'événements avec la liste des pays hôtes. La liste vient
+ * de `gameplayClassifications` (`events`), les années du dataset
+ * `eventEditions` (`eventEditions`) : chaque événement de `events` a au moins
+ * une année, et aucune année n'existe sans son événement — sans quoi le Drawer
+ * afficherait des années sous un pays refusé, ou rien sous un pays accepté.
+ * Un hôte du dataset hors catalogue est signalé aussi.
+ */
+export function validateEventEditions(
+  factsByCode: Readonly<Record<string, CountryFacts>>,
+  dataset: EventEditionsSnapshot,
+  codes: readonly string[],
+): string[] {
+  const errors: string[] = [];
+  codes.forEach((code) => {
+    const facts = factsByCode[code];
+    if (!facts) return;
+    facts.events
+      .filter((event) => (facts.eventEditions[event]?.length ?? 0) === 0)
+      .forEach((event) => {
+        errors.push(
+          `${code}: ${event} sans aucune édition — compléter scripts/countries/data/eventEditions.ts`,
+        );
+      });
+    Object.keys(facts.eventEditions)
+      .filter((event) => !(facts.events as readonly string[]).includes(event))
+      .forEach((event) => {
+        errors.push(
+          `${code}: éditions de ${event} sans l'événement dans events — compléter gameplayClassifications`,
+        );
+      });
+  });
+  Object.entries(dataset.events).forEach(([event, editions]) => {
+    editions.forEach(({ year, hosts }) => {
+      hosts
+        .filter((host) => !codes.includes(host))
+        .forEach((host) => {
+          errors.push(`${event} ${year}: hôte ${host} hors catalogue`);
+        });
+    });
+  });
+  return errors;
+}
+
+/**
+ * Cohérence du dataset `historicalDominations` (`history_from_*`) : pays du
+ * catalogue, au plus une domination par puissance et par pays, période
+ * ordonnée et révolue, motif et sources renseignés, sources connues de
+ * `content/sources.ts`. Un cas écarté (`excluded`) ne peut pas coexister avec
+ * une domination retenue de la même puissance : le dataset se contredirait.
+ */
+export function validateHistoricalDominations(
+  dataset: HistoricalDominationsSnapshot,
+  codes: readonly string[],
+  sourceIds: readonly string[],
+): string[] {
+  const errors: string[] = [];
+  const checkedYear = Number(dataset.checkedAt.slice(0, 4));
+  Object.entries(dataset.countries).forEach(([code, entries]) => {
+    if (!codes.includes(code))
+      errors.push(`${code}: domination hors catalogue`);
+    const powers = entries.map(({ power }) => power);
+    powers
+      .filter((power, index) => powers.indexOf(power) !== index)
+      .forEach((power) => {
+        errors.push(
+          `${code}: plusieurs dominations ${power} — n'en garder qu'une période`,
+        );
+      });
+    entries.forEach(({ power, from, to, reason, sources }) => {
+      const label = `${code} (${power})`;
+      if (from !== null && (!Number.isInteger(from) || from > to)) {
+        errors.push(`${label}: période invalide (${from}–${to})`);
+      }
+      if (!Number.isInteger(to) || to > checkedYear) {
+        errors.push(`${label}: fin invalide (${to})`);
+      }
+      if (reason.trim().length === 0) errors.push(`${label}: motif vide`);
+      sources
+        .filter(({ id }) => !sourceIds.includes(id))
+        .forEach(({ id }) => {
+          errors.push(
+            `${label}: source inconnue de content/sources.ts (${id})`,
+          );
+        });
+    });
+  });
+  Object.entries(dataset.excluded).forEach(([code, exclusions]) => {
+    if (!codes.includes(code)) errors.push(`${code}: exclusion hors catalogue`);
+    exclusions.forEach(({ power, reason }) => {
+      if (reason.trim().length === 0) {
+        errors.push(`${code} (${power}): motif d'exclusion vide`);
+      }
+      if (
+        (dataset.countries[code] ?? []).some((entry) => entry.power === power)
+      ) {
+        errors.push(`${code} (${power}): à la fois retenu et écarté`);
+      }
+    });
+  });
   return errors;
 }

@@ -12,11 +12,16 @@ import { AGRICULTURAL_PRODUCTION } from "./agriculturalProduction";
 import { CIVIL_TIME_OFFSETS } from "./civilTimeOffsets";
 import { COAL_ELECTRICITY } from "./coalElectricity";
 import { ENERGY_PRODUCTION } from "./energyProduction";
+import { EVENT_EDITIONS } from "./eventEditions";
 import { FOREST_COVER } from "./forestCover";
+import { HIGHEST_POINTS } from "./highestPoints";
+import { HISTORICAL_DOMINATIONS } from "./historicalDominations";
 import { HOLOCENE_VOLCANOES } from "./holoceneVolcanoes";
+import { HUMAN_DEVELOPMENT_INDEX } from "./humanDevelopmentIndex";
 import { MOUNTAIN_AREAS } from "./mountainArea";
 import { SOVEREIGNTY } from "./sovereignty";
 import { URBAN_CENTRES } from "./urbanCentres";
+import { WORLD_BANK_INDICATORS } from "./worldBankIndicators";
 
 export const QUANTITATIVE_DATASETS: QuantitativeDatasets = {
   civilTimeOffsets: CIVIL_TIME_OFFSETS,
@@ -28,4 +33,9 @@ export const QUANTITATIVE_DATASETS: QuantitativeDatasets = {
   energyProduction: ENERGY_PRODUCTION,
   coalElectricity: COAL_ELECTRICITY,
   sovereignty: SOVEREIGNTY,
+  highestPoints: HIGHEST_POINTS,
+  worldBank: WORLD_BANK_INDICATORS,
+  humanDevelopment: HUMAN_DEVELOPMENT_INDEX,
+  eventEditions: EVENT_EDITIONS,
+  historicalDominations: HISTORICAL_DOMINATIONS,
 };

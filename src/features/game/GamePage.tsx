@@ -7,7 +7,9 @@ import AppFooter from "@/app/AppFooter";
 import { Button } from "@/components/ui/button";
 import { ErrorScreen } from "@/features/errors/components/ErrorScreen";
 import { useBackendDownTimeout } from "@/features/errors/hooks/useBackendDownTimeout";
+import { useConstraintSourceToast } from "@/features/game/hooks/useConstraintSourceToast";
 import { useGameState } from "@/features/game/hooks/useGameState";
+import { useSolutionDrawer } from "@/features/game/hooks/useSolutionDrawer";
 import {
   getGridNumberForDate,
   getGridNumberForTodayUtc,
@@ -16,6 +18,7 @@ import { useT } from "@/i18n/LocaleContext";
 import { focusWithoutVisibleRing } from "@/lib/focus";
 import { cn } from "@/lib/utils";
 import { api } from "../../../convex/_generated/api";
+import { ConstraintSourceToast } from "./components/ConstraintSourceToast";
 import { GameGrid } from "./components/GameGrid";
 import { GridSkeleton } from "./components/GridSkeleton";
 import { GuessModal } from "./components/GuessModal";
@@ -23,6 +26,7 @@ import { Header } from "./components/Header";
 import { HowToPlayLink } from "./components/HowToPlayLink";
 import { RarityHint } from "./components/RarityHint";
 import { ResultScreen } from "./components/ResultScreen";
+import { SolutionDrawer } from "./components/SolutionDrawer";
 import { SolutionGrid } from "./components/SolutionGrid";
 import { SurveyCta } from "./components/SurveyCta";
 
@@ -53,6 +57,15 @@ export function GamePage() {
   const [resultModalDismissed, setResultModalDismissed] = useState(false);
   const resultTriggerRef = useRef<HTMLButtonElement>(null);
   const prevStatusRef = useRef(state.status);
+  const sourceToast = useConstraintSourceToast({
+    gridDate: state.date,
+    mode: state.mode,
+    selectedCell: state.selectedCell,
+  });
+  const solutionDrawer = useSolutionDrawer({
+    gridDate: state.date,
+    mode: state.mode,
+  });
 
   // biome-ignore lint/correctness/useExhaustiveDependencies: réinitialiser modale / vue lorsque la date de grille change (jour suivant)
   useEffect(() => {
@@ -126,6 +139,8 @@ export function GamePage() {
                 validAnswers={validAnswers}
                 distribution={guessDistribution ?? undefined}
                 cells={state.cells}
+                onHeaderClick={solutionDrawer.openConstraint}
+                onCellClick={solutionDrawer.openCell}
               />
 
               <RarityHint />
@@ -185,6 +200,7 @@ export function GamePage() {
                   });
                   selectCell(cell);
                 }}
+                onHeaderClick={(id) => sourceToast.onHeaderClick(id)}
               />
 
               <RarityHint />
@@ -217,6 +233,17 @@ export function GamePage() {
           onDismiss={() => dismissResultModal("dismiss_modal")}
           onRated={() => markRated(state.date)}
           onViewAnswers={(source) => dismissResultModal(source)}
+        />
+      )}
+
+      <ConstraintSourceToast toast={sourceToast} />
+
+      {solutionDrawer.target !== null && (
+        <SolutionDrawer
+          state={state}
+          validAnswers={validAnswers}
+          distribution={guessDistribution ?? undefined}
+          drawer={solutionDrawer}
         />
       )}
     </div>

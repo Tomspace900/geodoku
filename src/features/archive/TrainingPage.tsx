@@ -6,11 +6,15 @@ import AppFooter from "@/app/AppFooter";
 import { BackLink } from "@/components/editorial/BackLink";
 import { Button } from "@/components/ui/button";
 import { ErrorScreen } from "@/features/errors/components/ErrorScreen";
+import { ConstraintSourceToast } from "@/features/game/components/ConstraintSourceToast";
 import { GameGrid } from "@/features/game/components/GameGrid";
 import { GridSkeleton } from "@/features/game/components/GridSkeleton";
 import { GuessModal } from "@/features/game/components/GuessModal";
 import { Header } from "@/features/game/components/Header";
+import { SolutionDrawer } from "@/features/game/components/SolutionDrawer";
 import { SolutionGrid } from "@/features/game/components/SolutionGrid";
+import { useConstraintSourceToast } from "@/features/game/hooks/useConstraintSourceToast";
+import { useSolutionDrawer } from "@/features/game/hooks/useSolutionDrawer";
 import { getGridNumberForDate } from "@/features/game/logic/gridIssue";
 import { loadPersistedGame } from "@/features/game/logic/persistence";
 import { classifyReplayDate } from "@/features/game/logic/replayWindow";
@@ -107,6 +111,15 @@ function TrainingBoard({ date }: { date: string }) {
     hasGrid,
     validAnswers,
   } = useTrainingGame(date);
+  const sourceToast = useConstraintSourceToast({
+    gridDate: state.date,
+    mode: state.mode,
+    selectedCell: state.selectedCell,
+  });
+  const solutionDrawer = useSolutionDrawer({
+    gridDate: state.date,
+    mode: state.mode,
+  });
 
   // Rareté de la cohorte du jour concerné : complète et figée, donc le score
   // affiché est exact et stable (pas de marqueur « ≈ » qui bougerait).
@@ -145,12 +158,15 @@ function TrainingBoard({ date }: { date: string }) {
               distribution={distribution ?? undefined}
               cells={state.cells}
               mode="training"
+              onHeaderClick={solutionDrawer.openConstraint}
+              onCellClick={solutionDrawer.openCell}
             />
           ) : (
             <GameGrid
               state={state}
               distribution={distribution ?? undefined}
               onCellClick={selectCell}
+              onHeaderClick={(id) => sourceToast.onHeaderClick(id)}
             />
           )}
 
@@ -205,6 +221,17 @@ function TrainingBoard({ date }: { date: string }) {
           onDismiss={() => setResultDismissed(true)}
           onRestart={handleRestart}
           onViewAnswers={() => setResultDismissed(true)}
+        />
+      )}
+
+      <ConstraintSourceToast toast={sourceToast} />
+
+      {solutionDrawer.target !== null && (
+        <SolutionDrawer
+          state={state}
+          validAnswers={validAnswers}
+          distribution={distribution ?? undefined}
+          drawer={solutionDrawer}
         />
       )}
     </TrainingShell>

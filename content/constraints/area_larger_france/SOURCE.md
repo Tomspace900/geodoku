@@ -13,8 +13,8 @@ Pays dont la superficie est supérieure à celle de la France.
 
 ## Sources
 
-- Référence de révision : [géographie quantitative](../SOURCES.md#géographie-administrative-et-quantitative) (World Bank `AG.SRF.TOTL.K2`).
-- Liste établie depuis les superficies de world-countries.
+- Référence de révision (comparaison, jamais importée) : [géographie quantitative](../SOURCES.md#géographie-administrative-et-quantitative) (World Bank `AG.SRF.TOTL.K2`).
+- Liste établie depuis les superficies **totales** (eau intérieure comprise) de world-countries.
 
 ## Dérivation
 

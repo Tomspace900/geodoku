@@ -51,8 +51,9 @@ Barème tranché sur données réelles. La rareté d'une case s'appuie sur la **
 ```
 content/                  # snapshot de contenu versionné, TERMINAL (n'importe rien de src/convex)
   README.md               # carte du dossier + modèle facts → dérivation → listes
+  sources.ts               # registre des sources externes (nom, URL, millésime), partagé par les about.ts
   countries/              # catalog (identité) + countryCodes + facts + popularity (générés, datés) + SOURCE.md
-  constraints/            # index (registre typé) + derivations (prédicats) + SOURCES.md + <id>/{answers.ts, SOURCE.md}
+  constraints/            # index (registre typé) + derivations (prédicats) + abouts.ts (registre "à propos") + SOURCES.md + <id>/{answers.ts, about.ts, SOURCE.md}
 src/features/<feature>/   # game, archive, countries, admin, legal, errors
   logic/                  # pur, testé, zéro React/Convex
   testing/                # simulation partagée par Vitest/E2E/scripts
@@ -63,6 +64,8 @@ convex/lib/               # gridGenerator, gridScheduler, gridConstants (purs)
 scripts/content/            # dérivation & garde du snapshot content/ (check-content, build-answers, emit)
 scripts/ci/                 # exécutés en CI (check-e2e-convex-url)
 scripts/countries/          # pipeline contenu pays (build-countries, flagData, patches)
+  harvest/                # récoltes réseau isolées (Wikidata…) → data/*.ts committé, relu en diff
+  data/                   # datasets de faits datés (curés ou récoltés)
 scripts/local/              # outillage local versionné (analytics, simulate, sync gh…)
 scripts/dev/                # scratch perso (gitignored)
 e2e/                      # Playwright — helpers.ts + *.shared|desktop|mobile.spec.ts
@@ -88,11 +91,16 @@ e2e/                      # Playwright — helpers.ts + *.shared|desktop|mobile.
 - **Périmètre territorial** : un pays inclut son territoire **pleinement intégré**, et rien d'autre (DOM français, Canaries, Açores, Jan Mayen, îles BES… ; pas les territoires britanniques d'outre-mer, la Polynésie, le Groenland ni Heard-et-MacDonald). Règle commune à toutes les familles géographiques — volcans, océans, fuseaux, relief — écrite une fois dans [`content/constraints/SOURCES.md`](content/constraints/SOURCES.md) et qui prime sur le découpage de la source. Sans elle, chaque dataset imposait sa convention : le Royaume-Uni « possédait un volcan » par Tristan da Cunha pendant que la France n'avait qu'un fuseau horaire.
 - Contraintes **en réserve** (`RESERVE_CONSTRAINT_IDS`, [`content/constraints/index.ts`](content/constraints/index.ts)) : conçues et sourcées mais écartées du jeu actif (arbitrage gameplay). **Ni** générables **ni** rejouables — volontairement hors de `ConstraintId` (un id de réserve dans une grille échoue bruyamment) ; seul leur `SOURCE.md` subsiste (`status: archived`, sans `answers.ts`). `check:content` garde présence + absence d'`answers.ts` + non-chevauchement. Réactivation : réintroduire dans `CONSTRAINTS` + `derivations.ts` + i18n, puis `pnpm build:answers`.
 - Chaque contrainte porte un `SOURCE.md` (définition, dérivation, cas limites) ; le socle (`constraints/SOURCES.md`, `content/README.md`, `content/countries/SOURCE.md`) porte le principe et la provenance par famille de champs. `check:content` vérifie présence et frontmatter.
+- Chaque contrainte active/archivée porte aussi un `about.ts` (source(s) + millésime, `basis` `source`/`convention`, clarification ≤ 160 caractères sans nom de pays hors libellé) — c'est ce texte, pas le `SOURCE.md`, qu'affiche le toast joueur au tap sur un en-tête de contrainte. Registre séparé [`content/constraints/abouts.ts`](content/constraints/abouts.ts) : **jamais** dans `index.ts`, que Convex importe — les textes joueur n'ont rien à faire côté serveur. Sources externes centralisées dans [`content/sources.ts`](content/sources.ts). Gardé par `validateConstraintAbouts` (`pnpm check:content`).
 - Deux leviers pour réviser une contrainte active : la **définition** change → `derivations.ts` (+ `CONSTRAINTS`) ; une **donnée** est fausse → curation (`countryPatches.ts`, `flagData.json`) ou `pnpm build:countries`. Jamais `answers.ts` à la main.
-- `content/countries/facts.ts` est **généré** : les dix champs dérivés des datasets de `scripts/countries/data/` (fuseaux, volcans, relief, forêt, centres urbains, rangs de production, charbon, souveraineté) sont re-fusionnés par `check:content` ([`validateDatasetFacts.ts`](scripts/countries/validateDatasetFacts.ts)) — un dataset révisé sans `pnpm build:countries`, ou une édition à la main, échoue en CI. Les champs venus du réseau (population, capitales, adhésions, pageviews) n'ont d'autre juge que la regen.
-- `formerSovereigns` est une lecture **à la main** du texte libre du Factbook, et deux revues successives l'ont faite à l'œil en ratant des cas. [`validateSovereigntySources.ts`](scripts/countries/validateSovereigntySources.ts) (`check:content`) échoue si une `sourceDescription` nomme une des neuf puissances tracées sans la porter dans `formerSovereigns` : compléter la curation, ou inscrire le cas dans `ACCEPTED_OMISSIONS` **avec son motif**. Y verser un échec sans motif viderait la garde de son sens.
+- `content/countries/facts.ts` est **généré** : les champs dérivés des datasets de `scripts/countries/data/` (fuseaux, volcans, relief, forêt, centres urbains, rangs de production, charbon, souveraineté, point culminant, indicateurs WDI, IDH, éditions des événements) sont re-fusionnés par `check:content` ([`validateDatasetFacts.ts`](scripts/countries/validateDatasetFacts.ts)) — un dataset révisé sans `pnpm build:countries`, ou une édition à la main, échoue en CI. Les champs venus du réseau (population, capitales, adhésions, pageviews) n'ont d'autre juge que la regen.
+- [`content/countries/factProvenance.ts`](content/countries/factProvenance.ts) déclare la provenance de chaque **ligne affichée de la fiche pays** (`SheetRowId`, pas `keyof CountryFacts` : un champ composite se décompose en lignes de sources distinctes), même union `basis` + `SourceId[]` que les `about.ts`. Aucun écran ne la lit : la fiche pays (#125) est retirée de `develop` et sa branche `fiches-pays` la reprendra — la donnée et ses gardes restent pour elle. Une ligne qui recoupe une contrainte reprend la provenance de son `about.ts` (test [`factProvenance.test.ts`](content/countries/__tests__/factProvenance.test.ts)) ; `validateFactProvenance` compte ses sources dans la garde « source référencée ».
+- Les faits sont chargés en **lazy** : seul [`countrySheetData.ts`](src/features/countries/logic/countrySheetData.ts) importe `content/countries/facts.ts` côté joueur, pour `getConstraintValues` (préchargé au montage de la grille solution). `check:bundle` ([`check-bundle-size.ts`](scripts/ci/check-bundle-size.ts)) échoue si `facts.ts` atteint le graphe initial. Les noms `countrySheet*` restent ceux de la future fiche (#125).
+- **Histoire.** `history_from_*` lisent `dominations`, dataset curé [`historicalDominations.ts`](scripts/countries/data/historicalDominations.ts) : un pays passé **un jour** sous la puissance compte, et non le seul souverain *immédiatement antérieur* du Factbook (`formerSovereigns`, que plus aucune contrainte ne lit). Règles d'inclusion dans [`SOURCES.md`](content/constraints/SOURCES.md#histoire-et-souveraineté), chaque refus gardé dans `excluded` avec sa règle ; une année qu'aucune source ne donne reste `null`, jamais estimée. `formerSovereigns` reste gardé pour la fiche par [`validateSovereigntySources.ts`](scripts/countries/validateSovereigntySources.ts) : une omission ne s'accepte que motivée dans `ACCEPTED_OMISSIONS`.
+- **Valeur d'une contrainte** ([`constraintValue.ts`](src/features/countries/logic/constraintValue.ts)) : sous chaque pays, le Drawer de la grille solution affiche ce que le fait dit *en plus* du libellé (« 2ᵉ producteur de cacao », « 59 % de forêt ») — `null` quand la valeur répéterait le libellé. Une extraction par contrainte, `satisfies Record<ConstraintId, …>` : une contrainte ajoutée sans décision ne compile pas. **Une contrainte archivée n'a jamais de valeur** : sa liste est figée alors que les faits se régénèrent, la valeur courante la contredirait (le Salvador à 287 hab./km² dans « > 300 »). Lue dans le chunk lazy des faits (`getConstraintValues`), jamais depuis `facts.ts` directement. Les lignes du Drawer sont de l'information, pas des boutons.
 - Après un levier : `pnpm build:answers` → relire le diff ISO3 → `pnpm simulate:scheduling` → régénération du pool via `/admin` si OK.
 - Le snapshot `content/countries/` (identité, faits, popularité) est régénéré par `pnpm build:countries` (réseau), qui enchaîne `build:answers`.
+- **Récoltes réseau** (`scripts/countries/harvest/`, `pnpm harvest:capitals` / `highest-points` / `world-bank` / `hdi` / `forest`) : un script par source, séparé de `build-countries`, qui écrit un dataset de `scripts/countries/data/` relu en diff puis committé ; `build:countries` le fusionne hors-ligne. Overrides curés avec motif obligatoire, préservés à chaque récolte ; jamais de repli silencieux (une capitale sans libellé fr/en passe en override). Chaque récolte imprime le millésime à reporter à la main dans `content/sources.ts`, que `validateSourceVintages` (`check:content`) compare exactement au dataset. Détail par source : [`docs/content-pipeline.md`](docs/content-pipeline.md).
 - Drapeaux → [`scripts/countries/flagData.json`](scripts/countries/flagData.json) curé, pas d'heuristique.
 
 Détail complet : [`docs/content-pipeline.md`](docs/content-pipeline.md).
@@ -181,7 +189,7 @@ pnpm build
 # Contenu & pool
 pnpm build:countries             # regen réseau du snapshot content/ (+ enchaîne build:answers)
 pnpm build:answers               # re-dérive content/constraints/<id>/answers.ts (hors-ligne)
-pnpm check:content               # cohérence content/ (job quality + pre-commit) : obsolescence des listes + fraîcheur des faits dérivés + cohérence souveraineté + seam terminal + provenance SOURCE.md
+pnpm check:content               # cohérence content/ (job quality + pre-commit) : obsolescence des listes + fraîcheur des faits dérivés + cohérence souveraineté + seam terminal + provenance SOURCE.md + sources des contraintes (about.ts)
 pnpm analyze:pool
 pnpm simulate:scheduling          # validateur changement contraintes
 pnpm simulate:players             # dry-run par défaut ; --execute pour écrire (develop/dev)
@@ -228,7 +236,7 @@ pnpm exec convex env set ADMIN_TOKEN "xxx"
 
 L'`ignoreCommand` de [`vercel.json`](vercel.json) coupe le déploiement des branches `dependabot/*` : sans lui, chaque bump de patch créait un preview Vercel **et** un déploiement Convex preview jetables.
 
-**Dependabot** ([`.github/dependabot.yml`](.github/dependabot.yml)) — cible `develop` (le flux est `develop → main`, une PR sur `main` serait inmergeable), cadence mensuelle, **un seul groupe prod+dev** : des groupes séparés bloquent les bumps couplés (`convex-test` exige un `convex` récent). Les **majeures npm sont ignorées** — elles demandent du code à adapter et se font délibérément, pas en cliquant une PR.
+**Dependabot** ([`.github/dependabot.yml`](.github/dependabot.yml)) — cible `develop` (le flux est `develop → main`, une PR sur `main` serait inmergeable), cadence mensuelle, **un seul groupe prod+dev** : des groupes séparés bloquent les bumps couplés (`convex-test` exige un `convex` récent). Les **majeures npm sont ignorées** — elles demandent du code à adapter et se font délibérément, pas en cliquant une PR. `world-countries` est ignoré entièrement : c'est une source du snapshot `content/countries/`, que `check:content` confronte aux monnaies et gentilés committés — il se met à jour avec `pnpm build:countries`, jamais par un bump isolé.
 
 **Build Vercel :**
 
@@ -268,7 +276,9 @@ Complémentaire à Convex (`gridFeedback`/`dailyStats` = santé grilles ; PostHo
 | Saisie | `guess_modal_closed` |
 | Résultat | `result_screen_viewed`, `result_shared` (portent `score_total`/`score_grid`/`score_rarity`/`score_lives` — les anciens `originality_*`/`grid_score_percent` sont **retirés**, groupements dashboards à recréer), `difficulty_rated`, `solution_viewed`, `scoring_info_opened` (prop `source`: `result_screen`) |
 | UI | `how_to_play_*`, `locale_changed`, `footer_link_clicked`, `survey_link_clicked` / `survey_dismissed` (props `source`: `result_screen`/`solution_screen`/`footer` et `survey_id` ; banderole sondage post-partie via `SurveyCta` — écran de résultat sous le partage + écran de solution — gated par feature flag PostHog `survey_active` ; `geodoku:survey-done` mémorise l'interaction **par sondage** (`SURVEY_ID`, à changer avec les URLs : un clic sur l'ancien sondage ne masque pas le nouveau) et dissocie clic (masquage définitif, cf. `isSurveyDone`) et fermeture (masquage du jour courant, réapparaît le lendemain, plus du tout après `MAX_SURVEY_DISMISSALS` fermetures) ; lien permanent et discret dans `AppFooter` (même flag, toujours affiché quel que soit `geodoku:survey-done`, mais un clic dessus masque aussi la banderole) pour rester accessible aux joueurs qui changent d'avis après avoir fermé la banderole) |
-| Entraînement | `archive_opened`, `training_started` (`grid_date`, `resumed`, `restart`), `training_completed` (`grid_date`, `outcome`, `filled_cells`, `failed_attempts`), `training_result_viewed` (`grid_date`, `outcome`, `score_total`/`score_grid`/`score_rarity` sur 900, `failed_attempts`) — **noms distincts des events daily** pour ne pas corrompre les groupements existants. Corollaire : le mode entraînement n'émet **aucun** event daily, `cell_opened` compris (il alimente le tunnel du quotidien) ; `game_started`/`game_completed`/`result_screen_viewed`/`cell_opened` restent daily-only. Seul `scoring_info_opened` est partagé, distingué par `source: training_result_screen`. |
+| Sources | `constraint_source_viewed` (`grid_date`, `mode`: `daily`/`training`, `surface`: toujours `playing`, `constraint_id`) — tap sur un en-tête de contrainte **en jeu uniquement** (toast de source, [`useConstraintSourceToast`](src/features/game/hooks/useConstraintSourceToast.ts)) ; sur la grille solution, l'en-tête ouvre le Drawer de contrainte à la place (`solution_constraint_opened`, ci-dessous) — `surface` reste dans l'event pour ne pas casser les groupements existants, bien qu'il ne prenne plus qu'une seule valeur |
+| Grille solution | `solution_cell_opened` (`grid_date`, `mode`, `cell`, `answer_count`) et `solution_constraint_opened` (`grid_date`, `mode`, `constraint_id`, `answer_count`) — tap sur une case ou un en-tête de la grille solution, qui ouvre le Drawer partagé ([`useSolutionDrawer`](src/features/game/hooks/useSolutionDrawer.ts)). Les deux events sont **partagés** daily/entraînement, distingués par `mode`, jamais émis en cours de partie (la grille solution n'existe qu'une fois `status !== "playing"`). `country_sheet_opened` est retiré avec la fiche pays (#125) ; il reviendra avec elle. |
+| Entraînement | `archive_opened`, `training_started` (`grid_date`, `resumed`, `restart`), `training_completed` (`grid_date`, `outcome`, `filled_cells`, `failed_attempts`), `training_result_viewed` (`grid_date`, `outcome`, `score_total`/`score_grid`/`score_rarity` sur 900, `failed_attempts`) — **noms distincts des events daily** pour ne pas corrompre les groupements existants. Corollaire : le mode entraînement n'émet **aucun** event daily, `cell_opened` compris (il alimente le tunnel du quotidien) ; `game_started`/`game_completed`/`result_screen_viewed`/`cell_opened` restent daily-only. `scoring_info_opened` et `constraint_source_viewed` sont partagés, distingués par leur prop `mode`/`source`. |
 | Légal | `legal_page_viewed`, `legal_page_left` |
 | Fiabilité | `backend_timeout_shown`, `$exception` |
 
@@ -279,6 +289,7 @@ Source de vérité détaillée : grep `posthog?.capture` dans le code.
 **Toujours**
 
 - `pnpm lint` et `pnpm test` (aussi exécutés au pre-commit Husky)
+- Issue référencée dans le commit, et sous-issue **fermée à l'arrivée sur `develop`** avec son statut « Sur develop » (cf. §12)
 
 **Selon le périmètre**
 
@@ -305,3 +316,35 @@ re-dérivée ou un fait corrigé **ne parviennent donc à aucun joueur** tant qu
 Aucune garde ne le signale : `getGridContentIssue` vérifie la validité des grilles
 futures, pas leur fraîcheur éditoriale. Les grilles déjà publiées restent
 protégées par `gridAnswers`.
+
+## 12. Suivi des tâches (issues GitHub)
+
+Le suivi vit dans les **issues GitHub** du repo et dans le Project
+[Geodoku](https://github.com/users/Tomspace900/projects/1) (privé). Plus de Kanban
+Markdown : un bug, une idée ou un chantier sans issue n'est pas suivi. Un correctif
+trivial peut s'en passer.
+
+- **Une tâche = une issue**, avec un label de type : `bug`, `feature`, `ux`,
+  `contenu`, `tech`, `admin`, `analytics`, `release`, `idée`. Un gros chantier est
+  une issue `epic` découpée en **sous-issues**, avec un **milestone** s'il avance par
+  lots (refonte du contenu #38 → P4 #42, milestone « P4 — Fiches pays », un lot par
+  sous-issue).
+- **Champs du Project** : `Status` (Backlog · Prêt · En cours · Sur develop · En prod ·
+  Abandonné) et `Priorité` (🔴 Haute · 🟠 Moyenne · 🟢 Basse). Une issue ouverte entre
+  seule dans le Project, en Backlog ; la priorité se pose à la main.
+- **Cycle de vie** : « En cours » au démarrage. Une **sous-issue se ferme dès que son
+  travail arrive sur `develop`** (statut « Sur develop »), à la main : `gh issue close N
+  --comment "<hash>"`, car `Closes #N` ne ferme qu'au merge dans `main`, la branche
+  par défaut. L'**issue principale** du chantier (epic) et son issue de mise en prod
+  restent ouvertes jusqu'à la prod : la PR `develop → main` porte `Closes #<epic>`,
+  puis toutes les sous-issues passent en « En prod ». Le workflow « Item closed » du
+  Project doit donc poser « Sur develop », pas « En prod ». Abandon : fermer en
+  « not planned » et passer en « Abandonné ».
+- **Plans longs** : un plan d'exécution peut vivre dans `docs/` le temps du chantier,
+  avec son issue comme point d'entrée. À la mise en prod, ses décisions durables
+  passent dans `AGENTS.md`, `content/constraints/SOURCES.md` ou
+  `docs/content-pipeline.md`, ses points ouverts dans des issues, et le plan est
+  retiré : l'historique git le garde. Une décision durable ne vit jamais
+  seulement dans un commentaire d'issue.
+- **Repo public** : rien de privé dans une issue ni un commentaire. Pas de chiffres du
+  sondage joueurs (ses docs sont gitignorés), pas de données de prod, pas de secrets.

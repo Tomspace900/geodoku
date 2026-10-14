@@ -19,3 +19,9 @@ type Path<T, P extends string = ""> = {
 }[keyof T & string];
 
 export type TKey = Path<Translations>;
+
+/** Signature de `t` (`useLocale`), pour les formateurs purs qui la reçoivent en argument. */
+export type Translate = (
+  key: TKey,
+  vars?: Record<string, string | number>,
+) => string;

@@ -22,6 +22,7 @@ describe("GameGrid", () => {
           state={state}
           distribution={undefined}
           onCellClick={() => {}}
+          onHeaderClick={() => {}}
         />
       </LocaleProvider>,
     );

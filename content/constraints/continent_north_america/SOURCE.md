@@ -14,7 +14,7 @@ Pays dont le continent Geodoku est **Amérique du Nord**.
 ## Sources
 
 - Référence de révision : [nomenclature ONU M49](../SOURCES.md#géographie-administrative-et-quantitative).
-- Liste établie depuis les champs `region` / `subregion` de world-countries, alignés sur M49.
+- Liste établie depuis les champs `region` / `subregion` de world-countries, arbitrés par Geodoku (M49 en référence).
 
 ## Dérivation
 
@@ -22,7 +22,7 @@ Pays dont le continent Geodoku est **Amérique du Nord**.
 
 ## Cas limites
 
-L'Amérique centrale et les Caraïbes sont rattachées à l'Amérique du Nord, conformément à M49.
+L'Amérique centrale et les Caraïbes sont rattachées à l'Amérique du Nord par **convention Geodoku** : M49 les range sous « Amérique latine et Caraïbes », hors de l'Amérique septentrionale. La clarification joueur le dit (« Comprend l'Amérique centrale et les Caraïbes »).
 
 ## Révision
 

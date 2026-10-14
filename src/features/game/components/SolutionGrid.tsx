@@ -1,3 +1,6 @@
+import { useEffect } from "react";
+import { Button } from "@/components/ui/button";
+import { loadCountrySheetData } from "@/features/countries/logic/loadCountrySheetData";
 import { getCountryByIso3 } from "@/features/countries/logic/search";
 import { RARITY_STYLES } from "@/features/game/logic/constants";
 import {
@@ -10,16 +13,15 @@ import type {
   Cell,
   CellGuessDistribution,
   CellKey,
+  CellPosition,
   GameModeId,
   RarityTier,
 } from "@/features/game/types";
 import { useLocale } from "@/i18n/LocaleContext";
 import type { Locale } from "@/i18n/types";
 import { cn } from "@/lib/utils";
+import { ConstraintHeaderButton } from "./ConstraintHeaderButton";
 import { GridMatrix } from "./GridMatrix";
-
-const headerClass =
-  "flex items-center justify-center text-center text-[10px] font-medium text-on-surface-variant bg-surface-low rounded-xl p-2 leading-tight min-h-[52px]";
 
 function compareIsoByLocalizedName(
   locale: Locale,
@@ -38,6 +40,8 @@ type Props = {
   distribution: Record<string, CellGuessDistribution> | undefined;
   cells: Record<CellKey, Cell>;
   mode?: GameModeId;
+  onHeaderClick: (constraintId: ConstraintId) => void;
+  onCellClick: (cell: CellPosition, answerCount: number) => void;
 };
 
 export function SolutionGrid({
@@ -47,8 +51,18 @@ export function SolutionGrid({
   distribution,
   cells,
   mode = "daily",
+  onHeaderClick,
+  onCellClick,
 }: Props) {
   const { locale, t } = useLocale();
+
+  // Précharge le chunk des faits dès le montage de la grille solution, pour
+  // que les valeurs de contrainte soient déjà là au premier tap sur une case
+  // ou un en-tête.
+  useEffect(() => {
+    void loadCountrySheetData();
+  }, []);
+
   const rowLabels = rows.map((constraintId) => {
     const constraint = CONSTRAINT_BY_ID.get(constraintId);
     return constraint ? t(constraint.labelKey) : constraintId;
@@ -67,13 +81,19 @@ export function SolutionGrid({
       )}
       rowLabels={rowLabels}
       colLabels={colLabels}
-      renderColumnHeader={(label) => (
-        <div className={cn(headerClass, "p-1.5")}>{label}</div>
+      renderColumnHeader={(label, col) => (
+        <ConstraintHeaderButton
+          label={label}
+          onClick={() => onHeaderClick(cols[col])}
+        />
       )}
-      renderRowHeader={(label) => (
-        <div className={cn(headerClass, "p-1.5")}>{label}</div>
+      renderRowHeader={(label, row) => (
+        <ConstraintHeaderButton
+          label={label}
+          onClick={() => onHeaderClick(rows[row])}
+        />
       )}
-      renderCell={({ row, col }) => {
+      renderCell={({ row, col, rowLabel, colLabel }) => {
         const key = `${row},${col}` as CellKey;
         const codes = validAnswers[key] ?? [];
         const cellDist = distribution?.[key];
@@ -140,11 +160,24 @@ export function SolutionGrid({
         }
 
         return (
-          <div className="relative isolate aspect-square w-full min-h-0 rounded-xl bg-surface-lowest shadow-editorial">
+          <Button
+            type="button"
+            variant="ghost"
+            size="auto"
+            onClick={() => onCellClick({ row, col }, codes.length)}
+            aria-label={t("ui.solutionCellAriaLabel", {
+              row: row + 1,
+              col: col + 1,
+              rowConstraint: rowLabel,
+              colConstraint: colLabel,
+              count: codes.length,
+            })}
+            className="relative isolate block aspect-square h-auto w-full min-h-0 rounded-xl bg-surface-lowest p-0 shadow-editorial"
+          >
             <div className="flex h-full min-h-0 flex-col gap-0.5 overflow-y-auto p-1 sm:gap-1 sm:p-1.5">
               {ordered.map(({ iso, tier }) => countryChip(iso, tier))}
             </div>
-          </div>
+          </Button>
         );
       }}
     />

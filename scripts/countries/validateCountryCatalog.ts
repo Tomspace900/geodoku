@@ -29,6 +29,47 @@ const SOVEREIGNTY_KINDS = new Set([
 /** Le plus ancien événement retenu est l'Autriche (1156). Borne large. */
 const SOVEREIGNTY_MIN_YEAR = 1000;
 
+const SOVEREIGNTY_DATE = /^\d{4}-\d{2}-\d{2}$/;
+
+/** Altitude du mont Everest (CIA World Factbook) : aucun point culminant ne la dépasse. */
+export const MAX_HIGHEST_POINT_M = 8849;
+
+/** Bornes plausibles de l'espérance de vie à la naissance, en années (WDI 2021–2025 : ~53 à ~86). */
+export const LIFE_EXPECTANCY_MIN_YEARS = 30;
+export const LIFE_EXPECTANCY_MAX_YEARS = 95;
+
+/**
+ * Codes récents dont l'ICU embarquée peut ne pas encore avoir le nom dans
+ * toutes les langues : `Intl.DisplayNames` renvoie alors le code, et la fiche
+ * s'y replie à l'affichage. Une exception se justifie ici ; elle ne dispense
+ * jamais d'un nom **daté** (année entre parenthèses = monnaie disparue).
+ */
+const CURRENCY_CODES_WITHOUT_ICU_NAME: Readonly<Record<string, string>> = {
+  ZWG: "or du Zimbabwe (2024) : nom fr absent de l'ICU de Node 22.x, « Zimbabwean Gold » en anglais",
+};
+
+/**
+ * Un code de monnaie est valable si `Intl` le connaît **et** que son nom fr et
+ * en n'est ni le code brut ni un nom daté : « connu de `Intl` » ne suffit pas
+ * (SLL est connu, son nom est « leone sierra-léonais (1964—2022) »).
+ */
+export function validateCurrencyCode(code: string): string[] {
+  if (!/^[A-Z]{3}$/.test(code)) return [`code de monnaie invalide (${code})`];
+  if (!Intl.supportedValuesOf("currency").includes(code)) {
+    return [`monnaie ${code} inconnue de Intl.supportedValuesOf`];
+  }
+  return (["fr", "en"] as const).flatMap((locale) => {
+    const name = new Intl.DisplayNames(locale, { type: "currency" }).of(code);
+    if (name === undefined || /\d{4}/.test(name)) {
+      return [`monnaie ${code} : nom ${locale} daté (${name})`];
+    }
+    if (name === code && !(code in CURRENCY_CODES_WITHOUT_ICU_NAME)) {
+      return [`monnaie ${code} : aucun nom ${locale} dans Intl`];
+    }
+    return [];
+  });
+}
+
 /**
  * Invariants d'**identité** du catalogue (`content/countries/catalog.ts`).
  * Retourne toutes les incohérences afin qu'un run de CI soit actionnable.
@@ -58,6 +99,29 @@ export function validateCountryCatalog(
       errors.push(`${prefix}: alias invalides`);
   });
 
+  return errors;
+}
+
+/**
+ * Invariants d'une mesure datée WDI ou PNUD (`null` = pas de valeur, accepté) : valeur finie,
+ * strictement positive et dans `[min, max]`, année entière plausible.
+ */
+function validateDatedMeasure(
+  code: string,
+  field: string,
+  measure: { readonly value: number; readonly year: number } | null,
+  min: number,
+  max: number,
+): string[] {
+  if (measure === null) return [];
+  const errors: string[] = [];
+  const { value, year } = measure;
+  if (!Number.isFinite(value) || value <= 0 || value < min || value > max) {
+    errors.push(`${code}: ${field}.value hors bornes (${value})`);
+  }
+  if (!Number.isInteger(year) || year < 1960 || year > 2100) {
+    errors.push(`${code}: ${field}.year invalide (${year})`);
+  }
   return errors;
 }
 
@@ -201,9 +265,87 @@ export function validateCountryFacts(
         `${code}: sovereigntyYear et sovereigntyKind doivent être définis ensemble`,
       );
     }
+    if (!Array.isArray(facts.currencies) || facts.currencies.length === 0) {
+      errors.push(`${code}: currencies vide`);
+    } else {
+      facts.currencies.forEach((currency) => {
+        validateCurrencyCode(currency).forEach((error) => {
+          errors.push(`${code}: ${error}`);
+        });
+      });
+    }
+    (["fr", "en"] as const).forEach((locale) => {
+      const forms = facts.demonyms?.[locale];
+      if (!forms?.m.trim() || !forms.f.trim()) {
+        errors.push(`${code}: gentilé ${locale} manquant`);
+      }
+    });
+    if (facts.sovereigntyDate !== null) {
+      if (
+        !SOVEREIGNTY_DATE.test(facts.sovereigntyDate) ||
+        Number.isNaN(Date.parse(`${facts.sovereigntyDate}T00:00:00Z`))
+      ) {
+        errors.push(
+          `${code}: sovereigntyDate invalide (${facts.sovereigntyDate})`,
+        );
+      } else if (
+        Number(facts.sovereigntyDate.slice(0, 4)) !== facts.sovereigntyYear
+      ) {
+        errors.push(
+          `${code}: sovereigntyDate ${facts.sovereigntyDate} incohérente avec sovereigntyYear ${facts.sovereigntyYear}`,
+        );
+      }
+    }
+    const { elevationM, names } = facts.highestPoint;
+    if (
+      !Number.isFinite(elevationM) ||
+      elevationM <= 0 ||
+      elevationM > MAX_HIGHEST_POINT_M
+    ) {
+      errors.push(
+        `${code}: highestPoint.elevationM hors ]0, 8849] (${elevationM})`,
+      );
+    }
+    if (names !== null && (!names.fr?.trim() || !names.en?.trim())) {
+      errors.push(`${code}: highestPoint.names fr/en incomplet`);
+    }
+    errors.push(
+      ...validateDatedMeasure(
+        code,
+        "gdpPerCapitaUsd",
+        facts.gdpPerCapitaUsd,
+        0,
+        Number.POSITIVE_INFINITY,
+      ),
+    );
+    errors.push(
+      ...validateDatedMeasure(
+        code,
+        "lifeExpectancyYears",
+        facts.lifeExpectancyYears,
+        LIFE_EXPECTANCY_MIN_YEARS,
+        LIFE_EXPECTANCY_MAX_YEARS,
+      ),
+    );
+    errors.push(
+      ...validateDatedMeasure(
+        code,
+        "humanDevelopmentIndex",
+        facts.humanDevelopmentIndex,
+        0,
+        1,
+      ),
+    );
+    if (facts.sovereigntySheetHidden && facts.sovereigntyKind === null) {
+      errors.push(
+        `${code}: sovereigntySheetHidden sans événement de souveraineté`,
+      );
+    }
     facts.capitals.forEach((capital) => {
       if (
         !capital.name ||
+        !capital.names?.fr ||
+        !capital.names?.en ||
         !Number.isFinite(capital.latitude) ||
         capital.latitude < -90 ||
         capital.latitude > 90 ||

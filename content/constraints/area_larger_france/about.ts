@@ -1,0 +1,10 @@
+import { defineAbout } from "../defineAbout";
+
+export default defineAbout("area_larger_france", {
+  sources: ["world_countries"],
+  basis: "source",
+  clarification: {
+    fr: "France métropolitaine uniquement.",
+    en: "Metropolitan France only.",
+  },
+});

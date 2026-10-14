@@ -8,6 +8,7 @@ export default defineAnswerSet("flag_has_star", [
   "BDI",
   "BFA",
   "BIH",
+  "BOL",
   "BRA",
   "CAF",
   "CHL",

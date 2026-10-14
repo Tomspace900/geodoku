@@ -35,7 +35,6 @@ export default defineAnswerSet("ocean_atlantic", [
   "HTI",
   "IRL",
   "ISL",
-  "JAM",
   "KNA",
   "LBR",
   "LCA",

@@ -10,6 +10,11 @@ import { LegalSupportSection } from "./components/LegalSupportSection";
 // Étapes marquantes côté joueur, de la plus récente à la plus ancienne.
 const ENTRIES: { date: TKey; title: TKey; body: TKey }[] = [
   {
+    date: "changelog.entries.answerSourcesDate",
+    title: "changelog.entries.answerSourcesTitle",
+    body: "changelog.entries.answerSourcesBody",
+  },
+  {
     date: "changelog.entries.newConstraintsDate",
     title: "changelog.entries.newConstraintsTitle",
     body: "changelog.entries.newConstraintsBody",
@@ -92,10 +97,15 @@ const ENTRIES: { date: TKey; title: TKey; body: TKey }[] = [
 ];
 
 const ROADMAP: TKey[] = [
-  "changelog.roadmapReplay",
+  "changelog.roadmapCountrySheets",
   "changelog.roadmapConstraints",
   "changelog.roadmapLives",
 ];
+
+/** Le titre s'enchaîne au texte par un point, sauf s'il porte déjà sa ponctuation (« D'où viennent les données ? »). */
+function closeTitle(title: string): string {
+  return /[.?!…]$/.test(title) ? title : `${title}.`;
+}
 
 export function ChangelogPage() {
   const t = useT();
@@ -121,7 +131,7 @@ export function ChangelogPage() {
             </div>
             <p className="pl-4 font-sans text-sm leading-relaxed text-on-surface-variant">
               <span className="font-medium text-on-surface">
-                {t(entry.title)}.
+                {closeTitle(t(entry.title))}
               </span>{" "}
               {t(entry.body)}
             </p>

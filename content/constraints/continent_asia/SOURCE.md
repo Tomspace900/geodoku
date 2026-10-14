@@ -26,4 +26,8 @@ Un pays transcontinental (Russie, Turquie, Égypte…) est rattaché à un seul 
 
 ## Révision
 
+Revue 2026-10-09 (#122) — **Chypre** est absente de cette liste : elle est comptée en
+Europe par convention Geodoku (cf. `continent_europe`), alors que M49 la place en Asie
+occidentale.
+
 Procédure commune : [SOURCES.md](../SOURCES.md#procédure-de-révision).

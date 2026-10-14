@@ -4,7 +4,7 @@ import type { CountryCode } from "./countryCodes";
 import type { CountryFacts, CountryFactsSnapshot } from "./type";
 
 export const FACTS_SNAPSHOT: CountryFactsSnapshot = {
-  date: "2026-09-10",
+  date: "2026-10-14",
   note: "régénéré par pnpm build:countries",
 };
 
@@ -22,6 +22,7 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     flagSymbols: [],
     flagLayout: [],
     events: [],
+    eventEditions: {},
     memberships: [],
     capitals: [
       {
@@ -29,6 +30,10 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
         latitude: 34.52,
         longitude: 69.18,
         roles: ["primary"],
+        names: {
+          fr: "Kaboul",
+          en: "Kabul",
+        },
       },
     ],
     drivingSide: "right",
@@ -38,13 +43,55 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     utcOffsetCount: 1,
     lastVolcanicEruptionYear: null,
     mountainAreaShare: 0.612582984529997,
-    forestCoverShare: 0.0185278199408184,
+    forestCoverShare: 0.0185431519555985,
     urbanCentresOver1M: 2,
     productionRanks: {},
     coalElectricityShare: 0.030299999999999997,
     formerSovereigns: ["united_kingdom"],
+    dominations: [
+      {
+        power: "united_kingdom",
+        nature: "protected_state",
+        from: 1879,
+        to: 1919,
+        intermittent: false,
+        part: null,
+      },
+    ],
     sovereigntyYear: 1919,
     sovereigntyKind: "independence",
+    sovereigntyDate: "1919-08-19",
+    sovereigntySheetHidden: false,
+    highestPoint: {
+      elevationM: 7492,
+      names: {
+        fr: "Nowshak",
+        en: "Noshaq",
+      },
+    },
+    gdpPerCapitaUsd: {
+      value: 416.871146273728,
+      year: 2024,
+    },
+    lifeExpectancyYears: {
+      value: 66.289,
+      year: 2024,
+    },
+    humanDevelopmentIndex: {
+      value: 0.496,
+      year: 2023,
+    },
+    currencies: ["AFN"],
+    demonyms: {
+      fr: {
+        m: "Afghan",
+        f: "Afghane",
+      },
+      en: {
+        m: "Afghan",
+        f: "Afghan",
+      },
+    },
   },
   AGO: {
     continent: "africa",
@@ -59,6 +106,7 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     flagSymbols: ["star"],
     flagLayout: ["horizontal_stripes"],
     events: [],
+    eventEditions: {},
     memberships: ["african_union"],
     capitals: [
       {
@@ -66,6 +114,10 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
         latitude: -8.83,
         longitude: 13.22,
         roles: ["primary"],
+        names: {
+          fr: "Luanda",
+          en: "Luanda",
+        },
       },
     ],
     drivingSide: "right",
@@ -75,13 +127,46 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     utcOffsetCount: 1,
     lastVolcanicEruptionYear: null,
     mountainAreaShare: 0.12831074035453596,
-    forestCoverShare: 0.520912696719339,
+    forestCoverShare: 0.515620357744445,
     urbanCentresOver1M: 4,
     productionRanks: {},
     coalElectricityShare: 0,
     formerSovereigns: ["portugal"],
+    dominations: [],
     sovereigntyYear: 1975,
     sovereigntyKind: "independence",
+    sovereigntyDate: "1975-11-11",
+    sovereigntySheetHidden: false,
+    highestPoint: {
+      elevationM: 2620,
+      names: {
+        fr: "Morro de Môco",
+        en: "Mount Moco",
+      },
+    },
+    gdpPerCapitaUsd: {
+      value: 3129.47662331063,
+      year: 2025,
+    },
+    lifeExpectancyYears: {
+      value: 64.805,
+      year: 2024,
+    },
+    humanDevelopmentIndex: {
+      value: 0.616,
+      year: 2023,
+    },
+    currencies: ["AOA"],
+    demonyms: {
+      fr: {
+        m: "Angolais",
+        f: "Angolaise",
+      },
+      en: {
+        m: "Angolan",
+        f: "Angolan",
+      },
+    },
   },
   ALB: {
     continent: "europe",
@@ -96,6 +181,7 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     flagSymbols: ["animal"],
     flagLayout: [],
     events: [],
+    eventEditions: {},
     memberships: ["nato"],
     capitals: [
       {
@@ -103,6 +189,10 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
         latitude: 41.32,
         longitude: 19.82,
         roles: ["primary"],
+        names: {
+          fr: "Tirana",
+          en: "Tirana",
+        },
       },
     ],
     drivingSide: "right",
@@ -112,20 +202,53 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     utcOffsetCount: 1,
     lastVolcanicEruptionYear: null,
     mountainAreaShare: 0.5821970224015584,
-    forestCoverShare: 0.287919708029197,
+    forestCoverShare: 0.343430656934307,
     urbanCentresOver1M: 0,
     productionRanks: {},
     coalElectricityShare: null,
     formerSovereigns: [],
+    dominations: [],
     sovereigntyYear: 1912,
     sovereigntyKind: "independence",
+    sovereigntyDate: "1912-11-28",
+    sovereigntySheetHidden: false,
+    highestPoint: {
+      elevationM: 2764,
+      names: {
+        fr: "mont Korab",
+        en: "Korab",
+      },
+    },
+    gdpPerCapitaUsd: {
+      value: 12998.147869552,
+      year: 2025,
+    },
+    lifeExpectancyYears: {
+      value: 79.776,
+      year: 2024,
+    },
+    humanDevelopmentIndex: {
+      value: 0.81,
+      year: 2023,
+    },
+    currencies: ["ALL"],
+    demonyms: {
+      fr: {
+        m: "Albanais",
+        f: "Albanaise",
+      },
+      en: {
+        m: "Albanian",
+        f: "Albanian",
+      },
+    },
   },
   AND: {
     continent: "europe",
     waterAccess: "landlocked",
     borders: ["FRA", "ESP"],
     areaKm2: 468,
-    population: 90021,
+    population: 90105,
     officialLanguages: ["ca"],
     latitude: 42.5,
     subregion: "Southern Europe",
@@ -133,6 +256,7 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     flagSymbols: ["animal"],
     flagLayout: ["vertical_stripes"],
     events: [],
+    eventEditions: {},
     memberships: [],
     capitals: [
       {
@@ -140,6 +264,10 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
         latitude: 42.5,
         longitude: 1.52,
         roles: ["primary"],
+        names: {
+          fr: "Andorre-la-Vieille",
+          en: "Andorra la Vella",
+        },
       },
     ],
     drivingSide: "right",
@@ -149,13 +277,46 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     utcOffsetCount: 1,
     lastVolcanicEruptionYear: null,
     mountainAreaShare: 0.9914529914529915,
-    forestCoverShare: 0.34042553191489394,
+    forestCoverShare: 0.388888888888889,
     urbanCentresOver1M: 0,
     productionRanks: {},
     coalElectricityShare: null,
     formerSovereigns: [],
+    dominations: [],
     sovereigntyYear: 1278,
     sovereigntyKind: "foundation",
+    sovereigntyDate: null,
+    sovereigntySheetHidden: false,
+    highestPoint: {
+      elevationM: 2946,
+      names: {
+        fr: "pic de Coma Pedrosa",
+        en: "Coma Pedrosa",
+      },
+    },
+    gdpPerCapitaUsd: {
+      value: 54291.5026031052,
+      year: 2025,
+    },
+    lifeExpectancyYears: {
+      value: 84.188,
+      year: 2024,
+    },
+    humanDevelopmentIndex: {
+      value: 0.913,
+      year: 2023,
+    },
+    currencies: ["EUR"],
+    demonyms: {
+      fr: {
+        m: "Andorran",
+        f: "Andorrane",
+      },
+      en: {
+        m: "Andorran",
+        f: "Andorran",
+      },
+    },
   },
   ARE: {
     continent: "asia",
@@ -170,6 +331,7 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     flagSymbols: [],
     flagLayout: ["horizontal_stripes"],
     events: [],
+    eventEditions: {},
     memberships: ["arab_league", "brics"],
     capitals: [
       {
@@ -177,6 +339,10 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
         latitude: 24.47,
         longitude: 54.37,
         roles: ["primary"],
+        names: {
+          fr: "Abou Dabi",
+          en: "Abu Dhabi",
+        },
       },
     ],
     drivingSide: "right",
@@ -186,7 +352,7 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     utcOffsetCount: 1,
     lastVolcanicEruptionYear: null,
     mountainAreaShare: 0.030311004784688997,
-    forestCoverShare: 0.0446775556181357,
+    forestCoverShare: 0.0456082793579273,
     urbanCentresOver1M: 1,
     productionRanks: {
       crude_oil: 8,
@@ -194,8 +360,50 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     },
     coalElectricityShare: 0,
     formerSovereigns: ["united_kingdom"],
+    dominations: [
+      {
+        power: "united_kingdom",
+        nature: "protectorate",
+        from: 1892,
+        to: 1971,
+        intermittent: false,
+        part: null,
+      },
+    ],
     sovereigntyYear: 1971,
     sovereigntyKind: "independence",
+    sovereigntyDate: "1971-12-02",
+    sovereigntySheetHidden: false,
+    highestPoint: {
+      elevationM: 1905,
+      names: {
+        fr: "Jabal Bil Ays",
+        en: "Jebel Jais",
+      },
+    },
+    gdpPerCapitaUsd: {
+      value: 50273.5126243239,
+      year: 2024,
+    },
+    lifeExpectancyYears: {
+      value: 83.069,
+      year: 2024,
+    },
+    humanDevelopmentIndex: {
+      value: 0.94,
+      year: 2023,
+    },
+    currencies: ["AED"],
+    demonyms: {
+      fr: {
+        m: "Émirien",
+        f: "Émirienne",
+      },
+      en: {
+        m: "Emirati",
+        f: "Emirati",
+      },
+    },
   },
   ARG: {
     continent: "south_america",
@@ -203,13 +411,16 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     borders: ["BOL", "BRA", "CHL", "PRY", "URY"],
     areaKm2: 2780400,
     population: 46466688,
-    officialLanguages: ["gn", "es"],
+    officialLanguages: ["es"],
     latitude: -34,
     subregion: "South America",
     flagColors: ["blue", "yellow", "white"],
     flagSymbols: ["sun"],
     flagLayout: ["horizontal_stripes"],
     events: ["fifa_wc_host"],
+    eventEditions: {
+      fifa_wc_host: [1978],
+    },
     memberships: ["g20"],
     capitals: [
       {
@@ -217,6 +428,10 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
         latitude: -34.58,
         longitude: -58.67,
         roles: ["primary"],
+        names: {
+          fr: "Buenos Aires",
+          en: "Buenos Aires",
+        },
       },
     ],
     drivingSide: "right",
@@ -226,20 +441,53 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     utcOffsetCount: 1,
     lastVolcanicEruptionYear: 2024,
     mountainAreaShare: null,
-    forestCoverShare: 0.103212951412107,
+    forestCoverShare: 0.17158333607387,
     urbanCentresOver1M: 4,
     productionRanks: {},
     coalElectricityShare: 0.0086,
     formerSovereigns: ["spain"],
+    dominations: [],
     sovereigntyYear: 1816,
     sovereigntyKind: "independence",
+    sovereigntyDate: "1816-07-09",
+    sovereigntySheetHidden: false,
+    highestPoint: {
+      elevationM: 6962,
+      names: {
+        fr: "Aconcagua",
+        en: "Aconcagua",
+      },
+    },
+    gdpPerCapitaUsd: {
+      value: 14898.0885943842,
+      year: 2025,
+    },
+    lifeExpectancyYears: {
+      value: 77.543,
+      year: 2024,
+    },
+    humanDevelopmentIndex: {
+      value: 0.865,
+      year: 2023,
+    },
+    currencies: ["ARS"],
+    demonyms: {
+      fr: {
+        m: "Argentin",
+        f: "Argentine",
+      },
+      en: {
+        m: "Argentine",
+        f: "Argentine",
+      },
+    },
   },
   ARM: {
     continent: "asia",
     waterAccess: "landlocked",
     borders: ["AZE", "GEO", "IRN", "TUR"],
     areaKm2: 29743,
-    population: 3096900,
+    population: 3103900,
     officialLanguages: ["hy"],
     latitude: 40,
     subregion: "Western Asia",
@@ -247,6 +495,7 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     flagSymbols: [],
     flagLayout: ["horizontal_stripes"],
     events: [],
+    eventEditions: {},
     memberships: [],
     capitals: [
       {
@@ -254,6 +503,10 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
         latitude: 40.17,
         longitude: 44.5,
         roles: ["primary"],
+        names: {
+          fr: "Erevan",
+          en: "Yerevan",
+        },
       },
     ],
     drivingSide: "right",
@@ -263,13 +516,46 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     utcOffsetCount: 1,
     lastVolcanicEruptionYear: -778,
     mountainAreaShare: 0.8254379181656187,
-    forestCoverShare: 0.116183158247114,
+    forestCoverShare: 0.118466891541109,
     urbanCentresOver1M: 1,
     productionRanks: {},
     coalElectricityShare: 0,
     formerSovereigns: ["soviet_union"],
+    dominations: [],
     sovereigntyYear: 1991,
     sovereigntyKind: "independence",
+    sovereigntyDate: "1991-09-21",
+    sovereigntySheetHidden: false,
+    highestPoint: {
+      elevationM: 4090,
+      names: {
+        fr: "Aragats",
+        en: "Mount Aragats",
+      },
+    },
+    gdpPerCapitaUsd: {
+      value: 9474.01849300368,
+      year: 2025,
+    },
+    lifeExpectancyYears: {
+      value: 78.319512195122,
+      year: 2024,
+    },
+    humanDevelopmentIndex: {
+      value: 0.811,
+      year: 2023,
+    },
+    currencies: ["AMD"],
+    demonyms: {
+      fr: {
+        m: "Arménien",
+        f: "Arménienne",
+      },
+      en: {
+        m: "Armenian",
+        f: "Armenian",
+      },
+    },
   },
   ATG: {
     continent: "north_america",
@@ -284,6 +570,7 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     flagSymbols: ["sun", "triangle"],
     flagLayout: [],
     events: [],
+    eventEditions: {},
     memberships: ["commonwealth"],
     capitals: [
       {
@@ -291,6 +578,10 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
         latitude: 17.12,
         longitude: -61.85,
         roles: ["primary"],
+        names: {
+          fr: "Saint John's",
+          en: "St. John's",
+        },
       },
     ],
     drivingSide: "left",
@@ -300,27 +591,72 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     utcOffsetCount: 1,
     lastVolcanicEruptionYear: null,
     mountainAreaShare: 0,
-    forestCoverShare: 0.180134090909091,
+    forestCoverShare: 0.17987817341891202,
     urbanCentresOver1M: 0,
     productionRanks: {},
     coalElectricityShare: 0,
     formerSovereigns: ["united_kingdom"],
+    dominations: [
+      {
+        power: "united_kingdom",
+        nature: "colony",
+        from: 1632,
+        to: 1981,
+        intermittent: false,
+        part: null,
+      },
+    ],
     sovereigntyYear: 1981,
     sovereigntyKind: "independence",
+    sovereigntyDate: "1981-11-01",
+    sovereigntySheetHidden: false,
+    highestPoint: {
+      elevationM: 402,
+      names: {
+        fr: "mont Obama",
+        en: "Mount Obama",
+      },
+    },
+    gdpPerCapitaUsd: {
+      value: 24819.2454680158,
+      year: 2025,
+    },
+    lifeExpectancyYears: {
+      value: 77.766,
+      year: 2024,
+    },
+    humanDevelopmentIndex: {
+      value: 0.851,
+      year: 2023,
+    },
+    currencies: ["XCD"],
+    demonyms: {
+      fr: {
+        m: "Antiguais et Barbudien",
+        f: "Antiguaise et Barbudienne",
+      },
+      en: {
+        m: "Antiguan or Barbudan",
+        f: "Antiguan or Barbudan",
+      },
+    },
   },
   AUS: {
     continent: "oceania",
     waterAccess: "island",
     borders: [],
     areaKm2: 7692024,
-    population: 27801023,
+    population: 27921150,
     officialLanguages: ["en"],
     latitude: -27,
     subregion: "Australia and New Zealand",
-    flagColors: ["blue", "white"],
+    flagColors: ["red", "blue", "white"],
     flagSymbols: ["star", "cross"],
     flagLayout: [],
     events: ["summer_olympics_host"],
+    eventEditions: {
+      summer_olympics_host: [1956, 2000],
+    },
     memberships: ["commonwealth", "g20", "oecd"],
     capitals: [
       {
@@ -328,6 +664,10 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
         latitude: -35.27,
         longitude: 149.13,
         roles: ["primary"],
+        names: {
+          fr: "Canberra",
+          en: "Canberra",
+        },
       },
     ],
     drivingSide: "left",
@@ -342,7 +682,7 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     utcOffsetCount: 6,
     lastVolcanicEruptionYear: -2900,
     mountainAreaShare: 0.030629779626272616,
-    forestCoverShare: 0.174213145571644,
+    forestCoverShare: 0.173495921747473,
     urbanCentresOver1M: 4,
     productionRanks: {
       wheat: 6,
@@ -350,8 +690,50 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     },
     coalElectricityShare: 0.4521,
     formerSovereigns: ["united_kingdom"],
+    dominations: [
+      {
+        power: "united_kingdom",
+        nature: "colony",
+        from: 1788,
+        to: 1901,
+        intermittent: false,
+        part: null,
+      },
+    ],
     sovereigntyYear: 1901,
     sovereigntyKind: "independence",
+    sovereigntyDate: "1901-01-01",
+    sovereigntySheetHidden: false,
+    highestPoint: {
+      elevationM: 2228,
+      names: {
+        fr: "mont Kosciuszko",
+        en: "Mount Kosciuszko",
+      },
+    },
+    gdpPerCapitaUsd: {
+      value: 65129.7227990563,
+      year: 2025,
+    },
+    lifeExpectancyYears: {
+      value: 83.0512195121951,
+      year: 2024,
+    },
+    humanDevelopmentIndex: {
+      value: 0.958,
+      year: 2023,
+    },
+    currencies: ["AUD"],
+    demonyms: {
+      fr: {
+        m: "Australien",
+        f: "Australienne",
+      },
+      en: {
+        m: "Australian",
+        f: "Australian",
+      },
+    },
   },
   AUT: {
     continent: "europe",
@@ -366,6 +748,9 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     flagSymbols: [],
     flagLayout: ["horizontal_stripes"],
     events: ["winter_olympics_host"],
+    eventEditions: {
+      winter_olympics_host: [1964, 1976],
+    },
     memberships: ["eu", "eurozone", "oecd", "schengen"],
     capitals: [
       {
@@ -373,6 +758,10 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
         latitude: 48.2,
         longitude: 16.37,
         roles: ["primary"],
+        names: {
+          fr: "Vienne",
+          en: "Vienna",
+        },
       },
     ],
     drivingSide: "right",
@@ -382,13 +771,46 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     utcOffsetCount: 1,
     lastVolcanicEruptionYear: null,
     mountainAreaShare: 0.7086478043662291,
-    forestCoverShare: 0.472402653902084,
+    forestCoverShare: 0.47240305380513803,
     urbanCentresOver1M: 1,
     productionRanks: {},
     coalElectricityShare: 0,
     formerSovereigns: [],
+    dominations: [],
     sovereigntyYear: 1156,
     sovereigntyKind: "independence",
+    sovereigntyDate: "1156-09-17",
+    sovereigntySheetHidden: true,
+    highestPoint: {
+      elevationM: 3798,
+      names: {
+        fr: "Grossglockner",
+        en: "Grossglockner",
+      },
+    },
+    gdpPerCapitaUsd: {
+      value: 62930.0351324599,
+      year: 2025,
+    },
+    lifeExpectancyYears: {
+      value: 81.9951219512195,
+      year: 2024,
+    },
+    humanDevelopmentIndex: {
+      value: 0.93,
+      year: 2023,
+    },
+    currencies: ["EUR"],
+    demonyms: {
+      fr: {
+        m: "Autrichien",
+        f: "Autrichienne",
+      },
+      en: {
+        m: "Austrian",
+        f: "Austrian",
+      },
+    },
   },
   AZE: {
     continent: "asia",
@@ -396,13 +818,14 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     borders: ["ARM", "GEO", "IRN", "RUS", "TUR"],
     areaKm2: 86600,
     population: 10273450,
-    officialLanguages: ["az", "ru"],
+    officialLanguages: ["az"],
     latitude: 40.5,
     subregion: "Western Asia",
     flagColors: ["red", "blue", "green", "white"],
     flagSymbols: ["star", "crescent"],
     flagLayout: ["horizontal_stripes"],
     events: [],
+    eventEditions: {},
     memberships: [],
     capitals: [
       {
@@ -410,6 +833,10 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
         latitude: 40.38,
         longitude: 49.87,
         roles: ["primary"],
+        names: {
+          fr: "Bakou",
+          en: "Baku",
+        },
       },
     ],
     drivingSide: "right",
@@ -419,13 +846,46 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     utcOffsetCount: 1,
     lastVolcanicEruptionYear: -778,
     mountainAreaShare: 0.4811893764434181,
-    forestCoverShare: 0.14111954022988502,
+    forestCoverShare: 0.144303690260133,
     urbanCentresOver1M: 1,
     productionRanks: {},
     coalElectricityShare: 0,
     formerSovereigns: ["soviet_union"],
+    dominations: [],
     sovereigntyYear: 1991,
     sovereigntyKind: "independence",
+    sovereigntyDate: "1991-08-30",
+    sovereigntySheetHidden: false,
+    highestPoint: {
+      elevationM: 4466,
+      names: {
+        fr: "Bazardüzü",
+        en: "Mount Bazardüzü",
+      },
+    },
+    gdpPerCapitaUsd: {
+      value: 7410.72281660142,
+      year: 2025,
+    },
+    lifeExpectancyYears: {
+      value: 74.576,
+      year: 2024,
+    },
+    humanDevelopmentIndex: {
+      value: 0.789,
+      year: 2023,
+    },
+    currencies: ["AZN"],
+    demonyms: {
+      fr: {
+        m: "Azerbaïdjanais",
+        f: "Azerbaïdjanaise",
+      },
+      en: {
+        m: "Azerbaijani",
+        f: "Azerbaijani",
+      },
+    },
   },
   BDI: {
     continent: "africa",
@@ -440,6 +900,7 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     flagSymbols: ["star", "cross", "circle", "triangle"],
     flagLayout: [],
     events: [],
+    eventEditions: {},
     memberships: ["african_union"],
     capitals: [
       {
@@ -447,6 +908,10 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
         latitude: -3.43,
         longitude: 29.93,
         roles: ["primary"],
+        names: {
+          fr: "Gitega",
+          en: "Gitega",
+        },
       },
     ],
     drivingSide: "right",
@@ -461,8 +926,38 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     productionRanks: {},
     coalElectricityShare: 0,
     formerSovereigns: ["belgium"],
+    dominations: [],
     sovereigntyYear: 1962,
     sovereigntyKind: "independence",
+    sovereigntyDate: "1962-07-01",
+    sovereigntySheetHidden: false,
+    highestPoint: {
+      elevationM: 2685,
+      names: null,
+    },
+    gdpPerCapitaUsd: {
+      value: 233.823013385395,
+      year: 2025,
+    },
+    lifeExpectancyYears: {
+      value: 63.818,
+      year: 2024,
+    },
+    humanDevelopmentIndex: {
+      value: 0.439,
+      year: 2023,
+    },
+    currencies: ["BIF"],
+    demonyms: {
+      fr: {
+        m: "Burundais",
+        f: "Burundaise",
+      },
+      en: {
+        m: "Burundian",
+        f: "Burundian",
+      },
+    },
   },
   BEL: {
     continent: "europe",
@@ -477,6 +972,9 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     flagSymbols: [],
     flagLayout: ["vertical_stripes"],
     events: ["summer_olympics_host"],
+    eventEditions: {
+      summer_olympics_host: [1920],
+    },
     memberships: ["eu", "eurozone", "nato", "oecd", "schengen"],
     capitals: [
       {
@@ -484,6 +982,10 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
         latitude: 50.83,
         longitude: 4.33,
         roles: ["primary"],
+        names: {
+          fr: "Bruxelles",
+          en: "Brussels",
+        },
       },
     ],
     drivingSide: "right",
@@ -493,13 +995,46 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     utcOffsetCount: 1,
     lastVolcanicEruptionYear: null,
     mountainAreaShare: 0.0266312893081761,
-    forestCoverShare: 0.22604446776415,
+    forestCoverShare: 0.21988587918934901,
     urbanCentresOver1M: 1,
     productionRanks: {},
     coalElectricityShare: 0,
     formerSovereigns: ["netherlands"],
+    dominations: [],
     sovereigntyYear: 1830,
     sovereigntyKind: "independence",
+    sovereigntyDate: "1830-10-04",
+    sovereigntySheetHidden: false,
+    highestPoint: {
+      elevationM: 694,
+      names: {
+        fr: "signal de Botrange",
+        en: "Signal de Botrange",
+      },
+    },
+    gdpPerCapitaUsd: {
+      value: 60750.2735864647,
+      year: 2025,
+    },
+    lifeExpectancyYears: {
+      value: 82.3,
+      year: 2024,
+    },
+    humanDevelopmentIndex: {
+      value: 0.951,
+      year: 2023,
+    },
+    currencies: ["EUR"],
+    demonyms: {
+      fr: {
+        m: "Belge",
+        f: "Belge",
+      },
+      en: {
+        m: "Belgian",
+        f: "Belgian",
+      },
+    },
   },
   BEN: {
     continent: "africa",
@@ -514,6 +1049,7 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     flagSymbols: [],
     flagLayout: [],
     events: [],
+    eventEditions: {},
     memberships: ["african_union"],
     capitals: [
       {
@@ -521,6 +1057,10 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
         latitude: 6.48,
         longitude: 2.62,
         roles: ["primary"],
+        names: {
+          fr: "Porto-Novo",
+          en: "Porto-Novo",
+        },
       },
     ],
     drivingSide: "right",
@@ -530,13 +1070,52 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     utcOffsetCount: 1,
     lastVolcanicEruptionYear: null,
     mountainAreaShare: 0.00570048480758644,
-    forestCoverShare: 0.264734835047889,
+    forestCoverShare: 0.284500709471444,
     urbanCentresOver1M: 1,
     productionRanks: {},
     coalElectricityShare: 0,
     formerSovereigns: ["france"],
+    dominations: [
+      {
+        power: "france",
+        nature: "colony",
+        from: 1863,
+        to: 1960,
+        intermittent: true,
+        part: null,
+      },
+    ],
     sovereigntyYear: 1960,
     sovereigntyKind: "independence",
+    sovereigntyDate: "1960-08-01",
+    sovereigntySheetHidden: false,
+    highestPoint: {
+      elevationM: 675,
+      names: null,
+    },
+    gdpPerCapitaUsd: {
+      value: 1658.27312662991,
+      year: 2025,
+    },
+    lifeExpectancyYears: {
+      value: 60.961,
+      year: 2024,
+    },
+    humanDevelopmentIndex: {
+      value: 0.515,
+      year: 2023,
+    },
+    currencies: ["XOF"],
+    demonyms: {
+      fr: {
+        m: "Béninois",
+        f: "Béninoise",
+      },
+      en: {
+        m: "Beninese",
+        f: "Beninese",
+      },
+    },
   },
   BFA: {
     continent: "africa",
@@ -551,6 +1130,7 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     flagSymbols: ["star"],
     flagLayout: ["horizontal_stripes"],
     events: [],
+    eventEditions: {},
     memberships: ["african_union"],
     capitals: [
       {
@@ -558,6 +1138,10 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
         latitude: 12.37,
         longitude: -1.52,
         roles: ["primary"],
+        names: {
+          fr: "Ouagadougou",
+          en: "Ouagadougou",
+        },
       },
     ],
     drivingSide: "right",
@@ -567,13 +1151,55 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     utcOffsetCount: 1,
     lastVolcanicEruptionYear: null,
     mountainAreaShare: 0.000835265801360604,
-    forestCoverShare: 0.22172514619883,
+    forestCoverShare: 0.127072002923977,
     urbanCentresOver1M: 2,
     productionRanks: {},
     coalElectricityShare: 0,
     formerSovereigns: ["france"],
+    dominations: [
+      {
+        power: "france",
+        nature: "colony",
+        from: 1895,
+        to: 1960,
+        intermittent: false,
+        part: null,
+      },
+    ],
     sovereigntyYear: 1960,
     sovereigntyKind: "independence",
+    sovereigntyDate: "1960-08-05",
+    sovereigntySheetHidden: false,
+    highestPoint: {
+      elevationM: 749,
+      names: {
+        fr: "Tenakourou",
+        en: "Mount Tenakourou",
+      },
+    },
+    gdpPerCapitaUsd: {
+      value: 1147.57131635601,
+      year: 2025,
+    },
+    lifeExpectancyYears: {
+      value: 61.292,
+      year: 2024,
+    },
+    humanDevelopmentIndex: {
+      value: 0.459,
+      year: 2023,
+    },
+    currencies: ["XOF"],
+    demonyms: {
+      fr: {
+        m: "Burkinabé",
+        f: "Burkinabée",
+      },
+      en: {
+        m: "Burkinabe",
+        f: "Burkinabe",
+      },
+    },
   },
   BGD: {
     continent: "asia",
@@ -588,6 +1214,7 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     flagSymbols: ["circle"],
     flagLayout: [],
     events: [],
+    eventEditions: {},
     memberships: ["commonwealth"],
     capitals: [
       {
@@ -595,6 +1222,10 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
         latitude: 23.72,
         longitude: 90.4,
         roles: ["primary"],
+        names: {
+          fr: "Dacca",
+          en: "Dhaka",
+        },
       },
     ],
     drivingSide: "left",
@@ -604,15 +1235,57 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     utcOffsetCount: 1,
     lastVolcanicEruptionYear: null,
     mountainAreaShare: 0.0094802466626008,
-    forestCoverShare: 0.144899215263887,
+    forestCoverShare: 0.144073135130983,
     urbanCentresOver1M: 7,
     productionRanks: {
       rice: 3,
     },
     coalElectricityShare: 0.19940000000000002,
     formerSovereigns: [],
+    dominations: [
+      {
+        power: "united_kingdom",
+        nature: "colony",
+        from: 1757,
+        to: 1947,
+        intermittent: false,
+        part: null,
+      },
+    ],
     sovereigntyYear: 1971,
     sovereigntyKind: "independence",
+    sovereigntyDate: "1971-12-16",
+    sovereigntySheetHidden: false,
+    highestPoint: {
+      elevationM: 1060,
+      names: {
+        fr: "Mowdok Mual",
+        en: "Mowdok tiang",
+      },
+    },
+    gdpPerCapitaUsd: {
+      value: 2597.34352335275,
+      year: 2025,
+    },
+    lifeExpectancyYears: {
+      value: 74.93,
+      year: 2024,
+    },
+    humanDevelopmentIndex: {
+      value: 0.685,
+      year: 2023,
+    },
+    currencies: ["BDT"],
+    demonyms: {
+      fr: {
+        m: "Bangladais",
+        f: "Bangladaise",
+      },
+      en: {
+        m: "Bangladeshi",
+        f: "Bangladeshi",
+      },
+    },
   },
   BGR: {
     continent: "europe",
@@ -627,6 +1300,7 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     flagSymbols: [],
     flagLayout: ["horizontal_stripes"],
     events: [],
+    eventEditions: {},
     memberships: ["eu", "eurozone", "nato", "schengen"],
     capitals: [
       {
@@ -634,6 +1308,10 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
         latitude: 42.68,
         longitude: 23.32,
         roles: ["primary"],
+        names: {
+          fr: "Sofia",
+          en: "Sofia",
+        },
       },
     ],
     drivingSide: "right",
@@ -643,13 +1321,46 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     utcOffsetCount: 1,
     lastVolcanicEruptionYear: null,
     mountainAreaShare: 0.39174234976866673,
-    forestCoverShare: 0.362196020633751,
+    forestCoverShare: 0.362361827560796,
     urbanCentresOver1M: 1,
     productionRanks: {},
     coalElectricityShare: 0.22870000000000001,
     formerSovereigns: [],
+    dominations: [],
     sovereigntyYear: 1878,
     sovereigntyKind: "independence",
+    sovereigntyDate: "1878-03-03",
+    sovereigntySheetHidden: false,
+    highestPoint: {
+      elevationM: 2925,
+      names: {
+        fr: "Moussala",
+        en: "Musala",
+      },
+    },
+    gdpPerCapitaUsd: {
+      value: 20328.1667065538,
+      year: 2025,
+    },
+    lifeExpectancyYears: {
+      value: 75.7609756097561,
+      year: 2024,
+    },
+    humanDevelopmentIndex: {
+      value: 0.845,
+      year: 2023,
+    },
+    currencies: ["BGN"],
+    demonyms: {
+      fr: {
+        m: "Bulgare",
+        f: "Bulgare",
+      },
+      en: {
+        m: "Bulgarian",
+        f: "Bulgarian",
+      },
+    },
   },
   BHR: {
     continent: "asia",
@@ -664,6 +1375,7 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     flagSymbols: [],
     flagLayout: ["vertical_stripes"],
     events: [],
+    eventEditions: {},
     memberships: ["arab_league"],
     capitals: [
       {
@@ -671,6 +1383,10 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
         latitude: 26.23,
         longitude: 50.57,
         roles: ["primary"],
+        names: {
+          fr: "Manama",
+          en: "Manama",
+        },
       },
     ],
     drivingSide: "right",
@@ -680,13 +1396,55 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     utcOffsetCount: 1,
     lastVolcanicEruptionYear: null,
     mountainAreaShare: 0,
-    forestCoverShare: 0.0095,
+    forestCoverShare: 0.042625,
     urbanCentresOver1M: 1,
     productionRanks: {},
     coalElectricityShare: 0,
     formerSovereigns: ["united_kingdom"],
+    dominations: [
+      {
+        power: "united_kingdom",
+        nature: "protectorate",
+        from: 1861,
+        to: 1971,
+        intermittent: false,
+        part: null,
+      },
+    ],
     sovereigntyYear: 1971,
     sovereigntyKind: "independence",
+    sovereigntyDate: "1971-08-15",
+    sovereigntySheetHidden: false,
+    highestPoint: {
+      elevationM: 135,
+      names: {
+        fr: "Djébel ad Dukhan",
+        en: "Mountain of Smoke",
+      },
+    },
+    gdpPerCapitaUsd: {
+      value: 30596.5794898885,
+      year: 2025,
+    },
+    lifeExpectancyYears: {
+      value: 81.423,
+      year: 2024,
+    },
+    humanDevelopmentIndex: {
+      value: 0.899,
+      year: 2023,
+    },
+    currencies: ["BHD"],
+    demonyms: {
+      fr: {
+        m: "Bahreïnien",
+        f: "Bahreïnienne",
+      },
+      en: {
+        m: "Bahraini",
+        f: "Bahraini",
+      },
+    },
   },
   BHS: {
     continent: "north_america",
@@ -701,6 +1459,7 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     flagSymbols: ["triangle"],
     flagLayout: ["horizontal_stripes"],
     events: [],
+    eventEditions: {},
     memberships: ["commonwealth"],
     capitals: [
       {
@@ -708,6 +1467,10 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
         latitude: 25.08,
         longitude: -77.35,
         roles: ["primary"],
+        names: {
+          fr: "Nassau",
+          en: "Nassau",
+        },
       },
     ],
     drivingSide: "left",
@@ -722,8 +1485,50 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     productionRanks: {},
     coalElectricityShare: 0,
     formerSovereigns: ["united_kingdom"],
+    dominations: [
+      {
+        power: "united_kingdom",
+        nature: "colony",
+        from: 1647,
+        to: 1973,
+        intermittent: false,
+        part: null,
+      },
+    ],
     sovereigntyYear: 1973,
     sovereigntyKind: "independence",
+    sovereigntyDate: "1973-07-10",
+    sovereigntySheetHidden: false,
+    highestPoint: {
+      elevationM: 64,
+      names: {
+        fr: "mont Alvernia",
+        en: "Mount Alvernia",
+      },
+    },
+    gdpPerCapitaUsd: {
+      value: 39455.4466548546,
+      year: 2024,
+    },
+    lifeExpectancyYears: {
+      value: 74.71,
+      year: 2024,
+    },
+    humanDevelopmentIndex: {
+      value: 0.82,
+      year: 2023,
+    },
+    currencies: ["BSD", "USD"],
+    demonyms: {
+      fr: {
+        m: "Bahamien",
+        f: "Bahamienne",
+      },
+      en: {
+        m: "Bahamian",
+        f: "Bahamian",
+      },
+    },
   },
   BIH: {
     continent: "europe",
@@ -738,6 +1543,9 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     flagSymbols: ["star", "triangle"],
     flagLayout: [],
     events: ["winter_olympics_host"],
+    eventEditions: {
+      winter_olympics_host: [1984],
+    },
     memberships: [],
     capitals: [
       {
@@ -745,6 +1553,10 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
         latitude: 43.87,
         longitude: 18.42,
         roles: ["primary"],
+        names: {
+          fr: "Sarajevo",
+          en: "Sarajevo",
+        },
       },
     ],
     drivingSide: "right",
@@ -754,13 +1566,46 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     utcOffsetCount: 1,
     lastVolcanicEruptionYear: null,
     mountainAreaShare: 0.6906403171317542,
-    forestCoverShare: 0.427326171875,
+    forestCoverShare: 0.421875,
     urbanCentresOver1M: 0,
     productionRanks: {},
     coalElectricityShare: 0.5882999999999999,
     formerSovereigns: ["yugoslavia"],
+    dominations: [],
     sovereigntyYear: 1992,
     sovereigntyKind: "independence",
+    sovereigntyDate: "1992-03-01",
+    sovereigntySheetHidden: false,
+    highestPoint: {
+      elevationM: 2386,
+      names: {
+        fr: "Maglić",
+        en: "Maglić",
+      },
+    },
+    gdpPerCapitaUsd: {
+      value: 10381.8460703874,
+      year: 2025,
+    },
+    lifeExpectancyYears: {
+      value: 78.044,
+      year: 2024,
+    },
+    humanDevelopmentIndex: {
+      value: 0.804,
+      year: 2023,
+    },
+    currencies: ["BAM"],
+    demonyms: {
+      fr: {
+        m: "Bosnien",
+        f: "Bosnienne",
+      },
+      en: {
+        m: "Bosnian or Herzegovinian",
+        f: "Bosnian or Herzegovinian",
+      },
+    },
   },
   BLR: {
     continent: "europe",
@@ -775,6 +1620,7 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     flagSymbols: [],
     flagLayout: [],
     events: [],
+    eventEditions: {},
     memberships: [],
     capitals: [
       {
@@ -782,6 +1628,10 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
         latitude: 53.9,
         longitude: 27.57,
         roles: ["primary"],
+        names: {
+          fr: "Minsk",
+          en: "Minsk",
+        },
       },
     ],
     drivingSide: "right",
@@ -791,13 +1641,46 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     utcOffsetCount: 1,
     lastVolcanicEruptionYear: null,
     mountainAreaShare: 0,
-    forestCoverShare: 0.43408068655995796,
+    forestCoverShare: 0.43956686027894,
     urbanCentresOver1M: 1,
     productionRanks: {},
     coalElectricityShare: 0.0004,
     formerSovereigns: ["soviet_union"],
+    dominations: [],
     sovereigntyYear: 1991,
     sovereigntyKind: "independence",
+    sovereigntyDate: "1991-08-25",
+    sovereigntySheetHidden: false,
+    highestPoint: {
+      elevationM: 346,
+      names: {
+        fr: "Mont Dzerjinski",
+        en: "Dziaržynkaja hara",
+      },
+    },
+    gdpPerCapitaUsd: {
+      value: 10279.2547190723,
+      year: 2025,
+    },
+    lifeExpectancyYears: {
+      value: 74.3653414634147,
+      year: 2024,
+    },
+    humanDevelopmentIndex: {
+      value: 0.824,
+      year: 2023,
+    },
+    currencies: ["BYN"],
+    demonyms: {
+      fr: {
+        m: "Biélorusse",
+        f: "Biélorusse",
+      },
+      en: {
+        m: "Belarusian",
+        f: "Belarusian",
+      },
+    },
   },
   BLZ: {
     continent: "north_america",
@@ -805,13 +1688,14 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     borders: ["GTM", "MEX"],
     areaKm2: 22966,
     population: 418982,
-    officialLanguages: ["bjz", "en", "es"],
+    officialLanguages: ["en"],
     latitude: 17.25,
     subregion: "Central America",
     flagColors: ["red", "blue", "white"],
     flagSymbols: ["plant"],
     flagLayout: ["horizontal_stripes"],
     events: [],
+    eventEditions: {},
     memberships: ["commonwealth"],
     capitals: [
       {
@@ -819,6 +1703,10 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
         latitude: 17.25,
         longitude: -88.77,
         roles: ["primary"],
+        names: {
+          fr: "Belmopan",
+          en: "Belmopan",
+        },
       },
     ],
     drivingSide: "right",
@@ -828,13 +1716,55 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     utcOffsetCount: 1,
     lastVolcanicEruptionYear: null,
     mountainAreaShare: 0.1531394234956022,
-    forestCoverShare: 0.545186321788689,
+    forestCoverShare: 0.583125822007891,
     urbanCentresOver1M: 0,
     productionRanks: {},
     coalElectricityShare: 0,
     formerSovereigns: ["united_kingdom"],
+    dominations: [
+      {
+        power: "united_kingdom",
+        nature: "colony",
+        from: 1862,
+        to: 1981,
+        intermittent: false,
+        part: null,
+      },
+    ],
     sovereigntyYear: 1981,
     sovereigntyKind: "independence",
+    sovereigntyDate: "1981-09-21",
+    sovereigntySheetHidden: false,
+    highestPoint: {
+      elevationM: 1124,
+      names: {
+        fr: "Doyle's Delight",
+        en: "Doyle's Delight",
+      },
+    },
+    gdpPerCapitaUsd: {
+      value: 7865.47937690933,
+      year: 2025,
+    },
+    lifeExpectancyYears: {
+      value: 73.739,
+      year: 2024,
+    },
+    humanDevelopmentIndex: {
+      value: 0.721,
+      year: 2023,
+    },
+    currencies: ["BZD"],
+    demonyms: {
+      fr: {
+        m: "Bélizien",
+        f: "Bélizienne",
+      },
+      en: {
+        m: "Belizean",
+        f: "Belizean",
+      },
+    },
   },
   BOL: {
     continent: "south_america",
@@ -846,9 +1776,10 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     latitude: -17,
     subregion: "South America",
     flagColors: ["red", "green", "yellow"],
-    flagSymbols: ["animal"],
+    flagSymbols: ["animal", "star"],
     flagLayout: ["horizontal_stripes"],
     events: [],
+    eventEditions: {},
     memberships: [],
     capitals: [
       {
@@ -856,12 +1787,20 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
         latitude: -19.04,
         longitude: -65.26,
         roles: ["constitutional"],
+        names: {
+          fr: "Sucre",
+          en: "Sucre",
+        },
       },
       {
         name: "La Paz",
         latitude: -16.5,
         longitude: -68.15,
         roles: ["administrative"],
+        names: {
+          fr: "La Paz",
+          en: "La Paz",
+        },
       },
     ],
     drivingSide: "right",
@@ -871,13 +1810,46 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     utcOffsetCount: 1,
     lastVolcanicEruptionYear: 1995,
     mountainAreaShare: 0.3668623433319892,
-    forestCoverShare: 0.463457431920982,
+    forestCoverShare: 0.504153088413201,
     urbanCentresOver1M: 3,
     productionRanks: {},
     coalElectricityShare: 0,
     formerSovereigns: ["spain"],
+    dominations: [],
     sovereigntyYear: 1825,
     sovereigntyKind: "independence",
+    sovereigntyDate: "1825-08-06",
+    sovereigntySheetHidden: false,
+    highestPoint: {
+      elevationM: 6542,
+      names: {
+        fr: "Nevado Sajama",
+        en: "Nevado Sajama",
+      },
+    },
+    gdpPerCapitaUsd: {
+      value: 5147.81081955367,
+      year: 2025,
+    },
+    lifeExpectancyYears: {
+      value: 68.739,
+      year: 2024,
+    },
+    humanDevelopmentIndex: {
+      value: 0.733,
+      year: 2023,
+    },
+    currencies: ["BOB"],
+    demonyms: {
+      fr: {
+        m: "Bolivien",
+        f: "Bolivienne",
+      },
+      en: {
+        m: "Bolivian",
+        f: "Bolivian",
+      },
+    },
   },
   BRA: {
     continent: "south_america",
@@ -903,6 +1875,10 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     flagSymbols: ["star", "circle"],
     flagLayout: [],
     events: ["fifa_wc_host", "summer_olympics_host"],
+    eventEditions: {
+      fifa_wc_host: [1950, 2014],
+      summer_olympics_host: [2016],
+    },
     memberships: ["brics", "g20"],
     capitals: [
       {
@@ -910,6 +1886,10 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
         latitude: -15.79,
         longitude: -47.88,
         roles: ["primary"],
+        names: {
+          fr: "Brasilia",
+          en: "Brasília",
+        },
       },
     ],
     drivingSide: "right",
@@ -919,7 +1899,7 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     utcOffsetCount: 4,
     lastVolcanicEruptionYear: null,
     mountainAreaShare: 0.058455920646959925,
-    forestCoverShare: 0.589818729765235,
+    forestCoverShare: 0.589364069039284,
     urbanCentresOver1M: 20,
     productionRanks: {
       cocoa: 7,
@@ -928,8 +1908,41 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     },
     coalElectricityShare: 0.0217,
     formerSovereigns: ["portugal"],
+    dominations: [],
     sovereigntyYear: 1822,
     sovereigntyKind: "independence",
+    sovereigntyDate: "1822-09-07",
+    sovereigntySheetHidden: false,
+    highestPoint: {
+      elevationM: 2994,
+      names: {
+        fr: "Pico da Neblina",
+        en: "Pico da Neblina",
+      },
+    },
+    gdpPerCapitaUsd: {
+      value: 10713.2856869511,
+      year: 2025,
+    },
+    lifeExpectancyYears: {
+      value: 76.023,
+      year: 2024,
+    },
+    humanDevelopmentIndex: {
+      value: 0.786,
+      year: 2023,
+    },
+    currencies: ["BRL"],
+    demonyms: {
+      fr: {
+        m: "Brésilien",
+        f: "Brésilienne",
+      },
+      en: {
+        m: "Brazilian",
+        f: "Brazilian",
+      },
+    },
   },
   BRB: {
     continent: "north_america",
@@ -944,6 +1957,7 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     flagSymbols: [],
     flagLayout: ["vertical_stripes"],
     events: [],
+    eventEditions: {},
     memberships: ["commonwealth"],
     capitals: [
       {
@@ -951,6 +1965,10 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
         latitude: 13.1,
         longitude: -59.62,
         roles: ["primary"],
+        names: {
+          fr: "Bridgetown",
+          en: "Bridgetown",
+        },
       },
     ],
     drivingSide: "left",
@@ -965,8 +1983,50 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     productionRanks: {},
     coalElectricityShare: 0,
     formerSovereigns: ["united_kingdom"],
+    dominations: [
+      {
+        power: "united_kingdom",
+        nature: "colony",
+        from: 1627,
+        to: 1966,
+        intermittent: false,
+        part: null,
+      },
+    ],
     sovereigntyYear: 1966,
     sovereigntyKind: "independence",
+    sovereigntyDate: "1966-11-30",
+    sovereigntySheetHidden: false,
+    highestPoint: {
+      elevationM: 336,
+      names: {
+        fr: "mont Hillaby",
+        en: "Mount Hillaby",
+      },
+    },
+    gdpPerCapitaUsd: {
+      value: 28364.8181499736,
+      year: 2025,
+    },
+    lifeExpectancyYears: {
+      value: 76.332,
+      year: 2024,
+    },
+    humanDevelopmentIndex: {
+      value: 0.811,
+      year: 2023,
+    },
+    currencies: ["BBD"],
+    demonyms: {
+      fr: {
+        m: "Barbadien",
+        f: "Barbadienne",
+      },
+      en: {
+        m: "Barbadian",
+        f: "Barbadian",
+      },
+    },
   },
   BRN: {
     continent: "asia",
@@ -981,6 +2041,7 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     flagSymbols: ["crescent"],
     flagLayout: [],
     events: [],
+    eventEditions: {},
     memberships: ["asean", "commonwealth"],
     capitals: [
       {
@@ -988,10 +2049,14 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
         latitude: 4.88,
         longitude: 114.93,
         roles: ["primary"],
+        names: {
+          fr: "Bandar Seri Begawan",
+          en: "Bandar Seri Begawan",
+        },
       },
     ],
     drivingSide: "left",
-    geoTags: ["drives_on_left"],
+    geoTags: ["drives_on_left", "shared_island"],
     regime: "monarchy",
     physicalFeatures: ["rainforest", "pacific_coast"],
     utcOffsetCount: 1,
@@ -1002,15 +2067,57 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     productionRanks: {},
     coalElectricityShare: 0.1978,
     formerSovereigns: ["united_kingdom"],
+    dominations: [
+      {
+        power: "united_kingdom",
+        nature: "protectorate",
+        from: 1888,
+        to: 1984,
+        intermittent: false,
+        part: null,
+      },
+    ],
     sovereigntyYear: 1984,
     sovereigntyKind: "independence",
+    sovereigntyDate: "1984-01-01",
+    sovereigntySheetHidden: false,
+    highestPoint: {
+      elevationM: 1850,
+      names: {
+        fr: "Bukit Pagon",
+        en: "Bukit Pagon",
+      },
+    },
+    gdpPerCapitaUsd: {
+      value: 32234.6428368582,
+      year: 2025,
+    },
+    lifeExpectancyYears: {
+      value: 75.501,
+      year: 2024,
+    },
+    humanDevelopmentIndex: {
+      value: 0.837,
+      year: 2023,
+    },
+    currencies: ["BND", "SGD"],
+    demonyms: {
+      fr: {
+        m: "Brunéien",
+        f: "Brunéienne",
+      },
+      en: {
+        m: "Bruneian",
+        f: "Bruneian",
+      },
+    },
   },
   BTN: {
     continent: "asia",
     waterAccess: "landlocked",
     borders: ["CHN", "IND"],
     areaKm2: 38394,
-    population: 784043,
+    population: 790718,
     officialLanguages: ["dz"],
     latitude: 27.5,
     subregion: "Southern Asia",
@@ -1018,6 +2125,7 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     flagSymbols: ["triangle", "animal"],
     flagLayout: [],
     events: [],
+    eventEditions: {},
     memberships: [],
     capitals: [
       {
@@ -1025,6 +2133,10 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
         latitude: 27.47,
         longitude: 89.63,
         roles: ["primary"],
+        names: {
+          fr: "Thimphou",
+          en: "Thimphu",
+        },
       },
     ],
     drivingSide: "left",
@@ -1034,20 +2146,62 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     utcOffsetCount: 1,
     lastVolcanicEruptionYear: null,
     mountainAreaShare: 0.9963275511798719,
-    forestCoverShare: 0.7160513896172,
+    forestCoverShare: 0.7057446250655479,
     urbanCentresOver1M: 0,
     productionRanks: {},
     coalElectricityShare: 0,
     formerSovereigns: [],
+    dominations: [
+      {
+        power: "united_kingdom",
+        nature: "protected_state",
+        from: 1910,
+        to: 1947,
+        intermittent: false,
+        part: null,
+      },
+    ],
     sovereigntyYear: 1907,
     sovereigntyKind: "independence",
+    sovereigntyDate: "1907-12-17",
+    sovereigntySheetHidden: false,
+    highestPoint: {
+      elevationM: 7570,
+      names: {
+        fr: "Gangkhar Puensum",
+        en: "Gangkhar Puensum",
+      },
+    },
+    gdpPerCapitaUsd: {
+      value: 4492.78400306618,
+      year: 2025,
+    },
+    lifeExpectancyYears: {
+      value: 73.262,
+      year: 2024,
+    },
+    humanDevelopmentIndex: {
+      value: 0.698,
+      year: 2023,
+    },
+    currencies: ["BTN", "INR"],
+    demonyms: {
+      fr: {
+        m: "Bhoutanais",
+        f: "Bhoutanaise",
+      },
+      en: {
+        m: "Bhutanese",
+        f: "Bhutanese",
+      },
+    },
   },
   BWA: {
     continent: "africa",
     waterAccess: "landlocked",
     borders: ["NAM", "ZAF", "ZMB", "ZWE"],
     areaKm2: 582000,
-    population: 2359609,
+    population: 2515633,
     officialLanguages: ["en", "tn"],
     latitude: -22,
     subregion: "Southern Africa",
@@ -1055,6 +2209,7 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     flagSymbols: [],
     flagLayout: ["horizontal_stripes"],
     events: [],
+    eventEditions: {},
     memberships: ["commonwealth", "african_union"],
     capitals: [
       {
@@ -1062,6 +2217,10 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
         latitude: -24.63,
         longitude: 25.9,
         roles: ["primary"],
+        names: {
+          fr: "Gaborone",
+          en: "Gaborone",
+        },
       },
     ],
     drivingSide: "left",
@@ -1071,13 +2230,55 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     utcOffsetCount: 1,
     lastVolcanicEruptionYear: null,
     mountainAreaShare: 0.007415807560137457,
-    forestCoverShare: 0.26290826319411403,
+    forestCoverShare: 0.277560743211053,
     urbanCentresOver1M: 0,
     productionRanks: {},
     coalElectricityShare: 0.9825,
     formerSovereigns: ["united_kingdom"],
+    dominations: [
+      {
+        power: "united_kingdom",
+        nature: "protectorate",
+        from: 1885,
+        to: 1966,
+        intermittent: false,
+        part: null,
+      },
+    ],
     sovereigntyYear: 1966,
     sovereigntyKind: "independence",
+    sovereigntyDate: "1966-09-30",
+    sovereigntySheetHidden: false,
+    highestPoint: {
+      elevationM: 1495,
+      names: {
+        fr: "Manyelanong Hill",
+        en: "Manyelanong Hill",
+      },
+    },
+    gdpPerCapitaUsd: {
+      value: 7778.1151090571,
+      year: 2025,
+    },
+    lifeExpectancyYears: {
+      value: 69.293,
+      year: 2024,
+    },
+    humanDevelopmentIndex: {
+      value: 0.731,
+      year: 2023,
+    },
+    currencies: ["BWP"],
+    demonyms: {
+      fr: {
+        m: "Botswanais",
+        f: "Botswanaise",
+      },
+      en: {
+        m: "Motswana",
+        f: "Motswana",
+      },
+    },
   },
   CAF: {
     continent: "africa",
@@ -1092,6 +2293,7 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     flagSymbols: ["star"],
     flagLayout: [],
     events: [],
+    eventEditions: {},
     memberships: ["african_union"],
     capitals: [
       {
@@ -1099,6 +2301,10 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
         latitude: 4.37,
         longitude: 18.58,
         roles: ["primary"],
+        names: {
+          fr: "Bangui",
+          en: "Bangui",
+        },
       },
     ],
     drivingSide: "right",
@@ -1108,20 +2314,62 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     utcOffsetCount: 1,
     lastVolcanicEruptionYear: null,
     mountainAreaShare: 0.010313266472333158,
-    forestCoverShare: 0.356560403223217,
+    forestCoverShare: 0.7253510546084949,
     urbanCentresOver1M: 1,
     productionRanks: {},
     coalElectricityShare: null,
     formerSovereigns: ["france"],
+    dominations: [
+      {
+        power: "france",
+        nature: "colony",
+        from: 1889,
+        to: 1960,
+        intermittent: false,
+        part: null,
+      },
+    ],
     sovereigntyYear: 1960,
     sovereigntyKind: "independence",
+    sovereigntyDate: "1960-08-13",
+    sovereigntySheetHidden: false,
+    highestPoint: {
+      elevationM: 1410,
+      names: {
+        fr: "mont Ngaoui",
+        en: "Mont Ngaoui",
+      },
+    },
+    gdpPerCapitaUsd: {
+      value: 556.131398031455,
+      year: 2025,
+    },
+    lifeExpectancyYears: {
+      value: 57.671,
+      year: 2024,
+    },
+    humanDevelopmentIndex: {
+      value: 0.414,
+      year: 2023,
+    },
+    currencies: ["XAF"],
+    demonyms: {
+      fr: {
+        m: "Centrafricain",
+        f: "Centrafricaine",
+      },
+      en: {
+        m: "Central African",
+        f: "Central African",
+      },
+    },
   },
   CAN: {
     continent: "north_america",
     waterAccess: "coastal",
     borders: ["USA"],
     areaKm2: 9984670,
-    population: 41417056,
+    population: 41798407,
     officialLanguages: ["en", "fr"],
     latitude: 60,
     subregion: "North America",
@@ -1129,6 +2377,11 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     flagSymbols: ["plant"],
     flagLayout: ["vertical_stripes"],
     events: ["fifa_wc_host", "summer_olympics_host", "winter_olympics_host"],
+    eventEditions: {
+      fifa_wc_host: [2026],
+      summer_olympics_host: [1976],
+      winter_olympics_host: [1988, 2010],
+    },
     memberships: ["commonwealth", "g20", "g7", "nato", "oecd"],
     capitals: [
       {
@@ -1136,6 +2389,10 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
         latitude: 45.42,
         longitude: -75.7,
         roles: ["primary"],
+        names: {
+          fr: "Ottawa",
+          en: "Ottawa",
+        },
       },
     ],
     drivingSide: "right",
@@ -1150,7 +2407,7 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     utcOffsetCount: 6,
     lastVolcanicEruptionYear: 1800,
     mountainAreaShare: null,
-    forestCoverShare: 0.394617117321106,
+    forestCoverShare: 0.41967353533514595,
     urbanCentresOver1M: 5,
     productionRanks: {
       wheat: 5,
@@ -1159,8 +2416,61 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     },
     coalElectricityShare: 0.0395,
     formerSovereigns: ["united_kingdom"],
+    dominations: [
+      {
+        power: "france",
+        nature: "colony",
+        from: 1534,
+        to: 1763,
+        intermittent: false,
+        part: {
+          fr: "Nouvelle-France",
+          en: "New France",
+        },
+      },
+      {
+        power: "united_kingdom",
+        nature: "colony",
+        from: 1763,
+        to: 1867,
+        intermittent: false,
+        part: null,
+      },
+    ],
     sovereigntyYear: 1867,
     sovereigntyKind: "foundation",
+    sovereigntyDate: "1867-07-01",
+    sovereigntySheetHidden: false,
+    highestPoint: {
+      elevationM: 5959,
+      names: {
+        fr: "mont Logan",
+        en: "Mount Logan",
+      },
+    },
+    gdpPerCapitaUsd: {
+      value: 55697.6639660837,
+      year: 2025,
+    },
+    lifeExpectancyYears: {
+      value: 82.1080487804878,
+      year: 2024,
+    },
+    humanDevelopmentIndex: {
+      value: 0.939,
+      year: 2023,
+    },
+    currencies: ["CAD"],
+    demonyms: {
+      fr: {
+        m: "Canadien",
+        f: "Canadienne",
+      },
+      en: {
+        m: "Canadian",
+        f: "Canadian",
+      },
+    },
   },
   CHE: {
     continent: "europe",
@@ -1168,13 +2478,17 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     borders: ["AUT", "FRA", "ITA", "LIE", "DEU"],
     areaKm2: 41284,
     population: 9154896,
-    officialLanguages: ["fr", "gsw", "it", "rm"],
+    officialLanguages: ["fr", "de", "it", "rm"],
     latitude: 47,
     subregion: "Western Europe",
     flagColors: ["red", "white"],
     flagSymbols: ["cross"],
     flagLayout: [],
     events: ["fifa_wc_host", "winter_olympics_host"],
+    eventEditions: {
+      fifa_wc_host: [1954],
+      winter_olympics_host: [1928, 1948],
+    },
     memberships: ["oecd", "schengen"],
     capitals: [
       {
@@ -1182,6 +2496,10 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
         latitude: 46.92,
         longitude: 7.47,
         roles: ["primary"],
+        names: {
+          fr: "Berne",
+          en: "Bern",
+        },
       },
     ],
     drivingSide: "right",
@@ -1191,13 +2509,46 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     utcOffsetCount: 1,
     lastVolcanicEruptionYear: null,
     mountainAreaShare: 0.8577657203759326,
-    forestCoverShare: 0.323827380818297,
+    forestCoverShare: 0.319760018000675,
     urbanCentresOver1M: 0,
     productionRanks: {},
     coalElectricityShare: null,
     formerSovereigns: [],
+    dominations: [],
     sovereigntyYear: 1291,
     sovereigntyKind: "foundation",
+    sovereigntyDate: "1291-08-01",
+    sovereigntySheetHidden: false,
+    highestPoint: {
+      elevationM: 4634,
+      names: {
+        fr: "pointe Dufour",
+        en: "Dufourspitze",
+      },
+    },
+    gdpPerCapitaUsd: {
+      value: 114769.012314293,
+      year: 2025,
+    },
+    lifeExpectancyYears: {
+      value: 84.4073170731707,
+      year: 2024,
+    },
+    humanDevelopmentIndex: {
+      value: 0.97,
+      year: 2023,
+    },
+    currencies: ["CHF"],
+    demonyms: {
+      fr: {
+        m: "Suisse",
+        f: "Suisse",
+      },
+      en: {
+        m: "Swiss",
+        f: "Swiss",
+      },
+    },
   },
   CHL: {
     continent: "south_america",
@@ -1212,6 +2563,9 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     flagSymbols: ["star"],
     flagLayout: ["horizontal_stripes"],
     events: ["fifa_wc_host"],
+    eventEditions: {
+      fifa_wc_host: [1962],
+    },
     memberships: ["oecd"],
     capitals: [
       {
@@ -1219,6 +2573,10 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
         latitude: -33.45,
         longitude: -70.67,
         roles: ["primary"],
+        names: {
+          fr: "Santiago",
+          en: "Santiago",
+        },
       },
     ],
     drivingSide: "right",
@@ -1228,13 +2586,46 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     utcOffsetCount: 2,
     lastVolcanicEruptionYear: 2026,
     mountainAreaShare: 0.6359948789978072,
-    forestCoverShare: 0.250116461113584,
+    forestCoverShare: 0.24462703284959703,
     urbanCentresOver1M: 1,
     productionRanks: {},
     coalElectricityShare: 0.153,
     formerSovereigns: ["spain"],
+    dominations: [],
     sovereigntyYear: 1810,
     sovereigntyKind: "independence",
+    sovereigntyDate: "1810-09-18",
+    sovereigntySheetHidden: false,
+    highestPoint: {
+      elevationM: 6893,
+      names: {
+        fr: "Nevado Ojos del Salado",
+        en: "Ojos del Salado",
+      },
+    },
+    gdpPerCapitaUsd: {
+      value: 17994.5911957485,
+      year: 2025,
+    },
+    lifeExpectancyYears: {
+      value: 81.359,
+      year: 2024,
+    },
+    humanDevelopmentIndex: {
+      value: 0.878,
+      year: 2023,
+    },
+    currencies: ["CLP"],
+    demonyms: {
+      fr: {
+        m: "Chilien",
+        f: "Chilienne",
+      },
+      en: {
+        m: "Chilean",
+        f: "Chilean",
+      },
+    },
   },
   CHN: {
     continent: "asia",
@@ -1266,6 +2657,10 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     flagSymbols: ["star"],
     flagLayout: [],
     events: ["summer_olympics_host", "winter_olympics_host"],
+    eventEditions: {
+      summer_olympics_host: [2008],
+      winter_olympics_host: [2022],
+    },
     memberships: ["brics", "g20"],
     capitals: [
       {
@@ -1273,6 +2668,10 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
         latitude: 39.92,
         longitude: 116.38,
         roles: ["primary"],
+        names: {
+          fr: "Pékin",
+          en: "Beijing",
+        },
       },
     ],
     drivingSide: "right",
@@ -1282,7 +2681,7 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     utcOffsetCount: 1,
     lastVolcanicEruptionYear: 1951,
     mountainAreaShare: 0.521696646355126,
-    forestCoverShare: 0.24031938995825597,
+    forestCoverShare: 0.23852363762634202,
     urbanCentresOver1M: 83,
     productionRanks: {
       rice: 1,
@@ -1292,15 +2691,48 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     },
     coalElectricityShare: 0.5777,
     formerSovereigns: [],
+    dominations: [],
     sovereigntyYear: 1949,
     sovereigntyKind: "unification",
+    sovereigntyDate: "1949-10-01",
+    sovereigntySheetHidden: true,
+    highestPoint: {
+      elevationM: 8849,
+      names: {
+        fr: "Everest",
+        en: "Mount Everest",
+      },
+    },
+    gdpPerCapitaUsd: {
+      value: 13861.970224368,
+      year: 2025,
+    },
+    lifeExpectancyYears: {
+      value: 78.017,
+      year: 2024,
+    },
+    humanDevelopmentIndex: {
+      value: 0.797,
+      year: 2023,
+    },
+    currencies: ["CNY"],
+    demonyms: {
+      fr: {
+        m: "Chinois",
+        f: "Chinoise",
+      },
+      en: {
+        m: "Chinese",
+        f: "Chinese",
+      },
+    },
   },
   CIV: {
     continent: "africa",
     waterAccess: "coastal",
     borders: ["BFA", "GHA", "GIN", "LBR", "MLI"],
     areaKm2: 322463,
-    population: 31500000,
+    population: 33293101,
     officialLanguages: ["fr"],
     latitude: 8,
     subregion: "Western Africa",
@@ -1308,6 +2740,7 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     flagSymbols: [],
     flagLayout: ["vertical_stripes"],
     events: [],
+    eventEditions: {},
     memberships: ["african_union"],
     capitals: [
       {
@@ -1315,6 +2748,10 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
         latitude: 6.82,
         longitude: -5.27,
         roles: ["primary"],
+        names: {
+          fr: "Yamoussoukro",
+          en: "Yamoussoukro",
+        },
       },
     ],
     drivingSide: "right",
@@ -1324,15 +2761,57 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     utcOffsetCount: 1,
     lastVolcanicEruptionYear: null,
     mountainAreaShare: 0.03471406021776142,
-    forestCoverShare: 0.07855516037735849,
+    forestCoverShare: 0.123766352201258,
     urbanCentresOver1M: 1,
     productionRanks: {
       cocoa: 1,
     },
     coalElectricityShare: 0,
     formerSovereigns: ["france"],
+    dominations: [
+      {
+        power: "france",
+        nature: "colony",
+        from: 1893,
+        to: 1960,
+        intermittent: false,
+        part: null,
+      },
+    ],
     sovereigntyYear: 1960,
     sovereigntyKind: "independence",
+    sovereigntyDate: "1960-08-07",
+    sovereigntySheetHidden: false,
+    highestPoint: {
+      elevationM: 1752,
+      names: {
+        fr: "mont Nimba",
+        en: "Mount Nimba",
+      },
+    },
+    gdpPerCapitaUsd: {
+      value: 3050.10202257321,
+      year: 2025,
+    },
+    lifeExpectancyYears: {
+      value: 62.11,
+      year: 2024,
+    },
+    humanDevelopmentIndex: {
+      value: 0.582,
+      year: 2023,
+    },
+    currencies: ["XOF"],
+    demonyms: {
+      fr: {
+        m: "Ivoirien",
+        f: "Ivoirienne",
+      },
+      en: {
+        m: "Ivorian",
+        f: "Ivorian",
+      },
+    },
   },
   CMR: {
     continent: "africa",
@@ -1347,6 +2826,7 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     flagSymbols: ["star"],
     flagLayout: ["vertical_stripes"],
     events: [],
+    eventEditions: {},
     memberships: ["commonwealth", "african_union"],
     capitals: [
       {
@@ -1354,6 +2834,10 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
         latitude: 3.85,
         longitude: 11.5,
         roles: ["primary"],
+        names: {
+          fr: "Yaoundé",
+          en: "Yaoundé",
+        },
       },
     ],
     drivingSide: "right",
@@ -1363,15 +2847,68 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     utcOffsetCount: 1,
     lastVolcanicEruptionYear: 2000,
     mountainAreaShare: 0.20185217124275937,
-    forestCoverShare: 0.426741130925938,
+    forestCoverShare: 0.40991580461593796,
     urbanCentresOver1M: 2,
     productionRanks: {
       cocoa: 6,
     },
     coalElectricityShare: 0,
     formerSovereigns: ["france"],
+    dominations: [
+      {
+        power: "france",
+        nature: "trusteeship",
+        from: 1922,
+        to: 1960,
+        intermittent: false,
+        part: null,
+      },
+      {
+        power: "united_kingdom",
+        nature: "trusteeship",
+        from: 1922,
+        to: 1961,
+        intermittent: false,
+        part: {
+          fr: "Cameroun méridional",
+          en: "Southern Cameroons",
+        },
+      },
+    ],
     sovereigntyYear: 1960,
     sovereigntyKind: "independence",
+    sovereigntyDate: "1960-01-01",
+    sovereigntySheetHidden: false,
+    highestPoint: {
+      elevationM: 4045,
+      names: {
+        fr: "mont Cameroun",
+        en: "Mount Cameroon",
+      },
+    },
+    gdpPerCapitaUsd: {
+      value: 1972.3815800786,
+      year: 2025,
+    },
+    lifeExpectancyYears: {
+      value: 63.968,
+      year: 2024,
+    },
+    humanDevelopmentIndex: {
+      value: 0.588,
+      year: 2023,
+    },
+    currencies: ["XAF"],
+    demonyms: {
+      fr: {
+        m: "Camerounais",
+        f: "Camerounaise",
+      },
+      en: {
+        m: "Cameroonian",
+        f: "Cameroonian",
+      },
+    },
   },
   COD: {
     continent: "africa",
@@ -1379,13 +2916,14 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     borders: ["AGO", "BDI", "CAF", "COG", "RWA", "SSD", "TZA", "UGA", "ZMB"],
     areaKm2: 2344858,
     population: 116452000,
-    officialLanguages: ["fr", "kg", "ln", "lua", "sw"],
+    officialLanguages: ["fr"],
     latitude: -2.88,
     subregion: "Middle Africa",
     flagColors: ["red", "blue", "yellow"],
     flagSymbols: ["star"],
     flagLayout: [],
     events: [],
+    eventEditions: {},
     memberships: ["african_union"],
     capitals: [
       {
@@ -1393,6 +2931,10 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
         latitude: -4.32,
         longitude: 15.3,
         roles: ["primary"],
+        names: {
+          fr: "Kinshasa",
+          en: "Kinshasa",
+        },
       },
     ],
     drivingSide: "right",
@@ -1407,13 +2949,46 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     utcOffsetCount: 2,
     lastVolcanicEruptionYear: 2026,
     mountainAreaShare: 0.10379647722804536,
-    forestCoverShare: 0.541898572594341,
+    forestCoverShare: 0.616461172007675,
     urbanCentresOver1M: 6,
     productionRanks: {},
     coalElectricityShare: 0,
     formerSovereigns: ["belgium"],
+    dominations: [],
     sovereigntyYear: 1960,
     sovereigntyKind: "independence",
+    sovereigntyDate: "1960-06-30",
+    sovereigntySheetHidden: false,
+    highestPoint: {
+      elevationM: 5110,
+      names: {
+        fr: "mont Stanley",
+        en: "Mount Stanley",
+      },
+    },
+    gdpPerCapitaUsd: {
+      value: 806.776000708534,
+      year: 2025,
+    },
+    lifeExpectancyYears: {
+      value: 62.074,
+      year: 2024,
+    },
+    humanDevelopmentIndex: {
+      value: 0.522,
+      year: 2023,
+    },
+    currencies: ["CDF"],
+    demonyms: {
+      fr: {
+        m: "Congolais",
+        f: "Congolaise",
+      },
+      en: {
+        m: "Congolese",
+        f: "Congolese",
+      },
+    },
   },
   COG: {
     continent: "africa",
@@ -1421,13 +2996,14 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     borders: ["AGO", "CMR", "CAF", "COD", "GAB"],
     areaKm2: 342000,
     population: 6332961,
-    officialLanguages: ["fr", "kg", "ln"],
+    officialLanguages: ["fr"],
     latitude: -1,
     subregion: "Middle Africa",
     flagColors: ["red", "green", "yellow"],
     flagSymbols: ["triangle"],
     flagLayout: [],
     events: [],
+    eventEditions: {},
     memberships: ["opec", "african_union"],
     capitals: [
       {
@@ -1435,6 +3011,10 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
         latitude: -4.25,
         longitude: 15.28,
         roles: ["primary"],
+        names: {
+          fr: "Brazzaville",
+          en: "Brazzaville",
+        },
       },
     ],
     drivingSide: "right",
@@ -1444,13 +3024,55 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     utcOffsetCount: 1,
     lastVolcanicEruptionYear: null,
     mountainAreaShare: 0.025596491228070176,
-    forestCoverShare: 0.641317715959004,
+    forestCoverShare: 0.639115666178624,
     urbanCentresOver1M: 1,
     productionRanks: {},
     coalElectricityShare: 0,
     formerSovereigns: ["france"],
+    dominations: [
+      {
+        power: "france",
+        nature: "colony",
+        from: 1880,
+        to: 1960,
+        intermittent: false,
+        part: null,
+      },
+    ],
     sovereigntyYear: 1960,
     sovereigntyKind: "independence",
+    sovereigntyDate: "1960-08-15",
+    sovereigntySheetHidden: false,
+    highestPoint: {
+      elevationM: 1020,
+      names: {
+        fr: "mont Nabemba",
+        en: "Mont Nabemba",
+      },
+    },
+    gdpPerCapitaUsd: {
+      value: 2514.73393584747,
+      year: 2025,
+    },
+    lifeExpectancyYears: {
+      value: 66.001,
+      year: 2024,
+    },
+    humanDevelopmentIndex: {
+      value: 0.649,
+      year: 2023,
+    },
+    currencies: ["XAF"],
+    demonyms: {
+      fr: {
+        m: "Congolais",
+        f: "Congolaise",
+      },
+      en: {
+        m: "Congolese",
+        f: "Congolese",
+      },
+    },
   },
   COL: {
     continent: "south_america",
@@ -1465,6 +3087,7 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     flagSymbols: [],
     flagLayout: ["horizontal_stripes"],
     events: [],
+    eventEditions: {},
     memberships: ["oecd"],
     capitals: [
       {
@@ -1472,6 +3095,10 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
         latitude: 4.71,
         longitude: -74.07,
         roles: ["primary"],
+        names: {
+          fr: "Bogota",
+          en: "Bogotá",
+        },
       },
     ],
     drivingSide: "right",
@@ -1488,7 +3115,7 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     utcOffsetCount: 1,
     lastVolcanicEruptionYear: 2026,
     mountainAreaShare: 0.2662995687314539,
-    forestCoverShare: 0.527661596214511,
+    forestCoverShare: 0.538291392519153,
     urbanCentresOver1M: 4,
     productionRanks: {
       cocoa: 10,
@@ -1496,8 +3123,41 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     },
     coalElectricityShare: 0.1258,
     formerSovereigns: ["spain"],
+    dominations: [],
     sovereigntyYear: 1810,
     sovereigntyKind: "independence",
+    sovereigntyDate: "1810-07-20",
+    sovereigntySheetHidden: false,
+    highestPoint: {
+      elevationM: 5730,
+      names: {
+        fr: "pic Cristóbal Colón",
+        en: "Pico Cristóbal Colón",
+      },
+    },
+    gdpPerCapitaUsd: {
+      value: 8561.62091854449,
+      year: 2025,
+    },
+    lifeExpectancyYears: {
+      value: 77.913,
+      year: 2024,
+    },
+    humanDevelopmentIndex: {
+      value: 0.788,
+      year: 2023,
+    },
+    currencies: ["COP"],
+    demonyms: {
+      fr: {
+        m: "Colombien",
+        f: "Colombienne",
+      },
+      en: {
+        m: "Colombian",
+        f: "Colombian",
+      },
+    },
   },
   COM: {
     continent: "africa",
@@ -1512,6 +3172,7 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     flagSymbols: ["star", "crescent", "triangle"],
     flagLayout: ["horizontal_stripes"],
     events: [],
+    eventEditions: {},
     memberships: ["arab_league", "african_union"],
     capitals: [
       {
@@ -1519,6 +3180,10 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
         latitude: -11.7,
         longitude: 43.23,
         roles: ["primary"],
+        names: {
+          fr: "Moroni",
+          en: "Moroni",
+        },
       },
     ],
     drivingSide: "right",
@@ -1528,13 +3193,55 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     utcOffsetCount: 1,
     lastVolcanicEruptionYear: 2007,
     mountainAreaShare: 0.485499462943072,
-    forestCoverShare: 0.16980118216012902,
+    forestCoverShare: 0.178237506716819,
     urbanCentresOver1M: 0,
     productionRanks: {},
     coalElectricityShare: null,
     formerSovereigns: ["france"],
+    dominations: [
+      {
+        power: "france",
+        nature: "colony",
+        from: 1886,
+        to: 1975,
+        intermittent: false,
+        part: null,
+      },
+    ],
     sovereigntyYear: 1975,
     sovereigntyKind: "independence",
+    sovereigntyDate: "1975-07-06",
+    sovereigntySheetHidden: false,
+    highestPoint: {
+      elevationM: 2360,
+      names: {
+        fr: "Karthala",
+        en: "Mount Karthala",
+      },
+    },
+    gdpPerCapitaUsd: {
+      value: 2055.75921566281,
+      year: 2025,
+    },
+    lifeExpectancyYears: {
+      value: 67.023,
+      year: 2024,
+    },
+    humanDevelopmentIndex: {
+      value: 0.603,
+      year: 2023,
+    },
+    currencies: ["KMF"],
+    demonyms: {
+      fr: {
+        m: "Comorien",
+        f: "Comorienne",
+      },
+      en: {
+        m: "Comoran",
+        f: "Comoran",
+      },
+    },
   },
   CPV: {
     continent: "africa",
@@ -1549,6 +3256,7 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     flagSymbols: ["star"],
     flagLayout: ["horizontal_stripes"],
     events: [],
+    eventEditions: {},
     memberships: ["african_union"],
     capitals: [
       {
@@ -1556,6 +3264,10 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
         latitude: 14.92,
         longitude: -23.52,
         roles: ["primary"],
+        names: {
+          fr: "Praia",
+          en: "Praia",
+        },
       },
     ],
     drivingSide: "right",
@@ -1565,13 +3277,46 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     utcOffsetCount: 1,
     lastVolcanicEruptionYear: 2015,
     mountainAreaShare: 0.40317381601785274,
-    forestCoverShare: 0.115682382133995,
+    forestCoverShare: 0.123622828784119,
     urbanCentresOver1M: 0,
     productionRanks: {},
     coalElectricityShare: 0,
     formerSovereigns: ["portugal"],
+    dominations: [],
     sovereigntyYear: 1975,
     sovereigntyKind: "independence",
+    sovereigntyDate: "1975-07-05",
+    sovereigntySheetHidden: false,
+    highestPoint: {
+      elevationM: 2829,
+      names: {
+        fr: "Pico do Fogo",
+        en: "Pico do Fogo",
+      },
+    },
+    gdpPerCapitaUsd: {
+      value: 5796.47207860911,
+      year: 2025,
+    },
+    lifeExpectancyYears: {
+      value: 76.224,
+      year: 2024,
+    },
+    humanDevelopmentIndex: {
+      value: 0.668,
+      year: 2023,
+    },
+    currencies: ["CVE"],
+    demonyms: {
+      fr: {
+        m: "Cap-Verdien",
+        f: "Cap-Verdienne",
+      },
+      en: {
+        m: "Cabo Verdean",
+        f: "Cabo Verdean",
+      },
+    },
   },
   CRI: {
     continent: "north_america",
@@ -1586,6 +3331,7 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     flagSymbols: ["circle", "star"],
     flagLayout: ["horizontal_stripes"],
     events: [],
+    eventEditions: {},
     memberships: ["oecd"],
     capitals: [
       {
@@ -1593,6 +3339,10 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
         latitude: 9.93,
         longitude: -84.09,
         roles: ["primary"],
+        names: {
+          fr: "San José",
+          en: "San José",
+        },
       },
     ],
     drivingSide: "right",
@@ -1602,13 +3352,46 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     utcOffsetCount: 1,
     lastVolcanicEruptionYear: 2026,
     mountainAreaShare: 0.4676712328767123,
-    forestCoverShare: 0.603991382687035,
+    forestCoverShare: 0.589912974683544,
     urbanCentresOver1M: 1,
     productionRanks: {},
     coalElectricityShare: 0,
     formerSovereigns: ["spain"],
+    dominations: [],
     sovereigntyYear: 1821,
     sovereigntyKind: "independence",
+    sovereigntyDate: "1821-09-15",
+    sovereigntySheetHidden: false,
+    highestPoint: {
+      elevationM: 3819,
+      names: {
+        fr: "Cerro Chirripó",
+        en: "Cerro Chirripó",
+      },
+    },
+    gdpPerCapitaUsd: {
+      value: 19970.0989059622,
+      year: 2025,
+    },
+    lifeExpectancyYears: {
+      value: 80.996,
+      year: 2024,
+    },
+    humanDevelopmentIndex: {
+      value: 0.833,
+      year: 2023,
+    },
+    currencies: ["CRC"],
+    demonyms: {
+      fr: {
+        m: "Costaricain",
+        f: "Costaricaine",
+      },
+      en: {
+        m: "Costa Rican",
+        f: "Costa Rican",
+      },
+    },
   },
   CUB: {
     continent: "north_america",
@@ -1623,6 +3406,7 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     flagSymbols: ["star", "triangle"],
     flagLayout: ["horizontal_stripes"],
     events: [],
+    eventEditions: {},
     memberships: [],
     capitals: [
       {
@@ -1630,6 +3414,10 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
         latitude: 23.12,
         longitude: -82.35,
         roles: ["primary"],
+        names: {
+          fr: "La Havane",
+          en: "Havana",
+        },
       },
     ],
     drivingSide: "right",
@@ -1639,13 +3427,43 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     utcOffsetCount: 1,
     lastVolcanicEruptionYear: null,
     mountainAreaShare: 0.07543409413563394,
-    forestCoverShare: 0.31233140655106,
+    forestCoverShare: 0.348554913294798,
     urbanCentresOver1M: 1,
     productionRanks: {},
     coalElectricityShare: 0,
     formerSovereigns: ["spain"],
+    dominations: [],
     sovereigntyYear: 1902,
     sovereigntyKind: "independence",
+    sovereigntyDate: "1902-05-20",
+    sovereigntySheetHidden: false,
+    highestPoint: {
+      elevationM: 1974,
+      names: {
+        fr: "Pico Turquino",
+        en: "Pico Turquino",
+      },
+    },
+    gdpPerCapitaUsd: null,
+    lifeExpectancyYears: {
+      value: 78.264,
+      year: 2024,
+    },
+    humanDevelopmentIndex: {
+      value: 0.762,
+      year: 2023,
+    },
+    currencies: ["CUP"],
+    demonyms: {
+      fr: {
+        m: "Cubain",
+        f: "Cubaine",
+      },
+      en: {
+        m: "Cuban",
+        f: "Cuban",
+      },
+    },
   },
   CYP: {
     continent: "europe",
@@ -1660,6 +3478,7 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     flagSymbols: ["plant"],
     flagLayout: [],
     events: [],
+    eventEditions: {},
     memberships: ["commonwealth", "eu", "eurozone"],
     capitals: [
       {
@@ -1667,6 +3486,10 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
         latitude: 35.17,
         longitude: 33.37,
         roles: ["primary"],
+        names: {
+          fr: "Nicosie",
+          en: "Nicosia",
+        },
       },
     ],
     drivingSide: "left",
@@ -1676,20 +3499,62 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     utcOffsetCount: 1,
     lastVolcanicEruptionYear: null,
     mountainAreaShare: 0.3349908118041293,
-    forestCoverShare: 0.18665584415584402,
+    forestCoverShare: 0.186190476190476,
     urbanCentresOver1M: 0,
     productionRanks: {},
     coalElectricityShare: 0,
     formerSovereigns: ["united_kingdom"],
+    dominations: [
+      {
+        power: "united_kingdom",
+        nature: "colony",
+        from: 1878,
+        to: 1960,
+        intermittent: false,
+        part: null,
+      },
+    ],
     sovereigntyYear: 1960,
     sovereigntyKind: "independence",
+    sovereigntyDate: "1960-08-16",
+    sovereigntySheetHidden: false,
+    highestPoint: {
+      elevationM: 1951,
+      names: {
+        fr: "mont Olympe",
+        en: "Mount Olympus",
+      },
+    },
+    gdpPerCapitaUsd: {
+      value: 41783.08984375,
+      year: 2025,
+    },
+    lifeExpectancyYears: {
+      value: 81.821,
+      year: 2024,
+    },
+    humanDevelopmentIndex: {
+      value: 0.913,
+      year: 2023,
+    },
+    currencies: ["EUR"],
+    demonyms: {
+      fr: {
+        m: "Chypriote",
+        f: "Chypriote",
+      },
+      en: {
+        m: "Cypriot",
+        f: "Cypriot",
+      },
+    },
   },
   CZE: {
     continent: "europe",
     waterAccess: "landlocked",
     borders: ["AUT", "DEU", "POL", "SVK"],
     areaKm2: 78865,
-    population: 10896003,
+    population: 10903655,
     officialLanguages: ["cs"],
     latitude: 49.75,
     subregion: "Central Europe",
@@ -1697,6 +3562,7 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     flagSymbols: ["triangle"],
     flagLayout: ["horizontal_stripes"],
     events: [],
+    eventEditions: {},
     memberships: ["eu", "nato", "oecd", "schengen"],
     capitals: [
       {
@@ -1704,6 +3570,10 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
         latitude: 50.08,
         longitude: 14.47,
         roles: ["primary"],
+        names: {
+          fr: "Prague",
+          en: "Prague",
+        },
       },
     ],
     drivingSide: "right",
@@ -1713,20 +3583,53 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     utcOffsetCount: 1,
     lastVolcanicEruptionYear: null,
     mountainAreaShare: 0.25040258669878906,
-    forestCoverShare: 0.34762388374040804,
+    forestCoverShare: 0.382322514546639,
     urbanCentresOver1M: 1,
     productionRanks: {},
     coalElectricityShare: 0.3642,
     formerSovereigns: [],
+    dominations: [],
     sovereigntyYear: 1993,
     sovereigntyKind: "dissolution_successor",
+    sovereigntyDate: "1993-01-01",
+    sovereigntySheetHidden: false,
+    highestPoint: {
+      elevationM: 1602,
+      names: {
+        fr: "Sniejka",
+        en: "Sněžka",
+      },
+    },
+    gdpPerCapitaUsd: {
+      value: 35917.2724081665,
+      year: 2025,
+    },
+    lifeExpectancyYears: {
+      value: 79.9780487804878,
+      year: 2024,
+    },
+    humanDevelopmentIndex: {
+      value: 0.915,
+      year: 2023,
+    },
+    currencies: ["CZK"],
+    demonyms: {
+      fr: {
+        m: "Tchèque",
+        f: "Tchèque",
+      },
+      en: {
+        m: "Czech",
+        f: "Czech",
+      },
+    },
   },
   DEU: {
     continent: "europe",
     waterAccess: "coastal",
     borders: ["AUT", "BEL", "CZE", "DNK", "FRA", "LUX", "NLD", "POL", "CHE"],
     areaKm2: 357114,
-    population: 83467117,
+    population: 83298787,
     officialLanguages: ["de"],
     latitude: 51,
     subregion: "Western Europe",
@@ -1734,6 +3637,11 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     flagSymbols: [],
     flagLayout: ["horizontal_stripes"],
     events: ["fifa_wc_host", "summer_olympics_host", "winter_olympics_host"],
+    eventEditions: {
+      fifa_wc_host: [1974, 2006],
+      summer_olympics_host: [1936, 1972],
+      winter_olympics_host: [1936],
+    },
     memberships: ["eu", "eurozone", "g20", "g7", "nato", "oecd", "schengen"],
     capitals: [
       {
@@ -1741,6 +3649,10 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
         latitude: 52.52,
         longitude: 13.4,
         roles: ["primary"],
+        names: {
+          fr: "Berlin",
+          en: "Berlin",
+        },
       },
     ],
     drivingSide: "right",
@@ -1750,15 +3662,48 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     utcOffsetCount: 1,
     lastVolcanicEruptionYear: -8300,
     mountainAreaShare: null,
-    forestCoverShare: 0.32678934264373405,
+    forestCoverShare: 0.32830037489626,
     urbanCentresOver1M: 5,
     productionRanks: {
       wheat: 10,
     },
     coalElectricityShare: 0.2144,
     formerSovereigns: [],
+    dominations: [],
     sovereigntyYear: 1871,
-    sovereigntyKind: "independence",
+    sovereigntyKind: "unification",
+    sovereigntyDate: "1871-01-18",
+    sovereigntySheetHidden: false,
+    highestPoint: {
+      elevationM: 2963,
+      names: {
+        fr: "Zugspitze",
+        en: "Zugspitze",
+      },
+    },
+    gdpPerCapitaUsd: {
+      value: 60496.4350820414,
+      year: 2025,
+    },
+    lifeExpectancyYears: {
+      value: 80.7926829268293,
+      year: 2024,
+    },
+    humanDevelopmentIndex: {
+      value: 0.959,
+      year: 2023,
+    },
+    currencies: ["EUR"],
+    demonyms: {
+      fr: {
+        m: "Allemand",
+        f: "Allemande",
+      },
+      en: {
+        m: "German",
+        f: "German",
+      },
+    },
   },
   DJI: {
     continent: "africa",
@@ -1773,6 +3718,7 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     flagSymbols: ["star", "triangle"],
     flagLayout: ["horizontal_stripes"],
     events: [],
+    eventEditions: {},
     memberships: ["arab_league", "african_union"],
     capitals: [
       {
@@ -1780,6 +3726,10 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
         latitude: 11.58,
         longitude: 43.15,
         roles: ["primary"],
+        names: {
+          fr: "Djibouti",
+          en: "Djibouti",
+        },
       },
     ],
     drivingSide: "right",
@@ -1789,13 +3739,55 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     utcOffsetCount: 1,
     lastVolcanicEruptionYear: 1978,
     mountainAreaShare: 0.5068103448275862,
-    forestCoverShare: 0.00260724762726488,
+    forestCoverShare: 0.0025496117342536703,
     urbanCentresOver1M: 0,
     productionRanks: {},
     coalElectricityShare: 0,
     formerSovereigns: ["france"],
+    dominations: [
+      {
+        power: "france",
+        nature: "colony",
+        from: 1862,
+        to: 1977,
+        intermittent: false,
+        part: null,
+      },
+    ],
     sovereigntyYear: 1977,
     sovereigntyKind: "independence",
+    sovereigntyDate: "1977-06-27",
+    sovereigntySheetHidden: false,
+    highestPoint: {
+      elevationM: 2021,
+      names: {
+        fr: "Mousa Alli",
+        en: "Mousa Ali",
+      },
+    },
+    gdpPerCapitaUsd: {
+      value: 3905.604954681,
+      year: 2025,
+    },
+    lifeExpectancyYears: {
+      value: 66.202,
+      year: 2024,
+    },
+    humanDevelopmentIndex: {
+      value: 0.513,
+      year: 2023,
+    },
+    currencies: ["DJF"],
+    demonyms: {
+      fr: {
+        m: "Djiboutien",
+        f: "Djiboutienne",
+      },
+      en: {
+        m: "Djiboutian",
+        f: "Djiboutian",
+      },
+    },
   },
   DMA: {
     continent: "north_america",
@@ -1810,6 +3802,7 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     flagSymbols: ["star", "cross", "circle", "animal"],
     flagLayout: [],
     events: [],
+    eventEditions: {},
     memberships: ["commonwealth"],
     capitals: [
       {
@@ -1817,6 +3810,10 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
         latitude: 15.301,
         longitude: -61.3881,
         roles: ["primary"],
+        names: {
+          fr: "Roseau",
+          en: "Roseau",
+        },
       },
     ],
     drivingSide: "left",
@@ -1826,20 +3823,70 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     utcOffsetCount: 1,
     lastVolcanicEruptionYear: 1997,
     mountainAreaShare: 0,
-    forestCoverShare: 0.638266666666667,
+    forestCoverShare: 0.764846870838881,
     urbanCentresOver1M: 0,
     productionRanks: {},
     coalElectricityShare: null,
     formerSovereigns: ["united_kingdom"],
+    dominations: [
+      {
+        power: "france",
+        nature: "colony",
+        from: 1632,
+        to: 1759,
+        intermittent: false,
+        part: null,
+      },
+      {
+        power: "united_kingdom",
+        nature: "colony",
+        from: 1759,
+        to: 1978,
+        intermittent: false,
+        part: null,
+      },
+    ],
     sovereigntyYear: 1978,
     sovereigntyKind: "independence",
+    sovereigntyDate: "1978-11-03",
+    sovereigntySheetHidden: false,
+    highestPoint: {
+      elevationM: 1447,
+      names: {
+        fr: "Morne Diablotins",
+        en: "Morne Diablotins",
+      },
+    },
+    gdpPerCapitaUsd: {
+      value: 10989.0431185083,
+      year: 2025,
+    },
+    lifeExpectancyYears: {
+      value: 71.294,
+      year: 2024,
+    },
+    humanDevelopmentIndex: {
+      value: 0.761,
+      year: 2023,
+    },
+    currencies: ["XCD"],
+    demonyms: {
+      fr: {
+        m: "Dominiquais",
+        f: "Dominiquaise",
+      },
+      en: {
+        m: "Dominican",
+        f: "Dominican",
+      },
+    },
   },
   DNK: {
     continent: "europe",
     waterAccess: "coastal",
     borders: ["DEU"],
     areaKm2: 43094,
-    population: 6031699,
+    population: 6032304,
     officialLanguages: ["da"],
     latitude: 56,
     subregion: "Northern Europe",
@@ -1847,6 +3894,7 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     flagSymbols: ["cross"],
     flagLayout: [],
     events: [],
+    eventEditions: {},
     memberships: ["eu", "nato", "oecd", "schengen"],
     capitals: [
       {
@@ -1854,6 +3902,10 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
         latitude: 55.67,
         longitude: 12.58,
         roles: ["primary"],
+        names: {
+          fr: "Copenhague",
+          en: "Copenhagen",
+        },
       },
     ],
     drivingSide: "right",
@@ -1863,13 +3915,46 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     utcOffsetCount: 1,
     lastVolcanicEruptionYear: null,
     mountainAreaShare: 0,
-    forestCoverShare: 0.15781499999999998,
+    forestCoverShare: 0.159655,
     urbanCentresOver1M: 1,
     productionRanks: {},
     coalElectricityShare: 0.0496,
     formerSovereigns: [],
+    dominations: [],
     sovereigntyYear: 1849,
     sovereigntyKind: "foundation",
+    sovereigntyDate: "1849-06-05",
+    sovereigntySheetHidden: true,
+    highestPoint: {
+      elevationM: 171,
+      names: {
+        fr: "Møllehøj",
+        en: "Møllehøj",
+      },
+    },
+    gdpPerCapitaUsd: {
+      value: 76970.1535217919,
+      year: 2025,
+    },
+    lifeExpectancyYears: {
+      value: 82.2536585365854,
+      year: 2024,
+    },
+    humanDevelopmentIndex: {
+      value: 0.962,
+      year: 2023,
+    },
+    currencies: ["DKK"],
+    demonyms: {
+      fr: {
+        m: "Danois",
+        f: "Danoise",
+      },
+      en: {
+        m: "Danish",
+        f: "Danish",
+      },
+    },
   },
   DOM: {
     continent: "north_america",
@@ -1884,6 +3969,7 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     flagSymbols: ["cross"],
     flagLayout: [],
     events: [],
+    eventEditions: {},
     memberships: [],
     capitals: [
       {
@@ -1891,24 +3977,70 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
         latitude: 18.47,
         longitude: -69.9,
         roles: ["primary"],
+        names: {
+          fr: "Saint-Domingue",
+          en: "Santo Domingo",
+        },
       },
     ],
     drivingSide: "right",
-    geoTags: [],
+    geoTags: ["shared_island"],
     regime: "republic",
     physicalFeatures: ["caribbean_coast", "atlantic_coast"],
     utcOffsetCount: 1,
     lastVolcanicEruptionYear: null,
     mountainAreaShare: 0.36987117585420476,
-    forestCoverShare: 0.449887775472934,
+    forestCoverShare: 0.465624936460045,
     urbanCentresOver1M: 1,
     productionRanks: {
       cocoa: 9,
     },
     coalElectricityShare: 0.29960000000000003,
     formerSovereigns: [],
+    dominations: [
+      {
+        power: "france",
+        nature: "colony",
+        from: 1795,
+        to: 1809,
+        intermittent: false,
+        part: null,
+      },
+    ],
     sovereigntyYear: 1844,
     sovereigntyKind: "independence",
+    sovereigntyDate: "1844-02-27",
+    sovereigntySheetHidden: false,
+    highestPoint: {
+      elevationM: 3098,
+      names: {
+        fr: "Pico Duarte",
+        en: "Pico Duarte",
+      },
+    },
+    gdpPerCapitaUsd: {
+      value: 11059.2081531834,
+      year: 2025,
+    },
+    lifeExpectancyYears: {
+      value: 73.868,
+      year: 2024,
+    },
+    humanDevelopmentIndex: {
+      value: 0.776,
+      year: 2023,
+    },
+    currencies: ["DOP"],
+    demonyms: {
+      fr: {
+        m: "Dominicain",
+        f: "Dominicaine",
+      },
+      en: {
+        m: "Dominican",
+        f: "Dominican",
+      },
+    },
   },
   DZA: {
     continent: "africa",
@@ -1923,6 +4055,7 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     flagSymbols: ["star", "crescent"],
     flagLayout: ["vertical_stripes"],
     events: [],
+    eventEditions: {},
     memberships: ["arab_league", "opec", "african_union"],
     capitals: [
       {
@@ -1930,6 +4063,10 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
         latitude: 36.75,
         longitude: 3.05,
         roles: ["primary"],
+        names: {
+          fr: "Alger",
+          en: "Algiers",
+        },
       },
     ],
     drivingSide: "right",
@@ -1939,15 +4076,57 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     utcOffsetCount: 1,
     lastVolcanicEruptionYear: null,
     mountainAreaShare: 0.11498899334562405,
-    forestCoverShare: 0.00830314224054683,
+    forestCoverShare: 0.00710703099414714,
     urbanCentresOver1M: 2,
     productionRanks: {
       natural_gas: 10,
     },
     coalElectricityShare: 0,
     formerSovereigns: ["france"],
+    dominations: [
+      {
+        power: "france",
+        nature: "colony",
+        from: 1830,
+        to: 1962,
+        intermittent: false,
+        part: null,
+      },
+    ],
     sovereigntyYear: 1962,
     sovereigntyKind: "independence",
+    sovereigntyDate: "1962-07-05",
+    sovereigntySheetHidden: false,
+    highestPoint: {
+      elevationM: 2908,
+      names: {
+        fr: "Tahat",
+        en: "Mount Tahat",
+      },
+    },
+    gdpPerCapitaUsd: {
+      value: 6051.00322704182,
+      year: 2025,
+    },
+    lifeExpectancyYears: {
+      value: 76.475,
+      year: 2024,
+    },
+    humanDevelopmentIndex: {
+      value: 0.763,
+      year: 2023,
+    },
+    currencies: ["DZD"],
+    demonyms: {
+      fr: {
+        m: "Algérien",
+        f: "Algérienne",
+      },
+      en: {
+        m: "Algerian",
+        f: "Algerian",
+      },
+    },
   },
   ECU: {
     continent: "south_america",
@@ -1962,6 +4141,7 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     flagSymbols: ["animal"],
     flagLayout: ["horizontal_stripes"],
     events: [],
+    eventEditions: {},
     memberships: [],
     capitals: [
       {
@@ -1969,6 +4149,10 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
         latitude: -0.22,
         longitude: -78.5,
         roles: ["primary"],
+        names: {
+          fr: "Quito",
+          en: "Quito",
+        },
       },
     ],
     drivingSide: "right",
@@ -1983,15 +4167,48 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     utcOffsetCount: 2,
     lastVolcanicEruptionYear: 2026,
     mountainAreaShare: 0.4101704588554441,
-    forestCoverShare: 0.495450958286359,
+    forestCoverShare: 0.4980926880335,
     urbanCentresOver1M: 2,
     productionRanks: {
       cocoa: 4,
     },
     coalElectricityShare: 0,
     formerSovereigns: ["spain"],
+    dominations: [],
     sovereigntyYear: 1822,
     sovereigntyKind: "independence",
+    sovereigntyDate: "1822-05-24",
+    sovereigntySheetHidden: false,
+    highestPoint: {
+      elevationM: 6267,
+      names: {
+        fr: "Chimborazo",
+        en: "Chimborazo",
+      },
+    },
+    gdpPerCapitaUsd: {
+      value: 7125.27618527738,
+      year: 2025,
+    },
+    lifeExpectancyYears: {
+      value: 77.579,
+      year: 2024,
+    },
+    humanDevelopmentIndex: {
+      value: 0.777,
+      year: 2023,
+    },
+    currencies: ["USD"],
+    demonyms: {
+      fr: {
+        m: "Équatorien",
+        f: "Équatorienne",
+      },
+      en: {
+        m: "Ecuadorean",
+        f: "Ecuadorean",
+      },
+    },
   },
   EGY: {
     continent: "africa",
@@ -2006,6 +4223,7 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     flagSymbols: ["animal"],
     flagLayout: ["horizontal_stripes"],
     events: [],
+    eventEditions: {},
     memberships: ["arab_league", "brics", "african_union"],
     capitals: [
       {
@@ -2013,6 +4231,10 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
         latitude: 30.05,
         longitude: 31.25,
         roles: ["primary"],
+        names: {
+          fr: "Le Caire",
+          en: "Cairo",
+        },
       },
     ],
     drivingSide: "right",
@@ -2022,15 +4244,57 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     utcOffsetCount: 1,
     lastVolcanicEruptionYear: null,
     mountainAreaShare: 0.08421966182852011,
-    forestCoverShare: 0.000451855944547692,
+    forestCoverShare: 0.000041187402682204,
     urbanCentresOver1M: 9,
     productionRanks: {
       natural_gas: 15,
     },
     coalElectricityShare: 0,
     formerSovereigns: ["united_kingdom"],
+    dominations: [
+      {
+        power: "united_kingdom",
+        nature: "protectorate",
+        from: 1882,
+        to: 1922,
+        intermittent: false,
+        part: null,
+      },
+    ],
     sovereigntyYear: 1922,
     sovereigntyKind: "independence",
+    sovereigntyDate: "1922-02-28",
+    sovereigntySheetHidden: false,
+    highestPoint: {
+      elevationM: 2629,
+      names: {
+        fr: "mont Sainte-Catherine",
+        en: "Mount Catherine",
+      },
+    },
+    gdpPerCapitaUsd: {
+      value: 3085.80712036204,
+      year: 2025,
+    },
+    lifeExpectancyYears: {
+      value: 71.806,
+      year: 2024,
+    },
+    humanDevelopmentIndex: {
+      value: 0.754,
+      year: 2023,
+    },
+    currencies: ["EGP"],
+    demonyms: {
+      fr: {
+        m: "Égyptien",
+        f: "Égyptienne",
+      },
+      en: {
+        m: "Egyptian",
+        f: "Egyptian",
+      },
+    },
   },
   ERI: {
     continent: "africa",
@@ -2045,6 +4309,7 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     flagSymbols: ["triangle", "plant"],
     flagLayout: [],
     events: [],
+    eventEditions: {},
     memberships: ["african_union"],
     capitals: [
       {
@@ -2052,6 +4317,10 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
         latitude: 15.33,
         longitude: 38.93,
         roles: ["primary"],
+        names: {
+          fr: "Asmara",
+          en: "Asmara",
+        },
       },
     ],
     drivingSide: "right",
@@ -2061,13 +4330,43 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     utcOffsetCount: 1,
     lastVolcanicEruptionYear: 2012,
     mountainAreaShare: 0.6076360544217687,
-    forestCoverShare: 0.08630100133522371,
+    forestCoverShare: 0.120362582781457,
     urbanCentresOver1M: 0,
     productionRanks: {},
     coalElectricityShare: 0,
     formerSovereigns: [],
+    dominations: [],
     sovereigntyYear: 1993,
     sovereigntyKind: "independence",
+    sovereigntyDate: "1993-05-24",
+    sovereigntySheetHidden: false,
+    highestPoint: {
+      elevationM: 3018,
+      names: {
+        fr: "mont Soira",
+        en: "Emba Soira",
+      },
+    },
+    gdpPerCapitaUsd: null,
+    lifeExpectancyYears: {
+      value: 68.893,
+      year: 2024,
+    },
+    humanDevelopmentIndex: {
+      value: 0.503,
+      year: 2023,
+    },
+    currencies: ["ERN"],
+    demonyms: {
+      fr: {
+        m: "Érythréen",
+        f: "Érythréenne",
+      },
+      en: {
+        m: "Eritrean",
+        f: "Eritrean",
+      },
+    },
   },
   ESP: {
     continent: "europe",
@@ -2082,6 +4381,10 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     flagSymbols: ["animal"],
     flagLayout: ["horizontal_stripes"],
     events: ["fifa_wc_host", "summer_olympics_host"],
+    eventEditions: {
+      fifa_wc_host: [1982],
+      summer_olympics_host: [1992],
+    },
     memberships: ["eu", "eurozone", "nato", "oecd", "schengen"],
     capitals: [
       {
@@ -2089,6 +4392,10 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
         latitude: 40.4,
         longitude: -3.68,
         roles: ["primary"],
+        names: {
+          fr: "Madrid",
+          en: "Madrid",
+        },
       },
     ],
     drivingSide: "right",
@@ -2098,13 +4405,46 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     utcOffsetCount: 2,
     lastVolcanicEruptionYear: 2021,
     mountainAreaShare: 0.46216343341396704,
-    forestCoverShare: 0.371925889548355,
+    forestCoverShare: 0.38168079321605397,
     urbanCentresOver1M: 3,
     productionRanks: {},
     coalElectricityShare: 0.0092,
     formerSovereigns: [],
+    dominations: [],
     sovereigntyYear: 1492,
     sovereigntyKind: "foundation",
+    sovereigntyDate: null,
+    sovereigntySheetHidden: true,
+    highestPoint: {
+      elevationM: 3718,
+      names: {
+        fr: "Teide",
+        en: "Teide",
+      },
+    },
+    gdpPerCapitaUsd: {
+      value: 38627.2472148623,
+      year: 2025,
+    },
+    lifeExpectancyYears: {
+      value: 83.8878048780488,
+      year: 2024,
+    },
+    humanDevelopmentIndex: {
+      value: 0.918,
+      year: 2023,
+    },
+    currencies: ["EUR"],
+    demonyms: {
+      fr: {
+        m: "Espagnol",
+        f: "Espagnole",
+      },
+      en: {
+        m: "Spanish",
+        f: "Spanish",
+      },
+    },
   },
   EST: {
     continent: "europe",
@@ -2119,6 +4459,7 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     flagSymbols: [],
     flagLayout: ["horizontal_stripes"],
     events: [],
+    eventEditions: {},
     memberships: ["eu", "eurozone", "nato", "oecd", "schengen"],
     capitals: [
       {
@@ -2126,6 +4467,10 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
         latitude: 59.43,
         longitude: 24.72,
         roles: ["primary"],
+        names: {
+          fr: "Tallinn",
+          en: "Tallinn",
+        },
       },
     ],
     drivingSide: "right",
@@ -2135,13 +4480,46 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     utcOffsetCount: 1,
     lastVolcanicEruptionYear: null,
     mountainAreaShare: 0,
-    forestCoverShare: 0.570652937046572,
+    forestCoverShare: 0.572337935876433,
     urbanCentresOver1M: 0,
     productionRanks: {},
     coalElectricityShare: 0,
     formerSovereigns: ["soviet_union"],
+    dominations: [],
     sovereigntyYear: 1991,
     sovereigntyKind: "restoration",
+    sovereigntyDate: "1991-08-20",
+    sovereigntySheetHidden: false,
+    highestPoint: {
+      elevationM: 318,
+      names: {
+        fr: "Suur Munamägi",
+        en: "Suur Munamägi",
+      },
+    },
+    gdpPerCapitaUsd: {
+      value: 34417.6320815138,
+      year: 2025,
+    },
+    lifeExpectancyYears: {
+      value: 79.2951219512195,
+      year: 2024,
+    },
+    humanDevelopmentIndex: {
+      value: 0.905,
+      year: 2023,
+    },
+    currencies: ["EUR"],
+    demonyms: {
+      fr: {
+        m: "Estonien",
+        f: "Estonienne",
+      },
+      en: {
+        m: "Estonian",
+        f: "Estonian",
+      },
+    },
   },
   ETH: {
     continent: "africa",
@@ -2156,6 +4534,7 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     flagSymbols: ["circle", "star"],
     flagLayout: ["horizontal_stripes"],
     events: [],
+    eventEditions: {},
     memberships: ["brics", "african_union"],
     capitals: [
       {
@@ -2163,6 +4542,10 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
         latitude: 9.03,
         longitude: 38.7,
         roles: ["primary"],
+        names: {
+          fr: "Addis-Abeba",
+          en: "Addis Ababa",
+        },
       },
     ],
     drivingSide: "right",
@@ -2172,22 +4555,55 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     utcOffsetCount: 1,
     lastVolcanicEruptionYear: 2025,
     mountainAreaShare: 0.49928370913700987,
-    forestCoverShare: 0.149308975782695,
+    forestCoverShare: 0.238428930285381,
     urbanCentresOver1M: 1,
     productionRanks: {
       coffee: 4,
     },
     coalElectricityShare: 0,
     formerSovereigns: [],
+    dominations: [],
     sovereigntyYear: null,
     sovereigntyKind: null,
+    sovereigntyDate: null,
+    sovereigntySheetHidden: false,
+    highestPoint: {
+      elevationM: 4550,
+      names: {
+        fr: "Ras Dashan",
+        en: "Ras Dashen",
+      },
+    },
+    gdpPerCapitaUsd: {
+      value: 932.729352775179,
+      year: 2025,
+    },
+    lifeExpectancyYears: {
+      value: 67.603,
+      year: 2024,
+    },
+    humanDevelopmentIndex: {
+      value: 0.497,
+      year: 2023,
+    },
+    currencies: ["ETB"],
+    demonyms: {
+      fr: {
+        m: "Éthiopien",
+        f: "Éthiopienne",
+      },
+      en: {
+        m: "Ethiopian",
+        f: "Ethiopian",
+      },
+    },
   },
   FIN: {
     continent: "europe",
     waterAccess: "coastal",
     borders: ["NOR", "SWE", "RUS"],
     areaKm2: 338424,
-    population: 5655296,
+    population: 5659324,
     officialLanguages: ["fi", "sv"],
     latitude: 64,
     subregion: "Northern Europe",
@@ -2195,6 +4611,9 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     flagSymbols: ["cross"],
     flagLayout: [],
     events: ["summer_olympics_host"],
+    eventEditions: {
+      summer_olympics_host: [1952],
+    },
     memberships: ["eu", "eurozone", "nato", "oecd", "schengen"],
     capitals: [
       {
@@ -2202,6 +4621,10 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
         latitude: 60.17,
         longitude: 24.93,
         roles: ["primary"],
+        names: {
+          fr: "Helsinki",
+          en: "Helsinki",
+        },
       },
     ],
     drivingSide: "right",
@@ -2211,13 +4634,46 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     utcOffsetCount: 1,
     lastVolcanicEruptionYear: null,
     mountainAreaShare: 0.008371155709996927,
-    forestCoverShare: 0.737235162521384,
+    forestCoverShare: 0.7416436373207,
     urbanCentresOver1M: 1,
     productionRanks: {},
     coalElectricityShare: 0.0101,
     formerSovereigns: [],
+    dominations: [],
     sovereigntyYear: 1917,
     sovereigntyKind: "independence",
+    sovereigntyDate: "1917-12-06",
+    sovereigntySheetHidden: false,
+    highestPoint: {
+      elevationM: 1328,
+      names: {
+        fr: "Halti",
+        en: "Halti",
+      },
+    },
+    gdpPerCapitaUsd: {
+      value: 56148.580949046,
+      year: 2025,
+    },
+    lifeExpectancyYears: {
+      value: 82.3365853658537,
+      year: 2024,
+    },
+    humanDevelopmentIndex: {
+      value: 0.948,
+      year: 2023,
+    },
+    currencies: ["EUR"],
+    demonyms: {
+      fr: {
+        m: "Finlandais",
+        f: "Finlandaise",
+      },
+      en: {
+        m: "Finnish",
+        f: "Finnish",
+      },
+    },
   },
   FJI: {
     continent: "oceania",
@@ -2232,6 +4688,7 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     flagSymbols: ["cross", "animal"],
     flagLayout: [],
     events: [],
+    eventEditions: {},
     memberships: ["commonwealth"],
     capitals: [
       {
@@ -2239,6 +4696,10 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
         latitude: -18.13,
         longitude: 178.42,
         roles: ["primary"],
+        names: {
+          fr: "Suva",
+          en: "Suva",
+        },
       },
     ],
     drivingSide: "left",
@@ -2248,13 +4709,55 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     utcOffsetCount: 1,
     lastVolcanicEruptionYear: 1660,
     mountainAreaShare: 0.20742119089316988,
-    forestCoverShare: 0.634953475643131,
+    forestCoverShare: 0.6170443349753689,
     urbanCentresOver1M: 0,
     productionRanks: {},
     coalElectricityShare: 0,
     formerSovereigns: ["united_kingdom"],
+    dominations: [
+      {
+        power: "united_kingdom",
+        nature: "colony",
+        from: 1874,
+        to: 1970,
+        intermittent: false,
+        part: null,
+      },
+    ],
     sovereigntyYear: 1970,
     sovereigntyKind: "independence",
+    sovereigntyDate: "1970-10-10",
+    sovereigntySheetHidden: false,
+    highestPoint: {
+      elevationM: 1324,
+      names: {
+        fr: "mont Tomanivi",
+        en: "Mount Tomanivi",
+      },
+    },
+    gdpPerCapitaUsd: {
+      value: 6642.00449450523,
+      year: 2025,
+    },
+    lifeExpectancyYears: {
+      value: 67.463,
+      year: 2024,
+    },
+    humanDevelopmentIndex: {
+      value: 0.731,
+      year: 2023,
+    },
+    currencies: ["FJD"],
+    demonyms: {
+      fr: {
+        m: "Fidjien",
+        f: "Fidjienne",
+      },
+      en: {
+        m: "Fijian",
+        f: "Fijian",
+      },
+    },
   },
   FRA: {
     continent: "europe",
@@ -2280,6 +4783,11 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     flagSymbols: [],
     flagLayout: ["vertical_stripes"],
     events: ["fifa_wc_host", "summer_olympics_host", "winter_olympics_host"],
+    eventEditions: {
+      fifa_wc_host: [1938, 1998],
+      summer_olympics_host: [1900, 1924, 2024],
+      winter_olympics_host: [1924, 1968, 1992],
+    },
     memberships: ["eu", "eurozone", "g20", "g7", "nato", "oecd", "schengen"],
     capitals: [
       {
@@ -2287,6 +4795,10 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
         latitude: 48.87,
         longitude: 2.33,
         roles: ["primary"],
+        names: {
+          fr: "Paris",
+          en: "Paris",
+        },
       },
     ],
     drivingSide: "right",
@@ -2302,15 +4814,48 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     utcOffsetCount: 5,
     lastVolcanicEruptionYear: 2026,
     mountainAreaShare: 0.21357996719201733,
-    forestCoverShare: 0.324764820484275,
+    forestCoverShare: 0.326861489934131,
     urbanCentresOver1M: 2,
     productionRanks: {
       wheat: 7,
     },
     coalElectricityShare: 0.0018,
     formerSovereigns: [],
+    dominations: [],
     sovereigntyYear: 1789,
     sovereigntyKind: "independence",
+    sovereigntyDate: "1789-07-14",
+    sovereigntySheetHidden: true,
+    highestPoint: {
+      elevationM: 4810,
+      names: {
+        fr: "mont Blanc",
+        en: "Mont Blanc",
+      },
+    },
+    gdpPerCapitaUsd: {
+      value: 48985.7307807924,
+      year: 2025,
+    },
+    lifeExpectancyYears: {
+      value: 82.9804878048781,
+      year: 2024,
+    },
+    humanDevelopmentIndex: {
+      value: 0.92,
+      year: 2023,
+    },
+    currencies: ["EUR"],
+    demonyms: {
+      fr: {
+        m: "Français",
+        f: "Française",
+      },
+      en: {
+        m: "French",
+        f: "French",
+      },
+    },
   },
   FSM: {
     continent: "oceania",
@@ -2325,6 +4870,7 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     flagSymbols: ["star"],
     flagLayout: [],
     events: [],
+    eventEditions: {},
     memberships: [],
     capitals: [
       {
@@ -2332,6 +4878,10 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
         latitude: 6.92,
         longitude: 158.15,
         roles: ["primary"],
+        names: {
+          fr: "Palikir",
+          en: "Palikir",
+        },
       },
     ],
     drivingSide: "right",
@@ -2341,13 +4891,46 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     utcOffsetCount: 2,
     lastVolcanicEruptionYear: null,
     mountainAreaShare: 0.12393162393162394,
-    forestCoverShare: 0.921571428571429,
+    forestCoverShare: 0.9202567760342371,
     urbanCentresOver1M: 0,
     productionRanks: {},
     coalElectricityShare: null,
     formerSovereigns: ["united_states"],
+    dominations: [],
     sovereigntyYear: 1986,
     sovereigntyKind: "independence",
+    sovereigntyDate: "1986-11-03",
+    sovereigntySheetHidden: false,
+    highestPoint: {
+      elevationM: 782,
+      names: {
+        fr: "Nanlaud",
+        en: "Nanlaud",
+      },
+    },
+    gdpPerCapitaUsd: {
+      value: 4414.00737137479,
+      year: 2025,
+    },
+    lifeExpectancyYears: {
+      value: 67.357,
+      year: 2024,
+    },
+    humanDevelopmentIndex: {
+      value: 0.615,
+      year: 2023,
+    },
+    currencies: ["USD"],
+    demonyms: {
+      fr: {
+        m: "Micronésien",
+        f: "Micronésienne",
+      },
+      en: {
+        m: "Micronesian",
+        f: "Micronesian",
+      },
+    },
   },
   GAB: {
     continent: "africa",
@@ -2362,6 +4945,7 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     flagSymbols: [],
     flagLayout: ["horizontal_stripes"],
     events: [],
+    eventEditions: {},
     memberships: ["commonwealth", "opec", "african_union"],
     capitals: [
       {
@@ -2369,6 +4953,10 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
         latitude: 0.38,
         longitude: 9.45,
         roles: ["primary"],
+        names: {
+          fr: "Libreville",
+          en: "Libreville",
+        },
       },
     ],
     drivingSide: "right",
@@ -2378,13 +4966,55 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     utcOffsetCount: 1,
     lastVolcanicEruptionYear: null,
     mountainAreaShare: 0.03428127381681785,
-    forestCoverShare: 0.9118236504055579,
+    forestCoverShare: 0.9146881670353549,
     urbanCentresOver1M: 0,
     productionRanks: {},
     coalElectricityShare: 0,
     formerSovereigns: ["france"],
+    dominations: [
+      {
+        power: "france",
+        nature: "colony",
+        from: 1839,
+        to: 1960,
+        intermittent: false,
+        part: null,
+      },
+    ],
     sovereigntyYear: 1960,
     sovereigntyKind: "independence",
+    sovereigntyDate: "1960-08-17",
+    sovereigntySheetHidden: false,
+    highestPoint: {
+      elevationM: 1050,
+      names: {
+        fr: "mont Bengoué",
+        en: "Mont Bengoué",
+      },
+    },
+    gdpPerCapitaUsd: {
+      value: 8263.03321595,
+      year: 2025,
+    },
+    lifeExpectancyYears: {
+      value: 68.511,
+      year: 2024,
+    },
+    humanDevelopmentIndex: {
+      value: 0.733,
+      year: 2023,
+    },
+    currencies: ["XAF"],
+    demonyms: {
+      fr: {
+        m: "Gabonais",
+        f: "Gabonaise",
+      },
+      en: {
+        m: "Gabonese",
+        f: "Gabonese",
+      },
+    },
   },
   GBR: {
     continent: "europe",
@@ -2399,6 +5029,10 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     flagSymbols: ["cross"],
     flagLayout: [],
     events: ["fifa_wc_host", "summer_olympics_host"],
+    eventEditions: {
+      fifa_wc_host: [1966],
+      summer_olympics_host: [1908, 1948, 2012],
+    },
     memberships: ["commonwealth", "g20", "g7", "nato", "oecd"],
     capitals: [
       {
@@ -2406,22 +5040,59 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
         latitude: 51.5,
         longitude: -0.08,
         roles: ["primary"],
+        names: {
+          fr: "Londres",
+          en: "London",
+        },
       },
     ],
     drivingSide: "left",
-    geoTags: ["drives_on_left"],
+    geoTags: ["drives_on_left", "shared_island"],
     regime: "monarchy",
     physicalFeatures: ["atlantic_coast"],
     utcOffsetCount: 1,
     lastVolcanicEruptionYear: null,
     mountainAreaShare: 0.11579250720461096,
-    forestCoverShare: 0.132907130161617,
+    forestCoverShare: 0.134452114247923,
     urbanCentresOver1M: 5,
     productionRanks: {},
     coalElectricityShare: 0.0067,
     formerSovereigns: [],
+    dominations: [],
     sovereigntyYear: 1284,
     sovereigntyKind: "independence",
+    sovereigntyDate: "1284-03-03",
+    sovereigntySheetHidden: true,
+    highestPoint: {
+      elevationM: 1345,
+      names: {
+        fr: "Ben Nevis",
+        en: "Ben Nevis",
+      },
+    },
+    gdpPerCapitaUsd: {
+      value: 57601.9621201954,
+      year: 2025,
+    },
+    lifeExpectancyYears: {
+      value: 81.3868536585366,
+      year: 2024,
+    },
+    humanDevelopmentIndex: {
+      value: 0.946,
+      year: 2023,
+    },
+    currencies: ["GBP"],
+    demonyms: {
+      fr: {
+        m: "Britannique",
+        f: "Britannique",
+      },
+      en: {
+        m: "British",
+        f: "British",
+      },
+    },
   },
   GEO: {
     continent: "asia",
@@ -2436,6 +5107,7 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     flagSymbols: ["cross"],
     flagLayout: [],
     events: [],
+    eventEditions: {},
     memberships: [],
     capitals: [
       {
@@ -2443,6 +5115,10 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
         latitude: 41.68,
         longitude: 44.83,
         roles: ["primary"],
+        names: {
+          fr: "Tbilissi",
+          en: "Tbilisi",
+        },
       },
     ],
     drivingSide: "right",
@@ -2452,13 +5128,46 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     utcOffsetCount: 1,
     lastVolcanicEruptionYear: -750,
     mountainAreaShare: 0.8019368723098995,
-    forestCoverShare: 0.40615915959130805,
+    forestCoverShare: 0.446179306375018,
     urbanCentresOver1M: 0,
     productionRanks: {},
     coalElectricityShare: 0,
     formerSovereigns: ["soviet_union"],
+    dominations: [],
     sovereigntyYear: 1991,
     sovereigntyKind: "independence",
+    sovereigntyDate: "1991-04-09",
+    sovereigntySheetHidden: false,
+    highestPoint: {
+      elevationM: 5193,
+      names: {
+        fr: "Chkhara",
+        en: "Shkhara",
+      },
+    },
+    gdpPerCapitaUsd: {
+      value: 9691.53472415196,
+      year: 2025,
+    },
+    lifeExpectancyYears: {
+      value: 74.657,
+      year: 2024,
+    },
+    humanDevelopmentIndex: {
+      value: 0.844,
+      year: 2023,
+    },
+    currencies: ["GEL"],
+    demonyms: {
+      fr: {
+        m: "Géorgien",
+        f: "Géorgienne",
+      },
+      en: {
+        m: "Georgian",
+        f: "Georgian",
+      },
+    },
   },
   GHA: {
     continent: "africa",
@@ -2473,6 +5182,7 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     flagSymbols: ["star"],
     flagLayout: ["horizontal_stripes"],
     events: [],
+    eventEditions: {},
     memberships: ["commonwealth", "african_union"],
     capitals: [
       {
@@ -2480,6 +5190,10 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
         latitude: 5.55,
         longitude: -0.22,
         roles: ["primary"],
+        names: {
+          fr: "Accra",
+          en: "Accra",
+        },
       },
     ],
     drivingSide: "right",
@@ -2489,15 +5203,57 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     utcOffsetCount: 1,
     lastVolcanicEruptionYear: null,
     mountainAreaShare: 0.02207241765290337,
-    forestCoverShare: 0.351921958573042,
+    forestCoverShare: 0.306984920868621,
     urbanCentresOver1M: 3,
     productionRanks: {
       cocoa: 3,
     },
     coalElectricityShare: 0,
     formerSovereigns: ["united_kingdom"],
+    dominations: [
+      {
+        power: "united_kingdom",
+        nature: "colony",
+        from: 1874,
+        to: 1957,
+        intermittent: false,
+        part: null,
+      },
+    ],
     sovereigntyYear: 1957,
     sovereigntyKind: "independence",
+    sovereigntyDate: "1957-03-06",
+    sovereigntySheetHidden: false,
+    highestPoint: {
+      elevationM: 885,
+      names: {
+        fr: "mont Afadjato",
+        en: "Mount Afadja",
+      },
+    },
+    gdpPerCapitaUsd: {
+      value: 3257.1588903576,
+      year: 2025,
+    },
+    lifeExpectancyYears: {
+      value: 65.695,
+      year: 2024,
+    },
+    humanDevelopmentIndex: {
+      value: 0.628,
+      year: 2023,
+    },
+    currencies: ["GHS"],
+    demonyms: {
+      fr: {
+        m: "Ghanéen",
+        f: "Ghanéenne",
+      },
+      en: {
+        m: "Ghanaian",
+        f: "Ghanaian",
+      },
+    },
   },
   GIN: {
     continent: "africa",
@@ -2512,6 +5268,7 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     flagSymbols: [],
     flagLayout: ["vertical_stripes"],
     events: [],
+    eventEditions: {},
     memberships: ["african_union"],
     capitals: [
       {
@@ -2519,6 +5276,10 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
         latitude: 9.6412,
         longitude: -13.5784,
         roles: ["primary"],
+        names: {
+          fr: "Conakry",
+          en: "Conakry",
+        },
       },
     ],
     drivingSide: "right",
@@ -2528,13 +5289,55 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     utcOffsetCount: 1,
     lastVolcanicEruptionYear: null,
     mountainAreaShare: 0.22816108550905606,
-    forestCoverShare: 0.24698844212925303,
+    forestCoverShare: 0.203129985349178,
     urbanCentresOver1M: 1,
     productionRanks: {},
     coalElectricityShare: 0,
     formerSovereigns: ["france"],
+    dominations: [
+      {
+        power: "france",
+        nature: "colony",
+        from: 1891,
+        to: 1958,
+        intermittent: false,
+        part: null,
+      },
+    ],
     sovereigntyYear: 1958,
     sovereigntyKind: "independence",
+    sovereigntyDate: "1958-10-02",
+    sovereigntySheetHidden: false,
+    highestPoint: {
+      elevationM: 1752,
+      names: {
+        fr: "mont Nimba",
+        en: "Mount Richard-Molard",
+      },
+    },
+    gdpPerCapitaUsd: {
+      value: 1877.2541220972,
+      year: 2025,
+    },
+    lifeExpectancyYears: {
+      value: 60.904,
+      year: 2024,
+    },
+    humanDevelopmentIndex: {
+      value: 0.5,
+      year: 2023,
+    },
+    currencies: ["GNF"],
+    demonyms: {
+      fr: {
+        m: "Guinéen",
+        f: "Guinéenne",
+      },
+      en: {
+        m: "Guinean",
+        f: "Guinean",
+      },
+    },
   },
   GMB: {
     continent: "africa",
@@ -2549,6 +5352,7 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     flagSymbols: [],
     flagLayout: ["horizontal_stripes"],
     events: [],
+    eventEditions: {},
     memberships: ["commonwealth", "african_union"],
     capitals: [
       {
@@ -2556,6 +5360,10 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
         latitude: 13.45,
         longitude: -16.57,
         roles: ["primary"],
+        names: {
+          fr: "Banjul",
+          en: "Banjul",
+        },
       },
     ],
     drivingSide: "right",
@@ -2565,13 +5373,52 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     utcOffsetCount: 1,
     lastVolcanicEruptionYear: null,
     mountainAreaShare: 0,
-    forestCoverShare: 0.222792391304348,
+    forestCoverShare: 0.21990118577075102,
     urbanCentresOver1M: 1,
     productionRanks: {},
     coalElectricityShare: 0,
     formerSovereigns: ["united_kingdom"],
+    dominations: [
+      {
+        power: "united_kingdom",
+        nature: "colony",
+        from: 1664,
+        to: 1965,
+        intermittent: false,
+        part: null,
+      },
+    ],
     sovereigntyYear: 1965,
     sovereigntyKind: "independence",
+    sovereigntyDate: "1965-02-18",
+    sovereigntySheetHidden: false,
+    highestPoint: {
+      elevationM: 63,
+      names: null,
+    },
+    gdpPerCapitaUsd: {
+      value: 919.060423427951,
+      year: 2025,
+    },
+    lifeExpectancyYears: {
+      value: 66.057,
+      year: 2024,
+    },
+    humanDevelopmentIndex: {
+      value: 0.524,
+      year: 2023,
+    },
+    currencies: ["GMD"],
+    demonyms: {
+      fr: {
+        m: "Gambien",
+        f: "Gambienne",
+      },
+      en: {
+        m: "Gambian",
+        f: "Gambian",
+      },
+    },
   },
   GNB: {
     continent: "africa",
@@ -2579,13 +5426,14 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     borders: ["GIN", "SEN"],
     areaKm2: 36125,
     population: 1890252,
-    officialLanguages: ["pt", "pov"],
+    officialLanguages: ["pt"],
     latitude: 12,
     subregion: "Western Africa",
     flagColors: ["red", "green", "yellow", "black"],
     flagSymbols: ["star"],
     flagLayout: [],
     events: [],
+    eventEditions: {},
     memberships: ["african_union"],
     capitals: [
       {
@@ -2593,6 +5441,10 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
         latitude: 11.85,
         longitude: -15.58,
         roles: ["primary"],
+        names: {
+          fr: "Bissau",
+          en: "Bissau",
+        },
       },
     ],
     drivingSide: "right",
@@ -2602,13 +5454,46 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     utcOffsetCount: 1,
     lastVolcanicEruptionYear: null,
     mountainAreaShare: 0,
-    forestCoverShare: 0.695124466571835,
+    forestCoverShare: 0.749669274537696,
     urbanCentresOver1M: 0,
     productionRanks: {},
     coalElectricityShare: 0,
     formerSovereigns: ["portugal"],
+    dominations: [],
     sovereigntyYear: 1973,
     sovereigntyKind: "independence",
+    sovereigntyDate: "1973-09-24",
+    sovereigntySheetHidden: false,
+    highestPoint: {
+      elevationM: 277,
+      names: {
+        fr: "Dongol Ronde",
+        en: "Dongol Ronde",
+      },
+    },
+    gdpPerCapitaUsd: {
+      value: 1123.76679992349,
+      year: 2025,
+    },
+    lifeExpectancyYears: {
+      value: 64.254,
+      year: 2024,
+    },
+    humanDevelopmentIndex: {
+      value: 0.514,
+      year: 2023,
+    },
+    currencies: ["XOF"],
+    demonyms: {
+      fr: {
+        m: "Bissau-Guinéen",
+        f: "Bissau-Guinéenne",
+      },
+      en: {
+        m: "Guinea-Bissauan",
+        f: "Guinea-Bissauan",
+      },
+    },
   },
   GNQ: {
     continent: "africa",
@@ -2623,6 +5508,7 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     flagSymbols: ["triangle", "plant", "star"],
     flagLayout: ["horizontal_stripes"],
     events: [],
+    eventEditions: {},
     memberships: ["opec", "african_union"],
     capitals: [
       {
@@ -2630,6 +5516,10 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
         latitude: 3.75,
         longitude: 8.78,
         roles: ["primary"],
+        names: {
+          fr: "Malabo",
+          en: "Malabo",
+        },
       },
     ],
     drivingSide: "right",
@@ -2639,13 +5529,46 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     utcOffsetCount: 1,
     lastVolcanicEruptionYear: 1923,
     mountainAreaShare: 0.13051228120209618,
-    forestCoverShare: 0.863935828877005,
+    forestCoverShare: 0.863889631570504,
     urbanCentresOver1M: 0,
     productionRanks: {},
     coalElectricityShare: 0,
     formerSovereigns: ["spain"],
+    dominations: [],
     sovereigntyYear: 1968,
     sovereigntyKind: "independence",
+    sovereigntyDate: "1968-10-12",
+    sovereigntySheetHidden: false,
+    highestPoint: {
+      elevationM: 3008,
+      names: {
+        fr: "Pico Basilé",
+        en: "Pico Basilé",
+      },
+    },
+    gdpPerCapitaUsd: {
+      value: 6615.25245207167,
+      year: 2025,
+    },
+    lifeExpectancyYears: {
+      value: 63.906,
+      year: 2024,
+    },
+    humanDevelopmentIndex: {
+      value: 0.674,
+      year: 2023,
+    },
+    currencies: ["XAF"],
+    demonyms: {
+      fr: {
+        m: "Équato-Guinéen",
+        f: "Équato-Guinéenne",
+      },
+      en: {
+        m: "Equatorial Guinean",
+        f: "Equatorial Guinean",
+      },
+    },
   },
   GRC: {
     continent: "europe",
@@ -2660,6 +5583,9 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     flagSymbols: ["cross"],
     flagLayout: ["horizontal_stripes"],
     events: ["summer_olympics_host"],
+    eventEditions: {
+      summer_olympics_host: [1896, 2004],
+    },
     memberships: ["eu", "eurozone", "nato", "oecd", "schengen"],
     capitals: [
       {
@@ -2667,6 +5593,10 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
         latitude: 37.98,
         longitude: 23.73,
         roles: ["primary"],
+        names: {
+          fr: "Athènes",
+          en: "Athens",
+        },
       },
     ],
     drivingSide: "right",
@@ -2676,13 +5606,46 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     utcOffsetCount: 1,
     lastVolcanicEruptionYear: 1950,
     mountainAreaShare: 0.4850594742025911,
-    forestCoverShare: 0.302699767261443,
+    forestCoverShare: 0.369495733126455,
     urbanCentresOver1M: 1,
     productionRanks: {},
     coalElectricityShare: 0.057300000000000004,
     formerSovereigns: [],
+    dominations: [],
     sovereigntyYear: 1830,
     sovereigntyKind: "independence",
+    sovereigntyDate: "1830-02-03",
+    sovereigntySheetHidden: false,
+    highestPoint: {
+      elevationM: 2917,
+      names: {
+        fr: "mont Olympe",
+        en: "Mount Olympus",
+      },
+    },
+    gdpPerCapitaUsd: {
+      value: 26948.0070432791,
+      year: 2025,
+    },
+    lifeExpectancyYears: {
+      value: 81.8390243902439,
+      year: 2024,
+    },
+    humanDevelopmentIndex: {
+      value: 0.908,
+      year: 2023,
+    },
+    currencies: ["EUR"],
+    demonyms: {
+      fr: {
+        m: "Grec",
+        f: "Grecque",
+      },
+      en: {
+        m: "Greek",
+        f: "Greek",
+      },
+    },
   },
   GRD: {
     continent: "north_america",
@@ -2697,6 +5660,7 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     flagSymbols: ["star", "circle", "triangle"],
     flagLayout: [],
     events: [],
+    eventEditions: {},
     memberships: ["commonwealth"],
     capitals: [
       {
@@ -2704,6 +5668,10 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
         latitude: 12.0529,
         longitude: -61.7523,
         roles: ["primary"],
+        names: {
+          fr: "Saint-Georges",
+          en: "St. George's",
+        },
       },
     ],
     drivingSide: "left",
@@ -2713,13 +5681,63 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     utcOffsetCount: 1,
     lastVolcanicEruptionYear: 2017,
     mountainAreaShare: 0.23837209302325582,
-    forestCoverShare: 0.520588235294118,
+    forestCoverShare: 0.51453488372093,
     urbanCentresOver1M: 0,
     productionRanks: {},
     coalElectricityShare: 0,
     formerSovereigns: ["united_kingdom"],
+    dominations: [
+      {
+        power: "france",
+        nature: "colony",
+        from: 1650,
+        to: 1762,
+        intermittent: false,
+        part: null,
+      },
+      {
+        power: "united_kingdom",
+        nature: "colony",
+        from: 1762,
+        to: 1974,
+        intermittent: true,
+        part: null,
+      },
+    ],
     sovereigntyYear: 1974,
     sovereigntyKind: "independence",
+    sovereigntyDate: "1974-02-07",
+    sovereigntySheetHidden: false,
+    highestPoint: {
+      elevationM: 840,
+      names: {
+        fr: "mont Sainte-Catherine",
+        en: "Mount Saint Catherine",
+      },
+    },
+    gdpPerCapitaUsd: {
+      value: 12106.8790105068,
+      year: 2025,
+    },
+    lifeExpectancyYears: {
+      value: 75.367,
+      year: 2024,
+    },
+    humanDevelopmentIndex: {
+      value: 0.791,
+      year: 2023,
+    },
+    currencies: ["XCD"],
+    demonyms: {
+      fr: {
+        m: "Grenadien",
+        f: "Grenadienne",
+      },
+      en: {
+        m: "Grenadian",
+        f: "Grenadian",
+      },
+    },
   },
   GTM: {
     continent: "north_america",
@@ -2734,6 +5752,7 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     flagSymbols: ["plant", "animal"],
     flagLayout: ["vertical_stripes"],
     events: [],
+    eventEditions: {},
     memberships: [],
     capitals: [
       {
@@ -2741,6 +5760,10 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
         latitude: 14.62,
         longitude: -90.52,
         roles: ["primary"],
+        names: {
+          fr: "Guatemala",
+          en: "Guatemala City",
+        },
       },
     ],
     drivingSide: "right",
@@ -2750,13 +5773,46 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     utcOffsetCount: 1,
     lastVolcanicEruptionYear: 2026,
     mountainAreaShare: 0.4708189073276456,
-    forestCoverShare: 0.325961179544606,
+    forestCoverShare: 0.332402948861516,
     urbanCentresOver1M: 1,
     productionRanks: {},
     coalElectricityShare: 0.1583,
     formerSovereigns: ["spain"],
+    dominations: [],
     sovereigntyYear: 1821,
     sovereigntyKind: "independence",
+    sovereigntyDate: "1821-09-15",
+    sovereigntySheetHidden: false,
+    highestPoint: {
+      elevationM: 4220,
+      names: {
+        fr: "Tajumulco",
+        en: "Volcán Tajumulco",
+      },
+    },
+    gdpPerCapitaUsd: {
+      value: 6598.18032988711,
+      year: 2025,
+    },
+    lifeExpectancyYears: {
+      value: 72.746,
+      year: 2024,
+    },
+    humanDevelopmentIndex: {
+      value: 0.662,
+      year: 2023,
+    },
+    currencies: ["GTQ"],
+    demonyms: {
+      fr: {
+        m: "Guatémaltèque",
+        f: "Guatémaltèque",
+      },
+      en: {
+        m: "Guatemalan",
+        f: "Guatemalan",
+      },
+    },
   },
   GUY: {
     continent: "south_america",
@@ -2771,6 +5827,7 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     flagSymbols: ["triangle"],
     flagLayout: [],
     events: [],
+    eventEditions: {},
     memberships: ["commonwealth"],
     capitals: [
       {
@@ -2778,6 +5835,10 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
         latitude: 6.8,
         longitude: -58.15,
         roles: ["primary"],
+        names: {
+          fr: "Georgetown",
+          en: "Georgetown",
+        },
       },
     ],
     drivingSide: "left",
@@ -2787,13 +5848,55 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     utcOffsetCount: 1,
     lastVolcanicEruptionYear: null,
     mountainAreaShare: 0.09285059706283232,
-    forestCoverShare: 0.8708783698020269,
+    forestCoverShare: 0.8711021123425211,
     urbanCentresOver1M: 0,
     productionRanks: {},
     coalElectricityShare: 0,
     formerSovereigns: ["united_kingdom"],
+    dominations: [
+      {
+        power: "united_kingdom",
+        nature: "colony",
+        from: 1796,
+        to: 1966,
+        intermittent: true,
+        part: null,
+      },
+    ],
     sovereigntyYear: 1966,
     sovereigntyKind: "independence",
+    sovereigntyDate: "1966-05-26",
+    sovereigntySheetHidden: false,
+    highestPoint: {
+      elevationM: 2775,
+      names: {
+        fr: "mont Roraima",
+        en: "Mount Roraima",
+      },
+    },
+    gdpPerCapitaUsd: {
+      value: 32413.7930757518,
+      year: 2025,
+    },
+    lifeExpectancyYears: {
+      value: 70.319,
+      year: 2024,
+    },
+    humanDevelopmentIndex: {
+      value: 0.776,
+      year: 2023,
+    },
+    currencies: ["GYD"],
+    demonyms: {
+      fr: {
+        m: "Guyanien",
+        f: "Guyanienne",
+      },
+      en: {
+        m: "Guyanese",
+        f: "Guyanese",
+      },
+    },
   },
   HND: {
     continent: "north_america",
@@ -2808,6 +5911,7 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     flagSymbols: ["star"],
     flagLayout: ["horizontal_stripes"],
     events: [],
+    eventEditions: {},
     memberships: [],
     capitals: [
       {
@@ -2815,6 +5919,10 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
         latitude: 14.1,
         longitude: -87.22,
         roles: ["primary"],
+        names: {
+          fr: "Tegucigalpa",
+          en: "Tegucigalpa",
+        },
       },
     ],
     drivingSide: "right",
@@ -2824,22 +5932,55 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     utcOffsetCount: 1,
     lastVolcanicEruptionYear: -7638,
     mountainAreaShare: 0.6751413433844184,
-    forestCoverShare: 0.562732147645008,
+    forestCoverShare: 0.532824202341585,
     urbanCentresOver1M: 2,
     productionRanks: {
       coffee: 8,
     },
     coalElectricityShare: 0.0048,
     formerSovereigns: ["spain"],
+    dominations: [],
     sovereigntyYear: 1821,
     sovereigntyKind: "independence",
+    sovereigntyDate: "1821-09-15",
+    sovereigntySheetHidden: false,
+    highestPoint: {
+      elevationM: 2870,
+      names: {
+        fr: "Cerro Las Minas",
+        en: "Cerro Las Minas",
+      },
+    },
+    gdpPerCapitaUsd: {
+      value: 3598.21450440452,
+      year: 2025,
+    },
+    lifeExpectancyYears: {
+      value: 73.044,
+      year: 2024,
+    },
+    humanDevelopmentIndex: {
+      value: 0.645,
+      year: 2023,
+    },
+    currencies: ["HNL"],
+    demonyms: {
+      fr: {
+        m: "Hondurien",
+        f: "Hondurienne",
+      },
+      en: {
+        m: "Honduran",
+        f: "Honduran",
+      },
+    },
   },
   HRV: {
     continent: "europe",
     waterAccess: "coastal",
     borders: ["BIH", "HUN", "MNE", "SRB", "SVN"],
     areaKm2: 56594,
-    population: 3866233,
+    population: 3874993,
     officialLanguages: ["hr"],
     latitude: 45.16666666,
     subregion: "Southeast Europe",
@@ -2847,6 +5988,7 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     flagSymbols: ["animal", "crescent", "star"],
     flagLayout: ["horizontal_stripes"],
     events: [],
+    eventEditions: {},
     memberships: ["eu", "eurozone", "nato", "schengen"],
     capitals: [
       {
@@ -2854,6 +5996,10 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
         latitude: 45.815,
         longitude: 15.9819,
         roles: ["primary"],
+        names: {
+          fr: "Zagreb",
+          en: "Zagreb",
+        },
       },
     ],
     drivingSide: "right",
@@ -2863,13 +6009,46 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     utcOffsetCount: 1,
     lastVolcanicEruptionYear: null,
     mountainAreaShare: 0.2674135067321624,
-    forestCoverShare: 0.34785739814153,
+    forestCoverShare: 0.347312365975697,
     urbanCentresOver1M: 0,
     productionRanks: {},
     coalElectricityShare: 0.052300000000000006,
     formerSovereigns: ["yugoslavia"],
+    dominations: [],
     sovereigntyYear: 1991,
     sovereigntyKind: "independence",
+    sovereigntyDate: "1991-06-25",
+    sovereigntySheetHidden: false,
+    highestPoint: {
+      elevationM: 1831,
+      names: {
+        fr: "Dinara",
+        en: "Dinara",
+      },
+    },
+    gdpPerCapitaUsd: {
+      value: 27103.9116109268,
+      year: 2025,
+    },
+    lifeExpectancyYears: {
+      value: 78.9292682926829,
+      year: 2024,
+    },
+    humanDevelopmentIndex: {
+      value: 0.889,
+      year: 2023,
+    },
+    currencies: ["EUR"],
+    demonyms: {
+      fr: {
+        m: "Croate",
+        f: "Croate",
+      },
+      en: {
+        m: "Croatian",
+        f: "Croatian",
+      },
+    },
   },
   HTI: {
     continent: "north_america",
@@ -2884,6 +6063,7 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     flagSymbols: ["plant"],
     flagLayout: ["horizontal_stripes"],
     events: [],
+    eventEditions: {},
     memberships: [],
     capitals: [
       {
@@ -2891,22 +6071,68 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
         latitude: 18.53,
         longitude: -72.33,
         roles: ["primary"],
+        names: {
+          fr: "Port-au-Prince",
+          en: "Port-au-Prince",
+        },
       },
     ],
     drivingSide: "right",
-    geoTags: [],
+    geoTags: ["shared_island"],
     regime: "republic",
     physicalFeatures: ["caribbean_coast", "atlantic_coast"],
     utcOffsetCount: 1,
     lastVolcanicEruptionYear: null,
     mountainAreaShare: 0.4985585585585586,
-    forestCoverShare: 0.122630624092888,
+    forestCoverShare: 0.13399854862118998,
     urbanCentresOver1M: 1,
     productionRanks: {},
     coalElectricityShare: 0,
     formerSovereigns: ["france"],
+    dominations: [
+      {
+        power: "france",
+        nature: "colony",
+        from: 1697,
+        to: 1804,
+        intermittent: false,
+        part: null,
+      },
+    ],
     sovereigntyYear: 1804,
     sovereigntyKind: "independence",
+    sovereigntyDate: "1804-01-01",
+    sovereigntySheetHidden: false,
+    highestPoint: {
+      elevationM: 2674,
+      names: {
+        fr: "pic la Selle",
+        en: "Peak la Selle",
+      },
+    },
+    gdpPerCapitaUsd: {
+      value: 2694.18969101404,
+      year: 2025,
+    },
+    lifeExpectancyYears: {
+      value: 65.119,
+      year: 2024,
+    },
+    humanDevelopmentIndex: {
+      value: 0.554,
+      year: 2023,
+    },
+    currencies: ["HTG"],
+    demonyms: {
+      fr: {
+        m: "Haïtien",
+        f: "Haïtienne",
+      },
+      en: {
+        m: "Haitian",
+        f: "Haitian",
+      },
+    },
   },
   HUN: {
     continent: "europe",
@@ -2921,6 +6147,7 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     flagSymbols: [],
     flagLayout: ["horizontal_stripes"],
     events: [],
+    eventEditions: {},
     memberships: ["eu", "nato", "oecd", "schengen"],
     capitals: [
       {
@@ -2928,6 +6155,10 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
         latitude: 47.5,
         longitude: 19.08,
         roles: ["primary"],
+        names: {
+          fr: "Budapest",
+          en: "Budapest",
+        },
       },
     ],
     drivingSide: "right",
@@ -2937,13 +6168,46 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     utcOffsetCount: 1,
     lastVolcanicEruptionYear: null,
     mountainAreaShare: 0.031549640968310616,
-    forestCoverShare: 0.224484341442034,
+    forestCoverShare: 0.227396449704142,
     urbanCentresOver1M: 1,
     productionRanks: {},
     coalElectricityShare: 0.0642,
     formerSovereigns: [],
+    dominations: [],
     sovereigntyYear: 1918,
     sovereigntyKind: "foundation",
+    sovereigntyDate: "1918-11-16",
+    sovereigntySheetHidden: true,
+    highestPoint: {
+      elevationM: 1014,
+      names: {
+        fr: "Kékes",
+        en: "Kékes",
+      },
+    },
+    gdpPerCapitaUsd: {
+      value: 25907.4743259406,
+      year: 2025,
+    },
+    lifeExpectancyYears: {
+      value: 76.7243902439025,
+      year: 2024,
+    },
+    humanDevelopmentIndex: {
+      value: 0.87,
+      year: 2023,
+    },
+    currencies: ["HUF"],
+    demonyms: {
+      fr: {
+        m: "Hongrois",
+        f: "Hongroise",
+      },
+      en: {
+        m: "Hungarian",
+        f: "Hungarian",
+      },
+    },
   },
   IDN: {
     continent: "asia",
@@ -2958,6 +6222,7 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     flagSymbols: [],
     flagLayout: ["horizontal_stripes"],
     events: [],
+    eventEditions: {},
     memberships: ["asean", "g20", "brics"],
     capitals: [
       {
@@ -2965,10 +6230,14 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
         latitude: -6.17,
         longitude: 106.82,
         roles: ["primary"],
+        names: {
+          fr: "Jakarta",
+          en: "Jakarta",
+        },
       },
     ],
     drivingSide: "left",
-    geoTags: ["drives_on_left"],
+    geoTags: ["drives_on_left", "shared_island"],
     regime: "republic",
     physicalFeatures: [
       "equator_crosser",
@@ -2979,7 +6248,7 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     utcOffsetCount: 3,
     lastVolcanicEruptionYear: 2026,
     mountainAreaShare: 0.2983446648559333,
-    forestCoverShare: 0.477220336902463,
+    forestCoverShare: 0.5062662712816121,
     urbanCentresOver1M: 23,
     productionRanks: {
       cocoa: 2,
@@ -2989,8 +6258,41 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     },
     coalElectricityShare: 0.6148,
     formerSovereigns: ["netherlands"],
+    dominations: [],
     sovereigntyYear: 1945,
     sovereigntyKind: "independence",
+    sovereigntyDate: "1945-08-17",
+    sovereigntySheetHidden: false,
+    highestPoint: {
+      elevationM: 4884,
+      names: {
+        fr: "Puncak Jaya",
+        en: "Puncak Jaya",
+      },
+    },
+    gdpPerCapitaUsd: {
+      value: 5059.62596411213,
+      year: 2025,
+    },
+    lifeExpectancyYears: {
+      value: 71.288,
+      year: 2024,
+    },
+    humanDevelopmentIndex: {
+      value: 0.728,
+      year: 2023,
+    },
+    currencies: ["IDR"],
+    demonyms: {
+      fr: {
+        m: "Indonésien",
+        f: "Indonésienne",
+      },
+      en: {
+        m: "Indonesian",
+        f: "Indonesian",
+      },
+    },
   },
   IND: {
     continent: "asia",
@@ -2998,13 +6300,14 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     borders: ["BGD", "BTN", "MMR", "CHN", "NPL", "PAK"],
     areaKm2: 3287590,
     population: 1429404000,
-    officialLanguages: ["en", "hi", "ta"],
+    officialLanguages: ["en", "hi"],
     latitude: 20,
     subregion: "Southern Asia",
     flagColors: ["orange", "white", "green", "blue"],
     flagSymbols: ["circle"],
     flagLayout: ["horizontal_stripes"],
     events: [],
+    eventEditions: {},
     memberships: ["brics", "commonwealth", "g20"],
     capitals: [
       {
@@ -3012,6 +6315,10 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
         latitude: 28.6139,
         longitude: 77.209,
         roles: ["primary"],
+        names: {
+          fr: "New Delhi",
+          en: "New Delhi",
+        },
       },
     ],
     drivingSide: "left",
@@ -3026,7 +6333,7 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     utcOffsetCount: 1,
     lastVolcanicEruptionYear: 2026,
     mountainAreaShare: 0.13657481620275033,
-    forestCoverShare: 0.24539030468957598,
+    forestCoverShare: 0.24407118280365497,
     urbanCentresOver1M: 77,
     productionRanks: {
       coffee: 7,
@@ -3035,8 +6342,50 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     },
     coalElectricityShare: 0.7453,
     formerSovereigns: ["united_kingdom"],
+    dominations: [
+      {
+        power: "united_kingdom",
+        nature: "colony",
+        from: 1757,
+        to: 1947,
+        intermittent: false,
+        part: null,
+      },
+    ],
     sovereigntyYear: 1947,
     sovereigntyKind: "independence",
+    sovereigntyDate: "1947-08-15",
+    sovereigntySheetHidden: false,
+    highestPoint: {
+      elevationM: 8586,
+      names: {
+        fr: "Kangchenjunga",
+        en: "Kanchenjunga",
+      },
+    },
+    gdpPerCapitaUsd: {
+      value: 2702.47987141553,
+      year: 2025,
+    },
+    lifeExpectancyYears: {
+      value: 72.235,
+      year: 2024,
+    },
+    humanDevelopmentIndex: {
+      value: 0.685,
+      year: 2023,
+    },
+    currencies: ["INR"],
+    demonyms: {
+      fr: {
+        m: "Indien",
+        f: "Indienne",
+      },
+      en: {
+        m: "Indian",
+        f: "Indian",
+      },
+    },
   },
   IRL: {
     continent: "europe",
@@ -3051,6 +6400,7 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     flagSymbols: [],
     flagLayout: ["vertical_stripes"],
     events: [],
+    eventEditions: {},
     memberships: ["eu", "eurozone", "oecd"],
     capitals: [
       {
@@ -3058,22 +6408,68 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
         latitude: 53.32,
         longitude: -6.23,
         roles: ["primary"],
+        names: {
+          fr: "Dublin",
+          en: "Dublin",
+        },
       },
     ],
     drivingSide: "left",
-    geoTags: ["drives_on_left"],
+    geoTags: ["drives_on_left", "shared_island"],
     regime: "republic",
     physicalFeatures: ["atlantic_coast"],
     utcOffsetCount: 1,
     lastVolcanicEruptionYear: null,
     mountainAreaShare: 0.039560001707625976,
-    forestCoverShare: 0.115259108724053,
+    forestCoverShare: 0.118600667731166,
     urbanCentresOver1M: 1,
     productionRanks: {},
     coalElectricityShare: 0.0203,
     formerSovereigns: ["united_kingdom"],
+    dominations: [
+      {
+        power: "united_kingdom",
+        nature: "union",
+        from: 1801,
+        to: 1921,
+        intermittent: false,
+        part: null,
+      },
+    ],
     sovereigntyYear: 1921,
     sovereigntyKind: "independence",
+    sovereigntyDate: "1921-12-06",
+    sovereigntySheetHidden: false,
+    highestPoint: {
+      elevationM: 1041,
+      names: {
+        fr: "Carrauntuohill",
+        en: "Carrauntoohil",
+      },
+    },
+    gdpPerCapitaUsd: {
+      value: 131592.462547877,
+      year: 2025,
+    },
+    lifeExpectancyYears: {
+      value: 83.009756097561,
+      year: 2024,
+    },
+    humanDevelopmentIndex: {
+      value: 0.949,
+      year: 2023,
+    },
+    currencies: ["EUR"],
+    demonyms: {
+      fr: {
+        m: "Irlandais",
+        f: "Irlandaise",
+      },
+      en: {
+        m: "Irish",
+        f: "Irish",
+      },
+    },
   },
   IRN: {
     continent: "asia",
@@ -3088,6 +6484,7 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     flagSymbols: [],
     flagLayout: ["horizontal_stripes"],
     events: [],
+    eventEditions: {},
     memberships: ["brics", "opec"],
     capitals: [
       {
@@ -3095,6 +6492,10 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
         latitude: 35.7,
         longitude: 51.42,
         roles: ["primary"],
+        names: {
+          fr: "Téhéran",
+          en: "Tehran",
+        },
       },
     ],
     drivingSide: "right",
@@ -3104,7 +6505,7 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     utcOffsetCount: 1,
     lastVolcanicEruptionYear: -5350,
     mountainAreaShare: 0.5650654200504188,
-    forestCoverShare: 0.0664923611710324,
+    forestCoverShare: 0.0662619414483821,
     urbanCentresOver1M: 7,
     productionRanks: {
       crude_oil: 7,
@@ -3112,8 +6513,41 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     },
     coalElectricityShare: 0.0018,
     formerSovereigns: [],
+    dominations: [],
     sovereigntyYear: 1979,
     sovereigntyKind: "unification",
+    sovereigntyDate: "1979-04-01",
+    sovereigntySheetHidden: true,
+    highestPoint: {
+      elevationM: 5625,
+      names: {
+        fr: "mont Damavand",
+        en: "Damavand",
+      },
+    },
+    gdpPerCapitaUsd: {
+      value: 3924.38017821898,
+      year: 2025,
+    },
+    lifeExpectancyYears: {
+      value: 77.854,
+      year: 2024,
+    },
+    humanDevelopmentIndex: {
+      value: 0.799,
+      year: 2023,
+    },
+    currencies: ["IRR"],
+    demonyms: {
+      fr: {
+        m: "Iranien",
+        f: "Iranienne",
+      },
+      en: {
+        m: "Iranian",
+        f: "Iranian",
+      },
+    },
   },
   IRQ: {
     continent: "asia",
@@ -3121,13 +6555,14 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     borders: ["IRN", "JOR", "KWT", "SAU", "SYR", "TUR"],
     areaKm2: 438317,
     population: 46118793,
-    officialLanguages: ["ar", "arc", "ckb"],
+    officialLanguages: ["ar", "ckb"],
     latitude: 33,
     subregion: "Western Asia",
     flagColors: ["red", "green", "white", "black"],
     flagSymbols: [],
     flagLayout: ["horizontal_stripes"],
     events: [],
+    eventEditions: {},
     memberships: ["arab_league", "opec"],
     capitals: [
       {
@@ -3135,6 +6570,10 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
         latitude: 33.33,
         longitude: 44.4,
         roles: ["primary"],
+        names: {
+          fr: "Bagdad",
+          en: "Baghdad",
+        },
       },
     ],
     drivingSide: "right",
@@ -3144,15 +6583,57 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     utcOffsetCount: 1,
     lastVolcanicEruptionYear: null,
     mountainAreaShare: 0.0877104926343263,
-    forestCoverShare: 0.0190035242899592,
+    forestCoverShare: 0.0162568815792505,
     urbanCentresOver1M: 9,
     productionRanks: {
       crude_oil: 5,
     },
     coalElectricityShare: 0,
     formerSovereigns: ["united_kingdom"],
+    dominations: [
+      {
+        power: "united_kingdom",
+        nature: "mandate",
+        from: 1920,
+        to: 1932,
+        intermittent: false,
+        part: null,
+      },
+    ],
     sovereigntyYear: 1932,
     sovereigntyKind: "independence",
+    sovereigntyDate: "1932-10-03",
+    sovereigntySheetHidden: false,
+    highestPoint: {
+      elevationM: 3611,
+      names: {
+        fr: "Cheekha Dar",
+        en: "Cheekha Dar",
+      },
+    },
+    gdpPerCapitaUsd: {
+      value: 5409.67899716967,
+      year: 2025,
+    },
+    lifeExpectancyYears: {
+      value: 72.424,
+      year: 2024,
+    },
+    humanDevelopmentIndex: {
+      value: 0.695,
+      year: 2023,
+    },
+    currencies: ["IQD"],
+    demonyms: {
+      fr: {
+        m: "Irakien",
+        f: "Irakienne",
+      },
+      en: {
+        m: "Iraqi",
+        f: "Iraqi",
+      },
+    },
   },
   ISL: {
     continent: "europe",
@@ -3167,6 +6648,7 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     flagSymbols: ["cross"],
     flagLayout: [],
     events: [],
+    eventEditions: {},
     memberships: ["nato", "oecd", "schengen"],
     capitals: [
       {
@@ -3174,6 +6656,10 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
         latitude: 64.15,
         longitude: -21.95,
         roles: ["primary"],
+        names: {
+          fr: "Reykjavik",
+          en: "Reykjavík",
+        },
       },
     ],
     drivingSide: "right",
@@ -3183,13 +6669,46 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     utcOffsetCount: 1,
     lastVolcanicEruptionYear: 2025,
     mountainAreaShare: 0.43533009708737863,
-    forestCoverShare: 0.00528744421303184,
+    forestCoverShare: 0.00590598036298721,
     urbanCentresOver1M: 0,
     productionRanks: {},
     coalElectricityShare: 0,
     formerSovereigns: [],
+    dominations: [],
     sovereigntyYear: 1918,
     sovereigntyKind: "independence",
+    sovereigntyDate: "1918-12-01",
+    sovereigntySheetHidden: false,
+    highestPoint: {
+      elevationM: 2110,
+      names: {
+        fr: "Hvannadalshnjúkur",
+        en: "Hvannadalshnúkur",
+      },
+    },
+    gdpPerCapitaUsd: {
+      value: 98323.4849517418,
+      year: 2025,
+    },
+    lifeExpectancyYears: {
+      value: 82.809756097561,
+      year: 2024,
+    },
+    humanDevelopmentIndex: {
+      value: 0.972,
+      year: 2023,
+    },
+    currencies: ["ISK"],
+    demonyms: {
+      fr: {
+        m: "Islandais",
+        f: "Islandaise",
+      },
+      en: {
+        m: "Icelander",
+        f: "Icelander",
+      },
+    },
   },
   ISR: {
     continent: "asia",
@@ -3204,6 +6723,7 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     flagSymbols: ["star"],
     flagLayout: ["horizontal_stripes"],
     events: [],
+    eventEditions: {},
     memberships: ["oecd"],
     capitals: [
       {
@@ -3211,6 +6731,10 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
         latitude: 31.77,
         longitude: 35.23,
         roles: ["primary"],
+        names: {
+          fr: "Jérusalem",
+          en: "Jerusalem",
+        },
       },
     ],
     drivingSide: "right",
@@ -3220,20 +6744,62 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     utcOffsetCount: 1,
     lastVolcanicEruptionYear: null,
     mountainAreaShare: null,
-    forestCoverShare: 0.06469500924214419,
+    forestCoverShare: 0.0674676524953789,
     urbanCentresOver1M: 2,
     productionRanks: {},
     coalElectricityShare: 0.14300000000000002,
     formerSovereigns: ["united_kingdom"],
+    dominations: [
+      {
+        power: "united_kingdom",
+        nature: "mandate",
+        from: 1920,
+        to: 1948,
+        intermittent: false,
+        part: null,
+      },
+    ],
     sovereigntyYear: 1948,
-    sovereigntyKind: "foundation",
+    sovereigntyKind: "independence",
+    sovereigntyDate: "1948-05-14",
+    sovereigntySheetHidden: false,
+    highestPoint: {
+      elevationM: 1208,
+      names: {
+        fr: "mont Méron",
+        en: "Mount Meron",
+      },
+    },
+    gdpPerCapitaUsd: {
+      value: 60336.8477964194,
+      year: 2025,
+    },
+    lifeExpectancyYears: {
+      value: 83.1975609756098,
+      year: 2024,
+    },
+    humanDevelopmentIndex: {
+      value: 0.919,
+      year: 2023,
+    },
+    currencies: ["ILS"],
+    demonyms: {
+      fr: {
+        m: "Israélien",
+        f: "Israélienne",
+      },
+      en: {
+        m: "Israeli",
+        f: "Israeli",
+      },
+    },
   },
   ITA: {
     continent: "europe",
     waterAccess: "coastal",
     borders: ["AUT", "FRA", "SMR", "SVN", "CHE", "VAT"],
     areaKm2: 301336,
-    population: 58940756,
+    population: 58943673,
     officialLanguages: ["it"],
     latitude: 42.83333333,
     subregion: "Southern Europe",
@@ -3241,6 +6807,11 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     flagSymbols: [],
     flagLayout: ["vertical_stripes"],
     events: ["fifa_wc_host", "summer_olympics_host", "winter_olympics_host"],
+    eventEditions: {
+      fifa_wc_host: [1934, 1990],
+      summer_olympics_host: [1960],
+      winter_olympics_host: [1956, 2006, 2026],
+    },
     memberships: ["eu", "eurozone", "g20", "g7", "nato", "oecd", "schengen"],
     capitals: [
       {
@@ -3248,6 +6819,10 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
         latitude: 41.9,
         longitude: 12.48,
         roles: ["primary"],
+        names: {
+          fr: "Rome",
+          en: "Rome",
+        },
       },
     ],
     drivingSide: "right",
@@ -3257,13 +6832,46 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     utcOffsetCount: 1,
     lastVolcanicEruptionYear: 2026,
     mountainAreaShare: 0.47405553933151034,
-    forestCoverShare: 0.328944947923712,
+    forestCoverShare: 0.317766130123089,
     urbanCentresOver1M: 4,
     productionRanks: {},
     coalElectricityShare: 0.0148,
     formerSovereigns: [],
+    dominations: [],
     sovereigntyYear: 1861,
-    sovereigntyKind: "foundation",
+    sovereigntyKind: "unification",
+    sovereigntyDate: "1861-03-17",
+    sovereigntySheetHidden: false,
+    highestPoint: {
+      elevationM: 4748,
+      names: {
+        fr: "Mont Blanc de Courmayeur",
+        en: "Mont Blanc de Courmayeur",
+      },
+    },
+    gdpPerCapitaUsd: {
+      value: 43308.6403060733,
+      year: 2025,
+    },
+    lifeExpectancyYears: {
+      value: 83.9512195121951,
+      year: 2024,
+    },
+    humanDevelopmentIndex: {
+      value: 0.915,
+      year: 2023,
+    },
+    currencies: ["EUR"],
+    demonyms: {
+      fr: {
+        m: "Italien",
+        f: "Italienne",
+      },
+      en: {
+        m: "Italian",
+        f: "Italian",
+      },
+    },
   },
   JAM: {
     continent: "north_america",
@@ -3271,13 +6879,14 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     borders: [],
     areaKm2: 10991,
     population: 2774538,
-    officialLanguages: ["en", "jam"],
+    officialLanguages: ["en"],
     latitude: 18.25,
     subregion: "Caribbean",
     flagColors: ["green", "yellow", "black"],
     flagSymbols: ["cross"],
     flagLayout: [],
     events: [],
+    eventEditions: {},
     memberships: ["commonwealth"],
     capitals: [
       {
@@ -3285,22 +6894,68 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
         latitude: 17.99702,
         longitude: -76.79358,
         roles: ["primary"],
+        names: {
+          fr: "Kingston",
+          en: "Kingston",
+        },
       },
     ],
     drivingSide: "left",
     geoTags: ["drives_on_left"],
     regime: "monarchy",
-    physicalFeatures: ["caribbean_coast", "atlantic_coast"],
+    physicalFeatures: ["caribbean_coast"],
     utcOffsetCount: 1,
     lastVolcanicEruptionYear: null,
     mountainAreaShare: 0.45027749977254117,
-    forestCoverShare: 0.56190757156048,
+    forestCoverShare: 0.5619021237303791,
     urbanCentresOver1M: 0,
     productionRanks: {},
     coalElectricityShare: 0,
     formerSovereigns: ["united_kingdom"],
+    dominations: [
+      {
+        power: "united_kingdom",
+        nature: "colony",
+        from: 1655,
+        to: 1962,
+        intermittent: false,
+        part: null,
+      },
+    ],
     sovereigntyYear: 1962,
     sovereigntyKind: "independence",
+    sovereigntyDate: "1962-08-06",
+    sovereigntySheetHidden: false,
+    highestPoint: {
+      elevationM: 2256,
+      names: {
+        fr: "pic Blue Mountain",
+        en: "Blue Mountain Peak",
+      },
+    },
+    gdpPerCapitaUsd: {
+      value: 8002.92104076242,
+      year: 2025,
+    },
+    lifeExpectancyYears: {
+      value: 71.606,
+      year: 2024,
+    },
+    humanDevelopmentIndex: {
+      value: 0.72,
+      year: 2023,
+    },
+    currencies: ["JMD"],
+    demonyms: {
+      fr: {
+        m: "Jamaïcain",
+        f: "Jamaïcaine",
+      },
+      en: {
+        m: "Jamaican",
+        f: "Jamaican",
+      },
+    },
   },
   JOR: {
     continent: "asia",
@@ -3315,6 +6970,7 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     flagSymbols: ["star", "triangle"],
     flagLayout: ["horizontal_stripes"],
     events: [],
+    eventEditions: {},
     memberships: ["arab_league"],
     capitals: [
       {
@@ -3322,6 +6978,10 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
         latitude: 31.95,
         longitude: 35.93,
         roles: ["primary"],
+        names: {
+          fr: "Amman",
+          en: "Amman",
+        },
       },
     ],
     drivingSide: "right",
@@ -3331,20 +6991,62 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     utcOffsetCount: 1,
     lastVolcanicEruptionYear: -2670,
     mountainAreaShare: 0.16696514517248326,
-    forestCoverShare: 0.010980471653490101,
+    forestCoverShare: 0.00796224970155641,
     urbanCentresOver1M: 1,
     productionRanks: {},
     coalElectricityShare: 0,
     formerSovereigns: ["united_kingdom"],
+    dominations: [
+      {
+        power: "united_kingdom",
+        nature: "mandate",
+        from: 1920,
+        to: 1946,
+        intermittent: false,
+        part: null,
+      },
+    ],
     sovereigntyYear: 1946,
     sovereigntyKind: "independence",
+    sovereigntyDate: "1946-05-25",
+    sovereigntySheetHidden: false,
+    highestPoint: {
+      elevationM: 1854,
+      names: {
+        fr: "djebel Umm ad Dami",
+        en: "Jabal Umm ad Dami",
+      },
+    },
+    gdpPerCapitaUsd: {
+      value: 5347.77731384797,
+      year: 2025,
+    },
+    lifeExpectancyYears: {
+      value: 77.981,
+      year: 2024,
+    },
+    humanDevelopmentIndex: {
+      value: 0.754,
+      year: 2023,
+    },
+    currencies: ["JOD"],
+    demonyms: {
+      fr: {
+        m: "Jordanien",
+        f: "Jordanienne",
+      },
+      en: {
+        m: "Jordanian",
+        f: "Jordanian",
+      },
+    },
   },
   JPN: {
     continent: "asia",
     waterAccess: "island",
     borders: [],
     areaKm2: 377930,
-    population: 122680000,
+    population: 122650000,
     officialLanguages: ["ja"],
     latitude: 36,
     subregion: "Eastern Asia",
@@ -3352,6 +7054,11 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     flagSymbols: ["circle"],
     flagLayout: [],
     events: ["fifa_wc_host", "summer_olympics_host", "winter_olympics_host"],
+    eventEditions: {
+      fifa_wc_host: [2002],
+      summer_olympics_host: [1964, 2020],
+      winter_olympics_host: [1972, 1998],
+    },
     memberships: ["g20", "g7", "oecd"],
     capitals: [
       {
@@ -3359,6 +7066,10 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
         latitude: 35.68,
         longitude: 139.75,
         roles: ["primary"],
+        names: {
+          fr: "Tokyo",
+          en: "Tokyo",
+        },
       },
     ],
     drivingSide: "left",
@@ -3368,20 +7079,53 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     utcOffsetCount: 1,
     lastVolcanicEruptionYear: 2026,
     mountainAreaShare: 0.46588521683909717,
-    forestCoverShare: 0.683957811364628,
+    forestCoverShare: 0.683467764060357,
     urbanCentresOver1M: 9,
     productionRanks: {},
     coalElectricityShare: 0.32189999999999996,
     formerSovereigns: [],
+    dominations: [],
     sovereigntyYear: 1947,
     sovereigntyKind: "foundation",
+    sovereigntyDate: "1947-05-03",
+    sovereigntySheetHidden: true,
+    highestPoint: {
+      elevationM: 3776,
+      names: {
+        fr: "mont Fuji",
+        en: "Mount Fuji",
+      },
+    },
+    gdpPerCapitaUsd: {
+      value: 35951.0449549304,
+      year: 2025,
+    },
+    lifeExpectancyYears: {
+      value: 84.0363414634146,
+      year: 2024,
+    },
+    humanDevelopmentIndex: {
+      value: 0.925,
+      year: 2023,
+    },
+    currencies: ["JPY"],
+    demonyms: {
+      fr: {
+        m: "Japonais",
+        f: "Japonaise",
+      },
+      en: {
+        m: "Japanese",
+        f: "Japanese",
+      },
+    },
   },
   KAZ: {
     continent: "asia",
     waterAccess: "landlocked",
     borders: ["CHN", "KGZ", "RUS", "TKM", "UZB"],
     areaKm2: 2724900,
-    population: 20604819,
+    population: 20618796,
     officialLanguages: ["kk", "ru"],
     latitude: 48,
     subregion: "Central Asia",
@@ -3389,6 +7133,7 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     flagSymbols: ["sun", "animal"],
     flagLayout: [],
     events: [],
+    eventEditions: {},
     memberships: [],
     capitals: [
       {
@@ -3396,6 +7141,10 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
         latitude: 51.16,
         longitude: 71.45,
         roles: ["primary"],
+        names: {
+          fr: "Astana",
+          en: "Astana",
+        },
       },
     ],
     drivingSide: "right",
@@ -3405,15 +7154,48 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     utcOffsetCount: 1,
     lastVolcanicEruptionYear: null,
     mountainAreaShare: 0.06967815332672758,
-    forestCoverShare: 0.0131214516427751,
+    forestCoverShare: 0.012937400451902099,
     urbanCentresOver1M: 3,
     productionRanks: {
       crude_oil: 11,
     },
     coalElectricityShare: 0.5403,
     formerSovereigns: ["soviet_union"],
+    dominations: [],
     sovereigntyYear: 1991,
     sovereigntyKind: "independence",
+    sovereigntyDate: "1991-12-16",
+    sovereigntySheetHidden: false,
+    highestPoint: {
+      elevationM: 7010,
+      names: {
+        fr: "Khan Tengri",
+        en: "Khan Tengri",
+      },
+    },
+    gdpPerCapitaUsd: {
+      value: 14692.1331757237,
+      year: 2025,
+    },
+    lifeExpectancyYears: {
+      value: 74.531,
+      year: 2024,
+    },
+    humanDevelopmentIndex: {
+      value: 0.837,
+      year: 2023,
+    },
+    currencies: ["KZT"],
+    demonyms: {
+      fr: {
+        m: "Kazakhstanais",
+        f: "Kazakhstanaise",
+      },
+      en: {
+        m: "Kazakhstani",
+        f: "Kazakhstani",
+      },
+    },
   },
   KEN: {
     continent: "africa",
@@ -3428,6 +7210,7 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     flagSymbols: [],
     flagLayout: ["horizontal_stripes"],
     events: [],
+    eventEditions: {},
     memberships: ["commonwealth", "african_union"],
     capitals: [
       {
@@ -3435,6 +7218,10 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
         latitude: -1.28,
         longitude: 36.82,
         roles: ["primary"],
+        names: {
+          fr: "Nairobi",
+          en: "Nairobi",
+        },
       },
     ],
     drivingSide: "left",
@@ -3449,13 +7236,55 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     utcOffsetCount: 1,
     lastVolcanicEruptionYear: 1921,
     mountainAreaShare: 0.24725733889073637,
-    forestCoverShare: 0.062166247788040196,
+    forestCoverShare: 0.0651579346583773,
     urbanCentresOver1M: 2,
     productionRanks: {},
     coalElectricityShare: 0,
     formerSovereigns: ["united_kingdom"],
+    dominations: [
+      {
+        power: "united_kingdom",
+        nature: "colony",
+        from: 1895,
+        to: 1963,
+        intermittent: false,
+        part: null,
+      },
+    ],
     sovereigntyYear: 1963,
     sovereigntyKind: "independence",
+    sovereigntyDate: "1963-12-12",
+    sovereigntySheetHidden: false,
+    highestPoint: {
+      elevationM: 5199,
+      names: {
+        fr: "mont Kenya",
+        en: "Mount Kenya",
+      },
+    },
+    gdpPerCapitaUsd: {
+      value: 2362.86091198611,
+      year: 2025,
+    },
+    lifeExpectancyYears: {
+      value: 63.834,
+      year: 2024,
+    },
+    humanDevelopmentIndex: {
+      value: 0.628,
+      year: 2023,
+    },
+    currencies: ["KES"],
+    demonyms: {
+      fr: {
+        m: "Kényan",
+        f: "Kényane",
+      },
+      en: {
+        m: "Kenyan",
+        f: "Kenyan",
+      },
+    },
   },
   KGZ: {
     continent: "asia",
@@ -3470,6 +7299,7 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     flagSymbols: ["sun"],
     flagLayout: [],
     events: [],
+    eventEditions: {},
     memberships: [],
     capitals: [
       {
@@ -3477,6 +7307,10 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
         latitude: 42.87,
         longitude: 74.6,
         roles: ["primary"],
+        names: {
+          fr: "Bichkek",
+          en: "Bishkek",
+        },
       },
     ],
     drivingSide: "right",
@@ -3486,13 +7320,46 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     utcOffsetCount: 1,
     lastVolcanicEruptionYear: null,
     mountainAreaShare: 0.9066071187440923,
-    forestCoverShare: 0.0714337851929093,
+    forestCoverShare: 0.06545099061522419,
     urbanCentresOver1M: 1,
     productionRanks: {},
     coalElectricityShare: 0.09699999999999999,
     formerSovereigns: ["soviet_union"],
+    dominations: [],
     sovereigntyYear: 1991,
     sovereigntyKind: "independence",
+    sovereigntyDate: "1991-08-31",
+    sovereigntySheetHidden: false,
+    highestPoint: {
+      elevationM: 7439,
+      names: {
+        fr: "Jengish Chokusu",
+        en: "Jengish Chokusu",
+      },
+    },
+    gdpPerCapitaUsd: {
+      value: 3080.96893823359,
+      year: 2025,
+    },
+    lifeExpectancyYears: {
+      value: 72.4,
+      year: 2024,
+    },
+    humanDevelopmentIndex: {
+      value: 0.72,
+      year: 2023,
+    },
+    currencies: ["KGS"],
+    demonyms: {
+      fr: {
+        m: "Kirghize",
+        f: "Kirghize",
+      },
+      en: {
+        m: "Kyrgyzstani",
+        f: "Kyrgyzstani",
+      },
+    },
   },
   KHM: {
     continent: "asia",
@@ -3507,6 +7374,7 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     flagSymbols: [],
     flagLayout: ["horizontal_stripes"],
     events: [],
+    eventEditions: {},
     memberships: ["asean"],
     capitals: [
       {
@@ -3514,6 +7382,10 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
         latitude: 11.55,
         longitude: 104.92,
         roles: ["primary"],
+        names: {
+          fr: "Phnom Penh",
+          en: "Phnom Penh",
+        },
       },
     ],
     drivingSide: "right",
@@ -3523,15 +7395,57 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     utcOffsetCount: 1,
     lastVolcanicEruptionYear: null,
     mountainAreaShare: 0.08713232247907862,
-    forestCoverShare: 0.430619759800589,
+    forestCoverShare: 0.393759347382733,
     urbanCentresOver1M: 1,
     productionRanks: {
       rice: 10,
     },
     coalElectricityShare: 0.6092,
     formerSovereigns: ["france"],
+    dominations: [
+      {
+        power: "france",
+        nature: "protectorate",
+        from: 1863,
+        to: 1953,
+        intermittent: false,
+        part: null,
+      },
+    ],
     sovereigntyYear: 1953,
     sovereigntyKind: "independence",
+    sovereigntyDate: "1953-11-09",
+    sovereigntySheetHidden: false,
+    highestPoint: {
+      elevationM: 1810,
+      names: {
+        fr: "Phnum Aoral",
+        en: "Phnom Aural",
+      },
+    },
+    gdpPerCapitaUsd: {
+      value: 2872.42926639909,
+      year: 2025,
+    },
+    lifeExpectancyYears: {
+      value: 70.817,
+      year: 2024,
+    },
+    humanDevelopmentIndex: {
+      value: 0.606,
+      year: 2023,
+    },
+    currencies: ["KHR", "USD"],
+    demonyms: {
+      fr: {
+        m: "Cambodgien",
+        f: "Cambodgienne",
+      },
+      en: {
+        m: "Cambodian",
+        f: "Cambodian",
+      },
+    },
   },
   KIR: {
     continent: "oceania",
@@ -3546,6 +7460,7 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     flagSymbols: ["sun", "animal"],
     flagLayout: ["horizontal_stripes"],
     events: [],
+    eventEditions: {},
     memberships: ["commonwealth"],
     capitals: [
       {
@@ -3553,6 +7468,10 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
         latitude: 1.33,
         longitude: 172.98,
         roles: ["primary"],
+        names: {
+          fr: "Tarawa-Sud",
+          en: "South Tarawa",
+        },
       },
     ],
     drivingSide: "left",
@@ -3562,13 +7481,52 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     utcOffsetCount: 3,
     lastVolcanicEruptionYear: null,
     mountainAreaShare: 0,
-    forestCoverShare: 0.0145679012345679,
+    forestCoverShare: 0.013193588162762,
     urbanCentresOver1M: 0,
     productionRanks: {},
     coalElectricityShare: 0,
     formerSovereigns: ["united_kingdom"],
+    dominations: [
+      {
+        power: "united_kingdom",
+        nature: "colony",
+        from: 1892,
+        to: 1979,
+        intermittent: false,
+        part: null,
+      },
+    ],
     sovereigntyYear: 1979,
     sovereigntyKind: "independence",
+    sovereigntyDate: "1979-07-12",
+    sovereigntySheetHidden: false,
+    highestPoint: {
+      elevationM: 81,
+      names: null,
+    },
+    gdpPerCapitaUsd: {
+      value: 2558.66636011102,
+      year: 2025,
+    },
+    lifeExpectancyYears: {
+      value: 66.6,
+      year: 2024,
+    },
+    humanDevelopmentIndex: {
+      value: 0.644,
+      year: 2023,
+    },
+    currencies: ["AUD"],
+    demonyms: {
+      fr: {
+        m: "Kiribatien",
+        f: "Kiribatienne",
+      },
+      en: {
+        m: "I-Kiribati",
+        f: "I-Kiribati",
+      },
+    },
   },
   KNA: {
     continent: "north_america",
@@ -3583,6 +7541,7 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     flagSymbols: ["star", "triangle"],
     flagLayout: [],
     events: [],
+    eventEditions: {},
     memberships: ["commonwealth"],
     capitals: [
       {
@@ -3590,6 +7549,10 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
         latitude: 17.3,
         longitude: -62.72,
         roles: ["primary"],
+        names: {
+          fr: "Basseterre",
+          en: "Basseterre",
+        },
       },
     ],
     drivingSide: "left",
@@ -3599,13 +7562,66 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     utcOffsetCount: 1,
     lastVolcanicEruptionYear: 160,
     mountainAreaShare: 0,
-    forestCoverShare: 0.423076923076923,
+    forestCoverShare: 0.42145593869731796,
     urbanCentresOver1M: 0,
     productionRanks: {},
     coalElectricityShare: 0,
     formerSovereigns: ["united_kingdom"],
+    dominations: [
+      {
+        power: "france",
+        nature: "colony",
+        from: 1627,
+        to: 1713,
+        intermittent: false,
+        part: {
+          fr: "Saint-Kitts en partie",
+          en: "part of Saint Kitts",
+        },
+      },
+      {
+        power: "united_kingdom",
+        nature: "colony",
+        from: 1623,
+        to: 1983,
+        intermittent: false,
+        part: null,
+      },
+    ],
     sovereigntyYear: 1983,
     sovereigntyKind: "independence",
+    sovereigntyDate: "1983-09-19",
+    sovereigntySheetHidden: false,
+    highestPoint: {
+      elevationM: 1156,
+      names: {
+        fr: "mont Liamuiga",
+        en: "Mount Liamuiga",
+      },
+    },
+    gdpPerCapitaUsd: {
+      value: 25223.0257622185,
+      year: 2025,
+    },
+    lifeExpectancyYears: {
+      value: 72.281,
+      year: 2024,
+    },
+    humanDevelopmentIndex: {
+      value: 0.84,
+      year: 2023,
+    },
+    currencies: ["XCD"],
+    demonyms: {
+      fr: {
+        m: "Kittitien-et-Névicien",
+        f: "Kittitienne-et-Névicienne",
+      },
+      en: {
+        m: "Kittitian or Nevisian",
+        f: "Kittitian or Nevisian",
+      },
+    },
   },
   KOR: {
     continent: "asia",
@@ -3620,6 +7636,11 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     flagSymbols: ["circle"],
     flagLayout: [],
     events: ["fifa_wc_host", "summer_olympics_host", "winter_olympics_host"],
+    eventEditions: {
+      fifa_wc_host: [2002],
+      summer_olympics_host: [1988],
+      winter_olympics_host: [2018],
+    },
     memberships: ["g20", "oecd"],
     capitals: [
       {
@@ -3627,6 +7648,10 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
         latitude: 37.55,
         longitude: 126.98,
         roles: ["primary"],
+        names: {
+          fr: "Séoul",
+          en: "Seoul",
+        },
       },
     ],
     drivingSide: "right",
@@ -3636,13 +7661,46 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     utcOffsetCount: 1,
     lastVolcanicEruptionYear: 1007,
     mountainAreaShare: 0.3184213152380002,
-    forestCoverShare: 0.64108606557377,
+    forestCoverShare: 0.644127049180328,
     urbanCentresOver1M: 5,
     productionRanks: {},
     coalElectricityShare: 0.30510000000000004,
     formerSovereigns: [],
+    dominations: [],
     sovereigntyYear: 1945,
     sovereigntyKind: "independence",
+    sovereigntyDate: "1945-08-15",
+    sovereigntySheetHidden: false,
+    highestPoint: {
+      elevationM: 1950,
+      names: {
+        fr: "Hallasan",
+        en: "Hallasan",
+      },
+    },
+    gdpPerCapitaUsd: {
+      value: 36226.9663637512,
+      year: 2025,
+    },
+    lifeExpectancyYears: {
+      value: 83.6292682926829,
+      year: 2024,
+    },
+    humanDevelopmentIndex: {
+      value: 0.937,
+      year: 2023,
+    },
+    currencies: ["KRW"],
+    demonyms: {
+      fr: {
+        m: "Sud-Coréen",
+        f: "Sud-Coréenne",
+      },
+      en: {
+        m: "South Korean",
+        f: "South Korean",
+      },
+    },
   },
   KWT: {
     continent: "asia",
@@ -3657,6 +7715,7 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     flagSymbols: [],
     flagLayout: ["horizontal_stripes"],
     events: [],
+    eventEditions: {},
     memberships: ["arab_league", "opec"],
     capitals: [
       {
@@ -3664,6 +7723,10 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
         latitude: 29.37,
         longitude: 47.97,
         roles: ["primary"],
+        names: {
+          fr: "Koweït",
+          en: "Kuwait City",
+        },
       },
     ],
     drivingSide: "right",
@@ -3673,15 +7736,54 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     utcOffsetCount: 1,
     lastVolcanicEruptionYear: null,
     mountainAreaShare: 0,
-    forestCoverShare: 0.0035072951739618403,
+    forestCoverShare: 0.00353535353535354,
     urbanCentresOver1M: 1,
     productionRanks: {
       crude_oil: 10,
     },
     coalElectricityShare: 0,
     formerSovereigns: ["united_kingdom"],
+    dominations: [
+      {
+        power: "united_kingdom",
+        nature: "protectorate",
+        from: 1899,
+        to: 1961,
+        intermittent: false,
+        part: null,
+      },
+    ],
     sovereigntyYear: 1961,
     sovereigntyKind: "independence",
+    sovereigntyDate: "1961-06-19",
+    sovereigntySheetHidden: false,
+    highestPoint: {
+      elevationM: 300,
+      names: null,
+    },
+    gdpPerCapitaUsd: {
+      value: 32312.3119953634,
+      year: 2025,
+    },
+    lifeExpectancyYears: {
+      value: 84.580487804878,
+      year: 2024,
+    },
+    humanDevelopmentIndex: {
+      value: 0.852,
+      year: 2023,
+    },
+    currencies: ["KWD"],
+    demonyms: {
+      fr: {
+        m: "Koweïtien",
+        f: "Koweïtienne",
+      },
+      en: {
+        m: "Kuwaiti",
+        f: "Kuwaiti",
+      },
+    },
   },
   LAO: {
     continent: "asia",
@@ -3696,6 +7798,7 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     flagSymbols: ["circle"],
     flagLayout: ["horizontal_stripes"],
     events: [],
+    eventEditions: {},
     memberships: ["asean"],
     capitals: [
       {
@@ -3703,6 +7806,10 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
         latitude: 17.97,
         longitude: 102.6,
         roles: ["primary"],
+        names: {
+          fr: "Vientiane",
+          en: "Vientiane",
+        },
       },
     ],
     drivingSide: "right",
@@ -3712,13 +7819,55 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     utcOffsetCount: 1,
     lastVolcanicEruptionYear: null,
     mountainAreaShare: 0.7213302364864866,
-    forestCoverShare: 0.714558058925477,
+    forestCoverShare: 0.56788171577123,
     urbanCentresOver1M: 0,
     productionRanks: {},
     coalElectricityShare: 0.2328,
     formerSovereigns: ["france"],
+    dominations: [
+      {
+        power: "france",
+        nature: "protectorate",
+        from: 1893,
+        to: 1953,
+        intermittent: false,
+        part: null,
+      },
+    ],
     sovereigntyYear: 1949,
     sovereigntyKind: "independence",
+    sovereigntyDate: "1949-07-19",
+    sovereigntySheetHidden: false,
+    highestPoint: {
+      elevationM: 2817,
+      names: {
+        fr: "Phou Bia",
+        en: "Phou Bia",
+      },
+    },
+    gdpPerCapitaUsd: {
+      value: 2324.76353098791,
+      year: 2025,
+    },
+    lifeExpectancyYears: {
+      value: 69.225,
+      year: 2024,
+    },
+    humanDevelopmentIndex: {
+      value: 0.617,
+      year: 2023,
+    },
+    currencies: ["LAK"],
+    demonyms: {
+      fr: {
+        m: "Laotien",
+        f: "Laotienne",
+      },
+      en: {
+        m: "Laotian",
+        f: "Laotian",
+      },
+    },
   },
   LBN: {
     continent: "asia",
@@ -3733,6 +7882,7 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     flagSymbols: ["plant"],
     flagLayout: ["horizontal_stripes"],
     events: [],
+    eventEditions: {},
     memberships: ["arab_league"],
     capitals: [
       {
@@ -3740,6 +7890,10 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
         latitude: 33.87,
         longitude: 35.5,
         roles: ["primary"],
+        names: {
+          fr: "Beyrouth",
+          en: "Beirut",
+        },
       },
     ],
     drivingSide: "right",
@@ -3749,13 +7903,55 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     utcOffsetCount: 1,
     lastVolcanicEruptionYear: null,
     mountainAreaShare: 0.8248182166092612,
-    forestCoverShare: 0.141867057673509,
+    forestCoverShare: 0.137956989247312,
     urbanCentresOver1M: 1,
     productionRanks: {},
     coalElectricityShare: 0,
     formerSovereigns: ["france"],
+    dominations: [
+      {
+        power: "france",
+        nature: "mandate",
+        from: 1920,
+        to: 1943,
+        intermittent: false,
+        part: null,
+      },
+    ],
     sovereigntyYear: 1943,
     sovereigntyKind: "independence",
+    sovereigntyDate: "1943-11-22",
+    sovereigntySheetHidden: false,
+    highestPoint: {
+      elevationM: 3088,
+      names: {
+        fr: "Qurnat as Sawda'",
+        en: "Qurnat as Sawda'",
+      },
+    },
+    gdpPerCapitaUsd: {
+      value: 4473.27134441128,
+      year: 2024,
+    },
+    lifeExpectancyYears: {
+      value: 77.945,
+      year: 2024,
+    },
+    humanDevelopmentIndex: {
+      value: 0.752,
+      year: 2023,
+    },
+    currencies: ["LBP"],
+    demonyms: {
+      fr: {
+        m: "Libanais",
+        f: "Libanaise",
+      },
+      en: {
+        m: "Lebanese",
+        f: "Lebanese",
+      },
+    },
   },
   LBR: {
     continent: "africa",
@@ -3770,6 +7966,7 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     flagSymbols: ["star"],
     flagLayout: ["horizontal_stripes"],
     events: [],
+    eventEditions: {},
     memberships: ["african_union"],
     capitals: [
       {
@@ -3777,6 +7974,10 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
         latitude: 6.3156,
         longitude: -10.8074,
         roles: ["primary"],
+        names: {
+          fr: "Monrovia",
+          en: "Monrovia",
+        },
       },
     ],
     drivingSide: "right",
@@ -3786,13 +7987,46 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     utcOffsetCount: 1,
     lastVolcanicEruptionYear: null,
     mountainAreaShare: 0.04895437689123544,
-    forestCoverShare: 0.781422342192691,
+    forestCoverShare: 0.6652491694352161,
     urbanCentresOver1M: 1,
     productionRanks: {},
     coalElectricityShare: 0,
     formerSovereigns: [],
+    dominations: [],
     sovereigntyYear: 1847,
-    sovereigntyKind: "foundation",
+    sovereigntyKind: "independence",
+    sovereigntyDate: "1847-07-26",
+    sovereigntySheetHidden: false,
+    highestPoint: {
+      elevationM: 1447,
+      names: {
+        fr: "mont Wuteve",
+        en: "Mount Wuteve",
+      },
+    },
+    gdpPerCapitaUsd: {
+      value: 915.328972645548,
+      year: 2025,
+    },
+    lifeExpectancyYears: {
+      value: 62.324,
+      year: 2024,
+    },
+    humanDevelopmentIndex: {
+      value: 0.51,
+      year: 2023,
+    },
+    currencies: ["LRD"],
+    demonyms: {
+      fr: {
+        m: "Libérien",
+        f: "Libérienne",
+      },
+      en: {
+        m: "Liberian",
+        f: "Liberian",
+      },
+    },
   },
   LBY: {
     continent: "africa",
@@ -3807,6 +8041,7 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     flagSymbols: ["star", "crescent"],
     flagLayout: ["horizontal_stripes"],
     events: [],
+    eventEditions: {},
     memberships: ["arab_league", "opec", "african_union"],
     capitals: [
       {
@@ -3814,6 +8049,10 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
         latitude: 32.88,
         longitude: 13.17,
         roles: ["primary"],
+        names: {
+          fr: "Tripoli",
+          en: "Tripoli",
+        },
       },
     ],
     drivingSide: "right",
@@ -3823,15 +8062,48 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     utcOffsetCount: 1,
     lastVolcanicEruptionYear: null,
     mountainAreaShare: 0.020517862623185605,
-    forestCoverShare: 0.00123327687918433,
+    forestCoverShare: 0.00117076053968651,
     urbanCentresOver1M: 1,
     productionRanks: {
       crude_oil: 15,
     },
     coalElectricityShare: 0,
     formerSovereigns: [],
+    dominations: [],
     sovereigntyYear: 1951,
     sovereigntyKind: "independence",
+    sovereigntyDate: "1951-12-24",
+    sovereigntySheetHidden: false,
+    highestPoint: {
+      elevationM: 2267,
+      names: {
+        fr: "Bikku Bitti",
+        en: "Bikku Bitti",
+      },
+    },
+    gdpPerCapitaUsd: {
+      value: 6448.82415074121,
+      year: 2025,
+    },
+    lifeExpectancyYears: {
+      value: 71.121,
+      year: 2024,
+    },
+    humanDevelopmentIndex: {
+      value: 0.721,
+      year: 2023,
+    },
+    currencies: ["LYD"],
+    demonyms: {
+      fr: {
+        m: "Libyen",
+        f: "Libyenne",
+      },
+      en: {
+        m: "Libyan",
+        f: "Libyan",
+      },
+    },
   },
   LCA: {
     continent: "north_america",
@@ -3846,6 +8118,7 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     flagSymbols: ["triangle"],
     flagLayout: [],
     events: [],
+    eventEditions: {},
     memberships: ["commonwealth"],
     capitals: [
       {
@@ -3853,6 +8126,10 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
         latitude: 13.9957,
         longitude: -61.0061,
         roles: ["primary"],
+        names: {
+          fr: "Castries",
+          en: "Castries",
+        },
       },
     ],
     drivingSide: "left",
@@ -3862,13 +8139,63 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     utcOffsetCount: 1,
     lastVolcanicEruptionYear: 1766,
     mountainAreaShare: 0.15584415584415584,
-    forestCoverShare: 0.34049180327868794,
+    forestCoverShare: 0.53672131147541,
     urbanCentresOver1M: 0,
     productionRanks: {},
     coalElectricityShare: 0,
     formerSovereigns: ["united_kingdom"],
+    dominations: [
+      {
+        power: "france",
+        nature: "colony",
+        from: 1650,
+        to: 1803,
+        intermittent: true,
+        part: null,
+      },
+      {
+        power: "united_kingdom",
+        nature: "colony",
+        from: 1803,
+        to: 1979,
+        intermittent: false,
+        part: null,
+      },
+    ],
     sovereigntyYear: 1979,
     sovereigntyKind: "independence",
+    sovereigntyDate: "1979-02-22",
+    sovereigntySheetHidden: false,
+    highestPoint: {
+      elevationM: 948,
+      names: {
+        fr: "mont Gimie",
+        en: "Mount Gimie",
+      },
+    },
+    gdpPerCapitaUsd: {
+      value: 14745.8184305461,
+      year: 2025,
+    },
+    lifeExpectancyYears: {
+      value: 72.846,
+      year: 2024,
+    },
+    humanDevelopmentIndex: {
+      value: 0.748,
+      year: 2023,
+    },
+    currencies: ["XCD"],
+    demonyms: {
+      fr: {
+        m: "Saint-Lucien",
+        f: "Saint-Lucienne",
+      },
+      en: {
+        m: "Saint Lucian",
+        f: "Saint Lucian",
+      },
+    },
   },
   LIE: {
     continent: "europe",
@@ -3883,6 +8210,7 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     flagSymbols: [],
     flagLayout: ["horizontal_stripes"],
     events: [],
+    eventEditions: {},
     memberships: ["schengen"],
     capitals: [
       {
@@ -3890,22 +8218,59 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
         latitude: 47.13,
         longitude: 9.52,
         roles: ["primary"],
+        names: {
+          fr: "Vaduz",
+          en: "Vaduz",
+        },
       },
     ],
     drivingSide: "right",
-    geoTags: [],
+    geoTags: ["capital_not_largest"],
     regime: "monarchy",
     physicalFeatures: [],
     utcOffsetCount: 1,
     lastVolcanicEruptionYear: null,
     mountainAreaShare: 0.99375,
-    forestCoverShare: 0.41875,
+    forestCoverShare: 0.363125,
     urbanCentresOver1M: 0,
     productionRanks: {},
     coalElectricityShare: null,
     formerSovereigns: [],
-    sovereigntyYear: 1719,
+    dominations: [],
+    sovereigntyYear: 1806,
     sovereigntyKind: "independence",
+    sovereigntyDate: "1806-07-12",
+    sovereigntySheetHidden: false,
+    highestPoint: {
+      elevationM: 2599,
+      names: {
+        fr: "Grauspitz",
+        en: "Grauspitz",
+      },
+    },
+    gdpPerCapitaUsd: {
+      value: 220167.225473557,
+      year: 2024,
+    },
+    lifeExpectancyYears: {
+      value: 84.2,
+      year: 2024,
+    },
+    humanDevelopmentIndex: {
+      value: 0.938,
+      year: 2023,
+    },
+    currencies: ["CHF"],
+    demonyms: {
+      fr: {
+        m: "Liechtensteinois",
+        f: "Liechtensteinoise",
+      },
+      en: {
+        m: "Liechtensteiner",
+        f: "Liechtensteiner",
+      },
+    },
   },
   LKA: {
     continent: "asia",
@@ -3920,6 +8285,7 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     flagSymbols: ["animal"],
     flagLayout: [],
     events: [],
+    eventEditions: {},
     memberships: ["commonwealth"],
     capitals: [
       {
@@ -3927,6 +8293,10 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
         latitude: 6.89,
         longitude: 79.9,
         roles: ["primary"],
+        names: {
+          fr: "Sri Jayawardenapura Kotte",
+          en: "Sri Jayawardenepura Kotte",
+        },
       },
     ],
     drivingSide: "left",
@@ -3936,13 +8306,55 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     utcOffsetCount: 1,
     lastVolcanicEruptionYear: null,
     mountainAreaShare: 0.14924554183813443,
-    forestCoverShare: 0.340048496605238,
+    forestCoverShare: 0.344419657290656,
     urbanCentresOver1M: 1,
     productionRanks: {},
     coalElectricityShare: 0.3259,
     formerSovereigns: ["united_kingdom"],
+    dominations: [
+      {
+        power: "united_kingdom",
+        nature: "colony",
+        from: 1796,
+        to: 1948,
+        intermittent: false,
+        part: null,
+      },
+    ],
     sovereigntyYear: 1948,
     sovereigntyKind: "independence",
+    sovereigntyDate: "1948-02-04",
+    sovereigntySheetHidden: false,
+    highestPoint: {
+      elevationM: 2524,
+      names: {
+        fr: "Pidurutalagala",
+        en: "Pidurutalagala",
+      },
+    },
+    gdpPerCapitaUsd: {
+      value: 5002.07904353724,
+      year: 2025,
+    },
+    lifeExpectancyYears: {
+      value: 77.672,
+      year: 2024,
+    },
+    humanDevelopmentIndex: {
+      value: 0.776,
+      year: 2023,
+    },
+    currencies: ["LKR"],
+    demonyms: {
+      fr: {
+        m: "Sri-Lankais",
+        f: "Sri-Lankaise",
+      },
+      en: {
+        m: "Sri Lankan",
+        f: "Sri Lankan",
+      },
+    },
   },
   LSO: {
     continent: "africa",
@@ -3957,6 +8369,7 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     flagSymbols: [],
     flagLayout: ["horizontal_stripes"],
     events: [],
+    eventEditions: {},
     memberships: ["commonwealth", "african_union"],
     capitals: [
       {
@@ -3964,6 +8377,10 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
         latitude: -29.32,
         longitude: 27.48,
         roles: ["primary"],
+        names: {
+          fr: "Maseru",
+          en: "Maseru",
+        },
       },
     ],
     drivingSide: "left",
@@ -3978,15 +8395,57 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     productionRanks: {},
     coalElectricityShare: 0,
     formerSovereigns: ["united_kingdom"],
+    dominations: [
+      {
+        power: "united_kingdom",
+        nature: "colony",
+        from: 1868,
+        to: 1966,
+        intermittent: false,
+        part: null,
+      },
+    ],
     sovereigntyYear: 1966,
     sovereigntyKind: "independence",
+    sovereigntyDate: "1966-10-04",
+    sovereigntySheetHidden: false,
+    highestPoint: {
+      elevationM: 3482,
+      names: {
+        fr: "Thabana Ntlenyana",
+        en: "Thabana Ntlenyana",
+      },
+    },
+    gdpPerCapitaUsd: {
+      value: 1088.96276223185,
+      year: 2025,
+    },
+    lifeExpectancyYears: {
+      value: 57.798,
+      year: 2024,
+    },
+    humanDevelopmentIndex: {
+      value: 0.55,
+      year: 2023,
+    },
+    currencies: ["LSL", "ZAR"],
+    demonyms: {
+      fr: {
+        m: "Lésothien",
+        f: "Lésothienne",
+      },
+      en: {
+        m: "Mosotho",
+        f: "Mosotho",
+      },
+    },
   },
   LTU: {
     continent: "europe",
     waterAccess: "coastal",
     borders: ["BLR", "LVA", "POL", "RUS"],
     areaKm2: 65300,
-    population: 2886179,
+    population: 2887761,
     officialLanguages: ["lt"],
     latitude: 56,
     subregion: "Northern Europe",
@@ -3994,6 +8453,7 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     flagSymbols: [],
     flagLayout: ["horizontal_stripes"],
     events: [],
+    eventEditions: {},
     memberships: ["eu", "eurozone", "nato", "oecd", "schengen"],
     capitals: [
       {
@@ -4001,6 +8461,10 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
         latitude: 54.68,
         longitude: 25.32,
         roles: ["primary"],
+        names: {
+          fr: "Vilnius",
+          en: "Vilnius",
+        },
       },
     ],
     drivingSide: "right",
@@ -4010,13 +8474,46 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     utcOffsetCount: 1,
     lastVolcanicEruptionYear: null,
     mountainAreaShare: 0,
-    forestCoverShare: 0.352301501597444,
+    forestCoverShare: 0.353143769968051,
     urbanCentresOver1M: 0,
     productionRanks: {},
     coalElectricityShare: 0,
     formerSovereigns: ["soviet_union"],
+    dominations: [],
     sovereigntyYear: 1990,
     sovereigntyKind: "restoration",
+    sovereigntyDate: "1990-03-11",
+    sovereigntySheetHidden: false,
+    highestPoint: {
+      elevationM: 294,
+      names: {
+        fr: "Aukštojas",
+        en: "Aukštojas Hill",
+      },
+    },
+    gdpPerCapitaUsd: {
+      value: 32958.6706396386,
+      year: 2025,
+    },
+    lifeExpectancyYears: {
+      value: 77.1951219512195,
+      year: 2024,
+    },
+    humanDevelopmentIndex: {
+      value: 0.895,
+      year: 2023,
+    },
+    currencies: ["EUR"],
+    demonyms: {
+      fr: {
+        m: "Lituanien",
+        f: "Lituanienne",
+      },
+      en: {
+        m: "Lithuanian",
+        f: "Lithuanian",
+      },
+    },
   },
   LUX: {
     continent: "europe",
@@ -4031,6 +8528,7 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     flagSymbols: [],
     flagLayout: ["horizontal_stripes"],
     events: [],
+    eventEditions: {},
     memberships: ["eu", "eurozone", "nato", "oecd", "schengen"],
     capitals: [
       {
@@ -4038,6 +8536,10 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
         latitude: 49.6,
         longitude: 6.12,
         roles: ["primary"],
+        names: {
+          fr: "Luxembourg",
+          en: "Luxembourg",
+        },
       },
     ],
     drivingSide: "right",
@@ -4052,8 +8554,41 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     productionRanks: {},
     coalElectricityShare: 0,
     formerSovereigns: ["netherlands"],
+    dominations: [],
     sovereigntyYear: 1839,
     sovereigntyKind: "independence",
+    sovereigntyDate: null,
+    sovereigntySheetHidden: false,
+    highestPoint: {
+      elevationM: 559,
+      names: {
+        fr: "Buurgplaatz",
+        en: "Buurgplaatz",
+      },
+    },
+    gdpPerCapitaUsd: {
+      value: 147252.179121515,
+      year: 2025,
+    },
+    lifeExpectancyYears: {
+      value: 83.1951219512195,
+      year: 2024,
+    },
+    humanDevelopmentIndex: {
+      value: 0.922,
+      year: 2023,
+    },
+    currencies: ["EUR"],
+    demonyms: {
+      fr: {
+        m: "Luxembourgeois",
+        f: "Luxembourgeoise",
+      },
+      en: {
+        m: "Luxembourger",
+        f: "Luxembourger",
+      },
+    },
   },
   LVA: {
     continent: "europe",
@@ -4068,6 +8603,7 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     flagSymbols: [],
     flagLayout: ["horizontal_stripes"],
     events: [],
+    eventEditions: {},
     memberships: ["eu", "eurozone", "nato", "oecd", "schengen"],
     capitals: [
       {
@@ -4075,6 +8611,10 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
         latitude: 56.95,
         longitude: 24.1,
         roles: ["primary"],
+        names: {
+          fr: "Riga",
+          en: "Riga",
+        },
       },
     ],
     drivingSide: "right",
@@ -4084,13 +8624,46 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     utcOffsetCount: 1,
     lastVolcanicEruptionYear: null,
     mountainAreaShare: 0,
-    forestCoverShare: 0.549959826450265,
+    forestCoverShare: 0.555010445122931,
     urbanCentresOver1M: 0,
     productionRanks: {},
     coalElectricityShare: 0,
     formerSovereigns: ["soviet_union"],
-    sovereigntyYear: 1991,
+    dominations: [],
+    sovereigntyYear: 1990,
     sovereigntyKind: "restoration",
+    sovereigntyDate: "1990-05-04",
+    sovereigntySheetHidden: false,
+    highestPoint: {
+      elevationM: 312,
+      names: {
+        fr: "Gaiziņkalns",
+        en: "Gaiziņkalns",
+      },
+    },
+    gdpPerCapitaUsd: {
+      value: 26311.9730706362,
+      year: 2025,
+    },
+    lifeExpectancyYears: {
+      value: 76.4292682926829,
+      year: 2024,
+    },
+    humanDevelopmentIndex: {
+      value: 0.889,
+      year: 2023,
+    },
+    currencies: ["EUR"],
+    demonyms: {
+      fr: {
+        m: "Letton",
+        f: "Lettone",
+      },
+      en: {
+        m: "Latvian",
+        f: "Latvian",
+      },
+    },
   },
   MAR: {
     continent: "africa",
@@ -4105,6 +8678,7 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     flagSymbols: ["star"],
     flagLayout: [],
     events: [],
+    eventEditions: {},
     memberships: ["arab_league", "african_union"],
     capitals: [
       {
@@ -4112,6 +8686,10 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
         latitude: 34.02,
         longitude: -6.82,
         roles: ["primary"],
+        names: {
+          fr: "Rabat",
+          en: "Rabat",
+        },
       },
     ],
     drivingSide: "right",
@@ -4121,13 +8699,55 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     utcOffsetCount: 1,
     lastVolcanicEruptionYear: null,
     mountainAreaShare: 0.4784816929795096,
-    forestCoverShare: 0.129371068787811,
+    forestCoverShare: 0.127598252296661,
     urbanCentresOver1M: 5,
     productionRanks: {},
     coalElectricityShare: 0.6175,
     formerSovereigns: ["france"],
+    dominations: [
+      {
+        power: "france",
+        nature: "protectorate",
+        from: 1912,
+        to: 1956,
+        intermittent: false,
+        part: null,
+      },
+    ],
     sovereigntyYear: 1956,
     sovereigntyKind: "independence",
+    sovereigntyDate: "1956-03-02",
+    sovereigntySheetHidden: false,
+    highestPoint: {
+      elevationM: 4165,
+      names: {
+        fr: "djebel Toubkal",
+        en: "Jbel Toubkal",
+      },
+    },
+    gdpPerCapitaUsd: {
+      value: 4672.46826171875,
+      year: 2025,
+    },
+    lifeExpectancyYears: {
+      value: 75.493,
+      year: 2024,
+    },
+    humanDevelopmentIndex: {
+      value: 0.71,
+      year: 2023,
+    },
+    currencies: ["MAD"],
+    demonyms: {
+      fr: {
+        m: "Marocain",
+        f: "Marocaine",
+      },
+      en: {
+        m: "Moroccan",
+        f: "Moroccan",
+      },
+    },
   },
   MCO: {
     continent: "europe",
@@ -4142,6 +8762,7 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     flagSymbols: [],
     flagLayout: ["horizontal_stripes"],
     events: [],
+    eventEditions: {},
     memberships: [],
     capitals: [
       {
@@ -4149,6 +8770,10 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
         latitude: 43.73,
         longitude: 7.42,
         roles: ["primary"],
+        names: {
+          fr: "Monaco",
+          en: "Monaco",
+        },
       },
     ],
     drivingSide: "right",
@@ -4163,8 +8788,38 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     productionRanks: {},
     coalElectricityShare: null,
     formerSovereigns: [],
+    dominations: [],
     sovereigntyYear: 1419,
     sovereigntyKind: "foundation",
+    sovereigntyDate: null,
+    sovereigntySheetHidden: false,
+    highestPoint: {
+      elevationM: 162,
+      names: {
+        fr: "chemin des Révoires",
+        en: "Chemin des Révoires",
+      },
+    },
+    gdpPerCapitaUsd: {
+      value: 288001.574856495,
+      year: 2024,
+    },
+    lifeExpectancyYears: {
+      value: 86.497,
+      year: 2024,
+    },
+    humanDevelopmentIndex: null,
+    currencies: ["EUR"],
+    demonyms: {
+      fr: {
+        m: "Monégasque",
+        f: "Monégasque",
+      },
+      en: {
+        m: "Monegasque",
+        f: "Monegasque",
+      },
+    },
   },
   MDA: {
     continent: "europe",
@@ -4176,9 +8831,10 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     latitude: 47,
     subregion: "Eastern Europe",
     flagColors: ["red", "blue", "yellow"],
-    flagSymbols: ["animal", "crescent", "star"],
+    flagSymbols: ["animal", "crescent", "cross", "star"],
     flagLayout: ["vertical_stripes"],
     events: [],
+    eventEditions: {},
     memberships: [],
     capitals: [
       {
@@ -4186,6 +8842,10 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
         latitude: 47.01,
         longitude: 28.9,
         roles: ["primary"],
+        names: {
+          fr: "Chișinău",
+          en: "Chișinău",
+        },
       },
     ],
     drivingSide: "right",
@@ -4195,13 +8855,46 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     utcOffsetCount: 1,
     lastVolcanicEruptionYear: null,
     mountainAreaShare: 0.0019204632748330674,
-    forestCoverShare: 0.11737017916793199,
+    forestCoverShare: 0.112802915274825,
     urbanCentresOver1M: 0,
     productionRanks: {},
     coalElectricityShare: 0,
     formerSovereigns: ["soviet_union"],
+    dominations: [],
     sovereigntyYear: 1991,
     sovereigntyKind: "independence",
+    sovereigntyDate: "1991-08-27",
+    sovereigntySheetHidden: false,
+    highestPoint: {
+      elevationM: 430,
+      names: {
+        fr: "Dealul Bălănești",
+        en: "Bălănești Hill",
+      },
+    },
+    gdpPerCapitaUsd: {
+      value: 8621.71721623786,
+      year: 2025,
+    },
+    lifeExpectancyYears: {
+      value: 71.332,
+      year: 2024,
+    },
+    humanDevelopmentIndex: {
+      value: 0.785,
+      year: 2023,
+    },
+    currencies: ["MDL"],
+    demonyms: {
+      fr: {
+        m: "Moldave",
+        f: "Moldave",
+      },
+      en: {
+        m: "Moldovan",
+        f: "Moldovan",
+      },
+    },
   },
   MDG: {
     continent: "africa",
@@ -4216,6 +8909,7 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     flagSymbols: [],
     flagLayout: [],
     events: [],
+    eventEditions: {},
     memberships: ["african_union"],
     capitals: [
       {
@@ -4223,6 +8917,10 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
         latitude: -18.92,
         longitude: 47.52,
         roles: ["primary"],
+        names: {
+          fr: "Antananarivo",
+          en: "Antananarivo",
+        },
       },
     ],
     drivingSide: "right",
@@ -4232,13 +8930,55 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     utcOffsetCount: 1,
     lastVolcanicEruptionYear: null,
     mountainAreaShare: 0.4032086344906063,
-    forestCoverShare: 0.212962600550017,
+    forestCoverShare: 0.17481333791681,
     urbanCentresOver1M: 1,
     productionRanks: {},
     coalElectricityShare: 0.20579999999999998,
     formerSovereigns: ["france"],
+    dominations: [
+      {
+        power: "france",
+        nature: "colony",
+        from: 1895,
+        to: 1960,
+        intermittent: false,
+        part: null,
+      },
+    ],
     sovereigntyYear: 1960,
     sovereigntyKind: "independence",
+    sovereigntyDate: "1960-06-26",
+    sovereigntySheetHidden: false,
+    highestPoint: {
+      elevationM: 2876,
+      names: {
+        fr: "Maromokotro",
+        en: "Maromokotro",
+      },
+    },
+    gdpPerCapitaUsd: {
+      value: 599.265294255357,
+      year: 2025,
+    },
+    lifeExpectancyYears: {
+      value: 63.835,
+      year: 2024,
+    },
+    humanDevelopmentIndex: {
+      value: 0.487,
+      year: 2023,
+    },
+    currencies: ["MGA"],
+    demonyms: {
+      fr: {
+        m: "Malgache",
+        f: "Malgache",
+      },
+      en: {
+        m: "Malagasy",
+        f: "Malagasy",
+      },
+    },
   },
   MDV: {
     continent: "asia",
@@ -4253,6 +8993,7 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     flagSymbols: ["crescent"],
     flagLayout: [],
     events: [],
+    eventEditions: {},
     memberships: ["commonwealth"],
     capitals: [
       {
@@ -4260,6 +9001,10 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
         latitude: 4.17,
         longitude: 73.51,
         roles: ["primary"],
+        names: {
+          fr: "Malé",
+          en: "Malé",
+        },
       },
     ],
     drivingSide: "left",
@@ -4269,13 +9014,52 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     utcOffsetCount: 1,
     lastVolcanicEruptionYear: null,
     mountainAreaShare: 0,
-    forestCoverShare: 0.0275167785234899,
+    forestCoverShare: 0.124832214765101,
     urbanCentresOver1M: 0,
     productionRanks: {},
     coalElectricityShare: 0,
     formerSovereigns: ["united_kingdom"],
+    dominations: [
+      {
+        power: "united_kingdom",
+        nature: "protectorate",
+        from: 1887,
+        to: 1965,
+        intermittent: false,
+        part: null,
+      },
+    ],
     sovereigntyYear: 1965,
     sovereigntyKind: "independence",
+    sovereigntyDate: "1965-07-26",
+    sovereigntySheetHidden: false,
+    highestPoint: {
+      elevationM: 5,
+      names: null,
+    },
+    gdpPerCapitaUsd: {
+      value: 14614.7208116541,
+      year: 2025,
+    },
+    lifeExpectancyYears: {
+      value: 81.285,
+      year: 2024,
+    },
+    humanDevelopmentIndex: {
+      value: 0.766,
+      year: 2023,
+    },
+    currencies: ["MVR"],
+    demonyms: {
+      fr: {
+        m: "Maldivien",
+        f: "Maldivienne",
+      },
+      en: {
+        m: "Maldivian",
+        f: "Maldivian",
+      },
+    },
   },
   MEX: {
     continent: "north_america",
@@ -4290,6 +9074,10 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     flagSymbols: ["animal", "plant"],
     flagLayout: ["vertical_stripes"],
     events: ["fifa_wc_host", "summer_olympics_host"],
+    eventEditions: {
+      fifa_wc_host: [1970, 1986, 2026],
+      summer_olympics_host: [1968],
+    },
     memberships: ["g20", "oecd"],
     capitals: [
       {
@@ -4297,6 +9085,10 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
         latitude: 19.43,
         longitude: -99.13,
         roles: ["primary"],
+        names: {
+          fr: "Mexico",
+          en: "Mexico City",
+        },
       },
     ],
     drivingSide: "right",
@@ -4313,7 +9105,7 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     utcOffsetCount: 4,
     lastVolcanicEruptionYear: 2026,
     mountainAreaShare: 0.4795326757874642,
-    forestCoverShare: 0.335959176419147,
+    forestCoverShare: 0.342195632603719,
     urbanCentresOver1M: 10,
     productionRanks: {
       coffee: 10,
@@ -4321,8 +9113,41 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     },
     coalElectricityShare: 0.0349,
     formerSovereigns: ["spain"],
+    dominations: [],
     sovereigntyYear: 1810,
     sovereigntyKind: "independence",
+    sovereigntyDate: "1810-09-16",
+    sovereigntySheetHidden: false,
+    highestPoint: {
+      elevationM: 5636,
+      names: {
+        fr: "pic d'Orizaba",
+        en: "Pico de Orizaba",
+      },
+    },
+    gdpPerCapitaUsd: {
+      value: 13889.2339628708,
+      year: 2025,
+    },
+    lifeExpectancyYears: {
+      value: 75.264,
+      year: 2024,
+    },
+    humanDevelopmentIndex: {
+      value: 0.789,
+      year: 2023,
+    },
+    currencies: ["MXN"],
+    demonyms: {
+      fr: {
+        m: "Mexicain",
+        f: "Mexicaine",
+      },
+      en: {
+        m: "Mexican",
+        f: "Mexican",
+      },
+    },
   },
   MHL: {
     continent: "oceania",
@@ -4337,6 +9162,7 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     flagSymbols: ["star"],
     flagLayout: [],
     events: [],
+    eventEditions: {},
     memberships: [],
     capitals: [
       {
@@ -4344,6 +9170,10 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
         latitude: 7.1,
         longitude: 171.38,
         roles: ["primary"],
+        names: {
+          fr: "Majuro",
+          en: "Majuro",
+        },
       },
     ],
     drivingSide: "right",
@@ -4353,13 +9183,43 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     utcOffsetCount: 1,
     lastVolcanicEruptionYear: null,
     mountainAreaShare: 0,
-    forestCoverShare: 0.522222222222222,
+    forestCoverShare: 0.53646408839779,
     urbanCentresOver1M: 0,
     productionRanks: {},
     coalElectricityShare: null,
     formerSovereigns: ["united_states"],
+    dominations: [],
     sovereigntyYear: 1986,
     sovereigntyKind: "independence",
+    sovereigntyDate: "1986-10-21",
+    sovereigntySheetHidden: false,
+    highestPoint: {
+      elevationM: 14,
+      names: null,
+    },
+    gdpPerCapitaUsd: {
+      value: 8489.05793506422,
+      year: 2025,
+    },
+    lifeExpectancyYears: {
+      value: 67.075,
+      year: 2024,
+    },
+    humanDevelopmentIndex: {
+      value: 0.733,
+      year: 2023,
+    },
+    currencies: ["USD"],
+    demonyms: {
+      fr: {
+        m: "Marshallais",
+        f: "Marshallaise",
+      },
+      en: {
+        m: "Marshallese",
+        f: "Marshallese",
+      },
+    },
   },
   MKD: {
     continent: "europe",
@@ -4374,6 +9234,7 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     flagSymbols: ["sun"],
     flagLayout: [],
     events: [],
+    eventEditions: {},
     memberships: ["nato"],
     capitals: [
       {
@@ -4381,6 +9242,10 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
         latitude: 42,
         longitude: 21.43,
         roles: ["primary"],
+        names: {
+          fr: "Skopje",
+          en: "Skopje",
+        },
       },
     ],
     drivingSide: "right",
@@ -4390,13 +9255,46 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     utcOffsetCount: 1,
     lastVolcanicEruptionYear: null,
     mountainAreaShare: 0.6804729125345156,
-    forestCoverShare: 0.397101506740682,
+    forestCoverShare: 0.409432989690722,
     urbanCentresOver1M: 0,
     productionRanks: {},
     coalElectricityShare: 0.374,
     formerSovereigns: ["yugoslavia"],
+    dominations: [],
     sovereigntyYear: 1991,
     sovereigntyKind: "independence",
+    sovereigntyDate: "1991-09-08",
+    sovereigntySheetHidden: false,
+    highestPoint: {
+      elevationM: 2764,
+      names: {
+        fr: "mont Korab",
+        en: "Korab",
+      },
+    },
+    gdpPerCapitaUsd: {
+      value: 10489.9255355525,
+      year: 2025,
+    },
+    lifeExpectancyYears: {
+      value: 76.6165853658537,
+      year: 2024,
+    },
+    humanDevelopmentIndex: {
+      value: 0.815,
+      year: 2023,
+    },
+    currencies: ["MKD"],
+    demonyms: {
+      fr: {
+        m: "Macédonien",
+        f: "Macédonienne",
+      },
+      en: {
+        m: "Macedonian",
+        f: "Macedonian",
+      },
+    },
   },
   MLI: {
     continent: "africa",
@@ -4411,6 +9309,7 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     flagSymbols: [],
     flagLayout: ["vertical_stripes"],
     events: [],
+    eventEditions: {},
     memberships: ["african_union"],
     capitals: [
       {
@@ -4418,6 +9317,10 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
         latitude: 12.65,
         longitude: -8,
         roles: ["primary"],
+        names: {
+          fr: "Bamako",
+          en: "Bamako",
+        },
       },
     ],
     drivingSide: "right",
@@ -4427,13 +9330,55 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     utcOffsetCount: 1,
     lastVolcanicEruptionYear: null,
     mountainAreaShare: 0.005928114356486738,
-    forestCoverShare: 0.10896663634352001,
+    forestCoverShare: 0.08753013874888341,
     urbanCentresOver1M: 1,
     productionRanks: {},
     coalElectricityShare: 0,
     formerSovereigns: ["france"],
+    dominations: [
+      {
+        power: "france",
+        nature: "colony",
+        from: 1883,
+        to: 1960,
+        intermittent: false,
+        part: null,
+      },
+    ],
     sovereigntyYear: 1960,
     sovereigntyKind: "independence",
+    sovereigntyDate: "1960-09-22",
+    sovereigntySheetHidden: false,
+    highestPoint: {
+      elevationM: 1155,
+      names: {
+        fr: "Hombori Tondo",
+        en: "Hombori Tondo",
+      },
+    },
+    gdpPerCapitaUsd: {
+      value: 1193.27601004701,
+      year: 2025,
+    },
+    lifeExpectancyYears: {
+      value: 60.675,
+      year: 2024,
+    },
+    humanDevelopmentIndex: {
+      value: 0.419,
+      year: 2023,
+    },
+    currencies: ["XOF"],
+    demonyms: {
+      fr: {
+        m: "Malien",
+        f: "Malienne",
+      },
+      en: {
+        m: "Malian",
+        f: "Malian",
+      },
+    },
   },
   MLT: {
     continent: "europe",
@@ -4448,6 +9393,7 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     flagSymbols: ["cross"],
     flagLayout: ["vertical_stripes"],
     events: [],
+    eventEditions: {},
     memberships: ["commonwealth", "eu", "eurozone", "schengen"],
     capitals: [
       {
@@ -4455,22 +9401,68 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
         latitude: 35.88,
         longitude: 14.5,
         roles: ["primary"],
+        names: {
+          fr: "La Valette",
+          en: "Valletta",
+        },
       },
     ],
     drivingSide: "left",
-    geoTags: ["drives_on_left"],
+    geoTags: ["drives_on_left", "capital_not_largest"],
     regime: "republic",
     physicalFeatures: ["mediterranean_coast"],
     utcOffsetCount: 1,
     lastVolcanicEruptionYear: null,
     mountainAreaShare: 0,
-    forestCoverShare: 0.014375,
+    forestCoverShare: 0.014913533238140599,
     urbanCentresOver1M: 0,
     productionRanks: {},
     coalElectricityShare: 0,
     formerSovereigns: ["united_kingdom"],
+    dominations: [
+      {
+        power: "united_kingdom",
+        nature: "colony",
+        from: 1800,
+        to: 1964,
+        intermittent: false,
+        part: null,
+      },
+    ],
     sovereigntyYear: 1964,
     sovereigntyKind: "independence",
+    sovereigntyDate: "1964-09-21",
+    sovereigntySheetHidden: false,
+    highestPoint: {
+      elevationM: 253,
+      names: {
+        fr: "Ta' Dmejrek",
+        en: "Ta' Dmejrek",
+      },
+    },
+    gdpPerCapitaUsd: {
+      value: 47906.9000057635,
+      year: 2025,
+    },
+    lifeExpectancyYears: {
+      value: 82.9560975609756,
+      year: 2024,
+    },
+    humanDevelopmentIndex: {
+      value: 0.924,
+      year: 2023,
+    },
+    currencies: ["EUR"],
+    demonyms: {
+      fr: {
+        m: "Maltais",
+        f: "Maltaise",
+      },
+      en: {
+        m: "Maltese",
+        f: "Maltese",
+      },
+    },
   },
   MMR: {
     continent: "asia",
@@ -4485,6 +9477,7 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     flagSymbols: ["star"],
     flagLayout: ["horizontal_stripes"],
     events: [],
+    eventEditions: {},
     memberships: ["asean"],
     capitals: [
       {
@@ -4492,6 +9485,10 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
         latitude: 19.76,
         longitude: 96.07,
         roles: ["primary"],
+        names: {
+          fr: "Naypyidaw",
+          en: "Naypyidaw",
+        },
       },
     ],
     drivingSide: "right",
@@ -4501,15 +9498,57 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     utcOffsetCount: 1,
     lastVolcanicEruptionYear: -6050,
     mountainAreaShare: 0.4895281844813163,
-    forestCoverShare: 0.42402377924525403,
+    forestCoverShare: 0.42402347281168096,
     urbanCentresOver1M: 2,
     productionRanks: {
       rice: 7,
     },
     coalElectricityShare: 0.0553,
     formerSovereigns: ["united_kingdom"],
+    dominations: [
+      {
+        power: "united_kingdom",
+        nature: "colony",
+        from: 1826,
+        to: 1948,
+        intermittent: false,
+        part: null,
+      },
+    ],
     sovereigntyYear: 1948,
     sovereigntyKind: "independence",
+    sovereigntyDate: "1948-01-04",
+    sovereigntySheetHidden: false,
+    highestPoint: {
+      elevationM: 5870,
+      names: {
+        fr: "Gamlang Razi",
+        en: "Gamlang Razi",
+      },
+    },
+    gdpPerCapitaUsd: {
+      value: 1488.87527836542,
+      year: 2025,
+    },
+    lifeExpectancyYears: {
+      value: 67.095,
+      year: 2024,
+    },
+    humanDevelopmentIndex: {
+      value: 0.609,
+      year: 2023,
+    },
+    currencies: ["MMK"],
+    demonyms: {
+      fr: {
+        m: "Birman",
+        f: "Birmane",
+      },
+      en: {
+        m: "Burmese",
+        f: "Burmese",
+      },
+    },
   },
   MNE: {
     continent: "europe",
@@ -4524,6 +9563,7 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     flagSymbols: ["animal"],
     flagLayout: [],
     events: [],
+    eventEditions: {},
     memberships: ["nato"],
     capitals: [
       {
@@ -4531,6 +9571,10 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
         latitude: 42.43,
         longitude: 19.27,
         roles: ["primary"],
+        names: {
+          fr: "Podgorica",
+          en: "Podgorica",
+        },
       },
     ],
     drivingSide: "right",
@@ -4545,8 +9589,41 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     productionRanks: {},
     coalElectricityShare: 0.40509999999999996,
     formerSovereigns: [],
+    dominations: [],
     sovereigntyYear: 2006,
     sovereigntyKind: "independence",
+    sovereigntyDate: "2006-06-03",
+    sovereigntySheetHidden: false,
+    highestPoint: {
+      elevationM: 2534,
+      names: {
+        fr: "Zla Kolata",
+        en: "Zla Kolata",
+      },
+    },
+    gdpPerCapitaUsd: {
+      value: 14816.8380299947,
+      year: 2025,
+    },
+    lifeExpectancyYears: {
+      value: 77.890243902439,
+      year: 2024,
+    },
+    humanDevelopmentIndex: {
+      value: 0.862,
+      year: 2023,
+    },
+    currencies: ["EUR"],
+    demonyms: {
+      fr: {
+        m: "Monténégrin",
+        f: "Monténégrine",
+      },
+      en: {
+        m: "Montenegrin",
+        f: "Montenegrin",
+      },
+    },
   },
   MNG: {
     continent: "asia",
@@ -4561,6 +9638,7 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     flagSymbols: ["sun", "crescent"],
     flagLayout: ["vertical_stripes"],
     events: [],
+    eventEditions: {},
     memberships: [],
     capitals: [
       {
@@ -4568,6 +9646,10 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
         latitude: 47.92,
         longitude: 106.91,
         roles: ["primary"],
+        names: {
+          fr: "Oulan-Bator",
+          en: "Ulaanbaatar",
+        },
       },
     ],
     drivingSide: "right",
@@ -4577,13 +9659,46 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     utcOffsetCount: 2,
     lastVolcanicEruptionYear: -2980,
     mountainAreaShare: 0.3580457896183773,
-    forestCoverShare: 0.09091724058793041,
+    forestCoverShare: 0.0909742184590842,
     urbanCentresOver1M: 1,
     productionRanks: {},
     coalElectricityShare: 0.8469,
     formerSovereigns: [],
+    dominations: [],
     sovereigntyYear: 1911,
     sovereigntyKind: "independence",
+    sovereigntyDate: "1911-12-29",
+    sovereigntySheetHidden: false,
+    highestPoint: {
+      elevationM: 4374,
+      names: {
+        fr: "Kujten Uul",
+        en: "Hüiten Peak",
+      },
+    },
+    gdpPerCapitaUsd: {
+      value: 7108.22743246244,
+      year: 2025,
+    },
+    lifeExpectancyYears: {
+      value: 72.3980487804878,
+      year: 2024,
+    },
+    humanDevelopmentIndex: {
+      value: 0.747,
+      year: 2023,
+    },
+    currencies: ["MNT"],
+    demonyms: {
+      fr: {
+        m: "Mongol",
+        f: "Mongole",
+      },
+      en: {
+        m: "Mongolian",
+        f: "Mongolian",
+      },
+    },
   },
   MOZ: {
     continent: "africa",
@@ -4598,6 +9713,7 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     flagSymbols: ["star", "triangle"],
     flagLayout: ["horizontal_stripes"],
     events: [],
+    eventEditions: {},
     memberships: ["commonwealth", "african_union"],
     capitals: [
       {
@@ -4605,6 +9721,10 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
         latitude: -25.95,
         longitude: 32.58,
         roles: ["primary"],
+        names: {
+          fr: "Maputo",
+          en: "Maputo",
+        },
       },
     ],
     drivingSide: "left",
@@ -4614,13 +9734,46 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     utcOffsetCount: 1,
     lastVolcanicEruptionYear: null,
     mountainAreaShare: 0.18195461520228545,
-    forestCoverShare: 0.458130349195046,
+    forestCoverShare: 0.416808158905364,
     urbanCentresOver1M: 2,
     productionRanks: {},
     coalElectricityShare: 0,
     formerSovereigns: ["portugal"],
+    dominations: [],
     sovereigntyYear: 1975,
     sovereigntyKind: "independence",
+    sovereigntyDate: "1975-06-25",
+    sovereigntySheetHidden: false,
+    highestPoint: {
+      elevationM: 2436,
+      names: {
+        fr: "mont Binga",
+        en: "Monte Binga",
+      },
+    },
+    gdpPerCapitaUsd: {
+      value: 626.914419215727,
+      year: 2025,
+    },
+    lifeExpectancyYears: {
+      value: 63.797,
+      year: 2024,
+    },
+    humanDevelopmentIndex: {
+      value: 0.493,
+      year: 2023,
+    },
+    currencies: ["MZN"],
+    demonyms: {
+      fr: {
+        m: "Mozambicain",
+        f: "Mozambicaine",
+      },
+      en: {
+        m: "Mozambican",
+        f: "Mozambican",
+      },
+    },
   },
   MRT: {
     continent: "africa",
@@ -4635,6 +9788,7 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     flagSymbols: ["star", "crescent"],
     flagLayout: ["horizontal_stripes"],
     events: [],
+    eventEditions: {},
     memberships: ["arab_league", "african_union"],
     capitals: [
       {
@@ -4642,6 +9796,10 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
         latitude: 18.07,
         longitude: -15.97,
         roles: ["primary"],
+        names: {
+          fr: "Nouakchott",
+          en: "Nouakchott",
+        },
       },
     ],
     drivingSide: "right",
@@ -4651,13 +9809,55 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     utcOffsetCount: 1,
     lastVolcanicEruptionYear: null,
     mountainAreaShare: 0.006685747550208596,
-    forestCoverShare: 0.00287611138061512,
+    forestCoverShare: 0.0098367129135539,
     urbanCentresOver1M: 1,
     productionRanks: {},
     coalElectricityShare: 0,
     formerSovereigns: ["france"],
+    dominations: [
+      {
+        power: "france",
+        nature: "colony",
+        from: null,
+        to: 1960,
+        intermittent: false,
+        part: null,
+      },
+    ],
     sovereigntyYear: 1960,
     sovereigntyKind: "independence",
+    sovereigntyDate: "1960-11-28",
+    sovereigntySheetHidden: false,
+    highestPoint: {
+      elevationM: 915,
+      names: {
+        fr: "Kedia d'Idjil",
+        en: "Kediet ej Jill",
+      },
+    },
+    gdpPerCapitaUsd: {
+      value: 2197.51046251309,
+      year: 2025,
+    },
+    lifeExpectancyYears: {
+      value: 68.713,
+      year: 2024,
+    },
+    humanDevelopmentIndex: {
+      value: 0.563,
+      year: 2023,
+    },
+    currencies: ["MRU"],
+    demonyms: {
+      fr: {
+        m: "Mauritanien",
+        f: "Mauritanienne",
+      },
+      en: {
+        m: "Mauritanian",
+        f: "Mauritanian",
+      },
+    },
   },
   MUS: {
     continent: "africa",
@@ -4672,6 +9872,7 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     flagSymbols: [],
     flagLayout: ["horizontal_stripes"],
     events: [],
+    eventEditions: {},
     memberships: ["commonwealth", "african_union"],
     capitals: [
       {
@@ -4679,6 +9880,10 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
         latitude: -20.15,
         longitude: 57.48,
         roles: ["primary"],
+        names: {
+          fr: "Port-Louis",
+          en: "Port Louis",
+        },
       },
     ],
     drivingSide: "left",
@@ -4688,13 +9893,63 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     utcOffsetCount: 1,
     lastVolcanicEruptionYear: null,
     mountainAreaShare: 0.23921568627450981,
-    forestCoverShare: 0.19474211316975498,
+    forestCoverShare: 0.19145,
     urbanCentresOver1M: 0,
     productionRanks: {},
     coalElectricityShare: 0.39299999999999996,
     formerSovereigns: ["united_kingdom"],
+    dominations: [
+      {
+        power: "france",
+        nature: "colony",
+        from: 1721,
+        to: 1810,
+        intermittent: false,
+        part: null,
+      },
+      {
+        power: "united_kingdom",
+        nature: "colony",
+        from: 1810,
+        to: 1968,
+        intermittent: false,
+        part: null,
+      },
+    ],
     sovereigntyYear: 1968,
     sovereigntyKind: "independence",
+    sovereigntyDate: "1968-03-12",
+    sovereigntySheetHidden: false,
+    highestPoint: {
+      elevationM: 828,
+      names: {
+        fr: "piton de la Petite Rivière Noire",
+        en: "Piton de la Petite Rivière Noire",
+      },
+    },
+    gdpPerCapitaUsd: {
+      value: 12991.2935987166,
+      year: 2025,
+    },
+    lifeExpectancyYears: {
+      value: 73.7890243902439,
+      year: 2024,
+    },
+    humanDevelopmentIndex: {
+      value: 0.806,
+      year: 2023,
+    },
+    currencies: ["MUR"],
+    demonyms: {
+      fr: {
+        m: "Mauricien",
+        f: "Mauricienne",
+      },
+      en: {
+        m: "Mauritian",
+        f: "Mauritian",
+      },
+    },
   },
   MWI: {
     continent: "africa",
@@ -4709,6 +9964,7 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     flagSymbols: ["sun"],
     flagLayout: ["horizontal_stripes"],
     events: [],
+    eventEditions: {},
     memberships: ["commonwealth", "african_union"],
     capitals: [
       {
@@ -4716,6 +9972,10 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
         latitude: -13.97,
         longitude: 33.78,
         roles: ["primary"],
+        names: {
+          fr: "Lilongwe",
+          en: "Lilongwe",
+        },
       },
     ],
     drivingSide: "left",
@@ -4730,8 +9990,50 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     productionRanks: {},
     coalElectricityShare: 0,
     formerSovereigns: ["united_kingdom"],
+    dominations: [
+      {
+        power: "united_kingdom",
+        nature: "protectorate",
+        from: 1891,
+        to: 1964,
+        intermittent: false,
+        part: null,
+      },
+    ],
     sovereigntyYear: 1964,
     sovereigntyKind: "independence",
+    sovereigntyDate: "1964-07-06",
+    sovereigntySheetHidden: false,
+    highestPoint: {
+      elevationM: 3002,
+      names: {
+        fr: "Sapitwa",
+        en: "Sapitwa",
+      },
+    },
+    gdpPerCapitaUsd: {
+      value: 671.506847203876,
+      year: 2025,
+    },
+    lifeExpectancyYears: {
+      value: 67.561,
+      year: 2024,
+    },
+    humanDevelopmentIndex: {
+      value: 0.517,
+      year: 2023,
+    },
+    currencies: ["MWK"],
+    demonyms: {
+      fr: {
+        m: "Malawien",
+        f: "Malawienne",
+      },
+      en: {
+        m: "Malawian",
+        f: "Malawian",
+      },
+    },
   },
   MYS: {
     continent: "asia",
@@ -4746,6 +10048,7 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     flagSymbols: ["star", "crescent"],
     flagLayout: ["horizontal_stripes"],
     events: [],
+    eventEditions: {},
     memberships: ["asean", "commonwealth"],
     capitals: [
       {
@@ -4753,6 +10056,10 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
         latitude: 3.17,
         longitude: 101.7,
         roles: ["primary"],
+        names: {
+          fr: "Kuala Lumpur",
+          en: "Kuala Lumpur",
+        },
       },
     ],
     drivingSide: "left",
@@ -4762,15 +10069,57 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     utcOffsetCount: 1,
     lastVolcanicEruptionYear: null,
     mountainAreaShare: 0.2841993573214269,
-    forestCoverShare: 0.577190381981434,
+    forestCoverShare: 0.578442854968802,
     urbanCentresOver1M: 2,
     productionRanks: {
       natural_gas: 11,
     },
     coalElectricityShare: 0.4305,
     formerSovereigns: ["united_kingdom"],
+    dominations: [
+      {
+        power: "united_kingdom",
+        nature: "protectorate",
+        from: 1786,
+        to: 1957,
+        intermittent: false,
+        part: null,
+      },
+    ],
     sovereigntyYear: 1957,
     sovereigntyKind: "independence",
+    sovereigntyDate: "1957-08-31",
+    sovereigntySheetHidden: false,
+    highestPoint: {
+      elevationM: 4095,
+      names: {
+        fr: "mont Kinabalu",
+        en: "Mount Kinabalu",
+      },
+    },
+    gdpPerCapitaUsd: {
+      value: 13124.5554178269,
+      year: 2025,
+    },
+    lifeExpectancyYears: {
+      value: 76.821,
+      year: 2024,
+    },
+    humanDevelopmentIndex: {
+      value: 0.819,
+      year: 2023,
+    },
+    currencies: ["MYR"],
+    demonyms: {
+      fr: {
+        m: "Malaisien",
+        f: "Malaisienne",
+      },
+      en: {
+        m: "Malaysian",
+        f: "Malaysian",
+      },
+    },
   },
   NAM: {
     continent: "africa",
@@ -4778,23 +10127,14 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     borders: ["AGO", "BWA", "ZAF", "ZMB"],
     areaKm2: 825615,
     population: 3022401,
-    officialLanguages: [
-      "af",
-      "de",
-      "en",
-      "hz",
-      "hgm",
-      "kwn",
-      "loz",
-      "ng",
-      "tn",
-    ],
+    officialLanguages: ["en"],
     latitude: -22,
     subregion: "Southern Africa",
     flagColors: ["red", "blue", "green", "yellow", "white"],
     flagSymbols: ["sun", "triangle"],
     flagLayout: [],
     events: [],
+    eventEditions: {},
     memberships: ["commonwealth", "african_union"],
     capitals: [
       {
@@ -4802,6 +10142,10 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
         latitude: -22.57,
         longitude: 17.08,
         roles: ["primary"],
+        names: {
+          fr: "Windhoek",
+          en: "Windhoek",
+        },
       },
     ],
     drivingSide: "left",
@@ -4811,13 +10155,46 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     utcOffsetCount: 1,
     lastVolcanicEruptionYear: null,
     mountainAreaShare: 0.1992066520109252,
-    forestCoverShare: 0.07805111200184629,
+    forestCoverShare: 0.0977085838525914,
     urbanCentresOver1M: 0,
     productionRanks: {},
     coalElectricityShare: 0.024399999999999998,
     formerSovereigns: [],
+    dominations: [],
     sovereigntyYear: 1990,
     sovereigntyKind: "independence",
+    sovereigntyDate: "1990-03-21",
+    sovereigntySheetHidden: false,
+    highestPoint: {
+      elevationM: 2573,
+      names: {
+        fr: "Königstein",
+        en: "Königstein",
+      },
+    },
+    gdpPerCapitaUsd: {
+      value: 4875.92558158247,
+      year: 2025,
+    },
+    lifeExpectancyYears: {
+      value: 67.516,
+      year: 2024,
+    },
+    humanDevelopmentIndex: {
+      value: 0.665,
+      year: 2023,
+    },
+    currencies: ["NAD", "ZAR"],
+    demonyms: {
+      fr: {
+        m: "Namibien",
+        f: "Namibienne",
+      },
+      en: {
+        m: "Namibian",
+        f: "Namibian",
+      },
+    },
   },
   NER: {
     continent: "africa",
@@ -4832,6 +10209,7 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     flagSymbols: ["circle"],
     flagLayout: ["horizontal_stripes"],
     events: [],
+    eventEditions: {},
     memberships: ["african_union"],
     capitals: [
       {
@@ -4839,6 +10217,10 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
         latitude: 13.52,
         longitude: 2.12,
         roles: ["primary"],
+        names: {
+          fr: "Niamey",
+          en: "Niamey",
+        },
       },
     ],
     drivingSide: "right",
@@ -4848,13 +10230,55 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     utcOffsetCount: 1,
     lastVolcanicEruptionYear: null,
     mountainAreaShare: 0.01758800315706393,
-    forestCoverShare: 0.00822957290597616,
+    forestCoverShare: 0.008407199810531299,
     urbanCentresOver1M: 1,
     productionRanks: {},
     coalElectricityShare: 0.1789,
     formerSovereigns: ["france"],
+    dominations: [
+      {
+        power: "france",
+        nature: "colony",
+        from: 1922,
+        to: 1960,
+        intermittent: false,
+        part: null,
+      },
+    ],
     sovereigntyYear: 1960,
     sovereigntyKind: "independence",
+    sovereigntyDate: "1960-08-03",
+    sovereigntySheetHidden: false,
+    highestPoint: {
+      elevationM: 2022,
+      names: {
+        fr: "mont Indoukat-n-Taglès",
+        en: "Mont Idoukal-n-Taghès",
+      },
+    },
+    gdpPerCapitaUsd: {
+      value: 775.353622143879,
+      year: 2025,
+    },
+    lifeExpectancyYears: {
+      value: 61.433,
+      year: 2024,
+    },
+    humanDevelopmentIndex: {
+      value: 0.419,
+      year: 2023,
+    },
+    currencies: ["XOF"],
+    demonyms: {
+      fr: {
+        m: "Nigérien",
+        f: "Nigérienne",
+      },
+      en: {
+        m: "Nigerien",
+        f: "Nigerien",
+      },
+    },
   },
   NGA: {
     continent: "africa",
@@ -4869,6 +10293,7 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     flagSymbols: [],
     flagLayout: ["vertical_stripes"],
     events: [],
+    eventEditions: {},
     memberships: ["commonwealth", "opec", "african_union"],
     capitals: [
       {
@@ -4876,6 +10301,10 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
         latitude: 9.08,
         longitude: 7.53,
         roles: ["primary"],
+        names: {
+          fr: "Abuja",
+          en: "Abuja",
+        },
       },
     ],
     drivingSide: "right",
@@ -4885,7 +10314,7 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     utcOffsetCount: 1,
     lastVolcanicEruptionYear: null,
     mountainAreaShare: 0.07169549064267218,
-    forestCoverShare: 0.23207890027119898,
+    forestCoverShare: 0.19086838609089,
     urbanCentresOver1M: 17,
     productionRanks: {
       cocoa: 5,
@@ -4893,8 +10322,50 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     },
     coalElectricityShare: 0,
     formerSovereigns: ["united_kingdom"],
+    dominations: [
+      {
+        power: "united_kingdom",
+        nature: "colony",
+        from: 1861,
+        to: 1960,
+        intermittent: false,
+        part: null,
+      },
+    ],
     sovereigntyYear: 1960,
     sovereigntyKind: "independence",
+    sovereigntyDate: "1960-10-01",
+    sovereigntySheetHidden: false,
+    highestPoint: {
+      elevationM: 2419,
+      names: {
+        fr: "Chappal Waddi",
+        en: "Chappal Waddi",
+      },
+    },
+    gdpPerCapitaUsd: {
+      value: 1224.25410237743,
+      year: 2025,
+    },
+    lifeExpectancyYears: {
+      value: 54.635,
+      year: 2024,
+    },
+    humanDevelopmentIndex: {
+      value: 0.56,
+      year: 2023,
+    },
+    currencies: ["NGN"],
+    demonyms: {
+      fr: {
+        m: "Nigérian",
+        f: "Nigériane",
+      },
+      en: {
+        m: "Nigerian",
+        f: "Nigerian",
+      },
+    },
   },
   NIC: {
     continent: "north_america",
@@ -4909,6 +10380,7 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     flagSymbols: ["triangle"],
     flagLayout: ["horizontal_stripes"],
     events: [],
+    eventEditions: {},
     memberships: [],
     capitals: [
       {
@@ -4916,6 +10388,10 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
         latitude: 12.13,
         longitude: -86.25,
         roles: ["primary"],
+        names: {
+          fr: "Managua",
+          en: "Managua",
+        },
       },
     ],
     drivingSide: "right",
@@ -4930,15 +10406,48 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     productionRanks: {},
     coalElectricityShare: 0,
     formerSovereigns: ["spain"],
+    dominations: [],
     sovereigntyYear: 1821,
     sovereigntyKind: "independence",
+    sovereigntyDate: "1821-09-15",
+    sovereigntySheetHidden: false,
+    highestPoint: {
+      elevationM: 2085,
+      names: {
+        fr: "Cerro Mogotón",
+        en: "Cerro Mogotón",
+      },
+    },
+    gdpPerCapitaUsd: {
+      value: 3173.33724815085,
+      year: 2025,
+    },
+    lifeExpectancyYears: {
+      value: 75.1,
+      year: 2024,
+    },
+    humanDevelopmentIndex: {
+      value: 0.706,
+      year: 2023,
+    },
+    currencies: ["NIO"],
+    demonyms: {
+      fr: {
+        m: "Nicaraguayen",
+        f: "Nicaraguayenne",
+      },
+      en: {
+        m: "Nicaraguan",
+        f: "Nicaraguan",
+      },
+    },
   },
   NLD: {
     continent: "europe",
     waterAccess: "coastal",
     borders: ["BEL", "DEU"],
     areaKm2: 41850,
-    population: 18153271,
+    population: 18171612,
     officialLanguages: ["nl"],
     latitude: 52.5,
     subregion: "Western Europe",
@@ -4946,6 +10455,9 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     flagSymbols: [],
     flagLayout: ["horizontal_stripes"],
     events: ["summer_olympics_host"],
+    eventEditions: {
+      summer_olympics_host: [1928],
+    },
     memberships: ["eu", "eurozone", "nato", "oecd", "schengen"],
     capitals: [
       {
@@ -4953,6 +10465,10 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
         latitude: 52.35,
         longitude: 4.92,
         roles: ["primary"],
+        names: {
+          fr: "Amsterdam",
+          en: "Amsterdam",
+        },
       },
     ],
     drivingSide: "right",
@@ -4962,13 +10478,46 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     utcOffsetCount: 2,
     lastVolcanicEruptionYear: 1640,
     mountainAreaShare: 0,
-    forestCoverShare: 0.11057442827442801,
+    forestCoverShare: 0.109423819423819,
     urbanCentresOver1M: 2,
     productionRanks: {},
     coalElectricityShare: 0.0611,
     formerSovereigns: [],
+    dominations: [],
     sovereigntyYear: 1581,
-    sovereigntyKind: "foundation",
+    sovereigntyKind: "independence",
+    sovereigntyDate: "1581-07-26",
+    sovereigntySheetHidden: false,
+    highestPoint: {
+      elevationM: 862,
+      names: {
+        fr: "mont Scenery",
+        en: "Mount Scenery",
+      },
+    },
+    gdpPerCapitaUsd: {
+      value: 73683.917132794,
+      year: 2025,
+    },
+    lifeExpectancyYears: {
+      value: 81.9658536585366,
+      year: 2024,
+    },
+    humanDevelopmentIndex: {
+      value: 0.955,
+      year: 2023,
+    },
+    currencies: ["EUR"],
+    demonyms: {
+      fr: {
+        m: "Néerlandais",
+        f: "Néerlandaise",
+      },
+      en: {
+        m: "Dutch",
+        f: "Dutch",
+      },
+    },
   },
   NOR: {
     continent: "europe",
@@ -4983,6 +10532,9 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     flagSymbols: ["cross"],
     flagLayout: [],
     events: ["winter_olympics_host"],
+    eventEditions: {
+      winter_olympics_host: [1952, 1994],
+    },
     memberships: ["nato", "oecd", "schengen"],
     capitals: [
       {
@@ -4990,6 +10542,10 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
         latitude: 59.92,
         longitude: 10.75,
         roles: ["primary"],
+        names: {
+          fr: "Oslo",
+          en: "Oslo",
+        },
       },
     ],
     drivingSide: "right",
@@ -4999,7 +10555,7 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     utcOffsetCount: 1,
     lastVolcanicEruptionYear: 1985,
     mountainAreaShare: 0.9129999999999999,
-    forestCoverShare: 0.335009745518434,
+    forestCoverShare: 0.33254207044225403,
     urbanCentresOver1M: 0,
     productionRanks: {
       crude_oil: 12,
@@ -5007,8 +10563,41 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     },
     coalElectricityShare: 0,
     formerSovereigns: [],
+    dominations: [],
     sovereigntyYear: 1905,
-    sovereigntyKind: "unification",
+    sovereigntyKind: "independence",
+    sovereigntyDate: "1905-06-07",
+    sovereigntySheetHidden: false,
+    highestPoint: {
+      elevationM: 2469,
+      names: {
+        fr: "Galdhøpiggen",
+        en: "Galdhøpiggen",
+      },
+    },
+    gdpPerCapitaUsd: {
+      value: 94594.1929573987,
+      year: 2025,
+    },
+    lifeExpectancyYears: {
+      value: 83.1609756097561,
+      year: 2024,
+    },
+    humanDevelopmentIndex: {
+      value: 0.97,
+      year: 2023,
+    },
+    currencies: ["NOK"],
+    demonyms: {
+      fr: {
+        m: "Norvégien",
+        f: "Norvégienne",
+      },
+      en: {
+        m: "Norwegian",
+        f: "Norwegian",
+      },
+    },
   },
   NPL: {
     continent: "asia",
@@ -5023,6 +10612,7 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     flagSymbols: ["crescent", "sun", "triangle"],
     flagLayout: [],
     events: [],
+    eventEditions: {},
     memberships: [],
     capitals: [
       {
@@ -5030,6 +10620,10 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
         latitude: 27.72,
         longitude: 85.32,
         roles: ["primary"],
+        names: {
+          fr: "Katmandou",
+          en: "Kathmandu",
+        },
       },
     ],
     drivingSide: "left",
@@ -5039,13 +10633,46 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     utcOffsetCount: 1,
     lastVolcanicEruptionYear: null,
     mountainAreaShare: 0.8192769447143313,
-    forestCoverShare: 0.415907220090687,
+    forestCoverShare: 0.43481618416463197,
     urbanCentresOver1M: 1,
     productionRanks: {},
     coalElectricityShare: 0,
     formerSovereigns: [],
+    dominations: [],
     sovereigntyYear: 1768,
-    sovereigntyKind: "foundation",
+    sovereigntyKind: "unification",
+    sovereigntyDate: null,
+    sovereigntySheetHidden: false,
+    highestPoint: {
+      elevationM: 8849,
+      names: {
+        fr: "Everest",
+        en: "Mount Everest",
+      },
+    },
+    gdpPerCapitaUsd: {
+      value: 1535.87781246307,
+      year: 2025,
+    },
+    lifeExpectancyYears: {
+      value: 70.636,
+      year: 2024,
+    },
+    humanDevelopmentIndex: {
+      value: 0.622,
+      year: 2023,
+    },
+    currencies: ["NPR"],
+    demonyms: {
+      fr: {
+        m: "Népalais",
+        f: "Népalaise",
+      },
+      en: {
+        m: "Nepalese",
+        f: "Nepalese",
+      },
+    },
   },
   NRU: {
     continent: "oceania",
@@ -5060,6 +10687,7 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     flagSymbols: ["star"],
     flagLayout: ["horizontal_stripes"],
     events: [],
+    eventEditions: {},
     memberships: ["commonwealth"],
     capitals: [
       {
@@ -5067,6 +10695,10 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
         latitude: -0.55,
         longitude: 166.92,
         roles: ["primary"],
+        names: {
+          fr: "Yaren",
+          en: "Yaren",
+        },
       },
     ],
     drivingSide: "left",
@@ -5081,8 +10713,50 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     productionRanks: {},
     coalElectricityShare: 0,
     formerSovereigns: ["united_kingdom"],
+    dominations: [
+      {
+        power: "united_kingdom",
+        nature: "trusteeship",
+        from: 1919,
+        to: 1968,
+        intermittent: false,
+        part: null,
+      },
+    ],
     sovereigntyYear: 1968,
     sovereigntyKind: "independence",
+    sovereigntyDate: "1968-01-31",
+    sovereigntySheetHidden: false,
+    highestPoint: {
+      elevationM: 70,
+      names: {
+        fr: "Command Ridge",
+        en: "Command Ridge",
+      },
+    },
+    gdpPerCapitaUsd: {
+      value: 14639.5046929186,
+      year: 2025,
+    },
+    lifeExpectancyYears: {
+      value: 62.279,
+      year: 2024,
+    },
+    humanDevelopmentIndex: {
+      value: 0.703,
+      year: 2023,
+    },
+    currencies: ["AUD"],
+    demonyms: {
+      fr: {
+        m: "Nauruan",
+        f: "Nauruane",
+      },
+      en: {
+        m: "Nauruan",
+        f: "Nauruan",
+      },
+    },
   },
   NZL: {
     continent: "oceania",
@@ -5097,6 +10771,7 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     flagSymbols: ["star", "cross"],
     flagLayout: [],
     events: [],
+    eventEditions: {},
     memberships: ["commonwealth", "oecd"],
     capitals: [
       {
@@ -5104,6 +10779,10 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
         latitude: -41.3,
         longitude: 174.78,
         roles: ["primary"],
+        names: {
+          fr: "Wellington",
+          en: "Wellington",
+        },
       },
     ],
     drivingSide: "left",
@@ -5113,13 +10792,55 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     utcOffsetCount: 2,
     lastVolcanicEruptionYear: 2026,
     mountainAreaShare: 0.5066422151316057,
-    forestCoverShare: 0.377892841137822,
+    forestCoverShare: 0.386158140594736,
     urbanCentresOver1M: 1,
     productionRanks: {},
     coalElectricityShare: 0.0273,
     formerSovereigns: ["united_kingdom"],
+    dominations: [
+      {
+        power: "united_kingdom",
+        nature: "colony",
+        from: 1840,
+        to: 1907,
+        intermittent: false,
+        part: null,
+      },
+    ],
     sovereigntyYear: 1907,
     sovereigntyKind: "independence",
+    sovereigntyDate: "1907-09-26",
+    sovereigntySheetHidden: false,
+    highestPoint: {
+      elevationM: 3724,
+      names: {
+        fr: "Aoraki/Mont Cook",
+        en: "Aoraki / Mount Cook",
+      },
+    },
+    gdpPerCapitaUsd: {
+      value: 49591.0405731713,
+      year: 2025,
+    },
+    lifeExpectancyYears: {
+      value: 82.009756097561,
+      year: 2024,
+    },
+    humanDevelopmentIndex: {
+      value: 0.938,
+      year: 2023,
+    },
+    currencies: ["NZD"],
+    demonyms: {
+      fr: {
+        m: "Néo-Zélandais",
+        f: "Néo-Zélandaise",
+      },
+      en: {
+        m: "New Zealander",
+        f: "New Zealander",
+      },
+    },
   },
   OMN: {
     continent: "asia",
@@ -5134,6 +10855,7 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     flagSymbols: [],
     flagLayout: [],
     events: [],
+    eventEditions: {},
     memberships: ["arab_league"],
     capitals: [
       {
@@ -5141,6 +10863,10 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
         latitude: 23.62,
         longitude: 58.58,
         roles: ["primary"],
+        names: {
+          fr: "Mascate",
+          en: "Muscat",
+        },
       },
     ],
     drivingSide: "right",
@@ -5150,13 +10876,46 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     utcOffsetCount: 1,
     lastVolcanicEruptionYear: null,
     mountainAreaShare: 0.13992891760904685,
-    forestCoverShare: 0.0000762261712439418,
+    forestCoverShare: 0.0000516962843295638,
     urbanCentresOver1M: 0,
     productionRanks: {},
     coalElectricityShare: 0,
     formerSovereigns: [],
+    dominations: [],
     sovereigntyYear: 1650,
     sovereigntyKind: "foundation",
+    sovereigntyDate: null,
+    sovereigntySheetHidden: false,
+    highestPoint: {
+      elevationM: 3004,
+      names: {
+        fr: "djebel Shams",
+        en: "Jebel Shams",
+      },
+    },
+    gdpPerCapitaUsd: {
+      value: 19947.3966227092,
+      year: 2025,
+    },
+    lifeExpectancyYears: {
+      value: 80.246,
+      year: 2024,
+    },
+    humanDevelopmentIndex: {
+      value: 0.858,
+      year: 2023,
+    },
+    currencies: ["OMR"],
+    demonyms: {
+      fr: {
+        m: "Omanais",
+        f: "Omanaise",
+      },
+      en: {
+        m: "Omani",
+        f: "Omani",
+      },
+    },
   },
   PAK: {
     continent: "asia",
@@ -5171,6 +10930,7 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     flagSymbols: ["star", "crescent"],
     flagLayout: ["vertical_stripes"],
     events: [],
+    eventEditions: {},
     memberships: ["commonwealth"],
     capitals: [
       {
@@ -5178,6 +10938,10 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
         latitude: 33.68,
         longitude: 73.05,
         roles: ["primary"],
+        names: {
+          fr: "Islamabad",
+          en: "Islamabad",
+        },
       },
     ],
     drivingSide: "left",
@@ -5187,7 +10951,7 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     utcOffsetCount: 1,
     lastVolcanicEruptionYear: null,
     mountainAreaShare: 0.31121472437159264,
-    forestCoverShare: 0.0467242631797426,
+    forestCoverShare: 0.0408739362806144,
     urbanCentresOver1M: 11,
     productionRanks: {
       rice: 9,
@@ -5195,8 +10959,50 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     },
     coalElectricityShare: 0.1545,
     formerSovereigns: ["united_kingdom"],
+    dominations: [
+      {
+        power: "united_kingdom",
+        nature: "colony",
+        from: 1843,
+        to: 1947,
+        intermittent: false,
+        part: null,
+      },
+    ],
     sovereigntyYear: 1947,
     sovereigntyKind: "independence",
+    sovereigntyDate: "1947-08-14",
+    sovereigntySheetHidden: false,
+    highestPoint: {
+      elevationM: 8611,
+      names: {
+        fr: "K2",
+        en: "K2",
+      },
+    },
+    gdpPerCapitaUsd: {
+      value: 1595.90912252837,
+      year: 2025,
+    },
+    lifeExpectancyYears: {
+      value: 67.799,
+      year: 2024,
+    },
+    humanDevelopmentIndex: {
+      value: 0.544,
+      year: 2023,
+    },
+    currencies: ["PKR"],
+    demonyms: {
+      fr: {
+        m: "Pakistanais",
+        f: "Pakistanaise",
+      },
+      en: {
+        m: "Pakistani",
+        f: "Pakistani",
+      },
+    },
   },
   PAN: {
     continent: "north_america",
@@ -5211,6 +11017,7 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     flagSymbols: ["star"],
     flagLayout: [],
     events: [],
+    eventEditions: {},
     memberships: [],
     capitals: [
       {
@@ -5218,6 +11025,10 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
         latitude: 8.97,
         longitude: -79.53,
         roles: ["primary"],
+        names: {
+          fr: "Panama",
+          en: "Panama City",
+        },
       },
     ],
     drivingSide: "right",
@@ -5227,13 +11038,46 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     utcOffsetCount: 1,
     lastVolcanicEruptionYear: 1550,
     mountainAreaShare: 0.31246270734714987,
-    forestCoverShare: 0.563439727689404,
+    forestCoverShare: 0.622895659207334,
     urbanCentresOver1M: 1,
     productionRanks: {},
     coalElectricityShare: 0.037200000000000004,
     formerSovereigns: ["spain"],
+    dominations: [],
     sovereigntyYear: 1903,
     sovereigntyKind: "independence",
+    sovereigntyDate: "1903-11-03",
+    sovereigntySheetHidden: false,
+    highestPoint: {
+      elevationM: 3475,
+      names: {
+        fr: "Barú",
+        en: "Volcan Baru",
+      },
+    },
+    gdpPerCapitaUsd: {
+      value: 19789.7308555826,
+      year: 2025,
+    },
+    lifeExpectancyYears: {
+      value: 79.775,
+      year: 2024,
+    },
+    humanDevelopmentIndex: {
+      value: 0.839,
+      year: 2023,
+    },
+    currencies: ["PAB", "USD"],
+    demonyms: {
+      fr: {
+        m: "Panaméen",
+        f: "Panaméenne",
+      },
+      en: {
+        m: "Panamanian",
+        f: "Panamanian",
+      },
+    },
   },
   PER: {
     continent: "south_america",
@@ -5241,13 +11085,14 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     borders: ["BOL", "BRA", "CHL", "COL", "ECU"],
     areaKm2: 1285216,
     population: 34157732,
-    officialLanguages: ["ay", "qu", "es"],
+    officialLanguages: ["es"],
     latitude: -10,
     subregion: "South America",
     flagColors: ["red", "white"],
     flagSymbols: ["plant", "animal"],
     flagLayout: ["vertical_stripes"],
     events: [],
+    eventEditions: {},
     memberships: [],
     capitals: [
       {
@@ -5255,6 +11100,10 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
         latitude: -12.05,
         longitude: -77.05,
         roles: ["primary"],
+        names: {
+          fr: "Lima",
+          en: "Lima",
+        },
       },
     ],
     drivingSide: "right",
@@ -5269,7 +11118,7 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     utcOffsetCount: 1,
     lastVolcanicEruptionYear: 2026,
     mountainAreaShare: 0.4937823680999925,
-    forestCoverShare: 0.56103020234375,
+    forestCoverShare: 0.5293628125000001,
     urbanCentresOver1M: 2,
     productionRanks: {
       cocoa: 8,
@@ -5277,8 +11126,41 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     },
     coalElectricityShare: 0,
     formerSovereigns: ["spain"],
+    dominations: [],
     sovereigntyYear: 1821,
     sovereigntyKind: "independence",
+    sovereigntyDate: "1821-07-28",
+    sovereigntySheetHidden: false,
+    highestPoint: {
+      elevationM: 6746,
+      names: {
+        fr: "Huascarán",
+        en: "Huascarán",
+      },
+    },
+    gdpPerCapitaUsd: {
+      value: 9684.41170314988,
+      year: 2025,
+    },
+    lifeExpectancyYears: {
+      value: 77.941,
+      year: 2024,
+    },
+    humanDevelopmentIndex: {
+      value: 0.794,
+      year: 2023,
+    },
+    currencies: ["PEN"],
+    demonyms: {
+      fr: {
+        m: "Péruvien",
+        f: "Péruvienne",
+      },
+      en: {
+        m: "Peruvian",
+        f: "Peruvian",
+      },
+    },
   },
   PHL: {
     continent: "asia",
@@ -5293,6 +11175,7 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     flagSymbols: ["star", "sun", "triangle"],
     flagLayout: ["horizontal_stripes"],
     events: [],
+    eventEditions: {},
     memberships: ["asean"],
     capitals: [
       {
@@ -5300,6 +11183,10 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
         latitude: 14.6,
         longitude: 120.97,
         roles: ["primary"],
+        names: {
+          fr: "Manille",
+          en: "Manila",
+        },
       },
     ],
     drivingSide: "right",
@@ -5309,15 +11196,48 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     utcOffsetCount: 1,
     lastVolcanicEruptionYear: 2026,
     mountainAreaShare: 0.3128525235648585,
-    forestCoverShare: 0.24460073112653902,
+    forestCoverShare: 0.24662910420230102,
     urbanCentresOver1M: 4,
     productionRanks: {
       rice: 8,
     },
     coalElectricityShare: 0.6391,
     formerSovereigns: ["united_states"],
+    dominations: [],
     sovereigntyYear: 1946,
     sovereigntyKind: "independence",
+    sovereigntyDate: "1946-07-04",
+    sovereigntySheetHidden: false,
+    highestPoint: {
+      elevationM: 2954,
+      names: {
+        fr: "mont Apo",
+        en: "Mount Apo",
+      },
+    },
+    gdpPerCapitaUsd: {
+      value: 4170.72347271451,
+      year: 2025,
+    },
+    lifeExpectancyYears: {
+      value: 69.946,
+      year: 2024,
+    },
+    humanDevelopmentIndex: {
+      value: 0.72,
+      year: 2023,
+    },
+    currencies: ["PHP"],
+    demonyms: {
+      fr: {
+        m: "Philippin",
+        f: "Philippine",
+      },
+      en: {
+        m: "Filipino",
+        f: "Filipino",
+      },
+    },
   },
   PLW: {
     continent: "oceania",
@@ -5332,6 +11252,7 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     flagSymbols: ["circle"],
     flagLayout: [],
     events: [],
+    eventEditions: {},
     memberships: [],
     capitals: [
       {
@@ -5339,6 +11260,10 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
         latitude: 7.5,
         longitude: 134.62,
         roles: ["primary"],
+        names: {
+          fr: "Ngerulmud",
+          en: "Ngerulmud",
+        },
       },
     ],
     drivingSide: "right",
@@ -5348,13 +11273,46 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     utcOffsetCount: 1,
     lastVolcanicEruptionYear: null,
     mountainAreaShare: 0,
-    forestCoverShare: 0.905434782608696,
+    forestCoverShare: 0.9082788671023969,
     urbanCentresOver1M: 0,
     productionRanks: {},
     coalElectricityShare: null,
     formerSovereigns: ["united_states"],
+    dominations: [],
     sovereigntyYear: 1994,
     sovereigntyKind: "independence",
+    sovereigntyDate: "1994-10-01",
+    sovereigntySheetHidden: false,
+    highestPoint: {
+      elevationM: 242,
+      names: {
+        fr: "mont Ngerchelchuus",
+        en: "Mount Ngerchelchuus",
+      },
+    },
+    gdpPerCapitaUsd: {
+      value: 19532.3557719527,
+      year: 2025,
+    },
+    lifeExpectancyYears: {
+      value: 69.383,
+      year: 2024,
+    },
+    humanDevelopmentIndex: {
+      value: 0.786,
+      year: 2023,
+    },
+    currencies: ["USD"],
+    demonyms: {
+      fr: {
+        m: "Paluan",
+        f: "Paluane",
+      },
+      en: {
+        m: "Palauan",
+        f: "Palauan",
+      },
+    },
   },
   PNG: {
     continent: "oceania",
@@ -5369,6 +11327,7 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     flagSymbols: ["star", "animal"],
     flagLayout: [],
     events: [],
+    eventEditions: {},
     memberships: ["commonwealth"],
     capitals: [
       {
@@ -5376,29 +11335,78 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
         latitude: -9.45,
         longitude: 147.18,
         roles: ["primary"],
+        names: {
+          fr: "Port Moresby",
+          en: "Port Moresby",
+        },
       },
     ],
     drivingSide: "left",
-    geoTags: ["drives_on_left"],
+    geoTags: ["drives_on_left", "shared_island"],
     regime: "monarchy",
     physicalFeatures: ["rainforest", "pacific_coast"],
     utcOffsetCount: 2,
     lastVolcanicEruptionYear: 2026,
     mountainAreaShare: 0.44335839598997495,
-    forestCoverShare: 0.7895413593605091,
+    forestCoverShare: 0.751589012056706,
     urbanCentresOver1M: 0,
     productionRanks: {},
     coalElectricityShare: 0,
     formerSovereigns: [],
+    dominations: [
+      {
+        power: "united_kingdom",
+        nature: "colony",
+        from: 1884,
+        to: 1906,
+        intermittent: false,
+        part: {
+          fr: "Papouasie",
+          en: "Papua",
+        },
+      },
+    ],
     sovereigntyYear: 1975,
     sovereigntyKind: "independence",
+    sovereigntyDate: "1975-09-16",
+    sovereigntySheetHidden: false,
+    highestPoint: {
+      elevationM: 4509,
+      names: {
+        fr: "mont Wilhelm",
+        en: "Mount Wilhelm",
+      },
+    },
+    gdpPerCapitaUsd: {
+      value: 3019.5309140573,
+      year: 2025,
+    },
+    lifeExpectancyYears: {
+      value: 66.256,
+      year: 2024,
+    },
+    humanDevelopmentIndex: {
+      value: 0.576,
+      year: 2023,
+    },
+    currencies: ["PGK"],
+    demonyms: {
+      fr: {
+        m: "Papouasien",
+        f: "Papouasienne",
+      },
+      en: {
+        m: "Papua New Guinean",
+        f: "Papua New Guinean",
+      },
+    },
   },
   POL: {
     continent: "europe",
     waterAccess: "coastal",
     borders: ["BLR", "CZE", "DEU", "LTU", "RUS", "SVK", "UKR"],
     areaKm2: 312679,
-    population: 37243000,
+    population: 37232000,
     officialLanguages: ["pl"],
     latitude: 52,
     subregion: "Central Europe",
@@ -5406,6 +11414,7 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     flagSymbols: [],
     flagLayout: ["horizontal_stripes"],
     events: [],
+    eventEditions: {},
     memberships: ["eu", "nato", "oecd", "schengen"],
     capitals: [
       {
@@ -5413,6 +11422,10 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
         latitude: 52.25,
         longitude: 21,
         roles: ["primary"],
+        names: {
+          fr: "Varsovie",
+          en: "Warsaw",
+        },
       },
     ],
     drivingSide: "right",
@@ -5422,13 +11435,46 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     utcOffsetCount: 1,
     lastVolcanicEruptionYear: null,
     mountainAreaShare: 0.04550033740673342,
-    forestCoverShare: 0.310804192379273,
+    forestCoverShare: 0.30961831064093803,
     urbanCentresOver1M: 1,
     productionRanks: {},
     coalElectricityShare: 0.5432,
     formerSovereigns: [],
+    dominations: [],
     sovereigntyYear: 1918,
-    sovereigntyKind: "foundation",
+    sovereigntyKind: "restoration",
+    sovereigntyDate: "1918-11-11",
+    sovereigntySheetHidden: false,
+    highestPoint: {
+      elevationM: 2499,
+      names: {
+        fr: "Rysy",
+        en: "Rysy",
+      },
+    },
+    gdpPerCapitaUsd: {
+      value: 28419.5777395638,
+      year: 2025,
+    },
+    lifeExpectancyYears: {
+      value: 78.409756097561,
+      year: 2024,
+    },
+    humanDevelopmentIndex: {
+      value: 0.906,
+      year: 2023,
+    },
+    currencies: ["PLN"],
+    demonyms: {
+      fr: {
+        m: "Polonais",
+        f: "Polonaise",
+      },
+      en: {
+        m: "Polish",
+        f: "Polish",
+      },
+    },
   },
   PRK: {
     continent: "asia",
@@ -5443,6 +11489,7 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     flagSymbols: ["star", "circle"],
     flagLayout: ["horizontal_stripes"],
     events: [],
+    eventEditions: {},
     memberships: [],
     capitals: [
       {
@@ -5450,6 +11497,10 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
         latitude: 39.02,
         longitude: 125.75,
         roles: ["primary"],
+        names: {
+          fr: "Pyongyang",
+          en: "Pyongyang",
+        },
       },
     ],
     drivingSide: "right",
@@ -5459,13 +11510,40 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     utcOffsetCount: 1,
     lastVolcanicEruptionYear: 1903,
     mountainAreaShare: 0.609285038742969,
-    forestCoverShare: 0.495507017689561,
+    forestCoverShare: 0.639915289427788,
     urbanCentresOver1M: 1,
     productionRanks: {},
     coalElectricityShare: 0.3406,
     formerSovereigns: [],
+    dominations: [],
     sovereigntyYear: 1945,
     sovereigntyKind: "independence",
+    sovereigntyDate: "1945-08-15",
+    sovereigntySheetHidden: false,
+    highestPoint: {
+      elevationM: 2744,
+      names: {
+        fr: "mont Paektu",
+        en: "Baekdu Mountain",
+      },
+    },
+    gdpPerCapitaUsd: null,
+    lifeExpectancyYears: {
+      value: 73.743,
+      year: 2024,
+    },
+    humanDevelopmentIndex: null,
+    currencies: ["KPW"],
+    demonyms: {
+      fr: {
+        m: "Nord-Coréen",
+        f: "Nord-Coréenne",
+      },
+      en: {
+        m: "North Korean",
+        f: "North Korean",
+      },
+    },
   },
   PRT: {
     continent: "europe",
@@ -5480,6 +11558,7 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     flagSymbols: ["circle"],
     flagLayout: ["vertical_stripes"],
     events: [],
+    eventEditions: {},
     memberships: ["eu", "eurozone", "nato", "oecd", "schengen"],
     capitals: [
       {
@@ -5487,6 +11566,10 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
         latitude: 38.72,
         longitude: -9.13,
         roles: ["primary"],
+        names: {
+          fr: "Lisbonne",
+          en: "Lisbon",
+        },
       },
     ],
     drivingSide: "right",
@@ -5496,13 +11579,46 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     utcOffsetCount: 2,
     lastVolcanicEruptionYear: 2000,
     mountainAreaShare: 0.23592138125746553,
-    forestCoverShare: 0.36154994891142,
+    forestCoverShare: 0.36584335455474304,
     urbanCentresOver1M: 2,
     productionRanks: {},
     coalElectricityShare: 0,
     formerSovereigns: [],
+    dominations: [],
     sovereigntyYear: 1640,
-    sovereigntyKind: "independence",
+    sovereigntyKind: "restoration",
+    sovereigntyDate: "1640-12-01",
+    sovereigntySheetHidden: false,
+    highestPoint: {
+      elevationM: 2351,
+      names: {
+        fr: "Ponta do Pico",
+        en: "Mount Pico",
+      },
+    },
+    gdpPerCapitaUsd: {
+      value: 32081.8106150292,
+      year: 2025,
+    },
+    lifeExpectancyYears: {
+      value: 82.3829268292683,
+      year: 2024,
+    },
+    humanDevelopmentIndex: {
+      value: 0.89,
+      year: 2023,
+    },
+    currencies: ["EUR"],
+    demonyms: {
+      fr: {
+        m: "Portugais",
+        f: "Portugaise",
+      },
+      en: {
+        m: "Portuguese",
+        f: "Portuguese",
+      },
+    },
   },
   PRY: {
     continent: "south_america",
@@ -5517,6 +11633,7 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     flagSymbols: ["star", "circle", "plant", "animal"],
     flagLayout: ["horizontal_stripes"],
     events: [],
+    eventEditions: {},
     memberships: [],
     capitals: [
       {
@@ -5524,6 +11641,10 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
         latitude: -25.28,
         longitude: -57.57,
         roles: ["primary"],
+        names: {
+          fr: "Asuncion",
+          en: "Asunción",
+        },
       },
     ],
     drivingSide: "right",
@@ -5533,13 +11654,46 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     utcOffsetCount: 1,
     lastVolcanicEruptionYear: null,
     mountainAreaShare: 0.006355223821886555,
-    forestCoverShare: 0.38544925264012797,
+    forestCoverShare: 0.369302164886254,
     urbanCentresOver1M: 1,
     productionRanks: {},
     coalElectricityShare: 0,
     formerSovereigns: ["spain"],
+    dominations: [],
     sovereigntyYear: 1811,
     sovereigntyKind: "independence",
+    sovereigntyDate: "1811-05-15",
+    sovereigntySheetHidden: false,
+    highestPoint: {
+      elevationM: 842,
+      names: {
+        fr: "Cerro Peró",
+        en: "Cerro Tres Kandú",
+      },
+    },
+    gdpPerCapitaUsd: {
+      value: 7026.61906146401,
+      year: 2025,
+    },
+    lifeExpectancyYears: {
+      value: 73.982,
+      year: 2024,
+    },
+    humanDevelopmentIndex: {
+      value: 0.756,
+      year: 2023,
+    },
+    currencies: ["PYG"],
+    demonyms: {
+      fr: {
+        m: "Paraguayen",
+        f: "Paraguayenne",
+      },
+      en: {
+        m: "Paraguayan",
+        f: "Paraguayan",
+      },
+    },
   },
   PSE: {
     continent: "asia",
@@ -5554,6 +11708,7 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     flagSymbols: ["triangle"],
     flagLayout: ["horizontal_stripes"],
     events: [],
+    eventEditions: {},
     memberships: ["arab_league"],
     capitals: [
       {
@@ -5561,12 +11716,20 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
         latitude: 31.9038,
         longitude: 35.2034,
         roles: ["administrative"],
+        names: {
+          fr: "Ramallah",
+          en: "Ramallah",
+        },
       },
       {
         name: "Jerusalem",
         latitude: 31.78,
         longitude: 35.22,
         roles: [],
+        names: {
+          fr: "Jérusalem",
+          en: "Jerusalem",
+        },
       },
     ],
     drivingSide: "right",
@@ -5576,13 +11739,55 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     utcOffsetCount: 1,
     lastVolcanicEruptionYear: null,
     mountainAreaShare: 0.5590032154340836,
-    forestCoverShare: 0.0168298755186722,
+    forestCoverShare: 0.018423236514522802,
     urbanCentresOver1M: 2,
     productionRanks: {},
     coalElectricityShare: 0,
     formerSovereigns: [],
+    dominations: [
+      {
+        power: "united_kingdom",
+        nature: "mandate",
+        from: 1920,
+        to: 1948,
+        intermittent: false,
+        part: null,
+      },
+    ],
     sovereigntyYear: null,
     sovereigntyKind: null,
+    sovereigntyDate: null,
+    sovereigntySheetHidden: false,
+    highestPoint: {
+      elevationM: 1020,
+      names: {
+        fr: "Khallat al Batrakh",
+        en: "Khallat al Batrakh",
+      },
+    },
+    gdpPerCapitaUsd: {
+      value: 3171.10844621579,
+      year: 2025,
+    },
+    lifeExpectancyYears: {
+      value: 69.213,
+      year: 2024,
+    },
+    humanDevelopmentIndex: {
+      value: 0.674,
+      year: 2023,
+    },
+    currencies: ["EGP", "ILS", "JOD"],
+    demonyms: {
+      fr: {
+        m: "Palestinien",
+        f: "Palestinienne",
+      },
+      en: {
+        m: "Palestinian",
+        f: "Palestinian",
+      },
+    },
   },
   QAT: {
     continent: "asia",
@@ -5597,6 +11802,9 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     flagSymbols: [],
     flagLayout: ["vertical_stripes"],
     events: ["fifa_wc_host"],
+    eventEditions: {
+      fifa_wc_host: [2022],
+    },
     memberships: ["arab_league"],
     capitals: [
       {
@@ -5604,6 +11812,10 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
         latitude: 25.28,
         longitude: 51.53,
         roles: ["primary"],
+        names: {
+          fr: "Doha",
+          en: "Doha",
+        },
       },
     ],
     drivingSide: "right",
@@ -5613,15 +11825,57 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     utcOffsetCount: 1,
     lastVolcanicEruptionYear: null,
     mountainAreaShare: 0,
-    forestCoverShare: 0,
+    forestCoverShare: 0.00121845082680592,
     urbanCentresOver1M: 1,
     productionRanks: {
       natural_gas: 6,
     },
     coalElectricityShare: 0,
     formerSovereigns: ["united_kingdom"],
+    dominations: [
+      {
+        power: "united_kingdom",
+        nature: "protectorate",
+        from: 1916,
+        to: 1971,
+        intermittent: false,
+        part: null,
+      },
+    ],
     sovereigntyYear: 1971,
     sovereigntyKind: "independence",
+    sovereigntyDate: "1971-09-03",
+    sovereigntySheetHidden: false,
+    highestPoint: {
+      elevationM: 103,
+      names: {
+        fr: "Tuwayyir al Hamir",
+        en: "Tuwayyir al Hamir",
+      },
+    },
+    gdpPerCapitaUsd: {
+      value: 72524.9066385222,
+      year: 2025,
+    },
+    lifeExpectancyYears: {
+      value: 82.522,
+      year: 2024,
+    },
+    humanDevelopmentIndex: {
+      value: 0.886,
+      year: 2023,
+    },
+    currencies: ["QAR"],
+    demonyms: {
+      fr: {
+        m: "Qatarien",
+        f: "Qatarienne",
+      },
+      en: {
+        m: "Qatari",
+        f: "Qatari",
+      },
+    },
   },
   ROU: {
     continent: "europe",
@@ -5636,6 +11890,7 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     flagSymbols: [],
     flagLayout: ["vertical_stripes"],
     events: [],
+    eventEditions: {},
     memberships: ["eu", "nato", "schengen"],
     capitals: [
       {
@@ -5643,6 +11898,10 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
         latitude: 44.43,
         longitude: 26.1,
         roles: ["primary"],
+        names: {
+          fr: "Bucarest",
+          en: "Bucharest",
+        },
       },
     ],
     drivingSide: "right",
@@ -5652,13 +11911,46 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     utcOffsetCount: 1,
     lastVolcanicEruptionYear: null,
     mountainAreaShare: 0.3292951495652101,
-    forestCoverShare: 0.301158292767733,
+    forestCoverShare: 0.301890646731572,
     urbanCentresOver1M: 1,
     productionRanks: {},
     coalElectricityShare: 0.151,
     formerSovereigns: [],
+    dominations: [],
     sovereigntyYear: 1877,
     sovereigntyKind: "independence",
+    sovereigntyDate: "1877-05-09",
+    sovereigntySheetHidden: false,
+    highestPoint: {
+      elevationM: 2544,
+      names: {
+        fr: "Moldoveanu",
+        en: "Moldoveanu Peak",
+      },
+    },
+    gdpPerCapitaUsd: {
+      value: 22537.9532108047,
+      year: 2025,
+    },
+    lifeExpectancyYears: {
+      value: 76.4585365853659,
+      year: 2024,
+    },
+    humanDevelopmentIndex: {
+      value: 0.845,
+      year: 2023,
+    },
+    currencies: ["RON"],
+    demonyms: {
+      fr: {
+        m: "Roumain",
+        f: "Roumaine",
+      },
+      en: {
+        m: "Romanian",
+        f: "Romanian",
+      },
+    },
   },
   RUS: {
     continent: "europe",
@@ -5688,6 +11980,11 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     flagSymbols: [],
     flagLayout: ["horizontal_stripes"],
     events: ["fifa_wc_host", "summer_olympics_host", "winter_olympics_host"],
+    eventEditions: {
+      fifa_wc_host: [2018],
+      summer_olympics_host: [1980],
+      winter_olympics_host: [2014],
+    },
     memberships: ["brics", "g20"],
     capitals: [
       {
@@ -5695,6 +11992,10 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
         latitude: 55.75,
         longitude: 37.6,
         roles: ["primary"],
+        names: {
+          fr: "Moscou",
+          en: "Moscow",
+        },
       },
     ],
     drivingSide: "right",
@@ -5704,7 +12005,7 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     utcOffsetCount: 11,
     lastVolcanicEruptionYear: 2026,
     mountainAreaShare: 0.2500397994132964,
-    forestCoverShare: 0.497843605035639,
+    forestCoverShare: 0.5073929511561119,
     urbanCentresOver1M: 7,
     productionRanks: {
       wheat: 3,
@@ -5713,8 +12014,41 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     },
     coalElectricityShare: 0.1779,
     formerSovereigns: ["soviet_union"],
+    dominations: [],
     sovereigntyYear: 1991,
     sovereigntyKind: "continuation",
+    sovereigntyDate: "1991-12-25",
+    sovereigntySheetHidden: false,
+    highestPoint: {
+      elevationM: 5642,
+      names: {
+        fr: "Elbrouz",
+        en: "Mount Elbrus",
+      },
+    },
+    gdpPerCapitaUsd: {
+      value: 17546.609375,
+      year: 2025,
+    },
+    lifeExpectancyYears: {
+      value: 73.4404878048781,
+      year: 2024,
+    },
+    humanDevelopmentIndex: {
+      value: 0.832,
+      year: 2023,
+    },
+    currencies: ["RUB"],
+    demonyms: {
+      fr: {
+        m: "Russe",
+        f: "Russe",
+      },
+      en: {
+        m: "Russian",
+        f: "Russian",
+      },
+    },
   },
   RWA: {
     continent: "africa",
@@ -5729,6 +12063,7 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     flagSymbols: ["sun"],
     flagLayout: ["horizontal_stripes"],
     events: [],
+    eventEditions: {},
     memberships: ["commonwealth", "african_union"],
     capitals: [
       {
@@ -5736,6 +12071,10 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
         latitude: -1.95,
         longitude: 30.05,
         roles: ["primary"],
+        names: {
+          fr: "Kigali",
+          en: "Kigali",
+        },
       },
     ],
     drivingSide: "right",
@@ -5745,20 +12084,53 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     utcOffsetCount: 1,
     lastVolcanicEruptionYear: -8050,
     mountainAreaShare: 0.627230617358949,
-    forestCoverShare: 0.113092825293879,
+    forestCoverShare: 0.254737063525452,
     urbanCentresOver1M: 1,
     productionRanks: {},
     coalElectricityShare: 0.15039999999999998,
     formerSovereigns: ["belgium"],
+    dominations: [],
     sovereigntyYear: 1962,
     sovereigntyKind: "independence",
+    sovereigntyDate: "1962-07-01",
+    sovereigntySheetHidden: false,
+    highestPoint: {
+      elevationM: 4519,
+      names: {
+        fr: "mont Karisimbi",
+        en: "Mount Karisimbi",
+      },
+    },
+    gdpPerCapitaUsd: {
+      value: 1123.73874633225,
+      year: 2025,
+    },
+    lifeExpectancyYears: {
+      value: 68.017,
+      year: 2024,
+    },
+    humanDevelopmentIndex: {
+      value: 0.578,
+      year: 2023,
+    },
+    currencies: ["RWF"],
+    demonyms: {
+      fr: {
+        m: "Rwandais",
+        f: "Rwandaise",
+      },
+      en: {
+        m: "Rwandan",
+        f: "Rwandan",
+      },
+    },
   },
   SAU: {
     continent: "asia",
     waterAccess: "coastal",
     borders: ["IRQ", "JOR", "KWT", "OMN", "QAT", "ARE", "YEM"],
     areaKm2: 2149690,
-    population: 33702731,
+    population: 35325004,
     officialLanguages: ["ar"],
     latitude: 25,
     subregion: "Western Asia",
@@ -5766,6 +12138,7 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     flagSymbols: [],
     flagLayout: [],
     events: [],
+    eventEditions: {},
     memberships: ["arab_league", "g20", "opec"],
     capitals: [
       {
@@ -5773,6 +12146,10 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
         latitude: 24.65,
         longitude: 46.7,
         roles: ["primary"],
+        names: {
+          fr: "Riyad",
+          en: "Riyadh",
+        },
       },
     ],
     drivingSide: "right",
@@ -5782,7 +12159,7 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     utcOffsetCount: 1,
     lastVolcanicEruptionYear: 1810,
     mountainAreaShare: 0.10386148700510306,
-    forestCoverShare: 0.00454484134921779,
+    forestCoverShare: 0.012897441026380501,
     urbanCentresOver1M: 5,
     productionRanks: {
       crude_oil: 3,
@@ -5790,8 +12167,41 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     },
     coalElectricityShare: 0,
     formerSovereigns: [],
+    dominations: [],
     sovereigntyYear: 1932,
     sovereigntyKind: "unification",
+    sovereigntyDate: "1932-09-23",
+    sovereigntySheetHidden: false,
+    highestPoint: {
+      elevationM: 3133,
+      names: {
+        fr: "Jabal Sawda",
+        en: "Jabal Sawda",
+      },
+    },
+    gdpPerCapitaUsd: {
+      value: 34536.6555456551,
+      year: 2025,
+    },
+    lifeExpectancyYears: {
+      value: 78.982,
+      year: 2024,
+    },
+    humanDevelopmentIndex: {
+      value: 0.9,
+      year: 2023,
+    },
+    currencies: ["SAR"],
+    demonyms: {
+      fr: {
+        m: "Saoudien",
+        f: "Saoudienne",
+      },
+      en: {
+        m: "Saudi Arabian",
+        f: "Saudi Arabian",
+      },
+    },
   },
   SDN: {
     continent: "africa",
@@ -5806,6 +12216,7 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     flagSymbols: ["triangle"],
     flagLayout: ["horizontal_stripes"],
     events: [],
+    eventEditions: {},
     memberships: ["arab_league", "african_union"],
     capitals: [
       {
@@ -5813,6 +12224,10 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
         latitude: 15.6,
         longitude: 32.53,
         roles: ["primary"],
+        names: {
+          fr: "Khartoum",
+          en: "Khartoum",
+        },
       },
     ],
     drivingSide: "right",
@@ -5822,13 +12237,55 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     utcOffsetCount: 1,
     lastVolcanicEruptionYear: 850,
     mountainAreaShare: 0.07675863224443658,
-    forestCoverShare: 0.0955196466809422,
+    forestCoverShare: 0.119532548179872,
     urbanCentresOver1M: 2,
     productionRanks: {},
     coalElectricityShare: 0,
     formerSovereigns: ["united_kingdom"],
+    dominations: [
+      {
+        power: "united_kingdom",
+        nature: "condominium",
+        from: 1899,
+        to: 1956,
+        intermittent: false,
+        part: null,
+      },
+    ],
     sovereigntyYear: 1956,
     sovereigntyKind: "independence",
+    sovereigntyDate: "1956-01-01",
+    sovereigntySheetHidden: false,
+    highestPoint: {
+      elevationM: 3042,
+      names: {
+        fr: "djebel Marra",
+        en: "Jebel Marra",
+      },
+    },
+    gdpPerCapitaUsd: {
+      value: 1164.53991699219,
+      year: 2025,
+    },
+    lifeExpectancyYears: {
+      value: 66.521,
+      year: 2024,
+    },
+    humanDevelopmentIndex: {
+      value: 0.511,
+      year: 2023,
+    },
+    currencies: ["SDG"],
+    demonyms: {
+      fr: {
+        m: "Soudanais",
+        f: "Soudanaise",
+      },
+      en: {
+        m: "Sudanese",
+        f: "Sudanese",
+      },
+    },
   },
   SEN: {
     continent: "africa",
@@ -5843,6 +12300,7 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     flagSymbols: ["star"],
     flagLayout: ["vertical_stripes"],
     events: [],
+    eventEditions: {},
     memberships: ["african_union"],
     capitals: [
       {
@@ -5850,6 +12308,10 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
         latitude: 14.73,
         longitude: -17.63,
         roles: ["primary"],
+        names: {
+          fr: "Dakar",
+          en: "Dakar",
+        },
       },
     ],
     drivingSide: "right",
@@ -5859,20 +12321,59 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     utcOffsetCount: 1,
     lastVolcanicEruptionYear: null,
     mountainAreaShare: 0.0014589115604762047,
-    forestCoverShare: 0.412827091881785,
+    forestCoverShare: 0.450859606295123,
     urbanCentresOver1M: 2,
     productionRanks: {},
     coalElectricityShare: 0.0131,
     formerSovereigns: ["france"],
+    dominations: [
+      {
+        power: "france",
+        nature: "colony",
+        from: 1659,
+        to: 1960,
+        intermittent: false,
+        part: null,
+      },
+    ],
     sovereigntyYear: 1960,
     sovereigntyKind: "independence",
+    sovereigntyDate: "1960-04-04",
+    sovereigntySheetHidden: false,
+    highestPoint: {
+      elevationM: 648,
+      names: null,
+    },
+    gdpPerCapitaUsd: {
+      value: 1954.71174194867,
+      year: 2025,
+    },
+    lifeExpectancyYears: {
+      value: 68.924,
+      year: 2024,
+    },
+    humanDevelopmentIndex: {
+      value: 0.53,
+      year: 2023,
+    },
+    currencies: ["XOF"],
+    demonyms: {
+      fr: {
+        m: "Sénégalais",
+        f: "Sénégalaise",
+      },
+      en: {
+        m: "Senegalese",
+        f: "Senegalese",
+      },
+    },
   },
   SGP: {
     continent: "asia",
     waterAccess: "island",
     borders: [],
     areaKm2: 710,
-    population: 6110200,
+    population: 6208500,
     officialLanguages: ["en", "ms", "ta", "zh"],
     latitude: 1.36666666,
     subregion: "South-Eastern Asia",
@@ -5880,6 +12381,7 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     flagSymbols: ["star", "crescent"],
     flagLayout: ["horizontal_stripes"],
     events: [],
+    eventEditions: {},
     memberships: ["asean", "commonwealth"],
     capitals: [
       {
@@ -5887,6 +12389,10 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
         latitude: 1.28,
         longitude: 103.85,
         roles: ["primary"],
+        names: {
+          fr: "Singapour",
+          en: "Singapore",
+        },
       },
     ],
     drivingSide: "left",
@@ -5896,13 +12402,55 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     utcOffsetCount: 1,
     lastVolcanicEruptionYear: null,
     mountainAreaShare: 0,
-    forestCoverShare: 0.20933147632312,
+    forestCoverShare: 0.21835268103924801,
     urbanCentresOver1M: 1,
     productionRanks: {},
     coalElectricityShare: 0.0096,
     formerSovereigns: [],
+    dominations: [
+      {
+        power: "united_kingdom",
+        nature: "colony",
+        from: 1819,
+        to: 1963,
+        intermittent: false,
+        part: null,
+      },
+    ],
     sovereigntyYear: 1965,
     sovereigntyKind: "independence",
+    sovereigntyDate: "1965-08-09",
+    sovereigntySheetHidden: false,
+    highestPoint: {
+      elevationM: 166,
+      names: {
+        fr: "Bukit Timah",
+        en: "Bukit Timah",
+      },
+    },
+    gdpPerCapitaUsd: {
+      value: 98813.9788172877,
+      year: 2025,
+    },
+    lifeExpectancyYears: {
+      value: 83.3463414634146,
+      year: 2024,
+    },
+    humanDevelopmentIndex: {
+      value: 0.946,
+      year: 2023,
+    },
+    currencies: ["SGD"],
+    demonyms: {
+      fr: {
+        m: "Singapourien",
+        f: "Singapourienne",
+      },
+      en: {
+        m: "Singaporean",
+        f: "Singaporean",
+      },
+    },
   },
   SLB: {
     continent: "oceania",
@@ -5917,6 +12465,7 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     flagSymbols: ["star", "triangle"],
     flagLayout: [],
     events: [],
+    eventEditions: {},
     memberships: ["commonwealth"],
     capitals: [
       {
@@ -5924,6 +12473,10 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
         latitude: -9.43,
         longitude: 159.95,
         roles: ["primary"],
+        names: {
+          fr: "Honiara",
+          en: "Honiara",
+        },
       },
     ],
     drivingSide: "left",
@@ -5933,13 +12486,55 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     utcOffsetCount: 1,
     lastVolcanicEruptionYear: 2024,
     mountainAreaShare: 0.3206672203765227,
-    forestCoverShare: 0.900600214362272,
+    forestCoverShare: 0.898678099321186,
     urbanCentresOver1M: 0,
     productionRanks: {},
     coalElectricityShare: 0,
     formerSovereigns: ["united_kingdom"],
+    dominations: [
+      {
+        power: "united_kingdom",
+        nature: "protectorate",
+        from: 1893,
+        to: 1978,
+        intermittent: false,
+        part: null,
+      },
+    ],
     sovereigntyYear: 1978,
     sovereigntyKind: "independence",
+    sovereigntyDate: "1978-07-07",
+    sovereigntySheetHidden: false,
+    highestPoint: {
+      elevationM: 2335,
+      names: {
+        fr: "mont Popomanaseu",
+        en: "Mount Popomanaseu",
+      },
+    },
+    gdpPerCapitaUsd: {
+      value: 2086.18955928928,
+      year: 2025,
+    },
+    lifeExpectancyYears: {
+      value: 70.694,
+      year: 2024,
+    },
+    humanDevelopmentIndex: {
+      value: 0.584,
+      year: 2023,
+    },
+    currencies: ["SBD"],
+    demonyms: {
+      fr: {
+        m: "Salomonien",
+        f: "Salomonienne",
+      },
+      en: {
+        m: "Solomon Islander",
+        f: "Solomon Islander",
+      },
+    },
   },
   SLE: {
     continent: "africa",
@@ -5954,6 +12549,7 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     flagSymbols: [],
     flagLayout: ["horizontal_stripes"],
     events: [],
+    eventEditions: {},
     memberships: ["commonwealth", "african_union"],
     capitals: [
       {
@@ -5961,6 +12557,10 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
         latitude: 8.48,
         longitude: -13.23,
         roles: ["primary"],
+        names: {
+          fr: "Freetown",
+          en: "Freetown",
+        },
       },
     ],
     drivingSide: "right",
@@ -5970,13 +12570,55 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     utcOffsetCount: 1,
     lastVolcanicEruptionYear: null,
     mountainAreaShare: 0.09901031502648452,
-    forestCoverShare: 0.342988362427265,
+    forestCoverShare: 0.342992518703242,
     urbanCentresOver1M: 1,
     productionRanks: {},
     coalElectricityShare: 0,
     formerSovereigns: ["united_kingdom"],
+    dominations: [
+      {
+        power: "united_kingdom",
+        nature: "colony",
+        from: 1808,
+        to: 1961,
+        intermittent: false,
+        part: null,
+      },
+    ],
     sovereigntyYear: 1961,
     sovereigntyKind: "independence",
+    sovereigntyDate: "1961-04-27",
+    sovereigntySheetHidden: false,
+    highestPoint: {
+      elevationM: 1948,
+      names: {
+        fr: "Loma Mansa",
+        en: "Mount Bintumani",
+      },
+    },
+    gdpPerCapitaUsd: {
+      value: 846.296172499617,
+      year: 2025,
+    },
+    lifeExpectancyYears: {
+      value: 61.964,
+      year: 2024,
+    },
+    humanDevelopmentIndex: {
+      value: 0.467,
+      year: 2023,
+    },
+    currencies: ["SLE"],
+    demonyms: {
+      fr: {
+        m: "Sierra-Léonais",
+        f: "Sierra-Léonaise",
+      },
+      en: {
+        m: "Sierra Leonean",
+        f: "Sierra Leonean",
+      },
+    },
   },
   SLV: {
     continent: "north_america",
@@ -5991,6 +12633,7 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     flagSymbols: ["triangle", "plant"],
     flagLayout: ["horizontal_stripes"],
     events: [],
+    eventEditions: {},
     memberships: [],
     capitals: [
       {
@@ -5998,6 +12641,10 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
         latitude: 13.6929,
         longitude: -89.2182,
         roles: ["primary"],
+        names: {
+          fr: "San Salvador",
+          en: "San Salvador",
+        },
       },
     ],
     drivingSide: "right",
@@ -6007,13 +12654,46 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     utcOffsetCount: 1,
     lastVolcanicEruptionYear: 2023,
     mountainAreaShare: 0.57007746780096,
-    forestCoverShare: 0.275279922779923,
+    forestCoverShare: 0.329715250965251,
     urbanCentresOver1M: 1,
     productionRanks: {},
     coalElectricityShare: null,
     formerSovereigns: ["spain"],
+    dominations: [],
     sovereigntyYear: 1821,
     sovereigntyKind: "independence",
+    sovereigntyDate: "1821-09-15",
+    sovereigntySheetHidden: false,
+    highestPoint: {
+      elevationM: 2730,
+      names: {
+        fr: "Cerro El Pital",
+        en: "Cerro El Pital",
+      },
+    },
+    gdpPerCapitaUsd: {
+      value: 5766.72574029107,
+      year: 2025,
+    },
+    lifeExpectancyYears: {
+      value: 72.302,
+      year: 2024,
+    },
+    humanDevelopmentIndex: {
+      value: 0.678,
+      year: 2023,
+    },
+    currencies: ["USD"],
+    demonyms: {
+      fr: {
+        m: "Salvadorien",
+        f: "Salvadorienne",
+      },
+      en: {
+        m: "Salvadoran",
+        f: "Salvadoran",
+      },
+    },
   },
   SMR: {
     continent: "europe",
@@ -6028,6 +12708,7 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     flagSymbols: ["plant"],
     flagLayout: ["horizontal_stripes"],
     events: [],
+    eventEditions: {},
     memberships: [],
     capitals: [
       {
@@ -6035,22 +12716,59 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
         latitude: 43.94,
         longitude: 12.45,
         roles: ["primary"],
+        names: {
+          fr: "Saint-Marin",
+          en: "San Marino",
+        },
       },
     ],
     drivingSide: "right",
-    geoTags: [],
+    geoTags: ["capital_not_largest"],
     regime: "republic",
     physicalFeatures: [],
     utcOffsetCount: 1,
     lastVolcanicEruptionYear: null,
     mountainAreaShare: 0.39344262295081966,
-    forestCoverShare: 0.166666666666667,
+    forestCoverShare: 0.163398692810458,
     urbanCentresOver1M: 0,
     productionRanks: {},
     coalElectricityShare: null,
     formerSovereigns: [],
+    dominations: [],
     sovereigntyYear: null,
     sovereigntyKind: null,
+    sovereigntyDate: null,
+    sovereigntySheetHidden: false,
+    highestPoint: {
+      elevationM: 739,
+      names: {
+        fr: "mont Titano",
+        en: "Monte Titano",
+      },
+    },
+    gdpPerCapitaUsd: {
+      value: 59871.3288101478,
+      year: 2023,
+    },
+    lifeExpectancyYears: {
+      value: 85.817,
+      year: 2024,
+    },
+    humanDevelopmentIndex: {
+      value: 0.915,
+      year: 2023,
+    },
+    currencies: ["EUR"],
+    demonyms: {
+      fr: {
+        m: "Saint-Marinais",
+        f: "Saint-Marinaise",
+      },
+      en: {
+        m: "Sammarinese",
+        f: "Sammarinese",
+      },
+    },
   },
   SOM: {
     continent: "africa",
@@ -6065,6 +12783,7 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     flagSymbols: ["star"],
     flagLayout: [],
     events: [],
+    eventEditions: {},
     memberships: ["arab_league", "african_union"],
     capitals: [
       {
@@ -6072,6 +12791,10 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
         latitude: 2.07,
         longitude: 45.33,
         roles: ["primary"],
+        names: {
+          fr: "Mogadiscio",
+          en: "Mogadishu",
+        },
       },
     ],
     drivingSide: "right",
@@ -6081,13 +12804,58 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     utcOffsetCount: 1,
     lastVolcanicEruptionYear: null,
     mountainAreaShare: 0.09446771540185397,
-    forestCoverShare: 0.09165285172314849,
+    forestCoverShare: 0.0794090923582109,
     urbanCentresOver1M: 2,
     productionRanks: {},
     coalElectricityShare: 0,
     formerSovereigns: ["united_kingdom"],
+    dominations: [
+      {
+        power: "united_kingdom",
+        nature: "protectorate",
+        from: 1884,
+        to: 1960,
+        intermittent: false,
+        part: {
+          fr: "Somaliland",
+          en: "Somaliland",
+        },
+      },
+    ],
     sovereigntyYear: 1960,
     sovereigntyKind: "independence",
+    sovereigntyDate: "1960-07-01",
+    sovereigntySheetHidden: false,
+    highestPoint: {
+      elevationM: 2460,
+      names: {
+        fr: "Shimbiris",
+        en: "Shimbiris",
+      },
+    },
+    gdpPerCapitaUsd: {
+      value: 661.173877723116,
+      year: 2025,
+    },
+    lifeExpectancyYears: {
+      value: 58.967,
+      year: 2024,
+    },
+    humanDevelopmentIndex: {
+      value: 0.404,
+      year: 2023,
+    },
+    currencies: ["SOS"],
+    demonyms: {
+      fr: {
+        m: "Somalien",
+        f: "Somalienne",
+      },
+      en: {
+        m: "Somali",
+        f: "Somali",
+      },
+    },
   },
   SRB: {
     continent: "europe",
@@ -6102,6 +12870,7 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     flagSymbols: ["animal", "cross"],
     flagLayout: ["horizontal_stripes"],
     events: [],
+    eventEditions: {},
     memberships: [],
     capitals: [
       {
@@ -6109,6 +12878,10 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
         latitude: 44.83,
         longitude: 20.5,
         roles: ["primary"],
+        names: {
+          fr: "Belgrade",
+          en: "Belgrade",
+        },
       },
     ],
     drivingSide: "right",
@@ -6118,13 +12891,46 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     utcOffsetCount: 1,
     lastVolcanicEruptionYear: null,
     mountainAreaShare: 0.44447210873575443,
-    forestCoverShare: 0.323896349149721,
+    forestCoverShare: 0.38770297995061,
     urbanCentresOver1M: 1,
     productionRanks: {},
     coalElectricityShare: 0.6293,
     formerSovereigns: [],
+    dominations: [],
     sovereigntyYear: 2006,
-    sovereigntyKind: "independence",
+    sovereigntyKind: "dissolution_successor",
+    sovereigntyDate: "2006-06-05",
+    sovereigntySheetHidden: false,
+    highestPoint: {
+      elevationM: 2169,
+      names: {
+        fr: "Midžor",
+        en: "Midžor",
+      },
+    },
+    gdpPerCapitaUsd: {
+      value: 15262.0464193413,
+      year: 2025,
+    },
+    lifeExpectancyYears: {
+      value: 75.9682926829268,
+      year: 2024,
+    },
+    humanDevelopmentIndex: {
+      value: 0.833,
+      year: 2023,
+    },
+    currencies: ["RSD"],
+    demonyms: {
+      fr: {
+        m: "Serbe",
+        f: "Serbe",
+      },
+      en: {
+        m: "Serbian",
+        f: "Serbian",
+      },
+    },
   },
   SSD: {
     continent: "africa",
@@ -6139,6 +12945,7 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     flagSymbols: ["star", "triangle"],
     flagLayout: ["horizontal_stripes"],
     events: [],
+    eventEditions: {},
     memberships: ["african_union"],
     capitals: [
       {
@@ -6146,6 +12953,10 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
         latitude: 4.85,
         longitude: 31.62,
         roles: ["primary"],
+        names: {
+          fr: "Djouba",
+          en: "Juba",
+        },
       },
     ],
     drivingSide: "right",
@@ -6160,8 +12971,47 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     productionRanks: {},
     coalElectricityShare: 0,
     formerSovereigns: [],
+    dominations: [
+      {
+        power: "united_kingdom",
+        nature: "condominium",
+        from: 1899,
+        to: 1956,
+        intermittent: false,
+        part: null,
+      },
+    ],
     sovereigntyYear: 2011,
     sovereigntyKind: "independence",
+    sovereigntyDate: "2011-07-09",
+    sovereigntySheetHidden: false,
+    highestPoint: {
+      elevationM: 3187,
+      names: {
+        fr: "Kinyeti",
+        en: "Kinyeti",
+      },
+    },
+    gdpPerCapitaUsd: null,
+    lifeExpectancyYears: {
+      value: 57.738,
+      year: 2024,
+    },
+    humanDevelopmentIndex: {
+      value: 0.388,
+      year: 2023,
+    },
+    currencies: ["SSP"],
+    demonyms: {
+      fr: {
+        m: "Sud-Soudanais",
+        f: "Sud-Soudanaise",
+      },
+      en: {
+        m: "South Sudanese",
+        f: "South Sudanese",
+      },
+    },
   },
   STP: {
     continent: "africa",
@@ -6176,6 +13026,7 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     flagSymbols: ["star", "triangle"],
     flagLayout: ["horizontal_stripes"],
     events: [],
+    eventEditions: {},
     memberships: ["african_union"],
     capitals: [
       {
@@ -6183,6 +13034,10 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
         latitude: 0.34,
         longitude: 6.73,
         roles: ["primary"],
+        names: {
+          fr: "São Tomé",
+          en: "São Tomé",
+        },
       },
     ],
     drivingSide: "right",
@@ -6192,13 +13047,46 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     utcOffsetCount: 1,
     lastVolcanicEruptionYear: null,
     mountainAreaShare: 0,
-    forestCoverShare: 0.52125,
+    forestCoverShare: 0.5753125,
     urbanCentresOver1M: 0,
     productionRanks: {},
     coalElectricityShare: null,
     formerSovereigns: ["portugal"],
+    dominations: [],
     sovereigntyYear: 1975,
     sovereigntyKind: "independence",
+    sovereigntyDate: "1975-07-12",
+    sovereigntySheetHidden: false,
+    highestPoint: {
+      elevationM: 2024,
+      names: {
+        fr: "Pico de São Tomé",
+        en: "Pico de São Tomé",
+      },
+    },
+    gdpPerCapitaUsd: {
+      value: 4084.40062145233,
+      year: 2025,
+    },
+    lifeExpectancyYears: {
+      value: 69.905,
+      year: 2024,
+    },
+    humanDevelopmentIndex: {
+      value: 0.637,
+      year: 2023,
+    },
+    currencies: ["STN"],
+    demonyms: {
+      fr: {
+        m: "Santoméen",
+        f: "Santoméenne",
+      },
+      en: {
+        m: "Sao Tomean",
+        f: "Sao Tomean",
+      },
+    },
   },
   SUR: {
     continent: "south_america",
@@ -6213,6 +13101,7 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     flagSymbols: ["star"],
     flagLayout: ["horizontal_stripes"],
     events: [],
+    eventEditions: {},
     memberships: [],
     capitals: [
       {
@@ -6220,6 +13109,10 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
         latitude: 5.83,
         longitude: -55.17,
         roles: ["primary"],
+        names: {
+          fr: "Paramaribo",
+          en: "Paramaribo",
+        },
       },
     ],
     drivingSide: "left",
@@ -6229,13 +13122,55 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     utcOffsetCount: 1,
     lastVolcanicEruptionYear: null,
     mountainAreaShare: 0.05239287022341595,
-    forestCoverShare: 0.9444758351333,
+    forestCoverShare: 0.916511061375844,
     urbanCentresOver1M: 0,
     productionRanks: {},
     coalElectricityShare: 0,
     formerSovereigns: ["netherlands"],
+    dominations: [
+      {
+        power: "united_kingdom",
+        nature: "colony",
+        from: 1651,
+        to: 1667,
+        intermittent: false,
+        part: null,
+      },
+    ],
     sovereigntyYear: 1975,
     sovereigntyKind: "independence",
+    sovereigntyDate: "1975-11-25",
+    sovereigntySheetHidden: false,
+    highestPoint: {
+      elevationM: 1230,
+      names: {
+        fr: "Juliana Top",
+        en: "Julianatop",
+      },
+    },
+    gdpPerCapitaUsd: {
+      value: 7069.87230892274,
+      year: 2025,
+    },
+    lifeExpectancyYears: {
+      value: 73.757,
+      year: 2024,
+    },
+    humanDevelopmentIndex: {
+      value: 0.722,
+      year: 2023,
+    },
+    currencies: ["SRD"],
+    demonyms: {
+      fr: {
+        m: "Surinamais",
+        f: "Surinamaise",
+      },
+      en: {
+        m: "Surinamer",
+        f: "Surinamer",
+      },
+    },
   },
   SVK: {
     continent: "europe",
@@ -6250,6 +13185,7 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     flagSymbols: ["cross"],
     flagLayout: ["horizontal_stripes"],
     events: [],
+    eventEditions: {},
     memberships: ["eu", "eurozone", "nato", "oecd", "schengen"],
     capitals: [
       {
@@ -6257,6 +13193,10 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
         latitude: 48.15,
         longitude: 17.12,
         roles: ["primary"],
+        names: {
+          fr: "Bratislava",
+          en: "Bratislava",
+        },
       },
     ],
     drivingSide: "right",
@@ -6266,13 +13206,46 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     utcOffsetCount: 1,
     lastVolcanicEruptionYear: null,
     mountainAreaShare: 0.5283765320064441,
-    forestCoverShare: 0.4005615640599,
+    forestCoverShare: 0.40282445923460897,
     urbanCentresOver1M: 0,
     productionRanks: {},
     coalElectricityShare: 0.0176,
     formerSovereigns: [],
+    dominations: [],
     sovereigntyYear: 1993,
     sovereigntyKind: "dissolution_successor",
+    sovereigntyDate: "1993-01-01",
+    sovereigntySheetHidden: false,
+    highestPoint: {
+      elevationM: 2655,
+      names: {
+        fr: "Gerlachovský štít",
+        en: "Gerlachovský štít",
+      },
+    },
+    gdpPerCapitaUsd: {
+      value: 28543.6653439813,
+      year: 2025,
+    },
+    lifeExpectancyYears: {
+      value: 78.3707317073171,
+      year: 2024,
+    },
+    humanDevelopmentIndex: {
+      value: 0.88,
+      year: 2023,
+    },
+    currencies: ["EUR"],
+    demonyms: {
+      fr: {
+        m: "Slovaque",
+        f: "Slovaque",
+      },
+      en: {
+        m: "Slovak",
+        f: "Slovak",
+      },
+    },
   },
   SVN: {
     continent: "europe",
@@ -6287,6 +13260,7 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     flagSymbols: ["star"],
     flagLayout: ["horizontal_stripes"],
     events: [],
+    eventEditions: {},
     memberships: ["eu", "eurozone", "nato", "oecd", "schengen"],
     capitals: [
       {
@@ -6294,6 +13268,10 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
         latitude: 46.05,
         longitude: 14.52,
         roles: ["primary"],
+        names: {
+          fr: "Ljubljana",
+          en: "Ljubljana",
+        },
       },
     ],
     drivingSide: "right",
@@ -6303,20 +13281,53 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     utcOffsetCount: 1,
     lastVolcanicEruptionYear: null,
     mountainAreaShare: 0.6789325704138508,
-    forestCoverShare: 0.611748938389332,
+    forestCoverShare: 0.617676128038938,
     urbanCentresOver1M: 0,
     productionRanks: {},
     coalElectricityShare: 0.2095,
     formerSovereigns: ["yugoslavia"],
+    dominations: [],
     sovereigntyYear: 1991,
     sovereigntyKind: "independence",
+    sovereigntyDate: "1991-06-25",
+    sovereigntySheetHidden: false,
+    highestPoint: {
+      elevationM: 2864,
+      names: {
+        fr: "Triglav",
+        en: "Triglav",
+      },
+    },
+    gdpPerCapitaUsd: {
+      value: 37376.2216079138,
+      year: 2025,
+    },
+    lifeExpectancyYears: {
+      value: 82.2853658536585,
+      year: 2024,
+    },
+    humanDevelopmentIndex: {
+      value: 0.931,
+      year: 2023,
+    },
+    currencies: ["EUR"],
+    demonyms: {
+      fr: {
+        m: "Slovène",
+        f: "Slovène",
+      },
+      en: {
+        m: "Slovene",
+        f: "Slovene",
+      },
+    },
   },
   SWE: {
     continent: "europe",
     waterAccess: "coastal",
     borders: ["FIN", "NOR"],
     areaKm2: 450295,
-    population: 10613531,
+    population: 10621103,
     officialLanguages: ["sv"],
     latitude: 62,
     subregion: "Northern Europe",
@@ -6324,6 +13335,10 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     flagSymbols: ["cross"],
     flagLayout: [],
     events: ["fifa_wc_host", "summer_olympics_host"],
+    eventEditions: {
+      fifa_wc_host: [1958],
+      summer_olympics_host: [1912, 1956],
+    },
     memberships: ["eu", "nato", "oecd", "schengen"],
     capitals: [
       {
@@ -6331,6 +13346,10 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
         latitude: 59.33,
         longitude: 18.05,
         roles: ["primary"],
+        names: {
+          fr: "Stockholm",
+          en: "Stockholm",
+        },
       },
     ],
     drivingSide: "right",
@@ -6340,13 +13359,46 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     utcOffsetCount: 1,
     lastVolcanicEruptionYear: null,
     mountainAreaShare: 0.1500305355378141,
-    forestCoverShare: 0.687013529108454,
+    forestCoverShare: 0.685884057259312,
     urbanCentresOver1M: 1,
     productionRanks: {},
     coalElectricityShare: 0,
     formerSovereigns: [],
+    dominations: [],
     sovereigntyYear: 1523,
     sovereigntyKind: "foundation",
+    sovereigntyDate: "1523-06-06",
+    sovereigntySheetHidden: false,
+    highestPoint: {
+      elevationM: 2100,
+      names: {
+        fr: "Kebnekaise",
+        en: "Kebnekaise",
+      },
+    },
+    gdpPerCapitaUsd: {
+      value: 63133.2126736715,
+      year: 2025,
+    },
+    lifeExpectancyYears: {
+      value: 84.0634146341463,
+      year: 2024,
+    },
+    humanDevelopmentIndex: {
+      value: 0.959,
+      year: 2023,
+    },
+    currencies: ["SEK"],
+    demonyms: {
+      fr: {
+        m: "Suédois",
+        f: "Suédoise",
+      },
+      en: {
+        m: "Swedish",
+        f: "Swedish",
+      },
+    },
   },
   SWZ: {
     continent: "africa",
@@ -6361,6 +13413,7 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     flagSymbols: [],
     flagLayout: ["horizontal_stripes"],
     events: [],
+    eventEditions: {},
     memberships: ["commonwealth", "african_union"],
     capitals: [
       {
@@ -6368,12 +13421,20 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
         latitude: -26.31,
         longitude: 31.13,
         roles: ["administrative"],
+        names: {
+          fr: "Mbabane",
+          en: "Mbabane",
+        },
       },
       {
         name: "Lobamba",
         latitude: -26.47,
         longitude: 31.2,
         roles: ["legislative"],
+        names: {
+          fr: "Lobamba",
+          en: "Lobamba",
+        },
       },
     ],
     drivingSide: "left",
@@ -6383,20 +13444,62 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     utcOffsetCount: 1,
     lastVolcanicEruptionYear: null,
     mountainAreaShare: 0.7372149274360748,
-    forestCoverShare: 0.291389534883721,
+    forestCoverShare: 0.253529069767442,
     urbanCentresOver1M: 0,
     productionRanks: {},
     coalElectricityShare: 0.032799999999999996,
     formerSovereigns: ["united_kingdom"],
+    dominations: [
+      {
+        power: "united_kingdom",
+        nature: "protectorate",
+        from: 1903,
+        to: 1968,
+        intermittent: false,
+        part: null,
+      },
+    ],
     sovereigntyYear: 1968,
     sovereigntyKind: "independence",
+    sovereigntyDate: "1968-09-06",
+    sovereigntySheetHidden: false,
+    highestPoint: {
+      elevationM: 1862,
+      names: {
+        fr: "Emlembe",
+        en: "Emlembe",
+      },
+    },
+    gdpPerCapitaUsd: {
+      value: 4108.25221093363,
+      year: 2025,
+    },
+    lifeExpectancyYears: {
+      value: 64.264,
+      year: 2024,
+    },
+    humanDevelopmentIndex: {
+      value: 0.695,
+      year: 2023,
+    },
+    currencies: ["SZL", "ZAR"],
+    demonyms: {
+      fr: {
+        m: "Swazie",
+        f: "Swazie",
+      },
+      en: {
+        m: "Swazi",
+        f: "Swazi",
+      },
+    },
   },
   SYC: {
     continent: "africa",
     waterAccess: "island",
     borders: [],
     areaKm2: 452,
-    population: 123097,
+    population: 123565,
     officialLanguages: ["crs", "en", "fr"],
     latitude: -4.58333333,
     subregion: "Eastern Africa",
@@ -6404,6 +13507,7 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     flagSymbols: [],
     flagLayout: [],
     events: [],
+    eventEditions: {},
     memberships: ["commonwealth", "african_union"],
     capitals: [
       {
@@ -6411,6 +13515,10 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
         latitude: -4.62,
         longitude: 55.45,
         roles: ["primary"],
+        names: {
+          fr: "Victoria",
+          en: "Victoria",
+        },
       },
     ],
     drivingSide: "left",
@@ -6420,13 +13528,63 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     utcOffsetCount: 1,
     lastVolcanicEruptionYear: null,
     mountainAreaShare: 0,
-    forestCoverShare: 0.732608695652174,
+    forestCoverShare: 0.589934354485777,
     urbanCentresOver1M: 0,
     productionRanks: {},
     coalElectricityShare: 0,
     formerSovereigns: ["united_kingdom"],
+    dominations: [
+      {
+        power: "france",
+        nature: "colony",
+        from: 1756,
+        to: 1810,
+        intermittent: false,
+        part: null,
+      },
+      {
+        power: "united_kingdom",
+        nature: "colony",
+        from: 1810,
+        to: 1976,
+        intermittent: false,
+        part: null,
+      },
+    ],
     sovereigntyYear: 1976,
     sovereigntyKind: "independence",
+    sovereigntyDate: "1976-06-29",
+    sovereigntySheetHidden: false,
+    highestPoint: {
+      elevationM: 905,
+      names: {
+        fr: "Morne Seychellois",
+        en: "Morne Seychellois",
+      },
+    },
+    gdpPerCapitaUsd: {
+      value: 19449.3836346926,
+      year: 2025,
+    },
+    lifeExpectancyYears: {
+      value: 76.2951219512195,
+      year: 2024,
+    },
+    humanDevelopmentIndex: {
+      value: 0.848,
+      year: 2023,
+    },
+    currencies: ["SCR"],
+    demonyms: {
+      fr: {
+        m: "Seychellois",
+        f: "Seychelloise",
+      },
+      en: {
+        m: "Seychellois",
+        f: "Seychellois",
+      },
+    },
   },
   SYR: {
     continent: "asia",
@@ -6441,6 +13599,7 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     flagSymbols: ["star"],
     flagLayout: ["horizontal_stripes"],
     events: [],
+    eventEditions: {},
     memberships: ["arab_league"],
     capitals: [
       {
@@ -6448,6 +13607,10 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
         latitude: 33.5138,
         longitude: 36.2765,
         roles: ["primary"],
+        names: {
+          fr: "Damas",
+          en: "Damascus",
+        },
       },
     ],
     drivingSide: "right",
@@ -6457,13 +13620,55 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     utcOffsetCount: 1,
     lastVolcanicEruptionYear: -2670,
     mountainAreaShare: 0.15468733124527487,
-    forestCoverShare: 0.028431084245493697,
+    forestCoverShare: 0.0287398573217884,
     urbanCentresOver1M: 2,
     productionRanks: {},
     coalElectricityShare: 0,
     formerSovereigns: ["france"],
+    dominations: [
+      {
+        power: "france",
+        nature: "mandate",
+        from: 1920,
+        to: 1946,
+        intermittent: false,
+        part: null,
+      },
+    ],
     sovereigntyYear: 1946,
     sovereigntyKind: "independence",
+    sovereigntyDate: "1946-04-17",
+    sovereigntySheetHidden: false,
+    highestPoint: {
+      elevationM: 2814,
+      names: {
+        fr: "mont Hermon",
+        en: "Mount Hermon",
+      },
+    },
+    gdpPerCapitaUsd: {
+      value: 1056.78264718197,
+      year: 2022,
+    },
+    lifeExpectancyYears: {
+      value: 72.56,
+      year: 2024,
+    },
+    humanDevelopmentIndex: {
+      value: 0.564,
+      year: 2023,
+    },
+    currencies: ["SYP"],
+    demonyms: {
+      fr: {
+        m: "Syrien",
+        f: "Syrienne",
+      },
+      en: {
+        m: "Syrian",
+        f: "Syrian",
+      },
+    },
   },
   TCD: {
     continent: "africa",
@@ -6478,6 +13683,7 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     flagSymbols: [],
     flagLayout: ["vertical_stripes"],
     events: [],
+    eventEditions: {},
     memberships: ["african_union"],
     capitals: [
       {
@@ -6485,6 +13691,10 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
         latitude: 12.1,
         longitude: 15.03,
         roles: ["primary"],
+        names: {
+          fr: "N'Djaména",
+          en: "N'Djamena",
+        },
       },
     ],
     drivingSide: "right",
@@ -6494,13 +13704,55 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     utcOffsetCount: 1,
     lastVolcanicEruptionYear: null,
     mountainAreaShare: 0.07996806853582554,
-    forestCoverShare: 0.0316103105146125,
+    forestCoverShare: 0.030711165819568,
     urbanCentresOver1M: 1,
     productionRanks: {},
     coalElectricityShare: 0,
     formerSovereigns: ["france"],
+    dominations: [
+      {
+        power: "france",
+        nature: "colony",
+        from: 1900,
+        to: 1960,
+        intermittent: false,
+        part: null,
+      },
+    ],
     sovereigntyYear: 1960,
     sovereigntyKind: "independence",
+    sovereigntyDate: "1960-08-11",
+    sovereigntySheetHidden: false,
+    highestPoint: {
+      elevationM: 3445,
+      names: {
+        fr: "Emi Koussi",
+        en: "Emi Koussi",
+      },
+    },
+    gdpPerCapitaUsd: {
+      value: 1022.33559390754,
+      year: 2025,
+    },
+    lifeExpectancyYears: {
+      value: 55.238,
+      year: 2024,
+    },
+    humanDevelopmentIndex: {
+      value: 0.416,
+      year: 2023,
+    },
+    currencies: ["XAF"],
+    demonyms: {
+      fr: {
+        m: "Tchadien",
+        f: "Tchadienne",
+      },
+      en: {
+        m: "Chadian",
+        f: "Chadian",
+      },
+    },
   },
   TGO: {
     continent: "africa",
@@ -6515,6 +13767,7 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     flagSymbols: ["star"],
     flagLayout: ["horizontal_stripes"],
     events: [],
+    eventEditions: {},
     memberships: ["commonwealth", "african_union"],
     capitals: [
       {
@@ -6522,6 +13775,10 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
         latitude: 6.14,
         longitude: 1.21,
         roles: ["primary"],
+        names: {
+          fr: "Lomé",
+          en: "Lomé",
+        },
       },
     ],
     drivingSide: "right",
@@ -6531,13 +13788,55 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     utcOffsetCount: 1,
     lastVolcanicEruptionYear: null,
     mountainAreaShare: 0.07780223650611957,
-    forestCoverShare: 0.22070049641478198,
+    forestCoverShare: 0.224008089722375,
     urbanCentresOver1M: 1,
     productionRanks: {},
     coalElectricityShare: 0,
     formerSovereigns: ["france"],
+    dominations: [
+      {
+        power: "france",
+        nature: "trusteeship",
+        from: 1922,
+        to: 1960,
+        intermittent: false,
+        part: null,
+      },
+    ],
     sovereigntyYear: 1960,
     sovereigntyKind: "independence",
+    sovereigntyDate: "1960-04-27",
+    sovereigntySheetHidden: false,
+    highestPoint: {
+      elevationM: 986,
+      names: {
+        fr: "mont Agou",
+        en: "Mount Agou",
+      },
+    },
+    gdpPerCapitaUsd: {
+      value: 1383.89974929887,
+      year: 2025,
+    },
+    lifeExpectancyYears: {
+      value: 62.935,
+      year: 2024,
+    },
+    humanDevelopmentIndex: {
+      value: 0.571,
+      year: 2023,
+    },
+    currencies: ["XOF"],
+    demonyms: {
+      fr: {
+        m: "Togolais",
+        f: "Togolaise",
+      },
+      en: {
+        m: "Togolese",
+        f: "Togolese",
+      },
+    },
   },
   THA: {
     continent: "asia",
@@ -6552,6 +13851,7 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     flagSymbols: [],
     flagLayout: ["horizontal_stripes"],
     events: [],
+    eventEditions: {},
     memberships: ["asean"],
     capitals: [
       {
@@ -6559,6 +13859,10 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
         latitude: 13.75,
         longitude: 100.52,
         roles: ["primary"],
+        names: {
+          fr: "Bangkok",
+          en: "Bangkok",
+        },
       },
     ],
     drivingSide: "left",
@@ -6568,15 +13872,48 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     utcOffsetCount: 1,
     lastVolcanicEruptionYear: null,
     mountainAreaShare: 0.289419628936701,
-    forestCoverShare: 0.38687388674665796,
+    forestCoverShare: 0.389976511577835,
     urbanCentresOver1M: 1,
     productionRanks: {
       rice: 6,
     },
     coalElectricityShare: 0.16670000000000001,
     formerSovereigns: [],
+    dominations: [],
     sovereigntyYear: 1238,
     sovereigntyKind: "foundation",
+    sovereigntyDate: null,
+    sovereigntySheetHidden: false,
+    highestPoint: {
+      elevationM: 2565,
+      names: {
+        fr: "Doi Inthanon",
+        en: "Doi Inthanon",
+      },
+    },
+    gdpPerCapitaUsd: {
+      value: 8056.56359761558,
+      year: 2025,
+    },
+    lifeExpectancyYears: {
+      value: 76.564,
+      year: 2024,
+    },
+    humanDevelopmentIndex: {
+      value: 0.798,
+      year: 2023,
+    },
+    currencies: ["THB"],
+    demonyms: {
+      fr: {
+        m: "Thaïlandais",
+        f: "Thaïlandaise",
+      },
+      en: {
+        m: "Thai",
+        f: "Thai",
+      },
+    },
   },
   TJK: {
     continent: "asia",
@@ -6584,13 +13921,14 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     borders: ["AFG", "CHN", "KGZ", "UZB"],
     areaKm2: 143100,
     population: 10721000,
-    officialLanguages: ["ru", "tg"],
+    officialLanguages: ["tg"],
     latitude: 39,
     subregion: "Central Asia",
     flagColors: ["red", "green", "yellow", "white"],
     flagSymbols: ["star"],
     flagLayout: ["horizontal_stripes"],
     events: [],
+    eventEditions: {},
     memberships: [],
     capitals: [
       {
@@ -6598,6 +13936,10 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
         latitude: 38.55,
         longitude: 68.77,
         roles: ["primary"],
+        names: {
+          fr: "Douchanbé",
+          en: "Dushanbe",
+        },
       },
     ],
     drivingSide: "right",
@@ -6607,13 +13949,46 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     utcOffsetCount: 1,
     lastVolcanicEruptionYear: null,
     mountainAreaShare: 0.9308455625436758,
-    forestCoverShare: 0.0307514950644859,
+    forestCoverShare: 0.0305425462929606,
     urbanCentresOver1M: 1,
     productionRanks: {},
     coalElectricityShare: 0.045,
     formerSovereigns: ["soviet_union"],
+    dominations: [],
     sovereigntyYear: 1991,
     sovereigntyKind: "independence",
+    sovereigntyDate: "1991-09-09",
+    sovereigntySheetHidden: false,
+    highestPoint: {
+      elevationM: 7495,
+      names: {
+        fr: "pic Ismail Samani",
+        en: "Ismoil Somoni Peak",
+      },
+    },
+    gdpPerCapitaUsd: {
+      value: 1637.2542942547,
+      year: 2025,
+    },
+    lifeExpectancyYears: {
+      value: 71.927,
+      year: 2024,
+    },
+    humanDevelopmentIndex: {
+      value: 0.691,
+      year: 2023,
+    },
+    currencies: ["TJS"],
+    demonyms: {
+      fr: {
+        m: "Tadjike",
+        f: "Tadjike",
+      },
+      en: {
+        m: "Tajikistani",
+        f: "Tajikistani",
+      },
+    },
   },
   TKM: {
     continent: "asia",
@@ -6621,13 +13996,14 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     borders: ["AFG", "IRN", "KAZ", "UZB"],
     areaKm2: 488100,
     population: 7057841,
-    officialLanguages: ["ru", "tk"],
+    officialLanguages: ["tk"],
     latitude: 40,
     subregion: "Central Asia",
     flagColors: ["red", "green", "white"],
     flagSymbols: ["star", "crescent"],
     flagLayout: [],
     events: [],
+    eventEditions: {},
     memberships: [],
     capitals: [
       {
@@ -6635,6 +14011,10 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
         latitude: 37.95,
         longitude: 58.38,
         roles: ["primary"],
+        names: {
+          fr: "Achgabat",
+          en: "Ashgabat",
+        },
       },
     ],
     drivingSide: "right",
@@ -6644,15 +14024,48 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     utcOffsetCount: 1,
     lastVolcanicEruptionYear: null,
     mountainAreaShare: 0.045529604589223525,
-    forestCoverShare: 0.08782159044964138,
+    forestCoverShare: 0.049581852616347094,
     urbanCentresOver1M: 1,
     productionRanks: {
       natural_gas: 12,
     },
     coalElectricityShare: 0,
     formerSovereigns: ["soviet_union"],
+    dominations: [],
     sovereigntyYear: 1991,
     sovereigntyKind: "independence",
+    sovereigntyDate: "1991-10-27",
+    sovereigntySheetHidden: false,
+    highestPoint: {
+      elevationM: 3139,
+      names: {
+        fr: "Aýrybaba",
+        en: "Aýrybaba",
+      },
+    },
+    gdpPerCapitaUsd: {
+      value: 6540.17876401136,
+      year: 2025,
+    },
+    lifeExpectancyYears: {
+      value: 70.201,
+      year: 2024,
+    },
+    humanDevelopmentIndex: {
+      value: 0.764,
+      year: 2023,
+    },
+    currencies: ["TMT"],
+    demonyms: {
+      fr: {
+        m: "Turkmène",
+        f: "Turkmène",
+      },
+      en: {
+        m: "Turkmen",
+        f: "Turkmen",
+      },
+    },
   },
   TLS: {
     continent: "asia",
@@ -6667,6 +14080,7 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     flagSymbols: ["star", "triangle"],
     flagLayout: [],
     events: [],
+    eventEditions: {},
     memberships: ["asean"],
     capitals: [
       {
@@ -6674,22 +14088,59 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
         latitude: -8.58,
         longitude: 125.6,
         roles: ["primary"],
+        names: {
+          fr: "Dili",
+          en: "Dili",
+        },
       },
     ],
     drivingSide: "left",
-    geoTags: ["drives_on_left"],
+    geoTags: ["drives_on_left", "shared_island"],
     regime: "republic",
-    physicalFeatures: ["pacific_coast"],
+    physicalFeatures: [],
     utcOffsetCount: 1,
     lastVolcanicEruptionYear: null,
     mountainAreaShare: 0.6192012908430818,
-    forestCoverShare: 0.616610625420309,
+    forestCoverShare: 0.710174848688635,
     urbanCentresOver1M: 0,
     productionRanks: {},
     coalElectricityShare: 0,
     formerSovereigns: ["portugal"],
+    dominations: [],
     sovereigntyYear: 2002,
     sovereigntyKind: "restoration",
+    sovereigntyDate: "2002-05-20",
+    sovereigntySheetHidden: false,
+    highestPoint: {
+      elevationM: 2963,
+      names: {
+        fr: "mont Ramelau",
+        en: "Tatamailau",
+      },
+    },
+    gdpPerCapitaUsd: {
+      value: 1340.9640193437,
+      year: 2025,
+    },
+    lifeExpectancyYears: {
+      value: 67.904,
+      year: 2024,
+    },
+    humanDevelopmentIndex: {
+      value: 0.634,
+      year: 2023,
+    },
+    currencies: ["USD"],
+    demonyms: {
+      fr: {
+        m: "Est-Timorais",
+        f: "Est-Timoraise",
+      },
+      en: {
+        m: "East Timorese",
+        f: "East Timorese",
+      },
+    },
   },
   TON: {
     continent: "oceania",
@@ -6704,6 +14155,7 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     flagSymbols: ["cross"],
     flagLayout: [],
     events: [],
+    eventEditions: {},
     memberships: ["commonwealth"],
     capitals: [
       {
@@ -6711,6 +14163,10 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
         latitude: -21.13,
         longitude: -175.2,
         roles: ["primary"],
+        names: {
+          fr: "Nukuʻalofa",
+          en: "Nukuʻalofa",
+        },
       },
     ],
     drivingSide: "left",
@@ -6720,13 +14176,55 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     utcOffsetCount: 1,
     lastVolcanicEruptionYear: 2026,
     mountainAreaShare: 0.02677376171352075,
-    forestCoverShare: 0.124305555555556,
+    forestCoverShare: 0.12125,
     urbanCentresOver1M: 0,
     productionRanks: {},
     coalElectricityShare: 0,
     formerSovereigns: ["united_kingdom"],
+    dominations: [
+      {
+        power: "united_kingdom",
+        nature: "protectorate",
+        from: 1900,
+        to: 1970,
+        intermittent: false,
+        part: null,
+      },
+    ],
     sovereigntyYear: 1970,
     sovereigntyKind: "independence",
+    sovereigntyDate: "1970-06-04",
+    sovereigntySheetHidden: false,
+    highestPoint: {
+      elevationM: 1046,
+      names: {
+        fr: "Kao",
+        en: "Kao",
+      },
+    },
+    gdpPerCapitaUsd: {
+      value: 6547.18646814228,
+      year: 2025,
+    },
+    lifeExpectancyYears: {
+      value: 73.07,
+      year: 2024,
+    },
+    humanDevelopmentIndex: {
+      value: 0.769,
+      year: 2023,
+    },
+    currencies: ["TOP"],
+    demonyms: {
+      fr: {
+        m: "Tonguien",
+        f: "Tonguienne",
+      },
+      en: {
+        m: "Tongan",
+        f: "Tongan",
+      },
+    },
   },
   TTO: {
     continent: "north_america",
@@ -6741,6 +14239,7 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     flagSymbols: [],
     flagLayout: [],
     events: [],
+    eventEditions: {},
     memberships: ["commonwealth"],
     capitals: [
       {
@@ -6748,22 +14247,68 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
         latitude: 10.65,
         longitude: -61.52,
         roles: ["primary"],
+        names: {
+          fr: "Port-d'Espagne",
+          en: "Port of Spain",
+        },
       },
     ],
     drivingSide: "left",
-    geoTags: ["drives_on_left"],
+    geoTags: ["drives_on_left", "capital_not_largest"],
     regime: "republic",
     physicalFeatures: ["caribbean_coast", "atlantic_coast"],
     utcOffsetCount: 1,
     lastVolcanicEruptionYear: null,
     mountainAreaShare: 0.050682261208577,
-    forestCoverShare: 0.44235867446393795,
+    forestCoverShare: 0.442472698907956,
     urbanCentresOver1M: 0,
     productionRanks: {},
     coalElectricityShare: 0,
     formerSovereigns: ["united_kingdom"],
+    dominations: [
+      {
+        power: "united_kingdom",
+        nature: "colony",
+        from: 1797,
+        to: 1962,
+        intermittent: false,
+        part: null,
+      },
+    ],
     sovereigntyYear: 1962,
     sovereigntyKind: "independence",
+    sovereigntyDate: "1962-08-31",
+    sovereigntySheetHidden: false,
+    highestPoint: {
+      elevationM: 940,
+      names: {
+        fr: "Cerro del Aripo",
+        en: "El Cerro del Aripo",
+      },
+    },
+    gdpPerCapitaUsd: {
+      value: 18967.2704636681,
+      year: 2025,
+    },
+    lifeExpectancyYears: {
+      value: 73.617,
+      year: 2024,
+    },
+    humanDevelopmentIndex: {
+      value: 0.807,
+      year: 2023,
+    },
+    currencies: ["TTD"],
+    demonyms: {
+      fr: {
+        m: "Trinidadien",
+        f: "Trinidadienne",
+      },
+      en: {
+        m: "Trinidadian",
+        f: "Trinidadian",
+      },
+    },
   },
   TUN: {
     continent: "africa",
@@ -6778,6 +14323,7 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     flagSymbols: ["star", "crescent", "circle"],
     flagLayout: [],
     events: [],
+    eventEditions: {},
     memberships: ["arab_league", "african_union"],
     capitals: [
       {
@@ -6785,6 +14331,10 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
         latitude: 36.8,
         longitude: 10.18,
         roles: ["primary"],
+        names: {
+          fr: "Tunis",
+          en: "Tunis",
+        },
       },
     ],
     drivingSide: "right",
@@ -6794,13 +14344,55 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     utcOffsetCount: 1,
     lastVolcanicEruptionYear: null,
     mountainAreaShare: 0.16138989059348455,
-    forestCoverShare: 0.0455278063851699,
+    forestCoverShare: 0.0445475025746653,
     urbanCentresOver1M: 1,
     productionRanks: {},
     coalElectricityShare: 0,
     formerSovereigns: ["france"],
+    dominations: [
+      {
+        power: "france",
+        nature: "protectorate",
+        from: 1881,
+        to: 1956,
+        intermittent: false,
+        part: null,
+      },
+    ],
     sovereigntyYear: 1956,
     sovereigntyKind: "independence",
+    sovereigntyDate: "1956-03-20",
+    sovereigntySheetHidden: false,
+    highestPoint: {
+      elevationM: 1544,
+      names: {
+        fr: "djebel Chambi",
+        en: "Jebel ech Chambi",
+      },
+    },
+    gdpPerCapitaUsd: {
+      value: 4656.63818386852,
+      year: 2025,
+    },
+    lifeExpectancyYears: {
+      value: 76.711,
+      year: 2024,
+    },
+    humanDevelopmentIndex: {
+      value: 0.746,
+      year: 2023,
+    },
+    currencies: ["TND"],
+    demonyms: {
+      fr: {
+        m: "Tunisien",
+        f: "Tunisienne",
+      },
+      en: {
+        m: "Tunisian",
+        f: "Tunisian",
+      },
+    },
   },
   TUR: {
     continent: "asia",
@@ -6815,6 +14407,7 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     flagSymbols: ["star", "crescent"],
     flagLayout: [],
     events: [],
+    eventEditions: {},
     memberships: ["g20", "nato", "oecd"],
     capitals: [
       {
@@ -6822,6 +14415,10 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
         latitude: 39.93,
         longitude: 32.87,
         roles: ["primary"],
+        names: {
+          fr: "Ankara",
+          en: "Ankara",
+        },
       },
     ],
     drivingSide: "right",
@@ -6831,13 +14428,46 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     utcOffsetCount: 1,
     lastVolcanicEruptionYear: 1855,
     mountainAreaShare: 0.8,
-    forestCoverShare: 0.29479568104153897,
+    forestCoverShare: 0.293278588412614,
     urbanCentresOver1M: 8,
     productionRanks: {},
     coalElectricityShare: 0.3555,
     formerSovereigns: [],
+    dominations: [],
     sovereigntyYear: 1923,
     sovereigntyKind: "foundation",
+    sovereigntyDate: "1923-10-29",
+    sovereigntySheetHidden: true,
+    highestPoint: {
+      elevationM: 5137,
+      names: {
+        fr: "mont Ararat",
+        en: "Mount Ararat",
+      },
+    },
+    gdpPerCapitaUsd: {
+      value: 18599.4420922378,
+      year: 2025,
+    },
+    lifeExpectancyYears: {
+      value: 77.421,
+      year: 2024,
+    },
+    humanDevelopmentIndex: {
+      value: 0.853,
+      year: 2023,
+    },
+    currencies: ["TRY"],
+    demonyms: {
+      fr: {
+        m: "Turc",
+        f: "Turque",
+      },
+      en: {
+        m: "Turkish",
+        f: "Turkish",
+      },
+    },
   },
   TUV: {
     continent: "oceania",
@@ -6848,10 +14478,11 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     officialLanguages: ["en", "tvl"],
     latitude: -8,
     subregion: "Polynesia",
-    flagColors: ["blue", "yellow"],
+    flagColors: ["red", "blue", "yellow", "white"],
     flagSymbols: ["star", "cross"],
     flagLayout: [],
     events: [],
+    eventEditions: {},
     memberships: ["commonwealth"],
     capitals: [
       {
@@ -6859,6 +14490,10 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
         latitude: -8.52,
         longitude: 179.22,
         roles: ["primary"],
+        names: {
+          fr: "Funafuti",
+          en: "Funafuti",
+        },
       },
     ],
     drivingSide: "left",
@@ -6868,20 +14503,59 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     utcOffsetCount: 1,
     lastVolcanicEruptionYear: null,
     mountainAreaShare: 0,
-    forestCoverShare: 0.333333333333333,
+    forestCoverShare: 0.39615384615384597,
     urbanCentresOver1M: 0,
     productionRanks: {},
     coalElectricityShare: null,
     formerSovereigns: ["united_kingdom"],
+    dominations: [
+      {
+        power: "united_kingdom",
+        nature: "colony",
+        from: 1892,
+        to: 1978,
+        intermittent: false,
+        part: null,
+      },
+    ],
     sovereigntyYear: 1978,
     sovereigntyKind: "independence",
+    sovereigntyDate: "1978-10-01",
+    sovereigntySheetHidden: false,
+    highestPoint: {
+      elevationM: 5,
+      names: null,
+    },
+    gdpPerCapitaUsd: {
+      value: 6041.44908591428,
+      year: 2025,
+    },
+    lifeExpectancyYears: {
+      value: 67.259,
+      year: 2024,
+    },
+    humanDevelopmentIndex: {
+      value: 0.689,
+      year: 2023,
+    },
+    currencies: ["AUD"],
+    demonyms: {
+      fr: {
+        m: "Tuvaluan",
+        f: "Tuvaluane",
+      },
+      en: {
+        m: "Tuvaluan",
+        f: "Tuvaluan",
+      },
+    },
   },
   TWN: {
     continent: "asia",
     waterAccess: "island",
     borders: [],
     areaKm2: 36193,
-    population: 23235002,
+    population: 23224721,
     officialLanguages: ["zh"],
     latitude: 23.5,
     subregion: "Eastern Asia",
@@ -6889,6 +14563,7 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     flagSymbols: ["sun"],
     flagLayout: [],
     events: [],
+    eventEditions: {},
     memberships: [],
     capitals: [
       {
@@ -6896,10 +14571,14 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
         latitude: 25.03,
         longitude: 121.52,
         roles: ["primary"],
+        names: {
+          fr: "Taipei",
+          en: "Taipei",
+        },
       },
     ],
     drivingSide: "right",
-    geoTags: [],
+    geoTags: ["capital_not_largest"],
     regime: "republic",
     physicalFeatures: ["pacific_coast"],
     utcOffsetCount: 1,
@@ -6910,8 +14589,32 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     productionRanks: {},
     coalElectricityShare: 0.4007,
     formerSovereigns: [],
+    dominations: [],
     sovereigntyYear: null,
     sovereigntyKind: null,
+    sovereigntyDate: null,
+    sovereigntySheetHidden: false,
+    highestPoint: {
+      elevationM: 3952,
+      names: {
+        fr: "Yu Shan",
+        en: "Yushan Main Peak",
+      },
+    },
+    gdpPerCapitaUsd: null,
+    lifeExpectancyYears: null,
+    humanDevelopmentIndex: null,
+    currencies: ["TWD"],
+    demonyms: {
+      fr: {
+        m: "Taïwanais",
+        f: "Taïwanaise",
+      },
+      en: {
+        m: "Taiwanese",
+        f: "Taiwanese",
+      },
+    },
   },
   TZA: {
     continent: "africa",
@@ -6926,6 +14629,7 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     flagSymbols: ["triangle"],
     flagLayout: [],
     events: [],
+    eventEditions: {},
     memberships: ["commonwealth", "african_union"],
     capitals: [
       {
@@ -6933,6 +14637,10 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
         latitude: -6.16,
         longitude: 35.75,
         roles: ["primary"],
+        names: {
+          fr: "Dodoma",
+          en: "Dodoma",
+        },
       },
     ],
     drivingSide: "left",
@@ -6942,13 +14650,58 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     utcOffsetCount: 1,
     lastVolcanicEruptionYear: 2026,
     mountainAreaShare: 0.24229303757220236,
-    forestCoverShare: 0.500541883043576,
+    forestCoverShare: 0.501561085972851,
     urbanCentresOver1M: 2,
     productionRanks: {},
     coalElectricityShare: 0,
     formerSovereigns: ["united_kingdom"],
+    dominations: [
+      {
+        power: "united_kingdom",
+        nature: "trusteeship",
+        from: 1920,
+        to: 1961,
+        intermittent: false,
+        part: {
+          fr: "Tanganyika",
+          en: "Tanganyika",
+        },
+      },
+    ],
     sovereigntyYear: 1964,
     sovereigntyKind: "independence",
+    sovereigntyDate: "1964-04-26",
+    sovereigntySheetHidden: false,
+    highestPoint: {
+      elevationM: 5895,
+      names: {
+        fr: "Kilimandjaro",
+        en: "Kilimanjaro",
+      },
+    },
+    gdpPerCapitaUsd: {
+      value: 1318.81921386719,
+      year: 2025,
+    },
+    lifeExpectancyYears: {
+      value: 67.212,
+      year: 2024,
+    },
+    humanDevelopmentIndex: {
+      value: 0.555,
+      year: 2023,
+    },
+    currencies: ["TZS"],
+    demonyms: {
+      fr: {
+        m: "Tanzanien",
+        f: "Tanzanienne",
+      },
+      en: {
+        m: "Tanzanian",
+        f: "Tanzanian",
+      },
+    },
   },
   UGA: {
     continent: "africa",
@@ -6963,6 +14716,7 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     flagSymbols: ["circle", "animal"],
     flagLayout: ["horizontal_stripes"],
     events: [],
+    eventEditions: {},
     memberships: ["commonwealth", "african_union"],
     capitals: [
       {
@@ -6970,6 +14724,10 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
         latitude: 0.32,
         longitude: 32.55,
         roles: ["primary"],
+        names: {
+          fr: "Kampala",
+          en: "Kampala",
+        },
       },
     ],
     drivingSide: "left",
@@ -6979,15 +14737,57 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     utcOffsetCount: 1,
     lastVolcanicEruptionYear: -2120,
     mountainAreaShare: 0.20504657420823846,
-    forestCoverShare: 0.110419703770197,
+    forestCoverShare: 0.120879214043487,
     urbanCentresOver1M: 1,
     productionRanks: {
       coffee: 6,
     },
     coalElectricityShare: 0,
     formerSovereigns: ["united_kingdom"],
+    dominations: [
+      {
+        power: "united_kingdom",
+        nature: "protectorate",
+        from: 1894,
+        to: 1962,
+        intermittent: false,
+        part: null,
+      },
+    ],
     sovereigntyYear: 1962,
     sovereigntyKind: "independence",
+    sovereigntyDate: "1962-10-09",
+    sovereigntySheetHidden: false,
+    highestPoint: {
+      elevationM: 5110,
+      names: {
+        fr: "mont Stanley",
+        en: "Mount Stanley",
+      },
+    },
+    gdpPerCapitaUsd: {
+      value: 1206.30450825002,
+      year: 2025,
+    },
+    lifeExpectancyYears: {
+      value: 68.487,
+      year: 2024,
+    },
+    humanDevelopmentIndex: {
+      value: 0.582,
+      year: 2023,
+    },
+    currencies: ["UGX"],
+    demonyms: {
+      fr: {
+        m: "Ougandais",
+        f: "Ougandaise",
+      },
+      en: {
+        m: "Ugandan",
+        f: "Ugandan",
+      },
+    },
   },
   UKR: {
     continent: "europe",
@@ -7002,6 +14802,7 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     flagSymbols: [],
     flagLayout: ["horizontal_stripes"],
     events: [],
+    eventEditions: {},
     memberships: [],
     capitals: [
       {
@@ -7009,6 +14810,10 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
         latitude: 50.43,
         longitude: 30.52,
         roles: ["primary"],
+        names: {
+          fr: "Kyiv",
+          en: "Kyiv",
+        },
       },
     ],
     drivingSide: "right",
@@ -7018,15 +14823,48 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     utcOffsetCount: 1,
     lastVolcanicEruptionYear: null,
     mountainAreaShare: 0.03736205468102734,
-    forestCoverShare: 0.16755264066275502,
+    forestCoverShare: 0.172833966171902,
     urbanCentresOver1M: 2,
     productionRanks: {
       wheat: 9,
     },
     coalElectricityShare: null,
     formerSovereigns: ["soviet_union"],
+    dominations: [],
     sovereigntyYear: 1991,
     sovereigntyKind: "independence",
+    sovereigntyDate: "1991-08-24",
+    sovereigntySheetHidden: false,
+    highestPoint: {
+      elevationM: 2061,
+      names: {
+        fr: "Hoverla",
+        en: "Hoverla",
+      },
+    },
+    gdpPerCapitaUsd: {
+      value: 5865.884765625,
+      year: 2025,
+    },
+    lifeExpectancyYears: {
+      value: 74.692,
+      year: 2024,
+    },
+    humanDevelopmentIndex: {
+      value: 0.779,
+      year: 2023,
+    },
+    currencies: ["UAH"],
+    demonyms: {
+      fr: {
+        m: "Ukrainien",
+        f: "Ukrainienne",
+      },
+      en: {
+        m: "Ukrainian",
+        f: "Ukrainian",
+      },
+    },
   },
   URY: {
     continent: "south_america",
@@ -7041,6 +14879,9 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     flagSymbols: ["sun"],
     flagLayout: ["horizontal_stripes"],
     events: ["fifa_wc_host"],
+    eventEditions: {
+      fifa_wc_host: [1930],
+    },
     memberships: [],
     capitals: [
       {
@@ -7048,6 +14889,10 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
         latitude: -34.85,
         longitude: -56.17,
         roles: ["primary"],
+        names: {
+          fr: "Montevideo",
+          en: "Montevideo",
+        },
       },
     ],
     drivingSide: "right",
@@ -7057,13 +14902,46 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     utcOffsetCount: 1,
     lastVolcanicEruptionYear: null,
     mountainAreaShare: 0.0010550504325154391,
-    forestCoverShare: 0.119643469317792,
+    forestCoverShare: 0.113541880927894,
     urbanCentresOver1M: 1,
     productionRanks: {},
     coalElectricityShare: 0,
     formerSovereigns: [],
+    dominations: [],
     sovereigntyYear: 1825,
     sovereigntyKind: "independence",
+    sovereigntyDate: "1825-08-25",
+    sovereigntySheetHidden: false,
+    highestPoint: {
+      elevationM: 514,
+      names: {
+        fr: "Cerro Catedral",
+        en: "Cerro Catedral",
+      },
+    },
+    gdpPerCapitaUsd: {
+      value: 25215.8238152781,
+      year: 2025,
+    },
+    lifeExpectancyYears: {
+      value: 78.287,
+      year: 2024,
+    },
+    humanDevelopmentIndex: {
+      value: 0.862,
+      year: 2023,
+    },
+    currencies: ["UYU"],
+    demonyms: {
+      fr: {
+        m: "Uruguayen",
+        f: "Uruguayenne",
+      },
+      en: {
+        m: "Uruguayan",
+        f: "Uruguayan",
+      },
+    },
   },
   USA: {
     continent: "north_america",
@@ -7078,6 +14956,11 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     flagSymbols: ["star"],
     flagLayout: ["horizontal_stripes"],
     events: ["fifa_wc_host", "summer_olympics_host", "winter_olympics_host"],
+    eventEditions: {
+      fifa_wc_host: [1994, 2026],
+      summer_olympics_host: [1904, 1932, 1984, 1996],
+      winter_olympics_host: [1932, 1960, 1980, 2002],
+    },
     memberships: ["g20", "g7", "nato", "oecd"],
     capitals: [
       {
@@ -7085,6 +14968,10 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
         latitude: 38.89,
         longitude: -77.05,
         roles: ["primary"],
+        names: {
+          fr: "Washington",
+          en: "Washington, D.C.",
+        },
       },
     ],
     drivingSide: "right",
@@ -7101,7 +14988,7 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     utcOffsetCount: 6,
     lastVolcanicEruptionYear: 2026,
     mountainAreaShare: 0.2631638359005656,
-    forestCoverShare: 0.338669264120375,
+    forestCoverShare: 0.33784280157683805,
     urbanCentresOver1M: 25,
     productionRanks: {
       wheat: 4,
@@ -7110,8 +14997,50 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     },
     coalElectricityShare: 0.1485,
     formerSovereigns: ["united_kingdom"],
+    dominations: [
+      {
+        power: "united_kingdom",
+        nature: "colony",
+        from: 1607,
+        to: 1776,
+        intermittent: false,
+        part: null,
+      },
+    ],
     sovereigntyYear: 1776,
     sovereigntyKind: "independence",
+    sovereigntyDate: "1776-07-04",
+    sovereigntySheetHidden: false,
+    highestPoint: {
+      elevationM: 6190,
+      names: {
+        fr: "Denali",
+        en: "Denali",
+      },
+    },
+    gdpPerCapitaUsd: {
+      value: 90026.5163005744,
+      year: 2025,
+    },
+    lifeExpectancyYears: {
+      value: 78.890243902439,
+      year: 2024,
+    },
+    humanDevelopmentIndex: {
+      value: 0.938,
+      year: 2023,
+    },
+    currencies: ["USD"],
+    demonyms: {
+      fr: {
+        m: "Américain",
+        f: "Américaine",
+      },
+      en: {
+        m: "American",
+        f: "American",
+      },
+    },
   },
   UZB: {
     continent: "asia",
@@ -7119,13 +15048,14 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     borders: ["AFG", "KAZ", "KGZ", "TJK", "TKM"],
     areaKm2: 447400,
     population: 39047321,
-    officialLanguages: ["ru", "uz"],
+    officialLanguages: ["uz"],
     latitude: 41,
     subregion: "Central Asia",
     flagColors: ["red", "blue", "green", "white"],
     flagSymbols: ["star", "crescent"],
     flagLayout: ["horizontal_stripes"],
     events: [],
+    eventEditions: {},
     memberships: [],
     capitals: [
       {
@@ -7133,6 +15063,10 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
         latitude: 41.32,
         longitude: 69.25,
         roles: ["primary"],
+        names: {
+          fr: "Tachkent",
+          en: "Tashkent",
+        },
       },
     ],
     drivingSide: "right",
@@ -7142,13 +15076,46 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     utcOffsetCount: 1,
     lastVolcanicEruptionYear: null,
     mountainAreaShare: 0.12656459544032186,
-    forestCoverShare: 0.0854914331101781,
+    forestCoverShare: 0.0865110632020878,
     urbanCentresOver1M: 1,
     productionRanks: {},
     coalElectricityShare: 0.0699,
     formerSovereigns: ["soviet_union"],
+    dominations: [],
     sovereigntyYear: 1991,
     sovereigntyKind: "independence",
+    sovereigntyDate: "1991-09-01",
+    sovereigntySheetHidden: false,
+    highestPoint: {
+      elevationM: 4643,
+      names: {
+        fr: "Khazret Sultan",
+        en: "Khazret Sultan",
+      },
+    },
+    gdpPerCapitaUsd: {
+      value: 3968.2720079072,
+      year: 2025,
+    },
+    lifeExpectancyYears: {
+      value: 72.528,
+      year: 2024,
+    },
+    humanDevelopmentIndex: {
+      value: 0.74,
+      year: 2023,
+    },
+    currencies: ["UZS"],
+    demonyms: {
+      fr: {
+        m: "Ouzbèke",
+        f: "Ouzbèke",
+      },
+      en: {
+        m: "Uzbekistani",
+        f: "Uzbekistani",
+      },
+    },
   },
   VAT: {
     continent: "europe",
@@ -7163,6 +15130,7 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     flagSymbols: ["cross"],
     flagLayout: ["vertical_stripes"],
     events: [],
+    eventEditions: {},
     memberships: [],
     capitals: [
       {
@@ -7170,6 +15138,10 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
         latitude: 41.9,
         longitude: 12.45,
         roles: ["primary"],
+        names: {
+          fr: "Vatican",
+          en: "Vatican City",
+        },
       },
     ],
     drivingSide: "right",
@@ -7184,8 +15156,32 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     productionRanks: {},
     coalElectricityShare: null,
     formerSovereigns: [],
+    dominations: [],
     sovereigntyYear: 1929,
     sovereigntyKind: "foundation",
+    sovereigntyDate: "1929-02-11",
+    sovereigntySheetHidden: false,
+    highestPoint: {
+      elevationM: 78,
+      names: {
+        fr: "colline du Vatican",
+        en: "Vatican Hill",
+      },
+    },
+    gdpPerCapitaUsd: null,
+    lifeExpectancyYears: null,
+    humanDevelopmentIndex: null,
+    currencies: ["EUR"],
+    demonyms: {
+      fr: {
+        m: "Vatican",
+        f: "Vaticane",
+      },
+      en: {
+        m: "Vatican",
+        f: "Vatican",
+      },
+    },
   },
   VCT: {
     continent: "north_america",
@@ -7200,6 +15196,7 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     flagSymbols: [],
     flagLayout: ["vertical_stripes"],
     events: [],
+    eventEditions: {},
     memberships: ["commonwealth"],
     capitals: [
       {
@@ -7207,6 +15204,10 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
         latitude: 13.13,
         longitude: -61.22,
         roles: ["primary"],
+        names: {
+          fr: "Kingstown",
+          en: "Kingstown",
+        },
       },
     ],
     drivingSide: "left",
@@ -7216,13 +15217,55 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     utcOffsetCount: 1,
     lastVolcanicEruptionYear: 2021,
     mountainAreaShare: 0.38303341902313626,
-    forestCoverShare: 0.731794871794872,
+    forestCoverShare: 0.7341902313624681,
     urbanCentresOver1M: 0,
     productionRanks: {},
     coalElectricityShare: 0,
     formerSovereigns: ["united_kingdom"],
+    dominations: [
+      {
+        power: "united_kingdom",
+        nature: "colony",
+        from: 1763,
+        to: 1979,
+        intermittent: true,
+        part: null,
+      },
+    ],
     sovereigntyYear: 1979,
     sovereigntyKind: "independence",
+    sovereigntyDate: "1979-10-27",
+    sovereigntySheetHidden: false,
+    highestPoint: {
+      elevationM: 1234,
+      names: {
+        fr: "la Soufrière",
+        en: "La Soufrière",
+      },
+    },
+    gdpPerCapitaUsd: {
+      value: 12561.769166789,
+      year: 2025,
+    },
+    lifeExpectancyYears: {
+      value: 71.382,
+      year: 2024,
+    },
+    humanDevelopmentIndex: {
+      value: 0.798,
+      year: 2023,
+    },
+    currencies: ["XCD"],
+    demonyms: {
+      fr: {
+        m: "Vincentais",
+        f: "Vincentaise",
+      },
+      en: {
+        m: "Saint Vincentian",
+        f: "Saint Vincentian",
+      },
+    },
   },
   VEN: {
     continent: "south_america",
@@ -7237,6 +15280,7 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     flagSymbols: ["star", "animal"],
     flagLayout: ["horizontal_stripes"],
     events: [],
+    eventEditions: {},
     memberships: ["opec"],
     capitals: [
       {
@@ -7244,6 +15288,10 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
         latitude: 10.48,
         longitude: -66.87,
         roles: ["primary"],
+        names: {
+          fr: "Caracas",
+          en: "Caracas",
+        },
       },
     ],
     drivingSide: "right",
@@ -7253,13 +15301,46 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     utcOffsetCount: 1,
     lastVolcanicEruptionYear: null,
     mountainAreaShare: 0.27422813152998815,
-    forestCoverShare: 0.522338793719177,
+    forestCoverShare: 0.534967632220396,
     urbanCentresOver1M: 3,
     productionRanks: {},
     coalElectricityShare: 0,
     formerSovereigns: ["spain"],
+    dominations: [],
     sovereigntyYear: 1811,
     sovereigntyKind: "independence",
+    sovereigntyDate: "1811-07-05",
+    sovereigntySheetHidden: false,
+    highestPoint: {
+      elevationM: 4978,
+      names: {
+        fr: "Pico Bolívar",
+        en: "Pico Bolívar",
+      },
+    },
+    gdpPerCapitaUsd: {
+      value: 3494.8138870244,
+      year: 2025,
+    },
+    lifeExpectancyYears: {
+      value: 72.673,
+      year: 2024,
+    },
+    humanDevelopmentIndex: {
+      value: 0.709,
+      year: 2023,
+    },
+    currencies: ["VES"],
+    demonyms: {
+      fr: {
+        m: "Vénézuélien",
+        f: "Vénézuélienne",
+      },
+      en: {
+        m: "Venezuelan",
+        f: "Venezuelan",
+      },
+    },
   },
   VNM: {
     continent: "asia",
@@ -7274,6 +15355,7 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     flagSymbols: ["star"],
     flagLayout: [],
     events: [],
+    eventEditions: {},
     memberships: ["asean"],
     capitals: [
       {
@@ -7281,6 +15363,10 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
         latitude: 21.03,
         longitude: 105.85,
         roles: ["primary"],
+        names: {
+          fr: "Hanoï",
+          en: "Hanoi",
+        },
       },
     ],
     drivingSide: "right",
@@ -7290,7 +15376,7 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     utcOffsetCount: 1,
     lastVolcanicEruptionYear: 1923,
     mountainAreaShare: 0.4239490115092448,
-    forestCoverShare: 0.47445482070899603,
+    forestCoverShare: 0.470439557284106,
     urbanCentresOver1M: 4,
     productionRanks: {
       coffee: 2,
@@ -7298,8 +15384,50 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     },
     coalElectricityShare: 0.5032,
     formerSovereigns: ["france"],
+    dominations: [
+      {
+        power: "france",
+        nature: "colony",
+        from: 1858,
+        to: 1954,
+        intermittent: false,
+        part: null,
+      },
+    ],
     sovereigntyYear: 1945,
     sovereigntyKind: "independence",
+    sovereigntyDate: "1945-09-02",
+    sovereigntySheetHidden: false,
+    highestPoint: {
+      elevationM: 3144,
+      names: {
+        fr: "Fansipan",
+        en: "Fansipan",
+      },
+    },
+    gdpPerCapitaUsd: {
+      value: 5065.99091899299,
+      year: 2025,
+    },
+    lifeExpectancyYears: {
+      value: 74.736,
+      year: 2024,
+    },
+    humanDevelopmentIndex: {
+      value: 0.766,
+      year: 2023,
+    },
+    currencies: ["VND"],
+    demonyms: {
+      fr: {
+        m: "Vietnamien",
+        f: "Vietnamienne",
+      },
+      en: {
+        m: "Vietnamese",
+        f: "Vietnamese",
+      },
+    },
   },
   VUT: {
     continent: "oceania",
@@ -7314,6 +15442,7 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     flagSymbols: ["triangle"],
     flagLayout: [],
     events: [],
+    eventEditions: {},
     memberships: ["commonwealth"],
     capitals: [
       {
@@ -7321,6 +15450,10 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
         latitude: -17.73,
         longitude: 168.32,
         roles: ["primary"],
+        names: {
+          fr: "Port-Vila",
+          en: "Port Vila",
+        },
       },
     ],
     drivingSide: "right",
@@ -7330,13 +15463,63 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     utcOffsetCount: 1,
     lastVolcanicEruptionYear: 2026,
     mountainAreaShare: 0.3829682500615309,
-    forestCoverShare: 0.36283839212469204,
+    forestCoverShare: 0.748387890721142,
     urbanCentresOver1M: 0,
     productionRanks: {},
     coalElectricityShare: null,
     formerSovereigns: ["france", "united_kingdom"],
+    dominations: [
+      {
+        power: "france",
+        nature: "condominium",
+        from: 1906,
+        to: 1980,
+        intermittent: false,
+        part: null,
+      },
+      {
+        power: "united_kingdom",
+        nature: "condominium",
+        from: 1906,
+        to: 1980,
+        intermittent: false,
+        part: null,
+      },
+    ],
     sovereigntyYear: 1980,
     sovereigntyKind: "independence",
+    sovereigntyDate: "1980-07-30",
+    sovereigntySheetHidden: false,
+    highestPoint: {
+      elevationM: 1877,
+      names: {
+        fr: "mont Tabwemasana",
+        en: "Mount Tabwemasana",
+      },
+    },
+    gdpPerCapitaUsd: {
+      value: 4038.73520713411,
+      year: 2025,
+    },
+    lifeExpectancyYears: {
+      value: 71.654,
+      year: 2024,
+    },
+    humanDevelopmentIndex: {
+      value: 0.621,
+      year: 2023,
+    },
+    currencies: ["VUV"],
+    demonyms: {
+      fr: {
+        m: "Vanuatuan",
+        f: "Vanuatuane",
+      },
+      en: {
+        m: "Ni-Vanuatu",
+        f: "Ni-Vanuatu",
+      },
+    },
   },
   WSM: {
     continent: "oceania",
@@ -7351,6 +15534,7 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     flagSymbols: ["star"],
     flagLayout: [],
     events: [],
+    eventEditions: {},
     memberships: ["commonwealth"],
     capitals: [
       {
@@ -7358,6 +15542,10 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
         latitude: -13.82,
         longitude: -171.77,
         roles: ["primary"],
+        names: {
+          fr: "Apia",
+          en: "Apia",
+        },
       },
     ],
     drivingSide: "left",
@@ -7367,13 +15555,46 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     utcOffsetCount: 1,
     lastVolcanicEruptionYear: 1911,
     mountainAreaShare: 0.4479239971850809,
-    forestCoverShare: 0.57636690647482,
+    forestCoverShare: 0.578129496402878,
     urbanCentresOver1M: 0,
     productionRanks: {},
     coalElectricityShare: 0,
     formerSovereigns: [],
+    dominations: [],
     sovereigntyYear: 1962,
     sovereigntyKind: "independence",
+    sovereigntyDate: "1962-01-01",
+    sovereigntySheetHidden: false,
+    highestPoint: {
+      elevationM: 1857,
+      names: {
+        fr: "Mauga Silisili",
+        en: "Silisili",
+      },
+    },
+    gdpPerCapitaUsd: {
+      value: 5872.78333308796,
+      year: 2025,
+    },
+    lifeExpectancyYears: {
+      value: 71.826,
+      year: 2024,
+    },
+    humanDevelopmentIndex: {
+      value: 0.708,
+      year: 2023,
+    },
+    currencies: ["WST"],
+    demonyms: {
+      fr: {
+        m: "Samoan",
+        f: "Samoane",
+      },
+      en: {
+        m: "Samoan",
+        f: "Samoan",
+      },
+    },
   },
   XKX: {
     continent: "europe",
@@ -7388,6 +15609,7 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     flagSymbols: ["star"],
     flagLayout: [],
     events: [],
+    eventEditions: {},
     memberships: [],
     capitals: [
       {
@@ -7395,6 +15617,10 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
         latitude: 42.6629,
         longitude: 21.1655,
         roles: ["primary"],
+        names: {
+          fr: "Pristina",
+          en: "Pristina",
+        },
       },
     ],
     drivingSide: "right",
@@ -7409,8 +15635,38 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     productionRanks: {},
     coalElectricityShare: 0.9126000000000001,
     formerSovereigns: [],
+    dominations: [],
     sovereigntyYear: 2008,
     sovereigntyKind: "independence",
+    sovereigntyDate: "2008-02-17",
+    sovereigntySheetHidden: false,
+    highestPoint: {
+      elevationM: 2656,
+      names: {
+        fr: "Djeravica",
+        en: "Gjeravica",
+      },
+    },
+    gdpPerCapitaUsd: {
+      value: 7899.41841135202,
+      year: 2025,
+    },
+    lifeExpectancyYears: {
+      value: 78.222,
+      year: 2024,
+    },
+    humanDevelopmentIndex: null,
+    currencies: ["EUR"],
+    demonyms: {
+      fr: {
+        m: "Kosovar",
+        f: "Kosovare",
+      },
+      en: {
+        m: "Kosovar",
+        f: "Kosovar",
+      },
+    },
   },
   YEM: {
     continent: "asia",
@@ -7425,6 +15681,7 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     flagSymbols: [],
     flagLayout: ["horizontal_stripes"],
     events: [],
+    eventEditions: {},
     memberships: ["arab_league"],
     capitals: [
       {
@@ -7432,6 +15689,10 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
         latitude: 15.37,
         longitude: 44.19,
         roles: ["primary"],
+        names: {
+          fr: "Sanaa",
+          en: "Sanaa",
+        },
       },
     ],
     drivingSide: "right",
@@ -7446,8 +15707,50 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     productionRanks: {},
     coalElectricityShare: 0,
     formerSovereigns: ["united_kingdom"],
+    dominations: [
+      {
+        power: "united_kingdom",
+        nature: "colony",
+        from: 1839,
+        to: 1967,
+        intermittent: false,
+        part: {
+          fr: "Aden",
+          en: "Aden",
+        },
+      },
+    ],
     sovereigntyYear: 1990,
     sovereigntyKind: "unification",
+    sovereigntyDate: "1990-05-22",
+    sovereigntySheetHidden: false,
+    highestPoint: {
+      elevationM: 3666,
+      names: {
+        fr: "Jabal an Nabi Shu'ayb",
+        en: "Jabal an Nabi Shu'ayb",
+      },
+    },
+    gdpPerCapitaUsd: null,
+    lifeExpectancyYears: {
+      value: 69.439,
+      year: 2024,
+    },
+    humanDevelopmentIndex: {
+      value: 0.47,
+      year: 2023,
+    },
+    currencies: ["YER"],
+    demonyms: {
+      fr: {
+        m: "Yéménite",
+        f: "Yéménite",
+      },
+      en: {
+        m: "Yemeni",
+        f: "Yemeni",
+      },
+    },
   },
   ZAF: {
     continent: "africa",
@@ -7474,6 +15777,9 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     flagSymbols: ["triangle"],
     flagLayout: [],
     events: ["fifa_wc_host"],
+    eventEditions: {
+      fifa_wc_host: [2010],
+    },
     memberships: ["brics", "commonwealth", "g20", "african_union"],
     capitals: [
       {
@@ -7481,18 +15787,30 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
         latitude: -25.74,
         longitude: 28.19,
         roles: ["executive"],
+        names: {
+          fr: "Pretoria",
+          en: "Pretoria",
+        },
       },
       {
         name: "Cape Town",
         latitude: -33.92,
         longitude: 18.42,
         roles: ["legislative"],
+        names: {
+          fr: "Le Cap",
+          en: "Cape Town",
+        },
       },
       {
         name: "Bloemfontein",
         latitude: -29.12,
         longitude: 26.21,
         roles: ["judicial"],
+        names: {
+          fr: "Bloemfontein",
+          en: "Bloemfontein",
+        },
       },
     ],
     drivingSide: "left",
@@ -7502,13 +15820,55 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     utcOffsetCount: 1,
     lastVolcanicEruptionYear: 2004,
     mountainAreaShare: 0.35133333387931726,
-    forestCoverShare: 0.13965072665672001,
+    forestCoverShare: 0.187177291050128,
     urbanCentresOver1M: 5,
     productionRanks: {},
     coalElectricityShare: 0.8355,
     formerSovereigns: ["united_kingdom"],
+    dominations: [
+      {
+        power: "united_kingdom",
+        nature: "colony",
+        from: 1806,
+        to: 1910,
+        intermittent: false,
+        part: null,
+      },
+    ],
     sovereigntyYear: 1910,
     sovereigntyKind: "independence",
+    sovereigntyDate: "1910-05-31",
+    sovereigntySheetHidden: false,
+    highestPoint: {
+      elevationM: 3450,
+      names: {
+        fr: "Mafadi",
+        en: "Mafadi",
+      },
+    },
+    gdpPerCapitaUsd: {
+      value: 6597.71450918774,
+      year: 2025,
+    },
+    lifeExpectancyYears: {
+      value: 66.312,
+      year: 2024,
+    },
+    humanDevelopmentIndex: {
+      value: 0.741,
+      year: 2023,
+    },
+    currencies: ["ZAR"],
+    demonyms: {
+      fr: {
+        m: "Sud-Africain",
+        f: "Sud-Africaine",
+      },
+      en: {
+        m: "South African",
+        f: "South African",
+      },
+    },
   },
   ZMB: {
     continent: "africa",
@@ -7523,6 +15883,7 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     flagSymbols: ["animal"],
     flagLayout: [],
     events: [],
+    eventEditions: {},
     memberships: ["commonwealth", "african_union"],
     capitals: [
       {
@@ -7530,6 +15891,10 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
         latitude: -15.42,
         longitude: 28.28,
         roles: ["primary"],
+        names: {
+          fr: "Lusaka",
+          en: "Lusaka",
+        },
       },
     ],
     drivingSide: "left",
@@ -7539,20 +15904,62 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     utcOffsetCount: 1,
     lastVolcanicEruptionYear: null,
     mountainAreaShare: 0.09353292267463181,
-    forestCoverShare: 0.59523784150984,
+    forestCoverShare: 0.606257818910666,
     urbanCentresOver1M: 1,
     productionRanks: {},
     coalElectricityShare: 0.10800000000000001,
     formerSovereigns: ["united_kingdom"],
+    dominations: [
+      {
+        power: "united_kingdom",
+        nature: "protectorate",
+        from: 1911,
+        to: 1964,
+        intermittent: false,
+        part: null,
+      },
+    ],
     sovereigntyYear: 1964,
     sovereigntyKind: "independence",
+    sovereigntyDate: "1964-10-24",
+    sovereigntySheetHidden: false,
+    highestPoint: {
+      elevationM: 2330,
+      names: {
+        fr: "Mafinga Central",
+        en: "Mafinga Central",
+      },
+    },
+    gdpPerCapitaUsd: {
+      value: 1317.87771619597,
+      year: 2025,
+    },
+    lifeExpectancyYears: {
+      value: 66.528,
+      year: 2024,
+    },
+    humanDevelopmentIndex: {
+      value: 0.595,
+      year: 2023,
+    },
+    currencies: ["ZMW"],
+    demonyms: {
+      fr: {
+        m: "Zambien",
+        f: "Zambienne",
+      },
+      en: {
+        m: "Zambian",
+        f: "Zambian",
+      },
+    },
   },
   ZWE: {
     continent: "africa",
     waterAccess: "landlocked",
     borders: ["BWA", "MOZ", "ZAF", "ZMB"],
     areaKm2: 390757,
-    population: 17073087,
+    population: 16175966,
     officialLanguages: [
       "bwg",
       "en",
@@ -7576,6 +15983,7 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     flagSymbols: ["star", "triangle", "animal"],
     flagLayout: ["horizontal_stripes"],
     events: [],
+    eventEditions: {},
     memberships: ["african_union"],
     capitals: [
       {
@@ -7583,6 +15991,10 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
         latitude: -17.82,
         longitude: 31.03,
         roles: ["primary"],
+        names: {
+          fr: "Harare",
+          en: "Harare",
+        },
       },
     ],
     drivingSide: "left",
@@ -7592,12 +16004,54 @@ export const COUNTRY_FACTS: Record<CountryCode, CountryFacts> = {
     utcOffsetCount: 1,
     lastVolcanicEruptionYear: null,
     mountainAreaShare: 0.2864875101405733,
-    forestCoverShare: 0.447366421093447,
+    forestCoverShare: 0.35858885873077395,
     urbanCentresOver1M: 1,
     productionRanks: {},
     coalElectricityShare: 0.4288,
     formerSovereigns: ["united_kingdom"],
+    dominations: [
+      {
+        power: "united_kingdom",
+        nature: "colony",
+        from: 1890,
+        to: 1980,
+        intermittent: false,
+        part: null,
+      },
+    ],
     sovereigntyYear: 1980,
     sovereigntyKind: "independence",
+    sovereigntyDate: "1980-04-18",
+    sovereigntySheetHidden: false,
+    highestPoint: {
+      elevationM: 2592,
+      names: {
+        fr: "Inyangani",
+        en: "Mount Nyangani",
+      },
+    },
+    gdpPerCapitaUsd: {
+      value: 3021.43019873632,
+      year: 2025,
+    },
+    lifeExpectancyYears: {
+      value: 63.064,
+      year: 2024,
+    },
+    humanDevelopmentIndex: {
+      value: 0.598,
+      year: 2023,
+    },
+    currencies: ["ZWG", "USD"],
+    demonyms: {
+      fr: {
+        m: "Zimbabwéen",
+        f: "Zimbabwéenne",
+      },
+      en: {
+        m: "Zimbabwean",
+        f: "Zimbabwean",
+      },
+    },
   },
 };

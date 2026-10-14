@@ -13,7 +13,7 @@ Pays sans aucun accès à la mer.
 
 ## Sources
 
-- Référence de révision : [géographie quantitative](../SOURCES.md#géographie-administrative-et-quantitative) (enclavement).
+- Référence de révision (comparaison, jamais importée) : [géographie quantitative](../SOURCES.md#géographie-administrative-et-quantitative) (enclavement).
 - Liste établie depuis le champ `landlocked` de world-countries.
 
 ## Dérivation

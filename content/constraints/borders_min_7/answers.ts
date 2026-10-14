@@ -7,7 +7,6 @@ export default defineAnswerSet("borders_min_7", [
   "CHN",
   "COD",
   "DEU",
-  "DZA",
   "FRA",
   "HUN",
   "IRN",

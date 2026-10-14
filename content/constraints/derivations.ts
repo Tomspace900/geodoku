@@ -9,8 +9,8 @@
  *
  * `content/` est terminal : ce module n'importe que des types de `content/`.
  */
-import type { CountryCode } from "../countries/countryCodes";
-import type { CountryFacts } from "../countries/type";
+import { type CountryCode, isCountryCode } from "../countries/countryCodes";
+import type { CountryFacts, DominatingPower } from "../countries/type";
 import type { ActiveConstraintId } from "./index";
 
 /**
@@ -29,6 +29,15 @@ type Derivation = (facts: CountryFacts, ctx: DerivationContext) => boolean;
 const BORDERS_SOLO = 1;
 const BORDERS_MIN_5 = 5;
 const BORDERS_MIN_7 = 7;
+
+/**
+ * Voisins **jouables** : un territoire hors catalogue (Sahara occidental, Hong
+ * Kong, Macao) ne compte pas dans un décompte de frontières — sans quoi
+ * l'Algérie passait à 7 voisins par le Sahara occidental.
+ */
+function playableBorderCount(facts: CountryFacts): number {
+  return facts.borders.filter(isCountryCode).length;
+}
 
 const TIME_ZONES_MULTIPLE = 2;
 /**
@@ -87,6 +96,11 @@ function densityOf(facts: CountryFacts): number {
   return facts.population / facts.areaKm2;
 }
 
+/** Le pays a été un jour sous domination de cette puissance (dataset curé). */
+function dominatedBy(facts: CountryFacts, power: DominatingPower): boolean {
+  return facts.dominations.some((domination) => domination.power === power);
+}
+
 /**
  * Prédicat de dérivation par contrainte active. `satisfies` verrouille la
  * bijection avec `ActiveConstraintId` : une clé manquante ou en trop ne compile
@@ -102,13 +116,14 @@ export const DERIVATIONS = {
   continent_oceania: (f) => f.continent === "oceania",
 
   // ── Accès à l'eau ──────────────────────────────────────────────────────────
-  water_island: (f) => f.waterAccess === "island",
+  water_island: (f) =>
+    f.waterAccess === "island" || f.geoTags.includes("shared_island"),
   water_landlocked: (f) => f.waterAccess === "landlocked",
 
   // ── Frontières — nombre ────────────────────────────────────────────────────
-  borders_solo: (f) => f.borders.length === BORDERS_SOLO,
-  borders_min_5: (f) => f.borders.length >= BORDERS_MIN_5,
-  borders_min_7: (f) => f.borders.length >= BORDERS_MIN_7,
+  borders_solo: (f) => playableBorderCount(f) === BORDERS_SOLO,
+  borders_min_5: (f) => playableBorderCount(f) >= BORDERS_MIN_5,
+  borders_min_7: (f) => playableBorderCount(f) >= BORDERS_MIN_7,
 
   // ── Frontières — pivot ─────────────────────────────────────────────────────
   borders_russia: (f) => f.borders.includes(CODE_RUS),
@@ -227,23 +242,23 @@ export const DERIVATIONS = {
   energy_coal_electricity_majority: (f) =>
     f.coalElectricityShare !== null && f.coalElectricityShare > MAJORITY_SHARE,
 
-  // ── Histoire (souveraineté, CIA World Factbook — champ Independence) ───────
-  // `history_from_*` ne lisent QUE l'appartenance à `formerSovereigns` : ni le
-  // `kind`, ni aucune éligibilité. Le Yémen est dans la liste UK (Sud-Yémen
-  // britannique) alors que son événement 1990 est une `unification`.
+  // ── Histoire ──────────────────────────────────────────────────────────────
+  // `history_sovereignty_since_1990` lit l'événement de souveraineté du
+  // Factbook (champ Independence). `history_from_*` lisent `dominations`, pas
+  // `formerSovereigns` : un pays passé un jour sous la puissance compte, même
+  // devenu indépendant d'un autre État (Singapour, de la Malaisie).
   history_sovereignty_since_1990: (f) =>
     f.sovereigntyYear !== null &&
     f.sovereigntyYear >= SOVEREIGNTY_SINCE_YEAR &&
     f.sovereigntyKind !== null &&
     SOVEREIGNTY_GAINED.has(f.sovereigntyKind),
-  history_from_france: (f) => f.formerSovereigns.includes("france"),
-  history_from_united_kingdom: (f) =>
-    f.formerSovereigns.includes("united_kingdom"),
+  history_from_france: (f) => dominatedBy(f, "france"),
+  history_from_united_kingdom: (f) => dominatedBy(f, "united_kingdom"),
 } satisfies Record<ActiveConstraintId, Derivation>;
 
 /**
- * Nombre d'océans distincts bordant le pays. **Une mer fermée n'est pas un
- * océan** (arbitrage 2026-09-11) : Méditerranée, mer des Caraïbes, mer Rouge,
+ * Nombre d'océans distincts bordant le pays. **Une mer semi-fermée n'est pas
+ * un océan** (arbitrage 2026-09-11) : Méditerranée, mer des Caraïbes, mer Rouge,
  * golfe Persique, Baltique et mer Noire ne comptent pas, seule une façade sur
  * l'océan lui-même le fait. Un pays qui a les deux — la côte est atlantique
  * ouverte des Petites Antilles, la côte pacifique d'un pays d'Amérique

@@ -1,0 +1,260 @@
+/**
+ * Registre des sources externes citées par les contraintes (`about.ts`) et,
+ * à partir du lot 2, par la provenance des faits pays (`factProvenance.ts`).
+ *
+ * Une entrée = une source et un millésime. Deux jeux d'un même éditeur à
+ * millésimes différents (`eia_crude_oil` / `eia_natural_gas`) font deux
+ * entrées. `vintage` porte la période que décrit la donnée, jamais la date de
+ * regen ni `checked_at` ; `null` quand la source n'a pas de millésime
+ * (nomenclature, drapeaux, frontières).
+ */
+
+import type { LocalizedString } from "./type";
+
+export type SourceReference = Readonly<{
+  name: LocalizedString;
+  url: string;
+  vintage: LocalizedString | null;
+}>;
+
+export const SOURCES = {
+  un_m49: {
+    name: { fr: "Nomenclature ONU M49", en: "UN M49 nomenclature" },
+    url: "https://unstats.un.org/unsd/methodology/m49/",
+    vintage: null,
+  },
+  world_countries: {
+    name: { fr: "world-countries", en: "world-countries" },
+    url: "https://github.com/mledoze/countries",
+    vintage: null,
+  },
+  rest_countries: {
+    name: { fr: "REST Countries", en: "REST Countries" },
+    url: "https://restcountries.com/",
+    vintage: null,
+  },
+  // Adhésions aux organisations : état de l'instantané `FACTS_SNAPSHOT.date`,
+  // corrections datées de `countryPatches.ts` comprises. Gardé par
+  // `validateSourceVintages` ; `build:countries` imprime la valeur à reporter.
+  rest_countries_memberships: {
+    name: {
+      fr: "REST Countries — adhésions",
+      en: "REST Countries — memberships",
+    },
+    url: "https://restcountries.com/",
+    vintage: { fr: "au 14 octobre 2026", en: "as of 14 October 2026" },
+  },
+  wikidata_capital_labels: {
+    name: {
+      fr: "Wikidata — libellés des capitales",
+      en: "Wikidata — capital labels",
+    },
+    url: "https://www.wikidata.org/",
+    vintage: {
+      fr: "récolte du 23 septembre 2026",
+      en: "harvested 23 September 2026",
+    },
+  },
+  wikidata_highest_point_labels: {
+    name: {
+      fr: "Wikidata — libellés des points culminants",
+      en: "Wikidata — highest point labels",
+    },
+    url: "https://www.wikidata.org/",
+    vintage: {
+      fr: "récolte du 9 octobre 2026",
+      en: "harvested 9 October 2026",
+    },
+  },
+  cia_factbook_elevation: {
+    name: {
+      fr: "CIA World Factbook — Altitude",
+      en: "CIA World Factbook — Elevation",
+    },
+    url: "https://www.cia.gov/the-world-factbook/field/elevation/",
+    vintage: null,
+  },
+  world_bank_gdp_per_capita: {
+    name: {
+      fr: "Banque mondiale — PIB par habitant",
+      en: "World Bank — GDP per capita",
+    },
+    url: "https://data.worldbank.org/indicator/NY.GDP.PCAP.CD",
+    vintage: { fr: "2022–2025", en: "2022–2025" },
+  },
+  world_bank_life_expectancy: {
+    name: {
+      fr: "Banque mondiale — Espérance de vie à la naissance",
+      en: "World Bank — Life expectancy at birth",
+    },
+    url: "https://data.worldbank.org/indicator/SP.DYN.LE00.IN",
+    vintage: { fr: "2024", en: "2024" },
+  },
+  undp_hdr: {
+    name: {
+      fr: "PNUD — Indice de développement humain",
+      en: "UNDP — Human Development Index",
+    },
+    url: "https://hdr.undp.org/data-center/documentation-and-downloads",
+    vintage: {
+      fr: "Rapport 2025, données 2023",
+      en: "2025 Report, 2023 data",
+    },
+  },
+  un_flags: {
+    name: { fr: "Drapeaux officiels — ONU", en: "Official flags — UN" },
+    url: "https://www.un.org/en/about-us/member-states",
+    vintage: null,
+  },
+  iana_tz: {
+    name: { fr: "IANA Time Zone Database", en: "IANA Time Zone Database" },
+    url: "https://www.iana.org/time-zones",
+    vintage: { fr: "au 15 janvier 2026", en: "as of 15 January 2026" },
+  },
+  fifa_world_cup: {
+    name: { fr: "FIFA — Coupe du monde", en: "FIFA — World Cup" },
+    url: "https://www.fifa.com/fifaplus/en/tournaments/mens/worldcup",
+    // Dernière édition tenue du dataset `eventEditions` (gardé).
+    vintage: {
+      fr: "éditions tenues jusqu'en 2026",
+      en: "editions held up to 2026",
+    },
+  },
+  ioc_olympic_hosts: {
+    name: {
+      fr: "CIO — villes hôtes olympiques",
+      en: "IOC — Olympic host cities",
+    },
+    url: "https://www.olympics.com/ioc/olympic-games",
+    // Dernière édition tenue, été et hiver confondus (`eventEditions`, gardé).
+    vintage: {
+      fr: "éditions tenues jusqu'en 2026",
+      en: "editions held up to 2026",
+    },
+  },
+  cia_factbook_government_type: {
+    name: {
+      fr: "CIA World Factbook — Régime",
+      en: "CIA World Factbook — Government type",
+    },
+    url: "https://www.cia.gov/the-world-factbook/field/government-type/",
+    // Dernière mise à jour des données du miroir figé `factbook.json` (commit
+    // 8662a8b) ; le Factbook a cessé de paraître en février 2026.
+    vintage: { fr: "au 22 janvier 2026", en: "as of 22 January 2026" },
+  },
+  cia_factbook_independence: {
+    name: {
+      fr: "CIA World Factbook — Indépendance",
+      en: "CIA World Factbook — Independence",
+    },
+    url: "https://www.cia.gov/the-world-factbook/field/independence/",
+    vintage: null,
+  },
+  cia_factbook_background: {
+    name: {
+      fr: "CIA World Factbook — Contexte historique",
+      en: "CIA World Factbook — Background",
+    },
+    url: "https://www.cia.gov/the-world-factbook/field/background/",
+    vintage: null,
+  },
+  britannica: {
+    name: {
+      fr: "Encyclopædia Britannica",
+      en: "Encyclopædia Britannica",
+    },
+    url: "https://www.britannica.com/",
+    vintage: null,
+  },
+  cia_factbook_nationality: {
+    name: {
+      fr: "CIA World Factbook — Nationalité",
+      en: "CIA World Factbook — Nationality",
+    },
+    url: "https://www.cia.gov/the-world-factbook/field/nationality/",
+    vintage: null,
+  },
+  natural_earth: {
+    name: { fr: "Natural Earth", en: "Natural Earth" },
+    url: "https://github.com/nvkelso/natural-earth-vector/tree/v5.1.2/geojson",
+    vintage: null,
+  },
+  iho_s23: {
+    name: {
+      fr: "IHO S-23 — Limites des océans et des mers",
+      en: "IHO S-23 — Limits of Oceans and Seas",
+    },
+    url: "https://iho.int/uploads/user/pubs/standards/s-23/S-23_Ed3_1953_EN.pdf",
+    vintage: null,
+  },
+  nasa_modis_mcd12q1: {
+    name: { fr: "NASA MODIS MCD12Q1", en: "NASA MODIS MCD12Q1" },
+    url: "https://doi.org/10.5067/MODIS/MCD12Q1.061",
+    vintage: null,
+  },
+  smithsonian_gvp: {
+    name: {
+      fr: "Smithsonian Global Volcanism Program",
+      en: "Smithsonian Global Volcanism Program",
+    },
+    url: "https://volcano.si.edu/",
+    vintage: null,
+  },
+  un_sdg_mountain_area: {
+    name: {
+      fr: "ODD 15.4.2 — Aire montagneuse",
+      en: "SDG 15.4.2 — Mountain area",
+    },
+    url: "https://unstats.un.org/sdgs/metadata/?Text=&Goal=15&Target=15.4",
+    vintage: { fr: "2021", en: "2021" },
+  },
+  fao_forest_resources: {
+    name: {
+      fr: "Banque mondiale (FAO) — Surface forestière",
+      en: "World Bank (FAO) — Forest area",
+    },
+    url: "https://data.worldbank.org/indicator/AG.LND.FRST.ZS",
+    vintage: { fr: "2023", en: "2023" },
+  },
+  faostat_2022_2024: {
+    name: { fr: "FAOSTAT", en: "FAOSTAT" },
+    url: "https://www.fao.org/faostat/",
+    vintage: { fr: "moyenne 2022-2024", en: "2022–2024 average" },
+  },
+  usda_fas_coffee: {
+    name: {
+      fr: "USDA FAS — Coffee: World Markets and Trade",
+      en: "USDA FAS — Coffee: World Markets and Trade",
+    },
+    url: "https://apps.fas.usda.gov/psdonline/circulars/coffee.pdf",
+    vintage: {
+      fr: "campagnes 2023/24 à 2025/26",
+      en: "2023/24–2025/26 seasons",
+    },
+  },
+  eia_crude_oil: {
+    name: { fr: "U.S. EIA — Pétrole brut", en: "U.S. EIA — Crude oil" },
+    url: "https://www.eia.gov/international/data/world",
+    vintage: { fr: "2025", en: "2025" },
+  },
+  eia_natural_gas: {
+    name: { fr: "U.S. EIA — Gaz naturel", en: "U.S. EIA — Natural gas" },
+    url: "https://www.eia.gov/international/data/world",
+    vintage: { fr: "2024", en: "2024" },
+  },
+  ember_electricity: {
+    name: { fr: "Ember Data Explorer", en: "Ember Data Explorer" },
+    url: "https://ember-energy.org/data/data-tools/data-explorer/",
+    vintage: { fr: "2024", en: "2024" },
+  },
+  ghsl_urban_centre_database: {
+    name: {
+      fr: "GHSL Urban Centre Database",
+      en: "GHSL Urban Centre Database",
+    },
+    url: "https://human-settlement.emergency.copernicus.eu/ghs_ucdb_2024.php",
+    vintage: { fr: "2025", en: "2025" },
+  },
+} as const satisfies Record<string, SourceReference>;
+
+export type SourceId = keyof typeof SOURCES;

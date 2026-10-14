@@ -15,6 +15,7 @@ export default defineAnswerSet("flag_has_cross", [
   "GRC",
   "ISL",
   "JAM",
+  "MDA",
   "MLT",
   "NOR",
   "NZL",

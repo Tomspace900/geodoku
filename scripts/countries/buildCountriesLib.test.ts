@@ -4,6 +4,7 @@ import {
   applySourceCorrections,
   assignPopularity,
   buildAliases,
+  currencyAndDemonymFacts,
   dedupe,
   deriveContinent,
   deriveWaterAccess,
@@ -55,8 +56,18 @@ function minimalCountry(code: string): CountryRecord {
     productionRanks: {},
     coalElectricityShare: null,
     formerSovereigns: [],
+    dominations: [],
     sovereigntyYear: null,
     sovereigntyKind: null,
+    sovereigntyDate: null,
+    sovereigntySheetHidden: false,
+    highestPoint: { elevationM: 100, names: null },
+    gdpPerCapitaUsd: null,
+    lifeExpectancyYears: null,
+    humanDevelopmentIndex: null,
+    eventEditions: {},
+    currencies: ["EUR"],
+    demonyms: { fr: { m: "X", f: "X" }, en: { m: "X", f: "X" } },
   };
 }
 
@@ -216,6 +227,7 @@ describe("gameplayArraysForCode", () => {
     caribbeanCoast: [],
     peakOver5000m: [],
     capitalNotLargest: ["USA"],
+    sharedIslandState: ["IRL"],
     desert: [],
     rainforest: [],
     atlanticCoast: [],
@@ -257,6 +269,12 @@ describe("gameplayArraysForCode", () => {
       "capital_not_largest",
     ]);
   });
+
+  it("adds shared_island for a curated insular state on a shared island", () => {
+    expect(gameplayArraysForCode("IRL", classifications, rc).geoTags).toEqual([
+      "shared_island",
+    ]);
+  });
 });
 
 describe("regimeForCode", () => {
@@ -271,6 +289,7 @@ describe("regimeForCode", () => {
     caribbeanCoast: [],
     peakOver5000m: [],
     capitalNotLargest: [],
+    sharedIslandState: [],
     desert: [],
     rainforest: [],
     atlanticCoast: [],
@@ -302,6 +321,7 @@ describe("physicalFeaturesForCode", () => {
     caribbeanCoast: ["COL", "VEN"],
     peakOver5000m: ["FRA", "NPL"],
     capitalNotLargest: [],
+    sharedIslandState: [],
     desert: ["DZA"],
     rainforest: ["COD"],
     atlanticCoast: ["PRT"],
@@ -375,6 +395,7 @@ describe("quantitativeFactsForCode", () => {
     forestCover: {
       source: "x",
       referenceYear: 2023,
+      sourceUpdatedAt: "2026-10-08",
       countries: { FIN: 73.7 },
     },
     urbanCentres: {
@@ -421,16 +442,116 @@ describe("quantitativeFactsForCode", () => {
       referenceYear: 2024,
       countries: { CHN: 57.77, FIN: 1.01 },
     },
+    highestPoints: {
+      factbookCommit: "x",
+      harvestedAt: "2026-10-09",
+      points: Object.fromEntries(
+        [
+          "CHE",
+          "CHN",
+          "DEU",
+          "DZA",
+          "FIN",
+          "FRA",
+          "ISL",
+          "LCA",
+          "RUS",
+          "YEM",
+          "ZZZ",
+        ].map((code) => [
+          code,
+          {
+            sourceName: "x",
+            elevationM: 100,
+            label: { fr: "x", en: "x" },
+            wikidata: "Q1",
+          },
+        ]),
+      ),
+      overrides: {
+        RUS: {
+          kind: "label",
+          label: { fr: "Elbrouz", en: "Mount Elbrus" },
+          reason: "test",
+        },
+      },
+    },
+    worldBank: {
+      harvestedAt: "2026-10-09",
+      gdpPerCapita: {
+        code: "NY.GDP.PCAP.CD",
+        sourceUpdatedAt: "2026-10-08",
+        window: { from: 2021, to: 2025 },
+        values: { FRA: { value: 48986.4, year: 2025 } },
+        missing: { RUS: "no_value_in_window" },
+      },
+      lifeExpectancy: {
+        code: "SP.DYN.LE00.IN",
+        sourceUpdatedAt: "2026-10-08",
+        window: { from: 2021, to: 2025 },
+        values: { FRA: { value: 83.04, year: 2024 } },
+        missing: { RUS: "not_in_wdi" },
+      },
+    },
+    humanDevelopment: {
+      edition: 2025,
+      dataYear: 2023,
+      sourceUrl: "https://example.test/hdr.csv",
+      harvestedAt: "2026-10-09",
+      values: { FRA: { value: 0.92, category: "very_high" } },
+      missing: { RUS: "not_in_report" },
+    },
     sovereignty: {
       sourceCommit: "x",
       countries: {
         DZA: {
           kind: "independence",
           year: 1962,
+          date: "1962-07-05",
           formerSovereigns: ["france"],
           sourceDescription: "1962 (from France)",
         },
       },
+    },
+    eventEditions: {
+      checkedAt: "2026-10-13",
+      events: {
+        fifa_wc_host: [
+          { year: 2006, hosts: ["DEU"] },
+          { year: 1974, hosts: ["DEU"] },
+          { year: 2002, hosts: ["CHE", "FIN"] },
+        ],
+        summer_olympics_host: [{ year: 1972, hosts: ["DEU"] }],
+        winter_olympics_host: [],
+      },
+    },
+    historicalDominations: {
+      checkedAt: "2026-10-14",
+      countries: {
+        YEM: [
+          {
+            power: "united_kingdom",
+            nature: "colony",
+            from: 1839,
+            to: 1967,
+            part: { fr: "Aden", en: "Aden" },
+            reason: "x",
+            sources: [{ id: "cia_factbook_background" }],
+          },
+        ],
+        LCA: [
+          {
+            power: "france",
+            nature: "colony",
+            from: 1650,
+            to: 1803,
+            intermittent: true,
+            reason: "x",
+            sources: [{ id: "britannica", page: "/place/Saint-Lucia" }],
+          },
+        ],
+      },
+      excluded: {},
     },
   };
 
@@ -444,8 +565,19 @@ describe("quantitativeFactsForCode", () => {
       productionRanks: { crude_oil: 2 },
       coalElectricityShare: null,
       formerSovereigns: [],
+      dominations: [],
       sovereigntyYear: null,
       sovereigntyKind: null,
+      sovereigntyDate: null,
+      sovereigntySheetHidden: false,
+      highestPoint: {
+        elevationM: 100,
+        names: { fr: "Elbrouz", en: "Mount Elbrus" },
+      },
+      gdpPerCapitaUsd: null,
+      lifeExpectancyYears: null,
+      humanDevelopmentIndex: null,
+      eventEditions: {},
     });
     expect(quantitativeFactsForCode("CHE", datasets).mountainAreaShare).toBe(
       0.654,
@@ -492,15 +624,211 @@ describe("quantitativeFactsForCode", () => {
     expect(quantitativeFactsForCode("ZZZ", datasets).utcOffsetCount).toBe(1);
   });
 
+  it("flags a country whose dataset entry carries a sheetHidden reason", () => {
+    const hidden: QuantitativeDatasets = {
+      ...datasets,
+      sovereignty: {
+        sourceCommit: "x",
+        countries: {
+          FRA: {
+            kind: "independence",
+            year: 1789,
+            date: "1789-07-14",
+            sheetHidden: "aucune date officielle",
+            formerSovereigns: [],
+            sourceDescription: "no official date of independence",
+          },
+        },
+      },
+    };
+    expect(quantitativeFactsForCode("FRA", hidden).sovereigntySheetHidden).toBe(
+      true,
+    );
+  });
+
+  it("takes the elevation from the dataset and the override label over the harvested one", () => {
+    expect(quantitativeFactsForCode("RUS", datasets).highestPoint).toEqual({
+      elevationM: 100,
+      names: { fr: "Elbrouz", en: "Mount Elbrus" },
+    });
+  });
+
+  it("takes the elevation of a peak override, which names another summit", () => {
+    const withPeak: QuantitativeDatasets = {
+      ...datasets,
+      highestPoints: {
+        ...datasets.highestPoints,
+        overrides: {
+          RUS: {
+            kind: "peak",
+            label: { fr: "autre", en: "other" },
+            elevationM: 1208,
+            reason: "test",
+          },
+        },
+      },
+    };
+    expect(quantitativeFactsForCode("RUS", withPeak).highestPoint).toEqual({
+      elevationM: 1208,
+      names: { fr: "autre", en: "other" },
+    });
+  });
+
+  it("keeps the raw WDI value and its year, and null when the WDI has none", () => {
+    const fra = quantitativeFactsForCode("FRA", datasets);
+    expect(fra.gdpPerCapitaUsd).toEqual({ value: 48986.4, year: 2025 });
+    expect(fra.lifeExpectancyYears).toEqual({ value: 83.04, year: 2024 });
+    expect(
+      quantitativeFactsForCode("RUS", datasets).gdpPerCapitaUsd,
+    ).toBeNull();
+  });
+
+  it("keeps the HDI with the data year of the edition, and null when absent", () => {
+    expect(
+      quantitativeFactsForCode("FRA", datasets).humanDevelopmentIndex,
+    ).toEqual({ value: 0.92, year: 2023 });
+    expect(
+      quantitativeFactsForCode("RUS", datasets).humanDevelopmentIndex,
+    ).toBeNull();
+  });
+
+  it("gives each hosted event its years in ascending order, a co-host included", () => {
+    expect(quantitativeFactsForCode("DEU", datasets).eventEditions).toEqual({
+      fifa_wc_host: [1974, 2006],
+      summer_olympics_host: [1972],
+    });
+    expect(quantitativeFactsForCode("FIN", datasets).eventEditions).toEqual({
+      fifa_wc_host: [2002],
+    });
+  });
+
+  it("keeps what a domination displays, without its reason nor sources", () => {
+    expect({
+      yemen: quantitativeFactsForCode("YEM", datasets).dominations,
+      saintLucia: quantitativeFactsForCode("LCA", datasets).dominations,
+      russia: quantitativeFactsForCode("RUS", datasets).dominations,
+    }).toEqual({
+      yemen: [
+        {
+          power: "united_kingdom",
+          nature: "colony",
+          from: 1839,
+          to: 1967,
+          intermittent: false,
+          part: { fr: "Aden", en: "Aden" },
+        },
+      ],
+      saintLucia: [
+        {
+          power: "france",
+          nature: "colony",
+          from: 1650,
+          to: 1803,
+          intermittent: true,
+          part: null,
+        },
+      ],
+      russia: [],
+    });
+  });
+
+  it("fails loudly for a country without a highest point", () => {
+    expect(() => quantitativeFactsForCode("QQQ", datasets)).toThrow(
+      /QQQ: aucun point culminant/,
+    );
+  });
+
   it("copies the sovereignty event verbatim, [] / null when uncovered", () => {
     const dza = quantitativeFactsForCode("DZA", datasets);
     expect(dza.formerSovereigns).toEqual(["france"]);
     expect(dza.sovereigntyYear).toBe(1962);
     expect(dza.sovereigntyKind).toBe("independence");
+    expect(dza.sovereigntyDate).toBe("1962-07-05");
+    expect(dza.sovereigntySheetHidden).toBe(false);
     const zzz = quantitativeFactsForCode("ZZZ", datasets);
     expect(zzz.formerSovereigns).toEqual([]);
     expect(zzz.sovereigntyYear).toBe(null);
     expect(zzz.sovereigntyKind).toBe(null);
+  });
+});
+
+describe("currencyAndDemonymFacts", () => {
+  const wcFrance = {
+    currencies: { EUR: { name: "Euro" } },
+    demonyms: {
+      fra: { m: "Français", f: "Française" },
+      eng: { m: "French", f: "French" },
+    },
+  };
+  const reason = { reason: "test", date: "2026-09-25" };
+
+  it("reads world-countries when no correction applies", () => {
+    expect(
+      currencyAndDemonymFacts("FRA", wcFrance, undefined, undefined),
+    ).toEqual({
+      currencies: ["EUR"],
+      demonyms: {
+        fr: { m: "Français", f: "Française" },
+        en: { m: "French", f: "French" },
+      },
+    });
+  });
+
+  it("replaces the whole currency list with the correction", () => {
+    const row = { ...wcFrance, currencies: { CUC: {}, CUP: {} } };
+    expect(
+      currencyAndDemonymFacts(
+        "CUB",
+        row,
+        { currencies: ["CUP"], ...reason },
+        undefined,
+      ).currencies,
+    ).toEqual(["CUP"]);
+  });
+
+  it("corrects one language and keeps the other from the source", () => {
+    const facts = currencyAndDemonymFacts("ZAF", wcFrance, undefined, {
+      fr: { m: "Sud-Africain", f: "Sud-Africaine" },
+      ...reason,
+    });
+    expect(facts.demonyms.en).toEqual({ m: "French", f: "French" });
+  });
+
+  it("builds a country absent from world-countries from its corrections alone", () => {
+    expect(
+      currencyAndDemonymFacts(
+        "XKX",
+        undefined,
+        { currencies: ["EUR"], ...reason },
+        {
+          fr: { m: "Kosovar", f: "Kosovare" },
+          en: { m: "Kosovar", f: "Kosovar" },
+          ...reason,
+        },
+      ).currencies,
+    ).toEqual(["EUR"]);
+  });
+
+  it("fails loudly on an empty currency list", () => {
+    expect(() =>
+      currencyAndDemonymFacts(
+        "FSM",
+        { ...wcFrance, currencies: {} },
+        undefined,
+        undefined,
+      ),
+    ).toThrow(/aucune monnaie/);
+  });
+
+  it("fails loudly on a missing demonym", () => {
+    expect(() =>
+      currencyAndDemonymFacts(
+        "XKX",
+        undefined,
+        { currencies: ["EUR"], ...reason },
+        undefined,
+      ),
+    ).toThrow(/gentilé/);
   });
 });
 

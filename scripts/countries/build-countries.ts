@@ -24,16 +24,17 @@ import { resolve } from "node:path";
 import rawWorldCountries from "world-countries";
 import type {
   CapitalRole,
-  CountryCapital,
   CountryRecord,
   DrivingSide,
   PoliticalGroup,
 } from "../../content/countries/type.ts";
 import { writeCountrySnapshot } from "../content/emitCountrySnapshot.ts";
+import { asOfVintage } from "../content/vintageLabels.ts";
 import {
   applySourceCorrections,
   assignPopularity,
   buildAliases,
+  currencyAndDemonymFacts,
   deriveContinent,
   deriveWaterAccess,
   type FlagData,
@@ -46,9 +47,12 @@ import {
   type RcEnrichRow,
   rcEnrichmentMapFromRows,
   regimeForCode,
+  type SourceCapital,
   toWikipediaTitle,
+  withCapitalLabels,
 } from "./buildCountriesLib.ts";
 import { countryPatches } from "./countryPatches.ts";
+import { CAPITAL_LABELS } from "./data/capitalLabels.ts";
 import { QUANTITATIVE_DATASETS } from "./data/datasets.ts";
 
 // ─── World-countries shape (fields we consume) ────────────────────────────────
@@ -64,6 +68,11 @@ interface WCEntry {
   landlocked: boolean;
   borders: string[];
   languages: Record<string, string>;
+  currencies?: Record<string, unknown>;
+  demonyms?: {
+    fra?: { m: string; f: string };
+    eng?: { m: string; f: string };
+  };
   area: number;
   unMember: boolean;
   latlng?: [number, number];
@@ -273,7 +282,7 @@ function readObjectArrayField(
 
 function capitalFromV5Object(
   rawCapital: RestCountriesV5Object,
-): CountryCapital | null {
+): SourceCapital | null {
   const name = rawCapital.name;
   const coordinates = rawCapital.coordinates;
   const attributes = rawCapital.attributes;
@@ -320,7 +329,7 @@ function rcRowFromV5Object(obj: RestCountriesV5Object): RcEnrichRow | null {
   );
   const capitals = readObjectArrayField(obj, "capitals")
     .map(capitalFromV5Object)
-    .filter((capital): capital is CountryCapital => capital !== null);
+    .filter((capital): capital is SourceCapital => capital !== null);
   const drivingSide = drivingSideFromString(
     readStringField(obj, "cars.driving_side", "cars.driving_side"),
   );
@@ -731,13 +740,16 @@ async function main(): Promise<void> {
     const gameplay = gameplayArraysForCode(c.cca3, gameplayClassifications, rc);
 
     const nameEn = c.name.common;
-    const nameFr = c.translations.fra?.common ?? nameEn;
+    const sourceNameFr = c.translations.fra?.common ?? nameEn;
+    const nameCorrection = countryPatches.nameCorrectionsByIso3[c.cca3];
+    const nameFr = nameCorrection?.fr ?? sourceNameFr;
 
     const searchAliases = countryPatches.searchAliasesByIso3[c.cca3];
     const aliases = buildAliases([
       ...(rc.officialName ? [rc.officialName] : []),
       ...(rc.alternateNames ?? []),
       ...(searchAliases ?? []),
+      ...(nameCorrection ? [sourceNameFr] : []),
     ]);
 
     const country: CountryRecord = {
@@ -759,7 +771,7 @@ async function main(): Promise<void> {
       flagLayout,
       events: gameplay.events,
       memberships: rc.memberships,
-      capitals: rc.capitals,
+      capitals: withCapitalLabels(c.cca3, rc.capitals, CAPITAL_LABELS),
       drivingSide: rc.drivingSide,
       geoTags: gameplay.geoTags,
       regime: regimeForCode(c.cca3, gameplayClassifications),
@@ -768,6 +780,12 @@ async function main(): Promise<void> {
         gameplayClassifications,
       ),
       ...quantitativeFactsForCode(c.cca3, QUANTITATIVE_DATASETS),
+      ...currencyAndDemonymFacts(
+        c.cca3,
+        c,
+        countryPatches.currencyCorrectionsByIso3[c.cca3],
+        countryPatches.demonymCorrectionsByIso3[c.cca3],
+      ),
     };
 
     applySourceCorrections(
@@ -781,12 +799,18 @@ async function main(): Promise<void> {
   // 4. Merge manual additions (e.g. Kosovo, absent from world-countries).
   const additions: CountryRecord[] = countryPatches.manualCountryAdditions.map(
     (add) => {
-      const merged: CountryRecord = { ...add };
-      const rc = rcByCca3.get(merged.iso3);
+      const rc = rcByCca3.get(add.iso3);
+      const merged: CountryRecord = {
+        ...add,
+        capitals: withCapitalLabels(
+          add.iso3,
+          rc ? rc.capitals : add.capitals,
+          CAPITAL_LABELS,
+        ),
+      };
       if (rc) {
         if (merged.population <= 0) merged.population = rc.population;
         merged.iso2 = rc.iso2;
-        merged.capitals = rc.capitals;
         merged.drivingSide = rc.drivingSide;
         merged.memberships = rc.memberships;
       }
@@ -808,6 +832,12 @@ async function main(): Promise<void> {
       Object.assign(
         merged,
         quantitativeFactsForCode(merged.iso3, QUANTITATIVE_DATASETS),
+        currencyAndDemonymFacts(
+          merged.iso3,
+          undefined,
+          countryPatches.currencyCorrectionsByIso3[merged.iso3],
+          countryPatches.demonymCorrectionsByIso3[merged.iso3],
+        ),
       );
       return merged;
     },
@@ -910,6 +940,11 @@ async function main(): Promise<void> {
       if (!capital.name) {
         throw new Error(`${c.iso3}: capital missing name`);
       }
+      if (!capital.names.fr || !capital.names.en) {
+        throw new Error(
+          `${c.iso3}: capital « ${capital.name} » missing fr/en label`,
+        );
+      }
       if (
         !Number.isFinite(capital.latitude) ||
         capital.latitude < -90 ||
@@ -994,6 +1029,11 @@ async function main(): Promise<void> {
   log(
     "Output",
     "Relire le diff de content/ (catalog, facts, popularity, constraints/*/answers.ts).",
+  );
+  const membershipsVintage = asOfVintage(snapshotDate);
+  log(
+    "Output",
+    `Millésime à reporter dans content/sources.ts (rest_countries_memberships) : ${JSON.stringify(membershipsVintage)}`,
   );
 }
 

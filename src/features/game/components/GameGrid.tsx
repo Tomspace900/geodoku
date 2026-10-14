@@ -1,4 +1,7 @@
-import { CONSTRAINT_BY_ID } from "@/features/game/logic/constraints";
+import {
+  CONSTRAINT_BY_ID,
+  type ConstraintId,
+} from "@/features/game/logic/constraints";
 import { filledCellTier, isCohortComplete } from "@/features/game/logic/rarity";
 import type {
   CellGuessDistribution,
@@ -7,20 +10,23 @@ import type {
   GameState,
 } from "@/features/game/types";
 import { useT } from "@/i18n/LocaleContext";
-import { cn } from "@/lib/utils";
 import { CellComponent } from "./Cell";
+import { ConstraintHeaderButton } from "./ConstraintHeaderButton";
 import { GridMatrix } from "./GridMatrix";
 
 type Props = {
   state: GameState;
   distribution: Record<string, CellGuessDistribution> | undefined;
   onCellClick: (cell: CellPosition) => void;
+  onHeaderClick: (constraintId: ConstraintId) => void;
 };
 
-const headerClass =
-  "flex items-center justify-center text-center text-[10px] font-medium text-on-surface-variant bg-surface-low rounded-xl p-2 leading-tight min-h-[52px]";
-
-export function GameGrid({ state, distribution, onCellClick }: Props) {
+export function GameGrid({
+  state,
+  distribution,
+  onCellClick,
+  onHeaderClick,
+}: Props) {
   const t = useT();
   const isPlaying = state.status === "playing";
   const rowLabels = state.rows.map((constraintId) => {
@@ -41,11 +47,17 @@ export function GameGrid({ state, distribution, onCellClick }: Props) {
       )}
       rowLabels={rowLabels}
       colLabels={colLabels}
-      renderColumnHeader={(label) => (
-        <div className={cn(headerClass, "p-1.5")}>{label}</div>
+      renderColumnHeader={(label, col) => (
+        <ConstraintHeaderButton
+          label={label}
+          onClick={() => onHeaderClick(state.cols[col])}
+        />
       )}
-      renderRowHeader={(label) => (
-        <div className={cn(headerClass, "p-1.5")}>{label}</div>
+      renderRowHeader={(label, row) => (
+        <ConstraintHeaderButton
+          label={label}
+          onClick={() => onHeaderClick(state.rows[row])}
+        />
       )}
       renderCell={({ row, col, rowLabel, colLabel }) => {
         const key = `${row},${col}` as CellKey;

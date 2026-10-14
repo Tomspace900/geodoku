@@ -36,7 +36,6 @@ export default defineAnswerSet("ocean_pacific", [
   "SLB",
   "SLV",
   "THA",
-  "TLS",
   "TON",
   "TUV",
   "TWN",

@@ -27,3 +27,5 @@ Un pays transcontinental (Russie, Turquie, Égypte…) est rattaché à un seul 
 ## Révision
 
 Procédure commune : [SOURCES.md](../SOURCES.md#procédure-de-révision).
+
+Revue 2026-10-09 (#122) — **Chypre** est en Europe par convention Geodoku (membre de l'UE, attente du joueur), alors que M49 la place en Asie occidentale : le découpage est aligné sur M49 **sauf** pour elle.

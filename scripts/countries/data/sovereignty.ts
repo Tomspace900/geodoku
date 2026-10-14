@@ -8,7 +8,8 @@ import type { SovereigntySnapshot } from "./types";
  * Source : [CIA World Factbook, champ *Independence*](https://www.cia.gov/the-world-factbook/field/independence/),
  * via le miroir figé `factbook.json` (commit `8662a8b`). Porté verbatim du
  * snapshot `sovereignty` de la branche `constraint-explorer` (commit 221b42d) —
- * `sourceCommit` conservé tel quel.
+ * `sourceCommit` conservé tel quel. Une seule correction éditoriale depuis : le
+ * `kind` de la Serbie (#129), motivé au-dessus de son entrée.
  *
  * Le Factbook distingue indépendance, restauration, séparation, succession
  * d'État, continuité, fondation et unification. Seuls `formerSovereigns`, `year`
@@ -182,7 +183,7 @@ export const SOVEREIGNTY: SovereigntySnapshot = {
       sourceDescription: "12 December 1963 (from the UK)",
     },
     LBR: {
-      kind: "foundation",
+      kind: "independence",
       year: 1847,
       date: "1847-07-26",
       formerSovereigns: [],
@@ -741,6 +742,8 @@ export const SOVEREIGNTY: SovereigntySnapshot = {
       kind: "unification",
       year: 1949,
       date: "1949-10-01",
+      sheetHidden:
+        "proclamation d'un régime, pas une acquisition de souveraineté",
       formerSovereigns: [],
       sourceDescription:
         "1 October 1949 (People's Republic of China established); notable earlier dates: 221 B.C. (unification under the Qin Dynasty); 1 January 1912 (Qing Dynasty replaced by the Republic of China)",
@@ -757,6 +760,8 @@ export const SOVEREIGNTY: SovereigntySnapshot = {
       kind: "foundation",
       year: 1947,
       date: "1947-05-03",
+      sheetHidden:
+        "adoption d'une constitution : aucune nature d'événement ne convient",
       formerSovereigns: [],
       sourceDescription:
         "3 May 1947 (current constitution adopted as amendment to Meiji Constitution); notable earlier dates: 11 February 660 B.C. (mythological date of Emperor JIMMU founding the nation); 29 November 1890 (Meiji Constitution provides for constitutional monarchy)",
@@ -859,6 +864,8 @@ export const SOVEREIGNTY: SovereigntySnapshot = {
       kind: "independence",
       year: 1156,
       date: "1156-09-17",
+      sheetHidden:
+        "la source ne donne aucune date d'indépendance (« no official date of independence »)",
       formerSovereigns: [],
       sourceDescription:
         "no official date of independence: 976 (Margravate of Austria established); 17 September 1156 (Duchy of Austria founded); 6 January 1453 (Archduchy of Austria acknowledged); 11 August 1804 (Austrian Empire proclaimed); 30 March 1867 (Austro-Hungarian dual monarchy established); 12 November 1918 (First Republic proclaimed); 27 April 1945 (Second Republic proclaimed)",
@@ -904,6 +911,8 @@ export const SOVEREIGNTY: SovereigntySnapshot = {
       kind: "foundation",
       year: 1849,
       date: "1849-06-05",
+      sheetHidden:
+        "passage en monarchie parlementaire : aucune nature d'événement ne convient",
       formerSovereigns: [],
       sourceDescription:
         "ca. 965 (unified and Christianized under Harald I GORMSSON); 5 June 1849 (became a parliamentary constitutional monarchy)",
@@ -943,12 +952,14 @@ export const SOVEREIGNTY: SovereigntySnapshot = {
       kind: "independence",
       year: 1789,
       date: "1789-07-14",
+      sheetHidden:
+        "la source ne donne aucune date d'indépendance (« no official date of independence »)",
       formerSovereigns: [],
       sourceDescription:
         "no official date of independence: 486 (Frankish tribes unified under Merovingian kingship); 10 August 843 (Western Francia established from the division of the Carolingian Empire); 14 July 1789 (French monarchy overthrown); 22 September 1792 (First French Republic established); 4 October 1958 (Fifth French Republic established)",
     },
     DEU: {
-      kind: "independence",
+      kind: "unification",
       year: 1871,
       date: "1871-01-18",
       formerSovereigns: [],
@@ -974,6 +985,8 @@ export const SOVEREIGNTY: SovereigntySnapshot = {
       kind: "foundation",
       year: 1918,
       date: "1918-11-16",
+      sheetHidden:
+        "proclamation de la république : aucune nature d'événement ne convient",
       formerSovereigns: [],
       sourceDescription:
         "16 November 1918 (republic proclaimed); notable earlier dates: 25 December 1000 (crowning of King STEPHEN I, traditional founding date); 30 March 1867 (Austro-Hungarian dual monarchy established)",
@@ -987,7 +1000,7 @@ export const SOVEREIGNTY: SovereigntySnapshot = {
         "1 December 1918 (became a sovereign state under the Danish Crown); 17 June 1944 (from Denmark; birthday of Jon SIGURDSSON, leader of Iceland's 19th-century independence movement)",
     },
     ITA: {
-      kind: "foundation",
+      kind: "unification",
       year: 1861,
       date: "1861-03-17",
       formerSovereigns: [],
@@ -1002,8 +1015,8 @@ export const SOVEREIGNTY: SovereigntySnapshot = {
     },
     LVA: {
       kind: "restoration",
-      year: 1991,
-      date: "1918-11-18",
+      year: 1990,
+      date: "1990-05-04",
       formerSovereigns: ["soviet_union"],
       sourceDescription:
         "18 November 1918 (from Soviet Russia); 4 May 1990 (declared from the Soviet Union); 6 September 1991 (recognized by the Soviet Union)",
@@ -1026,8 +1039,8 @@ export const SOVEREIGNTY: SovereigntySnapshot = {
     },
     LIE: {
       kind: "independence",
-      year: 1719,
-      date: "1719-01-23",
+      year: 1806,
+      date: "1806-07-12",
       formerSovereigns: [],
       sourceDescription:
         "23 January 1719 (Principality of Liechtenstein established); 12 July 1806 (independence from the Holy Roman Empire); 24 August 1866 (independence from the German Confederation)",
@@ -1076,14 +1089,14 @@ export const SOVEREIGNTY: SovereigntySnapshot = {
       sourceDescription: "21 September 1964 (from the UK)",
     },
     NLD: {
-      kind: "foundation",
+      kind: "independence",
       year: 1581,
       date: "1581-07-26",
       formerSovereigns: [],
       sourceDescription: "26 July 1581 ",
     },
     NOR: {
-      kind: "unification",
+      kind: "independence",
       year: 1905,
       date: "1905-06-07",
       formerSovereigns: [],
@@ -1091,7 +1104,7 @@ export const SOVEREIGNTY: SovereigntySnapshot = {
         "7 June 1905 (union with Sweden declared dissolved); 26 October 1905 (Sweden agreed to the repeal of the union); notable earlier dates: ca. 872 (traditional unification of Norwegian kingdoms by HARALD Fairhair); 1397 (Kalmar Union of Denmark, Norway, and Sweden); 1524 (Denmark-Norway); 17 May 1814 (Norwegian constitution adopted); 4 November 1814 (Sweden-Norway union confirmed)",
     },
     POL: {
-      kind: "foundation",
+      kind: "restoration",
       year: 1918,
       date: "1918-11-11",
       formerSovereigns: [],
@@ -1099,15 +1112,20 @@ export const SOVEREIGNTY: SovereigntySnapshot = {
         "11 November 1918 (republic proclaimed); notable earlier dates: 14 April 966 (adoption of Christianity, traditional founding date), 1 July 1569 (Polish-Lithuanian Commonwealth created)",
     },
     PRT: {
-      kind: "independence",
+      kind: "restoration",
       year: 1640,
       date: "1640-12-01",
       formerSovereigns: [],
       sourceDescription:
         "1143 (Kingdom of Portugal recognized); 1 December 1640 (independence reestablished after 60 years of Spanish rule); 5 October 1910 (republic proclaimed)",
     },
+    // Revue #129 (2026-10-14) : `kind` corrigé d'`independence` à
+    // `dissolution_successor`. Le Monténégro a fait sécession le 3 juin 2006 ;
+    // la Serbie, qui n'a pas quitté l'union mais lui a succédé deux jours plus
+    // tard, n'accède pas à l'indépendance au sens du Factbook. L'entrée reste
+    // éligible à `history_sovereignty_since_1990` : la liste ne change pas.
     SRB: {
-      kind: "independence",
+      kind: "dissolution_successor",
       year: 2006,
       date: "2006-06-05",
       formerSovereigns: [],
@@ -1132,6 +1150,7 @@ export const SOVEREIGNTY: SovereigntySnapshot = {
     ESP: {
       kind: "foundation",
       year: 1492,
+      sheetHidden: "la source ne donne que « 1492 », sans événement nommé",
       formerSovereigns: [],
       sourceDescription: "1492",
     },
@@ -1154,6 +1173,8 @@ export const SOVEREIGNTY: SovereigntySnapshot = {
       kind: "independence",
       year: 1284,
       date: "1284-03-03",
+      sheetHidden:
+        "la source ne donne aucune date d'indépendance (« no official date of independence »)",
       formerSovereigns: [],
       sourceDescription:
         "no official date of independence: 927 (minor English kingdoms unite); 3 March 1284 (enactment of the Statute of Rhuddlan uniting England and Wales); 1536 (Act of Union incorporates England and Wales); 1 May 1707 (Acts of Union unite England, Scotland, and Wales as Great Britain); 1 January 1801 (Acts of Union unite Great Britain and Ireland as the United Kingdom of Great Britain and Ireland); 6 December 1921 (Anglo-Irish Treaty formalizes partition of Ireland; six counties become Northern Ireland and remain part of the UK); 12 April 1927 (Royal and Parliamentary Titles Act establishes current name of the United Kingdom of Great Britain and Northern Ireland)",
@@ -1191,12 +1212,14 @@ export const SOVEREIGNTY: SovereigntySnapshot = {
       kind: "unification",
       year: 1979,
       date: "1979-04-01",
+      sheetHidden:
+        "proclamation d'un régime, pas une acquisition de souveraineté",
       formerSovereigns: [],
       sourceDescription:
         "1 April 1979 (Islamic Republic of Iran proclaimed); notable earlier dates: ca. 550 B.C. (Achaemenid or Persian Empire established); A.D. 1501 (Iran reunified under the Safavid dynasty); 1794 (beginning of Qajar dynasty); 12 December 1925 (modern Iran established under the PAHLAVI dynasty)",
     },
     ISR: {
-      kind: "foundation",
+      kind: "independence",
       year: 1948,
       date: "1948-05-14",
       formerSovereigns: ["united_kingdom"],
@@ -1266,6 +1289,8 @@ export const SOVEREIGNTY: SovereigntySnapshot = {
       kind: "foundation",
       year: 1923,
       date: "1923-10-29",
+      sheetHidden:
+        "proclamation de la république : aucune nature d'événement ne convient",
       formerSovereigns: [],
       sourceDescription:
         "29 October 1923 (republic proclaimed, succeeding the Ottoman Empire)",
@@ -1436,7 +1461,7 @@ export const SOVEREIGNTY: SovereigntySnapshot = {
       sourceDescription: "26 July 1965 (from the UK)",
     },
     NPL: {
-      kind: "foundation",
+      kind: "unification",
       year: 1768,
       formerSovereigns: [],
       sourceDescription: "1768 (unified by Prithvi Narayan SHAH)",

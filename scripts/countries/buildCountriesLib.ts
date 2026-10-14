@@ -3,11 +3,14 @@
  */
 import type {
   CountryCapital,
+  CountryEvent,
   CountryRecord,
+  Demonyms,
   DrivingSide,
   FlagColor,
   FlagLayout,
   FlagSymbol,
+  HighestPoint,
   PhysicalFeature,
   PoliticalGroup,
   Regime,
@@ -15,15 +18,21 @@ import type {
 } from "../../content/countries/type.ts";
 import type {
   AgriculturalProductionSnapshot,
+  CapitalLabelsSnapshot,
   CivilTimeOffsetsSnapshot,
   CoalElectricitySnapshot,
   EnergyProductionSnapshot,
+  EventEditionsSnapshot,
   ForestCoverSnapshot,
+  HighestPointsSnapshot,
+  HistoricalDominationsSnapshot,
   HoloceneVolcanoSnapshot,
+  HumanDevelopmentIndexSnapshot,
   MountainAreaSnapshot,
   ProductionRankKey,
   SovereigntySnapshot,
   UrbanCentresSnapshot,
+  WorldBankIndicatorsSnapshot,
 } from "./data/types.ts";
 
 /** Explicit source fixes — only fields where world-countries / REST need gameplay correction. */
@@ -65,6 +74,12 @@ export type GameplayClassifications = {
   caribbeanCoast: string[];
   peakOver5000m: string[];
   capitalNotLargest: string[];
+  /**
+   * États dont tout le territoire est insulaire mais dont l'île est partagée
+   * avec un autre pays : `waterAccess` les laisse `coastal` (il vaut `island`
+   * sans frontière terrestre), `water_island` les lit ici en complément.
+   */
+  sharedIslandState: string[];
   desert: string[];
   rainforest: string[];
   atlanticCoast: string[];
@@ -73,12 +88,53 @@ export type GameplayClassifications = {
   arcticCoast: string[];
 };
 
+/** Ajout manuel : ses capitales sont sources, leurs libellés viennent du dataset. */
+export type ManualCountryAddition = Omit<CountryRecord, "capitals"> & {
+  capitals: SourceCapital[];
+};
+
+/**
+ * Correction de la liste des monnaies de world-countries. Chaque entrée porte
+ * son motif et sa date : la liste **remplace** celle de la source (rien n'est
+ * corrigeable par delta, la source se trompe sur l'ensemble).
+ */
+export type CurrencyCorrection = Readonly<{
+  currencies: readonly string[];
+  reason: string;
+  date: string;
+}>;
+
+/**
+ * Correction des gentilés de world-countries, par langue. Une langue absente
+ * garde la valeur de la source ; `XKX`, absent de world-countries, n'a que des
+ * corrections.
+ */
+export type DemonymCorrection = Readonly<{
+  fr?: Demonyms["fr"];
+  en?: Demonyms["en"];
+  reason: string;
+  date: string;
+}>;
+
+/**
+ * Correction du nom français de world-countries. Le nom de la source reste
+ * cherchable : le build le verse aux alias du pays.
+ */
+export type NameCorrection = Readonly<{
+  fr: string;
+  reason: string;
+  date: string;
+}>;
+
 export type CountryPatchesConfig = {
   sourceCorrectionsByIso3: Record<string, SourceCorrection>;
+  currencyCorrectionsByIso3: Record<string, CurrencyCorrection>;
+  demonymCorrectionsByIso3: Record<string, DemonymCorrection>;
+  nameCorrectionsByIso3: Record<string, NameCorrection>;
   searchAliasesByIso3: Record<string, string[]>;
   wikipediaTitlesByIso3: Record<string, string>;
   gameplayClassifications: GameplayClassifications;
-  manualCountryAdditions: CountryRecord[];
+  manualCountryAdditions: ManualCountryAddition[];
 };
 
 /**
@@ -95,6 +151,33 @@ export type FlagData = Record<
   }
 >;
 
+/** Capitale telle que REST Countries la donne, avant fusion des libellés. */
+export type SourceCapital = Omit<CountryCapital, "names">;
+
+/**
+ * Ajoute `names` à chaque capitale source : l'override curé l'emporte sur la
+ * récolte. Une capitale sans libellé échoue bruyamment — ni repli sur le nom
+ * source ni sur l'anglais : la liste vient de REST Countries, les libellés de
+ * `pnpm harvest:capitals`.
+ */
+export function withCapitalLabels(
+  iso3: string,
+  capitals: readonly SourceCapital[],
+  dataset: CapitalLabelsSnapshot,
+): CountryCapital[] {
+  return capitals.map((capital) => {
+    const label =
+      dataset.overrides[iso3]?.[capital.name] ??
+      dataset.labels[iso3]?.[capital.name];
+    if (!label) {
+      throw new Error(
+        `${iso3}: aucun libellé fr/en pour la capitale « ${capital.name} » — lancer pnpm harvest:capitals, puis un override motivé si besoin`,
+      );
+    }
+    return { ...capital, names: { fr: label.fr, en: label.en } };
+  });
+}
+
 /** REST Countries v5 row (subset consumed by build-countries). */
 export interface RcEnrichRow {
   cca3?: string | string[];
@@ -102,7 +185,7 @@ export interface RcEnrichRow {
   population: number;
   officialName?: string;
   alternateNames?: string[];
-  capitals?: CountryCapital[];
+  capitals?: SourceCapital[];
   drivingSide?: DrivingSide;
   memberships?: PoliticalGroup[];
   borders?: string[];
@@ -114,7 +197,7 @@ export type RcEnrichment = {
   population: number;
   officialName?: string;
   alternateNames: string[];
-  capitals: CountryCapital[];
+  capitals: SourceCapital[];
   drivingSide: DrivingSide;
   memberships: PoliticalGroup[];
   borders?: string[];
@@ -403,6 +486,8 @@ export function gameplayArraysForCode(
   }
   if (classifications.capitalNotLargest.includes(code))
     geoTags.push("capital_not_largest");
+  if (classifications.sharedIslandState.includes(code))
+    geoTags.push("shared_island");
   return { events, geoTags };
 }
 
@@ -449,6 +534,11 @@ export type QuantitativeDatasets = {
   energyProduction: EnergyProductionSnapshot;
   coalElectricity: CoalElectricitySnapshot;
   sovereignty: SovereigntySnapshot;
+  highestPoints: HighestPointsSnapshot;
+  worldBank: WorldBankIndicatorsSnapshot;
+  humanDevelopment: HumanDevelopmentIndexSnapshot;
+  eventEditions: EventEditionsSnapshot;
+  historicalDominations: HistoricalDominationsSnapshot;
 };
 
 type QuantitativeFacts = Pick<
@@ -461,8 +551,16 @@ type QuantitativeFacts = Pick<
   | "productionRanks"
   | "coalElectricityShare"
   | "formerSovereigns"
+  | "dominations"
   | "sovereigntyYear"
   | "sovereigntyKind"
+  | "sovereigntyDate"
+  | "sovereigntySheetHidden"
+  | "highestPoint"
+  | "gdpPerCapitaUsd"
+  | "lifeExpectancyYears"
+  | "humanDevelopmentIndex"
+  | "eventEditions"
 >;
 
 /**
@@ -518,6 +616,82 @@ function lastVolcanicEruptionYearForCode(
 }
 
 /**
+ * Point culminant d'un pays : altitude du Factbook (de l'override `peak` quand
+ * il retient un autre sommet), libellés de l'override curé s'il existe, de la
+ * récolte sinon. Un pays absent du dataset échoue bruyamment
+ * (les 197 sont couverts) — jamais d'altitude inventée.
+ */
+function highestPointForCode(
+  code: string,
+  snapshot: HighestPointsSnapshot,
+): HighestPoint {
+  const entry = snapshot.points[code];
+  if (!entry) {
+    throw new Error(
+      `${code}: aucun point culminant — lancer pnpm harvest:highest-points`,
+    );
+  }
+  const override = snapshot.overrides[code];
+  const label = override ? override.label : entry.label;
+  return {
+    elevationM:
+      override?.kind === "peak" ? override.elevationM : entry.elevationM,
+    names: label ? { fr: label.fr, en: label.en } : null,
+  };
+}
+
+/** IDH du pays avec l'année des données de l'édition, `null` sans valeur au fichier. */
+function humanDevelopmentForCode(
+  code: string,
+  dataset: HumanDevelopmentIndexSnapshot,
+): CountryRecord["humanDevelopmentIndex"] {
+  const entry = dataset.values[code];
+  return entry ? { value: entry.value, year: dataset.dataYear } : null;
+}
+
+/**
+ * Années des éditions accueillies par le pays, par événement, en ordre
+ * croissant. Un événement sans édition pour ce pays n'a pas de clé.
+ */
+function eventEditionsForCode(
+  code: string,
+  snapshot: EventEditionsSnapshot,
+): CountryRecord["eventEditions"] {
+  const editions: CountryRecord["eventEditions"] = {};
+  (
+    Object.entries(snapshot.events) as [
+      CountryEvent,
+      EventEditionsSnapshot["events"][CountryEvent],
+    ][]
+  ).forEach(([event, list]) => {
+    const years = list
+      .filter(({ hosts }) => hosts.includes(code))
+      .map(({ year }) => year)
+      .sort((a, b) => a - b);
+    if (years.length > 0) editions[event] = years;
+  });
+  return editions;
+}
+
+/**
+ * Dominations retenues pour le pays, dans l'ordre du dataset. Le motif et les
+ * sources restent dans le dataset : `facts.ts` ne porte que ce qui s'affiche.
+ */
+function dominationsForCode(
+  code: string,
+  snapshot: HistoricalDominationsSnapshot,
+): CountryRecord["dominations"] {
+  return (snapshot.countries[code] ?? []).map((entry) => ({
+    power: entry.power,
+    nature: entry.nature,
+    from: entry.from,
+    to: entry.to,
+    intermittent: entry.intermittent === true,
+    part: entry.part ? { fr: entry.part.fr, en: entry.part.en } : null,
+  }));
+}
+
+/**
  * Fusionne les datasets quantitatifs curés en scalaires dérivés par pays.
  * Les parts sont ramenées en fraction 0–1 ; une source qui ne couvre pas le
  * pays donne `null` (jamais 0). `utcOffsetCount` retombe à 1 si absent : tout
@@ -541,8 +715,60 @@ export function quantitativeFactsForCode(
     productionRanks: productionRanksForCode(code, datasets),
     coalElectricityShare: typeof coal === "number" ? coal / 100 : null,
     formerSovereigns: sovereignty ? [...sovereignty.formerSovereigns] : [],
+    dominations: dominationsForCode(code, datasets.historicalDominations),
     sovereigntyYear: sovereignty?.year ?? null,
     sovereigntyKind: sovereignty?.kind ?? null,
+    sovereigntyDate: sovereignty?.date ?? null,
+    sovereigntySheetHidden: sovereignty?.sheetHidden !== undefined,
+    highestPoint: highestPointForCode(code, datasets.highestPoints),
+    gdpPerCapitaUsd: datasets.worldBank.gdpPerCapita.values[code] ?? null,
+    lifeExpectancyYears: datasets.worldBank.lifeExpectancy.values[code] ?? null,
+    humanDevelopmentIndex: humanDevelopmentForCode(
+      code,
+      datasets.humanDevelopment,
+    ),
+    eventEditions: eventEditionsForCode(code, datasets.eventEditions),
+  };
+}
+
+/** Sous-ensemble de world-countries lu pour les monnaies et les gentilés. */
+export type WcCurrencyDemonymRow = Readonly<{
+  currencies?: Readonly<Record<string, unknown>>;
+  demonyms?: Readonly<{
+    fra?: Readonly<{ m: string; f: string }>;
+    eng?: Readonly<{ m: string; f: string }>;
+  }>;
+}>;
+
+/**
+ * Monnaies et gentilés d'un pays : world-countries, puis les corrections
+ * curées. Échoue bruyamment si le résultat est incomplet (monnaie vide, gentilé
+ * absent) — un pays sans donnée n'est jamais rempli en silence.
+ */
+export function currencyAndDemonymFacts(
+  iso3: string,
+  row: WcCurrencyDemonymRow | undefined,
+  currencyCorrection: CurrencyCorrection | undefined,
+  demonymCorrection: DemonymCorrection | undefined,
+): Pick<CountryRecord, "currencies" | "demonyms"> {
+  const currencies = currencyCorrection
+    ? [...currencyCorrection.currencies]
+    : Object.keys(row?.currencies ?? {});
+  if (currencies.length === 0) {
+    throw new Error(
+      `${iso3}: aucune monnaie — ajouter une entrée à currencyCorrectionsByIso3`,
+    );
+  }
+  const fr = demonymCorrection?.fr ?? row?.demonyms?.fra;
+  const en = demonymCorrection?.en ?? row?.demonyms?.eng;
+  if (!fr?.m || !fr.f || !en?.m || !en.f) {
+    throw new Error(
+      `${iso3}: gentilé fr/en incomplet — ajouter une entrée à demonymCorrectionsByIso3`,
+    );
+  }
+  return {
+    currencies,
+    demonyms: { fr: { m: fr.m, f: fr.f }, en: { m: en.m, f: en.f } },
   };
 }
 

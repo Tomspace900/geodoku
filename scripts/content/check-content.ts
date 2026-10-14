@@ -13,15 +13,31 @@
  *     importés du réseau restent hors de portée — cf. `validateDatasetFacts` ;
  *   - **souveraineté** : une `sourceDescription` qui nomme une puissance absente
  *     de `formerSovereigns` échoue — cf. `validateSovereigntySources` ;
+ *   - **millésimes** : le millésime d'une source récoltée ou datée dans
+ *     `content/sources.ts` dit exactement ce que dit son dataset (date de
+ *     récolte, plage d'années, édition, date de l'instantané des adhésions,
+ *     dernière édition tenue) — cf. `validateSourceVintages` ;
+ *   - **dominations** : `historicalDominations.ts` cohérent (catalogue, une
+ *     période par puissance, sources connues, aucun cas à la fois retenu et
+ *     écarté) — cf. `validateHistoricalDominations` ;
  *   - **seam** : `content/` est terminal, aucun module n'y importe `@/…` ni ne
  *     remonte hors du dossier — cf. `validateContentSeam` ;
  *   - **provenance** : présence et frontmatter cohérent des `SOURCE.md`
- *     (un par contrainte) et des trois documents de socle.
+ *     (un par contrainte) et des trois documents de socle ;
+ *   - **sources des contraintes** : un `about.ts` par contrainte active/archivée,
+ *     clarifications conformes — cf. `validateConstraintAbouts` ;
+ *   - **libellés chiffrés** : le chiffre d'un libellé calculé sur un pays de
+ *     référence (« plus dense que le Japon (320 hab./km²) ») est la valeur du
+ *     snapshot arrondie à 2 chiffres significatifs — cf. `validateReferenceLabels` ;
+ *   - **sources référencées** : chaque `SourceId` de `content/sources.ts` (about.ts
+ *     des contraintes + `factProvenance.ts` des faits pays, lot 2) est cité au
+ *     moins une fois, et chaque URL de source est en `https://`.
  *
  *   pnpm check:content
  */
 import { existsSync, readdirSync, readFileSync, statSync } from "node:fs";
 import { resolve } from "node:path";
+import rawWorldCountries from "world-countries";
 import {
   ARCHIVED_CONSTRAINT_IDS,
   answersForConstraint,
@@ -32,21 +48,60 @@ import {
 import { DERIVATIONS } from "../../content/constraints/derivations";
 import { COUNTRY_CATALOG } from "../../content/countries/catalog";
 import { COUNTRY_CODES } from "../../content/countries/countryCodes";
-import { COUNTRY_FACTS } from "../../content/countries/facts";
+import { COUNTRY_FACTS, FACTS_SNAPSHOT } from "../../content/countries/facts";
 import { COUNTRY_POPULARITY } from "../../content/countries/popularity";
+import { SOURCES } from "../../content/sources";
 import {
   ARCHIVED_CONSTRAINTS,
   CONSTRAINTS,
 } from "../../src/features/game/logic/constraints";
+import type { WcCurrencyDemonymRow } from "../countries/buildCountriesLib";
+import { countryPatches } from "../countries/countryPatches";
+import { CAPITAL_LABELS } from "../countries/data/capitalLabels";
 import { QUANTITATIVE_DATASETS } from "../countries/data/datasets";
+import { HIGHEST_POINTS } from "../countries/data/highestPoints";
+import { HUMAN_DEVELOPMENT_INDEX } from "../countries/data/humanDevelopmentIndex";
+import { WORLD_BANK_INDICATORS } from "../countries/data/worldBankIndicators";
+import { harvestVintage } from "../countries/harvest/capitalLabelsLib";
+import { forestVintage } from "../countries/harvest/forestCoverLib";
+import {
+  editionVintageLabel,
+  validateCategoryAgainstPublished,
+} from "../countries/harvest/humanDevelopmentIndexLib";
+import { yearRangeLabel } from "../countries/harvest/worldBankIndicatorsLib";
 import {
   validateCountryCatalog,
   validateCountryFacts,
 } from "../countries/validateCountryCatalog";
-import { validateDatasetFacts } from "../countries/validateDatasetFacts";
+import {
+  ACCEPTED_PEAK_GAPS,
+  validateCapitalLabels,
+  validateCurrencyDemonymFacts,
+  validateDatasetFacts,
+  validateEventEditions,
+  validateHighestPoints,
+  validateHistoricalDominations,
+  validateHumanDevelopmentIndex,
+  validatePeakCoherence,
+  validateWorldBankIndicator,
+} from "../countries/validateDatasetFacts";
 import { validateSovereigntySources } from "../countries/validateSovereigntySources";
+import {
+  referencedSourcesFromAbouts,
+  sourceUrlErrors,
+  unreferencedSourceErrors,
+  validateConstraintAbouts,
+} from "./validateConstraintAbouts";
 import { validateContentSeam } from "./validateContentSeam";
 import { validateDerivationFreshness } from "./validateDerivationFreshness";
+import { referencedSourcesFromFactProvenance } from "./validateFactProvenance";
+import { validateReferenceLabels } from "./validateReferenceLabels";
+import { validateSourceVintages } from "./validateSourceVintages";
+import {
+  asOfVintage,
+  editionsHeldUntilVintage,
+  lastEditionYear,
+} from "./vintageLabels";
 
 const EXPECTED_COUNTRY_COUNT = 197;
 const EXPECTED_ACTIVE_COUNT = 77;
@@ -73,7 +128,87 @@ function checkCountries(errors: string[]): void {
       COUNTRY_CODES,
     ),
   );
+  errors.push(
+    ...validateCapitalLabels(COUNTRY_FACTS, CAPITAL_LABELS, COUNTRY_CODES),
+  );
+  errors.push(
+    ...validateEventEditions(
+      COUNTRY_FACTS,
+      QUANTITATIVE_DATASETS.eventEditions,
+      COUNTRY_CODES,
+    ),
+  );
+  errors.push(
+    ...validateHistoricalDominations(
+      QUANTITATIVE_DATASETS.historicalDominations,
+      COUNTRY_CODES,
+      Object.keys(SOURCES),
+    ),
+  );
+  errors.push(
+    ...validateCurrencyDemonymFacts(
+      COUNTRY_FACTS,
+      Object.fromEntries(
+        (
+          rawWorldCountries as unknown as (WcCurrencyDemonymRow & {
+            cca3: string;
+          })[]
+        ).map((row) => [row.cca3, row]),
+      ),
+      countryPatches.currencyCorrectionsByIso3,
+      countryPatches.demonymCorrectionsByIso3,
+      COUNTRY_CODES,
+    ),
+  );
+  errors.push(
+    ...validateHighestPoints(
+      HIGHEST_POINTS,
+      QUANTITATIVE_DATASETS.sovereignty,
+      COUNTRY_CODES,
+    ),
+  );
+  errors.push(
+    ...validatePeakCoherence(COUNTRY_FACTS, ACCEPTED_PEAK_GAPS, COUNTRY_CODES),
+  );
+  errors.push(
+    ...validateWorldBankIndicator(
+      WORLD_BANK_INDICATORS.gdpPerCapita,
+      COUNTRY_CODES,
+    ),
+    ...validateWorldBankIndicator(
+      WORLD_BANK_INDICATORS.lifeExpectancy,
+      COUNTRY_CODES,
+    ),
+  );
+  errors.push(
+    ...validateHumanDevelopmentIndex(HUMAN_DEVELOPMENT_INDEX, COUNTRY_CODES),
+    ...validateCategoryAgainstPublished(HUMAN_DEVELOPMENT_INDEX),
+  );
   errors.push(...validateSovereigntySources(QUANTITATIVE_DATASETS.sovereignty));
+  errors.push(
+    ...validateSourceVintages(SOURCES, {
+      wikidata_capital_labels: harvestVintage(CAPITAL_LABELS.harvestedAt),
+      wikidata_highest_point_labels: harvestVintage(HIGHEST_POINTS.harvestedAt),
+      fao_forest_resources: forestVintage(QUANTITATIVE_DATASETS.forestCover),
+      world_bank_gdp_per_capita: yearRangeLabel(
+        WORLD_BANK_INDICATORS.gdpPerCapita,
+      ),
+      world_bank_life_expectancy: yearRangeLabel(
+        WORLD_BANK_INDICATORS.lifeExpectancy,
+      ),
+      undp_hdr: editionVintageLabel(HUMAN_DEVELOPMENT_INDEX),
+      rest_countries_memberships: asOfVintage(FACTS_SNAPSHOT.date),
+      fifa_world_cup: editionsHeldUntilVintage(
+        lastEditionYear(QUANTITATIVE_DATASETS.eventEditions, ["fifa_wc_host"]),
+      ),
+      ioc_olympic_hosts: editionsHeldUntilVintage(
+        lastEditionYear(QUANTITATIVE_DATASETS.eventEditions, [
+          "summer_olympics_host",
+          "winter_olympics_host",
+        ]),
+      ),
+    }),
+  );
 
   const countryCodes = COUNTRY_CATALOG.map(({ iso3 }) => iso3);
   if (COUNTRY_CATALOG.length !== EXPECTED_COUNTRY_COUNT) {
@@ -258,6 +393,17 @@ function main(): void {
   );
   errors.push(...validateContentSeam(resolve(".")));
   checkConstraintSources(errors);
+  errors.push(...validateConstraintAbouts());
+  errors.push(...validateReferenceLabels());
+
+  const referencedSources = new Set([
+    ...referencedSourcesFromAbouts(),
+    ...referencedSourcesFromFactProvenance(),
+  ]);
+  errors.push(
+    ...unreferencedSourceErrors(Object.keys(SOURCES), referencedSources),
+  );
+  errors.push(...sourceUrlErrors(new Map(Object.entries(SOURCES))));
 
   if (errors.length > 0) {
     throw new Error(`Contenu invalide:\n- ${errors.join("\n- ")}`);

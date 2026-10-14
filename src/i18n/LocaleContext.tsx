@@ -9,7 +9,7 @@ import {
 } from "react";
 import { STORAGE_KEYS, safeGet, safeSet } from "@/lib/storage";
 import { translate } from "./index";
-import type { Locale, TKey } from "./types";
+import type { Locale, TKey, Translate } from "./types";
 
 const SUPPORTED: Locale[] = ["fr", "en"];
 
@@ -25,7 +25,7 @@ function detectLocale(): Locale {
 type LocaleContextValue = {
   locale: Locale;
   setLocale: (l: Locale) => void;
-  t: (key: TKey, vars?: Record<string, string | number>) => string;
+  t: Translate;
 };
 
 const LocaleContext = createContext<LocaleContextValue | null>(null);

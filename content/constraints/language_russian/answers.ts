@@ -2,12 +2,8 @@
 import { defineAnswerSet } from "../defineAnswerSet";
 
 export default defineAnswerSet("language_russian", [
-  "AZE",
   "BLR",
   "KAZ",
   "KGZ",
   "RUS",
-  "TJK",
-  "TKM",
-  "UZB",
 ]);

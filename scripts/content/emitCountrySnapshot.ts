@@ -44,6 +44,7 @@ const FACT_KEYS = [
   "flagSymbols",
   "flagLayout",
   "events",
+  "eventEditions",
   "memberships",
   "capitals",
   "drivingSide",
@@ -58,8 +59,17 @@ const FACT_KEYS = [
   "productionRanks",
   "coalElectricityShare",
   "formerSovereigns",
+  "dominations",
   "sovereigntyYear",
   "sovereigntyKind",
+  "sovereigntyDate",
+  "sovereigntySheetHidden",
+  "highestPoint",
+  "gdpPerCapitaUsd",
+  "lifeExpectancyYears",
+  "humanDevelopmentIndex",
+  "currencies",
+  "demonyms",
 ] as const;
 
 function sortByIso3(records: readonly CountryRecord[]): CountryRecord[] {

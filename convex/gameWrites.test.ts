@@ -6,7 +6,7 @@ import { convexTest } from "convex-test";
 import { describe, expect, it } from "vitest";
 import { api, internal } from "./_generated/api";
 import { CELL_KEYS } from "./cellKeys";
-import { offsetUTC, todayUTC } from "./lib/dates";
+import { todayUTC } from "./lib/dates";
 import schema from "./schema";
 
 const modules = import.meta.glob([

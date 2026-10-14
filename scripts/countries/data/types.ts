@@ -11,13 +11,25 @@
  * quantitatifs dérivés ») et les `SOURCE.md` des contraintes concernées.
  */
 
+import type { HumanDevelopmentCategory } from "../../../content/countries/humanDevelopment.ts";
 import type {
+  CountryEvent,
+  DominatingPower,
+  DominationNature,
   FormerSovereign,
   ProductionRankKey,
   SovereigntyKind,
 } from "../../../content/countries/type.ts";
+import type { LocalizedString } from "../../../content/type.ts";
 
-export type { FormerSovereign, ProductionRankKey, SovereigntyKind };
+export type {
+  CountryEvent,
+  DominatingPower,
+  DominationNature,
+  FormerSovereign,
+  ProductionRankKey,
+  SovereigntyKind,
+};
 
 /** Décalages UTC civils distincts observés simultanément à `referenceDate`. */
 export type CivilTimeOffsetsSnapshot = Record<
@@ -71,6 +83,8 @@ export type UrbanCentresSnapshot = {
 export type ForestCoverSnapshot = {
   source: string;
   referenceYear: number;
+  /** `lastupdated` de la WDI : la série est révisée, une récolte peut changer une valeur passée. */
+  sourceUpdatedAt: string;
   /** Pourcentage 0–100 par ISO3 ; couverture complète des 197 pays jouables. */
   countries: Record<string, number>;
 };
@@ -134,6 +148,13 @@ export type SovereigntyEvent = Readonly<{
   kind: SovereigntyKind;
   year: number;
   date?: string;
+  /**
+   * Motif pour lequel la fiche pays ne montre pas cet événement : le libellé
+   * d'une nature (« Indépendance », « Fondation »…) le rendrait faux. Vit dans
+   * la donnée, pas dans une liste de la couche joueur ; la dérivation de
+   * `history_sovereignty_since_1990` ne le lit pas.
+   */
+  sheetHidden?: string;
   formerSovereigns: readonly FormerSovereign[];
   sourceDescription: string;
 }>;
@@ -142,4 +163,215 @@ export type SovereigntyEvent = Readonly<{
 export type SovereigntySnapshot = Readonly<{
   sourceCommit: string;
   countries: Readonly<Record<string, SovereigntyEvent>>;
+}>;
+
+/** Libellés d'une capitale, dans les deux langues du jeu. */
+export type CapitalLabel = { fr: string; en: string };
+
+/** Libellé posé à la main : le motif dit pourquoi la récolte ne suffit pas. */
+export type CapitalLabelOverride = CapitalLabel & { reason: string };
+
+/**
+ * Libellés des capitales, indexés par ISO3 puis par **nom source** REST
+ * Countries (`CountryCapital.name`). La liste des capitales reste celle de REST
+ * Countries : ce dataset ne fait que la traduire.
+ *
+ * `labels` est écrit par `harvest/capitalLabels.ts` (Wikidata) ; `overrides`
+ * est curé à la main, préservé à chaque récolte, et l'emporte sur `labels`.
+ */
+export type CapitalLabelsSnapshot = {
+  /** Date de récolte (`YYYY-MM-DD`) : Wikidata est un état courant, pas un millésime. */
+  harvestedAt: string;
+  labels: Record<string, Record<string, CapitalLabel>>;
+  overrides: Record<string, Record<string, CapitalLabelOverride>>;
+};
+
+/** Libellés d'un point culminant, dans les deux langues du jeu. */
+export type HighestPointLabel = { fr: string; en: string };
+
+/**
+ * Point culminant d'un pays. L'altitude et le nom viennent du CIA World
+ * Factbook (*Elevation › highest point*) ; `label` est le libellé fr/en
+ * Wikidata du même sommet, reconnu par l'altitude (le Factbook retire les
+ * diacritiques). `label` vaut `null` pour un point sans nom : l'affichage
+ * porte alors une convention unique.
+ */
+export type HighestPointEntry = {
+  /** Texte du Factbook, nettoyé des notes et parenthèses, sans l'altitude. */
+  sourceName: string;
+  /** Altitude du Factbook, en mètres. */
+  elevationM: number;
+  label: HighestPointLabel | null;
+  /** Identifiant Wikidata du sommet reconnu ; `null` si sans nom. */
+  wikidata: string | null;
+};
+
+/**
+ * Correction curée, le motif disant pourquoi la récolte ne suffit pas :
+ * - `label` renomme le sommet du Factbook (ou le déclare sans nom), altitude
+ *   du Factbook inchangée ;
+ * - `peak` retient **un autre sommet** que celui du Factbook (périmètre
+ *   territorial, chaîne au lieu d'un sommet) : le motif nomme alors la source
+ *   de son altitude.
+ */
+export type HighestPointOverride =
+  | { kind: "label"; label: HighestPointLabel | null; reason: string }
+  | {
+      kind: "peak";
+      label: HighestPointLabel;
+      elevationM: number;
+      reason: string;
+    };
+
+/**
+ * Points culminants par ISO3. `points` est écrit par `harvest/highestPoints.ts` ;
+ * `overrides` est curé, préservé à chaque récolte, et l'emporte sur `points[].label`
+ * (et sur l'altitude pour un override `peak`).
+ */
+export type HighestPointsSnapshot = {
+  /** Commit du miroir `factbook.json` — le même que `sovereignty.sourceCommit`. */
+  factbookCommit: string;
+  /** Date de récolte (`YYYY-MM-DD`) des libellés Wikidata (état courant). */
+  harvestedAt: string;
+  points: Record<string, HighestPointEntry>;
+  overrides: Record<string, HighestPointOverride>;
+};
+
+/** Pourquoi un pays n'a aucune valeur d'un indicateur WDI. */
+export type WorldBankMissingCause =
+  /** Aucune ligne pour ce code dans la réponse (Taïwan, Vatican). */
+  | "not_in_wdi"
+  /** Des lignes existent, mais aucune valeur non nulle dans la fenêtre. */
+  | "no_value_in_window";
+
+/** Valeur retenue d'un indicateur WDI : l'année non nulle la plus récente de la fenêtre. */
+export type WorldBankValue = { value: number; year: number };
+
+/**
+ * Un indicateur de la Banque mondiale (WDI), tel que récolté. Chaque pays du
+ * catalogue est soit dans `values`, soit dans `missing` avec sa cause — jamais
+ * dans les deux, jamais dans aucun.
+ */
+export type WorldBankIndicator = {
+  /** Code WDI (`NY.GDP.PCAP.CD`, `SP.DYN.LE00.IN`). */
+  code: string;
+  /** `meta.lastupdated` de la réponse : la WDI révise ses séries passées. */
+  sourceUpdatedAt: string;
+  /** Fenêtre demandée (années incluses) ; au-delà, un pays vaut `null`. */
+  window: { from: number; to: number };
+  values: Record<string, WorldBankValue>;
+  missing: Record<string, WorldBankMissingCause>;
+};
+
+/**
+ * PIB par habitant et espérance de vie, récoltés par
+ * `harvest/worldBankIndicators.ts`. Aucune valeur calculée n'est stockée
+ * (catégorie de revenu…) : elle se calcule à l'affichage.
+ */
+export type WorldBankIndicatorsSnapshot = {
+  /** Date de récolte (`YYYY-MM-DD`). */
+  harvestedAt: string;
+  gdpPerCapita: WorldBankIndicator;
+  lifeExpectancy: WorldBankIndicator;
+};
+
+/** Pourquoi un pays n'a aucune valeur d'IDH dans l'édition retenue. */
+export type HumanDevelopmentMissingCause =
+  /** Aucune ligne pour ce code dans le fichier (Taïwan, Vatican, Kosovo). */
+  | "not_in_report"
+  /** Une ligne existe mais sans valeur : catégorie « Other Countries or Territories ». */
+  | "no_value_published";
+
+/** IDH d'un pays, avec la catégorie que le PNUD publie pour lui (`hdicode`). */
+export type HumanDevelopmentValue = {
+  value: number;
+  category: HumanDevelopmentCategory;
+};
+
+/**
+ * Indice de développement humain du PNUD, tel que récolté. Chaque pays du
+ * catalogue est soit dans `values`, soit dans `missing` avec sa cause. La
+ * catégorie publiée n'est conservée que pour la garde de `check:content` : la
+ * fiche la recalcule depuis la valeur.
+ */
+export type HumanDevelopmentIndexSnapshot = {
+  /** Année du *Human Development Report* (« Rapport 2025 »). */
+  edition: number;
+  /** Année des données : la dernière de l'édition (« données 2023 »). */
+  dataYear: number;
+  /** URL exacte du fichier récolté. */
+  sourceUrl: string;
+  /** Date de récolte (`YYYY-MM-DD`). */
+  harvestedAt: string;
+  values: Record<string, HumanDevelopmentValue>;
+  missing: Record<string, HumanDevelopmentMissingCause>;
+};
+
+/**
+ * Une édition d'un événement accueilli : son année et ses pays hôtes (ISO3),
+ * rattachés au pays qui contient **aujourd'hui** la ville ou le territoire hôte.
+ * `note` dit ce qui ne se lit pas dans la ligne (édition décalée, hôte partagé).
+ */
+export type EventEdition = Readonly<{
+  year: number;
+  hosts: readonly string[];
+  note?: string;
+}>;
+
+/** Éditions passées des événements de `CountryEvent`, par ordre chronologique. */
+export type EventEditionsSnapshot = Readonly<{
+  checkedAt: string;
+  events: Readonly<Record<CountryEvent, readonly EventEdition[]>>;
+}>;
+
+/**
+ * Source d'une période de domination : une entrée de `content/sources.ts`, avec
+ * la page lue pour Britannica (chemin sous `https://www.britannica.com`).
+ */
+export type DominationSource = Readonly<
+  | { id: "cia_factbook_background" | "cia_factbook_independence" }
+  | { id: "britannica"; page: `/${string}` }
+>;
+
+/**
+ * Domination d'une puissance sur un pays, telle que retenue par les règles de
+ * `content/constraints/SOURCES.md#histoire-et-souveraineté`. `reason` dit ce que
+ * les années ne disent pas (acte retenu pour le début, partie concernée).
+ */
+export type DominationEntry = Readonly<{
+  power: DominatingPower;
+  nature: DominationNature;
+  from: number | null;
+  to: number;
+  intermittent?: true;
+  part?: LocalizedString;
+  reason: string;
+  sources: readonly [DominationSource, ...DominationSource[]];
+}>;
+
+/** Règle qui écarte un cas de domination (cf. `SOURCES.md`). */
+export type DominationExclusionRule =
+  | "military_occupation"
+  | "client_state"
+  | "napoleonic_annexation"
+  | "partial_territory"
+  | "dominion_mandate"
+  | "not_counted_by_convention"
+  | "no_formal_domination"
+  | "european_feudal_possession";
+
+export type DominationExclusion = Readonly<{
+  power: DominatingPower;
+  rules: readonly [DominationExclusionRule, ...DominationExclusionRule[]];
+  reason: string;
+}>;
+
+/**
+ * Dominations britannique et française retenues par pays, et cas écartés avec
+ * la règle qui les écarte — trace de chaque refus, relue en diff.
+ */
+export type HistoricalDominationsSnapshot = Readonly<{
+  checkedAt: string;
+  countries: Readonly<Record<string, readonly DominationEntry[]>>;
+  excluded: Readonly<Record<string, readonly DominationExclusion[]>>;
 }>;

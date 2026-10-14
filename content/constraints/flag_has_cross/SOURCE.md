@@ -22,10 +22,12 @@ Pays dont le drapeau porte une **croix**.
 
 ## Cas limites
 
-Un motif stylisé, minuscule ou intégré à des armoiries relève d'une décision explicite — c'est la principale source de désaccord sur cette contrainte.
+Tout motif figurant sur le drapeau d'État compte, armoiries comprises et quelle que soit sa taille ([convention `flag_*`](../SOURCES.md#drapeaux)) — c'est ce que dit le toast joueur. Un motif stylisé reste la principale source de désaccord sur cette contrainte et se tranche drapeau par drapeau.
 
 ## Révision
 
 Revue 2026-09-11 — même règle. Ajout : **SRB** (croix serbe cantonnée de quatre briquets, dans les armoiries qui fournissaient déjà l'aigle compté comme `animal`).
 
 Procédure commune : [SOURCES.md](../SOURCES.md#procédure-de-révision).
+
+Revue 2026-10-09 (#122) — **MDA** ajoutée : l'aigle des armoiries, déjà compté comme `animal`, tient une croix dans son bec. Même cas que la Croatie en 2026-09-11 : un blason ne fournit pas un élément sans l'autre.
