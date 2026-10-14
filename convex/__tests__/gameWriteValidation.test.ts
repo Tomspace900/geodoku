@@ -6,7 +6,6 @@ import {
   assertOperationId,
   assertValidGameEnd,
 } from "../gameWriteValidation";
-import { todayUTC } from "../lib/dates";
 
 describe("game write validation", () => {
   it("accepts a UUID v4 operation id", () => {
