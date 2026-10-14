@@ -195,7 +195,6 @@ pnpm simulate:scheduling          # validateur changement contraintes
 pnpm simulate:players             # dry-run par défaut ; --execute pour écrire (develop/dev)
 pnpm analyze:observed
 pnpm export:analytics             # écrit par défaut dans docs/reports/ (gitignored)
-pnpm review:constraint-values     # relecture « à propos » + valeur du Drawer par pays → docs/reports/ (gitignored)
 
 # Reproduire / observer prod (ou develop) en local — LE workflow par défaut
 pnpm dump:prod                    # copie l'état prod → cloud dev local
@@ -341,8 +340,11 @@ trivial peut s'en passer.
   puis toutes les sous-issues passent en « En prod ». Le workflow « Item closed » du
   Project doit donc poser « Sur develop », pas « En prod ». Abandon : fermer en
   « not planned » et passer en « Abandonné ».
-- **Plans longs** : un plan d'exécution (`docs/content-refactor-p4.md`…) reste un doc
-  versionné, dont l'issue est le point d'entrée. Une décision durable va dans
-  `AGENTS.md` ou dans le doc, jamais seulement dans un commentaire d'issue.
+- **Plans longs** : un plan d'exécution peut vivre dans `docs/` le temps du chantier,
+  avec son issue comme point d'entrée. À la mise en prod, ses décisions durables
+  passent dans `AGENTS.md`, `content/constraints/SOURCES.md` ou
+  `docs/content-pipeline.md`, ses points ouverts dans des issues, et le plan est
+  retiré : l'historique git le garde. Une décision durable ne vit jamais
+  seulement dans un commentaire d'issue.
 - **Repo public** : rien de privé dans une issue ni un commentaire. Pas de chiffres du
   sondage joueurs (ses docs sont gitignorés), pas de données de prod, pas de secrets.
