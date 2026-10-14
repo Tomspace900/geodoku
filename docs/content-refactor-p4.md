@@ -1285,7 +1285,7 @@ case (A–D).
 - Merge : fast-forward sur `develop`, re-signé par l'utilisateur.
 - Points ouverts : le rapport final de P4 se rédige après le merge.
 
-## 7. Bilan de P4 (2026-10-13)
+## 7. Bilan de P4 (2026-10-13, complété le 2026-10-14)
 
 ### Ce qui part en prod
 
@@ -1311,7 +1311,7 @@ case (A–D).
 
 ### Listes changées depuis la dernière mise en prod
 
-Onze contraintes, trente entrées — d'où la régénération du pool de prod :
+Treize contraintes, quarante-neuf entrées — d'où la régénération du pool de prod :
 
 | Contrainte | Changement | Origine |
 | --- | --- | --- |
@@ -1326,6 +1326,8 @@ Onze contraintes, trente entrées — d'où la régénération du pool de prod :
 | `ocean_pacific` | −TLS | mers de l'archipel des Indes orientales (#122) |
 | `physical_crosses_equator` | −KIR −MDV | terre émergée seulement (#122) |
 | `society_capital_not_largest` | +LIE +MLT +SMR +TWN | la ville, pas l'aire urbaine (#122) |
+| `history_from_united_kingdom` | +BGD +BTN +CMR +ERI +LBY +PNG +PSE +SAU +SGP +SSD +SUR | un jour sous domination (#126) |
+| `history_from_france` | +CAN +DMA +DOM +GRD +KNA +LCA +MUS +SYC | un jour sous domination (#126) |
 
 `pnpm simulate:scheduling` : 14/14. Deux contraintes deviennent rares
 (`density_less_canada`, `language_russian`) : #121.
@@ -1351,11 +1353,18 @@ ci-dessus :
 - **Données réseau** : les données partent à jour en prod. Pas de regen hors-ligne ;
   chaque récolte imprime le millésime à reporter, que `check:content` compare.
 
+- **Domination passée** (#126, tranché le 2026-10-14) : `history_from_*` compte tout
+  pays passé **un jour** sous domination de la puissance — colonie, protectorat,
+  État protégé, mandat, condominium ; une partie du territoire si elle portait la
+  capitale ou s'est unie au pays à la décolonisation. Occupations, États satellites
+  et annexions napoléoniennes exclus. Dataset `scripts/countries/data/historicalDominations.ts`,
+  règles dans `content/constraints/SOURCES.md`. Le Drawer affiche la nature et la
+  période (« Colonie (1819–1963) »).
+
 ### Chiffres
 
-- Tests : 624 (fin du lot 2) → 767 après retrait des tests de la fiche.
-- Chargement joueur initial : 257,7 → 257,0 KiB gzip, budget 280.
-- Chunk des faits : 39,9 KiB.
+- Tests : 624 (fin du lot 2) → 767 après retrait de la fiche → 800 après #126.
+- Chargement joueur initial : 257,7 → 256,7 KiB gzip, budget 280.
 
 ### Points ouverts
 
@@ -1375,6 +1384,6 @@ ci-dessus :
 1. Entrée de changelog et `LATEST_CHANGELOG_UPDATE_DATE`, le jour de la PR.
 2. PR `develop` → `main` ; les e2e tournent en CI sur tous les moteurs.
 3. En prod : `pnpm simulate:scheduling`, puis « Regénérer le pool » dans `/admin`.
-4. Le merge ferme #47, #48, #49 et #123 (`Closes`). Restent à cocher à la main dans
+4. Le merge ferme #47, #48, #49, #123 et #126 (`Closes`). Restent à cocher à la main dans
    #50 ; statuts du Project à mettre à jour.
 
