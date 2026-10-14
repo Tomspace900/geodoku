@@ -146,7 +146,7 @@ export const FACT_PROVENANCE: { readonly [K in SheetRowId]: FactProvenance } = {
     basis: "source",
     sources: ["cia_factbook_independence"],
   },
-  memberships: { basis: "source", sources: ["rest_countries"] },
+  memberships: { basis: "source", sources: ["rest_countries_memberships"] },
   flagColors: { basis: "convention", sources: ["un_flags"] },
   flagSymbols: { basis: "convention", sources: ["un_flags"] },
   flagLayout: { basis: "convention", sources: ["un_flags"] },

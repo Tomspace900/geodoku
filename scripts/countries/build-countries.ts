@@ -29,6 +29,7 @@ import type {
   PoliticalGroup,
 } from "../../content/countries/type.ts";
 import { writeCountrySnapshot } from "../content/emitCountrySnapshot.ts";
+import { asOfVintage } from "../content/vintageLabels.ts";
 import {
   applySourceCorrections,
   assignPopularity,
@@ -1028,6 +1029,11 @@ async function main(): Promise<void> {
   log(
     "Output",
     "Relire le diff de content/ (catalog, facts, popularity, constraints/*/answers.ts).",
+  );
+  const membershipsVintage = asOfVintage(snapshotDate);
+  log(
+    "Output",
+    `Millésime à reporter dans content/sources.ts (rest_countries_memberships) : ${JSON.stringify(membershipsVintage)}`,
   );
 }
 

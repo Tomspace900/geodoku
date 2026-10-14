@@ -13,9 +13,10 @@
  *     importés du réseau restent hors de portée — cf. `validateDatasetFacts` ;
  *   - **souveraineté** : une `sourceDescription` qui nomme une puissance absente
  *     de `formerSovereigns` échoue — cf. `validateSovereigntySources` ;
- *   - **millésimes récoltés** : le millésime d'une source récoltée dans
+ *   - **millésimes** : le millésime d'une source récoltée ou datée dans
  *     `content/sources.ts` dit exactement ce que dit son dataset (date de
- *     récolte, plage d'années, édition) — cf. `validateSourceVintages` ;
+ *     récolte, plage d'années, édition, date de l'instantané des adhésions,
+ *     dernière édition tenue) — cf. `validateSourceVintages` ;
  *   - **dominations** : `historicalDominations.ts` cohérent (catalogue, une
  *     période par puissance, sources connues, aucun cas à la fois retenu et
  *     écarté) — cf. `validateHistoricalDominations` ;
@@ -47,7 +48,7 @@ import {
 import { DERIVATIONS } from "../../content/constraints/derivations";
 import { COUNTRY_CATALOG } from "../../content/countries/catalog";
 import { COUNTRY_CODES } from "../../content/countries/countryCodes";
-import { COUNTRY_FACTS } from "../../content/countries/facts";
+import { COUNTRY_FACTS, FACTS_SNAPSHOT } from "../../content/countries/facts";
 import { COUNTRY_POPULARITY } from "../../content/countries/popularity";
 import { SOURCES } from "../../content/sources";
 import {
@@ -96,6 +97,11 @@ import { validateDerivationFreshness } from "./validateDerivationFreshness";
 import { referencedSourcesFromFactProvenance } from "./validateFactProvenance";
 import { validateReferenceLabels } from "./validateReferenceLabels";
 import { validateSourceVintages } from "./validateSourceVintages";
+import {
+  asOfVintage,
+  editionsHeldUntilVintage,
+  lastEditionYear,
+} from "./vintageLabels";
 
 const EXPECTED_COUNTRY_COUNT = 197;
 const EXPECTED_ACTIVE_COUNT = 77;
@@ -191,6 +197,16 @@ function checkCountries(errors: string[]): void {
         WORLD_BANK_INDICATORS.lifeExpectancy,
       ),
       undp_hdr: editionVintageLabel(HUMAN_DEVELOPMENT_INDEX),
+      rest_countries_memberships: asOfVintage(FACTS_SNAPSHOT.date),
+      fifa_world_cup: editionsHeldUntilVintage(
+        lastEditionYear(QUANTITATIVE_DATASETS.eventEditions, ["fifa_wc_host"]),
+      ),
+      ioc_olympic_hosts: editionsHeldUntilVintage(
+        lastEditionYear(QUANTITATIVE_DATASETS.eventEditions, [
+          "summer_olympics_host",
+          "winter_olympics_host",
+        ]),
+      ),
     }),
   );
 

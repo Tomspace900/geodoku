@@ -4,6 +4,7 @@
  * script pour être testable sans réseau.
  */
 import type { LocalizedString } from "../../../content/type.ts";
+import { dateLabel } from "../../content/vintageLabels.ts";
 import type {
   CapitalLabel,
   CapitalLabelOverride,
@@ -175,53 +176,11 @@ export const CAPITAL_LABELS: CapitalLabelsSnapshot = ${JSON.stringify(snapshot, 
 
 export type { CapitalLabelOverride };
 
-const MONTHS_FR = [
-  "janvier",
-  "février",
-  "mars",
-  "avril",
-  "mai",
-  "juin",
-  "juillet",
-  "août",
-  "septembre",
-  "octobre",
-  "novembre",
-  "décembre",
-];
-const MONTHS_EN = [
-  "January",
-  "February",
-  "March",
-  "April",
-  "May",
-  "June",
-  "July",
-  "August",
-  "September",
-  "October",
-  "November",
-  "December",
-];
-
 /**
  * Millésime des récoltes Wikidata (`wikidata_capital_labels`,
- * `wikidata_highest_point_labels`) : la date de récolte (`YYYY-MM-DD`, UTC), le 1er du mois s'écrivant « 1er » en
- * français. Calculé à la main plutôt que par `Intl`, qui donnerait « 1 octobre »
- * et dépendrait du fuseau de la machine.
+ * `wikidata_highest_point_labels`) : la date de récolte (`YYYY-MM-DD`, UTC).
  */
 export function harvestVintage(harvestedAt: string): LocalizedString {
-  const match = /^(\d{4})-(\d{2})-(\d{2})$/.exec(harvestedAt);
-  const monthIndex = match ? Number(match[2]) - 1 : -1;
-  if (!match || monthIndex < 0 || monthIndex > 11) {
-    throw new Error(
-      `harvestedAt doit être une date YYYY-MM-DD : « ${harvestedAt} »`,
-    );
-  }
-  const [, year, , dayText] = match;
-  const day = Number(dayText);
-  return {
-    fr: `récolte du ${day === 1 ? "1er" : day} ${MONTHS_FR[monthIndex]} ${year}`,
-    en: `harvested ${day} ${MONTHS_EN[monthIndex]} ${year}`,
-  };
+  const { fr, en } = dateLabel(harvestedAt);
+  return { fr: `récolte du ${fr}`, en: `harvested ${en}` };
 }

@@ -33,6 +33,17 @@ export const SOURCES = {
     url: "https://restcountries.com/",
     vintage: null,
   },
+  // Adhésions aux organisations : état de l'instantané `FACTS_SNAPSHOT.date`,
+  // corrections datées de `countryPatches.ts` comprises. Gardé par
+  // `validateSourceVintages` ; `build:countries` imprime la valeur à reporter.
+  rest_countries_memberships: {
+    name: {
+      fr: "REST Countries — adhésions",
+      en: "REST Countries — memberships",
+    },
+    url: "https://restcountries.com/",
+    vintage: { fr: "au 14 octobre 2026", en: "as of 14 October 2026" },
+  },
   wikidata_capital_labels: {
     name: {
       fr: "Wikidata — libellés des capitales",
@@ -103,7 +114,11 @@ export const SOURCES = {
   fifa_world_cup: {
     name: { fr: "FIFA — Coupe du monde", en: "FIFA — World Cup" },
     url: "https://www.fifa.com/fifaplus/en/tournaments/mens/worldcup",
-    vintage: null,
+    // Dernière édition tenue du dataset `eventEditions` (gardé).
+    vintage: {
+      fr: "éditions tenues jusqu'en 2026",
+      en: "editions held up to 2026",
+    },
   },
   ioc_olympic_hosts: {
     name: {
@@ -111,7 +126,11 @@ export const SOURCES = {
       en: "IOC — Olympic host cities",
     },
     url: "https://www.olympics.com/ioc/olympic-games",
-    vintage: null,
+    // Dernière édition tenue, été et hiver confondus (`eventEditions`, gardé).
+    vintage: {
+      fr: "éditions tenues jusqu'en 2026",
+      en: "editions held up to 2026",
+    },
   },
   cia_factbook_government_type: {
     name: {
@@ -119,7 +138,9 @@ export const SOURCES = {
       en: "CIA World Factbook — Government type",
     },
     url: "https://www.cia.gov/the-world-factbook/field/government-type/",
-    vintage: null,
+    // Dernière mise à jour des données du miroir figé `factbook.json` (commit
+    // 8662a8b) ; le Factbook a cessé de paraître en février 2026.
+    vintage: { fr: "au 22 janvier 2026", en: "as of 22 January 2026" },
   },
   cia_factbook_independence: {
     name: {

@@ -205,6 +205,12 @@ Une adhésion ou un retrait récent (Timor-Leste à l'ASEAN, retrait émirati de
 l'OPEP, statut saoudien aux BRICS) suit le millésime du snapshot REST Countries
 et se tranche à la révision, jamais par édition manuelle de `answers.ts`.
 
+**Date affichée (2026-10-15, #129).** Le toast cite « REST Countries —
+adhésions » avec la date de l'instantané (`FACTS_SNAPSHOT.date`, « au 14 octobre
+2026 »), corrections datées de `countryPatches.ts` comprises. `build:countries`
+imprime la valeur à reporter dans `content/sources.ts`, et `check:content`
+(`validateSourceVintages`) échoue tant qu'elle n'y est pas.
+
 ## Événements sportifs
 
 - Coupe du monde de football : [éditions et hôtes FIFA](https://www.fifa.com/fifaplus/en/tournaments/mens/worldcup).
@@ -226,6 +232,11 @@ CIO et leurs hôtes officiels comptent : **Stockholm 1956**, hôte des épreuves
 les Jeux intercalaires d'Athènes 1906 et les épreuves simplement délocalisées
 (voile d'Anvers 1920 à Amsterdam, équitation de Pékin 2008 à Hong Kong, surf de
 Paris 2024 à Tahiti) ne comptent pas.
+
+**Date affichée (2026-10-15, #129).** Les sources FIFA et CIO portent « éditions
+tenues jusqu'en AAAA », l'année de la dernière édition du dataset
+`eventEditions` (été et hiver confondus pour le CIO), gardée par
+`validateSourceVintages`.
 
 ## Nature et relief
 
