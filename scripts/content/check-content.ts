@@ -13,6 +13,9 @@
  *     importés du réseau restent hors de portée — cf. `validateDatasetFacts` ;
  *   - **souveraineté** : une `sourceDescription` qui nomme une puissance absente
  *     de `formerSovereigns` échoue — cf. `validateSovereigntySources` ;
+ *   - **dominations** : `historicalDominations.ts` cohérent (catalogue, une
+ *     période par puissance, sources connues, aucun cas à la fois retenu et
+ *     écarté) — cf. `validateHistoricalDominations` ;
  *   - **seam** : `content/` est terminal, aucun module n'y importe `@/…` ni ne
  *     remonte hors du dossier — cf. `validateContentSeam` ;
  *   - **provenance** : présence et frontmatter cohérent des `SOURCE.md`
@@ -73,6 +76,7 @@ import {
   validateDatasetFacts,
   validateEventEditions,
   validateHighestPoints,
+  validateHistoricalDominations,
   validateHumanDevelopmentIndex,
   validatePeakCoherence,
   validateWorldBankIndicator,
@@ -122,6 +126,13 @@ function checkCountries(errors: string[]): void {
       COUNTRY_FACTS,
       QUANTITATIVE_DATASETS.eventEditions,
       COUNTRY_CODES,
+    ),
+  );
+  errors.push(
+    ...validateHistoricalDominations(
+      QUANTITATIVE_DATASETS.historicalDominations,
+      COUNTRY_CODES,
+      Object.keys(SOURCES),
     ),
   );
   errors.push(

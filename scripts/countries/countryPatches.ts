@@ -740,6 +740,7 @@ export const manualCountryAdditions: ManualCountryAddition[] = [
     productionRanks: {},
     coalElectricityShare: null,
     formerSovereigns: [],
+    dominations: [],
     sovereigntyYear: null,
     sovereigntyKind: null,
     sovereigntyDate: null,

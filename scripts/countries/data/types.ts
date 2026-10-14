@@ -14,13 +14,18 @@
 import type { HumanDevelopmentCategory } from "../../../content/countries/humanDevelopment.ts";
 import type {
   CountryEvent,
+  DominatingPower,
+  DominationNature,
   FormerSovereign,
   ProductionRankKey,
   SovereigntyKind,
 } from "../../../content/countries/type.ts";
+import type { LocalizedString } from "../../../content/type.ts";
 
 export type {
   CountryEvent,
+  DominatingPower,
+  DominationNature,
   FormerSovereign,
   ProductionRankKey,
   SovereigntyKind,
@@ -317,4 +322,55 @@ export type EventEdition = Readonly<{
 export type EventEditionsSnapshot = Readonly<{
   checkedAt: string;
   events: Readonly<Record<CountryEvent, readonly EventEdition[]>>;
+}>;
+
+/**
+ * Source d'une période de domination : une entrée de `content/sources.ts`, avec
+ * la page lue pour Britannica (chemin sous `https://www.britannica.com`).
+ */
+export type DominationSource = Readonly<
+  | { id: "cia_factbook_background" | "cia_factbook_independence" }
+  | { id: "britannica"; page: `/${string}` }
+>;
+
+/**
+ * Domination d'une puissance sur un pays, telle que retenue par les règles de
+ * `content/constraints/SOURCES.md#histoire-et-souveraineté`. `reason` dit ce que
+ * les années ne disent pas (acte retenu pour le début, partie concernée).
+ */
+export type DominationEntry = Readonly<{
+  power: DominatingPower;
+  nature: DominationNature;
+  from: number | null;
+  to: number;
+  intermittent?: true;
+  part?: LocalizedString;
+  reason: string;
+  sources: readonly [DominationSource, ...DominationSource[]];
+}>;
+
+/** Règle qui écarte un cas de domination (cf. `SOURCES.md`). */
+export type DominationExclusionRule =
+  | "military_occupation"
+  | "client_state"
+  | "napoleonic_annexation"
+  | "partial_territory"
+  | "dominion_mandate"
+  | "no_formal_domination"
+  | "european_feudal_possession";
+
+export type DominationExclusion = Readonly<{
+  power: DominatingPower;
+  rules: readonly [DominationExclusionRule, ...DominationExclusionRule[]];
+  reason: string;
+}>;
+
+/**
+ * Dominations britannique et française retenues par pays, et cas écartés avec
+ * la règle qui les écarte — trace de chaque refus, relue en diff.
+ */
+export type HistoricalDominationsSnapshot = Readonly<{
+  checkedAt: string;
+  countries: Readonly<Record<string, readonly DominationEntry[]>>;
+  excluded: Readonly<Record<string, readonly DominationExclusion[]>>;
 }>;

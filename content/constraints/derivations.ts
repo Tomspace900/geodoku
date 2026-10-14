@@ -10,7 +10,7 @@
  * `content/` est terminal : ce module n'importe que des types de `content/`.
  */
 import { type CountryCode, isCountryCode } from "../countries/countryCodes";
-import type { CountryFacts } from "../countries/type";
+import type { CountryFacts, DominatingPower } from "../countries/type";
 import type { ActiveConstraintId } from "./index";
 
 /**
@@ -94,6 +94,11 @@ const CODE_IND = "IND";
 
 function densityOf(facts: CountryFacts): number {
   return facts.population / facts.areaKm2;
+}
+
+/** Le pays a été un jour sous domination de cette puissance (dataset curé). */
+function dominatedBy(facts: CountryFacts, power: DominatingPower): boolean {
+  return facts.dominations.some((domination) => domination.power === power);
 }
 
 /**
@@ -236,18 +241,18 @@ export const DERIVATIONS = {
   energy_coal_electricity_majority: (f) =>
     f.coalElectricityShare !== null && f.coalElectricityShare > MAJORITY_SHARE,
 
-  // ── Histoire (souveraineté, CIA World Factbook — champ Independence) ───────
-  // `history_from_*` ne lisent QUE l'appartenance à `formerSovereigns` : ni le
-  // `kind`, ni aucune éligibilité. Le Yémen est dans la liste UK (Sud-Yémen
-  // britannique) alors que son événement 1990 est une `unification`.
+  // ── Histoire ──────────────────────────────────────────────────────────────
+  // `history_sovereignty_since_1990` lit l'événement de souveraineté du
+  // Factbook (champ Independence). `history_from_*` lisent `dominations`, pas
+  // `formerSovereigns` : un pays passé un jour sous la puissance compte, même
+  // devenu indépendant d'un autre État (Singapour, de la Malaisie).
   history_sovereignty_since_1990: (f) =>
     f.sovereigntyYear !== null &&
     f.sovereigntyYear >= SOVEREIGNTY_SINCE_YEAR &&
     f.sovereigntyKind !== null &&
     SOVEREIGNTY_GAINED.has(f.sovereigntyKind),
-  history_from_france: (f) => f.formerSovereigns.includes("france"),
-  history_from_united_kingdom: (f) =>
-    f.formerSovereigns.includes("united_kingdom"),
+  history_from_france: (f) => dominatedBy(f, "france"),
+  history_from_united_kingdom: (f) => dominatedBy(f, "united_kingdom"),
 } satisfies Record<ActiveConstraintId, Derivation>;
 
 /**

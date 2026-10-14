@@ -27,6 +27,7 @@ import type {
   CapitalLabelsSnapshot,
   EventEditionsSnapshot,
   HighestPointsSnapshot,
+  HistoricalDominationsSnapshot,
   HumanDevelopmentIndexSnapshot,
   SovereigntySnapshot,
   WorldBankIndicator,
@@ -42,6 +43,7 @@ const DATASET_DERIVED_KEYS = [
   "productionRanks",
   "coalElectricityShare",
   "formerSovereigns",
+  "dominations",
   "sovereigntyYear",
   "sovereigntyKind",
   "sovereigntyDate",
@@ -420,6 +422,65 @@ export function validateEventEditions(
         .forEach((host) => {
           errors.push(`${event} ${year}: hôte ${host} hors catalogue`);
         });
+    });
+  });
+  return errors;
+}
+
+/**
+ * Cohérence du dataset `historicalDominations` (`history_from_*`) : pays du
+ * catalogue, au plus une domination par puissance et par pays, période
+ * ordonnée et révolue, motif et sources renseignés, sources connues de
+ * `content/sources.ts`. Un cas écarté (`excluded`) ne peut pas coexister avec
+ * une domination retenue de la même puissance : le dataset se contredirait.
+ */
+export function validateHistoricalDominations(
+  dataset: HistoricalDominationsSnapshot,
+  codes: readonly string[],
+  sourceIds: readonly string[],
+): string[] {
+  const errors: string[] = [];
+  const checkedYear = Number(dataset.checkedAt.slice(0, 4));
+  Object.entries(dataset.countries).forEach(([code, entries]) => {
+    if (!codes.includes(code))
+      errors.push(`${code}: domination hors catalogue`);
+    const powers = entries.map(({ power }) => power);
+    powers
+      .filter((power, index) => powers.indexOf(power) !== index)
+      .forEach((power) => {
+        errors.push(
+          `${code}: plusieurs dominations ${power} — n'en garder qu'une période`,
+        );
+      });
+    entries.forEach(({ power, from, to, reason, sources }) => {
+      const label = `${code} (${power})`;
+      if (from !== null && (!Number.isInteger(from) || from > to)) {
+        errors.push(`${label}: période invalide (${from}–${to})`);
+      }
+      if (!Number.isInteger(to) || to > checkedYear) {
+        errors.push(`${label}: fin invalide (${to})`);
+      }
+      if (reason.trim().length === 0) errors.push(`${label}: motif vide`);
+      sources
+        .filter(({ id }) => !sourceIds.includes(id))
+        .forEach(({ id }) => {
+          errors.push(
+            `${label}: source inconnue de content/sources.ts (${id})`,
+          );
+        });
+    });
+  });
+  Object.entries(dataset.excluded).forEach(([code, exclusions]) => {
+    if (!codes.includes(code)) errors.push(`${code}: exclusion hors catalogue`);
+    exclusions.forEach(({ power, reason }) => {
+      if (reason.trim().length === 0) {
+        errors.push(`${code} (${power}): motif d'exclusion vide`);
+      }
+      if (
+        (dataset.countries[code] ?? []).some((entry) => entry.power === power)
+      ) {
+        errors.push(`${code} (${power}): à la fois retenu et écarté`);
+      }
     });
   });
   return errors;

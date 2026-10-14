@@ -128,6 +128,44 @@ export type FormerSovereign =
   | "united_states"
   | "yugoslavia";
 
+/** Puissances dont la domination passée est tracée (`history_from_*`). */
+export type DominatingPower = Extract<
+  FormerSovereign,
+  "france" | "united_kingdom"
+>;
+
+/**
+ * Statut du territoire sous cette puissance, au moment où sa domination prend
+ * fin (une colonie d'abord protectorat est une colonie). `trusteeship` est la
+ * tutelle ONU qui a succédé aux mandats de la SDN.
+ */
+export type DominationNature =
+  | "colony"
+  | "protectorate"
+  | "protected_state"
+  | "mandate"
+  | "trusteeship"
+  | "condominium"
+  | "military_administration"
+  | "union";
+
+/**
+ * Période de domination d'une puissance sur le pays (dataset curé
+ * `scripts/countries/data/historicalDominations.ts`). Années à la précision de
+ * la source ; `from` vaut `null` quand aucune source de référence ne date le
+ * début — jamais une année inventée.
+ */
+export type Domination = Readonly<{
+  power: DominatingPower;
+  nature: DominationNature;
+  from: number | null;
+  to: number;
+  /** Domination interrompue par celle d'une autre puissance. */
+  intermittent: boolean;
+  /** Partie du territoire actuel concernée, quand ce n'est pas le pays entier. */
+  part: LocalizedString | null;
+}>;
+
 /**
  * Nature de l'événement de souveraineté retenu pour un pays (CIA World Factbook).
  * `separation` fait partie du vocabulaire source mais n'est portée par aucun pays
@@ -235,6 +273,12 @@ export type CountryFacts = Readonly<{
    * (CIA World Factbook). `[]` si aucune ou si la source ne couvre pas le pays.
    */
   formerSovereigns: readonly FormerSovereign[];
+  /**
+   * Dominations britannique et française passées, au plus une par puissance
+   * (`history_from_*`). Distinct de `formerSovereigns`, qui ne dit que le
+   * souverain **immédiatement antérieur** selon le Factbook. `[]` si aucune.
+   */
+  dominations: readonly Domination[];
   /**
    * Année de l'événement de souveraineté retenu (CIA World Factbook). Donnée
    * brute, jamais masquée. `null` quand la source ne couvre pas le pays — jamais 0.
@@ -372,6 +416,7 @@ export type CountryRecord = {
   productionRanks: Partial<Record<ProductionRankKey, number>>;
   coalElectricityShare: number | null;
   formerSovereigns: FormerSovereign[];
+  dominations: Domination[];
   sovereigntyYear: number | null;
   sovereigntyKind: SovereigntyKind | null;
   sovereigntyDate: string | null;

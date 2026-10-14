@@ -25,6 +25,7 @@ import type {
   EventEditionsSnapshot,
   ForestCoverSnapshot,
   HighestPointsSnapshot,
+  HistoricalDominationsSnapshot,
   HoloceneVolcanoSnapshot,
   HumanDevelopmentIndexSnapshot,
   MountainAreaSnapshot,
@@ -518,6 +519,7 @@ export type QuantitativeDatasets = {
   worldBank: WorldBankIndicatorsSnapshot;
   humanDevelopment: HumanDevelopmentIndexSnapshot;
   eventEditions: EventEditionsSnapshot;
+  historicalDominations: HistoricalDominationsSnapshot;
 };
 
 type QuantitativeFacts = Pick<
@@ -530,6 +532,7 @@ type QuantitativeFacts = Pick<
   | "productionRanks"
   | "coalElectricityShare"
   | "formerSovereigns"
+  | "dominations"
   | "sovereigntyYear"
   | "sovereigntyKind"
   | "sovereigntyDate"
@@ -652,6 +655,24 @@ function eventEditionsForCode(
 }
 
 /**
+ * Dominations retenues pour le pays, dans l'ordre du dataset. Le motif et les
+ * sources restent dans le dataset : `facts.ts` ne porte que ce qui s'affiche.
+ */
+function dominationsForCode(
+  code: string,
+  snapshot: HistoricalDominationsSnapshot,
+): CountryRecord["dominations"] {
+  return (snapshot.countries[code] ?? []).map((entry) => ({
+    power: entry.power,
+    nature: entry.nature,
+    from: entry.from,
+    to: entry.to,
+    intermittent: entry.intermittent === true,
+    part: entry.part ? { fr: entry.part.fr, en: entry.part.en } : null,
+  }));
+}
+
+/**
  * Fusionne les datasets quantitatifs curés en scalaires dérivés par pays.
  * Les parts sont ramenées en fraction 0–1 ; une source qui ne couvre pas le
  * pays donne `null` (jamais 0). `utcOffsetCount` retombe à 1 si absent : tout
@@ -675,6 +696,7 @@ export function quantitativeFactsForCode(
     productionRanks: productionRanksForCode(code, datasets),
     coalElectricityShare: typeof coal === "number" ? coal / 100 : null,
     formerSovereigns: sovereignty ? [...sovereignty.formerSovereigns] : [],
+    dominations: dominationsForCode(code, datasets.historicalDominations),
     sovereigntyYear: sovereignty?.year ?? null,
     sovereigntyKind: sovereignty?.kind ?? null,
     sovereigntyDate: sovereignty?.date ?? null,

@@ -314,6 +314,10 @@ l'Antarctique n'est pas jouable et l'île Marion (46°S) relève de l'Indien.
 
 ## Histoire et souveraineté
 
+Deux familles de données, à ne pas confondre.
+
+**L'événement de souveraineté** (`history_sovereignty_since_1990`) :
+
 - [CIA World Factbook — champ *Independence*](https://www.cia.gov/the-world-factbook/field/independence/),
   via le miroir figé `factbook.json` (commit `8662a8b`).
 - Dataset curé : `scripts/countries/data/sovereignty.ts` — un « événement de
@@ -325,16 +329,66 @@ actuel : indépendance, restauration de l'indépendance, séparation, succession
 après dissolution, continuité d'État, fondation ou unification. `build-countries`
 en garde trois scalaires par pays — `formerSovereigns` (slugs des anciennes
 puissances, jamais des ISO3), `sovereigntyYear`, `sovereigntyKind` — **tels
-quels**, sans masquage.
+quels**, sans masquage. `history_sovereignty_since_1990` lit `sovereigntyYear >=
+1990` **et** `sovereigntyKind ∈ { independence, restoration,
+dissolution_successor }` : les continuités d'État (Russie 1991) et unifications
+(Yémen 1990) sont écartées par le `kind`, pas par une donnée effacée.
 
-- `history_from_france` / `history_from_united_kingdom` lisent **uniquement**
-  l'appartenance à `formerSovereigns` : ni le `kind`, ni aucune éligibilité. Le
-  Yémen est ainsi dans la liste britannique (Sud-Yémen britannique) bien que son
-  événement de 1990 soit une `unification`.
-- `history_sovereignty_since_1990` lit `sovereigntyYear >= 1990` **et**
-  `sovereigntyKind ∈ { independence, restoration, dissolution_successor }` : les
-  continuités d'État (Russie 1991) et unifications (Yémen 1990) sont écartées par
-  le `kind`, pas par une donnée effacée.
+`formerSovereigns` ne nomme que le souverain **immédiatement antérieur**
+(Singapour « from Malaysian Federation », le Bangladesh « from Pakistan ») : il
+reste la lecture du Factbook, gardée par `validateSovereigntySources`, mais
+**aucune contrainte ne le lit plus** pour dire « un jour sous domination ».
+
+**Les dominations passées** (`history_from_france`, `history_from_united_kingdom`,
+issue #126) :
+
+- Dataset curé : `scripts/countries/data/historicalDominations.ts` — au plus une
+  période par puissance et par pays (nature, début, fin, partie concernée), avec
+  un motif et ses sources ; et un bloc `excluded` qui garde chaque cas écarté
+  avec la règle qui l'écarte.
+- Sources : CIA World Factbook, champs *Background* et *Independence* (même
+  miroir), et [Encyclopædia Britannica](https://www.britannica.com/), une page
+  citée par entrée. Une année qu'aucune source de référence ne donne reste
+  `null` (début de la domination française en Mauritanie) — jamais estimée.
+- Fusion : `dominations` dans `facts.ts` ; les deux contraintes lisent
+  l'existence d'une domination de la puissance.
+
+Règles, tranchées le 2026-10-14 — un pays entre dans la liste s'il a été **un
+jour** sous domination de la puissance :
+
+1. **Nature.** Comptent la colonie, le protectorat, l'**État protégé** dont la
+   puissance dirige les affaires étrangères (Afghanistan, Bhoutan, États du
+   Golfe, Nejd de 1915 à 1927), le mandat ou la tutelle, le condominium.
+   L'influence sans traité de protectorat ne compte pas : Oman, qui concluait
+   ses propres traités, ni le Népal.
+2. **Occupation militaire** suivie de restitution : exclue (Égypte 1798–1801,
+   Islande 1940, Java 1811–1816, zones d'occupation de 1945). Une conquête
+   **conservée** compte dès la conquête (Maurice 1810, Malte 1800).
+3. **Administration d'une ex-colonie ennemie** jusqu'à son indépendance :
+   comptée (Libye 1942–1951, Érythrée 1941–1952) — ce n'est pas une
+   occupation passagère.
+4. **État satellite** (royaume de Hollande, duché de Varsovie, Mexique de
+   Maximilien) : exclu.
+5. **Annexion napoléonienne** : exclue, même quand elle a pris la capitale
+   (Belgique, Luxembourg, Pays-Bas, Monaco…) — la contrainte parle d'empire
+   colonial.
+6. **Territoire partiel** : compte si la capitale actuelle en relevait (Canada,
+   Ottawa en Nouvelle-France ; Saint-Kitts, Basseterre française), ou si le
+   territoire dominé s'est uni à l'État au moment de la décolonisation
+   (Cameroun méridional, Somaliland, Aden). Hong Kong, Pondichéry ou la
+   Louisiane ne font pas entrer la Chine, l'Inde ni les États-Unis.
+7. **Passages successifs** : un pays passé d'une puissance à l'autre entre
+   dans les deux listes (Maurice, Seychelles, Sainte-Lucie, Grenade, Dominique).
+8. **Angleterre avant 1707** : ses colonies d'outre-mer comptent (Suriname
+   1651–1667), pas ses possessions féodales en Europe (la France médiévale).
+9. **Mandat confié à la Couronne mais exercé par un dominion** (Namibie, Samoa) :
+   exclu, la domination était sud-africaine ou néo-zélandaise.
+
+Conventions de période : début = premier acte retenu par la source (traité,
+fondation, annexion, conquête non restituée) ; fin = indépendance, cession ou
+transfert, à l'année du champ *Independence* quand la domination s'achève par
+l'indépendance. Nature = statut du territoire à la fin de la domination ;
+`intermittent` = domination interrompue par une autre puissance.
 
 Un pays non couvert par la source vaut `[]` / `null`, jamais 0. Les territoires et
 dépendances non jouables n'entrent dans aucune liste.

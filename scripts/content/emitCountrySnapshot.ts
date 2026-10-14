@@ -59,6 +59,7 @@ const FACT_KEYS = [
   "productionRanks",
   "coalElectricityShare",
   "formerSovereigns",
+  "dominations",
   "sovereigntyYear",
   "sovereigntyKind",
   "sovereigntyDate",

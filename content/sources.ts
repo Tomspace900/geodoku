@@ -129,6 +129,22 @@ export const SOURCES = {
     url: "https://www.cia.gov/the-world-factbook/field/independence/",
     vintage: null,
   },
+  cia_factbook_background: {
+    name: {
+      fr: "CIA World Factbook — Contexte historique",
+      en: "CIA World Factbook — Background",
+    },
+    url: "https://www.cia.gov/the-world-factbook/field/background/",
+    vintage: null,
+  },
+  britannica: {
+    name: {
+      fr: "Encyclopædia Britannica",
+      en: "Encyclopædia Britannica",
+    },
+    url: "https://www.britannica.com/",
+    vintage: null,
+  },
   cia_factbook_nationality: {
     name: {
       fr: "CIA World Factbook — Nationalité",

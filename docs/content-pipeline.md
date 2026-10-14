@@ -209,7 +209,7 @@ exactement à l'édition et à l'année du dataset (`validateEditionVintage`).
   de `scripts/countries/data/` et échoue (« lancer pnpm build:countries ») si
   l'un des champs qu'ils produisent (`utcOffsetCount`, `lastVolcanicEruptionYear`,
   `mountainAreaShare`, `forestCoverShare`, `urbanCentresOver1M`,
-  `productionRanks`, `coalElectricityShare`, `formerSovereigns`,
+  `productionRanks`, `coalElectricityShare`, `formerSovereigns`, `dominations`,
   `sovereigntyYear`, `sovereigntyKind`, `sovereigntyDate`, `sovereigntySheetHidden`, `highestPoint`, `gdpPerCapitaUsd`, `lifeExpectancyYears`, `humanDevelopmentIndex`) ne correspond plus à `facts.ts` : dataset
   révisé sans regen, ou `facts.ts` édité à la main malgré son en-tête
   `@generated`. Les **libellés des capitales** sont vérifiés de même contre

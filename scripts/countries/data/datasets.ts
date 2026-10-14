@@ -15,6 +15,7 @@ import { ENERGY_PRODUCTION } from "./energyProduction";
 import { EVENT_EDITIONS } from "./eventEditions";
 import { FOREST_COVER } from "./forestCover";
 import { HIGHEST_POINTS } from "./highestPoints";
+import { HISTORICAL_DOMINATIONS } from "./historicalDominations";
 import { HOLOCENE_VOLCANOES } from "./holoceneVolcanoes";
 import { HUMAN_DEVELOPMENT_INDEX } from "./humanDevelopmentIndex";
 import { MOUNTAIN_AREAS } from "./mountainArea";
@@ -36,4 +37,5 @@ export const QUANTITATIVE_DATASETS: QuantitativeDatasets = {
   worldBank: WORLD_BANK_INDICATORS,
   humanDevelopment: HUMAN_DEVELOPMENT_INDEX,
   eventEditions: EVENT_EDITIONS,
+  historicalDominations: HISTORICAL_DOMINATIONS,
 };

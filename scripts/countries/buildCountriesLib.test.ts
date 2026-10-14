@@ -56,6 +56,7 @@ function minimalCountry(code: string): CountryRecord {
     productionRanks: {},
     coalElectricityShare: null,
     formerSovereigns: [],
+    dominations: [],
     sovereigntyYear: null,
     sovereigntyKind: null,
     sovereigntyDate: null,
@@ -436,17 +437,27 @@ describe("quantitativeFactsForCode", () => {
       factbookCommit: "x",
       harvestedAt: "2026-10-09",
       points: Object.fromEntries(
-        ["CHE", "CHN", "DEU", "DZA", "FIN", "FRA", "ISL", "RUS", "ZZZ"].map(
-          (code) => [
-            code,
-            {
-              sourceName: "x",
-              elevationM: 100,
-              label: { fr: "x", en: "x" },
-              wikidata: "Q1",
-            },
-          ],
-        ),
+        [
+          "CHE",
+          "CHN",
+          "DEU",
+          "DZA",
+          "FIN",
+          "FRA",
+          "ISL",
+          "LCA",
+          "RUS",
+          "YEM",
+          "ZZZ",
+        ].map((code) => [
+          code,
+          {
+            sourceName: "x",
+            elevationM: 100,
+            label: { fr: "x", en: "x" },
+            wikidata: "Q1",
+          },
+        ]),
       ),
       overrides: {
         RUS: {
@@ -505,6 +516,34 @@ describe("quantitativeFactsForCode", () => {
         winter_olympics_host: [],
       },
     },
+    historicalDominations: {
+      checkedAt: "2026-10-14",
+      countries: {
+        YEM: [
+          {
+            power: "united_kingdom",
+            nature: "colony",
+            from: 1839,
+            to: 1967,
+            part: { fr: "Aden", en: "Aden" },
+            reason: "x",
+            sources: [{ id: "cia_factbook_background" }],
+          },
+        ],
+        LCA: [
+          {
+            power: "france",
+            nature: "colony",
+            from: 1650,
+            to: 1803,
+            intermittent: true,
+            reason: "x",
+            sources: [{ id: "britannica", page: "/place/Saint-Lucia" }],
+          },
+        ],
+      },
+      excluded: {},
+    },
   };
 
   it("reduces datasets to per-country scalars, shares as 0–1 fractions", () => {
@@ -517,6 +556,7 @@ describe("quantitativeFactsForCode", () => {
       productionRanks: { crude_oil: 2 },
       coalElectricityShare: null,
       formerSovereigns: [],
+      dominations: [],
       sovereigntyYear: null,
       sovereigntyKind: null,
       sovereigntyDate: null,
@@ -650,6 +690,36 @@ describe("quantitativeFactsForCode", () => {
     });
     expect(quantitativeFactsForCode("FIN", datasets).eventEditions).toEqual({
       fifa_wc_host: [2002],
+    });
+  });
+
+  it("keeps what a domination displays, without its reason nor sources", () => {
+    expect({
+      yemen: quantitativeFactsForCode("YEM", datasets).dominations,
+      saintLucia: quantitativeFactsForCode("LCA", datasets).dominations,
+      russia: quantitativeFactsForCode("RUS", datasets).dominations,
+    }).toEqual({
+      yemen: [
+        {
+          power: "united_kingdom",
+          nature: "colony",
+          from: 1839,
+          to: 1967,
+          intermittent: false,
+          part: { fr: "Aden", en: "Aden" },
+        },
+      ],
+      saintLucia: [
+        {
+          power: "france",
+          nature: "colony",
+          from: 1650,
+          to: 1803,
+          intermittent: true,
+          part: null,
+        },
+      ],
+      russia: [],
     });
   });
 

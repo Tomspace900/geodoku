@@ -274,33 +274,45 @@ describe("DERIVATIONS — bascules de seuil", () => {
     });
   });
 
-  it("history_from_france : appartenance à formerSovereigns, sans filtre de kind", () => {
+  it("history_from_france : un jour sous domination française, selon les règles du dataset", () => {
     expect({
       senegal: derive("history_from_france", "SEN"),
       vanuatu: derive("history_from_france", "VUT"), // condominium franco-britannique
-      india: derive("history_from_france", "IND"),
+      mauritius: derive("history_from_france", "MUS"), // française avant d'être britannique
+      canada: derive("history_from_france", "CAN"), // Ottawa en Nouvelle-France
+      india: derive("history_from_france", "IND"), // Pondichéry : partiel, sans la capitale
+      belgium: derive("history_from_france", "BEL"), // annexion napoléonienne
+      egypt: derive("history_from_france", "EGY"), // occupation militaire
       thailand: derive("history_from_france", "THA"), // jamais colonisée
     }).toEqual({
       senegal: true,
       vanuatu: true,
+      mauritius: true,
+      canada: true,
       india: false,
+      belgium: false,
+      egypt: false,
       thailand: false,
     });
   });
 
-  it("history_from_united_kingdom : formerSovereigns seul, flag d'éligibilité ignoré", () => {
+  it("history_from_united_kingdom : pas seulement le souverain immédiatement antérieur", () => {
     expect({
-      india: derive("history_from_united_kingdom", "IND"),
-      israel: derive("history_from_united_kingdom", "ISR"), // qualifies=false mais listé v1
-      united_states: derive("history_from_united_kingdom", "USA"), // trou de parsing v1 rattrapé
-      canada: derive("history_from_united_kingdom", "CAN"), // idem (Statute of Westminster)
-      senegal: derive("history_from_united_kingdom", "SEN"),
+      singapore: derive("history_from_united_kingdom", "SGP"), // indépendante de la Malaisie
+      bangladesh: derive("history_from_united_kingdom", "BGD"), // indépendant du Pakistan
+      yemen: derive("history_from_united_kingdom", "YEM"), // Aden, union de 1990
+      suriname: derive("history_from_united_kingdom", "SUR"), // colonie anglaise d'avant 1707
+      china: derive("history_from_united_kingdom", "CHN"), // Hong Kong : partiel
+      oman: derive("history_from_united_kingdom", "OMN"), // jamais protectorat
+      iceland: derive("history_from_united_kingdom", "ISL"), // occupation militaire
     }).toEqual({
-      india: true,
-      israel: true,
-      united_states: true,
-      canada: true,
-      senegal: false,
+      singapore: true,
+      bangladesh: true,
+      yemen: true,
+      suriname: true,
+      china: false,
+      oman: false,
+      iceland: false,
     });
   });
 
