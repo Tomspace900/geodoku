@@ -8,7 +8,7 @@ export default defineAbout("history_from_france", {
   ],
   basis: "convention",
   clarification: {
-    fr: "Colonie, protectorat, mandat ou tutelle ayant couvert le pays ou sa capitale actuelle. Occupations et annexions napoléoniennes exclues.",
-    en: "Colony, protectorate, mandate or trusteeship that covered the country or its present capital. Occupations and Napoleonic annexations excluded.",
+    fr: "Colonie, protectorat, mandat ou tutelle ayant couvert le pays ou sa capitale actuelle. Occupations exclues.",
+    en: "Colony, protectorate, mandate or trusteeship covering the country or its current capital. Occupations excluded.",
   },
 });
