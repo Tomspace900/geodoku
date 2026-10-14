@@ -75,7 +75,7 @@ describe("constraintValueFor", () => {
   });
 
   it("shows the official language even when there is only one", () => {
-    expect(frText("language_french", "FRA")).toBe("français");
+    expect(frText("language_french", "FRA")).toBe("Français");
   });
 
   it("lists every official language of a multilingual country", () => {
@@ -86,16 +86,20 @@ describe("constraintValueFor", () => {
 
   it("names the constraint's language first, so a shortened list still shows it (Spanish is 4th in Bolivia)", () => {
     expect(frText("language_spanish", "BOL")).toBe(
-      "espagnol, aymara, guarani et quechua",
+      "Espagnol, aymara, guarani et quechua",
     );
   });
 
   it("names every official language, the constraint's first", () => {
     const text = frText("language_english", "ZAF") ?? "";
-    expect(text.startsWith("anglais, ")).toBe(true);
+    expect(text.startsWith("Anglais, ")).toBe(true);
     expect(text.split(/, | et /)).toHaveLength(
       COUNTRY_FACTS.ZAF.officialLanguages.length,
     );
+  });
+
+  it("opens every value with a capital, even an ocean written lowercase in French", () => {
+    expect(frText("ocean_multiple_basins", "AUS")).toMatch(/^Océan /);
   });
 
   it("shows nothing for a flag symbol, which the label already names", () => {

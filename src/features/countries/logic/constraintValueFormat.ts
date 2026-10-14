@@ -40,8 +40,20 @@ const SHARE_LABEL_KEYS = {
  * libellés `countrySheet.value.*` ; le rang et les fuseaux sont écrits plus court
  * ici — la ligne partage la place avec une seconde valeur — et suivent le
  * vocabulaire du libellé de contrainte (« fuseaux horaires »).
+ *
+ * Toute valeur commence par une majuscule, comme une ligne : en français, les
+ * langues, les océans ou les sommets (« français », « océan Indien », « mont
+ * Blanc ») s'écrivent en minuscule au fil du texte.
  */
 export function formatConstraintValue(
+  value: ConstraintValue,
+  locale: Locale,
+  t: Translate,
+): string {
+  return capitalizeFirst(valueText(value, locale, t), locale);
+}
+
+function valueText(
   value: ConstraintValue,
   locale: Locale,
   t: Translate,
@@ -93,7 +105,7 @@ export function formatConstraintValue(
     case "highestPoint":
       return t("countrySheet.value.highestPoint", {
         name: value.names
-          ? capitalizeFirst(value.names[locale], locale)
+          ? value.names[locale]
           : t("countrySheet.value.unnamedHighestPoint"),
         value: formatInteger(value.elevationM, locale),
       });

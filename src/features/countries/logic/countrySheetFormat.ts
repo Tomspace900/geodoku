@@ -174,9 +174,9 @@ export function formatLanguageName(code: string, locale: Locale): string {
 }
 
 /**
- * Majuscule initiale d'un libellé en début de valeur : Wikidata écrit « mont
- * Blanc », « pic d'Orizaba » (typographie française des noms communs), qui
- * jurerait en tête de ligne.
+ * Majuscule initiale d'une valeur : la typographie française écrit en
+ * minuscule « mont Blanc », « océan Indien » ou « français », qui jureraient
+ * en tête de ligne.
  */
 export function capitalizeFirst(text: string, locale: Locale): string {
   return text.charAt(0).toLocaleUpperCase(locale) + text.slice(1);
