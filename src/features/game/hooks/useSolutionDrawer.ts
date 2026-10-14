@@ -1,6 +1,9 @@
 import { usePostHog } from "@posthog/react";
 import { useState } from "react";
-import type { ConstraintId } from "@/features/game/logic/constraints";
+import {
+  type ConstraintId,
+  constraintAnswers,
+} from "@/features/game/logic/constraints";
 import type { CellPosition, GameModeId } from "@/features/game/types";
 
 export type SolutionDrawerTarget =
@@ -33,15 +36,12 @@ export function useSolutionDrawer({
     setTarget({ kind: "cell", cell });
   }
 
-  function openConstraint(
-    constraintId: ConstraintId,
-    answerCount: number,
-  ): void {
+  function openConstraint(constraintId: ConstraintId): void {
     posthog?.capture("solution_constraint_opened", {
       grid_date: gridDate,
       mode,
       constraint_id: constraintId,
-      answer_count: answerCount,
+      answer_count: constraintAnswers(constraintId).size,
     });
     setTarget({ kind: "constraint", constraintId });
   }

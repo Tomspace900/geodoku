@@ -29,7 +29,7 @@ import type {
   GameState,
 } from "@/features/game/types";
 import { useLocale } from "@/i18n/LocaleContext";
-import type { Locale } from "@/i18n/types";
+import type { Locale, Translate } from "@/i18n/types";
 import { focusWithoutVisibleRing } from "@/lib/focus";
 import { cn } from "@/lib/utils";
 
@@ -77,6 +77,15 @@ function AnswerRow({
   );
 }
 
+/** Ordre alphabétique des noms localisés, partagé par les deux listes. */
+function compareCountryNames(locale: Locale) {
+  return (a: string, b: string) => {
+    const na = getCountryByIso3(a)?.names[locale] ?? a;
+    const nb = getCountryByIso3(b)?.names[locale] ?? b;
+    return na.localeCompare(nb, locale);
+  };
+}
+
 /**
  * Valeurs des contraintes de la case pour un pays, jointes en une ligne
  * (« 2ᵉ producteur mondial de cacao · 51 % de forêt »). Vide quand aucune
@@ -86,7 +95,7 @@ function cellSubline(
   values: ConstraintValuesByCountry,
   iso: string,
   locale: Locale,
-  t: ReturnType<typeof useLocale>["t"],
+  t: Translate,
 ): string | null {
   const parts = (values.get(iso) ?? []).flatMap((value) =>
     value ? [formatConstraintValue(value, locale, t)] : [],
@@ -111,11 +120,7 @@ function CellListView({
     [...codes],
     totalGuesses,
     rarityByCountry,
-    (a, b) => {
-      const na = getCountryByIso3(a)?.names[locale] ?? a;
-      const nb = getCountryByIso3(b)?.names[locale] ?? b;
-      return na.localeCompare(nb, locale);
-    },
+    compareCountryNames(locale),
   );
   const hasData = totalGuesses > 0;
 
@@ -157,11 +162,7 @@ function ConstraintListView({
   values: ConstraintValuesByCountry;
 }) {
   const { locale, t } = useLocale();
-  const ordered = [...countries].sort((a, b) => {
-    const na = getCountryByIso3(a)?.names[locale] ?? a;
-    const nb = getCountryByIso3(b)?.names[locale] ?? b;
-    return na.localeCompare(nb, locale);
-  });
+  const ordered = [...countries].sort(compareCountryNames(locale));
 
   return (
     <ul className="flex flex-col gap-1 overflow-y-auto px-4 pb-4">
@@ -197,7 +198,7 @@ export function SolutionDrawer({
   distribution,
   drawer,
 }: Props) {
-  const { locale, t } = useLocale();
+  const { t } = useLocale();
   const [open, setOpen] = useState(true);
   const openerRef = useRef<HTMLElement | null>(
     document.activeElement instanceof HTMLElement
@@ -286,11 +287,7 @@ export function SolutionDrawer({
             </DrawerHeader>
             <div className="px-4 pb-2">
               {constraintId && (
-                <ConstraintSourceInfo
-                  constraintId={constraintId}
-                  locale={locale}
-                  t={t}
-                />
+                <ConstraintSourceInfo constraintId={constraintId} />
               )}
               <p className="mt-2 text-xs text-on-surface-variant">
                 {t("ui.constraintAnswerCount", {

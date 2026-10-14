@@ -15,7 +15,6 @@ import { SolutionDrawer } from "@/features/game/components/SolutionDrawer";
 import { SolutionGrid } from "@/features/game/components/SolutionGrid";
 import { useConstraintSourceToast } from "@/features/game/hooks/useConstraintSourceToast";
 import { useSolutionDrawer } from "@/features/game/hooks/useSolutionDrawer";
-import { constraintAnswers } from "@/features/game/logic/constraints";
 import { getGridNumberForDate } from "@/features/game/logic/gridIssue";
 import { loadPersistedGame } from "@/features/game/logic/persistence";
 import { classifyReplayDate } from "@/features/game/logic/replayWindow";
@@ -159,13 +158,8 @@ function TrainingBoard({ date }: { date: string }) {
               distribution={distribution ?? undefined}
               cells={state.cells}
               mode="training"
-              onHeaderClick={(id) =>
-                solutionDrawer.openConstraint(id, constraintAnswers(id).size)
-              }
-              onCellClick={(cell) => {
-                const key = `${cell.row},${cell.col}`;
-                solutionDrawer.openCell(cell, validAnswers[key]?.length ?? 0);
-              }}
+              onHeaderClick={solutionDrawer.openConstraint}
+              onCellClick={solutionDrawer.openCell}
             />
           ) : (
             <GameGrid

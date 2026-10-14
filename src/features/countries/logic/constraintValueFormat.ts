@@ -1,4 +1,4 @@
-import type { Locale, TKey } from "@/i18n/types";
+import type { Locale, TKey, Translate } from "@/i18n/types";
 import type { ConstraintValue } from "./constraintValue";
 import {
   capitalizeFirst,
@@ -13,11 +13,6 @@ import {
   formatYear,
 } from "./countrySheetFormat";
 import { getCountryByIso3 } from "./search";
-
-type TranslateFn = (
-  key: TKey,
-  vars?: Record<string, string | number>,
-) => string;
 
 /**
  * Trois chiffres significatifs (« 241 M », « 1,43 Md ») : un drawer de liste
@@ -49,7 +44,7 @@ const SHARE_LABEL_KEYS = {
 export function formatConstraintValue(
   value: ConstraintValue,
   locale: Locale,
-  t: TranslateFn,
+  t: Translate,
 ): string {
   switch (value.kind) {
     case "population":

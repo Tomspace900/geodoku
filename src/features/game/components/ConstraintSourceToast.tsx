@@ -18,7 +18,7 @@ type Props = {
  * `pointer-events-auto` sur le toast lui-même.
  */
 export function ConstraintSourceToast({ toast }: Props) {
-  const { locale, t } = useLocale();
+  const { t } = useLocale();
   const { active, close, pause, resume } = toast;
 
   useEffect(() => {
@@ -63,11 +63,7 @@ export function ConstraintSourceToast({ toast }: Props) {
         </div>
 
         <div className="mt-1">
-          <ConstraintSourceInfo
-            constraintId={active.constraintId}
-            locale={locale}
-            t={t}
-          />
+          <ConstraintSourceInfo constraintId={active.constraintId} />
         </div>
       </div>
     </div>

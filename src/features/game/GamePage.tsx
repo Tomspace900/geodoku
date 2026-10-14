@@ -10,7 +10,6 @@ import { useBackendDownTimeout } from "@/features/errors/hooks/useBackendDownTim
 import { useConstraintSourceToast } from "@/features/game/hooks/useConstraintSourceToast";
 import { useGameState } from "@/features/game/hooks/useGameState";
 import { useSolutionDrawer } from "@/features/game/hooks/useSolutionDrawer";
-import { constraintAnswers } from "@/features/game/logic/constraints";
 import {
   getGridNumberForDate,
   getGridNumberForTodayUtc,
@@ -140,13 +139,8 @@ export function GamePage() {
                 validAnswers={validAnswers}
                 distribution={guessDistribution ?? undefined}
                 cells={state.cells}
-                onHeaderClick={(id) =>
-                  solutionDrawer.openConstraint(id, constraintAnswers(id).size)
-                }
-                onCellClick={(cell) => {
-                  const key = `${cell.row},${cell.col}`;
-                  solutionDrawer.openCell(cell, validAnswers[key]?.length ?? 0);
-                }}
+                onHeaderClick={solutionDrawer.openConstraint}
+                onCellClick={solutionDrawer.openCell}
               />
 
               <RarityHint />

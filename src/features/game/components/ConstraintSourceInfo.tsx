@@ -1,17 +1,10 @@
 import { Button } from "@/components/ui/button";
 import { constraintSourceView } from "@/features/game/logic/constraintSource";
 import type { ConstraintId } from "@/features/game/logic/constraints";
-import type { Locale, TKey } from "@/i18n/types";
-
-type TranslateFn = (
-  key: TKey,
-  vars?: Record<string, string | number>,
-) => string;
+import { useLocale } from "@/i18n/LocaleContext";
 
 type Props = {
   constraintId: ConstraintId;
-  locale: Locale;
-  t: TranslateFn;
 };
 
 /**
@@ -21,7 +14,8 @@ type Props = {
  * même vue pure (`constraintSourceView`) sous son titre plutôt que dans un
  * toast flottant.
  */
-export function ConstraintSourceInfo({ constraintId, locale, t }: Props) {
+export function ConstraintSourceInfo({ constraintId }: Props) {
+  const { locale, t } = useLocale();
   const view = constraintSourceView(constraintId, locale);
   return (
     <>

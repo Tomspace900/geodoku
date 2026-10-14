@@ -41,7 +41,7 @@ type Props = {
   cells: Record<CellKey, Cell>;
   mode?: GameModeId;
   onHeaderClick: (constraintId: ConstraintId) => void;
-  onCellClick: (cell: CellPosition) => void;
+  onCellClick: (cell: CellPosition, answerCount: number) => void;
 };
 
 export function SolutionGrid({
@@ -164,7 +164,7 @@ export function SolutionGrid({
             type="button"
             variant="ghost"
             size="auto"
-            onClick={() => onCellClick({ row, col })}
+            onClick={() => onCellClick({ row, col }, codes.length)}
             aria-label={t("ui.solutionCellAriaLabel", {
               row: row + 1,
               col: col + 1,
