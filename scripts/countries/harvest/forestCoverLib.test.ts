@@ -3,7 +3,7 @@ import type { ForestCoverSnapshot } from "../data/types";
 import {
   buildForestCover,
   FOREST_AREA_CODE,
-  validateForestVintage,
+  forestVintage,
 } from "./forestCoverLib";
 import type { WdiRow } from "./worldBankIndicatorsLib";
 
@@ -52,23 +52,14 @@ describe("buildForestCover", () => {
   });
 });
 
-describe("validateForestVintage", () => {
-  const snapshot: ForestCoverSnapshot = {
-    source: "x",
-    referenceYear: 2023,
-    sourceUpdatedAt: "2026-10-08",
-    countries: {},
-  };
-
-  it("accepte le millésime égal à l'année du dataset", () => {
-    expect(validateForestVintage({ fr: "2023", en: "2023" }, snapshot)).toEqual(
-      [],
-    );
-  });
-
-  it("signale un millésime désaccordé", () => {
-    expect(
-      validateForestVintage({ fr: "2022", en: "2022" }, snapshot),
-    ).toHaveLength(1);
+describe("forestVintage", () => {
+  it("écrit l'année de référence du dataset", () => {
+    const snapshot: ForestCoverSnapshot = {
+      source: "x",
+      referenceYear: 2023,
+      sourceUpdatedAt: "2026-10-08",
+      countries: {},
+    };
+    expect(forestVintage(snapshot)).toEqual({ fr: "2023", en: "2023" });
   });
 });

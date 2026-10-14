@@ -107,20 +107,6 @@ export function forestVintage(snapshot: ForestCoverSnapshot): LocalizedString {
   return { fr: year, en: year };
 }
 
-/** Garde : le millésime écrit à la main dit l'année du dataset. */
-export function validateForestVintage(
-  sourceVintage: LocalizedString | null,
-  snapshot: ForestCoverSnapshot,
-): string[] {
-  const expected = forestVintage(snapshot);
-  if (sourceVintage?.fr === expected.fr && sourceVintage?.en === expected.en) {
-    return [];
-  }
-  return [
-    `sources.fao_forest_resources: millésime ${JSON.stringify(sourceVintage)} désaccordé du dataset (année ${snapshot.referenceYear}) — mettre à jour content/sources.ts`,
-  ];
-}
-
 /** Sérialise le dataset (le fichier est ensuite normalisé par Biome). */
 export function renderForestCoverModule(snapshot: ForestCoverSnapshot): string {
   return `import type { ForestCoverSnapshot } from "./types";

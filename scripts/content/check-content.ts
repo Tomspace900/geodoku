@@ -13,6 +13,9 @@
  *     importés du réseau restent hors de portée — cf. `validateDatasetFacts` ;
  *   - **souveraineté** : une `sourceDescription` qui nomme une puissance absente
  *     de `formerSovereigns` échoue — cf. `validateSovereigntySources` ;
+ *   - **millésimes récoltés** : le millésime d'une source récoltée dans
+ *     `content/sources.ts` dit exactement ce que dit son dataset (date de
+ *     récolte, plage d'années, édition) — cf. `validateSourceVintages` ;
  *   - **dominations** : `historicalDominations.ts` cohérent (catalogue, une
  *     période par puissance, sources connues, aucun cas à la fois retenu et
  *     écarté) — cf. `validateHistoricalDominations` ;
@@ -58,13 +61,13 @@ import { QUANTITATIVE_DATASETS } from "../countries/data/datasets";
 import { HIGHEST_POINTS } from "../countries/data/highestPoints";
 import { HUMAN_DEVELOPMENT_INDEX } from "../countries/data/humanDevelopmentIndex";
 import { WORLD_BANK_INDICATORS } from "../countries/data/worldBankIndicators";
-import { validateHarvestVintage } from "../countries/harvest/capitalLabelsLib";
-import { validateForestVintage } from "../countries/harvest/forestCoverLib";
+import { harvestVintage } from "../countries/harvest/capitalLabelsLib";
+import { forestVintage } from "../countries/harvest/forestCoverLib";
 import {
+  editionVintageLabel,
   validateCategoryAgainstPublished,
-  validateEditionVintage,
 } from "../countries/harvest/humanDevelopmentIndexLib";
-import { validateYearRangeVintage } from "../countries/harvest/worldBankIndicatorsLib";
+import { yearRangeLabel } from "../countries/harvest/worldBankIndicatorsLib";
 import {
   validateCountryCatalog,
   validateCountryFacts,
@@ -92,6 +95,7 @@ import { validateContentSeam } from "./validateContentSeam";
 import { validateDerivationFreshness } from "./validateDerivationFreshness";
 import { referencedSourcesFromFactProvenance } from "./validateFactProvenance";
 import { validateReferenceLabels } from "./validateReferenceLabels";
+import { validateSourceVintages } from "./validateSourceVintages";
 
 const EXPECTED_COUNTRY_COUNT = 197;
 const EXPECTED_ACTIVE_COUNT = 77;
@@ -151,26 +155,6 @@ function checkCountries(errors: string[]): void {
     ),
   );
   errors.push(
-    ...validateHarvestVintage(
-      "wikidata_capital_labels",
-      SOURCES.wikidata_capital_labels.vintage,
-      CAPITAL_LABELS.harvestedAt,
-    ),
-  );
-  errors.push(
-    ...validateForestVintage(
-      SOURCES.fao_forest_resources.vintage,
-      QUANTITATIVE_DATASETS.forestCover,
-    ),
-  );
-  errors.push(
-    ...validateHarvestVintage(
-      "wikidata_highest_point_labels",
-      SOURCES.wikidata_highest_point_labels.vintage,
-      HIGHEST_POINTS.harvestedAt,
-    ),
-  );
-  errors.push(
     ...validateHighestPoints(
       HIGHEST_POINTS,
       QUANTITATIVE_DATASETS.sovereignty,
@@ -189,27 +173,26 @@ function checkCountries(errors: string[]): void {
       WORLD_BANK_INDICATORS.lifeExpectancy,
       COUNTRY_CODES,
     ),
-    ...validateYearRangeVintage(
-      "world_bank_gdp_per_capita",
-      SOURCES.world_bank_gdp_per_capita.vintage,
-      WORLD_BANK_INDICATORS.gdpPerCapita,
-    ),
-    ...validateYearRangeVintage(
-      "world_bank_life_expectancy",
-      SOURCES.world_bank_life_expectancy.vintage,
-      WORLD_BANK_INDICATORS.lifeExpectancy,
-    ),
   );
   errors.push(
     ...validateHumanDevelopmentIndex(HUMAN_DEVELOPMENT_INDEX, COUNTRY_CODES),
     ...validateCategoryAgainstPublished(HUMAN_DEVELOPMENT_INDEX),
-    ...validateEditionVintage(
-      "undp_hdr",
-      SOURCES.undp_hdr.vintage,
-      HUMAN_DEVELOPMENT_INDEX,
-    ),
   );
   errors.push(...validateSovereigntySources(QUANTITATIVE_DATASETS.sovereignty));
+  errors.push(
+    ...validateSourceVintages(SOURCES, {
+      wikidata_capital_labels: harvestVintage(CAPITAL_LABELS.harvestedAt),
+      wikidata_highest_point_labels: harvestVintage(HIGHEST_POINTS.harvestedAt),
+      fao_forest_resources: forestVintage(QUANTITATIVE_DATASETS.forestCover),
+      world_bank_gdp_per_capita: yearRangeLabel(
+        WORLD_BANK_INDICATORS.gdpPerCapita,
+      ),
+      world_bank_life_expectancy: yearRangeLabel(
+        WORLD_BANK_INDICATORS.lifeExpectancy,
+      ),
+      undp_hdr: editionVintageLabel(HUMAN_DEVELOPMENT_INDEX),
+    }),
+  );
 
   const countryCodes = COUNTRY_CATALOG.map(({ iso3 }) => iso3);
   if (COUNTRY_CATALOG.length !== EXPECTED_COUNTRY_COUNT) {

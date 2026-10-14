@@ -7,7 +7,6 @@ import {
   parseCsv,
   readHdrRows,
   validateCategoryAgainstPublished,
-  validateEditionVintage,
 } from "./humanDevelopmentIndexLib";
 
 const row = (iso3: string, hdicode: string, hdi: string): HdrRow => ({
@@ -123,7 +122,7 @@ describe("buildSnapshot", () => {
   });
 });
 
-describe("validateEditionVintage", () => {
+describe("editionVintageLabel", () => {
   const snapshot = { edition: 2025, dataYear: 2023 };
 
   it("écrit l'édition et l'année des données dans les deux langues", () => {
@@ -131,26 +130,6 @@ describe("validateEditionVintage", () => {
       fr: "Rapport 2025, données 2023",
       en: "2025 Report, 2023 data",
     });
-  });
-
-  it("accepte le millésime exact", () => {
-    expect(
-      validateEditionVintage(
-        "undp_hdr",
-        editionVintageLabel(snapshot),
-        snapshot,
-      ),
-    ).toEqual([]);
-  });
-
-  it("signale un millésime resté sur l'édition précédente", () => {
-    expect(
-      validateEditionVintage(
-        "undp_hdr",
-        { fr: "Rapport 2023 (données 2021)", en: "2023 Report (2021 data)" },
-        snapshot,
-      ),
-    ).toHaveLength(1);
   });
 });
 

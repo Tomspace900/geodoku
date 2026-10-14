@@ -5,7 +5,6 @@ import {
   harvestWindow,
   parseWdiResponse,
   selectLatestValues,
-  validateYearRangeVintage,
   type WdiRow,
   yearRangeLabel,
 } from "./worldBankIndicatorsLib";
@@ -137,18 +136,5 @@ describe("yearRangeLabel", () => {
 
   it("refuse un indicateur vide", () => {
     expect(() => yearRangeLabel(indicator([]))).toThrow();
-  });
-
-  it("signale un millésime écrit à la main qui diffère", () => {
-    const ok = { fr: "2022–2025", en: "2022–2025" };
-    expect(validateYearRangeVintage("s", ok, indicator([2022, 2025]))).toEqual(
-      [],
-    );
-    expect(
-      validateYearRangeVintage("s", ok, indicator([2023, 2025])),
-    ).toHaveLength(1);
-    expect(validateYearRangeVintage("s", null, indicator([2024]))).toHaveLength(
-      1,
-    );
   });
 });

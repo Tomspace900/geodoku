@@ -205,8 +205,8 @@ const MONTHS_EN = [
 ];
 
 /**
- * Millésime affiché sur la fiche pour la source `wikidata_capital_labels` :
- * la date de récolte (`YYYY-MM-DD`, UTC), le 1er du mois s'écrivant « 1er » en
+ * Millésime des récoltes Wikidata (`wikidata_capital_labels`,
+ * `wikidata_highest_point_labels`) : la date de récolte (`YYYY-MM-DD`, UTC), le 1er du mois s'écrivant « 1er » en
  * français. Calculé à la main plutôt que par `Intl`, qui donnerait « 1 octobre »
  * et dépendrait du fuseau de la machine.
  */
@@ -224,24 +224,4 @@ export function harvestVintage(harvestedAt: string): LocalizedString {
     fr: `récolte du ${day === 1 ? "1er" : day} ${MONTHS_FR[monthIndex]} ${year}`,
     en: `harvested ${day} ${MONTHS_EN[monthIndex]} ${year}`,
   };
-}
-
-/**
- * Garde : le millésime de `content/sources.ts` (écrit à la main, affiché au
- * joueur) doit dire la même date que `harvestedAt`, que seule la récolte met à
- * jour. Comparaison exacte. Partagée par les récoltes Wikidata (capitales,
- * points culminants) : `sourceId` n'est là que pour nommer l'entrée fautive.
- */
-export function validateHarvestVintage(
-  sourceId: string,
-  sourceVintage: LocalizedString | null,
-  harvestedAt: string,
-): string[] {
-  const expected = harvestVintage(harvestedAt);
-  if (sourceVintage?.fr === expected.fr && sourceVintage?.en === expected.en) {
-    return [];
-  }
-  return [
-    `sources.${sourceId}: millésime ${JSON.stringify(sourceVintage)} désaccordé de la récolte (harvestedAt ${harvestedAt}, attendu ${JSON.stringify(expected)}) — mettre à jour content/sources.ts`,
-  ];
 }

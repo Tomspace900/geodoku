@@ -194,25 +194,6 @@ export function editionVintageLabel(
 }
 
 /**
- * Garde : le millésime de `content/sources.ts` (écrit à la main, affiché au
- * joueur) doit dire exactement l'édition et l'année du dataset, que seule la
- * récolte met à jour. Comparaison exacte.
- */
-export function validateEditionVintage(
-  sourceId: string,
-  sourceVintage: LocalizedString | null,
-  snapshot: Pick<HumanDevelopmentIndexSnapshot, "edition" | "dataYear">,
-): string[] {
-  const expected = editionVintageLabel(snapshot);
-  if (sourceVintage?.fr === expected.fr && sourceVintage?.en === expected.en) {
-    return [];
-  }
-  return [
-    `sources.${sourceId}: millésime ${JSON.stringify(sourceVintage)} désaccordé de la récolte (attendu ${JSON.stringify(expected)}) — mettre à jour content/sources.ts`,
-  ];
-}
-
-/**
  * Garde : la catégorie calculée avec nos seuils égale celle que le PNUD publie
  * (`hdicode`), pour chaque pays. Un écart signale des seuils périmés (nouvelle
  * édition) ou une erreur de lecture.

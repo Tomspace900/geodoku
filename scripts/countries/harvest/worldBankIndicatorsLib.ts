@@ -159,25 +159,6 @@ export function yearRangeLabel(indicator: WorldBankIndicator): LocalizedString {
   return { fr: label, en: label };
 }
 
-/**
- * Garde : le millésime de `content/sources.ts` (écrit à la main, affiché au
- * joueur) doit dire exactement la plage que donne le dataset, que seule la
- * récolte met à jour. Comparaison exacte.
- */
-export function validateYearRangeVintage(
-  sourceId: string,
-  sourceVintage: LocalizedString | null,
-  indicator: WorldBankIndicator,
-): string[] {
-  const expected = yearRangeLabel(indicator);
-  if (sourceVintage?.fr === expected.fr && sourceVintage?.en === expected.en) {
-    return [];
-  }
-  return [
-    `sources.${sourceId}: millésime ${JSON.stringify(sourceVintage)} désaccordé de la récolte (plage attendue ${JSON.stringify(expected)}) — mettre à jour content/sources.ts`,
-  ];
-}
-
 /** Sérialise le dataset (le fichier est ensuite normalisé par Biome). */
 export function renderWorldBankModule(
   snapshot: WorldBankIndicatorsSnapshot,
