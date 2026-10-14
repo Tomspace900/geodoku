@@ -90,10 +90,14 @@ export const en = {
     contactBodyPre: "A question? Write to me at",
   },
   changelog: {
-    eyebrow: "Last updated · September 2026",
+    eyebrow: "Last updated · October 2026",
     title: "Changelog",
     backToGame: "Back to the game",
     entries: {
+      answerSourcesDate: "October 14, 2026",
+      answerSourcesTitle: "Where does the data come from?",
+      answerSourcesBody:
+        "Finally, some clarification on constraints and answers! Mid-game, clicking a constraint shows its dated sources, along with any conventions used. After your game, you can browse the solution countries for each cell and each constraint, each with what qualifies it: population, rank as a producer, year of independence\u2026",
       newConstraintsDate: "September 16, 2026",
       newConstraintsTitle: "A batch of new constraints",
       newConstraintsBody:

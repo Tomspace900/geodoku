@@ -92,10 +92,14 @@ export const fr = {
     contactBodyPre: "Une question\u00A0? \u00C9cris-moi \u00E0",
   },
   changelog: {
-    eyebrow: "Derni\u00E8re mise \u00E0 jour · Septembre 2026",
+    eyebrow: "Derni\u00E8re mise \u00E0 jour · Octobre 2026",
     title: "Changelog",
     backToGame: "Retour au jeu",
     entries: {
+      answerSourcesDate: "14 octobre 2026",
+      answerSourcesTitle: "D'o\u00F9 viennent les donn\u00E9es\u00A0?",
+      answerSourcesBody:
+        "Enfin un peu de clarification sur les contraintes et les r\u00E9ponses\u00A0! En pleine partie, cliquer sur une contrainte affiche ses sources dat\u00E9es, ainsi que les \u00E9ventuelles conventions retenues. \u00C0 la fin de ta partie, tu peux consulter les pays solutions de chaque case et de chaque contrainte, avec pour chacun ce qui le qualifie\u00A0: population, rang de producteur, ann\u00E9e d'ind\u00E9pendance\u2026",
       newConstraintsDate: "16 septembre 2026",
       newConstraintsTitle: "Une salve de nouvelles contraintes",
       newConstraintsBody:
