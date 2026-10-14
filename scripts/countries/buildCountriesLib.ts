@@ -116,10 +116,21 @@ export type DemonymCorrection = Readonly<{
   date: string;
 }>;
 
+/**
+ * Correction du nom français de world-countries. Le nom de la source reste
+ * cherchable : le build le verse aux alias du pays.
+ */
+export type NameCorrection = Readonly<{
+  fr: string;
+  reason: string;
+  date: string;
+}>;
+
 export type CountryPatchesConfig = {
   sourceCorrectionsByIso3: Record<string, SourceCorrection>;
   currencyCorrectionsByIso3: Record<string, CurrencyCorrection>;
   demonymCorrectionsByIso3: Record<string, DemonymCorrection>;
+  nameCorrectionsByIso3: Record<string, NameCorrection>;
   searchAliasesByIso3: Record<string, string[]>;
   wikipediaTitlesByIso3: Record<string, string>;
   gameplayClassifications: GameplayClassifications;

@@ -2,6 +2,7 @@
  * Curated country patches — typed, segmented config for build-countries.
  *
  * - sourceCorrectionsByIso3: explicit fixes where world-countries / REST disagree with gameplay intent
+ * - nameCorrectionsByIso3: French names where world-countries departs from the official French list
  * - searchAliasesByIso3: player-facing search variants NOT already in names or REST alternates
  * - wikipediaTitlesByIso3: Wikipedia article title overrides (popularity only)
  * - gameplayClassifications: constraint tag lists (events, geo, physical features, regime)
@@ -13,6 +14,7 @@ import type {
   DemonymCorrection,
   GameplayClassifications,
   ManualCountryAddition,
+  NameCorrection,
   SourceCorrection,
 } from "./buildCountriesLib.ts";
 
@@ -952,10 +954,42 @@ export const demonymCorrectionsByIso3: Record<Iso3, DemonymCorrection> = {
   },
 };
 
+const NAME_REFERENCES =
+  "INSEE, COG 2026 « Pays et territoires étrangers » (https://www.insee.fr/fr/statistiques/fichier/8740222/v_pays_territoire_2026.csv) ; Commission nationale de toponymie, liste « Pays, territoires et villes du monde » adoptée par le CNIG le 2025-09-16 (https://cnig.gouv.fr/IMG/pdf/7__liste_pays_territoires_et_villes_du_monde.pdf)";
+
+/**
+ * Noms français où `world-countries` s'écarte de la liste de référence de
+ * l'administration française. Le nom de la source est conservé comme alias de
+ * recherche. Revue #129 (2026-10-14).
+ */
+export const nameCorrectionsByIso3: Record<Iso3, NameCorrection> = {
+  CPV: {
+    fr: "Cap-Vert",
+    reason: `world-countries : « Îles du Cap-Vert » ; ${NAME_REFERENCES} : « Cap-Vert »`,
+    date: "2026-10-14",
+  },
+  PLW: {
+    fr: "Palaos",
+    reason: `world-countries : « Palaos (Palau) » ; ${NAME_REFERENCES} : « Palaos »`,
+    date: "2026-10-14",
+  },
+  MUS: {
+    fr: "Maurice",
+    reason: `world-countries : « Île Maurice » ; ${NAME_REFERENCES} : « Maurice »`,
+    date: "2026-10-14",
+  },
+  SUR: {
+    fr: "Suriname",
+    reason: `world-countries : « Surinam » ; ${NAME_REFERENCES} : « Suriname »`,
+    date: "2026-10-14",
+  },
+};
+
 export const countryPatches: CountryPatchesConfig = {
   sourceCorrectionsByIso3,
   currencyCorrectionsByIso3,
   demonymCorrectionsByIso3,
+  nameCorrectionsByIso3,
   searchAliasesByIso3,
   wikipediaTitlesByIso3,
   gameplayClassifications,

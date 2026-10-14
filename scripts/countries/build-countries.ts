@@ -739,13 +739,16 @@ async function main(): Promise<void> {
     const gameplay = gameplayArraysForCode(c.cca3, gameplayClassifications, rc);
 
     const nameEn = c.name.common;
-    const nameFr = c.translations.fra?.common ?? nameEn;
+    const sourceNameFr = c.translations.fra?.common ?? nameEn;
+    const nameCorrection = countryPatches.nameCorrectionsByIso3[c.cca3];
+    const nameFr = nameCorrection?.fr ?? sourceNameFr;
 
     const searchAliases = countryPatches.searchAliasesByIso3[c.cca3];
     const aliases = buildAliases([
       ...(rc.officialName ? [rc.officialName] : []),
       ...(rc.alternateNames ?? []),
       ...(searchAliases ?? []),
+      ...(nameCorrection ? [sourceNameFr] : []),
     ]);
 
     const country: CountryRecord = {

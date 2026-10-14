@@ -434,10 +434,16 @@ export const COUNTRY_CATALOG: CountryCatalog = [
     iso2: "CV",
     iso3: "CPV",
     names: {
-      fr: "Îles du Cap-Vert",
+      fr: "Cap-Vert",
       en: "Cape Verde",
     },
-    aliases: ["Republic of Cabo Verde", "Cape Verde", "Cap-Vert", "Cabo Verde"],
+    aliases: [
+      "Republic of Cabo Verde",
+      "Cape Verde",
+      "Cap-Vert",
+      "Cabo Verde",
+      "Îles du Cap-Vert",
+    ],
     flagEmoji: "🇨🇻",
   },
   {
@@ -1332,10 +1338,10 @@ export const COUNTRY_CATALOG: CountryCatalog = [
     iso2: "MU",
     iso3: "MUS",
     names: {
-      fr: "Île Maurice",
+      fr: "Maurice",
       en: "Mauritius",
     },
-    aliases: ["Republic of Mauritius"],
+    aliases: ["Republic of Mauritius", "Île Maurice"],
     flagEmoji: "🇲🇺",
   },
   {
@@ -1524,10 +1530,10 @@ export const COUNTRY_CATALOG: CountryCatalog = [
     iso2: "PW",
     iso3: "PLW",
     names: {
-      fr: "Palaos (Palau)",
+      fr: "Palaos",
       en: "Palau",
     },
-    aliases: ["Republic of Palau"],
+    aliases: ["Republic of Palau", "Palaos (Palau)"],
     flagEmoji: "🇵🇼",
   },
   {
@@ -1784,7 +1790,7 @@ export const COUNTRY_CATALOG: CountryCatalog = [
     iso2: "SR",
     iso3: "SUR",
     names: {
-      fr: "Surinam",
+      fr: "Suriname",
       en: "Suriname",
     },
     aliases: [
