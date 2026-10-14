@@ -96,7 +96,7 @@ export const fr = {
     title: "Changelog",
     backToGame: "Retour au jeu",
     entries: {
-      answerSourcesDate: "14 octobre 2026",
+      answerSourcesDate: "15 octobre 2026",
       answerSourcesTitle: "D'o\u00F9 viennent les donn\u00E9es\u00A0?",
       answerSourcesBody:
         "Enfin un peu de clarification sur les contraintes et les r\u00E9ponses\u00A0! En pleine partie, cliquer sur une contrainte affiche ses sources dat\u00E9es, ainsi que les \u00E9ventuelles conventions retenues. \u00C0 la fin de ta partie, tu peux consulter les pays solutions de chaque case et de chaque contrainte, avec pour chacun ce qui le qualifie\u00A0: population, rang de producteur, ann\u00E9e d'ind\u00E9pendance\u2026",
@@ -169,7 +169,7 @@ export const fr = {
     roadmapTitle: "Et la suite\u00A0?",
     roadmapLead:
       "Quelques pistes que j'aimerais explorer. Rien n'est grav\u00E9 dans le marbre. Tes id\u00E9es sont les bienvenues.",
-    roadmapReplay: "Rejouer les grilles pr\u00E9c\u00E9dentes",
+    roadmapCountrySheets: "Des fiches d\u00E9taill\u00E9es pour chaque pays",
     roadmapConstraints:
       "Des grilles \u00E0 th\u00E8me ou des \u00E9ditions sp\u00E9ciales",
     roadmapLives: "Mode facile et/ou mode hardcore",

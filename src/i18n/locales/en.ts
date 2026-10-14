@@ -94,7 +94,7 @@ export const en = {
     title: "Changelog",
     backToGame: "Back to the game",
     entries: {
-      answerSourcesDate: "October 14, 2026",
+      answerSourcesDate: "October 15, 2026",
       answerSourcesTitle: "Where does the data come from?",
       answerSourcesBody:
         "Finally, some clarification on constraints and answers! Mid-game, clicking a constraint shows its dated sources, along with any conventions used. After your game, you can browse the solution countries for each cell and each constraint, each with what qualifies it: population, rank as a producer, year of independence\u2026",
@@ -166,7 +166,7 @@ export const en = {
     roadmapTitle: "What's next?",
     roadmapLead:
       "A few directions I'd love to explore. Nothing is set in stone. Your ideas are very welcome.",
-    roadmapReplay: "Replay previous grids",
+    roadmapCountrySheets: "Detailed sheets for every country",
     roadmapConstraints: "Themed grids or special editions",
     roadmapLives: "Easy mode and/or hardcore mode",
     contactTitle: "Got an idea or a remark?",
