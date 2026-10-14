@@ -6,14 +6,11 @@ import type {
   CountryFacts,
 } from "../../../../content/countries/type";
 import type { LocalizedString } from "../../../../content/type";
-import type {
-  DominatingPower,
-  PhysicalFeature,
-  ProductionRankKey,
-} from "../types";
+import type { DominatingPower, ProductionRankKey } from "../types";
 import {
   DOMINATION_NATURE_LABELS,
-  PHYSICAL_FEATURE_LABELS,
+  OCEAN_COAST_LABELS,
+  type OceanCoast,
   PRODUCTION_LABELS,
   SOVEREIGNTY_KIND_LABELS,
 } from "./countrySheetLabels";
@@ -69,7 +66,7 @@ type ConstraintValueExtractor = (facts: CountryFacts) => ConstraintValue | null;
 /** Contrainte booléenne ou catégorielle : sa valeur répéterait son libellé. */
 const NO_VALUE: ConstraintValueExtractor = () => null;
 
-const OCEAN_FEATURES: readonly PhysicalFeature[] = [
+const OCEAN_COASTS: readonly OceanCoast[] = [
   "atlantic_coast",
   "pacific_coast",
   "indian_ocean_coast",
@@ -171,9 +168,9 @@ function officialLanguages(code: string): ConstraintValueExtractor {
 
 const oceanBasins: ConstraintValueExtractor = (facts) =>
   listWhenSeveral(
-    OCEAN_FEATURES.filter((feature) =>
-      facts.physicalFeatures.includes(feature),
-    ).map((feature) => PHYSICAL_FEATURE_LABELS[feature]),
+    OCEAN_COASTS.filter((coast) => facts.physicalFeatures.includes(coast)).map(
+      (coast) => OCEAN_COAST_LABELS[coast],
+    ),
   );
 
 /**

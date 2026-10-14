@@ -274,7 +274,6 @@ export const fr = {
     empty: "Aucune grille passée disponible pour le moment.",
     completed: "{attempts} essais",
     notPlayed: "Jamais jouée",
-    play: "Jouer",
   },
   training: {
     eyebrow: "Entraînement",
@@ -453,25 +452,10 @@ export const fr = {
     },
     enum: {
       physicalFeature: {
-        equatorCrosser: "traverse l'équateur",
-        mediterraneanCoast: "mer Méditerranée",
-        caribbeanCoast: "mer des Caraïbes",
-        peakOver5000m: "sommet de plus de 5 000 m",
-        hasDesert: "désert",
-        rainforest: "forêt tropicale",
         atlanticCoast: "océan Atlantique",
         pacificCoast: "océan Pacifique",
         indianOceanCoast: "océan Indien",
         arcticCoast: "océan Arctique",
-      },
-      flagColor: {
-        red: "rouge",
-        blue: "bleu",
-        green: "vert",
-        yellow: "jaune",
-        white: "blanc",
-        black: "noir",
-        orange: "orange",
       },
       sovereigntyKind: {
         independence: "Indépendance",

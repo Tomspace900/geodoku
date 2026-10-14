@@ -17,8 +17,6 @@ export type {
   Country,
   DominatingPower,
   DominationNature,
-  FlagColor,
-  FlagSymbol,
   PhysicalFeature,
   ProductionRankKey,
   SovereigntyKind,

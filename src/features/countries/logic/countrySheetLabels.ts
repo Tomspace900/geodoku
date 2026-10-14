@@ -1,7 +1,6 @@
 import type { TKey } from "@/i18n/types";
 import type {
   DominationNature,
-  FlagColor,
   PhysicalFeature,
   ProductionRankKey,
   SovereigntyKind,
@@ -14,28 +13,17 @@ import type {
  * (« Pays d'Afrique ») plutôt que comme des valeurs (« Afrique »).
  */
 
-/** Les membres de `PhysicalFeature` : façades maritimes (océans) ; les autres ne servent pas de valeur. */
-export const PHYSICAL_FEATURE_LABELS: Record<PhysicalFeature, TKey> = {
-  equator_crosser: "countrySheet.enum.physicalFeature.equatorCrosser",
-  mediterranean_coast: "countrySheet.enum.physicalFeature.mediterraneanCoast",
-  caribbean_coast: "countrySheet.enum.physicalFeature.caribbeanCoast",
-  peak_over_5000m: "countrySheet.enum.physicalFeature.peakOver5000m",
-  has_desert: "countrySheet.enum.physicalFeature.hasDesert",
-  rainforest: "countrySheet.enum.physicalFeature.rainforest",
+/** Façades maritimes, seuls membres de `PhysicalFeature` qui servent de valeur (`ocean_multiple_basins`). */
+export type OceanCoast = Extract<
+  PhysicalFeature,
+  "atlantic_coast" | "pacific_coast" | "indian_ocean_coast" | "arctic_coast"
+>;
+
+export const OCEAN_COAST_LABELS: Record<OceanCoast, TKey> = {
   atlantic_coast: "countrySheet.enum.physicalFeature.atlanticCoast",
   pacific_coast: "countrySheet.enum.physicalFeature.pacificCoast",
   indian_ocean_coast: "countrySheet.enum.physicalFeature.indianOceanCoast",
   arctic_coast: "countrySheet.enum.physicalFeature.arcticCoast",
-};
-
-export const FLAG_COLOR_LABELS: Record<FlagColor, TKey> = {
-  red: "countrySheet.enum.flagColor.red",
-  blue: "countrySheet.enum.flagColor.blue",
-  green: "countrySheet.enum.flagColor.green",
-  yellow: "countrySheet.enum.flagColor.yellow",
-  white: "countrySheet.enum.flagColor.white",
-  black: "countrySheet.enum.flagColor.black",
-  orange: "countrySheet.enum.flagColor.orange",
 };
 
 export const SOVEREIGNTY_KIND_LABELS: Record<SovereigntyKind, TKey> = {

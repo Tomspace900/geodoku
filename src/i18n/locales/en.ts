@@ -266,7 +266,6 @@ export const en = {
     empty: "No past grid available yet.",
     completed: "{attempts} attempts",
     notPlayed: "Never played",
-    play: "Play",
   },
   training: {
     eyebrow: "Training",
@@ -437,25 +436,10 @@ export const en = {
     },
     enum: {
       physicalFeature: {
-        equatorCrosser: "crosses the equator",
-        mediterraneanCoast: "Mediterranean Sea",
-        caribbeanCoast: "Caribbean Sea",
-        peakOver5000m: "peak over 5,000 m",
-        hasDesert: "desert",
-        rainforest: "rainforest",
         atlanticCoast: "Atlantic Ocean",
         pacificCoast: "Pacific Ocean",
         indianOceanCoast: "Indian Ocean",
         arcticCoast: "Arctic Ocean",
-      },
-      flagColor: {
-        red: "red",
-        blue: "blue",
-        green: "green",
-        yellow: "yellow",
-        white: "white",
-        black: "black",
-        orange: "orange",
       },
       sovereigntyKind: {
         independence: "Independence",
