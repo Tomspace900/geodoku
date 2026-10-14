@@ -1836,7 +1836,7 @@ export const COUNTRY_CATALOG: CountryCatalog = [
     iso2: "SZ",
     iso3: "SWZ",
     names: {
-      fr: "Swaziland",
+      fr: "Eswatini",
       en: "Eswatini",
     },
     aliases: [

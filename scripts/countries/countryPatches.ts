@@ -983,6 +983,12 @@ export const nameCorrectionsByIso3: Record<Iso3, NameCorrection> = {
     reason: `world-countries : « Surinam » ; ${NAME_REFERENCES} : « Suriname »`,
     date: "2026-10-14",
   },
+  SWZ: {
+    fr: "Eswatini",
+    reason:
+      "world-countries : « Swaziland » ; nom officiel depuis le 19 avril 2018, retenu par l'ONU et le ministère des Affaires étrangères. Exception aux références : INSEE et CNT disent encore « Swaziland », gardé en alias de recherche (décision du 2026-10-14)",
+    date: "2026-10-14",
+  },
 };
 
 export const countryPatches: CountryPatchesConfig = {

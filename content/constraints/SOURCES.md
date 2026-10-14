@@ -370,9 +370,11 @@ dans la liste s'il a été **un jour** sous domination de la puissance :
    puissance dirige les affaires étrangères (Afghanistan, Bhoutan, États du
    Golfe), le mandat ou la tutelle, le condominium. Un État protégé compte
    quand l'entité protégée **est l'État actuel, ou s'est unie à lui au moment de
-   sa formation** ; une protection sur une entité disparue avant la formation de
-   l'État actuel ne compte pas (Nejd, protégé de 1915 à 1927 ; Arabie saoudite
-   formée en 1932). Le Yémen entre au contraire par Aden, unie en 1990.
+   sa formation** (le Yémen entre par Aden, unie en 1990). **Exception de
+   convention** : l'Arabie saoudite, bien que le Nejd ait été sous protection
+   britannique de 1915 à 1927 (traité de Darin) ; ni le Factbook ni l'usage
+   courant ne la comptent parmi les pays passés sous domination britannique, et
+   le joueur ne l'y attend pas (décision du 2026-10-14).
    L'influence sans traité de protectorat ne compte pas : Oman, qui concluait
    ses propres traités, ni le Népal.
 2. **Occupation militaire** suivie de restitution : exclue (Égypte 1798–1801,
@@ -402,8 +404,8 @@ dans la liste s'il a été **un jour** sous domination de la puissance :
 
 Revue 2026-10-14 (#129) : la règle « administration d'une ex-colonie ennemie »,
 qui comptait la Libye et l'Érythrée, est **supprimée** (ex-règle 3) et ces deux
-cas rejoignent l'occupation militaire (règle 2) ; la règle 1 est précisée pour
-écarter l'Arabie saoudite (Nejd), sans exclure le Yémen. Le terme « État
+cas rejoignent l'occupation militaire (règle 2) ; l'Arabie saoudite sort par une
+exception de convention, sans toucher au Yémen. Le terme « État
 protégé » reste.
 
 Conventions de période : début = premier acte retenu par la source (traité,

@@ -1541,9 +1541,9 @@ export const HISTORICAL_DOMINATIONS: HistoricalDominationsSnapshot = {
     SAU: [
       {
         power: "united_kingdom",
-        rules: ["pre_formation_protectorate"],
+        rules: ["not_counted_by_convention"],
         reason:
-          "Protectorat sur le Nejd de 1915 à 1927 (traité de Djeddah) ; l'Arabie saoudite n'est formée qu'en 1932, l'entité protégée avait disparu avant.",
+          "Traité de Darin (1915) : le Nejd sous protection britannique jusqu'au traité de Djeddah (1927). Ni le Factbook ni l'usage courant ne comptent l'Arabie saoudite parmi les pays passés sous domination britannique : exception de convention, décision du 2026-10-14 (#129).",
       },
     ],
     SEN: [

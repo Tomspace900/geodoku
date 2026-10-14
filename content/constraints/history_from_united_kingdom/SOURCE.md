@@ -56,10 +56,11 @@ qu'en partie (« Colonie, Aden (1839–1967) »).
   devenues colonies de la Couronne après leur conquête. Le Fezzan, sous
   administration française, n'a jamais fait entrer la Libye dans
   `history_from_france` (Tripoli était britannique).
-- **L'Arabie saoudite** : le protectorat de 1915 à 1927 portait sur le Nejd,
-  entité antérieure à l'État formé en 1932 ; règle 1 des
-  [règles communes](../SOURCES.md#histoire-et-souveraineté), exclusion
-  `pre_formation_protectorate`. Le **Yémen** reste, par Aden unie en 1990. Le
+- **L'Arabie saoudite** : exception de convention (exclusion
+  `not_counted_by_convention`, [règles communes](../SOURCES.md#histoire-et-souveraineté)).
+  Le Nejd a été sous protection britannique de 1915 à 1927, mais ni le Factbook
+  ni l'usage courant ne la comptent parmi les pays passés sous domination
+  britannique. Le **Yémen** reste, par Aden unie en 1990. Le
   Bhoutan, l'Afghanistan et les États du Golfe restent, de même que le terme
   « État protégé ».
 - **Le Yémen et la Somalie** entrent par l'union : Sanaa n'a jamais été
