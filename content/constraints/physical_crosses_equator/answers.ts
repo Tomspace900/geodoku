@@ -10,6 +10,8 @@ export default defineAnswerSet("physical_crosses_equator", [
   "GAB",
   "IDN",
   "KEN",
+  "KIR",
+  "MDV",
   "SOM",
   "STP",
   "UGA",

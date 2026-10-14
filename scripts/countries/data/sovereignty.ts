@@ -8,7 +8,8 @@ import type { SovereigntySnapshot } from "./types";
  * Source : [CIA World Factbook, champ *Independence*](https://www.cia.gov/the-world-factbook/field/independence/),
  * via le miroir figé `factbook.json` (commit `8662a8b`). Porté verbatim du
  * snapshot `sovereignty` de la branche `constraint-explorer` (commit 221b42d) —
- * `sourceCommit` conservé tel quel.
+ * `sourceCommit` conservé tel quel. Une seule correction éditoriale depuis : le
+ * `kind` de la Serbie (#129), motivé au-dessus de son entrée.
  *
  * Le Factbook distingue indépendance, restauration, séparation, succession
  * d'État, continuité, fondation et unification. Seuls `formerSovereigns`, `year`
@@ -1118,8 +1119,13 @@ export const SOVEREIGNTY: SovereigntySnapshot = {
       sourceDescription:
         "1143 (Kingdom of Portugal recognized); 1 December 1640 (independence reestablished after 60 years of Spanish rule); 5 October 1910 (republic proclaimed)",
     },
+    // Revue #129 (2026-10-14) : `kind` corrigé d'`independence` à
+    // `dissolution_successor`. Le Monténégro a fait sécession le 3 juin 2006 ;
+    // la Serbie, qui n'a pas quitté l'union mais lui a succédé deux jours plus
+    // tard, n'accède pas à l'indépendance au sens du Factbook. L'entrée reste
+    // éligible à `history_sovereignty_since_1990` : la liste ne change pas.
     SRB: {
-      kind: "independence",
+      kind: "dissolution_successor",
       year: 2006,
       date: "2006-06-05",
       formerSovereigns: [],

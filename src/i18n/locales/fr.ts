@@ -489,7 +489,6 @@ export const fr = {
         mandate: "Mandat",
         trusteeship: "Tutelle",
         condominium: "Condominium",
-        militaryAdministration: "Administration militaire",
         union: "Union",
       },
       production: {

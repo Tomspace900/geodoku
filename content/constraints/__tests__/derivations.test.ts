@@ -305,6 +305,10 @@ describe("DERIVATIONS — bascules de seuil", () => {
       china: derive("history_from_united_kingdom", "CHN"), // Hong Kong : partiel
       oman: derive("history_from_united_kingdom", "OMN"), // jamais protectorat
       iceland: derive("history_from_united_kingdom", "ISL"), // occupation militaire
+      libya: derive("history_from_united_kingdom", "LBY"), // administration militaire provisoire
+      eritrea: derive("history_from_united_kingdom", "ERI"), // idem
+      saudiArabia: derive("history_from_united_kingdom", "SAU"), // Nejd, entité d'avant 1932
+      mauritius: derive("history_from_united_kingdom", "MUS"), // conquête conservée : colonie
     }).toEqual({
       singapore: true,
       bangladesh: true,
@@ -313,6 +317,40 @@ describe("DERIVATIONS — bascules de seuil", () => {
       china: false,
       oman: false,
       iceland: false,
+      libya: false,
+      eritrea: false,
+      saudiArabia: false,
+      mauritius: true,
+    });
+  });
+
+  it("water_island : un État insulaire sur une île partagée compte, pas un voisin continental", () => {
+    expect({
+      iceland: derive("water_island", "ISL"), // sans frontière terrestre
+      ireland: derive("water_island", "IRL"), // île partagée avec le Royaume-Uni
+      indonesia: derive("water_island", "IDN"), // trois voisins terrestres, tout insulaire
+      malaysia: derive("water_island", "MYS"), // partie continentale
+      france: derive("water_island", "FRA"),
+    }).toEqual({
+      iceland: true,
+      ireland: true,
+      indonesia: true,
+      malaysia: false,
+      france: false,
+    });
+  });
+
+  it("physical_crosses_equator : terre coupée ou archipel du pays traversé", () => {
+    expect({
+      ecuador: derive("physical_crosses_equator", "ECU"), // terre coupée
+      maldives: derive("physical_crosses_equator", "MDV"), // chenal Addu Kandu
+      kiribati: derive("physical_crosses_equator", "KIR"), // entre Aranuka et Nonouti
+      equatorialGuinea: derive("physical_crosses_equator", "GNQ"), // Annobón : autre archipel
+    }).toEqual({
+      ecuador: true,
+      maldives: true,
+      kiribati: true,
+      equatorialGuinea: false,
     });
   });
 

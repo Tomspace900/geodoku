@@ -116,7 +116,8 @@ export const DERIVATIONS = {
   continent_oceania: (f) => f.continent === "oceania",
 
   // ── Accès à l'eau ──────────────────────────────────────────────────────────
-  water_island: (f) => f.waterAccess === "island",
+  water_island: (f) =>
+    f.waterAccess === "island" || f.geoTags.includes("shared_island"),
   water_landlocked: (f) => f.waterAccess === "landlocked",
 
   // ── Frontières — nombre ────────────────────────────────────────────────────

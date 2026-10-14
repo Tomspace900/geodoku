@@ -56,8 +56,6 @@ export const DOMINATION_NATURE_LABELS: Record<DominationNature, TKey> = {
   mandate: "countrySheet.enum.dominationNature.mandate",
   trusteeship: "countrySheet.enum.dominationNature.trusteeship",
   condominium: "countrySheet.enum.dominationNature.condominium",
-  military_administration:
-    "countrySheet.enum.dominationNature.militaryAdministration",
   union: "countrySheet.enum.dominationNature.union",
 };
 

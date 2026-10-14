@@ -11,12 +11,14 @@ import type { DominationSource, HistoricalDominationsSnapshot } from "./types";
  * Règles (tranchées le 2026-10-14, détail et motifs dans
  * `content/constraints/SOURCES.md#histoire-et-souveraineté`) :
  * - comptent la colonie, le protectorat, l'État protégé (affaires étrangères
- *   dirigées par la puissance), le mandat ou la tutelle, le condominium, et
- *   l'administration d'une ex-colonie ennemie jusqu'à son indépendance ;
- * - ne comptent pas l'occupation militaire suivie de restitution, l'État
- *   satellite, l'annexion napoléonienne, le mandat exercé par un dominion, ni
- *   les possessions féodales de l'Angleterre en Europe ; ses colonies
- *   d'outre-mer d'avant 1707 comptent ;
+ *   dirigées par la puissance) quand l'entité protégée est l'État actuel ou
+ *   s'est unie à lui à sa formation, le mandat ou la tutelle, le condominium ;
+ * - ne comptent pas l'occupation militaire suivie de restitution (dont
+ *   l'administration militaire provisoire d'une ex-colonie ennemie), une
+ *   protection sur une entité disparue avant la formation de l'État actuel,
+ *   l'État satellite, l'annexion napoléonienne, le mandat exercé par un
+ *   dominion, ni les possessions féodales de l'Angleterre en Europe ; ses
+ *   colonies d'outre-mer d'avant 1707 comptent ;
  * - un territoire partiel compte si la capitale actuelle en relevait, ou s'il
  *   s'est uni à l'État au moment de la décolonisation ;
  * - un pays passé d'une puissance à l'autre entre dans les deux listes.
@@ -347,17 +349,6 @@ export const HISTORICAL_DOMINATIONS: HistoricalDominationsSnapshot = {
         sources: [brit("/place/Egypt"), FB_BG, FB_IND],
       },
     ],
-    ERI: [
-      {
-        power: "united_kingdom",
-        nature: "military_administration",
-        from: 1941,
-        to: 1952,
-        reason:
-          "Administration britannique de l'ex-colonie italienne de 1941 à la fédération avec l'Éthiopie (1952).",
-        sources: [brit("/place/Eritrea"), FB_BG],
-      },
-    ],
     FJI: [
       {
         power: "united_kingdom",
@@ -605,21 +596,6 @@ export const HISTORICAL_DOMINATIONS: HistoricalDominationsSnapshot = {
         sources: [brit("/place/Lebanon"), FB_BG, FB_IND],
       },
     ],
-    LBY: [
-      {
-        power: "united_kingdom",
-        nature: "military_administration",
-        from: 1942,
-        to: 1951,
-        part: {
-          fr: "Tripolitaine et Cyrénaïque",
-          en: "Tripolitania and Cyrenaica",
-        },
-        reason:
-          "Administration militaire britannique de l'ex-colonie italienne, de l'occupation de 1942 à l'indépendance de 1951 (le Fezzan sous administration française).",
-        sources: [brit("/place/Cyrenaica"), FB_IND],
-      },
-    ],
     LCA: [
       {
         power: "france",
@@ -862,18 +838,6 @@ export const HISTORICAL_DOMINATIONS: HistoricalDominationsSnapshot = {
         reason:
           "Traité de 1916 confiant la politique étrangère à la Grande-Bretagne.",
         sources: [brit("/place/Qatar"), FB_BG, FB_IND],
-      },
-    ],
-    SAU: [
-      {
-        power: "united_kingdom",
-        nature: "protectorate",
-        from: 1915,
-        to: 1927,
-        part: { fr: "Nejd", en: "Najd" },
-        reason:
-          "Traité de 1915 : Ibn Saoud accepte le statut de protectorat ; souveraineté reconnue au traité de Djeddah (1927).",
-        sources: [brit("/biography/Ibn-Saud"), brit("/event/Treaty-of-Jiddah")],
       },
     ],
     SDN: [
@@ -1292,6 +1256,14 @@ export const HISTORICAL_DOMINATIONS: HistoricalDominationsSnapshot = {
         reason: "Expédition d'Égypte de 1798 à 1801.",
       },
     ],
+    ERI: [
+      {
+        power: "united_kingdom",
+        rules: ["military_occupation"],
+        reason:
+          "Administration militaire britannique (British Military Administration) de 1941 à la fédération avec l'Éthiopie (1952), dans l'attente d'un règlement international : jamais colonie, protectorat ni tutelle.",
+      },
+    ],
     ESP: [
       {
         power: "united_kingdom",
@@ -1441,6 +1413,12 @@ export const HISTORICAL_DOMINATIONS: HistoricalDominationsSnapshot = {
     ],
     LBY: [
       {
+        power: "united_kingdom",
+        rules: ["military_occupation"],
+        reason:
+          "Administration militaire britannique (British Military Administration) de la Tripolitaine et de la Cyrénaïque de 1942 à l'indépendance (1951), dans l'attente d'un règlement international : jamais colonie, protectorat ni tutelle.",
+      },
+      {
         power: "france",
         rules: ["partial_territory"],
         reason:
@@ -1558,6 +1536,14 @@ export const HISTORICAL_DOMINATIONS: HistoricalDominationsSnapshot = {
         power: "france",
         rules: ["military_occupation"],
         reason: "Campagne de 1812.",
+      },
+    ],
+    SAU: [
+      {
+        power: "united_kingdom",
+        rules: ["pre_formation_protectorate"],
+        reason:
+          "Protectorat sur le Nejd de 1915 à 1927 (traité de Djeddah) ; l'Arabie saoudite n'est formée qu'en 1932, l'entité protégée avait disparu avant.",
       },
     ],
     SEN: [

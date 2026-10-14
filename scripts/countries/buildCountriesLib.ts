@@ -74,6 +74,12 @@ export type GameplayClassifications = {
   caribbeanCoast: string[];
   peakOver5000m: string[];
   capitalNotLargest: string[];
+  /**
+   * États dont tout le territoire est insulaire mais dont l'île est partagée
+   * avec un autre pays : `waterAccess` les laisse `coastal` (il vaut `island`
+   * sans frontière terrestre), `water_island` les lit ici en complément.
+   */
+  sharedIslandState: string[];
   desert: string[];
   rainforest: string[];
   atlanticCoast: string[];
@@ -469,6 +475,8 @@ export function gameplayArraysForCode(
   }
   if (classifications.capitalNotLargest.includes(code))
     geoTags.push("capital_not_largest");
+  if (classifications.sharedIslandState.includes(code))
+    geoTags.push("shared_island");
   return { events, geoTags };
 }
 

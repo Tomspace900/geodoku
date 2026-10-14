@@ -62,7 +62,8 @@ export const sourceCorrectionsByIso3: Record<Iso3, SourceCorrection> = {
    * Elle s'étend de 5,4°N à 13,5°S, sa capitale est à -4,32° et son centroïde à
    * -2,88° : sud à l'unanimité des trois lectures.
    *
-   * Les 10 autres `equatorCrosser` tombent déjà du bon côté sans patch.
+   * Les 10 autres pays dont la ligne coupe la terre tombent déjà du bon côté
+   * sans patch.
    *
    * Langues (règle plus bas) — Constitution, art. 1 : le français est la langue
    * officielle ; kikongo, lingala, swahili et tshiluba sont « langues nationales ».
@@ -335,6 +336,12 @@ export const gameplayClassifications: GameplayClassifications = {
     "KEN",
     "SOM",
     "IDN",
+    // Revue #129 (2026-10-14) : la ligne coupe les eaux entre les îles d'un même
+    // archipel du pays — chenal Addu Kandu (Maldives), entre Aranuka et Nonouti
+    // (Kiribati). La Guinée équatoriale reste hors liste : Annobón n'appartient
+    // pas au même archipel que Bioko et le continent.
+    "MDV",
+    "KIR",
   ],
   mediterraneanCoast: [
     "ESP",
@@ -453,7 +460,21 @@ export const gameplayClassifications: GameplayClassifications = {
     "SMR",
     "LIE",
     "MLT",
+    // Revue #129 (2026-10-14) : convention intra-muros — Port-d'Espagne compte
+    // moins d'habitants que Chaguanas et San Fernando (recensement 2011).
+    "TTO",
   ],
+  /**
+   * Revue #129 (2026-10-14) : État dont tout le territoire est insulaire, île
+   * partagée comprise. `waterAccess` ne vaut `island` que sans frontière
+   * terrestre ; ces huit pays y restent `coastal` (l'Indonésie compte trois
+   * voisins), d'où cette classification séparée plutôt qu'une correction de
+   * `waterAccess`, que lisent d'autres contraintes.
+   * Brunei (Bornéo), Haïti et République dominicaine (Hispaniola), Indonésie
+   * (Bornéo, Nouvelle-Guinée, Timor), Irlande et Royaume-Uni (Irlande),
+   * Papouasie-Nouvelle-Guinée (Nouvelle-Guinée), Timor oriental (Timor).
+   */
+  sharedIslandState: ["BRN", "DOM", "GBR", "HTI", "IDN", "IRL", "PNG", "TLS"],
   desert: [
     "DZA",
     "LBY",

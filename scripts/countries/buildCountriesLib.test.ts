@@ -227,6 +227,7 @@ describe("gameplayArraysForCode", () => {
     caribbeanCoast: [],
     peakOver5000m: [],
     capitalNotLargest: ["USA"],
+    sharedIslandState: ["IRL"],
     desert: [],
     rainforest: [],
     atlanticCoast: [],
@@ -268,6 +269,12 @@ describe("gameplayArraysForCode", () => {
       "capital_not_largest",
     ]);
   });
+
+  it("adds shared_island for a curated insular state on a shared island", () => {
+    expect(gameplayArraysForCode("IRL", classifications, rc).geoTags).toEqual([
+      "shared_island",
+    ]);
+  });
 });
 
 describe("regimeForCode", () => {
@@ -282,6 +289,7 @@ describe("regimeForCode", () => {
     caribbeanCoast: [],
     peakOver5000m: [],
     capitalNotLargest: [],
+    sharedIslandState: [],
     desert: [],
     rainforest: [],
     atlanticCoast: [],
@@ -313,6 +321,7 @@ describe("physicalFeaturesForCode", () => {
     caribbeanCoast: ["COL", "VEN"],
     peakOver5000m: ["FRA", "NPL"],
     capitalNotLargest: [],
+    sharedIslandState: [],
     desert: ["DZA"],
     rainforest: ["COD"],
     atlanticCoast: ["PRT"],

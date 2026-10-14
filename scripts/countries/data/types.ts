@@ -356,6 +356,7 @@ export type DominationExclusionRule =
   | "napoleonic_annexation"
   | "partial_territory"
   | "dominion_mandate"
+  | "pre_formation_protectorate"
   | "no_formal_domination"
   | "european_feudal_possession";
 

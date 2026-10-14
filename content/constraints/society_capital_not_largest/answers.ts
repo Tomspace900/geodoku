@@ -33,6 +33,7 @@ export default defineAnswerSet("society_capital_not_largest", [
   "SDN",
   "SMR",
   "SWZ",
+  "TTO",
   "TUR",
   "TWN",
   "TZA",

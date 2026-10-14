@@ -473,7 +473,6 @@ export const en = {
         mandate: "Mandate",
         trusteeship: "Trust territory",
         condominium: "Condominium",
-        militaryAdministration: "Military administration",
         union: "Union",
       },
       production: {

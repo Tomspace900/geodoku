@@ -146,7 +146,6 @@ export type DominationNature =
   | "mandate"
   | "trusteeship"
   | "condominium"
-  | "military_administration"
   | "union";
 
 /**
