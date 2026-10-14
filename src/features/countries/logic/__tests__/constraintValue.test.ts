@@ -126,16 +126,26 @@ describe("constraintValueFor", () => {
     expect(withValue).toEqual([]);
   });
 
-  it("shows no independence date when the retained event is a unification (South Yemen left in 1967, not 1990)", () => {
+  it("gives the period of British rule, not the independence from another state", () => {
     expect(
-      constraintValueFor("history_from_united_kingdom", COUNTRY_FACTS.YEM),
-    ).toBeNull();
+      constraintValueFor("history_from_united_kingdom", COUNTRY_FACTS.SGP),
+    ).toMatchObject({ kind: "domination", from: 1819, to: 1963 });
   });
 
-  it("gives the independence event of a former colony, with its year", () => {
+  it("names the part of the country that was under British rule", () => {
     expect(
-      constraintValueFor("history_from_france", COUNTRY_FACTS.DZA),
-    ).toMatchObject({ kind: "sovereignty", year: 1962 });
+      constraintValueFor("history_from_united_kingdom", COUNTRY_FACTS.YEM),
+    ).toMatchObject({ kind: "domination", part: { en: "Aden" } });
+  });
+
+  it("gives each power its own period for a country ruled by both", () => {
+    expect({
+      france: constraintValueFor("history_from_france", COUNTRY_FACTS.MUS),
+      uk: constraintValueFor("history_from_united_kingdom", COUNTRY_FACTS.MUS),
+    }).toMatchObject({
+      france: { from: 1721, to: 1810 },
+      uk: { from: 1810, to: 1968 },
+    });
   });
 
   it("names the one neighbour of a single-neighbour country", () => {
@@ -169,9 +179,25 @@ describe("formatConstraintValue", () => {
     );
   });
 
-  it("writes the independence of a former colony as nature and date", () => {
-    expect(frText("history_from_france", "DZA")).toBe(
-      "Indépendance (5 juillet 1962)",
+  it("writes a domination as nature and period", () => {
+    expect(frText("history_from_france", "DZA")).toBe("Colonie (1830–1962)");
+  });
+
+  it("writes the dominated part between nature and period", () => {
+    expect(frText("history_from_united_kingdom", "YEM")).toBe(
+      "Colonie, Aden (1839–1967)",
+    );
+  });
+
+  it("says when a domination was interrupted by another power", () => {
+    expect(frText("history_from_france", "LCA")).toBe(
+      "Colonie (1650–1803, par intermittence)",
+    );
+  });
+
+  it("writes only the end of a domination whose start no source dates", () => {
+    expect(frText("history_from_france", "MRT")).toBe(
+      "Colonie (jusqu'en 1960)",
     );
   });
 

@@ -421,6 +421,11 @@ export const en = {
     soleNeighbor: "Neighbor: {names}",
     capitalSingular: "Capital: {names}",
     capitalPlural: "Capitals: {names}",
+    domination: "{nature} ({period})",
+    dominationPart: "{nature}, {part} ({period})",
+    period: "{from}–{to}",
+    periodIntermittent: "{from}–{to}, intermittently",
+    periodUntil: "until {to}",
   },
   countrySheet: {
     value: {
@@ -460,6 +465,16 @@ export const en = {
         continuation: "Continuation",
         foundation: "Foundation",
         unification: "Unification",
+      },
+      dominationNature: {
+        colony: "Colony",
+        protectorate: "Protectorate",
+        protectedState: "Protected state",
+        mandate: "Mandate",
+        trusteeship: "Trust territory",
+        condominium: "Condominium",
+        militaryAdministration: "Military administration",
+        union: "Union",
       },
       production: {
         cocoa: "cocoa",

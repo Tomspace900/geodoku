@@ -115,6 +115,30 @@ export function formatConstraintValue(
           ? formatFullDate(value.date, locale)
           : formatYear(value.year, locale),
       });
+    case "domination": {
+      const period =
+        value.from === null
+          ? t("constraintValue.periodUntil", {
+              to: formatYear(value.to, locale),
+            })
+          : t(
+              value.intermittent
+                ? "constraintValue.periodIntermittent"
+                : "constraintValue.period",
+              {
+                from: formatYear(value.from, locale),
+                to: formatYear(value.to, locale),
+              },
+            );
+      const nature = t(value.natureLabelKey);
+      return value.part
+        ? t("constraintValue.dominationPart", {
+            nature,
+            part: value.part[locale],
+            period,
+          })
+        : t("constraintValue.domination", { nature, period });
+    }
     case "enumList":
       return formatList(
         value.labelKeys.map((key) => t(key)),

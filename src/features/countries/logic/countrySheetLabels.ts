@@ -1,5 +1,6 @@
 import type { TKey } from "@/i18n/types";
 import type {
+  DominationNature,
   FlagColor,
   PhysicalFeature,
   ProductionRankKey,
@@ -46,6 +47,18 @@ export const SOVEREIGNTY_KIND_LABELS: Record<SovereigntyKind, TKey> = {
   continuation: "countrySheet.enum.sovereigntyKind.continuation",
   foundation: "countrySheet.enum.sovereigntyKind.foundation",
   unification: "countrySheet.enum.sovereigntyKind.unification",
+};
+
+export const DOMINATION_NATURE_LABELS: Record<DominationNature, TKey> = {
+  colony: "countrySheet.enum.dominationNature.colony",
+  protectorate: "countrySheet.enum.dominationNature.protectorate",
+  protected_state: "countrySheet.enum.dominationNature.protectedState",
+  mandate: "countrySheet.enum.dominationNature.mandate",
+  trusteeship: "countrySheet.enum.dominationNature.trusteeship",
+  condominium: "countrySheet.enum.dominationNature.condominium",
+  military_administration:
+    "countrySheet.enum.dominationNature.militaryAdministration",
+  union: "countrySheet.enum.dominationNature.union",
 };
 
 export const PRODUCTION_LABELS: Record<ProductionRankKey, TKey> = {

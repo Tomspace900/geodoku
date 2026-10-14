@@ -6,8 +6,13 @@ import type {
   CountryFacts,
 } from "../../../../content/countries/type";
 import type { LocalizedString } from "../../../../content/type";
-import type { PhysicalFeature, ProductionRankKey } from "../types";
+import type {
+  DominatingPower,
+  PhysicalFeature,
+  ProductionRankKey,
+} from "../types";
 import {
+  DOMINATION_NATURE_LABELS,
   PHYSICAL_FEATURE_LABELS,
   PRODUCTION_LABELS,
   SOVEREIGNTY_KIND_LABELS,
@@ -45,6 +50,15 @@ export type ConstraintValue =
       year: number;
       /** `YYYY-MM-DD` ; `null` quand la source ne donne que l'année. */
       date: string | null;
+    }
+  | {
+      kind: "domination";
+      natureLabelKey: TKey;
+      /** `null` quand aucune source ne date le début. */
+      from: number | null;
+      to: number;
+      intermittent: boolean;
+      part: LocalizedString | null;
     }
   | { kind: "enumList"; labelKeys: readonly TKey[] }
   | { kind: "languages"; codes: readonly string[] }
@@ -165,8 +179,7 @@ const oceanBasins: ConstraintValueExtractor = (facts) =>
 /**
  * Événement de souveraineté du pays (nature + date). Masqué là où le dataset
  * le masque (`sovereigntySheetHidden`) : sa nature serait fausse une fois
- * affichée. Pour `history_from_*`, c'est l'événement d'où sort l'ancienne
- * puissance — la date de l'indépendance.
+ * affichée.
  */
 const sovereigntyEvent: ConstraintValueExtractor = (facts) =>
   facts.sovereigntyKind === null ||
@@ -181,21 +194,25 @@ const sovereigntyEvent: ConstraintValueExtractor = (facts) =>
       };
 
 /**
- * Natures d'événement qui ne sont pas un départ de l'ancienne puissance : une
- * unification (Yémen, 22 mai 1990 — l'indépendance du Sud date de 1967) ou une
- * fondation datée d'après la tutelle. L'afficher en face de « sous domination
- * britannique » donnerait la mauvaise date.
+ * Nature et période de la domination de cette puissance — pas la date
+ * d'indépendance, qui ne dit rien de la domination quand le pays est devenu
+ * indépendant d'un autre État (Singapour, 1965, de la Malaisie).
  */
-const NOT_A_DEPARTURE: ReadonlySet<string> = new Set([
-  "unification",
-  "foundation",
-  "continuation",
-]);
-
-const departureFromFormerSovereign: ConstraintValueExtractor = (facts) =>
-  facts.sovereigntyKind !== null && NOT_A_DEPARTURE.has(facts.sovereigntyKind)
-    ? null
-    : sovereigntyEvent(facts);
+function dominationBy(power: DominatingPower): ConstraintValueExtractor {
+  return (facts) => {
+    const domination = facts.dominations.find((d) => d.power === power);
+    return domination
+      ? {
+          kind: "domination",
+          natureLabelKey: DOMINATION_NATURE_LABELS[domination.nature],
+          from: domination.from,
+          to: domination.to,
+          intermittent: domination.intermittent,
+          part: domination.part,
+        }
+      : null;
+  };
+}
 
 /** Le voisin unique n'est pas dans le libellé (« Un seul voisin terrestre ») : c'est l'information. */
 const soleNeighbor: ConstraintValueExtractor = (facts) => {
@@ -354,8 +371,8 @@ const EXTRACTORS = {
 
   // ── Histoire ───────────────────────────────────────────────────────────────
   history_sovereignty_since_1990: sovereigntyEvent,
-  history_from_france: departureFromFormerSovereign,
-  history_from_united_kingdom: departureFromFormerSovereign,
+  history_from_france: dominationBy("france"),
+  history_from_united_kingdom: dominationBy("united_kingdom"),
 } satisfies Record<ConstraintId, ConstraintValueExtractor>;
 
 /**
