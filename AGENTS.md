@@ -236,6 +236,8 @@ pnpm exec convex env set ADMIN_TOKEN "xxx"
 
 L'`ignoreCommand` de [`vercel.json`](vercel.json) coupe le déploiement des branches `dependabot/*` : sans lui, chaque bump de patch créait un preview Vercel **et** un déploiement Convex preview jetables.
 
+**Suppression des branches.** Le repo supprime la branche de tête après merge (`delete_branch_on_merge`), ce qui nettoie les branches de travail et Dependabot. `develop` en est exemptée par le ruleset « develop — suppression interdite », dont la seule règle est l'interdiction de suppression : les push forcés après rebase restent permis. Sans lui, le merge d'une PR `develop → main` supprimait `develop` (2026-10-15), et GitHub redirigeait alors vers `main` les PR qui la visaient. `main` est gardée par son propre ruleset, « Main protection ».
+
 **Dependabot** ([`.github/dependabot.yml`](.github/dependabot.yml)) — cible `develop` (le flux est `develop → main`, une PR sur `main` serait inmergeable), cadence mensuelle, **un seul groupe prod+dev** : des groupes séparés bloquent les bumps couplés (`convex-test` exige un `convex` récent). Les **majeures npm sont ignorées** — elles demandent du code à adapter et se font délibérément, pas en cliquant une PR. `world-countries` est ignoré entièrement : c'est une source du snapshot `content/countries/`, que `check:content` confronte aux monnaies et gentilés committés — il se met à jour avec `pnpm build:countries`, jamais par un bump isolé.
 
 **Build Vercel :**
