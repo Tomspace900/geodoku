@@ -11,6 +11,7 @@ import {
   formatSurface,
   formatYear,
 } from "../countrySheetFormat";
+import { LANGUAGE_NAMES } from "../languageNames";
 
 describe("formatOrdinal", () => {
   it("uses the irregular French form for 1", () => {
@@ -43,92 +44,16 @@ describe("formatYear", () => {
 });
 
 describe("formatLanguageName", () => {
-  it("resolves a standard ISO 639-1 code via Intl", () => {
-    expect(formatLanguageName("fr", "en")).toBe("French");
-  });
-
   it.each([
-    ["ber", "fr", "langues berbères"],
-    ["kck", "en", "Kalanga"],
-    ["nzs", "en", "New Zealand Sign Language"],
-    ["zib", "fr", "langue des signes zimbabwéenne"],
-    ["zdj", "en", "Ngazidja Comorian"],
-  ] as const)(
-    "falls back to a curated label for %s not resolved by Intl (%s)",
-    (code, locale, expected) => {
-      expect(formatLanguageName(code, locale)).toBe(expected);
-    },
-  );
-});
-
-describe("formatLanguageName with an ICU that knows no language", () => {
-  afterEach(() => {
-    vi.unstubAllGlobals();
-  });
-
-  // Codes que l'ICU de Chromium ne résout pas (relevé 2026-10-14) : aucun ne
-  // doit s'afficher brut, ni en français ni en anglais.
-  const CHROMIUM_UNRESOLVED = [
-    "bar",
-    "ber",
-    "bi",
-    "bwg",
-    "ckb",
-    "crs",
-    "dyu",
-    "dz",
-    "ff",
-    "fj",
-    "gil",
-    "hif",
-    "kck",
-    "khi",
-    "mfe",
-    "mos",
-    "na",
-    "nd",
-    "ndc",
-    "nr",
-    "nzs",
-    "pau",
-    "rn",
-    "se",
-    "sg",
-    "ss",
-    "tet",
-    "toi",
-    "tpi",
-    "tvl",
-    "ve",
-    "zdj",
-    "zib",
-  ] as const;
-
-  it.each(["fr", "en"] as const)(
-    "never renders a raw code for the Chromium gaps (%s)",
-    (locale) => {
-      class RawDisplayNames {
-        of(code: string): string {
-          return code;
-        }
-      }
-      vi.stubGlobal("Intl", { ...Intl, DisplayNames: RawDisplayNames });
-      const raw = CHROMIUM_UNRESOLVED.filter(
-        (code) => formatLanguageName(code, locale) === code,
-      );
-      expect(raw).toEqual([]);
-    },
-  );
-});
-
-describe("formatLanguageName curated labels", () => {
-  it.each([
+    ["fr", "en", "French"],
+    ["sn", "fr", "shona"],
+    ["xh", "fr", "xhosa"],
+    ["cnr", "fr", "monténégrin"],
     ["rn", "fr", "kirundi"],
-    ["rn", "en", "Kirundi"],
-    ["ckb", "fr", "kurde"],
     ["ckb", "en", "Kurdish"],
+    ["zib", "fr", "langue des signes zimbabwéenne"],
   ] as const)(
-    "prefers the curated label over Intl for %s (%s)",
+    "names %s in %s from the static table",
     (code, locale, expected) => {
       expect(formatLanguageName(code, locale)).toBe(expected);
     },
@@ -219,15 +144,31 @@ describe("capitalizeFirst", () => {
 });
 
 describe("formatLanguageName on the real snapshot", () => {
+  afterEach(() => {
+    vi.unstubAllGlobals();
+  });
+
   const codes = [
     ...new Set(
       Object.values(COUNTRY_FACTS).flatMap((facts) => facts.officialLanguages),
     ),
-  ];
+  ].sort();
 
+  it("names exactly the official languages of the snapshot", () => {
+    expect(Object.keys(LANGUAGE_NAMES).sort()).toEqual(codes);
+  });
+
+  // Une ICU qui ne connaît aucune langue, le pire moteur possible : Safari iOS
+  // rendait « ny, sn, st, tn, ts, xh » bruts en prod (2026-10-15).
   it.each(["fr", "en"] as const)(
-    "never renders a raw ISO code (%s)",
+    "never renders a raw ISO code, whatever the browser ICU (%s)",
     (locale) => {
+      class RawDisplayNames {
+        of(code: string): string {
+          return code;
+        }
+      }
+      vi.stubGlobal("Intl", { ...Intl, DisplayNames: RawDisplayNames });
       const raw = codes.filter(
         (code) => formatLanguageName(code, locale) === code,
       );
@@ -235,7 +176,7 @@ describe("formatLanguageName on the real snapshot", () => {
     },
   );
 
-  it("writes every French language name in lowercase, as the ICU does", () => {
+  it("writes every French language name in lowercase", () => {
     const capitalized = codes.filter((code) => {
       const name = formatLanguageName(code, "fr");
       return name.charAt(0) !== name.charAt(0).toLocaleLowerCase("fr");
