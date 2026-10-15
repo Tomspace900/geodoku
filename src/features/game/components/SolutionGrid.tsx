@@ -172,9 +172,13 @@ export function SolutionGrid({
               colConstraint: colLabel,
               count: codes.length,
             })}
-            className="relative isolate block aspect-square h-auto w-full min-h-0 rounded-xl bg-surface-lowest p-0 shadow-editorial"
+            className="relative isolate block aspect-square h-auto w-full min-h-0 whitespace-normal rounded-xl bg-surface-lowest p-0 text-left shadow-editorial"
           >
-            <div className="flex h-full min-h-0 flex-col gap-0.5 overflow-y-auto p-1 sm:gap-1 sm:p-1.5">
+            {/* Le Button impose `whitespace-nowrap` et un texte centré, annulés
+                sur la case : sans ça, les noms longs ne passent plus à la ligne
+                et la case défile à l'horizontale. Défilement vertical sans
+                barre, la puce coupée en bas suffit à signaler la suite. */}
+            <div className="flex h-full min-h-0 flex-col gap-0.5 overflow-y-auto overflow-x-hidden p-1 [scrollbar-width:none] sm:gap-1 sm:p-1.5 [&::-webkit-scrollbar]:hidden">
               {ordered.map(({ iso, tier }) => countryChip(iso, tier))}
             </div>
           </Button>
