@@ -40,7 +40,7 @@ Documenté **par famille de champs** de `CountryFacts` (voir
 | `borders` | world-countries + REST Countries v5 `borders`, corrigés par `countryPatches.ts` | importé + curé |
 | `areaKm2` | world-countries `area` | importé |
 | `population` | REST Countries v5 | importé |
-| `officialLanguages` | world-countries `languages` (ISO 639-1, repli 639-3) | importé |
+| `officialLanguages` | world-countries `languages` (ISO 639-1, repli 639-3). Affichage par la table figée `LANGUAGE_NAMES` (`src/features/countries/logic/languageNames.ts`), jamais par l'ICU du navigateur, dont la couverture varie d'un moteur à l'autre ; un test exige une entrée fr et en par code du snapshot | importé |
 | `currencies` (codes ISO 4217) | world-countries `currencies`, remplacées pays par pays par `currencyCorrectionsByIso3` (`countryPatches.ts`, motif et date par entrée : FSM, KIR, TUV, CUB, SLE, ZWE, XKX). Invariant `check:content` : liste non vide, code connu de `Intl` avec un nom fr et en sans année. Affichage par `Intl.DisplayNames`, repli sur le code | importé + curé |
 | `demonyms` (`fr` / `en`, `m` / `f`) | world-countries `demonyms.fra` / `demonyms.eng`, corrigés par `demonymCorrectionsByIso3` (fautes, accents, majuscule de chaque élément d'un composé ; `XKX` à la main ; anglais corrigé sur le champ *Nationality* du CIA World Factbook, miroir `factbook.json` au commit 8662a8b). On corrige les fautes sans s'aligner sur la CNT. La liste « Pays, territoires et villes du monde » de la CNT (fév. 2025) sert de référence de relecture, sans être une source citée | importé + curé |
 | `latitude` | world-countries `latlng[0]` (centroïde) | importé |

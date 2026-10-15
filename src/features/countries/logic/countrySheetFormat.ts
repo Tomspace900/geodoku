@@ -1,5 +1,5 @@
 import type { Locale } from "@/i18n/types";
-import type { LocalizedString } from "../../../../content/type";
+import { LANGUAGE_NAMES } from "./languageNames";
 
 /**
  * Formateurs purs — nombres, pourcentages, ordinaux, années négatives, dates,
@@ -100,77 +100,12 @@ export function formatList(items: readonly string[], locale: Locale): string {
 }
 
 /**
- * Codes de langue que l'ICU embarquée ne résout pas : `Intl.DisplayNames`
- * renvoie le code tel quel, ou lève. Deux familles : des codes ISO 639-3 hors
- * CLDR (barwe, ndau, langues des signes…), et des langues que Node connaît mais
- * que l'ICU allégée de Chromium ignore (relevé le 2026-10-14 dans le navigateur
- * intégré : bislama, créoles mauricien et seychellois, dzongkha, peul,
- * fidjien…) — le joueur y lisait « mfe » ou « crs » à la place d'un nom. Les
- * noms français sont en minuscules, comme ceux de l'ICU (« français »),
- * puisqu'ils se lisent au milieu d'une liste ; un test garde que plus aucun code
- * n'est rendu brut, y compris quand l'ICU ne connaît aucune langue.
+ * Nom d'une langue, lu dans la table figée `LANGUAGE_NAMES` et jamais dans
+ * l'ICU du navigateur, dont la couverture varie d'un moteur à l'autre. Le code
+ * brut n'est qu'un dernier recours, qu'un test interdit sur le snapshot.
  */
-const LANGUAGE_NAME_FALLBACKS: Readonly<Record<string, LocalizedString>> = {
-  bar: { fr: "bavarois", en: "Bavarian" },
-  ber: { fr: "langues berbères", en: "Berber languages" },
-  bi: { fr: "bichelamar", en: "Bislama" },
-  bwg: { fr: "barwe", en: "Barwe" },
-  crs: { fr: "créole seychellois", en: "Seychellois Creole" },
-  dyu: { fr: "dioula", en: "Dyula" },
-  dz: { fr: "dzongkha", en: "Dzongkha" },
-  ff: { fr: "peul", en: "Fula" },
-  fj: { fr: "fidjien", en: "Fijian" },
-  gil: { fr: "gilbertin", en: "Gilbertese" },
-  hif: { fr: "hindi fidjien", en: "Fiji Hindi" },
-  kck: { fr: "kalanga", en: "Kalanga" },
-  khi: { fr: "langues khoïsan", en: "Khoisan languages" },
-  mfe: { fr: "créole mauricien", en: "Mauritian Creole" },
-  mos: { fr: "moré", en: "Mossi" },
-  na: { fr: "nauruan", en: "Nauruan" },
-  nd: { fr: "ndébélé du Nord", en: "North Ndebele" },
-  ndc: { fr: "ndau", en: "Ndau" },
-  nr: { fr: "ndébélé du Sud", en: "South Ndebele" },
-  nzs: {
-    fr: "langue des signes néo-zélandaise",
-    en: "New Zealand Sign Language",
-  },
-  pau: { fr: "palau", en: "Palauan" },
-  se: { fr: "same du Nord", en: "Northern Sami" },
-  sg: { fr: "sango", en: "Sango" },
-  ss: { fr: "swati", en: "Swati" },
-  tet: { fr: "tétoum", en: "Tetum" },
-  toi: { fr: "tonga", en: "Tonga" },
-  tpi: { fr: "tok pisin", en: "Tok Pisin" },
-  tvl: { fr: "tuvaluan", en: "Tuvaluan" },
-  ve: { fr: "venda", en: "Venda" },
-  zdj: { fr: "comorien ngazidja", en: "Ngazidja Comorian" },
-  zib: { fr: "langue des signes zimbabwéenne", en: "Zimbabwean Sign Language" },
-};
-
-/**
- * Libellés curés, prioritaires sur `Intl.DisplayNames` : l'ICU connaît ces codes
- * mais les nomme d'une façon que personne n'emploie (revue #129, 2026-10-14).
- * `rn` est « roundi » en français pour l'ICU, quand la langue du Burundi se dit
- * kirundi ; `ckb` est « sorani », la variété centrale du kurde, que la
- * constitution irakienne désigne comme le kurde.
- */
-const CURATED_LANGUAGE_NAMES: Readonly<Record<string, LocalizedString>> = {
-  rn: { fr: "kirundi", en: "Kirundi" },
-  ckb: { fr: "kurde", en: "Kurdish" },
-};
-
 export function formatLanguageName(code: string, locale: Locale): string {
-  const curated = CURATED_LANGUAGE_NAMES[code];
-  if (curated) return curated[locale];
-  try {
-    const displayName = new Intl.DisplayNames([locale], {
-      type: "language",
-    }).of(code);
-    if (displayName && displayName !== code) return displayName;
-  } catch {
-    // Sous-étiquette non reconnue par l'ICU embarquée — repli ci-dessous.
-  }
-  return LANGUAGE_NAME_FALLBACKS[code]?.[locale] ?? code;
+  return LANGUAGE_NAMES[code]?.[locale] ?? code;
 }
 
 /**
