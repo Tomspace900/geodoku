@@ -4,6 +4,7 @@ import {
   clearPendingOperationId,
   createOperationId,
   getOrCreatePendingOperationId,
+  listPendingOperations,
 } from "../operationIds";
 
 beforeEach(() => {
@@ -153,5 +154,29 @@ describe("operation ids", () => {
     setItem.mockRestore();
 
     expect(next).toBe("00000000-0000-4000-8000-000000000015");
+  });
+
+  it("lists only the operations still awaiting an acknowledgement", () => {
+    vi.spyOn(crypto, "randomUUID")
+      .mockReturnValueOnce("00000000-0000-4000-8000-000000000016")
+      .mockReturnValueOnce("00000000-0000-4000-8000-000000000017");
+    const acknowledged = getOrCreatePendingOperationId(
+      "guess:2026-07-18:0,0:FRA",
+    );
+    getOrCreatePendingOperationId("guess:2026-07-18:0,1:ESP");
+
+    clearPendingOperationId("guess:2026-07-18:0,0:FRA", acknowledged);
+
+    // Les tests de stockage en échec laissent un snapshot en mémoire : on ne
+    // regarde que les opérations de ce test.
+    const pending = listPendingOperations().filter(({ slot }) =>
+      slot.startsWith("guess:2026-07-18"),
+    );
+    expect(pending).toEqual([
+      {
+        slot: "guess:2026-07-18:0,1:ESP",
+        operationId: "00000000-0000-4000-8000-000000000017",
+      },
+    ]);
   });
 });
