@@ -200,8 +200,6 @@ export const fr = {
     wrong_col: "Ce pays ne respecte pas la contrainte {constraint}.",
     wrong_constraints:
       "Ce pays ne respecte ni {rowConstraint}, ni {colConstraint}.",
-    unavailable:
-      "Impossible de vérifier ce pays pour le moment. Réessaie dans un instant.",
     unknown: "Erreur inconnue.",
   },
   errorScreen: {
