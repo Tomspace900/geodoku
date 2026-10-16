@@ -22,6 +22,15 @@ export const domainRejectedResult = v.object({
   reason: v.literal("invalid_guess"),
 });
 
+/**
+ * Coup adressé à une autre grille que celle du jour (envoi rejoué après minuit
+ * UTC). Jamais stocké en reçu : le refus ne dépend que de l'horloge.
+ */
+export const dateMismatchResult = v.object({
+  kind: v.literal("domain_rejected"),
+  reason: v.literal("date_mismatch"),
+});
+
 export const recordedResult = v.object({ kind: v.literal("recorded") });
 
 /** Union stockée dans `operationReceipts.result`. */
@@ -35,4 +44,5 @@ export const operationResultValidator = v.union(
 export const submitGuessResult = v.union(
   acceptedGuessResult,
   domainRejectedResult,
+  dateMismatchResult,
 );
