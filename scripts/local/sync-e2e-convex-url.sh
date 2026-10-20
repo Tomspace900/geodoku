@@ -3,6 +3,11 @@
 # variable GitHub Actions VITE_CONVEX_URL (utilisée par le job e2e en CI).
 # Script local uniquement — jamais exécuté par la CI.
 #
+# Outil de secours rare : preview/develop est réglé pour ne jamais expirer
+# (dashboard Convex, depuis le 2026-10-20), son adresse est donc stable. Il ne
+# sert qu'après une recréation anormale (suppression manuelle, expiration
+# réactivée) — vérifier d'abord le réglage d'expiration.
+#
 # Prérequis : pnpm install, npx convex login, gh auth login
 # Usage : pnpm sync:e2e-convex-url
 #         SLEEP_SEC=5 pnpm sync:e2e-convex-url   # si réseau lent

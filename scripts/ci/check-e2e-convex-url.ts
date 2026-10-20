@@ -9,8 +9,10 @@ const CONVEX_URL_RE = /^https:\/\/[a-z0-9-]+(\.[a-z0-9-]+)*\.convex\.cloud\/?$/;
 
 function fail(message: string): never {
   console.error(message);
+  // preview/develop est réglé pour ne jamais expirer : un changement d'adresse
+  // est anormal, pas un aléa à resynchroniser en silence.
   console.error(
-    "Si l'URL a changé (preview develop recréé) : pnpm sync:e2e-convex-url",
+    "Si l'adresse de preview/develop a changé, c'est anormal : le déploiement a été supprimé, ou son expiration réactivée. Vérifier le réglage d'expiration dans le dashboard Convex (preview/develop doit ne jamais expirer), puis pnpm sync:e2e-convex-url et relancer le run.",
   );
   process.exit(1);
 }

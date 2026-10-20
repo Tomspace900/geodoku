@@ -181,7 +181,7 @@ pnpm check:e2e-convex-url         # ping VITE_CONVEX_URL avant e2e (CI + local)
 pnpm test:e2e
 pnpm test:e2e:ui
 pnpm test:e2e:reset               # environnement dev perso jetable uniquement
-pnpm sync:e2e-convex-url          # met à jour vars.VITE_CONVEX_URL (gh) après recreate develop
+pnpm sync:e2e-convex-url          # secours : resync vars.VITE_CONVEX_URL (gh) si preview/develop a été recréé (anormal, cf. §8)
 
 # Build
 pnpm build
@@ -222,17 +222,28 @@ pnpm exec convex env set ADMIN_TOKEN "xxx"
 **GitHub Actions** ([`.github/workflows/ci.yml`](.github/workflows/ci.yml)) :
 
 - `quality` (sans secret) — lint, typechecks, Vitest, design system et bundle. Push `main`/`develop` + PR vers `main`/`develop`.
-- `e2e` — `pnpm check:e2e-convex-url` puis Playwright (étape dédiée en CI, fail-fast avant install navigateurs) ; `vars.VITE_CONVEX_URL` = deploy `preview/develop` (si URL invalide : `pnpm sync:e2e-convex-url` en local, **puis relancer le run** — GitHub fige le contexte `vars` à la *création* du run, donc un run déjà en vol garde l'ancienne URL même si son job `e2e` démarre après le resync ; sans ce re-run on croit à un resync qui n'a pas pris). Pas de deploy key ni seed (develop déjà seedé, cron horaire). **Sérialisé** (`concurrency: e2e-develop`). ⚠️ soumet de vrais guesses → bruite les stats develop (staging assumé). **Sauté sur les PR Dependabot** (`github.actor`) pour cette raison précise : un bump de dépendance ne vaut pas de polluer les stats de staging. Le build reste couvert, `quality` lançant `check:bundle` (qui fait un `vite build`), et la suite complète tourne au merge dans `develop`.
+- `e2e` — `pnpm check:e2e-convex-url` puis Playwright (étape dédiée en CI, fail-fast avant install navigateurs) ; `vars.VITE_CONVEX_URL` = deploy `preview/develop` (adresse stable, cf. ci-dessous ; si elle a malgré tout changé : vérifier le réglage d'expiration, `pnpm sync:e2e-convex-url` en local, **puis relancer le run** — GitHub fige le contexte `vars` à la *création* du run, donc un run déjà en vol garde l'ancienne URL même si son job `e2e` démarre après le resync ; sans ce re-run on croit à un resync qui n'a pas pris). Pas de deploy key ni seed (develop déjà seedé, cron horaire). **Sérialisé** (`concurrency: e2e-develop`). ⚠️ soumet de vrais guesses → bruite les stats develop (staging assumé). **Sauté sur les PR Dependabot** (`github.actor`) pour cette raison précise : un bump de dépendance ne vaut pas de polluer les stats de staging. Le build reste couvert, `quality` lançant `check:bundle` (qui fait un `vite build`), et la suite complète tourne au merge dans `develop`.
 
 **Mapping branche → environnement :**
 
 | Contexte           | Front             | Backend Convex                 | Données                    |
 | ------------------ | ----------------- | ------------------------------ | -------------------------- |
 | `main`             | Vercel Production | prod                           | persistantes               |
-| `develop`          | Vercel Preview    | `preview/develop`              | persistantes               |
-| autre branche WIP  | Vercel Preview    | `preview/<branch>`             | seedées auto au 1er deploy |
+| `develop`          | Vercel Preview    | `preview/develop` (n'expire jamais) | persistantes (depuis le 2026-10-20) |
+| autre branche WIP  | Vercel Preview    | `preview/<branch>`             | seedées auto au 1er deploy, expirent après 5 j |
 | `dependabot/*`     | aucun déploiement | aucun                          | —                          |
 | local              | `pnpm dev`        | cloud dev perso (`convex dev`) | gérées manuellement        |
+
+**`preview/develop` ne doit jamais expirer.** Convex supprime un preview deployment
+5 jours après sa création sur les offres Free/Starter (14 jours sur les offres
+payantes), quelle que soit l'activité. Pour `develop`, cela changeait l'adresse
+(et cassait `vars.VITE_CONVEX_URL`) et effaçait les données tous les 5 jours :
+le déploiement est donc réglé pour ne jamais expirer dans le dashboard Convex,
+depuis le 2026-10-20. Ses données datent de la recréation de ce jour-là
+(`seed:autoSeedIfEmpty`), pas de l'historique antérieur. Un changement d'adresse
+est désormais **anormal** (suppression manuelle ou expiration réactivée) : vérifier
+le réglage avant de resynchroniser. Les previews des autres branches expirent
+toujours après 5 jours, et c'est voulu : elles sont jetables.
 
 L'`ignoreCommand` de [`vercel.json`](vercel.json) coupe le déploiement des branches `dependabot/*` : sans lui, chaque bump de patch créait un preview Vercel **et** un déploiement Convex preview jetables.
 
