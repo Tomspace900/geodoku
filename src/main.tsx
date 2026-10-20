@@ -8,14 +8,20 @@ import { BrowserRouter } from "react-router";
 import App from "@/App";
 import "@/index.css";
 
-posthog.init(import.meta.env.VITE_POSTHOG_PROJECT_TOKEN, {
-  api_host: import.meta.env.VITE_POSTHOG_HOST,
-  defaults: "2026-01-30",
-  autocapture: false,
-  // Identifiant anonyme stocké en localStorage uniquement : aucun cookie posé,
-  // donc pas de bandeau de consentement requis (cf. /privacy).
-  persistence: "localStorage",
-});
+// Les previews Vercel n'ont volontairement pas de jeton, pour ne pas polluer les
+// stats : sans init, chaque appel posthog est un no-op, sans l'erreur de console
+// qu'un init à jeton vide déclenche.
+const posthogToken = import.meta.env.VITE_POSTHOG_PROJECT_TOKEN?.trim();
+if (posthogToken) {
+  posthog.init(posthogToken, {
+    api_host: import.meta.env.VITE_POSTHOG_HOST,
+    defaults: "2026-01-30",
+    autocapture: false,
+    // Identifiant anonyme stocké en localStorage uniquement : aucun cookie posé,
+    // donc pas de bandeau de consentement requis (cf. /privacy).
+    persistence: "localStorage",
+  });
+}
 
 createRoot(document.getElementById("root")!).render(
   <StrictMode>

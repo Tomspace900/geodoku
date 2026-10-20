@@ -229,7 +229,7 @@ pnpm exec convex env set ADMIN_TOKEN "xxx"
 | Contexte           | Front             | Backend Convex                 | Données                    |
 | ------------------ | ----------------- | ------------------------------ | -------------------------- |
 | `main`             | Vercel Production | prod                           | persistantes               |
-| `develop`          | Vercel Preview    | `preview/develop` (n'expire jamais) | persistantes (depuis le 2026-10-20) |
+| `develop`          | Vercel Preview    | `preview/develop` (n'expire jamais) | persistantes               |
 | autre branche WIP  | Vercel Preview    | `preview/<branch>`             | seedées auto au 1er deploy, expirent après 5 j |
 | `dependabot/*`     | aucun déploiement | aucun                          | —                          |
 | local              | `pnpm dev`        | cloud dev perso (`convex dev`) | gérées manuellement        |
@@ -239,8 +239,8 @@ pnpm exec convex env set ADMIN_TOKEN "xxx"
 payantes), quelle que soit l'activité. Pour `develop`, cela changeait l'adresse
 (et cassait `vars.VITE_CONVEX_URL`) et effaçait les données tous les 5 jours :
 le déploiement est donc réglé pour ne jamais expirer dans le dashboard Convex,
-depuis le 2026-10-20. Ses données datent de la recréation de ce jour-là
-(`seed:autoSeedIfEmpty`), pas de l'historique antérieur. Un changement d'adresse
+depuis le 2026-10-20. Recréé ce jour-là (`seed:autoSeedIfEmpty`), il a été
+réaligné sur la prod par `pnpm dump:prod-to-develop` le même jour. Un changement d'adresse
 est désormais **anormal** (suppression manuelle ou expiration réactivée) : vérifier
 le réglage avant de resynchroniser. Les previews des autres branches expirent
 toujours après 5 jours, et c'est voulu : elles sont jetables.
@@ -279,7 +279,7 @@ frontend aux joueurs, et un échec du push fait échouer le déploiement Vercel.
 
 Complémentaire à Convex (`gridFeedback`/`dailyStats` = santé grilles ; PostHog = parcours joueur). **Convex = source de vérité** en cas de chevauchement.
 
-**Init** ([`src/main.tsx`](src/main.tsx)) : `autocapture: false`, `persistence: "localStorage"` (pas de cookies). Pas de `identify()`, pas de PII. Tenir [`/privacy`](src/features/legal/PrivacyPage.tsx) à jour.
+**Init** ([`src/main.tsx`](src/main.tsx)) : `autocapture: false`, `persistence: "localStorage"` (pas de cookies). **Pas d'init sans jeton** : les previews Vercel n'ont volontairement pas de `VITE_POSTHOG_PROJECT_TOKEN` (stats non polluées), chaque appel posthog y est un no-op. Pas de `identify()`, pas de PII. Tenir [`/privacy`](src/features/legal/PrivacyPage.tsx) à jour.
 
 **Conventions.** Events `snake_case`, passé (`game_completed`). `posthog?.capture(...)` avec optional chaining. `grid_date` sur events partie. **Vérifier le catalogue avant d'en ajouter.**
 
