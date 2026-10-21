@@ -1,7 +1,5 @@
 import { usePostHog } from "@posthog/react";
-import type { LucideIcon } from "lucide-react";
 import { Ban, Gem, Grid3x3, Heart, HelpCircle } from "lucide-react";
-import type { ComponentType } from "react";
 import { useEffect, useRef, useState } from "react";
 import { AccentBar } from "@/components/editorial/AccentBar";
 import { Button } from "@/components/ui/button";
@@ -13,16 +11,12 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { useT } from "@/i18n/LocaleContext";
-import type { TKey } from "@/i18n/types";
 import { STORAGE_KEYS, safeGet, safeSet } from "@/lib/storage";
+import { type IconRule, IconRuleList } from "./IconRuleList";
 import { RarityLegend } from "./RarityLegend";
 
-const RULES: {
-  icon: LucideIcon;
-  titleKey: TKey;
-  bodyKey: TKey;
-  BodyComponent?: ComponentType<{ className?: string }>;
-}[] = [
+/** Les quatre règles, reprises telles quelles par la page « À propos » (#142). */
+export const HOW_TO_PLAY_RULES: readonly IconRule[] = [
   {
     icon: Grid3x3,
     titleKey: "howToPlay.rule1Title",
@@ -133,24 +127,7 @@ export function HowToPlayLink() {
             <AccentBar className="mt-3" />
           </DialogHeader>
 
-          <ol className="space-y-4">
-            {RULES.map(({ icon: Icon, titleKey, bodyKey, BodyComponent }) => (
-              <li key={titleKey} className="flex items-start gap-3">
-                <span className="grid h-9 w-9 shrink-0 place-items-center rounded-full bg-brand/10 text-brand">
-                  <Icon size={17} strokeWidth={2} />
-                </span>
-                <div className="space-y-0.5 pt-0.5">
-                  <p className="font-sans text-sm font-semibold text-on-surface leading-snug">
-                    {t(titleKey)}
-                  </p>
-                  <p className="font-sans text-xs text-on-surface-variant leading-relaxed">
-                    {t(bodyKey)}
-                  </p>
-                  {BodyComponent && <BodyComponent className="pt-2" />}
-                </div>
-              </li>
-            ))}
-          </ol>
+          <IconRuleList rules={HOW_TO_PLAY_RULES} />
 
           <p className="text-center text-xs text-on-surface-variant">
             {t("howToPlay.sourcesHint")}

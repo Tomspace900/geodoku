@@ -26,7 +26,7 @@ Barème tranché sur données réelles. La rareté d'une case s'appuie sur la **
 
 **L'enjeu communautaire.** À la fin, le joueur partage sa grille sous forme d'emojis colorés (🟪🟦🟨🟥⬜⬛) avec `<total> pts`, à la manière de Wordle. `⬛` = cases bloquées ; `⬜` = cases non remplies en défaite. Le partage ([`share.ts`](src/features/game/logic/share.ts)) ouvre la **feuille native** (Web Share API) **uniquement sur appareil tactile** (`canUseNativeShare` = `navigator.share` **et** pointeur principal `coarse` / `maxTouchPoints > 0`) et retombe sur le **presse-papiers** sur desktop. **Ne pas** élargir vers « feuille native dès que `navigator.share` existe » — Safari/Chrome desktop l'exposent aussi. Les deux chemins envoient **exactement la même chaîne** (`formatShareString`), et `navigator.share` ne reçoit qu'**un seul champ `text`**, URL comprise en fin de corps : **jamais `{title, text, url}`**. La feuille iOS transmet chaque champ comme un item distinct et l'app réceptrice n'en garde souvent qu'un — avec une `url` séparée, Messages/WhatsApp/Mail n'envoyaient que le lien, sans score ni emojis, de façon variable selon l'app cible (d'où l'impression que « le partage dépend du navigateur »). L'aperçu de lien qu'un champ `url` ferait gagner ne vaut pas le contenu perdu. Un échec de copie (`ShareOutcome` `failed`) se dit à l'écran mais n'émet pas d'event. `share_method` (`native`/`clipboard`) part dans l'event PostHog `result_shared`.
 
-**Mode entraînement (`/archive`).** Les grilles des **7 derniers jours** (J-1 → J-7) sont rejouables une fois la partie du jour terminée — sinon la route **redirige vers `/`** (garde d'expérience, pas de sécurité : l'endpoint est public et sans identité). Essais **illimités** : on compte les essais ratés au lieu de décompter des vies, donc une partie ne se perd que par **blocage**. Les cases se colorent normalement, sur la **cohorte figée** du jour concerné (complète → score exact et stable, sans marqueur « ≈ »). **Cohorte close ⇒ un pays absent de la distribution vaut une part de 0, donc ultra** (`isCohortComplete` / `filledCellShare`, [`rarity.ts`](src/features/game/logic/rarity.ts)) : sur une grille passée l'absence est définitive et signifie « personne ne l'a choisi », alors que sur la grille du jour elle signifie « pas encore » : le coup du joueur, envoyé en arrière-plan, n'est pas encore agrégé, et on l'ajoute localement (`1 / (total + 1)`, marqué « ≈ ») pour que badge et score ne restent jamais en attente d'un envoi qui n'arrive pas. Sans cette distinction, un pays inédit n'avait aucun badge **et laissait le score bloqué sur `null`** — c'est la même lecture que la grille solution, qui applique `rarityByCountry[iso] ?? 0` depuis toujours. Score sur **900** : grille + rareté, part vies neutralisée, avec le nombre d'essais affiché à part ([`TrainingResultScreen`](src/features/archive/components/TrainingResultScreen.tsx)). Titres de fin réutilisés du quotidien (paliers calibrés sur /1000, donc le haut du barème sort plus rarement — assumé). **Pas de partage** (les emojis n'ont de sens comparés que le même jour), pas de notation de difficulté, et surtout **aucune écriture Convex** : les cohortes passées restent pures et le seam `guesses.isReplay` reste dormant. Une date future (ou aujourd'hui) est refusée **côté serveur et côté client** — `classifyReplayDate` ([`replayWindow.ts`](src/features/game/logic/replayWindow.ts)) est le module pur partagé par les deux ; un petit malin qui bricole l'URL tombe sur `ErrorScreen variant="time-traveller"`.
+**Mode entraînement (`/archive`).** Les grilles des **7 derniers jours** (J-1 → J-7) sont rejouables une fois la partie du jour terminée — sinon la route **redirige vers l'accueil de sa langue** (garde d'expérience, pas de sécurité : l'endpoint est public et sans identité). Essais **illimités** : on compte les essais ratés au lieu de décompter des vies, donc une partie ne se perd que par **blocage**. Les cases se colorent normalement, sur la **cohorte figée** du jour concerné (complète → score exact et stable, sans marqueur « ≈ »). **Cohorte close ⇒ un pays absent de la distribution vaut une part de 0, donc ultra** (`isCohortComplete` / `filledCellShare`, [`rarity.ts`](src/features/game/logic/rarity.ts)) : sur une grille passée l'absence est définitive et signifie « personne ne l'a choisi », alors que sur la grille du jour elle signifie « pas encore » : le coup du joueur, envoyé en arrière-plan, n'est pas encore agrégé, et on l'ajoute localement (`1 / (total + 1)`, marqué « ≈ ») pour que badge et score ne restent jamais en attente d'un envoi qui n'arrive pas. Sans cette distinction, un pays inédit n'avait aucun badge **et laissait le score bloqué sur `null`** — c'est la même lecture que la grille solution, qui applique `rarityByCountry[iso] ?? 0` depuis toujours. Score sur **900** : grille + rareté, part vies neutralisée, avec le nombre d'essais affiché à part ([`TrainingResultScreen`](src/features/archive/components/TrainingResultScreen.tsx)). Titres de fin réutilisés du quotidien (paliers calibrés sur /1000, donc le haut du barème sort plus rarement — assumé). **Pas de partage** (les emojis n'ont de sens comparés que le même jour), pas de notation de difficulté, et surtout **aucune écriture Convex** : les cohortes passées restent pures et le seam `guesses.isReplay` reste dormant. Une date future (ou aujourd'hui) est refusée **côté serveur et côté client** — `classifyReplayDate` ([`replayWindow.ts`](src/features/game/logic/replayWindow.ts)) est le module pur partagé par les deux ; un petit malin qui bricole l'URL tombe sur `ErrorScreen variant="time-traveller"`.
 
 **Ce que Geodoku n'est PAS.** Pas de compte, pas de login, pas de leaderboard, pas de streak inter-jours, pas de stats globales, pas d'ads, pas de mobile app. Un site web minimaliste, une partie par jour (plus l'entraînement sur les 7 dernières), un partage. Point.
 
@@ -44,7 +44,7 @@ Barème tranché sur données réelles. La rareté d'une case s'appuie sur la **
 - **Recherche fuzzy** : match-sorter (normalisation NFD côté requête)
 - **Fonts** : Newsreader (serif) + Inter (sans-serif)
 
-**Choix assumés et non négociables.** Pas de state manager externe : `useReducer` + `Context`. Pas de TanStack Query. Pas de Zod. Pas de date-fns : dates en `YYYY-MM-DD` ([`src/lib/dates.ts`](src/lib/dates.ts)). Routage déclaratif minimal avec React Router pour `/`, `/admin`, `/privacy` et `/changelog` ([`src/App.tsx`](src/App.tsx)) : jeu et pages éditoriales eager, admin seul chargé en lazy.
+**Choix assumés et non négociables.** Pas de state manager externe : `useReducer` + `Context`. Pas de TanStack Query. Pas de Zod. Pas de date-fns : dates en `YYYY-MM-DD` ([`src/lib/dates.ts`](src/lib/dates.ts)). Routage déclaratif minimal avec React Router ([`src/App.tsx`](src/App.tsx)) : accueil, `/about`, `/privacy`, `/changelog` et `/archive[/:date]`, chacune sous chaque langue (`/fr/…`, `/en/…`, §4 i18n), plus `/admin`. Jeu et pages éditoriales eager, archive et admin chargées en lazy.
 
 ## 3. Architecture
 
@@ -62,7 +62,8 @@ src/features/<feature>/   # game, archive, countries, admin, legal, errors
 convex/                   # schema, grids, guesses, scheduling, seed, crons
 convex/lib/               # gridGenerator, gridScheduler, gridConstants (purs)
 scripts/content/            # dérivation & garde du snapshot content/ (check-content, build-answers, emit)
-scripts/ci/                 # exécutés en CI (check-e2e-convex-url)
+scripts/build/              # pré-rendu au build (prerender, pageHead), appelé par vite.config.ts
+scripts/ci/                 # exécutés en CI (check-bundle-size, check-design-system)
 scripts/countries/          # pipeline contenu pays (build-countries, flagData, patches)
   harvest/                # récoltes réseau isolées (Wikidata…) → data/*.ts committé, relu en diff
   data/                   # datasets de faits datés (curés ou récoltés)
@@ -116,6 +117,8 @@ Détail complet : [`docs/content-pipeline.md`](docs/content-pipeline.md).
 **Imports.** Alias `@/` pour `src/`. Biome gère l'ordre.
 
 **i18n.** Tout texte joueur via `translate()` ([`src/i18n/`](src/i18n/)). Ajouter les clés dans `locales/fr.ts` **et** `en.ts`. Contraintes actives + archivées couvertes par le test `translate`.
+
+**La langue vient de l'URL, et toutes les langues sont au même niveau** (#140, [`localePath.ts`](src/i18n/localePath.ts)) : `/fr/…`, `/en/…`, `/admin` hors i18n. Aucune langue n'est « par défaut » : le jeu vise un public international, et la première version (français à la racine, anglais sous `/en`) faisait arriver en français un anglophone qui tapait l'adresse. Ajouter une langue = l'ajouter à `LOCALES` et traduire. Les adresses **sans langue** (`/`, `/about`, `/privacy`, `/changelog`, `/archive…`) n'ont pas de page : le middleware Vercel [`middleware.ts`](middleware.ts) les redirige en 302, avant tout affichage, vers la même page dans la langue du visiteur — son choix (cookie `geodoku_locale`), sinon `Accept-Language`, sinon l'anglais (`preferredLocale`). Elles sont le `x-default` des `hreflang` ; Googlebot, sans langue, part vers l'anglais et découvre le reste par les `hreflang` et le sitemap. Son matcher est un littéral (lu statiquement par Vercel) : une nouvelle page publique doit y être ajoutée, ce que garde `middleware.test.ts`. En dev (pas de middleware), `HomeRedirect` ([`App.tsx`](src/App.tsx)) fait le même choix côté client pour `/` et les adresses inconnues. Tout lien interne passe par `localizedPath` (`useLocale`), jamais un chemin en dur. Le choix du joueur (sélecteur FR/EN ou toast) vit dans un **cookie** et non en localStorage, pour que le middleware le lise ([`localeCookie.ts`](src/i18n/localeCookie.ts)) ; l'ancienne clé `geodoku:locale` n'est plus lue que pour y être recopiée une fois. Un **lien direct** (`/en/about`) affiche toujours la page demandée : quand la langue du joueur en diffère, [`LocaleSuggestionToast`](src/i18n/components/LocaleSuggestionToast.tsx) la propose, rédigé dans la langue proposée (`suggestedLocale`) — on suggère, on ne redirige pas, comme le recommande Google. Pour la suggestion, l'ordre est **choix, puis pays, puis navigateur** : le middleware transmet la langue du pays de connexion (`x-vercel-ip-country` → `countryLocale`, cookie de session `geodoku_country_locale` qui ne contient que la langue). Ainsi un téléphone réglé en anglais à Bordeaux est redirigé vers `/en` (le navigateur décide de la redirection) puis se voit proposer le français. Seuls les pays à langue dominante claire comptent : Belgique, Suisse, Canada et Luxembourg ne suggèrent rien. Le lien de partage est la racine `geodoku.app` : qui le reçoit arrive dans sa propre langue.
 
 **Tests unitaires.**
 
@@ -177,11 +180,9 @@ pnpm check:design-system          # audit tokens/DS sur src/**/*.tsx (job qualit
 pnpm check:bundle                 # vite build + budget bundle joueur 280 KiB (job quality)
 
 # E2E Playwright — nécessite une grille du jour
-pnpm check:e2e-convex-url         # ping VITE_CONVEX_URL avant e2e (CI + local)
 pnpm test:e2e
 pnpm test:e2e:ui
 pnpm test:e2e:reset               # environnement dev perso jetable uniquement
-pnpm sync:e2e-convex-url          # met à jour vars.VITE_CONVEX_URL (gh) après recreate develop
 
 # Build
 pnpm build
@@ -222,23 +223,34 @@ pnpm exec convex env set ADMIN_TOKEN "xxx"
 **GitHub Actions** ([`.github/workflows/ci.yml`](.github/workflows/ci.yml)) :
 
 - `quality` (sans secret) — lint, typechecks, Vitest, design system et bundle. Push `main`/`develop` + PR vers `main`/`develop`.
-- `e2e` — `pnpm check:e2e-convex-url` puis Playwright (étape dédiée en CI, fail-fast avant install navigateurs) ; `vars.VITE_CONVEX_URL` = deploy `preview/develop` (si URL invalide : `pnpm sync:e2e-convex-url` en local, **puis relancer le run** — GitHub fige le contexte `vars` à la *création* du run, donc un run déjà en vol garde l'ancienne URL même si son job `e2e` démarre après le resync ; sans ce re-run on croit à un resync qui n'a pas pris). Pas de deploy key ni seed (develop déjà seedé, cron horaire). **Sérialisé** (`concurrency: e2e-develop`). ⚠️ soumet de vrais guesses → bruite les stats develop (staging assumé). **Sauté sur les PR Dependabot** (`github.actor`) pour cette raison précise : un bump de dépendance ne vaut pas de polluer les stats de staging. Le build reste couvert, `quality` lançant `check:bundle` (qui fait un `vite build`), et la suite complète tourne au merge dans `develop`.
+- `e2e` — Playwright contre `vars.VITE_CONVEX_URL` = deploy `preview/develop`, d'adresse fixe (cf. ci-dessous). Pas de deploy key ni seed (develop déjà seedé, cron horaire). **Sérialisé** (`concurrency: e2e-develop`). ⚠️ soumet de vrais guesses → bruite les stats develop (staging assumé). **Sauté sur les PR Dependabot** (`github.actor`) pour cette raison précise : un bump de dépendance ne vaut pas de polluer les stats de staging. Le build reste couvert, `quality` lançant `check:bundle` (qui fait un `vite build`), et la suite complète tourne au merge dans `develop`.
 
 **Mapping branche → environnement :**
 
 | Contexte           | Front             | Backend Convex                 | Données                    |
 | ------------------ | ----------------- | ------------------------------ | -------------------------- |
 | `main`             | Vercel Production | prod                           | persistantes               |
-| `develop`          | Vercel Preview    | `preview/develop`              | persistantes               |
-| autre branche WIP  | Vercel Preview    | `preview/<branch>`             | seedées auto au 1er deploy |
+| `develop`          | Vercel Preview    | `preview/develop` (n'expire jamais) | persistantes               |
+| autre branche WIP  | Vercel Preview    | `preview/<branch>`             | seedées auto au 1er deploy, expirent après 5 j |
 | `dependabot/*`     | aucun déploiement | aucun                          | —                          |
 | local              | `pnpm dev`        | cloud dev perso (`convex dev`) | gérées manuellement        |
+
+**`preview/develop` ne doit jamais expirer.** Convex supprime un preview deployment
+5 jours après sa création sur les offres Free/Starter (14 jours sur les offres
+payantes), quelle que soit l'activité. Pour `develop`, cela changeait l'adresse
+(et cassait `vars.VITE_CONVEX_URL`) et effaçait les données tous les 5 jours :
+le déploiement est donc réglé pour ne jamais expirer dans le dashboard Convex,
+depuis le 2026-10-20. Recréé ce jour-là (`seed:autoSeedIfEmpty`), il a été
+réaligné sur la prod par `pnpm dump:prod-to-develop` le même jour. Aucun outil ne
+resynchronise l'adresse : si les e2e ne joignent plus Convex, c'est que ce réglage
+a sauté. Les previews des autres branches expirent
+toujours après 5 jours, et c'est voulu : elles sont jetables.
 
 L'`ignoreCommand` de [`vercel.json`](vercel.json) coupe le déploiement des branches `dependabot/*` : sans lui, chaque bump de patch créait un preview Vercel **et** un déploiement Convex preview jetables.
 
 **Suppression des branches.** Le repo supprime la branche de tête après merge (`delete_branch_on_merge`), ce qui nettoie les branches de travail et Dependabot. `develop` en est exemptée par le ruleset « develop — suppression interdite », dont la seule règle est l'interdiction de suppression : les push forcés après rebase restent permis. Sans lui, le merge d'une PR `develop → main` supprimait `develop` (2026-10-15), et GitHub redirigeait alors vers `main` les PR qui la visaient. `main` est gardée par son propre ruleset, « Main protection ».
 
-**Dependabot** ([`.github/dependabot.yml`](.github/dependabot.yml)) — cible `develop` (le flux est `develop → main`, une PR sur `main` serait inmergeable), cadence mensuelle, **un seul groupe prod+dev** : des groupes séparés bloquent les bumps couplés (`convex-test` exige un `convex` récent). Les **majeures npm sont ignorées** — elles demandent du code à adapter et se font délibérément, pas en cliquant une PR. `world-countries` est ignoré entièrement : c'est une source du snapshot `content/countries/`, que `check:content` confronte aux monnaies et gentilés committés — il se met à jour avec `pnpm build:countries`, jamais par un bump isolé.
+**Dependabot** ([`.github/dependabot.yml`](.github/dependabot.yml)) — cible `develop` (le flux est `develop → main`, une PR sur `main` serait inmergeable), cadence mensuelle, **un seul groupe prod+dev** : des groupes séparés bloquent les bumps couplés (`convex-test` exige un `convex` récent). Les **majeures npm sont ignorées** — elles demandent du code à adapter et se font délibérément, pas en cliquant une PR. Avant une majeure, lire ses `peerDependencies` : React Router 8 exige React ≥ 19.2.7 et a tourné deux mois sur React 18 sans que rien ne casse à l'écran, jusqu'au pré-rendu ; il reste en 7.x tant que React 19 n'est pas passé. Majeures en attente : #144. `world-countries` est ignoré entièrement : c'est une source du snapshot `content/countries/`, que `check:content` confronte aux monnaies et gentilés committés — il se met à jour avec `pnpm build:countries`, jamais par un bump isolé.
 
 **Build Vercel :**
 
@@ -252,6 +264,29 @@ Le CLI Convex exécute d'abord `--cmd 'vite build'`, puis pousse les fonctions,
 index et schéma. Vercel n'expose toutefois le bundle qu'après le succès de la
 commande complète : le push Convex précède donc toujours l'exposition du nouveau
 frontend aux joueurs, et un échec du push fait échouer le déploiement Vercel.
+
+**Pré-rendu** (#139). Tout `vite build` se termine par le plugin `geodoku-prerender`
+([`vite.config.ts`](vite.config.ts), [`scripts/build/prerender.ts`](scripts/build/prerender.ts)) :
+build SSR de [`src/entry-server.tsx`](src/entry-server.tsx), puis un vrai HTML par page
+publique et par langue (`PRERENDERED_PAGES`, [`pageMeta.ts`](src/app/pageMeta.ts)), avec
+titre, description, canonical et `hreflang` propres à la page. Les robots des moteurs IA
+n'exécutent pas le JavaScript : sans ce HTML, ils ne voyaient qu'un `<div id="root">` vide.
+Le client garde `createRoot().render()` ; le HTML servi est l'app en chargement, déjà
+stylée, que React remplace par un rendu identique. Fichiers au format `cleanUrls` de
+[`vercel.json`](vercel.json) (`fr/privacy.html`, `en/privacy.html`…), avec `trailingSlash: false` : `/fr/privacy/`
+est redirigé vers `/fr/privacy`, une seule adresse par page. Les adresses sans langue n'ont
+pas de fichier (middleware, §4 i18n) ; `index.html` n'est que le gabarit. Les autres routes du SPA
+(`/fr/archive…`, `/en/archive…`, `/admin`) sont réécrites vers `/app-shell` (le fichier
+`app-shell.html` ; avec `cleanUrls`, viser `.html` donne un 404), le gabarit vide, pour ne
+pas afficher l'accueil avant `/archive`. **Toute nouvelle route du SPA doit y être ajoutée**,
+sinon elle répond 404 : le reste reçoit `404.html`, ce même gabarit avec un vrai statut 404
+(#141) — le joueur est renvoyé vers l'accueil, un robot voit une page inexistante.
+`sitemap.xml` est généré depuis les pages pré-rendues, jamais écrit à la main. Sous
+Node, rien ne doit toucher au navigateur au chargement d'un module. Le client Convex y
+reçoit une adresse factice (`import.meta.env.SSR`, branche absente du bundle navigateur) :
+il ne se connecte qu'à la première souscription, qui n'a jamais lieu au pré-rendu, donc
+le build n'a besoin ni du réseau ni de `VITE_CONVEX_URL`, que le job `quality` de la CI
+n'a pas.
 
 **`convex/_generated/` est versionné** — régénérer avec `pnpm convex:dev` ou `pnpm exec convex codegen` après changement schéma/API et commiter le diff.
 
@@ -268,7 +303,7 @@ frontend aux joueurs, et un échec du push fait échouer le déploiement Vercel.
 
 Complémentaire à Convex (`gridFeedback`/`dailyStats` = santé grilles ; PostHog = parcours joueur). **Convex = source de vérité** en cas de chevauchement.
 
-**Init** ([`src/main.tsx`](src/main.tsx)) : `autocapture: false`, `persistence: "localStorage"` (pas de cookies). Pas de `identify()`, pas de PII. Tenir [`/privacy`](src/features/legal/PrivacyPage.tsx) à jour.
+**Init** ([`src/main.tsx`](src/main.tsx)) : `autocapture: false`, `persistence: "localStorage"` (pas de cookies). **Pas d'init sans jeton** : les previews Vercel n'ont volontairement pas de `VITE_POSTHOG_PROJECT_TOKEN` (stats non polluées), chaque appel posthog y est un no-op. Pas de `identify()`, pas de PII. Tenir [`/privacy`](src/features/legal/PrivacyPage.tsx) à jour.
 
 **Conventions.** Events `snake_case`, passé (`game_completed`). `posthog?.capture(...)` avec optional chaining. `grid_date` sur events partie. **Vérifier le catalogue avant d'en ajouter.**
 
@@ -277,11 +312,11 @@ Complémentaire à Convex (`gridFeedback`/`dailyStats` = santé grilles ; PostHo
 | Partie | `game_started`, `session_resumed`, `cell_opened`, `guess_submitted` (émis à l'accusé serveur, avec `replayed` et `submit_latency_ms` hors rejeu), `guess_failed`, `game_completed` (n'émet plus `grid_score_percent` — dérivable de `filled_cells`+`lives_left`) |
 | Saisie | `guess_modal_closed` |
 | Résultat | `result_screen_viewed`, `result_shared` (portent `score_total`/`score_grid`/`score_rarity`/`score_lives` — les anciens `originality_*`/`grid_score_percent` sont **retirés**, groupements dashboards à recréer), `difficulty_rated`, `solution_viewed`, `scoring_info_opened` (prop `source`: `result_screen`) |
-| UI | `how_to_play_*`, `locale_changed`, `footer_link_clicked`, `survey_link_clicked` / `survey_dismissed` (props `source`: `result_screen`/`solution_screen`/`footer` et `survey_id` ; banderole sondage post-partie via `SurveyCta` — écran de résultat sous le partage + écran de solution — gated par feature flag PostHog `survey_active` ; `geodoku:survey-done` mémorise l'interaction **par sondage** (`SURVEY_ID`, à changer avec les URLs : un clic sur l'ancien sondage ne masque pas le nouveau) et dissocie clic (masquage définitif, cf. `isSurveyDone`) et fermeture (masquage du jour courant, réapparaît le lendemain, plus du tout après `MAX_SURVEY_DISMISSALS` fermetures) ; lien permanent et discret dans `AppFooter` (même flag, toujours affiché quel que soit `geodoku:survey-done`, mais un clic dessus masque aussi la banderole) pour rester accessible aux joueurs qui changent d'avis après avoir fermé la banderole) |
+| UI | `how_to_play_*`, `locale_changed` (prop `source`: `footer`/`suggestion`), `locale_suggestion_shown` / `locale_suggestion_dismissed` (props `from`/`to`/`basis` : `choice`/`country`/`browser` ; toast de suggestion d'une autre langue, #140 — `locale_changed` venu du toast porte aussi `basis`), `footer_link_clicked`, `survey_link_clicked` / `survey_dismissed` (props `source`: `result_screen`/`solution_screen`/`footer` et `survey_id` ; banderole sondage post-partie via `SurveyCta` — écran de résultat sous le partage + écran de solution — gated par feature flag PostHog `survey_active` ; `geodoku:survey-done` mémorise l'interaction **par sondage** (`SURVEY_ID`, à changer avec les URLs : un clic sur l'ancien sondage ne masque pas le nouveau) et dissocie clic (masquage définitif, cf. `isSurveyDone`) et fermeture (masquage du jour courant, réapparaît le lendemain, plus du tout après `MAX_SURVEY_DISMISSALS` fermetures) ; lien permanent et discret dans `AppFooter` (même flag, toujours affiché quel que soit `geodoku:survey-done`, mais un clic dessus masque aussi la banderole) pour rester accessible aux joueurs qui changent d'avis après avoir fermé la banderole) |
 | Sources | `constraint_source_viewed` (`grid_date`, `mode`: `daily`/`training`, `surface`: toujours `playing`, `constraint_id`) — tap sur un en-tête de contrainte **en jeu uniquement** (toast de source, [`useConstraintSourceToast`](src/features/game/hooks/useConstraintSourceToast.ts)) ; sur la grille solution, l'en-tête ouvre le Drawer de contrainte à la place (`solution_constraint_opened`, ci-dessous) — `surface` reste dans l'event pour ne pas casser les groupements existants, bien qu'il ne prenne plus qu'une seule valeur |
 | Grille solution | `solution_cell_opened` (`grid_date`, `mode`, `cell`, `answer_count`) et `solution_constraint_opened` (`grid_date`, `mode`, `constraint_id`, `answer_count`) — tap sur une case ou un en-tête de la grille solution, qui ouvre le Drawer partagé ([`useSolutionDrawer`](src/features/game/hooks/useSolutionDrawer.ts)). Les deux events sont **partagés** daily/entraînement, distingués par `mode`, jamais émis en cours de partie (la grille solution n'existe qu'une fois `status !== "playing"`). `country_sheet_opened` est retiré avec la fiche pays (#125) ; il reviendra avec elle. |
 | Entraînement | `archive_opened`, `training_started` (`grid_date`, `resumed`, `restart`), `training_completed` (`grid_date`, `outcome`, `filled_cells`, `failed_attempts`), `training_result_viewed` (`grid_date`, `outcome`, `score_total`/`score_grid`/`score_rarity` sur 900, `failed_attempts`) — **noms distincts des events daily** pour ne pas corrompre les groupements existants. Corollaire : le mode entraînement n'émet **aucun** event daily, `cell_opened` compris (il alimente le tunnel du quotidien) ; `game_started`/`game_completed`/`result_screen_viewed`/`cell_opened` restent daily-only. `scoring_info_opened` et `constraint_source_viewed` sont partagés, distingués par leur prop `mode`/`source`. |
-| Légal | `legal_page_viewed`, `legal_page_left` |
+| Légal | `legal_page_viewed`, `legal_page_left` (prop `page` : `privacy`, `changelog`, `about`) |
 | Fiabilité | `backend_timeout_shown`, `$exception` |
 
 Source de vérité détaillée : grep `posthog?.capture` dans le code.

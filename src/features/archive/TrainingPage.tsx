@@ -18,7 +18,7 @@ import { useSolutionDrawer } from "@/features/game/hooks/useSolutionDrawer";
 import { getGridNumberForDate } from "@/features/game/logic/gridIssue";
 import { loadPersistedGame } from "@/features/game/logic/persistence";
 import { classifyReplayDate } from "@/features/game/logic/replayWindow";
-import { useT } from "@/i18n/LocaleContext";
+import { useLocale, useT } from "@/i18n/LocaleContext";
 import { todayUTC } from "@/lib/dates";
 import { cn } from "@/lib/utils";
 import { api } from "../../../convex/_generated/api";
@@ -50,7 +50,10 @@ function TrainingShell({
 
 function BackToArchive() {
   const t = useT();
-  return <BackLink to="/archive" label={t("training.backToList")} />;
+  const { localizedPath } = useLocale();
+  return (
+    <BackLink to={localizedPath("/archive")} label={t("training.backToList")} />
+  );
 }
 
 /**
@@ -63,6 +66,7 @@ function BackToArchive() {
 export function TrainingPage() {
   const { date = "" } = useParams();
   const navigate = useNavigate();
+  const { localizedPath } = useLocale();
   const today = todayUTC();
   const verdict = classifyReplayDate(date, today);
 
@@ -72,17 +76,17 @@ export function TrainingPage() {
     isDailyGameFinished(loadPersistedGame(), today),
   );
 
-  if (!dailyFinished) return <Navigate to="/" replace />;
+  if (!dailyFinished) return <Navigate to={localizedPath("/")} replace />;
   // Lien périmé ou mal formé : rien de malveillant, on ramène à l'archive.
   if (verdict === "too_old" || verdict === "malformed") {
-    return <Navigate to="/archive" replace />;
+    return <Navigate to={localizedPath("/archive")} replace />;
   }
   if (verdict === "future") {
     return (
       <TrainingShell>
         <ErrorScreen
           variant="time-traveller"
-          onBack={() => navigate("/archive", { replace: true })}
+          onBack={() => navigate(localizedPath("/archive"), { replace: true })}
         />
       </TrainingShell>
     );

@@ -48,12 +48,11 @@ export const en = {
     constraintAnswerCount: "{count} countries",
   },
   footer: {
-    loveCreditPre: "Made with love ❤️, inspired by ",
-    loveCreditPost: ".",
-    contact: "Contact",
+    loveCredit: "Made with love ❤️",
     support: "Buy me a coffee",
+    about: "About",
     privacy: "Privacy",
-    changelog: "Changelog",
+    changelog: "What's new",
     changelogNew: "New",
     survey: "Share feedback",
     copyright: "©\u00A0{year}\u00A0Geodoku",
@@ -76,7 +75,7 @@ export const en = {
       "No sign-up, no login, no ads. I don't sell data or use it for advertising. There are no advertising trackers on the site.",
     deviceTitle: "On your device",
     deviceBody:
-      "Your browser keeps a few settings in local storage: your language, the current grid progress, your training games on past grids, a random anti-spam identifier, and short-lived technical keys used to deduplicate submissions. None of it is an advertising cookie. Clearing the site data removes it.",
+      "Your browser keeps a few settings: your language, in a preference cookie set only if you pick one; the language of the country you connect from, in a session cookie holding only that language, to suggest the right version; and in local storage the current grid progress, your training games on past grids, a random anti-spam identifier, and short-lived technical keys used to deduplicate submissions. None of it is an advertising cookie. Clearing the site data removes it.",
     serverTitle: "What gets sent to me",
     serverBody:
       "While you play, I record aggregated picks per cell, game outcomes, and difficulty feedback. To make retries reliable, the server keeps a technical receipt of the action (for example its cell and country) with an opaque key for seven days, without a stable identifier linking your actions. Pseudonymous usage events also help me understand the journey. None of this contains a name, email, or account.",
@@ -91,7 +90,7 @@ export const en = {
   },
   changelog: {
     eyebrow: "Last updated · October 2026",
-    title: "Changelog",
+    title: "What's new",
     backToGame: "Back to the game",
     entries: {
       answerSourcesDate: "October 15, 2026",
@@ -171,6 +170,55 @@ export const en = {
     roadmapLives: "Easy mode and/or hardcore mode",
     contactTitle: "Got an idea or a remark?",
     contactBodyPre: "I welcome every suggestion. Write to me at",
+  },
+  seo: {
+    homeTitle: "Geodoku — The daily geography grid",
+    privacyTitle: "Privacy · Geodoku",
+    changelogTitle: "What's new · Geodoku",
+    aboutTitle: "About Geodoku: rules, scoring and FAQ",
+    aboutDescription:
+      "All about Geodoku, the daily geography grid: a 3×3 grid of countries, five lives, a bonus for rare answers, training on the last seven grids, and frequently asked questions.",
+    homeDescription:
+      "Free daily geography puzzle. Every day, a 3×3 grid: find countries that match both their row and their column. No sign-up.",
+    privacyDescription:
+      "What Geodoku collects and what it doesn't: no account, no ads, just the bare minimum to run the game.",
+    changelogDescription:
+      "What's new in Geodoku, update after update: new constraints, features and fixes.",
+  },
+  // Toast proposing THIS language, written in it (#140): each locale suggests itself.
+  localeSuggestion: {
+    title: "Prefer English?",
+    body: "Geodoku is also available in English.",
+    accept: "Play in English",
+    dismiss: "No thanks",
+  },
+  aboutPage: {
+    eyebrow: "Rules, scoring and FAQ",
+    title: "About",
+    backToGame: "Back to the game",
+    leadPre: "Geodoku is a free daily geography game, inspired by ",
+    leadPost:
+      ". Every day, a 3×3 grid: each row and each column sets a constraint, and each cell needs a country that meets both.",
+    rulesTitle: "The rules",
+    scoreTitle: "Scoring",
+    trainingTitle: "Training",
+    trainingBody:
+      "Once today's grid is done, the previous seven grids stay playable, with unlimited attempts. A game only ends if a cell can no longer be filled. Training is scored out of 900: no lives, so no lives bonus.",
+    faqTitle: "Frequently asked questions",
+    faqPriceQ: "How much does Geodoku cost?",
+    faqPriceA: "Nothing. The game is free, with no account and no ads.",
+    faqNewGridQ: "When does the new grid come out?",
+    faqNewGridA: "Every day at midnight UTC. Everyone plays the same grid.",
+    faqBlockedQ: "What happens when a cell has no answer left?",
+    faqBlockedA:
+      "It gets blocked: every country that fits is already placed elsewhere. The game ends when you run out of lives or when no cell can be filled anymore.",
+    faqAppQ: "Do I need to install an app?",
+    faqAppA: "No. Geodoku runs in your browser, on phone or computer.",
+    faqSourcesQ: "Where do the answers come from?",
+    faqSourcesA:
+      "From dated public sources such as REST Countries, the CIA World Factbook, the World Bank, the FAO and Wikidata. During a game, tap a constraint to see its own.",
+    contactTitle: "Contact",
+    contactBodyPre: "A question, an idea, a bug? Write to me at",
   },
   howToPlay: {
     title: "How to play?",

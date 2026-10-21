@@ -12,6 +12,8 @@ test.beforeEach(async ({ page }) => {
 
 test("language switch flips the UI between EN and FR", async ({ page }) => {
   await page.goto("/");
+  // La racine n'a pas de langue : le choix mémorisé (anglais) l'emporte.
+  await expect(page).toHaveURL(/\/en$/);
   await waitForGrid(page);
 
   // prepareSession seeds EN — cell aria-labels are in English.
@@ -23,12 +25,55 @@ test("language switch flips the UI between EN and FR", async ({ page }) => {
 
   await page.getByRole("button", { name: "FR", exact: true }).click();
 
-  // After switching, the same cell exposes its French aria-label.
+  // After switching, the same cell exposes its French aria-label, under /fr.
   await expect(
     page.getByRole("button", {
       name: /^Sélectionner case ligne 1 colonne 1 :/,
     }),
   ).toBeVisible();
+  await expect(page).toHaveURL(/\/fr$/);
+  await expect(page.locator("html")).toHaveAttribute("lang", "fr");
+});
+
+test("the root follows the browser, and a direct link suggests its language", async ({
+  page,
+}) => {
+  // Sans choix mémorisé ; le navigateur de test annonce en-US.
+  await page.addInitScript(() => {
+    // biome-ignore lint/suspicious/noDocumentCookie: clears the preference cookie seeded by prepareSession
+    document.cookie = "geodoku_locale=; Path=/; Max-Age=0";
+  });
+  await page.goto("/");
+  await expect(page).toHaveURL(/\/en$/);
+  await expect(
+    page.getByRole("button", { name: "Play in English" }),
+  ).toHaveCount(0);
+
+  // Un lien direct vers une page française l'affiche, et suggère l'anglais.
+  await page.goto("/fr/about");
+  await expect(page.locator("html")).toHaveAttribute("lang", "fr");
+  await page.getByRole("button", { name: "Play in English" }).click();
+  await expect(page).toHaveURL(/\/en\/about$/);
+  await expect(page.locator("html")).toHaveAttribute("lang", "en");
+  await expect(
+    page.getByRole("button", { name: "Play in English" }),
+  ).toHaveCount(0);
+});
+
+test("suggests the country's language to a browser set in another one", async ({
+  page,
+}) => {
+  // Posé en prod par le middleware (pays de connexion) ; ici à la main.
+  await page.addInitScript(() => {
+    // biome-ignore lint/suspicious/noDocumentCookie: clears the preference cookie seeded by prepareSession
+    document.cookie = "geodoku_locale=; Path=/; Max-Age=0";
+    // biome-ignore lint/suspicious/noDocumentCookie: mirrors the middleware's country-language cookie
+    document.cookie = "geodoku_country_locale=fr; Path=/";
+  });
+  await page.goto("/en");
+  await page.getByRole("button", { name: "Jouer en français" }).click();
+  await expect(page).toHaveURL(/\/fr$/);
+  await expect(page.locator("html")).toHaveAttribute("lang", "fr");
 });
 
 test("dialogs keep programmatic focus visually silent until Tab", async ({
@@ -69,17 +114,36 @@ test("dialogs keep programmatic focus visually silent until Tab", async ({
 // ── Page Privacy ─────────────────────────────────────────────────────────────
 
 test("privacy page renders its content", async ({ page }) => {
-  await page.goto("/privacy/");
+  await page.goto("/en/privacy/");
   await expect(page.getByRole("heading", { name: "Privacy" })).toBeVisible();
   await expect(page.getByText("Back to the game")).toBeVisible();
-  await expect(page).toHaveURL(/\/privacy$/);
+  await expect(page).toHaveURL(/\/en\/privacy$/);
+});
+
+// ── Page À propos ────────────────────────────────────────────────────────────
+
+test("about page renders its rules and FAQ, reachable from the footer", async ({
+  page,
+}) => {
+  await page.goto("/");
+  await waitForGrid(page);
+  await page.getByRole("link", { name: "About", exact: true }).click();
+
+  await expect(page).toHaveURL(/\/en\/about$/);
+  await expect(
+    page.getByRole("heading", { level: 1, name: "About" }),
+  ).toBeVisible();
+  await expect(page.getByText("Unique countries")).toBeVisible();
+  await expect(
+    page.getByText("How much does Geodoku cost?", { exact: true }),
+  ).toBeVisible();
 });
 
 // ── Page Changelog ───────────────────────────────────────────────────────────
 
 test("changelog page renders its content", async ({ page }) => {
-  await page.goto("/changelog");
-  await expect(page.getByRole("heading", { name: "Changelog" })).toBeVisible();
+  await page.goto("/en/changelog");
+  await expect(page.getByRole("heading", { name: "What's new" })).toBeVisible();
   await expect(page.getByText("Back to the game")).toBeVisible();
 });
 
@@ -104,9 +168,9 @@ test("editorial links navigate without reloading the document", async ({
     ),
   ).toBe(sentinel);
 
-  await page.getByRole("link", { name: "Changelog", exact: true }).click();
-  await expect(page.getByRole("heading", { name: "Changelog" })).toBeVisible();
-  await expect(page.locator("[data-route-announcer]")).toHaveText("Changelog");
+  await page.getByRole("link", { name: "What's new", exact: true }).click();
+  await expect(page.getByRole("heading", { name: "What's new" })).toBeVisible();
+  await expect(page.locator("[data-route-announcer]")).toHaveText("What's new");
   expect(
     await page.evaluate(
       () =>

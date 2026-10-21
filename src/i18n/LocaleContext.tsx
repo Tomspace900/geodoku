@@ -7,37 +7,60 @@ import {
   useEffect,
   useState,
 } from "react";
-import { STORAGE_KEYS, safeGet, safeSet } from "@/lib/storage";
+import { useLocation, useNavigate } from "react-router";
 import { translate } from "./index";
+import { readStoredLocale, storeLocale } from "./localeCookie";
+import { FALLBACK_LOCALE, localeFromPath, localizePath } from "./localePath";
 import type { Locale, TKey, Translate } from "./types";
-
-const SUPPORTED: Locale[] = ["fr", "en"];
-
-function detectLocale(): Locale {
-  if (typeof window === "undefined") return "en";
-  const stored = safeGet(STORAGE_KEYS.locale);
-  if (stored && SUPPORTED.includes(stored as Locale)) return stored as Locale;
-  const nav = window.navigator.language?.toLowerCase() ?? "";
-  if (nav.startsWith("fr")) return "fr";
-  return "en";
-}
 
 type LocaleContextValue = {
   locale: Locale;
+  /** Langue déjà choisie par le joueur, `null` s'il n'a jamais choisi. */
+  storedLocale: Locale | null;
+  /** Mémorise la langue et rejoint la même page dans cette langue. */
   setLocale: (l: Locale) => void;
+  /** Le chemin donné, dans la langue courante (`/privacy` → `/en/privacy`). */
+  localizedPath: (path: string) => string;
   t: Translate;
 };
 
 const LocaleContext = createContext<LocaleContextValue | null>(null);
 
+/**
+ * La langue vient de l'URL (#140) : `/fr/…`, `/en/…`. La racine `/` est
+ * redirigée vers la langue du visiteur par le middleware Vercel, avant tout
+ * affichage ; le navigateur ne sert plus ici qu'à suggérer une autre langue
+ * (`LocaleSuggestionToast`). L'admin, non localisée, suit la langue choisie.
+ */
 export function LocaleProvider({ children }: { children: ReactNode }) {
-  const [locale, setLocaleState] = useState<Locale>(() => detectLocale());
+  const location = useLocation();
+  const navigate = useNavigate();
+  const [storedLocale, setStoredLocale] = useState<Locale | null>(() =>
+    readStoredLocale(),
+  );
+  const locale =
+    localeFromPath(location.pathname) ?? storedLocale ?? FALLBACK_LOCALE;
 
-  const setLocale = useCallback((l: Locale) => {
-    setLocaleState(l);
-    safeSet(STORAGE_KEYS.locale, l);
-    document.documentElement.lang = l;
-  }, []);
+  const setLocale = useCallback(
+    (next: Locale) => {
+      storeLocale(next);
+      setStoredLocale(next);
+      const target = localizePath(location.pathname, next);
+      if (target !== location.pathname) {
+        navigate({
+          pathname: target,
+          search: location.search,
+          hash: location.hash,
+        });
+      }
+    },
+    [location.pathname, location.search, location.hash, navigate],
+  );
+
+  const localizedPath = useCallback(
+    (path: string) => localizePath(path, locale),
+    [locale],
+  );
 
   useEffect(() => {
     document.documentElement.lang = locale;
@@ -54,7 +77,9 @@ export function LocaleProvider({ children }: { children: ReactNode }) {
   );
 
   return (
-    <LocaleContext.Provider value={{ locale, setLocale, t }}>
+    <LocaleContext.Provider
+      value={{ locale, storedLocale, setLocale, localizedPath, t }}
+    >
       {children}
     </LocaleContext.Provider>
   );
