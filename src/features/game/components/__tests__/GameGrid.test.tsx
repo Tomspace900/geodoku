@@ -1,13 +1,12 @@
 import { render, screen } from "@testing-library/react";
+import { MemoryRouter } from "react-router";
 import { describe, expect, it } from "vitest";
 import { LocaleProvider } from "@/i18n/LocaleContext";
-import { STORAGE_KEYS, safeSet } from "@/lib/storage";
 import { createInitialState } from "../../logic/reducer";
 import { GameGrid } from "../GameGrid";
 
 describe("GameGrid", () => {
   it("names a blocked cell for assistive technologies", () => {
-    safeSet(STORAGE_KEYS.locale, "en");
     const state = createInitialState(
       "daily",
       "2026-07-15",
@@ -17,14 +16,16 @@ describe("GameGrid", () => {
     state.cells["0,2"] = { status: "blocked" };
 
     render(
-      <LocaleProvider>
-        <GameGrid
-          state={state}
-          distribution={undefined}
-          onCellClick={() => {}}
-          onHeaderClick={() => {}}
-        />
-      </LocaleProvider>,
+      <MemoryRouter initialEntries={["/en"]}>
+        <LocaleProvider>
+          <GameGrid
+            state={state}
+            distribution={undefined}
+            onCellClick={() => {}}
+            onHeaderClick={() => {}}
+          />
+        </LocaleProvider>
+      </MemoryRouter>,
     );
 
     expect(

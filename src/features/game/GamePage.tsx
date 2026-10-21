@@ -14,7 +14,7 @@ import {
   getGridNumberForDate,
   getGridNumberForTodayUtc,
 } from "@/features/game/logic/gridIssue";
-import { useT } from "@/i18n/LocaleContext";
+import { useLocale, useT } from "@/i18n/LocaleContext";
 import { focusWithoutVisibleRing } from "@/lib/focus";
 import { cn } from "@/lib/utils";
 import { api } from "../../../convex/_generated/api";
@@ -33,6 +33,7 @@ import { SurveyCta } from "./components/SurveyCta";
 export function GamePage() {
   const posthog = usePostHog();
   const t = useT();
+  const { localizedPath } = useLocale();
   const {
     state,
     selectCell,
@@ -176,7 +177,7 @@ export function GamePage() {
                       variant="link"
                       className="w-full justify-center text-xs mt-2"
                     >
-                      <Link to="/archive">
+                      <Link to={localizedPath("/archive")}>
                         <History
                           className="size-3 sm:size-3.5"
                           aria-hidden="true"

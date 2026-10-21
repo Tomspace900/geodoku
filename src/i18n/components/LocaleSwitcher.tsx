@@ -1,10 +1,8 @@
 import { usePostHog } from "@posthog/react";
 import { Button } from "@/components/ui/button";
 import { useLocale } from "@/i18n/LocaleContext";
-import type { Locale } from "@/i18n/types";
+import { LOCALES } from "@/i18n/localePath";
 import { cn } from "@/lib/utils";
-
-const LOCALES: Locale[] = ["fr", "en"];
 
 export function LocaleSwitcher({ className }: { className?: string }) {
   const posthog = usePostHog();
@@ -24,7 +22,11 @@ export function LocaleSwitcher({ className }: { className?: string }) {
           variant="ghost-label"
           onClick={() => {
             if (l !== locale) {
-              posthog?.capture("locale_changed", { from: locale, to: l });
+              posthog?.capture("locale_changed", {
+                from: locale,
+                to: l,
+                source: "footer",
+              });
             }
             setLocale(l);
           }}

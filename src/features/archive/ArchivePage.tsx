@@ -58,7 +58,7 @@ function completedAttempts(
 export function ArchivePage() {
   const t = useT();
   const posthog = usePostHog();
-  const { locale } = useLocale();
+  const { locale, localizedPath } = useLocale();
   const today = todayUTC();
 
   const [dailyFinished] = useState(() =>
@@ -79,7 +79,7 @@ export function ArchivePage() {
   }, [dailyFinished]);
 
   // L'archive n'ouvre qu'une fois la grille du jour terminée.
-  if (!dailyFinished) return <Navigate to="/" replace />;
+  if (!dailyFinished) return <Navigate to={localizedPath("/")} replace />;
 
   return (
     <div className="min-h-svh bg-surface flex flex-col items-center px-4 py-6">
@@ -87,7 +87,7 @@ export function ArchivePage() {
         {/* Même en-tête que les pages éditoriales (`LegalLayout`) : lien retour,
             marque, titre et eyebrow — l'archive est une page à part entière. */}
         <header className="flex flex-col gap-5">
-          <BackLink to="/" label={t("archive.backToGame")} />
+          <BackLink to={localizedPath("/")} label={t("archive.backToGame")} />
 
           <DisplayHeader
             as="h1"
@@ -138,6 +138,7 @@ function ArchiveRow({
   attempts: number | null;
 }) {
   const t = useT();
+  const { localizedPath } = useLocale();
   const gridNumber = getGridNumberForDate(grid.date);
   // Les contraintes archivées restent résolvables (`CONSTRAINT_BY_ID` les couvre),
   // ce qui garantit un libellé lisible même pour une contrainte retirée depuis.
@@ -149,7 +150,7 @@ function ArchiveRow({
   return (
     <li>
       <Link
-        to={`/archive/${grid.date}`}
+        to={localizedPath(`/archive/${grid.date}`)}
         className="flex items-center gap-3 rounded-xl bg-surface-low px-4 py-3 shadow-editorial transition-colors hover:bg-surface-high"
       >
         {/* Pastille d'accent sur les grilles encore à faire : signale ce qui

@@ -1,7 +1,7 @@
 import { usePostHog } from "@posthog/react";
 import { useEffect, useRef } from "react";
 
-export type LegalAnalyticsPage = "privacy" | "changelog";
+export type LegalAnalyticsPage = "privacy" | "changelog" | "about";
 
 const READ_SCROLL_THRESHOLD_PERCENT = 80;
 

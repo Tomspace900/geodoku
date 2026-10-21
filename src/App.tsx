@@ -1,11 +1,21 @@
-import { lazy, Suspense, useLayoutEffect } from "react";
+import { lazy, Suspense, useEffect, useLayoutEffect } from "react";
 import { Navigate, Route, Routes, useLocation } from "react-router";
+import { pageMeta } from "@/app/pageMeta";
 import { Providers } from "@/app/providers";
 import { useFreshBundle } from "@/app/useFreshBundle";
 import { GamePage } from "@/features/game/GamePage";
+import { AboutPage } from "@/features/legal/AboutPage";
 import { ChangelogPage } from "@/features/legal/ChangelogPage";
 import { PrivacyPage } from "@/features/legal/PrivacyPage";
-import { useT } from "@/i18n/LocaleContext";
+import { LocaleSuggestionToast } from "@/i18n/components/LocaleSuggestionToast";
+import { useLocale, useT } from "@/i18n/LocaleContext";
+import {
+  LOCALES,
+  localeFromPath,
+  localizePath,
+  preferredLocale,
+  stripLocale,
+} from "@/i18n/localePath";
 
 const AdminPage = lazy(() =>
   import("@/features/admin/AdminPage").then((module) => ({
@@ -53,18 +63,21 @@ function RouteScrollReset() {
   return null;
 }
 
-function RouteAnnouncer({ pathname }: { pathname: string }) {
+function RouteAnnouncer({ pathname: localizedPathname }: { pathname: string }) {
   const t = useT();
+  const pathname = stripLocale(localizedPathname);
   const label =
-    pathname === "/privacy"
-      ? t("footer.privacy")
-      : pathname === "/changelog"
-        ? t("footer.changelog")
-        : pathname === "/admin"
-          ? "Administration"
-          : pathname.startsWith("/archive")
-            ? t("archive.title")
-            : t("ui.appName");
+    pathname === "/about"
+      ? t("footer.about")
+      : pathname === "/privacy"
+        ? t("footer.privacy")
+        : pathname === "/changelog"
+          ? t("footer.changelog")
+          : pathname === "/admin"
+            ? "Administration"
+            : pathname.startsWith("/archive")
+              ? t("archive.title")
+              : t("ui.appName");
 
   return (
     <output
@@ -78,9 +91,29 @@ function RouteAnnouncer({ pathname }: { pathname: string }) {
   );
 }
 
+/**
+ * La racine et les adresses inconnues mènent à l'accueil : celui de la langue
+ * de l'adresse (`/en/inconnue` → `/en`), sinon celui du visiteur. En prod, le
+ * middleware Vercel redirige déjà `/` ; ce repli sert au dev et au gabarit 404.
+ */
+function HomeRedirect() {
+  const { pathname } = useLocation();
+  const { storedLocale } = useLocale();
+  const locale =
+    localeFromPath(pathname) ??
+    preferredLocale({ storedLocale, languages: navigator.languages ?? [] });
+  return <Navigate to={localizePath("/", locale)} replace />;
+}
+
 function AppRoutes() {
   const location = useLocation();
   const normalizedPath = normalizePath(location.pathname);
+
+  // Le titre suit la page et la langue en navigation interne ; le pré-rendu
+  // le pose déjà dans le HTML servi (#140).
+  useEffect(() => {
+    document.title = pageMeta(normalizedPath).title;
+  }, [normalizedPath]);
 
   if (normalizedPath !== location.pathname) {
     return (
@@ -100,25 +133,47 @@ function AppRoutes() {
       <RouteScrollReset key={normalizedPath} />
       <RouteAnnouncer pathname={normalizedPath} />
       <Routes>
-        <Route path="/" element={<GamePage />} />
-        <Route path="/privacy" element={<PrivacyPage />} />
-        <Route path="/changelog" element={<ChangelogPage />} />
-        <Route
-          path="/archive"
-          element={
-            <Suspense fallback={<RouteLoading />}>
-              <ArchivePage />
-            </Suspense>
-          }
-        />
-        <Route
-          path="/archive/:date"
-          element={
-            <Suspense fallback={<RouteLoading />}>
-              <TrainingPage />
-            </Suspense>
-          }
-        />
+        {/* Chaque page existe dans chaque langue : `/fr/privacy`, `/en/privacy` (#140). */}
+        {LOCALES.flatMap((locale) => [
+          <Route
+            key={`${locale}-home`}
+            path={localizePath("/", locale)}
+            element={<GamePage />}
+          />,
+          <Route
+            key={`${locale}-about`}
+            path={localizePath("/about", locale)}
+            element={<AboutPage />}
+          />,
+          <Route
+            key={`${locale}-privacy`}
+            path={localizePath("/privacy", locale)}
+            element={<PrivacyPage />}
+          />,
+          <Route
+            key={`${locale}-changelog`}
+            path={localizePath("/changelog", locale)}
+            element={<ChangelogPage />}
+          />,
+          <Route
+            key={`${locale}-archive`}
+            path={localizePath("/archive", locale)}
+            element={
+              <Suspense fallback={<RouteLoading />}>
+                <ArchivePage />
+              </Suspense>
+            }
+          />,
+          <Route
+            key={`${locale}-training`}
+            path={localizePath("/archive/:date", locale)}
+            element={
+              <Suspense fallback={<RouteLoading />}>
+                <TrainingPage />
+              </Suspense>
+            }
+          />,
+        ])}
         <Route
           path="/admin"
           element={
@@ -127,8 +182,9 @@ function AppRoutes() {
             </Suspense>
           }
         />
-        <Route path="*" element={<Navigate to="/" replace />} />
+        <Route path="*" element={<HomeRedirect />} />
       </Routes>
+      <LocaleSuggestionToast />
     </>
   );
 }
@@ -138,7 +194,8 @@ function App() {
   const location = useLocation();
 
   return (
-    <Providers errorBoundaryKey={normalizePath(location.pathname)}>
+    // Clé sans langue : passer de `/fr` à `/en` ne remonte pas la page en cours.
+    <Providers errorBoundaryKey={stripLocale(normalizePath(location.pathname))}>
       <AppRoutes />
     </Providers>
   );

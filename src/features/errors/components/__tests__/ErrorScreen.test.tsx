@@ -1,11 +1,16 @@
 import { fireEvent, render, screen } from "@testing-library/react";
 import type { ReactElement } from "react";
+import { MemoryRouter } from "react-router";
 import { describe, expect, it, vi } from "vitest";
 import { LocaleProvider } from "@/i18n/LocaleContext";
 import { ErrorScreen } from "../ErrorScreen";
 
 function renderWithLocale(ui: ReactElement) {
-  return render(<LocaleProvider>{ui}</LocaleProvider>);
+  return render(
+    <MemoryRouter>
+      <LocaleProvider>{ui}</LocaleProvider>
+    </MemoryRouter>,
+  );
 }
 
 describe("ErrorScreen", () => {

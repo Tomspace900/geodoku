@@ -137,7 +137,8 @@ export function pickWrongCountry(
 /**
  * Prépare l'état client avant le chargement de la page (à appeler avant
  * `page.goto`) :
- * - force la locale EN pour des aria-labels prévisibles ;
+ * - force la locale EN (cookie de choix, comme après un clic sur « EN ») pour
+ *   des aria-labels prévisibles ;
  * - désactive le tutoriel « How to play », qui s'ouvre automatiquement au
  *   premier passage. Sa modale (Radix Dialog) rend tout l'arrière-plan inerte
  *   (`aria-hidden`) → les boutons de cellule sortent de l'arrière-plan
@@ -145,7 +146,8 @@ export function pickWrongCountry(
  */
 export async function prepareSession(page: Page) {
   await page.addInitScript(() => {
-    localStorage.setItem("geodoku:locale", "en");
+    // biome-ignore lint/suspicious/noDocumentCookie: test setup mirrors the app's preference cookie
+    document.cookie = "geodoku_locale=en; Path=/";
     localStorage.setItem("geodoku:how-to-play", "false");
   });
 }
