@@ -21,8 +21,11 @@ function moduleScriptFingerprint(doc: Document): string {
 }
 
 // Capturée une fois, au chargement : le module courant a forcément été chargé
-// par l'un de ces <script>, donc ils sont déjà dans le DOM ici.
-const LOADED_FINGERPRINT = moduleScriptFingerprint(document);
+// par l'un de ces <script>, donc ils sont déjà dans le DOM ici. Le pré-rendu
+// importe ce module sous Node, sans `document` : l'empreinte y reste vide et le
+// hook, qui ne tourne que dans un effet, n'est jamais exécuté.
+const LOADED_FINGERPRINT =
+  typeof document === "undefined" ? "" : moduleScriptFingerprint(document);
 
 export function useFreshBundle() {
   useEffect(() => {

@@ -7,12 +7,13 @@ import {
   type LegalAnalyticsPage,
   useLegalPageAnalytics,
 } from "@/features/legal/hooks/useLegalPageAnalytics";
+import { useLocale } from "@/i18n/LocaleContext";
 
 type Props = {
   title: string;
   eyebrow: string;
   backLabel: string;
-  lead?: string;
+  lead?: ReactNode;
   analyticsPage: LegalAnalyticsPage;
   children: ReactNode;
 };
@@ -30,12 +31,13 @@ export function LegalLayout({
   children,
 }: Props) {
   useLegalPageAnalytics(analyticsPage);
+  const { localizedPath } = useLocale();
 
   return (
     <div className="min-h-svh bg-surface flex flex-col items-center px-4 py-6">
       <div className="w-full max-w-2xl flex flex-col gap-8 flex-1">
         <header className="flex flex-col gap-5">
-          <BackLink to="/" label={backLabel} />
+          <BackLink to={localizedPath("/")} label={backLabel} />
 
           <DisplayHeader
             as="h1"

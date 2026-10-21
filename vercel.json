@@ -1,6 +1,12 @@
 {
   "ignoreCommand": "case \"$VERCEL_GIT_COMMIT_REF\" in dependabot/*) exit 0;; *) exit 1;; esac",
-  "rewrites": [{ "source": "/(.*)", "destination": "/index.html" }],
+  "cleanUrls": true,
+  "trailingSlash": false,
+  "rewrites": [
+    { "source": "/fr/archive/:path*", "destination": "/app-shell" },
+    { "source": "/en/archive/:path*", "destination": "/app-shell" },
+    { "source": "/admin/:path*", "destination": "/app-shell" }
+  ],
   "headers": [
     {
       "source": "/(.*)",

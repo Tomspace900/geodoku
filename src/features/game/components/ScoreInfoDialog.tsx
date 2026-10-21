@@ -1,7 +1,5 @@
 import { usePostHog } from "@posthog/react";
-import type { LucideIcon } from "lucide-react";
 import { Gem, Grid3x3, Heart, Info } from "lucide-react";
-import type { ComponentType } from "react";
 import { useState } from "react";
 import { AccentBar } from "@/components/editorial/AccentBar";
 import { Button } from "@/components/ui/button";
@@ -12,35 +10,31 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { useT } from "@/i18n/LocaleContext";
-import type { TKey } from "@/i18n/types";
+import { type IconRule, IconRuleList } from "./IconRuleList";
 import { RarityLegend } from "./RarityLegend";
 
-type ScorePart = {
-  icon: LucideIcon;
-  titleKey: TKey;
-  bodyKey: TKey;
-  BodyComponent?: ComponentType<{ className?: string }>;
-};
-
-const GRID_PART: ScorePart = {
+const GRID_PART: IconRule = {
   icon: Grid3x3,
   titleKey: "scoring.gridTitle",
   bodyKey: "scoring.gridBody",
 };
-const LIVES_PART: ScorePart = {
+const LIVES_PART: IconRule = {
   icon: Heart,
   titleKey: "scoring.livesTitle",
   bodyKey: "scoring.livesBody",
 };
-const RARITY_PART: ScorePart = {
+const RARITY_PART: IconRule = {
   icon: Gem,
   titleKey: "scoring.rarityTitle",
   bodyKey: "scoring.rarityBody",
   BodyComponent: (props) => <RarityLegend variant="points" {...props} />,
 };
 
-/** Barème du jour : trois parts sur 1000. Entraînement : deux parts sur 900. */
-const PARTS_BY_SCALE: Record<ScoreScale, ScorePart[]> = {
+/**
+ * Barème du jour : trois parts sur 1000. Entraînement : deux parts sur 900.
+ * Repris par la page « À propos » (#142).
+ */
+export const SCORE_PARTS_BY_SCALE: Record<ScoreScale, readonly IconRule[]> = {
   daily: [GRID_PART, LIVES_PART, RARITY_PART],
   training: [GRID_PART, RARITY_PART],
 };
@@ -108,26 +102,7 @@ export function ScoreInfoDialog({ scale = "daily" }: Props) {
             {introAfter}
           </p>
 
-          <ol className="space-y-4">
-            {PARTS_BY_SCALE[scale].map(
-              ({ icon: Icon, titleKey, bodyKey, BodyComponent }) => (
-                <li key={titleKey} className="flex items-start gap-3">
-                  <span className="grid h-9 w-9 shrink-0 place-items-center rounded-full bg-brand/10 text-brand">
-                    <Icon size={17} strokeWidth={2} />
-                  </span>
-                  <div className="space-y-0.5 pt-0.5">
-                    <p className="font-sans text-sm font-semibold text-on-surface leading-snug">
-                      {t(titleKey)}
-                    </p>
-                    <p className="font-sans text-xs text-on-surface-variant leading-relaxed">
-                      {t(bodyKey)}
-                    </p>
-                    {BodyComponent && <BodyComponent className="pt-2" />}
-                  </div>
-                </li>
-              ),
-            )}
-          </ol>
+          <IconRuleList rules={SCORE_PARTS_BY_SCALE[scale]} />
 
           {/* La rareté d'une grille passée est figée (cohorte complète) : le
               rappel « ça s'affinera » ne vaut que pour la grille du jour. */}

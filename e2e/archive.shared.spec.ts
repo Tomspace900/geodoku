@@ -56,16 +56,18 @@ async function seedFinishedDaily(page: import("@playwright/test").Page) {
 test("redirects the archive to today's grid while the daily game is unfinished", async ({
   page,
 }) => {
-  await page.goto("/archive");
-  await expect(page).toHaveURL(/\/$/);
+  await page.goto("/en/archive");
+  // prepareSession mémorise l'anglais : l'accueil de la partie est /en.
+  await expect(page).toHaveURL(/\/en$/);
   await waitForGrid(page);
 });
 
 test("redirects a training grid to today's grid while the daily game is unfinished", async ({
   page,
 }) => {
-  await page.goto(`/archive/${replayable[0].date}`);
-  await expect(page).toHaveURL(/\/$/);
+  await page.goto(`/en/archive/${replayable[0].date}`);
+  // prepareSession mémorise l'anglais : l'accueil de la partie est /en.
+  await expect(page).toHaveURL(/\/en$/);
 });
 
 // ── 2. Liste de l'archive ─────────────────────────────────────────────────────
@@ -74,13 +76,14 @@ test("lists the replayable grids once the daily game is over", async ({
   page,
 }) => {
   await seedFinishedDaily(page);
-  await page.goto("/archive");
+  await page.goto("/en/archive");
 
-  await expect(page.locator('a[href^="/archive/"]')).toHaveCount(
+  // prepareSession mémorise l'anglais : les liens restent dans la version /en.
+  await expect(page.locator('a[href^="/en/archive/"]')).toHaveCount(
     replayable.length,
   );
   await expect(
-    page.locator(`a[href="/archive/${replayable[0].date}"]`),
+    page.locator(`a[href="/en/archive/${replayable[0].date}"]`),
   ).toBeVisible();
 });
 
@@ -93,7 +96,7 @@ test("plays a past grid without lives and resumes it after a reload", async ({
   const solution = solveGrid(target.validAnswers);
   if (!solution) throw new Error("Invariant violated: grid is not solvable");
 
-  await page.goto(`/archive/${target.date}`);
+  await page.goto(`/en/archive/${target.date}`);
   await waitForGrid(page);
 
   // Pas de vies en entraînement : un compteur d'essais, pas des cœurs.
@@ -128,7 +131,7 @@ test("counts a wrong guess as an attempt without ending the game", async ({
   const wrong = pickWrongCountry(target.validAnswers, "0,0");
   if (!wrong) throw new Error("Could not find a wrong country for this grid");
 
-  await page.goto(`/archive/${target.date}`);
+  await page.goto(`/en/archive/${target.date}`);
   await waitForGrid(page);
 
   // Six erreurs : une de plus que les 5 vies du mode quotidien. La grille doit
@@ -158,7 +161,7 @@ test("counts a wrong guess as an attempt without ending the game", async ({
 
 test("shows the time-traveller screen for a future date", async ({ page }) => {
   await seedFinishedDaily(page);
-  await page.goto(`/archive/${tomorrowIso()}`);
+  await page.goto(`/en/archive/${tomorrowIso()}`);
 
   await expect(page.getByRole("alert")).toContainText("Nice try");
   await expect(

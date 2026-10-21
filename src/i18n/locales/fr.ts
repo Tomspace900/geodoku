@@ -50,12 +50,11 @@ export const fr = {
     constraintAnswerCount: "{count} pays",
   },
   footer: {
-    loveCreditPre: "Fait avec amour ❤️, inspiré par ",
-    loveCreditPost: ".",
-    contact: "Contact",
+    loveCredit: "Fait avec amour ❤️",
     support: "Offrir un café",
+    about: "À propos",
     privacy: "Confidentialité",
-    changelog: "Changelog",
+    changelog: "Nouveautés",
     changelogNew: "New",
     survey: "Donner mon avis",
     copyright: "©\u00A0{year}\u00A0Geodoku",
@@ -78,7 +77,7 @@ export const fr = {
       "Pas d'inscription, pas de connexion, pas de publicit\u00E9. Je ne vends aucune donn\u00E9e et ne les utilise pas \u00E0 des fins publicitaires. Il n'y a aucun traceur publicitaire sur le site.",
     deviceTitle: "Sur ton appareil",
     deviceBody:
-      "Ton navigateur garde quelques r\u00E9glages en stockage local\u00A0: ta langue, la progression de la grille du jour, tes parties d'entra\u00EEnement sur les grilles pass\u00E9es, un identifiant al\u00E9atoire anti-spam et de courtes cl\u00E9s techniques pour d\u00E9dupliquer les envois. Rien de tout \u00E7a n'est un cookie publicitaire. Effacer les donn\u00E9es du site les supprime.",
+      "Ton navigateur garde quelques r\u00E9glages\u00A0: ta langue, dans un cookie de pr\u00E9f\u00E9rence pos\u00E9 seulement si tu la choisis, et en stockage local la progression de la grille du jour, tes parties d'entra\u00EEnement sur les grilles pass\u00E9es, un identifiant al\u00E9atoire anti-spam et de courtes cl\u00E9s techniques pour d\u00E9dupliquer les envois. Rien de tout \u00E7a n'est un cookie publicitaire. Effacer les donn\u00E9es du site les supprime.",
     serverTitle: "Ce qui m'est envoy\u00E9",
     serverBody:
       "Quand tu joues, j'enregistre les choix agr\u00E9g\u00E9s par case, les fins de partie et le ressenti de difficult\u00E9. Pour fiabiliser un nouvel envoi, le serveur conserve pendant sept jours un re\u00E7u technique de l'action (par exemple case et pays) avec une cl\u00E9 opaque, sans identifiant stable reliant tes actions. Des \u00E9v\u00E9nements d'usage pseudonymes m'aident aussi \u00E0 comprendre le parcours. Rien de cela ne contient de nom, d'e-mail ou de compte.",
@@ -93,7 +92,7 @@ export const fr = {
   },
   changelog: {
     eyebrow: "Derni\u00E8re mise \u00E0 jour · Octobre 2026",
-    title: "Changelog",
+    title: "Nouveautés",
     backToGame: "Retour au jeu",
     entries: {
       answerSourcesDate: "15 octobre 2026",
@@ -177,6 +176,58 @@ export const fr = {
     contactBodyPre:
       "J'accueille toutes les suggestions avec plaisir. \u00C9cris-moi \u00E0",
   },
+  seo: {
+    homeTitle: "Geodoku — Le sudoku de géographie quotidien",
+    privacyTitle: "Confidentialité · Geodoku",
+    changelogTitle: "Nouveautés · Geodoku",
+    aboutTitle: "À propos de Geodoku : règles, score et questions fréquentes",
+    aboutDescription:
+      "Tout sur Geodoku, le sudoku de géographie quotidien : une grille 3×3 de pays, cinq vies, un bonus pour les réponses rares, un entraînement sur les sept dernières grilles, et les questions fréquentes.",
+    homeDescription:
+      "Sudoku de géographie gratuit. Chaque jour, une grille 3×3 : trouve les pays qui valident leur ligne et leur colonne. Sans inscription.",
+    privacyDescription:
+      "Ce que Geodoku collecte, et ce qu'il ne collecte pas : pas de compte, pas de publicité, le strict minimum pour faire tourner le jeu.",
+    changelogDescription:
+      "Les nouveautés de Geodoku, mise à jour après mise à jour : nouvelles contraintes, fonctionnalités et corrections.",
+  },
+  // Toast qui propose CETTE langue, rédigé dans celle-ci (#140) : chaque langue se propose elle-même.
+  localeSuggestion: {
+    title: "Vous préférez le français\u00A0?",
+    body: "Geodoku existe aussi en français.",
+    accept: "Jouer en français",
+    dismiss: "Non merci",
+  },
+  aboutPage: {
+    eyebrow: "Règles, score et questions",
+    title: "À propos",
+    backToGame: "Retour au jeu",
+    leadPre:
+      "Geodoku est un jeu de géographie quotidien et gratuit, inspiré par ",
+    leadPost:
+      ". Chaque jour, une grille 3×3\u00A0: chaque ligne et chaque colonne impose une contrainte, et chaque case attend un pays qui respecte les deux.",
+    rulesTitle: "Les règles",
+    scoreTitle: "Le score",
+    trainingTitle: "L'entraînement",
+    trainingBody:
+      "Une fois la grille du jour terminée, les sept grilles précédentes restent jouables, sans limite d'essais. La partie ne s'arrête que si une case devient impossible à remplir. Le score y est sur 900\u00A0: sans vies, pas de bonus de vies.",
+    faqTitle: "Questions fréquentes",
+    faqPriceQ: "Combien coûte Geodoku\u00A0?",
+    faqPriceA: "Rien. Le jeu est gratuit, sans compte et sans publicité.",
+    faqNewGridQ: "Quand arrive la nouvelle grille\u00A0?",
+    faqNewGridA:
+      "Chaque jour à minuit UTC, soit 1\u00A0h du matin en France l'hiver et 2\u00A0h l'été. Tout le monde joue la même grille.",
+    faqBlockedQ: "Que se passe-t-il quand une case n'a plus de réponse\u00A0?",
+    faqBlockedA:
+      "Elle se bloque\u00A0: tous ses pays possibles sont déjà placés ailleurs. La partie s'arrête quand tes vies tombent à zéro ou qu'aucune case ne peut plus être remplie.",
+    faqAppQ: "Faut-il installer une application\u00A0?",
+    faqAppA:
+      "Non. Geodoku se joue dans le navigateur, sur téléphone comme sur ordinateur.",
+    faqSourcesQ: "D'où viennent les réponses\u00A0?",
+    faqSourcesA:
+      "De sources publiques datées, comme REST Countries, le CIA World Factbook, la Banque mondiale, la FAO ou Wikidata. Pendant la partie, touche une contrainte pour voir les siennes.",
+    contactTitle: "Contact",
+    contactBodyPre: "Une question, une idée, un bug\u00A0? Écris-moi à",
+  },
   howToPlay: {
     title: "Comment jouer\u00A0?",
     rule1Title: "Trouve le pays",
@@ -242,9 +293,9 @@ export const fr = {
     title: "Calcul du score",
     intro: "Ton score final additionne trois bonus, sur {max}.",
     introMax: "1000\u00A0points",
-    gridTitle: "Case remplie: 50\u00A0pts",
+    gridTitle: "Case remplie\u00A0: 50\u00A0pts",
     gridBody: "Jusqu'à 450 points, le cœur du score.",
-    livesTitle: "Vie restante: 20\u00A0pts",
+    livesTitle: "Vie restante\u00A0: 20\u00A0pts",
     livesBody: "Jusqu'à 100 points.",
     rarityTitle: "Bonus de rareté",
     rarityBody: "Jusqu'à 450 points en fonction de la rareté du pays.",

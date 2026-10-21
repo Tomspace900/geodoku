@@ -1,7 +1,7 @@
 import { useFeatureFlagEnabled, usePostHog } from "@posthog/react";
-import { Coffee, Mail, MessageSquareText } from "lucide-react";
+import { Coffee, MessageSquareText } from "lucide-react";
 import { Link } from "react-router";
-import { KOFI_URL, METRODOKU_URL, SUPPORT_EMAIL } from "@/app/links";
+import { KOFI_URL } from "@/app/links";
 import { isChangelogNewBadgeVisible } from "@/features/legal/logic/changelog";
 import { LocaleSwitcher } from "@/i18n/components/LocaleSwitcher";
 import { useLocale, useT } from "@/i18n/LocaleContext";
@@ -13,7 +13,7 @@ import {
 } from "@/lib/survey";
 import { cn } from "@/lib/utils";
 
-type FooterLink = "metrodoku" | "support" | "contact" | "privacy" | "changelog";
+type FooterLink = "support" | "about" | "privacy" | "changelog";
 
 function Middot() {
   return (
@@ -26,7 +26,7 @@ function Middot() {
 export default function AppFooter({ className }: { className?: string }) {
   const posthog = usePostHog();
   const t = useT();
-  const { locale } = useLocale();
+  const { locale, localizedPath } = useLocale();
   const year = new Date().getFullYear();
   const surveyActive = useFeatureFlagEnabled(SURVEY_FLAG);
 
@@ -57,21 +57,11 @@ export default function AppFooter({ className }: { className?: string }) {
       )}
     >
       <div className="flex flex-col items-center gap-2.5 text-center sm:gap-3 md:gap-4">
-        <p className="max-w-md px-1 font-sans text-[10px] leading-snug text-on-surface-variant sm:px-2 sm:text-xs sm:leading-relaxed">
-          {t("footer.loveCreditPre")}
-          <a
-            href={METRODOKU_URL}
-            className={cn("text-on-surface-variant", linkClass)}
-            rel="noopener noreferrer"
-            target="_blank"
-            onClick={() => trackFooterLink("metrodoku")}
-          >
-            Metrodoku
-          </a>
-          {t("footer.loveCreditPost")}
-        </p>
-
-        <div className="flex flex-wrap items-center justify-center gap-x-1.5 gap-y-0.5 font-sans text-[10px] text-on-surface-variant sm:gap-x-2 sm:gap-y-1 sm:text-xs">
+        {/* Mot doux et soutien sur une ligne ; les pages sur la suivante. Le
+            contact et le crédit à Metrodoku vivent dans « À propos ». */}
+        <div className="flex max-w-md flex-wrap items-center justify-center gap-x-1.5 gap-y-0.5 px-1 font-sans text-[10px] leading-snug text-on-surface-variant sm:px-2 sm:text-xs sm:leading-relaxed">
+          <p>{t("footer.loveCredit")}</p>
+          <Middot />
           <a
             href={KOFI_URL}
             className={cn(
@@ -85,22 +75,15 @@ export default function AppFooter({ className }: { className?: string }) {
             <Coffee className="size-3 sm:size-3.5" aria-hidden="true" />
             {t("footer.support")}
           </a>
-          <Middot />
-          <a
-            href={`mailto:${SUPPORT_EMAIL}`}
-            className={cn("inline-flex items-center gap-1", linkClass)}
-            onClick={() => trackFooterLink("contact")}
-          >
-            <Mail className="size-3 sm:size-3.5" aria-hidden="true" />
-            {t("footer.contact")}
-          </a>
-          <Middot />
+        </div>
+
+        <div className="flex flex-wrap items-center justify-center gap-x-1.5 gap-y-0.5 font-sans text-[10px] text-on-surface-variant sm:gap-x-2 sm:gap-y-1 sm:text-xs">
           <Link
-            to="/privacy"
+            to={localizedPath("/about")}
             className={linkClass}
-            onClick={() => trackFooterLink("privacy")}
+            onClick={() => trackFooterLink("about")}
           >
-            {t("footer.privacy")}
+            {t("footer.about")}
           </Link>
           <Middot />
           <span className="inline-flex items-center gap-1">
@@ -110,13 +93,21 @@ export default function AppFooter({ className }: { className?: string }) {
               </span>
             ) : null}
             <Link
-              to="/changelog"
+              to={localizedPath("/changelog")}
               className={linkClass}
               onClick={() => trackFooterLink("changelog")}
             >
               {t("footer.changelog")}
             </Link>
           </span>
+          <Middot />
+          <Link
+            to={localizedPath("/privacy")}
+            className={linkClass}
+            onClick={() => trackFooterLink("privacy")}
+          >
+            {t("footer.privacy")}
+          </Link>
           {surveyActive === true ? (
             <>
               <Middot />
