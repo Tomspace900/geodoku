@@ -1,6 +1,9 @@
 import { describe, expect, it } from "vitest";
 import {
   browserLocale,
+  COUNTRY_LOCALE_COOKIE,
+  countryLocale,
+  countryLocaleFromCookie,
   LOCALE_COOKIE,
   localeFromCookie,
   localeFromPath,
@@ -119,32 +122,77 @@ describe("preferredLocale", () => {
   });
 });
 
-describe("suggestedLocale", () => {
-  it("propose la langue du navigateur sur une page d'une autre langue", () => {
-    expect(
-      suggestedLocale({
-        pathname: "/fr/about",
-        storedLocale: null,
-        languages: ["en-US"],
-      }),
-    ).toBe("en");
+describe("countryLocale", () => {
+  it("donne la langue dominante d'un pays", () => {
+    expect(countryLocale("FR")).toBe("fr");
   });
 
-  it("propose le choix du joueur plutôt que son navigateur", () => {
+  it("ne tranche pas pour un pays plurilingue", () => {
+    expect(countryLocale("BE")).toBeNull();
+  });
+
+  it("ne dit rien sans pays", () => {
+    expect(countryLocale(null)).toBeNull();
+  });
+});
+
+describe("countryLocaleFromCookie", () => {
+  it("lit la langue du pays posée par le middleware", () => {
+    expect(countryLocaleFromCookie(`${COUNTRY_LOCALE_COOKIE}=fr`)).toBe("fr");
+  });
+});
+
+describe("suggestedLocale", () => {
+  const noSignal = { storedLocale: null, countryLocale: null, languages: [] };
+
+  it("propose la langue du pays à un navigateur réglé dans une autre", () => {
     expect(
       suggestedLocale({
+        ...noSignal,
         pathname: "/en",
-        storedLocale: "fr",
+        countryLocale: "fr",
         languages: ["en-US"],
       }),
-    ).toBe("fr");
+    ).toEqual({ locale: "fr", basis: "country" });
+  });
+
+  it("ne propose rien sur une page dans la langue du pays", () => {
+    expect(
+      suggestedLocale({
+        ...noSignal,
+        pathname: "/fr/about",
+        countryLocale: "fr",
+        languages: ["en-US"],
+      }),
+    ).toBeNull();
+  });
+
+  it("fait passer le choix du joueur avant son pays", () => {
+    expect(
+      suggestedLocale({
+        ...noSignal,
+        pathname: "/fr",
+        storedLocale: "en",
+        countryLocale: "fr",
+      }),
+    ).toEqual({ locale: "en", basis: "choice" });
+  });
+
+  it("suit le navigateur sans pays reconnu", () => {
+    expect(
+      suggestedLocale({
+        ...noSignal,
+        pathname: "/fr/about",
+        languages: ["en-US"],
+      }),
+    ).toEqual({ locale: "en", basis: "browser" });
   });
 
   it("ne propose rien sur une page déjà dans la bonne langue", () => {
     expect(
       suggestedLocale({
+        ...noSignal,
         pathname: "/en/privacy",
-        storedLocale: null,
         languages: ["en-US"],
       }),
     ).toBeNull();
@@ -152,21 +200,13 @@ describe("suggestedLocale", () => {
 
   it("ne propose rien sans langue reconnue", () => {
     expect(
-      suggestedLocale({
-        pathname: "/fr",
-        storedLocale: null,
-        languages: ["es-ES"],
-      }),
+      suggestedLocale({ ...noSignal, pathname: "/fr", languages: ["es-ES"] }),
     ).toBeNull();
   });
 
   it("ne propose rien hors des pages localisées", () => {
     expect(
-      suggestedLocale({
-        pathname: "/admin",
-        storedLocale: null,
-        languages: ["en-US"],
-      }),
+      suggestedLocale({ ...noSignal, pathname: "/admin", countryLocale: "fr" }),
     ).toBeNull();
   });
 });

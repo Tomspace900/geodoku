@@ -1,4 +1,6 @@
 import {
+  COUNTRY_LOCALE_COOKIE,
+  countryLocale,
   localeFromCookie,
   localizePath,
   parseAcceptLanguage,
@@ -10,6 +12,12 @@ import {
  * `/about`, `/archive/…`) mènent à la même page dans la langue du visiteur,
  * avant tout affichage. Le choix du joueur (cookie), sinon `Accept-Language`,
  * sinon l'anglais (`preferredLocale`).
+ *
+ * Il transmet aussi à la page la langue du pays de connexion (cookie de
+ * session `geodoku_country_locale`, qui ne contient que la langue), pour que
+ * le toast propose le français à un téléphone réglé en anglais à Bordeaux. Le
+ * pays ne décide pas de la redirection : le navigateur dit mieux quelle langue
+ * le visiteur lit.
  *
  * Redirection temporaire : la cible dépend du visiteur, elle ne doit être mise
  * en cache ni par le navigateur ni par un intermédiaire. Googlebot, qui
@@ -32,6 +40,8 @@ export default function middleware(
     languages: parseAcceptLanguage(request.headers.get("accept-language")),
   });
   url.pathname = localizePath(url.pathname, locale);
+  const local = countryLocale(request.headers.get("x-vercel-ip-country"));
+  const secure = url.protocol === "https:" ? "; Secure" : "";
 
   return new Response(null, {
     status: 302,
@@ -39,6 +49,8 @@ export default function middleware(
       Location: url.toString(),
       "Cache-Control": "private, no-store",
       Vary: "Accept-Language, Cookie",
+      // Sans pays reconnu, on efface une valeur d'une session précédente.
+      "Set-Cookie": `${COUNTRY_LOCALE_COOKIE}=${local ?? ""}; Path=/; SameSite=Lax${secure}${local === null ? "; Max-Age=0" : ""}`,
     },
   });
 }

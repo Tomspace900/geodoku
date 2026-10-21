@@ -5,14 +5,19 @@ import { useLocation } from "react-router";
 import { Button } from "@/components/ui/button";
 import { translate } from "@/i18n";
 import { useLocale } from "@/i18n/LocaleContext";
-import { suggestedLocale } from "@/i18n/localePath";
-import type { Locale, TKey } from "@/i18n/types";
+import {
+  countryLocaleFromCookie,
+  type LocaleSuggestion,
+  suggestedLocale,
+} from "@/i18n/localePath";
+import type { TKey } from "@/i18n/types";
 
 /**
  * Suggestion d'une autre langue (#140), sur le modèle du toast de source des
  * contraintes. Affichée sur une page localisée quand la langue du joueur (son
- * choix, sinon son navigateur) en diffère (`suggestedLocale`) — typiquement en
- * arrivant par un lien direct. Rédigée dans la langue qu'elle propose : elle
+ * choix, sinon celle de son pays, sinon celle de son navigateur) en diffère
+ * (`suggestedLocale`) : un lien direct, ou un navigateur dans une autre
+ * langue que celle du pays. Rédigée dans la langue qu'elle propose : elle
  * s'adresse à quelqu'un qui ne lit peut-être pas celle de la page.
  *
  * Elle reste jusqu'à un choix, mémorisé dans les deux cas : accepter rejoint la
@@ -25,7 +30,7 @@ export function LocaleSuggestionToast() {
   const posthog = usePostHog();
   const { pathname } = useLocation();
   const { locale, storedLocale, setLocale } = useLocale();
-  const [suggestion, setSuggestion] = useState<Locale | null>(null);
+  const [suggestion, setSuggestion] = useState<LocaleSuggestion | null>(null);
   const reportedRef = useRef(false);
 
   // Évalué après le montage : le pré-rendu ne connaît ni le navigateur ni la
@@ -35,6 +40,7 @@ export function LocaleSuggestionToast() {
       suggestedLocale({
         pathname,
         storedLocale,
+        countryLocale: countryLocaleFromCookie(document.cookie),
         languages: navigator.languages ?? [],
       }),
     );
@@ -45,12 +51,13 @@ export function LocaleSuggestionToast() {
     reportedRef.current = true;
     posthog?.capture("locale_suggestion_shown", {
       from: locale,
-      to: suggestion,
+      to: suggestion.locale,
+      basis: suggestion.basis,
     });
   }, [suggestion, locale, posthog]);
 
   if (suggestion === null) return null;
-  const target = suggestion;
+  const { locale: target, basis } = suggestion;
   const text = (key: TKey) => translate(target, key);
 
   function accept() {
@@ -58,6 +65,7 @@ export function LocaleSuggestionToast() {
       from: locale,
       to: target,
       source: "suggestion",
+      basis,
     });
     setLocale(target);
   }
@@ -66,6 +74,7 @@ export function LocaleSuggestionToast() {
     posthog?.capture("locale_suggestion_dismissed", {
       from: locale,
       to: target,
+      basis,
     });
     setLocale(locale);
   }

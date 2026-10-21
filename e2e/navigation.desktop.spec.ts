@@ -60,6 +60,22 @@ test("the root follows the browser, and a direct link suggests its language", as
   ).toHaveCount(0);
 });
 
+test("suggests the country's language to a browser set in another one", async ({
+  page,
+}) => {
+  // Posé en prod par le middleware (pays de connexion) ; ici à la main.
+  await page.addInitScript(() => {
+    // biome-ignore lint/suspicious/noDocumentCookie: clears the preference cookie seeded by prepareSession
+    document.cookie = "geodoku_locale=; Path=/; Max-Age=0";
+    // biome-ignore lint/suspicious/noDocumentCookie: mirrors the middleware's country-language cookie
+    document.cookie = "geodoku_country_locale=fr; Path=/";
+  });
+  await page.goto("/en");
+  await page.getByRole("button", { name: "Jouer en français" }).click();
+  await expect(page).toHaveURL(/\/fr$/);
+  await expect(page.locator("html")).toHaveAttribute("lang", "fr");
+});
+
 test("dialogs keep programmatic focus visually silent until Tab", async ({
   page,
 }) => {

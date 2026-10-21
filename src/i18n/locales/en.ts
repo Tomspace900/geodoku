@@ -75,7 +75,7 @@ export const en = {
       "No sign-up, no login, no ads. I don't sell data or use it for advertising. There are no advertising trackers on the site.",
     deviceTitle: "On your device",
     deviceBody:
-      "Your browser keeps a few settings: your language, in a preference cookie set only if you pick one, and in local storage the current grid progress, your training games on past grids, a random anti-spam identifier, and short-lived technical keys used to deduplicate submissions. None of it is an advertising cookie. Clearing the site data removes it.",
+      "Your browser keeps a few settings: your language, in a preference cookie set only if you pick one; the language of the country you connect from, in a session cookie holding only that language, to suggest the right version; and in local storage the current grid progress, your training games on past grids, a random anti-spam identifier, and short-lived technical keys used to deduplicate submissions. None of it is an advertising cookie. Clearing the site data removes it.",
     serverTitle: "What gets sent to me",
     serverBody:
       "While you play, I record aggregated picks per cell, game outcomes, and difficulty feedback. To make retries reliable, the server keeps a technical receipt of the action (for example its cell and country) with an opaque key for seven days, without a stable identifier linking your actions. Pseudonymous usage events also help me understand the journey. None of this contains a name, email, or account.",

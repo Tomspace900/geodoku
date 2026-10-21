@@ -1,7 +1,10 @@
+// @vitest-environment node
+// Le middleware tourne sous Node chez Vercel ; un environnement navigateur
+// retirerait `Set-Cookie` de ses réponses.
 import { describe, expect, it } from "vitest";
 import { PRERENDERED_PAGES } from "@/app/pageMeta";
 import middleware, { config } from "../../../middleware";
-import { LOCALE_COOKIE } from "../localePath";
+import { COUNTRY_LOCALE_COOKIE, LOCALE_COOKIE } from "../localePath";
 
 function redirectFor(
   path: string,
@@ -50,6 +53,31 @@ describe("middleware de langue", () => {
       302,
       "private, no-store",
     ]);
+  });
+
+  it("transmet la langue du pays sans décider de la redirection", () => {
+    const response = middleware({
+      url: "https://www.geodoku.app/",
+      headers: new Headers({
+        "accept-language": "en-US",
+        "x-vercel-ip-country": "FR",
+      }),
+    });
+    expect([
+      response.headers.get("Location"),
+      response.headers.get("Set-Cookie"),
+    ]).toEqual([
+      "https://www.geodoku.app/en",
+      `${COUNTRY_LOCALE_COOKIE}=fr; Path=/; SameSite=Lax; Secure`,
+    ]);
+  });
+
+  it("efface la langue du pays hors des pays reconnus", () => {
+    const response = middleware({
+      url: "https://www.geodoku.app/",
+      headers: new Headers({ "x-vercel-ip-country": "BE" }),
+    });
+    expect(response.headers.get("Set-Cookie")).toContain("Max-Age=0");
   });
 
   it("couvre chaque page publique sans langue", () => {

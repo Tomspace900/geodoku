@@ -19,6 +19,40 @@ export const LOCALE_COOKIE = "geodoku_locale";
 /** Un an : le choix d'une langue ne se périme pas. */
 export const LOCALE_COOKIE_MAX_AGE_SECONDS = 60 * 60 * 24 * 365;
 
+/**
+ * Langue du pays d'où le visiteur se connecte, posée par le middleware pour la
+ * session. Ne contient que la langue (`fr`), jamais le pays ni l'adresse IP.
+ */
+export const COUNTRY_LOCALE_COOKIE = "geodoku_country_locale";
+
+/**
+ * Pays à langue dominante claire, parmi les langues proposées (codes ISO
+ * 3166-1 alpha-2, tels que `x-vercel-ip-country`). Un pays plurilingue
+ * (Belgique, Suisse, Canada, Luxembourg) ne suggère rien : on se tromperait
+ * pour une bonne partie de ses habitants.
+ */
+const COUNTRY_LOCALES: Readonly<Record<string, Locale>> = {
+  // France, ses outre-mer à code propre, Monaco.
+  FR: "fr",
+  GP: "fr",
+  MQ: "fr",
+  GF: "fr",
+  RE: "fr",
+  YT: "fr",
+  PM: "fr",
+  BL: "fr",
+  MF: "fr",
+  WF: "fr",
+  PF: "fr",
+  NC: "fr",
+  MC: "fr",
+  US: "en",
+  GB: "en",
+  IE: "en",
+  AU: "en",
+  NZ: "en",
+};
+
 /** L'admin n'a qu'une version : jamais préfixée, jamais redirigée. */
 function isUnlocalized(barePath: string): boolean {
   return barePath === "/admin" || barePath.startsWith("/admin/");
@@ -78,15 +112,30 @@ export function browserLocale(languages: readonly string[]): Locale | null {
   return match ?? null;
 }
 
-/** Valeur du cookie de langue dans un en-tête `Cookie` (ou `document.cookie`). */
+/** Langue choisie par le joueur, lue dans un en-tête `Cookie` (ou `document.cookie`). */
 export function localeFromCookie(cookie: string | null): Locale | null {
-  if (!cookie) return null;
-  const value = cookie
-    .split(";")
-    .map((part) => part.trim())
-    .find((part) => part.startsWith(`${LOCALE_COOKIE}=`))
-    ?.slice(LOCALE_COOKIE.length + 1);
+  const value = cookieValue(cookie, LOCALE_COOKIE);
   return isLocale(value) ? value : null;
+}
+
+/** Langue du pays de connexion, posée par le middleware pour la session. */
+export function countryLocaleFromCookie(cookie: string | null): Locale | null {
+  const value = cookieValue(cookie, COUNTRY_LOCALE_COOKIE);
+  return isLocale(value) ? value : null;
+}
+
+/** Langue dominante d'un pays (`FR` → `fr`), `null` hors de la liste. */
+export function countryLocale(country: string | null): Locale | null {
+  return country ? (COUNTRY_LOCALES[country.toUpperCase()] ?? null) : null;
+}
+
+/** Valeur d'un cookie dans un en-tête `Cookie` (ou `document.cookie`). */
+function cookieValue(cookie: string | null, name: string): string | undefined {
+  return cookie
+    ?.split(";")
+    .map((part) => part.trim())
+    .find((part) => part.startsWith(`${name}=`))
+    ?.slice(name.length + 1);
 }
 
 type PreferenceContext = {
@@ -102,23 +151,42 @@ export function preferredLocale({
   return storedLocale ?? browserLocale(languages) ?? FALLBACK_LOCALE;
 }
 
-type SuggestionContext = PreferenceContext & { pathname: string };
+type SuggestionContext = PreferenceContext & {
+  pathname: string;
+  countryLocale: Locale | null;
+};
+
+export type LocaleSuggestion = Readonly<{
+  locale: Locale;
+  /** Ce qui motive la suggestion : le choix du joueur, son pays ou son navigateur. */
+  basis: "choice" | "country" | "browser";
+}>;
 
 /**
- * Langue à suggérer sur une page localisée : celle du joueur (son choix, sinon
- * son navigateur) quand la page est dans une autre. Un lien direct affiche
- * toujours la page demandée : on suggère, on ne redirige pas. Sans langue
- * reconnue, rien à suggérer.
+ * Langue à suggérer sur une page localisée, quand la page est dans une autre :
+ * le choix du joueur, sinon la langue de son pays, sinon celle de son
+ * navigateur. Le pays passe avant le navigateur : un téléphone réglé en
+ * anglais à Bordeaux arrive sur `/en` (la redirection suit le navigateur) et
+ * se voit proposer le français ; un Français sur un lien `/fr` n'a rien à
+ * corriger. Un lien direct affiche toujours la page demandée : on suggère, on
+ * ne redirige pas.
  */
 export function suggestedLocale({
   pathname,
   storedLocale,
+  countryLocale,
   languages,
-}: SuggestionContext): Locale | null {
+}: SuggestionContext): LocaleSuggestion | null {
   const pageLocale = localeFromPath(pathname);
-  const wanted = storedLocale ?? browserLocale(languages);
-  if (pageLocale === null || wanted === null || wanted === pageLocale) {
-    return null;
-  }
-  return wanted;
+  if (pageLocale === null) return null;
+  const browser = browserLocale(languages);
+  const suggestion: LocaleSuggestion | null =
+    storedLocale !== null
+      ? { locale: storedLocale, basis: "choice" }
+      : countryLocale !== null
+        ? { locale: countryLocale, basis: "country" }
+        : browser !== null
+          ? { locale: browser, basis: "browser" }
+          : null;
+  return suggestion?.locale === pageLocale ? null : suggestion;
 }
