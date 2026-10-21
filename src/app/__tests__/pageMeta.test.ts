@@ -31,6 +31,17 @@ describe("pageMeta", () => {
     });
   });
 
+  it("donne au jeu le canonical de l'accueil, pas la racine qui redirige", () => {
+    const graph = pageMeta("/fr").structuredData?.["@graph"] as
+      | { url: string }[]
+      | undefined;
+    expect(graph?.[1]?.url).toBe("https://www.geodoku.app/fr");
+  });
+
+  it("ne donne pas de données structurées hors de l'accueil", () => {
+    expect(pageMeta("/fr/privacy").structuredData).toBeNull();
+  });
+
   it("reprend l'accueil pour une page non pré-rendue", () => {
     expect(pageMeta("/en/archive").canonical).toBe(
       "https://www.geodoku.app/en",

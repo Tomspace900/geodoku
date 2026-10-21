@@ -17,7 +17,8 @@
  *
  * Les routes du SPA non pré-rendues (`/fr/archive`, `/admin`) sont réécrites vers
  * `app-shell.html` (`vercel.json`), le gabarit vide d'origine : leur servir
- * l'accueil pré-rendu ferait clignoter l'accueil avant la vraie page. Toute
+ * l'accueil pré-rendu ferait clignoter l'accueil avant la vraie page. Ce
+ * gabarit, dont l'en-tête ne décrit aucune page réelle, porte un `noindex`. Toute
  * autre adresse reçoit `404.html`, le même gabarit servi avec un vrai statut
  * 404 (#141) : le joueur est renvoyé vers l'accueil par le SPA, un robot voit
  * une page inexistante. Le client garde `createRoot().render()` : React
@@ -28,7 +29,7 @@ import { dirname, join } from "node:path";
 import { pathToFileURL } from "node:url";
 import { build } from "vite";
 import type { PageMeta } from "../../src/app/pageMeta.ts";
-import { applyPageHead } from "./pageHead.ts";
+import { applyPageHead, withNoindex } from "./pageHead.ts";
 import { renderSitemap } from "./sitemap.ts";
 
 const ROOT_PLACEHOLDER = '<div id="root"></div>';
@@ -81,8 +82,8 @@ export async function prerender({
         `[prerender] ${ROOT_PLACEHOLDER} introuvable dans index.html`,
       );
     }
-    writeFileSync(join(outDir, APP_SHELL), template);
-    writeFileSync(join(outDir, NOT_FOUND), template);
+    writeFileSync(join(outDir, APP_SHELL), withNoindex(template));
+    writeFileSync(join(outDir, NOT_FOUND), withNoindex(template));
 
     const paths = server.prerenderedPaths();
     paths.forEach((path) => {

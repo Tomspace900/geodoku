@@ -104,6 +104,19 @@ export function HowToPlayLink() {
         {t("ui.howToPlay")}
       </Button>
 
+      {/* La modale s'affiche par-dessus la page, ce que le pré-rendu ne produit
+          pas : ses règles manqueraient au HTML servi, seul texte que lisent
+          les robots des moteurs IA (#139). Au pré-rendu seulement, on les y
+          met, masquées à l'écran comme un texte pour lecteur d'écran : le
+          contenu exact de la modale ouverte aux nouveaux visiteurs, sans rien
+          changer à l'affichage. Le rendu client ne les contient pas. */}
+      {import.meta.env.SSR ? (
+        <section className="sr-only">
+          <h2>{t("howToPlay.title")}</h2>
+          <IconRuleList rules={HOW_TO_PLAY_RULES} />
+        </section>
+      ) : null}
+
       <Dialog
         open={open}
         onOpenChange={(nextOpen) => {

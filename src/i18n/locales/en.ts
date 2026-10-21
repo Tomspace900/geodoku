@@ -184,6 +184,14 @@ export const en = {
       "What Geodoku collects and what it doesn't: no account, no ads, just the bare minimum to run the game.",
     changelogDescription:
       "What's new in Geodoku, update after update: new constraints, features and fixes.",
+    imageAlt: "Geodoku — a 3×3 geography sudoku grid",
+    // Structured data (JSON-LD) for the home page, read by search engines.
+    gameDescription:
+      "A geography sudoku. Every day, a 3×3 grid where each row and each column sets a geographic constraint: find a country that meets both.",
+    gameGenreGeography: "Geography game",
+    gameGenreEducational: "Educational game",
+    gamePlatform: "Web browser",
+    gameOperatingSystem: "Any modern web browser",
   },
   // Toast proposing THIS language, written in it (#140): each locale suggests itself.
   localeSuggestion: {

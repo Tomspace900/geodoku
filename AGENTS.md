@@ -269,8 +269,12 @@ frontend aux joueurs, et un échec du push fait échouer le déploiement Vercel.
 ([`vite.config.ts`](vite.config.ts), [`scripts/build/prerender.ts`](scripts/build/prerender.ts)) :
 build SSR de [`src/entry-server.tsx`](src/entry-server.tsx), puis un vrai HTML par page
 publique et par langue (`PRERENDERED_PAGES`, [`pageMeta.ts`](src/app/pageMeta.ts)), avec
-titre, description, canonical et `hreflang` propres à la page. Les robots des moteurs IA
+titre, description, canonical, `hreflang` et `og:image:alt` propres à la page ; l'accueil seul
+porte les données structurées (JSON-LD, `structuredData`), dans sa langue. Les robots des moteurs IA
 n'exécutent pas le JavaScript : sans ce HTML, ils ne voyaient qu'un `<div id="root">` vide.
+Une modale ne passe pas au pré-rendu : `HowToPlayLink` y ajoute donc ses règles, sous
+`import.meta.env.SSR`, masquées à l'écran (`sr-only`) — le contenu exact de la modale ouverte
+aux nouveaux visiteurs, absent du rendu client, sans rien changer à l'affichage.
 Le client garde `createRoot().render()` ; le HTML servi est l'app en chargement, déjà
 stylée, que React remplace par un rendu identique. Fichiers au format `cleanUrls` de
 [`vercel.json`](vercel.json) (`fr/privacy.html`, `en/privacy.html`…), avec `trailingSlash: false` : `/fr/privacy/`
@@ -278,7 +282,8 @@ est redirigé vers `/fr/privacy`, une seule adresse par page. Les adresses sans 
 pas de fichier (middleware, §4 i18n) ; `index.html` n'est que le gabarit. Les autres routes du SPA
 (`/fr/archive…`, `/en/archive…`, `/admin`) sont réécrites vers `/app-shell` (le fichier
 `app-shell.html` ; avec `cleanUrls`, viser `.html` donne un 404), le gabarit vide, pour ne
-pas afficher l'accueil avant `/archive`. **Toute nouvelle route du SPA doit y être ajoutée**,
+pas afficher l'accueil avant `/archive` ; son en-tête ne décrivant aucune page réelle, ce
+gabarit porte un `noindex`. **Toute nouvelle route du SPA doit y être ajoutée**,
 sinon elle répond 404 : le reste reçoit `404.html`, ce même gabarit avec un vrai statut 404
 (#141) — le joueur est renvoyé vers l'accueil, un robot voit une page inexistante.
 `sitemap.xml` est généré depuis les pages pré-rendues, jamais écrit à la main. Sous
