@@ -16,6 +16,7 @@ import {
 import { formatGridDateLabel } from "@/features/game/logic/gridDateLabel";
 import { getGridNumberForDate } from "@/features/game/logic/gridIssue";
 import { loadPersistedGame } from "@/features/game/logic/persistence";
+import { REPLAY_WINDOW_DAYS } from "@/features/game/logic/replayWindow";
 import { useLocale, useT } from "@/i18n/LocaleContext";
 import { todayUTC } from "@/lib/dates";
 import { cn } from "@/lib/utils";
@@ -85,7 +86,7 @@ export function ArchivePage() {
     <div className="min-h-svh bg-surface flex flex-col items-center px-4 py-6">
       <main className="w-full max-w-2xl flex flex-col gap-8 flex-1">
         {/* Même en-tête que les pages éditoriales (`LegalLayout`) : lien retour,
-            marque, titre et eyebrow — l'archive est une page à part entière. */}
+            marque, titre et eyebrow : l'entraînement est une page à part entière. */}
         <header className="flex flex-col gap-5">
           <BackLink to={localizedPath("/")} label={t("archive.backToGame")} />
 
@@ -96,6 +97,9 @@ export function ArchivePage() {
             title={t("archive.title")}
             eyebrow={t("archive.eyebrow")}
           />
+          <p className="font-sans text-sm text-on-surface-variant">
+            {t("archive.subtitle", { days: REPLAY_WINDOW_DAYS })}
+          </p>
         </header>
 
         {grids === undefined ? (

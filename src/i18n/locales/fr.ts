@@ -38,7 +38,7 @@ export const fr = {
     possibleAnswersPartial: "{remaining}\u00A0réponses possibles sur {total}",
     viewAnswers: "Voir les réponses",
     viewMyResult: "Voir mon score",
-    replayPastGrids: "Archives",
+    replayPastGrids: "Entraînement",
     closeResult: "Fermer",
     closeDialog: "Fermer la fenêtre",
     resultDialogDescription:
@@ -287,7 +287,7 @@ export const fr = {
       "Changer la date dans l'URL, l'idée était bonne, mais il va falloir attendre",
     timeTravellerBodyAccent: "le jour J",
     timeTravellerBodyPost: ".",
-    timeTravellerCta: "Retour aux archives",
+    timeTravellerCta: "Retour à l'entraînement",
   },
   rarity: {
     common: "Commun",
@@ -325,8 +325,9 @@ export const fr = {
       "Pas de vies à l'entraînement, donc pas de bonus de vies : seules la grille et la rareté comptent.",
   },
   archive: {
-    eyebrow: "Entraînement · Vies illimitées",
-    title: "Archives",
+    eyebrow: "Vies illimitées",
+    title: "Entraînement",
+    subtitle: "Rejoue les grilles des {days} derniers jours.",
     backToGame: "Retour au jeu",
     empty: "Aucune grille passée disponible pour le moment.",
     completed: "{attempts} essais",
@@ -339,7 +340,7 @@ export const fr = {
     attempts: "{count} essais",
     unlimitedLives: "Vies illimitées",
     restart: "Recommencer",
-    backToList: "Retour aux archives",
+    backToList: "Retour à l'entraînement",
     resultDialogDescription:
       "Ton résultat d'entraînement : cases remplies, bonus de rareté et nombre d'essais.",
     noResult: "Cette grille n'est plus disponible.",
