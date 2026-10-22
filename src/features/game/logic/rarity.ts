@@ -25,8 +25,11 @@ export function isCohortComplete(mode: GameModeId): boolean {
  * affiche le même tier partout. `null` tant qu'il n'y a pas de donnée.
  *
  * `cohortComplete` change la lecture d'un pays **absent** de la distribution :
- * - cohorte ouverte (grille du jour) → `null`. L'absence veut dire « pas encore » :
- *   la journée continue, et le coup du joueur lui-même n'est pas encore agrégé.
+ * - cohorte ouverte (grille du jour) → le coup du joueur n'est pas encore agrégé
+ *   (la saisie est local-first, l'envoi part en arrière-plan). On l'ajoute :
+ *   `1 / (total + 1)`, exactement la part que le serveur renverra si personne
+ *   d'autre ne joue entre-temps, marquée `estimated`. Sans cela, un coup jamais
+ *   transmis (réseau coupé) laisserait badge et score en attente indéfiniment.
  * - cohorte close (grille passée) → part **0**, donc ultra. L'absence est alors
  *   définitive et signifie « personne ne l'a choisi », ce qui est la définition
  *   même du maximum de rareté. C'est déjà la lecture de la grille solution
@@ -47,9 +50,10 @@ export function filledCellShare(
       estimated: false,
     };
   }
-  if (cellDist.totalGuesses <= 0) return null;
   const share = cellDist.rarityByCountry[countryCode];
-  if (share === undefined) return null;
+  if (share === undefined) {
+    return { share: 1 / (cellDist.totalGuesses + 1), estimated: true };
+  }
   return { share, estimated: cellDist.totalGuesses < ESTIMATED_MAX_TOTAL };
 }
 

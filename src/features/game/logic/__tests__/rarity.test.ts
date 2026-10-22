@@ -79,16 +79,16 @@ describe("filledCellTier (part brute, cohorte)", () => {
     expect(filledCellTier("FR", undefined)).toBeNull();
   });
 
-  it("returns null when the cell has no guesses yet", () => {
-    expect(
-      filledCellTier("FR", { totalGuesses: 0, rarityByCountry: {} }),
-    ).toBeNull();
+  it("counts the player's own pick on a cell nobody has played yet", () => {
+    expect(filledCellTier("FR", { totalGuesses: 0, rarityByCountry: {} })).toBe(
+      "common",
+    );
   });
 
-  it("returns null when the country is absent from the distribution", () => {
+  it("counts the player's own pick before it reaches the distribution", () => {
     expect(
       filledCellTier("FR", { totalGuesses: 10, rarityByCountry: { IT: 0.5 } }),
-    ).toBeNull();
+    ).toBe("ultra");
   });
 });
 
@@ -120,14 +120,23 @@ describe("filledCellShare (part brute cohorte + estimated)", () => {
     ).toEqual({ share: 0.4, estimated: false });
   });
 
-  it("null sans donnée pour ce pays / cette case", () => {
+  it("null tant que la distribution n'est pas chargée", () => {
+    expect(filledCellShare("FR", undefined)).toBeNull();
+  });
+
+  it("ajoute le coup du joueur pas encore agrégé à la cohorte", () => {
     expect(
       filledCellShare("FR", {
-        totalGuesses: 10,
-        rarityByCountry: { IT: 0.5 },
+        totalGuesses: 9,
+        rarityByCountry: { IT: 1 },
       }),
-    ).toBeNull();
-    expect(filledCellShare("FR", undefined)).toBeNull();
+    ).toEqual({ share: 0.1, estimated: true });
+  });
+
+  it("se résout sur une case encore jamais comptée", () => {
+    expect(
+      filledCellShare("FR", { totalGuesses: 0, rarityByCountry: {} }),
+    ).toEqual({ share: 1, estimated: true });
   });
 });
 
@@ -166,10 +175,12 @@ describe("filledCellShare — cohorte close (grille passée)", () => {
     expect(filledCellShare("NRU", undefined, true)).toBeNull();
   });
 
-  it("laisse la grille du jour inchangée : absent = pas encore agrégé", () => {
+  it("sur la grille du jour, absent = coup du joueur pas encore agrégé", () => {
     const cellDist = { totalGuesses: 10, rarityByCountry: { MCO: 0.8 } };
-    expect(filledCellShare("NRU", cellDist)).toBeNull();
-    expect(filledCellShare("NRU", cellDist, false)).toBeNull();
+    expect(filledCellShare("NRU", cellDist, false)).toEqual({
+      share: 1 / 11,
+      estimated: true,
+    });
   });
 });
 
