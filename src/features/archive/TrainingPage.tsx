@@ -174,6 +174,7 @@ function TrainingBoard({ date }: { date: string }) {
                 distribution={distribution ?? undefined}
                 onCellClick={selectCell}
                 onHeaderClick={(id) => sourceToast.onHeaderClick(id)}
+                onBlockedCellClick={sourceToast.onBlockedCellClick}
               />
               <GiveUpLink onConfirm={giveUp} />
             </>

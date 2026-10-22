@@ -29,6 +29,8 @@ export const en = {
       "Select cell row {row} column {col}: {rowConstraint} × {colConstraint}",
     cellFilledAriaLabel:
       "Cell row {row} column {col}: {rowConstraint} × {colConstraint}, filled with {country}",
+    blockedCellTitle: "Blocked cell",
+    blockedCellBody: "Every country that fits is already placed elsewhere.",
     cellBlockedAriaLabel:
       "Blocked cell row {row} column {col}: {rowConstraint} × {colConstraint}",
     remainingLives: "{count} lives remaining",

@@ -74,4 +74,14 @@ describe("useConstraintSourceToast", () => {
 
     expect(result.current.active).toBeNull();
   });
+
+  it("une case bloquée ouvre son explication, la retaper la referme", () => {
+    const { result } = renderHook(() => useConstraintSourceToast(PARAMS));
+
+    act(() => result.current.onBlockedCellClick("1,2"));
+    expect(result.current.active).toEqual({ kind: "blockedCell", cell: "1,2" });
+
+    act(() => result.current.onBlockedCellClick("1,2"));
+    expect(result.current.active).toBeNull();
+  });
 });

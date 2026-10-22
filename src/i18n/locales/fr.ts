@@ -31,6 +31,8 @@ export const fr = {
       "Sélectionner case ligne {row} colonne {col} : {rowConstraint} × {colConstraint}",
     cellFilledAriaLabel:
       "Case ligne {row} colonne {col} : {rowConstraint} × {colConstraint}, remplie avec {country}",
+    blockedCellTitle: "Case bloquée",
+    blockedCellBody: "Tous ses pays possibles sont déjà placés ailleurs.",
     cellBlockedAriaLabel:
       "Case bloquée ligne {row} colonne {col} : {rowConstraint} × {colConstraint}",
     remainingLives: "{count} vies restantes",

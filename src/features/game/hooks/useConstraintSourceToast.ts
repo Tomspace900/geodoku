@@ -2,11 +2,15 @@ import { usePostHog } from "@posthog/react";
 import { useEffect, useRef, useState } from "react";
 import { CONSTRAINT_SOURCE_TOAST_MS } from "@/features/game/logic/constants";
 import type { ConstraintId } from "@/features/game/logic/constraints";
-import type { CellPosition, GameModeId } from "@/features/game/types";
+import type { CellKey, CellPosition, GameModeId } from "@/features/game/types";
 
-export type ConstraintSourceToastTarget = Readonly<{
-  constraintId: ConstraintId;
-}>;
+/**
+ * Le toast sert aussi à expliquer une case bloquée (#60) : même geste (taper),
+ * même place, plutôt qu'une règle de plus dans « Comment jouer ».
+ */
+export type ConstraintSourceToastTarget =
+  | Readonly<{ kind: "constraint"; constraintId: ConstraintId }>
+  | Readonly<{ kind: "blockedCell"; cell: CellKey }>;
 
 type Params = {
   gridDate: string;
@@ -24,7 +28,8 @@ type Params = {
  * `constraint_source_viewed` (`surface: "playing"`, conservé pour ne pas
  * casser les groupements existants bien qu'il ne prenne plus qu'une seule
  * valeur) ; l'ouverture de la modale de saisie (`selectedCell`) ferme le
- * toast.
+ * toast. `onBlockedCellClick` fait de même pour une case bloquée, avec l'event
+ * `blocked_cell_opened` : une case n'a pas de `constraint_id`.
  */
 export function useConstraintSourceToast({
   gridDate,
@@ -72,7 +77,7 @@ export function useConstraintSourceToast({
 
   function onHeaderClick(constraintId: ConstraintId): void {
     pausedRef.current = false;
-    if (active?.constraintId === constraintId) {
+    if (active?.kind === "constraint" && active.constraintId === constraintId) {
       setActive(null);
       return;
     }
@@ -82,7 +87,21 @@ export function useConstraintSourceToast({
       surface: "playing",
       constraint_id: constraintId,
     });
-    setActive({ constraintId });
+    setActive({ kind: "constraint", constraintId });
+  }
+
+  function onBlockedCellClick(cell: CellKey): void {
+    pausedRef.current = false;
+    if (active?.kind === "blockedCell" && active.cell === cell) {
+      setActive(null);
+      return;
+    }
+    posthog?.capture("blocked_cell_opened", {
+      grid_date: gridDate,
+      mode,
+      cell,
+    });
+    setActive({ kind: "blockedCell", cell });
   }
 
   function pause(): void {
@@ -95,5 +114,5 @@ export function useConstraintSourceToast({
     if (active) scheduleClose();
   }
 
-  return { active, onHeaderClick, close, pause, resume };
+  return { active, onHeaderClick, onBlockedCellClick, close, pause, resume };
 }

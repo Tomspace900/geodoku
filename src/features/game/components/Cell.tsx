@@ -15,6 +15,8 @@ type Props = {
   colLabel: string;
   isDisabled: boolean;
   onClick: () => void;
+  /** Taper une case bloquée explique pourquoi elle l'est (#60). */
+  onBlockedClick: () => void;
   /** Tier dérivé de la distribution dynamique ; `null` tant qu'elle charge. */
   tier: RarityTier | null;
 };
@@ -26,6 +28,7 @@ export function CellComponent({
   colLabel,
   isDisabled,
   onClick,
+  onBlockedClick,
   tier,
 }: Props) {
   const { locale, t } = useLocale();
@@ -79,22 +82,25 @@ export function CellComponent({
 
   if (cell.status === "blocked") {
     return (
-      <div className="aspect-square w-full rounded-xl bg-surface-low flex items-center justify-center">
-        <span className="sr-only">
-          {t("ui.cellBlockedAriaLabel", {
-            row: position.row + 1,
-            col: position.col + 1,
-            rowConstraint: rowLabel,
-            colConstraint: colLabel,
-          })}
-        </span>
+      <button
+        type="button"
+        onClick={onBlockedClick}
+        data-cell-key={toCellKey(position)}
+        aria-label={t("ui.cellBlockedAriaLabel", {
+          row: position.row + 1,
+          col: position.col + 1,
+          rowConstraint: rowLabel,
+          colConstraint: colLabel,
+        })}
+        className="aspect-square w-full rounded-xl bg-surface-low flex items-center justify-center cursor-pointer transition-colors duration-150 hover:bg-surface-high focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-on-surface/20 focus-visible:ring-offset-2 focus-visible:ring-offset-surface"
+      >
         <X
           size={18}
           className="text-on-surface-variant/40"
           strokeWidth={1.5}
           aria-hidden="true"
         />
-      </div>
+      </button>
     );
   }
 

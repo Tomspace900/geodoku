@@ -195,6 +195,7 @@ export function GamePage() {
                   selectCell(cell);
                 }}
                 onHeaderClick={(id) => sourceToast.onHeaderClick(id)}
+                onBlockedCellClick={sourceToast.onBlockedCellClick}
               />
 
               <RarityHint />
