@@ -35,6 +35,11 @@ dans `content/constraints/index.ts`). Réactivation : réintroduire l'entrée da
 
 Le Timor oriental est le onzième membre (adhésion actée le 26 octobre 2025). REST Countries v5 ne l'a pas encore intégré : un delta `membershipsAdd: ["asean"]` sur `TLS` dans `countryPatches.ts` le rétablit, à retirer quand la source rattrape. La Papouasie–Nouvelle-Guinée (observateur) est exclue. Les territoires non jouables ne sont pas ajoutés séparément.
 
+## Clarification à la réactivation
+
+À reprendre dans son `about.ts` : développer le sigle, « Association des nations de
+l'Asie du Sud-Est » / « Association of Southeast Asian Nations ».
+
 ## Révision
 
 Procédure commune : [SOURCES.md](../SOURCES.md#procédure-de-révision).
