@@ -1,6 +1,6 @@
 import { usePostHog } from "@posthog/react";
 import { useQuery } from "convex/react";
-import { Dumbbell } from "lucide-react";
+import { History } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import { Link } from "react-router";
 import AppFooter from "@/app/AppFooter";
@@ -174,7 +174,7 @@ export function GamePage() {
                     </Button>
                     <Button asChild size="lg" className="w-full">
                       <Link to={localizedPath("/archive")}>
-                        <Dumbbell aria-hidden="true" />
+                        <History aria-hidden="true" />
                         {t("ui.replayPastGrids")}
                       </Link>
                     </Button>

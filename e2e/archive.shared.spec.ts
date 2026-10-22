@@ -157,7 +157,7 @@ test("counts a wrong guess as an attempt without ending the game", async ({
   expect(training).toContain('"failedAttempts":6');
 });
 
-test("gives up a practice grid after confirmation, and stays finished on reload", async ({
+test("gives up a practice grid, and stays finished on reload", async ({
   page,
 }) => {
   await seedFinishedDaily(page);
@@ -169,8 +169,6 @@ test("gives up a practice grid after confirmation, and stays finished on reload"
   await fillCell(page, 1, 1, solution["0,0"].name);
 
   await page.getByRole("button", { name: "Give up" }).click();
-  const confirm = page.getByRole("dialog", { name: "Give up this grid?" });
-  await confirm.getByRole("button", { name: "Give up" }).click();
 
   // La partie se termine comme après un blocage : écran de résultat.
   const result = page.getByRole("dialog").filter({
@@ -186,6 +184,12 @@ test("gives up a practice grid after confirmation, and stays finished on reload"
 
   await page.reload();
   await expect(result).toBeVisible();
+
+  // La liste affiche l'abandon, pas un nombre d'essais.
+  await page.goto("/en/archive");
+  await expect(
+    page.locator(`a[href="/en/archive/${target.date}"]`),
+  ).toContainText("Given up");
 });
 
 // ── 4. Dates futures ──────────────────────────────────────────────────────────

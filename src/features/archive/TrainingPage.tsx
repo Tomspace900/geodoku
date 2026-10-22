@@ -1,5 +1,5 @@
 import { useQuery } from "convex/react";
-import { RotateCcw } from "lucide-react";
+import { Flag, RotateCcw } from "lucide-react";
 import { type ReactNode, useEffect, useState } from "react";
 import { Navigate, useNavigate, useParams } from "react-router";
 import AppFooter from "@/app/AppFooter";
@@ -22,7 +22,6 @@ import { useLocale, useT } from "@/i18n/LocaleContext";
 import { todayUTC } from "@/lib/dates";
 import { cn } from "@/lib/utils";
 import { api } from "../../../convex/_generated/api";
-import { GiveUpLink } from "./components/GiveUpLink";
 import { TrainingResultScreen } from "./components/TrainingResultScreen";
 import { useTrainingGame } from "./hooks/useTrainingGame";
 import { isDailyGameFinished } from "./logic/dailyGate";
@@ -176,7 +175,17 @@ function TrainingBoard({ date }: { date: string }) {
                 onHeaderClick={(id) => sourceToast.onHeaderClick(id)}
                 onBlockedCellClick={sourceToast.onBlockedCellClick}
               />
-              <GiveUpLink onConfirm={giveUp} />
+              {/* Tertiaire et sans confirmation : la partie se termine aussitôt,
+                  et « Recommencer » reste à un tap sur l'écran de résultat. */}
+              <Button
+                type="button"
+                variant="link"
+                onClick={giveUp}
+                className="mx-auto text-xs"
+              >
+                <Flag className="size-3 sm:size-3.5" aria-hidden="true" />
+                {t("training.giveUp")}
+              </Button>
             </>
           )}
 

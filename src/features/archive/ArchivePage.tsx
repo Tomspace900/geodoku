@@ -1,6 +1,6 @@
 import { usePostHog } from "@posthog/react";
 import { useQuery } from "convex/react";
-import { Check, ChevronRight } from "lucide-react";
+import { Check, ChevronRight, Flag } from "lucide-react";
 import { useEffect, useState } from "react";
 import { Link, Navigate } from "react-router";
 import AppFooter from "@/app/AppFooter";
@@ -8,7 +8,6 @@ import { AppMark } from "@/components/AppMark";
 import { BackLink } from "@/components/editorial/BackLink";
 import { DisplayHeader } from "@/components/editorial/DisplayHeader";
 import { Eyebrow } from "@/components/editorial/Eyebrow";
-import { hasEmptyCell } from "@/features/game/logic/blockedDetection";
 import {
   CONSTRAINT_BY_ID,
   type ConstraintId,
@@ -22,6 +21,7 @@ import { todayUTC } from "@/lib/dates";
 import { cn } from "@/lib/utils";
 import { api } from "../../../convex/_generated/api";
 import { isDailyGameFinished } from "./logic/dailyGate";
+import { type RowOutcome, rowOutcome } from "./logic/rowOutcome";
 import {
   loadTrainingGames,
   type PersistedTrainingGame,
@@ -37,25 +37,6 @@ type ReplayableGrid = {
   rows: string[];
   cols: string[];
 };
-
-/**
- * Nombre d'essais d'une partie d'entraînement terminée, lu dans le stockage local
- * (l'entraînement n'écrit rien côté serveur). `null` tant que la partie est
- * jouable — la liste ne signale que le terminé.
- *
- * Une partie est terminée quand il ne reste aucune case vide : soit la grille est
- * pleine, soit les cases restantes sont bloquées. Les vies n'entrent pas en jeu,
- * puisque les essais sont illimités — et comme la grille finit donc presque
- * toujours pleine, seul le nombre d'essais distingue vraiment deux parties.
- */
-function completedAttempts(
-  game: PersistedTrainingGame | undefined,
-): number | null {
-  if (!game) return null;
-  // Une partie abandonnée est terminée, même avec des cases vides.
-  if (hasEmptyCell(game.cells) && game.givenUp !== true) return null;
-  return game.failedAttempts;
-}
 
 export function ArchivePage() {
   const t = useT();
@@ -118,7 +99,7 @@ export function ArchivePage() {
                 key={grid.date}
                 grid={grid}
                 dateLabel={formatGridDateLabel(grid.date, locale)}
-                attempts={completedAttempts(
+                outcome={rowOutcome(
                   trainingGames.find((game) => game.date === grid.date),
                 )}
               />
@@ -135,12 +116,11 @@ export function ArchivePage() {
 function ArchiveRow({
   grid,
   dateLabel,
-  attempts,
+  outcome,
 }: {
   grid: ReplayableGrid;
   dateLabel: string;
-  /** Essais de la partie terminée, ou `null` si la grille n'a pas été bouclée. */
-  attempts: number | null;
+  outcome: RowOutcome;
 }) {
   const t = useT();
   const { localizedPath } = useLocale();
@@ -164,11 +144,11 @@ function ArchiveRow({
         <span
           className={cn(
             "size-2 shrink-0 rounded-full",
-            attempts === null ? "bg-brand" : "bg-transparent",
+            outcome.kind === "unfinished" ? "bg-brand" : "bg-transparent",
           )}
           aria-hidden
         />
-        {attempts === null && (
+        {outcome.kind === "unfinished" && (
           <span className="sr-only">{t("archive.notPlayed")}</span>
         )}
 
@@ -184,10 +164,16 @@ function ArchiveRow({
           <p className="truncate font-serif text-sm text-on-surface">
             {constraintLabels.join(" · ")}
           </p>
-          {attempts !== null && (
+          {outcome.kind === "completed" && (
             <span className="flex items-center gap-1 text-xs text-on-surface-variant">
               <Check size={12} className="text-brand" aria-hidden />
-              {t("archive.completed", { attempts })}
+              {t("archive.completed", { attempts: outcome.attempts })}
+            </span>
+          )}
+          {outcome.kind === "givenUp" && (
+            <span className="flex items-center gap-1 text-xs text-on-surface-variant">
+              <Flag size={12} aria-hidden />
+              {t("archive.givenUp")}
             </span>
           )}
         </div>

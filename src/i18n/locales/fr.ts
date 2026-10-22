@@ -334,6 +334,7 @@ export const fr = {
     empty: "Aucune grille passée disponible pour le moment.",
     completed: "{attempts} essais",
     notPlayed: "Jamais jouée",
+    givenUp: "Abandon",
   },
   training: {
     eyebrow: "Entraînement",
@@ -343,11 +344,6 @@ export const fr = {
     unlimitedLives: "Vies illimitées",
     restart: "Recommencer",
     giveUp: "Abandonner",
-    giveUpTitle: "Abandonner la grille\u00A0?",
-    giveUpBody:
-      "La partie s'arrête\u00A0: tes cases remplies comptent au score, puis tu découvres les réponses. Tu pourras toujours recommencer la grille.",
-    giveUpConfirm: "Abandonner",
-    giveUpCancel: "Continuer à jouer",
     backToList: "Retour à l'entraînement",
     resultDialogDescription:
       "Ton résultat d'entraînement : cases remplies, bonus de rareté et nombre d'essais.",

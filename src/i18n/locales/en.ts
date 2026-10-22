@@ -324,6 +324,7 @@ export const en = {
     empty: "No past grid available yet.",
     completed: "{attempts} attempts",
     notPlayed: "Never played",
+    givenUp: "Given up",
   },
   training: {
     eyebrow: "Practice",
@@ -333,11 +334,6 @@ export const en = {
     unlimitedLives: "Unlimited lives",
     restart: "Restart",
     giveUp: "Give up",
-    giveUpTitle: "Give up this grid?",
-    giveUpBody:
-      "The game ends: your filled cells count toward the score, then you see the answers. You can always restart the grid.",
-    giveUpConfirm: "Give up",
-    giveUpCancel: "Keep playing",
     backToList: "Back to practice",
     resultDialogDescription:
       "Your practice result: filled cells, rarity bonus and number of attempts.",
