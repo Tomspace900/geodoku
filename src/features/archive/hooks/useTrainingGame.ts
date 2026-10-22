@@ -3,7 +3,7 @@ import { useQuery } from "convex/react";
 import { useCallback, useEffect, useReducer, useRef } from "react";
 import type { ConstraintId } from "@/features/game/logic/constraints";
 import { evaluateGuess } from "@/features/game/logic/guessEvaluation";
-import { failedAttemptCount } from "@/features/game/logic/lives";
+import { failedAttemptCount, isGivenUp } from "@/features/game/logic/lives";
 import { createInitialState, gameReducer } from "@/features/game/logic/reducer";
 import {
   type SanitizedPersistedGame,
@@ -107,6 +107,7 @@ export function useTrainingGame(date: string) {
       outcome: state.status,
       filled_cells: filledCells,
       failed_attempts: failedAttemptCount(state.lives),
+      given_up: isGivenUp(state),
     });
   }, [state.date, state.status, state.cells, state.lives]);
 
@@ -130,6 +131,10 @@ export function useTrainingGame(date: string) {
       restart: true,
     });
   }, [grid, today, posthog]);
+
+  const giveUp = useCallback(() => {
+    dispatch({ type: "giveUp" });
+  }, []);
 
   // Purement local : le verdict vient de `validAnswers`, déjà livré au client.
   const submitGuess = useCallback(
@@ -162,6 +167,7 @@ export function useTrainingGame(date: string) {
     selectCell,
     submitGuess,
     restart,
+    giveUp,
     isLoading: grid === undefined,
     hasGrid: !!grid,
     validAnswers: grid?.validAnswers ?? {},

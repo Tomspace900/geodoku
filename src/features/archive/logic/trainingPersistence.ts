@@ -1,4 +1,4 @@
-import { failedAttemptCount } from "@/features/game/logic/lives";
+import { failedAttemptCount, isGivenUp } from "@/features/game/logic/lives";
 import { isReplayableDate } from "@/features/game/logic/replayWindow";
 import type { Cell, CellKey, GameState } from "@/features/game/types";
 import { STORAGE_KEYS, safeGet, safeSet } from "@/lib/storage";
@@ -19,6 +19,8 @@ export type PersistedTrainingGame = {
   date: string;
   cells: Record<CellKey, Cell>;
   failedAttempts: number;
+  /** Absent des parties enregistrées avant l'abandon (#148) : vaut `false`. */
+  givenUp?: boolean;
 };
 
 type PersistedTrainingStore = {
@@ -87,6 +89,7 @@ export function saveTrainingGame(state: GameState, today: string): void {
       date: state.date,
       cells: state.cells,
       failedAttempts: failedAttemptCount(state.lives),
+      givenUp: isGivenUp(state),
     },
   ]);
 }

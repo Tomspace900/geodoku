@@ -166,7 +166,12 @@ export function sanitizePersistedForGrid(
  * un compteur d'essais entier positif.
  */
 export function sanitizeTrainingGame(
-  input: { date: string; cells: unknown; failedAttempts: unknown },
+  input: {
+    date: string;
+    cells: unknown;
+    failedAttempts: unknown;
+    givenUp?: unknown;
+  },
   validAnswers: Record<string, string[]>,
 ): SanitizedPersistedGame | null {
   if (typeof input.date !== "string" || input.date.length === 0) return null;
@@ -192,11 +197,15 @@ export function sanitizeTrainingGame(
     new Set(usedCodes),
   );
 
+  // L'abandon ne se lit pas dans les cases : c'est le seul fait persisté en plus.
+  // Il ne transforme qu'une partie encore en cours, jamais une victoire.
+  const status = canonicalStatus(usedCodes.length, lives, canonicalCells);
+
   return {
     date: input.date,
     cells: canonicalCells,
     lives,
-    status: canonicalStatus(usedCodes.length, lives, canonicalCells),
+    status: status === "playing" && input.givenUp === true ? "lost" : status,
     endRecorded: false,
     rated: false,
   };

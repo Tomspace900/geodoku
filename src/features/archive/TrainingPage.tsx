@@ -22,6 +22,7 @@ import { useLocale, useT } from "@/i18n/LocaleContext";
 import { todayUTC } from "@/lib/dates";
 import { cn } from "@/lib/utils";
 import { api } from "../../../convex/_generated/api";
+import { GiveUpLink } from "./components/GiveUpLink";
 import { TrainingResultScreen } from "./components/TrainingResultScreen";
 import { useTrainingGame } from "./hooks/useTrainingGame";
 import { isDailyGameFinished } from "./logic/dailyGate";
@@ -111,6 +112,7 @@ function TrainingBoard({ date }: { date: string }) {
     selectCell,
     submitGuess,
     restart,
+    giveUp,
     isLoading,
     hasGrid,
     validAnswers,
@@ -166,19 +168,22 @@ function TrainingBoard({ date }: { date: string }) {
               onCellClick={solutionDrawer.openCell}
             />
           ) : (
-            <GameGrid
-              state={state}
-              distribution={distribution ?? undefined}
-              onCellClick={selectCell}
-              onHeaderClick={(id) => sourceToast.onHeaderClick(id)}
-            />
+            <>
+              <GameGrid
+                state={state}
+                distribution={distribution ?? undefined}
+                onCellClick={selectCell}
+                onHeaderClick={(id) => sourceToast.onHeaderClick(id)}
+              />
+              <GiveUpLink onConfirm={giveUp} />
+            </>
           )}
 
           {/* Même disposition que la vue solution du quotidien : surface de
-              lecture, donc aucun primaire — un secondaire pour l'action de la
+              lecture, donc aucun primaire : un secondaire pour l'action de la
               page, puis un renvoi tertiaire. Largeur bornée (un bouton qui court
-              sur 672 px se lit mal). Pas de « Autre grille » ici : le retour aux
-              archives est déjà en permanence en haut de page. */}
+              sur 672 px se lit mal). Pas de « Autre grille » ici : le retour à
+              l'entraînement est déjà en permanence en haut de page. */}
           {isFinished && resultDismissed && (
             <div className="mx-auto flex w-full max-w-md flex-col gap-2">
               <Button

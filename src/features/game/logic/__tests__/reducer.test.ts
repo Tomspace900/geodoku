@@ -387,6 +387,34 @@ describe("gameReducer — mode entraînement", () => {
   });
 });
 
+describe("gameReducer — giveUp", () => {
+  it("termine une partie d'entraînement en défaite, cases remplies conservées", () => {
+    let state = createInitialState(
+      "training",
+      "2024-01-01",
+      ["continent_europe", "continent_asia", "continent_africa"],
+      ["water_landlocked", "water_island", "borders_min_5"],
+    );
+    state = gameReducer(state, {
+      type: "guessSuccess",
+      cell: { row: 0, col: 0 },
+      countryCode: "FRA",
+      validAnswers: emptyValidAnswers,
+    });
+    state = gameReducer(state, { type: "giveUp" });
+    expect(state.status).toBe("lost");
+    expect(state.cells["0,0"]).toEqual({
+      status: "filled",
+      countryCode: "FRA",
+    });
+  });
+
+  it("n'existe pas sur la grille du jour", () => {
+    const state = gameReducer(freshState(), { type: "giveUp" });
+    expect(state.status).toBe("playing");
+  });
+});
+
 describe("gameReducer — rehydrate", () => {
   function makePersistedGame(): SanitizedPersistedGame {
     return {

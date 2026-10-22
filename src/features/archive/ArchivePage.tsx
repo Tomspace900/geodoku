@@ -52,7 +52,8 @@ function completedAttempts(
   game: PersistedTrainingGame | undefined,
 ): number | null {
   if (!game) return null;
-  if (hasEmptyCell(game.cells)) return null;
+  // Une partie abandonnée est terminée, même avec des cases vides.
+  if (hasEmptyCell(game.cells) && game.givenUp !== true) return null;
   return game.failedAttempts;
 }
 

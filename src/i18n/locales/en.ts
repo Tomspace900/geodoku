@@ -211,7 +211,7 @@ export const en = {
     scoreTitle: "Scoring",
     trainingTitle: "Practice",
     trainingBody:
-      "Once today's grid is done, the previous seven grids stay playable, with unlimited attempts. A game only ends if a cell can no longer be filled. Practice is scored out of 900: no lives, so no lives bonus.",
+      "Once today's grid is done, the previous seven grids stay playable, with unlimited attempts. A game ends when a cell can no longer be filled, or when you give up. Practice is scored out of 900: no lives, so no lives bonus.",
     faqTitle: "Frequently asked questions",
     faqPriceQ: "How much does Geodoku cost?",
     faqPriceA: "Nothing. The game is free, with no account and no ads.",
@@ -330,6 +330,12 @@ export const en = {
     attempts: "{count} attempts",
     unlimitedLives: "Unlimited lives",
     restart: "Restart",
+    giveUp: "Give up",
+    giveUpTitle: "Give up this grid?",
+    giveUpBody:
+      "The game ends: your filled cells count toward the score, then you see the answers. You can always restart the grid.",
+    giveUpConfirm: "Give up",
+    giveUpCancel: "Keep playing",
     backToList: "Back to practice",
     resultDialogDescription:
       "Your practice result: filled cells, rarity bonus and number of attempts.",

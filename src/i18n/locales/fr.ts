@@ -217,7 +217,7 @@ export const fr = {
     scoreTitle: "Le score",
     trainingTitle: "L'entraînement",
     trainingBody:
-      "Une fois la grille du jour terminée, les sept grilles précédentes restent jouables, sans limite d'essais. La partie ne s'arrête que si une case devient impossible à remplir. Le score y est sur 900\u00A0: sans vies, pas de bonus de vies.",
+      "Une fois la grille du jour terminée, les sept grilles précédentes restent jouables, sans limite d'essais. La partie s'arrête quand une case devient impossible à remplir, ou si tu abandonnes. Le score y est sur 900\u00A0: sans vies, pas de bonus de vies.",
     faqTitle: "Questions fréquentes",
     faqPriceQ: "Combien coûte Geodoku\u00A0?",
     faqPriceA: "Rien. Le jeu est gratuit, sans compte et sans publicité.",
@@ -340,6 +340,12 @@ export const fr = {
     attempts: "{count} essais",
     unlimitedLives: "Vies illimitées",
     restart: "Recommencer",
+    giveUp: "Abandonner",
+    giveUpTitle: "Abandonner la grille\u00A0?",
+    giveUpBody:
+      "La partie s'arrête\u00A0: tes cases remplies comptent au score, puis tu découvres les réponses. Tu pourras toujours recommencer la grille.",
+    giveUpConfirm: "Abandonner",
+    giveUpCancel: "Continuer à jouer",
     backToList: "Retour à l'entraînement",
     resultDialogDescription:
       "Ton résultat d'entraînement : cases remplies, bonus de rareté et nombre d'essais.",

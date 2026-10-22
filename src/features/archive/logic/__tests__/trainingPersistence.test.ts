@@ -65,6 +65,18 @@ describe("saveTrainingGame / loadTrainingGame", () => {
     expect(games[0].failedAttempts).toBe(6);
   });
 
+  it("retient l'abandon, qui ne se lit pas dans les cases", () => {
+    const state = trainingState("2026-07-24");
+    state.status = "lost";
+    saveTrainingGame(state, TODAY);
+    expect(loadTrainingGame("2026-07-24", TODAY)?.givenUp).toBe(true);
+  });
+
+  it("ne marque pas abandonnée une partie en cours", () => {
+    saveTrainingGame(trainingState("2026-07-24"), TODAY);
+    expect(loadTrainingGame("2026-07-24", TODAY)?.givenUp).toBe(false);
+  });
+
   it("ne persiste rien tant que la grille n'est pas chargée (date vide)", () => {
     saveTrainingGame(trainingState(""), TODAY);
     expect(loadTrainingGames(TODAY)).toHaveLength(0);

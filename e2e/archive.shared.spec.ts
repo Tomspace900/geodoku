@@ -157,6 +157,37 @@ test("counts a wrong guess as an attempt without ending the game", async ({
   expect(training).toContain('"failedAttempts":6');
 });
 
+test("gives up a practice grid after confirmation, and stays finished on reload", async ({
+  page,
+}) => {
+  await seedFinishedDaily(page);
+  const solution = solveGrid(target.validAnswers);
+  if (!solution) throw new Error("Invariant violated: grid is not solvable");
+
+  await page.goto(`/en/archive/${target.date}`);
+  await waitForGrid(page);
+  await fillCell(page, 1, 1, solution["0,0"].name);
+
+  await page.getByRole("button", { name: "Give up" }).click();
+  const confirm = page.getByRole("dialog", { name: "Give up this grid?" });
+  await confirm.getByRole("button", { name: "Give up" }).click();
+
+  // La partie se termine comme après un blocage : écran de résultat.
+  const result = page.getByRole("dialog").filter({
+    hasText: "Your practice result",
+  });
+  await expect(result).toBeVisible();
+
+  const training = await page.evaluate(
+    (key) => localStorage.getItem(key),
+    TRAINING_STORAGE_KEY,
+  );
+  expect(training).toContain('"givenUp":true');
+
+  await page.reload();
+  await expect(result).toBeVisible();
+});
+
 // ── 4. Dates futures ──────────────────────────────────────────────────────────
 
 test("shows the time-traveller screen for a future date", async ({ page }) => {
