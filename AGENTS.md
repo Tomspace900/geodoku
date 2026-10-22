@@ -409,10 +409,7 @@ trivial peut s'en passer.
   tableau se manipule avec le `gh` **local** de Thomas (scope `project`, posé une fois
   par `gh auth refresh -s project`), depuis une session locale ou une session Remote
   Control sur son Mac. Une session cloud sans accès au Mac le dit au lieu de sauter
-  l'étape. Le mode de permission de Claude Code refuse par défaut ces écritures vers
-  GitHub : elles sont autorisées dans le `~/.claude/settings.json` du Mac (`.claude/`
-  est gitignoré), par `Bash(gh project item-edit:*)`, `Bash(gh project item-list:*)`,
-  `Bash(gh issue close:*)` et `Bash(gh issue edit:*)`. Identifiants :
+  l'étape. Identifiants :
 
   ```bash
   # Project « Geodoku » n°1 : PVT_kwHOBW96fc4BmVUK
