@@ -12,7 +12,7 @@ export const fr = {
     typeAtLeast: "Saisis au moins\u00A03 caractères",
     noResults: "Aucun pays trouvé.",
     rarityEvolvesHint: "Les raretés évoluent au fil des parties du jour.",
-    constraintSourceConvention: "Classification Geodoku",
+    constraintSourceConvention: "arbitrage Geodoku",
     constraintSourcePrefix: "Source :",
     constraintSourcesPrefix: "Sources :",
     feedbackQuestion: "Comment as-tu trouvé la grille\u00A0?",

@@ -10,7 +10,7 @@ export const en = {
     typeAtLeast: "Type at least\u00A03 characters",
     noResults: "No country found.",
     rarityEvolvesHint: "Rarities keep shifting as more people play today.",
-    constraintSourceConvention: "Geodoku classification",
+    constraintSourceConvention: "Geodoku's call",
     constraintSourcePrefix: "Source:",
     constraintSourcesPrefix: "Sources:",
     feedbackQuestion: "How did you find this grid?",
