@@ -393,18 +393,21 @@ trivial peut s'en passer.
   2. **Début** : « En cours », et l'epic aussi si c'est sa première sous-issue.
   3. **Arrivée sur `develop`** : fermer l'issue à la main (`gh issue close N --comment
      "<hash>"`, car `Closes #N` ne ferme qu'au merge dans `main`, la branche par
-     défaut), **puis** la passer en « Sur develop » (aucun workflow ne le fait). Jamais
+     défaut) ; le workflow « Item closed » la passe en « Sur develop ». C'est le seul
+     moment qu'une session cloud, sans accès au Project, couvre entièrement. Jamais
      l'epic sans l'accord de Thomas.
   4. **Merge `develop → main`** : passer en « En prod » tout ce qui est « Sur develop »
-     et les issues que la PR ferme. Une epic qui passe en « En prod » est fermée par le
-     workflow. La PR `develop → main` porte `Closes #<epic>`.
+     et les issues que la PR ferme (ordre ci-dessous : fermer, attendre, poser le
+     statut, relire). La PR `develop → main` porte `Closes #<epic>`.
 - **Workflows intégrés du Project** (réglés dans l'interface web, l'API ne les montre
   pas) : « Item added » → **Prêt** (colonne par défaut : une idée vague oubliée en
-  « Prêt » se voit, une issue prête oubliée en Backlog disparaît) ; « Auto-close issue »
-  ferme une issue passée en **En prod**. « Item closed » est **désactivé** : il renvoyait
-  en « Sur develop » toute issue fermée, y compris celles qu'« Auto-close » ferme en
-  prod et celles qu'on abandonne (constaté le 2026-10-22 sur #38 et #67). Une fermeture
-  n'est donc jamais un statut : on pose toujours le statut à la main.
+  « Prêt » se voit, une issue prête oubliée en Backlog disparaît) ; « Item closed » →
+  **Sur develop** ; « Auto-close issue » ferme une issue passée en **En prod**.
+  « Item closed » s'applique à **toute** fermeture, y compris celle d'« Auto-close » en
+  prod et celle d'un abandon (constaté le 2026-10-22 sur #38 et #67). D'où la règle :
+  pour « En prod » ou « Abandonné », **fermer d'abord, attendre une quinzaine de
+  secondes, poser le statut, puis relire**. Le passage en prod se fait toujours depuis
+  le `gh` local, qui peut corriger.
   Abandon : fermer en « not planned », puis passer en « Abandonné ».
 - **Une issue de mise en prod** (`release`) ne sert que s'il reste des gestes manuels
   après le déploiement (régénérer le pool, Search Console). Sinon, la PR `develop → main`
