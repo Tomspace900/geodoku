@@ -36,7 +36,6 @@ import { cn } from "@/lib/utils";
 const ERROR_KEY_MAP: Record<string, TKey> = {
   already_used: "error.already_used",
   invalid_country: "error.invalid_country",
-  unavailable: "error.unavailable",
 };
 
 const FAILED_CONSTRAINT_CLASS =
@@ -44,8 +43,7 @@ const FAILED_CONSTRAINT_CLASS =
 
 type SubmitResult =
   | { kind: "accepted" }
-  | { kind: "domain_rejected"; reason: string; gameOver: boolean }
-  | { kind: "unavailable" };
+  | { kind: "domain_rejected"; reason: string; gameOver: boolean };
 
 type LifeFlash = {
   key: number;
@@ -219,10 +217,6 @@ export function GuessModal({
     if (!result) return;
     if (result.kind === "accepted") {
       handleClose("submitted");
-      return;
-    }
-    if (result.kind === "unavailable") {
-      showError("unavailable");
       return;
     }
     if (result.gameOver) {

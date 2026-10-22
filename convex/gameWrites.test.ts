@@ -217,6 +217,63 @@ describe("today guess writes", () => {
     });
   });
 
+  it("refuses a guess addressed to another day's grid without counting it", async () => {
+    const backend = createBackend();
+    await seedTodayGrid(backend);
+
+    const result = await backend.mutation(api.guesses.submitTodayGuess, {
+      operationId: operationId(20),
+      cellKey: "0,0",
+      countryCode: "FRA",
+      clientId: CLIENT_ID,
+      date: "2000-01-01",
+    });
+
+    expect({ result, state: await guessState(backend) }).toEqual({
+      result: { kind: "domain_rejected", reason: "date_mismatch" },
+      state: {
+        guesses: [],
+        totalGuesses: 0,
+        failedAttempts: 0,
+        receiptCount: 0,
+      },
+    });
+  });
+
+  it("returns the receipt of a guess counted before midnight when replayed after", async () => {
+    const backend = createBackend();
+    await seedTodayGrid(backend);
+    const counted = {
+      kind: "accepted" as const,
+      count: 1,
+      total: 1,
+      rarity: 1,
+    };
+    await backend.run(async (ctx) => {
+      await ctx.db.insert("operationReceipts", {
+        operationId: operationId(21),
+        operationType: "submit_guess",
+        date: "2000-01-01",
+        canonicalPayload: JSON.stringify({
+          cellKey: "0,0",
+          countryCode: "FRA",
+        }),
+        result: counted,
+        expiresAt: Date.now() + 1_000,
+      });
+    });
+
+    const result = await backend.mutation(api.guesses.submitTodayGuess, {
+      operationId: operationId(21),
+      cellKey: "0,0",
+      countryCode: "FRA",
+      clientId: CLIENT_ID,
+      date: "2000-01-01",
+    });
+
+    expect(result).toEqual(counted);
+  });
+
   it("rejects recording a snapshot answer as a failed guess", async () => {
     const backend = createBackend();
     await seedTodayGrid(backend);

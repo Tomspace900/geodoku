@@ -250,8 +250,6 @@ export const en = {
     wrong_col: "This country does not match the {constraint} constraint.",
     wrong_constraints:
       "This country matches neither {rowConstraint} nor {colConstraint}.",
-    unavailable:
-      "We couldn't check this country right now. Please try again in a moment.",
     unknown: "Unknown error.",
   },
   errorScreen: {
