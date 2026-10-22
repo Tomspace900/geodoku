@@ -393,8 +393,7 @@ trivial peut s'en passer.
   2. **Début** : « En cours », et l'epic aussi si c'est sa première sous-issue.
   3. **Arrivée sur `develop`** : fermer l'issue à la main (`gh issue close N --comment
      "<hash>"`, car `Closes #N` ne ferme qu'au merge dans `main`, la branche par
-     défaut) ; le workflow « Item closed » la passe en « Sur develop ». C'est le seul
-     moment qu'une session cloud, sans accès au Project, couvre entièrement. Jamais
+     défaut) ; le workflow « Item closed » la passe en « Sur develop ». Jamais
      l'epic sans l'accord de Thomas.
   4. **Merge `develop → main`** : passer en « En prod » tout ce qui est « Sur develop »
      et les issues que la PR ferme (ordre ci-dessous : fermer, attendre, poser le
@@ -429,8 +428,11 @@ trivial peut s'en passer.
     --field-id PVTSSF_lAHOBW96fc4BmVUKzhk-x9g --single-select-option-id 47fc9ee4
   ```
 
-- **Commits** : on empile les commits directement sur `develop`, sans PR. Une session
-  cloud fait de même (un commit sur `develop`), et n'ouvre de PR que vers `main`.
+- **Commits** : le code se fait sur le Mac de Thomas, commits à son nom empilés sur
+  son `develop` local, sans PR, puis poussés par lui ou par la session locale avec son
+  accord. Une session cloud ne commite ni ne pousse jamais sur `develop` : elle ne crée
+  une branche `claude/…` que sur demande explicite, que Thomas intègre ensuite en local
+  (squash ou cherry-pick). Les PR ne vont que de `develop` vers `main`.
 - **Plans longs** : un plan d'exécution peut vivre dans `docs/` le temps du chantier,
   avec son issue comme point d'entrée. À la mise en prod, ses décisions durables
   passent dans `AGENTS.md`, `content/constraints/SOURCES.md` ou
