@@ -177,7 +177,7 @@ export const fr = {
       "J'accueille toutes les suggestions avec plaisir. \u00C9cris-moi \u00E0",
   },
   seo: {
-    homeTitle: "Geodoku — Le sudoku de géographie quotidien",
+    homeTitle: "Geodoku, le sudoku de géographie quotidien",
     privacyTitle: "Confidentialité · Geodoku",
     changelogTitle: "Nouveautés · Geodoku",
     aboutTitle: "À propos de Geodoku : règles, score et questions fréquentes",
@@ -189,7 +189,7 @@ export const fr = {
       "Ce que Geodoku collecte, et ce qu'il ne collecte pas : pas de compte, pas de publicité, le strict minimum pour faire tourner le jeu.",
     changelogDescription:
       "Les nouveautés de Geodoku, mise à jour après mise à jour : nouvelles contraintes, fonctionnalités et corrections.",
-    imageAlt: "Geodoku — une grille 3×3 de sudoku géographique",
+    imageAlt: "Geodoku, une grille 3×3 de sudoku géographique",
     // Données structurées (JSON-LD) de l'accueil, lues par les moteurs.
     gameDescription:
       "Un sudoku de géographie. Chaque jour, une grille 3×3 dont chaque ligne et chaque colonne impose une contrainte géographique\u00A0: trouve un pays qui valide les deux.",
@@ -466,7 +466,7 @@ export const fr = {
     history_sovereignty_since_1990: "Indépendance récente (depuis 1990)",
     history_from_france: "Anciennement sous domination française",
     history_from_united_kingdom: "Anciennement sous domination britannique",
-    // Archivées — non générées, conservées pour rejouer d'anciennes grilles.
+    // Archivées : non générées, conservées pour rejouer d'anciennes grilles.
     nature_holocene_volcano: "Possède un volcan actif ou récent",
     area_gt_500k: "Grand pays (>500\u00A0000\u00A0km²)",
     area_lt_1k: "Micro-État (<1\u00A0000\u00A0km²)",

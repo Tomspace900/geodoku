@@ -52,7 +52,7 @@ describe("applyPageHead", () => {
 
   it("traduit le texte alternatif de l'image d'aperçu", () => {
     expect(applyPageHead(template, pageMeta("/en"))).toContain(
-      '<meta property="og:image:alt" content="Geodoku — a 3×3 geography sudoku grid" />',
+      '<meta property="og:image:alt" content="Geodoku, a 3×3 geography sudoku grid" />',
     );
   });
 

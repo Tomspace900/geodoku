@@ -172,7 +172,7 @@ export const en = {
     contactBodyPre: "I welcome every suggestion. Write to me at",
   },
   seo: {
-    homeTitle: "Geodoku — The daily geography grid",
+    homeTitle: "Geodoku, the daily geography grid",
     privacyTitle: "Privacy · Geodoku",
     changelogTitle: "What's new · Geodoku",
     aboutTitle: "About Geodoku: rules, scoring and FAQ",
@@ -184,7 +184,7 @@ export const en = {
       "What Geodoku collects and what it doesn't: no account, no ads, just the bare minimum to run the game.",
     changelogDescription:
       "What's new in Geodoku, update after update: new constraints, features and fixes.",
-    imageAlt: "Geodoku — a 3×3 geography sudoku grid",
+    imageAlt: "Geodoku, a 3×3 geography sudoku grid",
     // Structured data (JSON-LD) for the home page, read by search engines.
     gameDescription:
       "A geography sudoku. Every day, a 3×3 grid where each row and each column sets a geographic constraint: find a country that meets both.",
@@ -311,7 +311,7 @@ export const en = {
     trainingIntro: "In training, the score adds up two bonuses, out of {max}.",
     trainingIntroMax: "900 points",
     trainingNoLives:
-      "No lives in training, so no life bonus — only the grid and rarity count.",
+      "No lives in training, so no life bonus: only the grid and rarity count.",
   },
   archive: {
     eyebrow: "Training · Unlimited lives",
@@ -447,7 +447,7 @@ export const en = {
     history_sovereignty_since_1990: "Recent independence (since 1990)",
     history_from_france: "Formerly under French rule",
     history_from_united_kingdom: "Formerly under British rule",
-    // Archived — no longer generated, kept so past grids stay replayable.
+    // Archived: no longer generated, kept so past grids stay replayable.
     nature_holocene_volcano: "Has an active or recent volcano",
     area_gt_500k: "Large country (>500,000\u00A0km²)",
     area_lt_1k: "Micro-state (<1,000\u00A0km²)",

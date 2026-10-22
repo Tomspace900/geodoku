@@ -38,16 +38,16 @@ export const SOURCES = {
   // `validateSourceVintages` ; `build:countries` imprime la valeur à reporter.
   rest_countries_memberships: {
     name: {
-      fr: "REST Countries — adhésions",
-      en: "REST Countries — memberships",
+      fr: "REST Countries : adhésions",
+      en: "REST Countries: memberships",
     },
     url: "https://restcountries.com/",
     vintage: { fr: "au 14 octobre 2026", en: "as of 14 October 2026" },
   },
   wikidata_capital_labels: {
     name: {
-      fr: "Wikidata — libellés des capitales",
-      en: "Wikidata — capital labels",
+      fr: "Wikidata : libellés des capitales",
+      en: "Wikidata: capital labels",
     },
     url: "https://www.wikidata.org/",
     vintage: {
@@ -57,8 +57,8 @@ export const SOURCES = {
   },
   wikidata_highest_point_labels: {
     name: {
-      fr: "Wikidata — libellés des points culminants",
-      en: "Wikidata — highest point labels",
+      fr: "Wikidata : libellés des points culminants",
+      en: "Wikidata: highest point labels",
     },
     url: "https://www.wikidata.org/",
     vintage: {
@@ -68,32 +68,32 @@ export const SOURCES = {
   },
   cia_factbook_elevation: {
     name: {
-      fr: "CIA World Factbook — Altitude",
-      en: "CIA World Factbook — Elevation",
+      fr: "CIA World Factbook : Altitude",
+      en: "CIA World Factbook: Elevation",
     },
     url: "https://www.cia.gov/the-world-factbook/field/elevation/",
     vintage: null,
   },
   world_bank_gdp_per_capita: {
     name: {
-      fr: "Banque mondiale — PIB par habitant",
-      en: "World Bank — GDP per capita",
+      fr: "Banque mondiale : PIB par habitant",
+      en: "World Bank: GDP per capita",
     },
     url: "https://data.worldbank.org/indicator/NY.GDP.PCAP.CD",
     vintage: { fr: "2022–2025", en: "2022–2025" },
   },
   world_bank_life_expectancy: {
     name: {
-      fr: "Banque mondiale — Espérance de vie à la naissance",
-      en: "World Bank — Life expectancy at birth",
+      fr: "Banque mondiale : Espérance de vie à la naissance",
+      en: "World Bank: Life expectancy at birth",
     },
     url: "https://data.worldbank.org/indicator/SP.DYN.LE00.IN",
     vintage: { fr: "2024", en: "2024" },
   },
   undp_hdr: {
     name: {
-      fr: "PNUD — Indice de développement humain",
-      en: "UNDP — Human Development Index",
+      fr: "PNUD : Indice de développement humain",
+      en: "UNDP: Human Development Index",
     },
     url: "https://hdr.undp.org/data-center/documentation-and-downloads",
     vintage: {
@@ -102,7 +102,7 @@ export const SOURCES = {
     },
   },
   un_flags: {
-    name: { fr: "Drapeaux officiels — ONU", en: "Official flags — UN" },
+    name: { fr: "Drapeaux officiels (ONU)", en: "Official flags (UN)" },
     url: "https://www.un.org/en/about-us/member-states",
     vintage: null,
   },
@@ -112,7 +112,7 @@ export const SOURCES = {
     vintage: { fr: "au 15 janvier 2026", en: "as of 15 January 2026" },
   },
   fifa_world_cup: {
-    name: { fr: "FIFA — Coupe du monde", en: "FIFA — World Cup" },
+    name: { fr: "FIFA : Coupe du monde", en: "FIFA: World Cup" },
     url: "https://www.fifa.com/fifaplus/en/tournaments/mens/worldcup",
     // Dernière édition tenue du dataset `eventEditions` (gardé).
     vintage: {
@@ -122,8 +122,8 @@ export const SOURCES = {
   },
   ioc_olympic_hosts: {
     name: {
-      fr: "CIO — villes hôtes olympiques",
-      en: "IOC — Olympic host cities",
+      fr: "CIO : villes hôtes olympiques",
+      en: "IOC: Olympic host cities",
     },
     url: "https://www.olympics.com/ioc/olympic-games",
     // Dernière édition tenue, été et hiver confondus (`eventEditions`, gardé).
@@ -134,8 +134,8 @@ export const SOURCES = {
   },
   cia_factbook_government_type: {
     name: {
-      fr: "CIA World Factbook — Régime",
-      en: "CIA World Factbook — Government type",
+      fr: "CIA World Factbook : Régime",
+      en: "CIA World Factbook: Government type",
     },
     url: "https://www.cia.gov/the-world-factbook/field/government-type/",
     // Dernière mise à jour des données du miroir figé `factbook.json` (commit
@@ -144,16 +144,16 @@ export const SOURCES = {
   },
   cia_factbook_independence: {
     name: {
-      fr: "CIA World Factbook — Indépendance",
-      en: "CIA World Factbook — Independence",
+      fr: "CIA World Factbook : Indépendance",
+      en: "CIA World Factbook: Independence",
     },
     url: "https://www.cia.gov/the-world-factbook/field/independence/",
     vintage: null,
   },
   cia_factbook_background: {
     name: {
-      fr: "CIA World Factbook — Contexte historique",
-      en: "CIA World Factbook — Background",
+      fr: "CIA World Factbook : Contexte historique",
+      en: "CIA World Factbook: Background",
     },
     url: "https://www.cia.gov/the-world-factbook/field/background/",
     vintage: null,
@@ -168,8 +168,8 @@ export const SOURCES = {
   },
   cia_factbook_nationality: {
     name: {
-      fr: "CIA World Factbook — Nationalité",
-      en: "CIA World Factbook — Nationality",
+      fr: "CIA World Factbook : Nationalité",
+      en: "CIA World Factbook: Nationality",
     },
     url: "https://www.cia.gov/the-world-factbook/field/nationality/",
     vintage: null,
@@ -181,8 +181,8 @@ export const SOURCES = {
   },
   iho_s23: {
     name: {
-      fr: "IHO S-23 — Limites des océans et des mers",
-      en: "IHO S-23 — Limits of Oceans and Seas",
+      fr: "IHO S-23 : Limites des océans et des mers",
+      en: "IHO S-23: Limits of Oceans and Seas",
     },
     url: "https://iho.int/uploads/user/pubs/standards/s-23/S-23_Ed3_1953_EN.pdf",
     vintage: null,
@@ -202,16 +202,16 @@ export const SOURCES = {
   },
   un_sdg_mountain_area: {
     name: {
-      fr: "ODD 15.4.2 — Aire montagneuse",
-      en: "SDG 15.4.2 — Mountain area",
+      fr: "ODD 15.4.2 : Aire montagneuse",
+      en: "SDG 15.4.2: Mountain area",
     },
     url: "https://unstats.un.org/sdgs/metadata/?Text=&Goal=15&Target=15.4",
     vintage: { fr: "2021", en: "2021" },
   },
   fao_forest_resources: {
     name: {
-      fr: "Banque mondiale (FAO) — Surface forestière",
-      en: "World Bank (FAO) — Forest area",
+      fr: "Banque mondiale (FAO) : Surface forestière",
+      en: "World Bank (FAO): Forest area",
     },
     url: "https://data.worldbank.org/indicator/AG.LND.FRST.ZS",
     vintage: { fr: "2023", en: "2023" },
@@ -223,8 +223,8 @@ export const SOURCES = {
   },
   usda_fas_coffee: {
     name: {
-      fr: "USDA FAS — Coffee: World Markets and Trade",
-      en: "USDA FAS — Coffee: World Markets and Trade",
+      fr: "Coffee: World Markets and Trade (USDA FAS)",
+      en: "Coffee: World Markets and Trade (USDA FAS)",
     },
     url: "https://apps.fas.usda.gov/psdonline/circulars/coffee.pdf",
     vintage: {
@@ -233,12 +233,12 @@ export const SOURCES = {
     },
   },
   eia_crude_oil: {
-    name: { fr: "U.S. EIA — Pétrole brut", en: "U.S. EIA — Crude oil" },
+    name: { fr: "U.S. EIA : Pétrole brut", en: "U.S. EIA: Crude oil" },
     url: "https://www.eia.gov/international/data/world",
     vintage: { fr: "2025", en: "2025" },
   },
   eia_natural_gas: {
-    name: { fr: "U.S. EIA — Gaz naturel", en: "U.S. EIA — Natural gas" },
+    name: { fr: "U.S. EIA : Gaz naturel", en: "U.S. EIA: Natural gas" },
     url: "https://www.eia.gov/international/data/world",
     vintage: { fr: "2024", en: "2024" },
   },
