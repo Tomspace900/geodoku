@@ -96,9 +96,9 @@ export const en = {
     backToGame: "Back to the game",
     entries: {
       stabilityDate: "October 22, 2026",
-      stabilityTitle: "Smoother, even on a bad connection",
+      stabilityTitle: "Small fixes",
       stabilityBody:
-        "The game copes better with a bad connection: a correct country fills its cell right away, without waiting for the server. In practice mode, you can now give up a grid and see its answers. Plus a whole bunch of bug fixes and small improvements.",
+        "A minor update: the game copes better with a bad connection, and in practice mode you can see the answers right away. Plus a few details and some stability work.",
       answerSourcesDate: "October 15, 2026",
       answerSourcesTitle: "Where does the data come from?",
       answerSourcesBody:

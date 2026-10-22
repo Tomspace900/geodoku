@@ -98,9 +98,9 @@ export const fr = {
     backToGame: "Retour au jeu",
     entries: {
       stabilityDate: "22 octobre 2026",
-      stabilityTitle: "Plus fluide, même avec une mauvaise connexion",
+      stabilityTitle: "Petites corrections",
       stabilityBody:
-        "Le jeu tient mieux le coup quand la connexion est mauvaise\u00A0: un bon pays remplit sa case tout de suite, sans attendre le serveur. En entraînement, tu peux désormais abandonner une grille et découvrir ses réponses. Et une bonne floppée de corrections et de petites améliorations en prime.",
+        "Une mise à jour mineure\u00A0: le jeu tient mieux quand la connexion est mauvaise, et en entraînement on peut voir les réponses directement. Plus quelques détails et de la stabilité.",
       answerSourcesDate: "15 octobre 2026",
       answerSourcesTitle: "D'o\u00F9 viennent les donn\u00E9es\u00A0?",
       answerSourcesBody:
