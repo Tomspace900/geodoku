@@ -100,7 +100,7 @@ export const fr = {
       stabilityDate: "22 octobre 2026",
       stabilityTitle: "Petites corrections",
       stabilityBody:
-        "Une mise à jour mineure\u00A0: le jeu tient mieux quand la connexion est mauvaise, et en entraînement on peut voir les réponses directement. Plus quelques détails et de la stabilité.",
+        "Une mise à jour mineure\u00A0: le jeu supporte mieux une mauvaise connexion, et en entraînement tu peux voir les réponses sans finir la grille. Plus quelques détails et de la stabilité.",
       answerSourcesDate: "15 octobre 2026",
       answerSourcesTitle: "D'o\u00F9 viennent les donn\u00E9es\u00A0?",
       answerSourcesBody:

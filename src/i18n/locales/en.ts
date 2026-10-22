@@ -98,7 +98,7 @@ export const en = {
       stabilityDate: "October 22, 2026",
       stabilityTitle: "Small fixes",
       stabilityBody:
-        "A minor update: the game copes better with a bad connection, and in practice mode you can see the answers right away. Plus a few details and some stability work.",
+        "A minor update: the game handles a bad connection better, and in practice mode you can see the answers without finishing the grid. Plus a few details and stability work.",
       answerSourcesDate: "October 15, 2026",
       answerSourcesTitle: "Where does the data come from?",
       answerSourcesBody:
