@@ -331,7 +331,7 @@ Source de vérité détaillée : grep `posthog?.capture` dans le code.
 **Toujours**
 
 - `pnpm lint` et `pnpm test` (aussi exécutés au pre-commit Husky)
-- Issue référencée dans le commit, et sous-issue **fermée à l'arrivée sur `develop`** avec son statut « Sur develop » (cf. §12)
+- Issue référencée dans le commit, **fermée à l'arrivée sur `develop`** (« Sur develop »), et Project à jour aux quatre moments de §12 (création, début, `develop`, prod)
 
 **Selon le périmètre**
 
@@ -367,21 +367,70 @@ Markdown : un bug, une idée ou un chantier sans issue n'est pas suivi. Un corre
 trivial peut s'en passer.
 
 - **Une tâche = une issue**, avec un label de type : `bug`, `feature`, `ux`,
-  `contenu`, `tech`, `admin`, `analytics`, `release`, `idée`. Un gros chantier est
-  une issue `epic` découpée en **sous-issues**, avec un **milestone** s'il avance par
-  lots (refonte du contenu #38 → P4 #42, milestone « P4 — Fiches pays », un lot par
-  sous-issue).
-- **Champs du Project** : `Status` (Backlog · Prêt · En cours · Sur develop · En prod ·
-  Abandonné) et `Priorité` (🔴 Haute · 🟠 Moyenne · 🟢 Basse). Une issue ouverte entre
-  seule dans le Project, en Backlog ; la priorité se pose à la main.
-- **Cycle de vie** : « En cours » au démarrage. Une **sous-issue se ferme dès que son
-  travail arrive sur `develop`** (statut « Sur develop »), à la main : `gh issue close N
-  --comment "<hash>"`, car `Closes #N` ne ferme qu'au merge dans `main`, la branche
-  par défaut. L'**issue principale** du chantier (epic) et son issue de mise en prod
-  restent ouvertes jusqu'à la prod : la PR `develop → main` porte `Closes #<epic>`,
-  puis toutes les sous-issues passent en « En prod ». Le workflow « Item closed » du
-  Project doit donc poser « Sur develop », pas « En prod ». Abandon : fermer en
-  « not planned » et passer en « Abandonné ».
+  `contenu`, `tech`, `admin`, `analytics`, `marketing`, `release`, `idée`. Un gros
+  chantier est une issue `epic` découpée en **sous-issues**, avec un **milestone** s'il
+  avance par lots (refonte du contenu #38 → P4 #42, milestone « P4 — Fiches pays »).
+- **Champs du Project** : `Status` et `Priorité` (🔴 Haute · 🟠 Moyenne · 🟢 Basse).
+  Le tableau n'est utile que s'il est vrai : **tout agent qui crée, commence, livre ou
+  met en prod une issue met son statut à jour dans la même session**, sans attendre
+  qu'on le lui demande.
+
+| Statut | On y met | On en sort |
+| ------ | -------- | ---------- |
+| Backlog | Une idée pas pour tout de suite, pas encore rédigée. Doit rester court. | Quand « Prêt » est vide : on en pioche une, on la rédige, elle passe en « Prêt ». |
+| Prêt | Toute issue bien identifiée, **avec une priorité**. C'est la file de travail, dans laquelle on pioche par priorité. | Au début du travail (branche ou premier commit) : « En cours ». |
+| En cours | Le travail a commencé. Une epic y reste tant que ses sous-issues avancent. | Issue simple ou sous-issue : arrivée sur `develop`. Epic : **uniquement sur feu vert explicite de Thomas**, souvent après plusieurs retouches. |
+| Sur develop | Issue fermée à la main dès son arrivée sur `develop`. | Merge de la PR `develop → main`. |
+| En prod | Le travail est en prod. | Fin. |
+| Abandonné | Issue fermée en « not planned ». | Fin. |
+
+- **« Prêt », c'est** : le constat ou le besoin est clair, la piste retenue est écrite
+  (ou la décision à prendre est nommée), le hors-périmètre est dit s'il y a ambiguïté,
+  les vérifications sont listées. Le format `## Constat` / `## Besoin` / `## Pistes` /
+  `## Vérifications` le couvre. Une idée en une phrase reste en Backlog.
+- **Les quatre moments où l'on touche au tableau** :
+  1. **Création** : poser le statut (« Prêt » ou « Backlog ») et, en « Prêt », la priorité.
+  2. **Début** : « En cours », et l'epic aussi si c'est sa première sous-issue.
+  3. **Arrivée sur `develop`** : fermer l'issue à la main (`gh issue close N --comment
+     "<hash>"`, car `Closes #N` ne ferme qu'au merge dans `main`, la branche par
+     défaut) ; le workflow « Item closed » la passe en « Sur develop ». C'est le seul
+     moment qu'une session cloud, sans accès au Project, couvre entièrement. Jamais
+     l'epic sans l'accord de Thomas.
+  4. **Merge `develop → main`** : passer en « En prod » tout ce qui est « Sur develop »
+     et les issues que la PR ferme (ordre ci-dessous : fermer, attendre, poser le
+     statut, relire). La PR `develop → main` porte `Closes #<epic>`.
+- **Workflows intégrés du Project** (réglés dans l'interface web, l'API ne les montre
+  pas) : « Item added » → **Prêt** (colonne par défaut : une idée vague oubliée en
+  « Prêt » se voit, une issue prête oubliée en Backlog disparaît) ; « Item closed » →
+  **Sur develop** ; « Auto-close issue » ferme une issue passée en **En prod**.
+  « Item closed » s'applique à **toute** fermeture, y compris celle d'« Auto-close » en
+  prod et celle d'un abandon (constaté le 2026-10-22 sur #38 et #67). D'où la règle :
+  pour « En prod » ou « Abandonné », **fermer d'abord, attendre une quinzaine de
+  secondes, poser le statut, puis relire**. Le passage en prod se fait toujours depuis
+  le `gh` local, qui peut corriger.
+  Abandon : fermer en « not planned », puis passer en « Abandonné ».
+- **Une issue de mise en prod** (`release`) ne sert que s'il reste des gestes manuels
+  après le déploiement (régénérer le pool, Search Console). Sinon, la PR `develop → main`
+  et l'epic suffisent.
+- **Outils.** Les outils GitHub des sessions cloud ne gèrent pas les Projects v2 : le
+  tableau se manipule avec le `gh` **local** de Thomas (scope `project`, posé une fois
+  par `gh auth refresh -s project`), depuis une session locale ou une session Remote
+  Control sur son Mac. Une session cloud sans accès au Mac le dit au lieu de sauter
+  l'étape. Identifiants :
+
+  ```bash
+  # Project « Geodoku » n°1 : PVT_kwHOBW96fc4BmVUK
+  # Status   PVTSSF_lAHOBW96fc4BmVUKzhk-x9g : Backlog f75ad846 · Prêt be9518dc · En cours 47fc9ee4
+  #          Sur develop 6571d1bd · En prod 98236657 · Abandonné 656dff45
+  # Priorité PVTSSF_lAHOBW96fc4BmVUKzhk-yCU : Haute 6085a7f0 · Moyenne e70ef5e7 · Basse 68bc87c3
+  ITEM=$(gh project item-list 1 --owner Tomspace900 --limit 300 --format json \
+    --jq '.items[] | select(.content.number == 52) | .id')
+  gh project item-edit --project-id PVT_kwHOBW96fc4BmVUK --id "$ITEM" \
+    --field-id PVTSSF_lAHOBW96fc4BmVUKzhk-x9g --single-select-option-id 47fc9ee4
+  ```
+
+- **Commits** : on empile les commits directement sur `develop`, sans PR. Une session
+  cloud fait de même (un commit sur `develop`), et n'ouvre de PR que vers `main`.
 - **Plans longs** : un plan d'exécution peut vivre dans `docs/` le temps du chantier,
   avec son issue comme point d'entrée. À la mise en prod, ses décisions durables
   passent dans `AGENTS.md`, `content/constraints/SOURCES.md` ou
