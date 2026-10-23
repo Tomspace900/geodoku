@@ -231,8 +231,7 @@ pnpm exec convex env set ADMIN_TOKEN "xxx"
 | ------------------ | ----------------- | ------------------------------ | -------------------------- |
 | `main`             | Vercel Production | prod                           | persistantes               |
 | `develop`          | Vercel Preview    | `preview/develop` (n'expire jamais) | persistantes               |
-| autre branche WIP  | Vercel Preview    | `preview/<branch>`             | seedées auto au 1er deploy, expirent après 5 j |
-| `dependabot/*`     | aucun déploiement | aucun                          | —                          |
+| toute autre branche (WIP, `claude/*`, `dependabot/*`) | aucun déploiement | aucun | — |
 | local              | `pnpm dev`        | cloud dev perso (`convex dev`) | gérées manuellement        |
 
 **`preview/develop` ne doit jamais expirer.** Convex supprime un preview deployment
@@ -243,10 +242,9 @@ le déploiement est donc réglé pour ne jamais expirer dans le dashboard Convex
 depuis le 2026-10-20. Recréé ce jour-là (`seed:autoSeedIfEmpty`), il a été
 réaligné sur la prod par `pnpm dump:prod-to-develop` le même jour. Aucun outil ne
 resynchronise l'adresse : si les e2e ne joignent plus Convex, c'est que ce réglage
-a sauté. Les previews des autres branches expirent
-toujours après 5 jours, et c'est voulu : elles sont jetables.
+a sauté.
 
-L'`ignoreCommand` de [`vercel.json`](vercel.json) coupe le déploiement des branches `dependabot/*` : sans lui, chaque bump de patch créait un preview Vercel **et** un déploiement Convex preview jetables.
+L'`ignoreCommand` de [`vercel.json`](vercel.json) ne déploie que `main` et `develop` (#149) : toute autre branche poussée (travail, `claude/*` ouvertes par les sessions cloud, Dependabot) ne crée ni preview Vercel ni déploiement Convex preview. Chacun de ces previews était seedé au premier déploiement (`seed:autoSeedIfEmpty` génère un pool complet puis appelle `assignGridForDate` date par date, qui relit tout le pool à chaque fois), pour un environnement jetable que personne n'ouvrait. Pour prévisualiser une branche malgré tout, l'ajouter le temps du besoin au `case` de l'`ignoreCommand`, dans un commit de cette branche.
 
 **Suppression des branches.** Le repo supprime la branche de tête après merge (`delete_branch_on_merge`), ce qui nettoie les branches de travail et Dependabot. `develop` en est exemptée par le ruleset « develop — suppression interdite », dont la seule règle est l'interdiction de suppression : les push forcés après rebase restent permis. Sans lui, le merge d'une PR `develop → main` supprimait `develop` (2026-10-15), et GitHub redirigeait alors vers `main` les PR qui la visaient. `main` est gardée par son propre ruleset, « Main protection ».
 
