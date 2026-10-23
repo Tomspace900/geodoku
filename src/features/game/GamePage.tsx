@@ -66,6 +66,9 @@ export function GamePage() {
   const solutionDrawer = useSolutionDrawer({
     gridDate: state.date,
     mode: state.mode,
+    // La grille solution est montée sous la modale de résultat : elle n'est
+    // vraiment à l'écran qu'une fois celle-ci fermée.
+    visible: state.status !== "playing" && resultModalDismissed,
   });
 
   // biome-ignore lint/correctness/useExhaustiveDependencies: réinitialiser modale / vue lorsque la date de grille change (jour suivant)

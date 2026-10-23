@@ -129,9 +129,11 @@ function TrainingBoard({ date }: { date: string }) {
     mode: state.mode,
     selectedCell: state.selectedCell,
   });
+  const [resultDismissed, setResultDismissed] = useState(false);
   const solutionDrawer = useSolutionDrawer({
     gridDate: state.date,
     mode: state.mode,
+    visible: hasGrid && state.status !== "playing" && resultDismissed,
   });
 
   // Rareté de la cohorte du jour concerné : complète et figée, donc le score
@@ -141,7 +143,6 @@ function TrainingBoard({ date }: { date: string }) {
     state.date ? { date: state.date } : "skip",
   );
 
-  const [resultDismissed, setResultDismissed] = useState(false);
   useEffect(() => {
     if (state.status === "playing") setResultDismissed(false);
   }, [state.status]);

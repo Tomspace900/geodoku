@@ -1,4 +1,3 @@
-import { usePostHog } from "@posthog/react";
 import { Heart, X } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import { Eyebrow } from "@/components/editorial/Eyebrow";
@@ -16,6 +15,10 @@ import {
   DrawerTitle,
 } from "@/components/ui/drawer";
 import { searchCountries } from "@/features/countries/logic/search";
+import {
+  type GuessModalOutcome,
+  useGuessModalAnalytics,
+} from "@/features/game/hooks/useGuessModalAnalytics";
 import { UI_ANIMATION_MS } from "@/features/game/logic/constants";
 import { CONSTRAINT_BY_ID } from "@/features/game/logic/constraints";
 import { getUsedCountryCodes } from "@/features/game/logic/usedCountries";
@@ -136,7 +139,6 @@ export function GuessModal({
   onClose,
   onSubmit,
 }: Props) {
-  const posthog = usePostHog();
   const [open, setOpen] = useState(true);
   const [query, setQuery] = useState("");
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
@@ -179,15 +181,8 @@ export function GuessModal({
     };
   }, []);
 
-  function handleClose(reason: "submitted" | "dismissed") {
-    if (reason === "dismissed") {
-      posthog?.capture("guess_modal_closed", {
-        grid_date: state.date,
-        cell: cellKey,
-        had_query: query.length > 0,
-        query_length: query.length,
-      });
-    }
+  function handleClose(outcome: GuessModalOutcome) {
+    analytics.recordClose(outcome, query.length);
     setOpen(false);
     setTimeout(onClose, 300);
   }
@@ -216,11 +211,12 @@ export function GuessModal({
     setSubmitting(false);
     if (!result) return;
     if (result.kind === "accepted") {
-      handleClose("submitted");
+      handleClose("found");
       return;
     }
+    analytics.recordFailedAttempt();
     if (result.gameOver) {
-      handleClose("submitted");
+      handleClose("game_over");
       return;
     }
     setQuery("");
@@ -247,6 +243,14 @@ export function GuessModal({
 
   const hasMinSearchLength = query.length >= 3;
   const results = hasMinSearchLength ? searchCountries(query, 12) : [];
+  const analytics = useGuessModalAnalytics({
+    gridDate: state.date,
+    mode: state.mode,
+    cellKey,
+    query,
+    searchable: hasMinSearchLength,
+    resultCount: results.length,
+  });
 
   const rowFailed =
     errorReason === "wrong_row" || errorReason === "wrong_constraints";
