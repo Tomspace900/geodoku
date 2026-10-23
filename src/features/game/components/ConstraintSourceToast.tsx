@@ -11,7 +11,8 @@ type Props = {
 };
 
 /**
- * Toast flottant affichant la source d'une contrainte — rendu une fois par
+ * Toast flottant affichant la source d'une contrainte, ou l'explication d'une
+ * case bloquée (#60). Rendu une fois par
  * page (`GamePage`, `TrainingPage`), **en jeu uniquement** : sur la grille
  * solution, l'en-tête ouvre le Drawer de contrainte à la place (lot 2).
  * `pointer-events-none` sur le conteneur pour ne jamais bloquer une case ;
@@ -32,8 +33,16 @@ export function ConstraintSourceToast({ toast }: Props) {
 
   if (!active) return null;
 
-  const constraint = CONSTRAINT_BY_ID.get(active.constraintId);
-  const label = constraint ? t(constraint.labelKey) : active.constraintId;
+  const constraint =
+    active.kind === "constraint"
+      ? CONSTRAINT_BY_ID.get(active.constraintId)
+      : undefined;
+  const label =
+    active.kind === "blockedCell"
+      ? t("ui.blockedCellTitle")
+      : constraint
+        ? t(constraint.labelKey)
+        : active.constraintId;
 
   return (
     <div className="pointer-events-none fixed inset-x-0 bottom-0 z-40 flex justify-center px-4 pb-[max(1rem,env(safe-area-inset-bottom))]">
@@ -63,7 +72,13 @@ export function ConstraintSourceToast({ toast }: Props) {
         </div>
 
         <div className="mt-1">
-          <ConstraintSourceInfo constraintId={active.constraintId} />
+          {active.kind === "constraint" ? (
+            <ConstraintSourceInfo constraintId={active.constraintId} />
+          ) : (
+            <p className="font-sans text-xs text-on-surface-variant">
+              {t("ui.blockedCellBody")}
+            </p>
+          )}
         </div>
       </div>
     </div>

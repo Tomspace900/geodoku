@@ -12,7 +12,7 @@ import {
 } from "@/components/ui/dialog";
 import { ScoreDisplay } from "@/features/game/components/ScoreDisplay";
 import { ShareEmojiGrid } from "@/features/game/components/ShareEmojiGrid";
-import { failedAttemptCount } from "@/features/game/logic/lives";
+import { failedAttemptCount, isGivenUp } from "@/features/game/logic/lives";
 import {
   type ResultOutcome,
   resultTitleKeys,
@@ -74,7 +74,9 @@ export function TrainingResultScreen({
   const resultOutcome: ResultOutcome =
     state.status === "won"
       ? { status: "won", total: titleTotal ?? score.gridValue }
-      : { status: "lostByBlock" };
+      : isGivenUp(state)
+        ? { status: "givenUp" }
+        : { status: "lostByBlock" };
   const titleKeys = resultTitleKeys(resultOutcome);
   const resultTitleKey = titleKeys[Math.floor(titleRoll * titleKeys.length)];
 

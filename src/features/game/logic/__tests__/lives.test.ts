@@ -1,10 +1,13 @@
 import { describe, expect, it } from "vitest";
-import type { LivesState } from "../../types";
+import type { Cell, CellKey, LivesState } from "../../types";
 import { STARTING_LIVES } from "../constants";
+import { CELL_KEYS } from "../gridTopology";
 import {
   afterFailedAttempt,
+  canGiveUp,
   failedAttemptCount,
   initialLives,
+  isGivenUp,
   isOutOfLives,
   livesCapacity,
   livesRemaining,
@@ -83,5 +86,50 @@ describe("scoreLives / livesCapacity — échelle du score", () => {
   it("l'entraînement neutralise la part vies (0 sur une capacité de 0)", () => {
     expect(scoreLives(unlimited(3))).toBe(0);
     expect(livesCapacity(unlimited(3))).toBe(0);
+  });
+});
+
+describe("canGiveUp", () => {
+  it("n'autorise l'abandon qu'en régime illimité", () => {
+    expect(canGiveUp(unlimited(0))).toBe(true);
+    expect(canGiveUp(limited(3))).toBe(false);
+  });
+});
+
+describe("isGivenUp", () => {
+  const cellsWith = (status: "empty" | "blocked"): Record<CellKey, Cell> =>
+    Object.fromEntries(CELL_KEYS.map((key) => [key, { status }])) as Record<
+      CellKey,
+      Cell
+    >;
+
+  it("lit un abandon dans une défaite d'entraînement qui garde une case vide", () => {
+    expect(
+      isGivenUp({
+        status: "lost",
+        cells: cellsWith("empty"),
+        lives: unlimited(2),
+      }),
+    ).toBe(true);
+  });
+
+  it("ne confond pas un blocage avec un abandon", () => {
+    expect(
+      isGivenUp({
+        status: "lost",
+        cells: cellsWith("blocked"),
+        lives: unlimited(2),
+      }),
+    ).toBe(false);
+  });
+
+  it("ne confond pas une défaite aux vies du quotidien avec un abandon", () => {
+    expect(
+      isGivenUp({
+        status: "lost",
+        cells: cellsWith("empty"),
+        lives: limited(0),
+      }),
+    ).toBe(false);
   });
 });

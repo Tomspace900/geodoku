@@ -54,7 +54,10 @@ export const WIN_TITLE_KEYS: Record<WinTitleBand, TKey[]> = {
   ],
 };
 
-/** Défaite par épuisement des vies : formules de consolation (pioche aléatoire). */
+/**
+ * Défaite par épuisement des vies, ou abandon à l'entraînement : formules de
+ * consolation (pioche aléatoire).
+ */
 export const LIVES_DEFEAT_KEYS: TKey[] = [
   "result.livesDefeat1",
   "result.livesDefeat2",
@@ -71,7 +74,8 @@ export const BLOCKED_TITLE_KEYS: TKey[] = ["result.blocked"];
 export type ResultOutcome =
   | { status: "won"; total: number }
   | { status: "lostByLives" }
-  | { status: "lostByBlock" };
+  | { status: "lostByBlock" }
+  | { status: "givenUp" };
 
 /**
  * Clés candidates pour le titre de fin selon l'issue. Le composant en pioche une
@@ -84,6 +88,7 @@ export function resultTitleKeys(outcome: ResultOutcome): TKey[] {
     case "lostByBlock":
       return BLOCKED_TITLE_KEYS;
     case "lostByLives":
+    case "givenUp":
       return LIVES_DEFEAT_KEYS;
   }
 }

@@ -1,5 +1,5 @@
 import { useQuery } from "convex/react";
-import { RotateCcw } from "lucide-react";
+import { Flag, RotateCcw } from "lucide-react";
 import { type ReactNode, useEffect, useState } from "react";
 import { Navigate, useNavigate, useParams } from "react-router";
 import AppFooter from "@/app/AppFooter";
@@ -111,6 +111,7 @@ function TrainingBoard({ date }: { date: string }) {
     selectCell,
     submitGuess,
     restart,
+    giveUp,
     isLoading,
     hasGrid,
     validAnswers,
@@ -166,19 +167,33 @@ function TrainingBoard({ date }: { date: string }) {
               onCellClick={solutionDrawer.openCell}
             />
           ) : (
-            <GameGrid
-              state={state}
-              distribution={distribution ?? undefined}
-              onCellClick={selectCell}
-              onHeaderClick={(id) => sourceToast.onHeaderClick(id)}
-            />
+            <>
+              <GameGrid
+                state={state}
+                distribution={distribution ?? undefined}
+                onCellClick={selectCell}
+                onHeaderClick={(id) => sourceToast.onHeaderClick(id)}
+                onBlockedCellClick={sourceToast.onBlockedCellClick}
+              />
+              {/* Tertiaire et sans confirmation : la partie se termine aussitôt,
+                  et « Recommencer » reste à un tap sur l'écran de résultat. */}
+              <Button
+                type="button"
+                variant="link"
+                onClick={giveUp}
+                className="mx-auto text-xs"
+              >
+                <Flag className="size-3 sm:size-3.5" aria-hidden="true" />
+                {t("training.giveUp")}
+              </Button>
+            </>
           )}
 
           {/* Même disposition que la vue solution du quotidien : surface de
-              lecture, donc aucun primaire — un secondaire pour l'action de la
+              lecture, donc aucun primaire : un secondaire pour l'action de la
               page, puis un renvoi tertiaire. Largeur bornée (un bouton qui court
-              sur 672 px se lit mal). Pas de « Autre grille » ici : le retour aux
-              archives est déjà en permanence en haut de page. */}
+              sur 672 px se lit mal). Pas de « Autre grille » ici : le retour à
+              l'entraînement est déjà en permanence en haut de page. */}
           {isFinished && resultDismissed && (
             <div className="mx-auto flex w-full max-w-md flex-col gap-2">
               <Button

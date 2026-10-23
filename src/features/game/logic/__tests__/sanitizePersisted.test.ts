@@ -1,7 +1,10 @@
 import { describe, expect, it } from "vitest";
 import type { Cell, CellKey } from "../../types";
 import type { PersistedGame } from "../persistence";
-import { sanitizePersistedForGrid } from "../sanitizePersisted";
+import {
+  sanitizePersistedForGrid,
+  sanitizeTrainingGame,
+} from "../sanitizePersisted";
 
 const CELL_KEYS: CellKey[] = [
   "0,0",
@@ -254,5 +257,28 @@ describe("sanitizePersistedForGrid", () => {
     });
     const out = sanitizePersistedForGrid(p, va);
     expect(out?.cells["0,2"].status).toBe("blocked");
+  });
+});
+
+describe("sanitizeTrainingGame — abandon", () => {
+  it("rend perdue une partie abandonnée, malgré ses cases vides", () => {
+    const sanitized = sanitizeTrainingGame(
+      {
+        date: "2026-07-24",
+        cells: emptyCells(),
+        failedAttempts: 1,
+        givenUp: true,
+      },
+      uniqueAnswers(),
+    );
+    expect(sanitized?.status).toBe("lost");
+  });
+
+  it("garde en cours une partie sans abandon (parties antérieures à #148)", () => {
+    const sanitized = sanitizeTrainingGame(
+      { date: "2026-07-24", cells: emptyCells(), failedAttempts: 1 },
+      uniqueAnswers(),
+    );
+    expect(sanitized?.status).toBe("playing");
   });
 });

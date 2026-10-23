@@ -19,6 +19,7 @@ type Props = {
   distribution: Record<string, CellGuessDistribution> | undefined;
   onCellClick: (cell: CellPosition) => void;
   onHeaderClick: (constraintId: ConstraintId) => void;
+  onBlockedCellClick: (cell: CellKey) => void;
 };
 
 export function GameGrid({
@@ -26,6 +27,7 @@ export function GameGrid({
   distribution,
   onCellClick,
   onHeaderClick,
+  onBlockedCellClick,
 }: Props) {
   const t = useT();
   const isPlaying = state.status === "playing";
@@ -82,6 +84,7 @@ export function GameGrid({
             onClick={() => {
               if (isPlayable) onCellClick({ row, col });
             }}
+            onBlockedClick={() => onBlockedCellClick(key)}
           />
         );
       }}

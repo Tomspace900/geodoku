@@ -150,17 +150,17 @@ export function GamePage() {
                   CTA sondage monté en même temps que celui de ResultScreen (état
                   `done` désynchronisé) et le rend visible seulement une fois la
                   grille solution réellement à l'écran. */}
-              {/* Surface de lecture : aucun primaire ici. Le retour au résultat
-                  est l'action inverse de « Voir les réponses » — même niveau
-                  qu'elle (secondary), pour que l'aller-retour soit symétrique. */}
+              {/* Le retour au résultat est l'action inverse de « Voir les
+                  réponses » : même niveau qu'elle (secondary), pour que
+                  l'aller-retour soit symétrique. */}
               {resultModalDismissed && (
                 <div className="flex flex-col gap-2">
                   <SurveyCta source="solution_screen" />
-                  {/* Surface de lecture : aucun primaire. Un secondaire pour
-                      revenir au score, puis un renvoi tertiaire vers l'archive —
-                      `variant="link"` porte exactement le style des liens du
-                      footer, l'icône reprend leur taille. Largeur bornée : un
-                      bouton étiré sur toute la colonne se lit mal. */}
+                  {/* Un secondaire pour revenir au score, puis l'entraînement au
+                      même gabarit en primaire : c'est la suite naturelle une fois
+                      la grille du jour lue, et un lien de footer passait
+                      inaperçu (#148). Largeur bornée : un bouton étiré sur toute
+                      la colonne se lit mal. */}
                   <div className="mx-auto flex w-full max-w-md flex-col gap-2">
                     <Button
                       ref={resultTriggerRef}
@@ -172,16 +172,9 @@ export function GamePage() {
                     >
                       {t("ui.viewMyResult")}
                     </Button>
-                    <Button
-                      asChild
-                      variant="link"
-                      className="w-full justify-center text-xs mt-2"
-                    >
+                    <Button asChild size="lg" className="w-full">
                       <Link to={localizedPath("/archive")}>
-                        <History
-                          className="size-3 sm:size-3.5"
-                          aria-hidden="true"
-                        />
+                        <History aria-hidden="true" />
                         {t("ui.replayPastGrids")}
                       </Link>
                     </Button>
@@ -202,6 +195,7 @@ export function GamePage() {
                   selectCell(cell);
                 }}
                 onHeaderClick={(id) => sourceToast.onHeaderClick(id)}
+                onBlockedCellClick={sourceToast.onBlockedCellClick}
               />
 
               <RarityHint />

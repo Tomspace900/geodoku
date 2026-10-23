@@ -23,13 +23,14 @@ describe("GameGrid", () => {
             distribution={undefined}
             onCellClick={() => {}}
             onHeaderClick={() => {}}
+            onBlockedCellClick={() => {}}
           />
         </LocaleProvider>
       </MemoryRouter>,
     );
 
     expect(
-      screen.getByRole("cell", {
+      screen.getByRole("button", {
         name: /^Blocked cell row 1 column 3: European country × At least 5\s+land neighbors$/,
       }),
     ).toBeTruthy();

@@ -37,6 +37,10 @@ describe("resultTitleKeys", () => {
     expect(LIVES_DEFEAT_KEYS.length).toBeGreaterThanOrEqual(2);
   });
 
+  it("consoles a practice give-up like a defeat by lives", () => {
+    expect(resultTitleKeys({ status: "givenUp" })).toBe(LIVES_DEFEAT_KEYS);
+  });
+
   it("uses the single blocked title", () => {
     expect(resultTitleKeys({ status: "lostByBlock" })).toBe(BLOCKED_TITLE_KEYS);
     expect(BLOCKED_TITLE_KEYS).toHaveLength(1);

@@ -26,7 +26,7 @@ Barème tranché sur données réelles. La rareté d'une case s'appuie sur la **
 
 **L'enjeu communautaire.** À la fin, le joueur partage sa grille sous forme d'emojis colorés (🟪🟦🟨🟥⬜⬛) avec `<total> pts`, à la manière de Wordle. `⬛` = cases bloquées ; `⬜` = cases non remplies en défaite. Le partage ([`share.ts`](src/features/game/logic/share.ts)) ouvre la **feuille native** (Web Share API) **uniquement sur appareil tactile** (`canUseNativeShare` = `navigator.share` **et** pointeur principal `coarse` / `maxTouchPoints > 0`) et retombe sur le **presse-papiers** sur desktop. **Ne pas** élargir vers « feuille native dès que `navigator.share` existe » — Safari/Chrome desktop l'exposent aussi. Les deux chemins envoient **exactement la même chaîne** (`formatShareString`), et `navigator.share` ne reçoit qu'**un seul champ `text`**, URL comprise en fin de corps : **jamais `{title, text, url}`**. La feuille iOS transmet chaque champ comme un item distinct et l'app réceptrice n'en garde souvent qu'un — avec une `url` séparée, Messages/WhatsApp/Mail n'envoyaient que le lien, sans score ni emojis, de façon variable selon l'app cible (d'où l'impression que « le partage dépend du navigateur »). L'aperçu de lien qu'un champ `url` ferait gagner ne vaut pas le contenu perdu. Un échec de copie (`ShareOutcome` `failed`) se dit à l'écran mais n'émet pas d'event. `share_method` (`native`/`clipboard`) part dans l'event PostHog `result_shared`.
 
-**Mode entraînement (`/archive`).** Les grilles des **7 derniers jours** (J-1 → J-7) sont rejouables une fois la partie du jour terminée — sinon la route **redirige vers l'accueil de sa langue** (garde d'expérience, pas de sécurité : l'endpoint est public et sans identité). Essais **illimités** : on compte les essais ratés au lieu de décompter des vies, donc une partie ne se perd que par **blocage**. Les cases se colorent normalement, sur la **cohorte figée** du jour concerné (complète → score exact et stable, sans marqueur « ≈ »). **Cohorte close ⇒ un pays absent de la distribution vaut une part de 0, donc ultra** (`isCohortComplete` / `filledCellShare`, [`rarity.ts`](src/features/game/logic/rarity.ts)) : sur une grille passée l'absence est définitive et signifie « personne ne l'a choisi », alors que sur la grille du jour elle signifie « pas encore » (le coup du joueur n'est pas encore agrégé). Sans cette distinction, un pays inédit n'avait aucun badge **et laissait le score bloqué sur `null`** — c'est la même lecture que la grille solution, qui applique `rarityByCountry[iso] ?? 0` depuis toujours. Score sur **900** : grille + rareté, part vies neutralisée, avec le nombre d'essais affiché à part ([`TrainingResultScreen`](src/features/archive/components/TrainingResultScreen.tsx)). Titres de fin réutilisés du quotidien (paliers calibrés sur /1000, donc le haut du barème sort plus rarement — assumé). **Pas de partage** (les emojis n'ont de sens comparés que le même jour), pas de notation de difficulté, et surtout **aucune écriture Convex** : les cohortes passées restent pures et le seam `guesses.isReplay` reste dormant. Une date future (ou aujourd'hui) est refusée **côté serveur et côté client** — `classifyReplayDate` ([`replayWindow.ts`](src/features/game/logic/replayWindow.ts)) est le module pur partagé par les deux ; un petit malin qui bricole l'URL tombe sur `ErrorScreen variant="time-traveller"`.
+**Mode entraînement (`/archive`).** Les grilles des **7 derniers jours** (J-1 → J-7) sont rejouables une fois la partie du jour terminée — sinon la route **redirige vers l'accueil de sa langue** (garde d'expérience, pas de sécurité : l'endpoint est public et sans identité). Essais **illimités** : on compte les essais ratés au lieu de décompter des vies, donc une partie ne se perd que par **blocage** ou **abandon** (lien « Abandonner », sans confirmation, #148 : statut `lost`, pas de statut dédié ; seul fait persisté en plus des cases, `givenUp`, puisqu'il ne se lit pas dans la grille — `isGivenUp`, [`lives.ts`](src/features/game/logic/lives.ts)). Pas d'abandon sur la grille du jour : il toucherait stats et score partagé. Les cases se colorent normalement, sur la **cohorte figée** du jour concerné (complète → score exact et stable, sans marqueur « ≈ »). **Cohorte close ⇒ un pays absent de la distribution vaut une part de 0, donc ultra** (`isCohortComplete` / `filledCellShare`, [`rarity.ts`](src/features/game/logic/rarity.ts)) : sur une grille passée l'absence est définitive et signifie « personne ne l'a choisi », alors que sur la grille du jour elle signifie « pas encore » : le coup du joueur, envoyé en arrière-plan, n'est pas encore agrégé, et on l'ajoute localement (`1 / (total + 1)`, marqué « ≈ ») pour que badge et score ne restent jamais en attente d'un envoi qui n'arrive pas. Sans cette distinction, un pays inédit n'avait aucun badge **et laissait le score bloqué sur `null`** — c'est la même lecture que la grille solution, qui applique `rarityByCountry[iso] ?? 0` depuis toujours. Score sur **900** : grille + rareté, part vies neutralisée, avec le nombre d'essais affiché à part ([`TrainingResultScreen`](src/features/archive/components/TrainingResultScreen.tsx)). Titres de fin réutilisés du quotidien (paliers calibrés sur /1000, donc le haut du barème sort plus rarement — assumé). **Pas de partage** (les emojis n'ont de sens comparés que le même jour), pas de notation de difficulté, et surtout **aucune écriture Convex** : les cohortes passées restent pures et le seam `guesses.isReplay` reste dormant. Une date future (ou aujourd'hui) est refusée **côté serveur et côté client** — `classifyReplayDate` ([`replayWindow.ts`](src/features/game/logic/replayWindow.ts)) est le module pur partagé par les deux ; un petit malin qui bricole l'URL tombe sur `ErrorScreen variant="time-traveller"`.
 
 **Ce que Geodoku n'est PAS.** Pas de compte, pas de login, pas de leaderboard, pas de streak inter-jours, pas de stats globales, pas d'ads, pas de mobile app. Un site web minimaliste, une partie par jour (plus l'entraînement sur les 7 dernières), un partage. Point.
 
@@ -116,7 +116,7 @@ Détail complet : [`docs/content-pipeline.md`](docs/content-pipeline.md).
 
 **Imports.** Alias `@/` pour `src/`. Biome gère l'ordre.
 
-**i18n.** Tout texte joueur via `translate()` ([`src/i18n/`](src/i18n/)). Ajouter les clés dans `locales/fr.ts` **et** `en.ts`. Contraintes actives + archivées couvertes par le test `translate`.
+**i18n.** Tout texte joueur via `translate()` ([`src/i18n/`](src/i18n/)). Ajouter les clés dans `locales/fr.ts` **et** `en.ts`. Contraintes actives + archivées couvertes par le test `translate`. **Pas de tiret cadratin (« — ») dans un texte joueur** : il fait « texte généré » ; point, virgule, deux-points ou parenthèses selon le cas. Le demi-cadratin des intervalles (« 2022–2024 ») reste, comme le « — » de case vide de la grille solution (glyphe, pas prose). Gardé par [`noEmDash.test.ts`](src/i18n/__tests__/noEmDash.test.ts) sur les locales, `content/sources.ts`, les `about.ts`, `index.html` et le manifeste.
 
 **La langue vient de l'URL, et toutes les langues sont au même niveau** (#140, [`localePath.ts`](src/i18n/localePath.ts)) : `/fr/…`, `/en/…`, `/admin` hors i18n. Aucune langue n'est « par défaut » : le jeu vise un public international, et la première version (français à la racine, anglais sous `/en`) faisait arriver en français un anglophone qui tapait l'adresse. Ajouter une langue = l'ajouter à `LOCALES` et traduire. Les adresses **sans langue** (`/`, `/about`, `/privacy`, `/changelog`, `/archive…`) n'ont pas de page : le middleware Vercel [`middleware.ts`](middleware.ts) les redirige en 302, avant tout affichage, vers la même page dans la langue du visiteur — son choix (cookie `geodoku_locale`), sinon `Accept-Language`, sinon l'anglais (`preferredLocale`). Elles sont le `x-default` des `hreflang` ; Googlebot, sans langue, part vers l'anglais et découvre le reste par les `hreflang` et le sitemap. Son matcher est un littéral (lu statiquement par Vercel) : une nouvelle page publique doit y être ajoutée, ce que garde `middleware.test.ts`. En dev (pas de middleware), `HomeRedirect` ([`App.tsx`](src/App.tsx)) fait le même choix côté client pour `/` et les adresses inconnues. Tout lien interne passe par `localizedPath` (`useLocale`), jamais un chemin en dur. Le choix du joueur (sélecteur FR/EN ou toast) vit dans un **cookie** et non en localStorage, pour que le middleware le lise ([`localeCookie.ts`](src/i18n/localeCookie.ts)) ; l'ancienne clé `geodoku:locale` n'est plus lue que pour y être recopiée une fois. Un **lien direct** (`/en/about`) affiche toujours la page demandée : quand la langue du joueur en diffère, [`LocaleSuggestionToast`](src/i18n/components/LocaleSuggestionToast.tsx) la propose, rédigé dans la langue proposée (`suggestedLocale`) — on suggère, on ne redirige pas, comme le recommande Google. Pour la suggestion, l'ordre est **choix, puis pays, puis navigateur** : le middleware transmet la langue du pays de connexion (`x-vercel-ip-country` → `countryLocale`, cookie de session `geodoku_country_locale` qui ne contient que la langue). Ainsi un téléphone réglé en anglais à Bordeaux est redirigé vers `/en` (le navigateur décide de la redirection) puis se voit proposer le français. Seuls les pays à langue dominante claire comptent : Belgique, Suisse, Canada et Luxembourg ne suggèrent rien. Le lien de partage est la racine `geodoku.app` : qui le reçoit arrive dans sa propre langue.
 
@@ -152,7 +152,7 @@ Philosophie **Editorial Intellectual** (NYT Games) : spacieux, typographique, to
 
 **Crons** ([`convex/crons.ts`](convex/crons.ts)) : `ensureDailyGrids` (horaire) ; `reconcilePoolAndSchedule` (03:00 UTC si stock bas, hors migration legacy explicite).
 
-**Endpoints jeu** ([`convex/grids.ts`](convex/grids.ts), [`guesses.ts`](convex/guesses.ts)) : `getTodayGrid`, `submitTodayGuess`, `recordTodayFailedGuess`, `getTodayGuessDistribution`, `recordTodayGameEnd`, `submitTodayGridFeedback`. Chaque écriture reçoit un `operationId` idempotent.
+**Endpoints jeu** ([`convex/grids.ts`](convex/grids.ts), [`guesses.ts`](convex/guesses.ts)) : `getTodayGrid`, `submitTodayGuess`, `recordTodayFailedGuess`, `getTodayGuessDistribution`, `recordTodayGameEnd`, `submitTodayGridFeedback`. Chaque écriture reçoit un `operationId` idempotent. **Saisie local-first** : un bon pays est validé contre `validAnswers` côté client, la case se remplit tout de suite et `submitTodayGuess` part en arrière-plan ([`useGameState`](src/features/game/hooks/useGameState.ts)) ; un envoi sans accusé reste dans les opérations en attente et est rejoué au chargement suivant, avec le même `operationId`. D'où l'argument `date` de `submitTodayGuess` : un coup rejoué après minuit UTC est refusé (`date_mismatch`) au lieu d'être compté sur la grille du lendemain, sauf s'il avait déjà été compté (son reçu est renvoyé).
 
 **Endpoints archive** (mode entraînement, **lecture seule**) : `getReplayableGrids` (J-1 → J-7, **sans `validAnswers`** — la liste ne doit rien révéler) et `getReplayGrid({date})` (grille + réponses). Ce dernier est gardé par `assertReplayableDate` ([`gameWriteValidation.ts`](convex/gameWriteValidation.ts)) : **le refus des dates `>= todayUTC()` est le point critique** — sans lui, `/archive/<demain>` livrerait la grille du lendemain avec ses réponses. Une date hors fenêtre **lève** ; une grille absente renvoie `null` (trou de données, pas une demande illégitime). La rareté figée est lue via `guesses.getGuessDistributionForDate` — promu de « legacy à supprimer » à endpoint du parcours joueur. Aucune mutation, donc aucun rate-limit ni `operationId` sur ce chemin.
 
@@ -314,13 +314,13 @@ Complémentaire à Convex (`gridFeedback`/`dailyStats` = santé grilles ; PostHo
 
 | Domaine | Events |
 | ------- | ------ |
-| Partie | `game_started`, `session_resumed`, `cell_opened`, `guess_submitted`, `guess_failed`, `game_completed` (n'émet plus `grid_score_percent` — dérivable de `filled_cells`+`lives_left`) |
+| Partie | `game_started`, `session_resumed`, `cell_opened`, `guess_submitted` (émis à l'accusé serveur, avec `replayed` et `submit_latency_ms` hors rejeu), `guess_failed`, `game_completed` (n'émet plus `grid_score_percent` — dérivable de `filled_cells`+`lives_left`) |
 | Saisie | `guess_modal_closed` |
 | Résultat | `result_screen_viewed`, `result_shared` (portent `score_total`/`score_grid`/`score_rarity`/`score_lives` — les anciens `originality_*`/`grid_score_percent` sont **retirés**, groupements dashboards à recréer), `difficulty_rated`, `solution_viewed`, `scoring_info_opened` (prop `source`: `result_screen`) |
 | UI | `how_to_play_*`, `locale_changed` (prop `source`: `footer`/`suggestion`), `locale_suggestion_shown` / `locale_suggestion_dismissed` (props `from`/`to`/`basis` : `choice`/`country`/`browser` ; toast de suggestion d'une autre langue, #140 — `locale_changed` venu du toast porte aussi `basis`), `footer_link_clicked`, `survey_link_clicked` / `survey_dismissed` (props `source`: `result_screen`/`solution_screen`/`footer` et `survey_id` ; banderole sondage post-partie via `SurveyCta` — écran de résultat sous le partage + écran de solution — gated par feature flag PostHog `survey_active` ; `geodoku:survey-done` mémorise l'interaction **par sondage** (`SURVEY_ID`, à changer avec les URLs : un clic sur l'ancien sondage ne masque pas le nouveau) et dissocie clic (masquage définitif, cf. `isSurveyDone`) et fermeture (masquage du jour courant, réapparaît le lendemain, plus du tout après `MAX_SURVEY_DISMISSALS` fermetures) ; lien permanent et discret dans `AppFooter` (même flag, toujours affiché quel que soit `geodoku:survey-done`, mais un clic dessus masque aussi la banderole) pour rester accessible aux joueurs qui changent d'avis après avoir fermé la banderole) |
-| Sources | `constraint_source_viewed` (`grid_date`, `mode`: `daily`/`training`, `surface`: toujours `playing`, `constraint_id`) — tap sur un en-tête de contrainte **en jeu uniquement** (toast de source, [`useConstraintSourceToast`](src/features/game/hooks/useConstraintSourceToast.ts)) ; sur la grille solution, l'en-tête ouvre le Drawer de contrainte à la place (`solution_constraint_opened`, ci-dessous) — `surface` reste dans l'event pour ne pas casser les groupements existants, bien qu'il ne prenne plus qu'une seule valeur |
+| Sources | `constraint_source_viewed` (`grid_date`, `mode`: `daily`/`training`, `surface`: toujours `playing`, `constraint_id`) — tap sur un en-tête de contrainte **en jeu uniquement** (toast de source, [`useConstraintSourceToast`](src/features/game/hooks/useConstraintSourceToast.ts)) ; sur la grille solution, l'en-tête ouvre le Drawer de contrainte à la place (`solution_constraint_opened`, ci-dessous) — `surface` reste dans l'event pour ne pas casser les groupements existants, bien qu'il ne prenne plus qu'une seule valeur. `blocked_cell_opened` (`grid_date`, `mode`, `cell`) : tap sur une case bloquée ⬛ en jeu, qui ouvre le même toast avec l'explication du blocage (#60) ; event distinct car une case n'a pas de `constraint_id` |
 | Grille solution | `solution_cell_opened` (`grid_date`, `mode`, `cell`, `answer_count`) et `solution_constraint_opened` (`grid_date`, `mode`, `constraint_id`, `answer_count`) — tap sur une case ou un en-tête de la grille solution, qui ouvre le Drawer partagé ([`useSolutionDrawer`](src/features/game/hooks/useSolutionDrawer.ts)). Les deux events sont **partagés** daily/entraînement, distingués par `mode`, jamais émis en cours de partie (la grille solution n'existe qu'une fois `status !== "playing"`). `country_sheet_opened` est retiré avec la fiche pays (#125) ; il reviendra avec elle. |
-| Entraînement | `archive_opened`, `training_started` (`grid_date`, `resumed`, `restart`), `training_completed` (`grid_date`, `outcome`, `filled_cells`, `failed_attempts`), `training_result_viewed` (`grid_date`, `outcome`, `score_total`/`score_grid`/`score_rarity` sur 900, `failed_attempts`) — **noms distincts des events daily** pour ne pas corrompre les groupements existants. Corollaire : le mode entraînement n'émet **aucun** event daily, `cell_opened` compris (il alimente le tunnel du quotidien) ; `game_started`/`game_completed`/`result_screen_viewed`/`cell_opened` restent daily-only. `scoring_info_opened` et `constraint_source_viewed` sont partagés, distingués par leur prop `mode`/`source`. |
+| Entraînement | `archive_opened`, `training_started` (`grid_date`, `resumed`, `restart`), `training_completed` (`grid_date`, `outcome`, `filled_cells`, `failed_attempts`, `given_up` : abandon, #148), `training_result_viewed` (`grid_date`, `outcome`, `score_total`/`score_grid`/`score_rarity` sur 900, `failed_attempts`) — **noms distincts des events daily** pour ne pas corrompre les groupements existants. Corollaire : le mode entraînement n'émet **aucun** event daily, `cell_opened` compris (il alimente le tunnel du quotidien) ; `game_started`/`game_completed`/`result_screen_viewed`/`cell_opened` restent daily-only. `scoring_info_opened` et `constraint_source_viewed` sont partagés, distingués par leur prop `mode`/`source`. |
 | Légal | `legal_page_viewed`, `legal_page_left` (prop `page` : `privacy`, `changelog`, `about`) |
 | Fiabilité | `backend_timeout_shown`, `$exception` |
 
@@ -331,7 +331,7 @@ Source de vérité détaillée : grep `posthog?.capture` dans le code.
 **Toujours**
 
 - `pnpm lint` et `pnpm test` (aussi exécutés au pre-commit Husky)
-- Issue référencée dans le commit, et sous-issue **fermée à l'arrivée sur `develop`** avec son statut « Sur develop » (cf. §12)
+- Issue référencée dans le commit, **fermée à l'arrivée sur `develop`** (« Sur develop »), et Project à jour aux quatre moments de §12 (création, début, `develop`, prod)
 
 **Selon le périmètre**
 
@@ -367,21 +367,72 @@ Markdown : un bug, une idée ou un chantier sans issue n'est pas suivi. Un corre
 trivial peut s'en passer.
 
 - **Une tâche = une issue**, avec un label de type : `bug`, `feature`, `ux`,
-  `contenu`, `tech`, `admin`, `analytics`, `release`, `idée`. Un gros chantier est
-  une issue `epic` découpée en **sous-issues**, avec un **milestone** s'il avance par
-  lots (refonte du contenu #38 → P4 #42, milestone « P4 — Fiches pays », un lot par
-  sous-issue).
-- **Champs du Project** : `Status` (Backlog · Prêt · En cours · Sur develop · En prod ·
-  Abandonné) et `Priorité` (🔴 Haute · 🟠 Moyenne · 🟢 Basse). Une issue ouverte entre
-  seule dans le Project, en Backlog ; la priorité se pose à la main.
-- **Cycle de vie** : « En cours » au démarrage. Une **sous-issue se ferme dès que son
-  travail arrive sur `develop`** (statut « Sur develop »), à la main : `gh issue close N
-  --comment "<hash>"`, car `Closes #N` ne ferme qu'au merge dans `main`, la branche
-  par défaut. L'**issue principale** du chantier (epic) et son issue de mise en prod
-  restent ouvertes jusqu'à la prod : la PR `develop → main` porte `Closes #<epic>`,
-  puis toutes les sous-issues passent en « En prod ». Le workflow « Item closed » du
-  Project doit donc poser « Sur develop », pas « En prod ». Abandon : fermer en
-  « not planned » et passer en « Abandonné ».
+  `contenu`, `tech`, `admin`, `analytics`, `marketing`, `release`, `idée`. Un gros
+  chantier est une issue `epic` découpée en **sous-issues**, avec un **milestone** s'il
+  avance par lots (refonte du contenu #38 → P4 #42, milestone « P4 — Fiches pays »).
+- **Champs du Project** : `Status` et `Priorité` (🔴 Haute · 🟠 Moyenne · 🟢 Basse).
+  Le tableau n'est utile que s'il est vrai : **tout agent qui crée, commence, livre ou
+  met en prod une issue met son statut à jour dans la même session**, sans attendre
+  qu'on le lui demande.
+
+| Statut | On y met | On en sort |
+| ------ | -------- | ---------- |
+| Backlog | Une idée pas pour tout de suite, pas encore rédigée. Doit rester court. | Quand « Prêt » est vide : on en pioche une, on la rédige, elle passe en « Prêt ». |
+| Prêt | Toute issue bien identifiée, **avec une priorité**. C'est la file de travail, dans laquelle on pioche par priorité. | Au début du travail (branche ou premier commit) : « En cours ». |
+| En cours | Le travail a commencé. Une epic y reste tant que ses sous-issues avancent. | Issue simple ou sous-issue : arrivée sur `develop`. Epic : **uniquement sur feu vert explicite de Thomas**, souvent après plusieurs retouches. |
+| Sur develop | Issue fermée à la main dès son arrivée sur `develop`. | Merge de la PR `develop → main`. |
+| En prod | Le travail est en prod. | Fin. |
+| Abandonné | Issue fermée en « not planned ». | Fin. |
+
+- **« Prêt », c'est** : le constat ou le besoin est clair, la piste retenue est écrite
+  (ou la décision à prendre est nommée), le hors-périmètre est dit s'il y a ambiguïté,
+  les vérifications sont listées. Le format `## Constat` / `## Besoin` / `## Pistes` /
+  `## Vérifications` le couvre. Une idée en une phrase reste en Backlog.
+- **Les quatre moments où l'on touche au tableau** :
+  1. **Création** : poser le statut (« Prêt » ou « Backlog ») et, en « Prêt », la priorité.
+  2. **Début** : « En cours », et l'epic aussi si c'est sa première sous-issue.
+  3. **Arrivée sur `develop`** : fermer l'issue à la main (`gh issue close N --comment
+     "<hash>"`, car `Closes #N` ne ferme qu'au merge dans `main`, la branche par
+     défaut) ; le workflow « Item closed » la passe en « Sur develop ». Jamais
+     l'epic sans l'accord de Thomas.
+  4. **Merge `develop → main`** : passer en « En prod » tout ce qui est « Sur develop »
+     et les issues que la PR ferme (ordre ci-dessous : fermer, attendre, poser le
+     statut, relire). La PR `develop → main` porte `Closes #<epic>`.
+- **Workflows intégrés du Project** (réglés dans l'interface web, l'API ne les montre
+  pas) : « Item added » → **Prêt** (colonne par défaut : une idée vague oubliée en
+  « Prêt » se voit, une issue prête oubliée en Backlog disparaît) ; « Item closed » →
+  **Sur develop** ; « Auto-close issue » ferme une issue passée en **En prod**.
+  « Item closed » s'applique à **toute** fermeture, y compris celle d'« Auto-close » en
+  prod et celle d'un abandon (constaté le 2026-10-22 sur #38 et #67). D'où la règle :
+  pour « En prod » ou « Abandonné », **fermer d'abord, attendre une quinzaine de
+  secondes, poser le statut, puis relire**. Le passage en prod se fait toujours depuis
+  le `gh` local, qui peut corriger.
+  Abandon : fermer en « not planned », puis passer en « Abandonné ».
+- **Une issue de mise en prod** (`release`) ne sert que s'il reste des gestes manuels
+  après le déploiement (régénérer le pool, Search Console). Sinon, la PR `develop → main`
+  et l'epic suffisent.
+- **Outils.** Les outils GitHub des sessions cloud ne gèrent pas les Projects v2 : le
+  tableau se manipule avec le `gh` **local** de Thomas (scope `project`, posé une fois
+  par `gh auth refresh -s project`), depuis une session locale ou une session Remote
+  Control sur son Mac. Une session cloud sans accès au Mac le dit au lieu de sauter
+  l'étape. Identifiants :
+
+  ```bash
+  # Project « Geodoku » n°1 : PVT_kwHOBW96fc4BmVUK
+  # Status   PVTSSF_lAHOBW96fc4BmVUKzhk-x9g : Backlog f75ad846 · Prêt be9518dc · En cours 47fc9ee4
+  #          Sur develop 6571d1bd · En prod 98236657 · Abandonné 656dff45
+  # Priorité PVTSSF_lAHOBW96fc4BmVUKzhk-yCU : Haute 6085a7f0 · Moyenne e70ef5e7 · Basse 68bc87c3
+  ITEM=$(gh project item-list 1 --owner Tomspace900 --limit 300 --format json \
+    --jq '.items[] | select(.content.number == 52) | .id')
+  gh project item-edit --project-id PVT_kwHOBW96fc4BmVUK --id "$ITEM" \
+    --field-id PVTSSF_lAHOBW96fc4BmVUKzhk-x9g --single-select-option-id 47fc9ee4
+  ```
+
+- **Commits** : le code se fait sur le Mac de Thomas, commits à son nom empilés sur
+  son `develop` local, sans PR, puis poussés par lui ou par la session locale avec son
+  accord. Une session cloud ne commite ni ne pousse jamais sur `develop` : elle ne crée
+  une branche `claude/…` que sur demande explicite, que Thomas intègre ensuite en local
+  (squash ou cherry-pick). Les PR ne vont que de `develop` vers `main`.
 - **Plans longs** : un plan d'exécution peut vivre dans `docs/` le temps du chantier,
   avec son issue comme point d'entrée. À la mise en prod, ses décisions durables
   passent dans `AGENTS.md`, `content/constraints/SOURCES.md` ou

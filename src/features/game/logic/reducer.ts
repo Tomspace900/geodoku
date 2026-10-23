@@ -11,7 +11,12 @@ import {
 } from "./blockedDetection";
 import type { ConstraintId } from "./constraints";
 import { CELL_KEYS, toCellKey } from "./gridTopology";
-import { afterFailedAttempt, initialLives, isOutOfLives } from "./lives";
+import {
+  afterFailedAttempt,
+  canGiveUp,
+  initialLives,
+  isOutOfLives,
+} from "./lives";
 import type { SanitizedPersistedGame } from "./sanitizePersisted";
 import { getUsedCountryCodes } from "./usedCountries";
 
@@ -25,6 +30,7 @@ export type GameAction =
       validAnswers: Record<string, string[]>;
     }
   | { type: "guessFailure" }
+  | { type: "giveUp" }
   | { type: "setEndRecorded"; date: string }
   | { type: "setRated"; date: string }
   | {
@@ -122,6 +128,13 @@ export function gameReducer(state: GameState, action: GameAction): GameState {
         status: isOutOfLives(lives) ? "lost" : "playing",
       };
     }
+
+    // Les cases déjà remplies restent : elles comptent au score, comme après
+    // un blocage. Sans effet là où l'abandon n'existe pas (quotidien).
+    case "giveUp":
+      return state.status === "playing" && canGiveUp(state.lives)
+        ? { ...state, status: "lost", selectedCell: null }
+        : state;
 
     // Garde par date : le dispatch peut résulter d'une promesse (recordGameEnd /
     // submitGridFeedback) résolue après un basculement de grille à minuit UTC ;

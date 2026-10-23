@@ -46,7 +46,7 @@ type AcceptedGuess = {
 
 type GuessResult =
   | AcceptedGuess
-  | { kind: "domain_rejected"; reason: "invalid_guess" };
+  | { kind: "domain_rejected"; reason: "invalid_guess" | "date_mismatch" };
 
 async function getDistribution(
   ctx: QueryCtx,
@@ -206,14 +206,24 @@ export const submitTodayGuess = mutation({
     cellKey: cellKeyValidator,
     countryCode: v.string(),
     clientId: v.string(),
+    /**
+     * Date de la grille sur laquelle le coup a été joué. Optionnelle pour les
+     * onglets ouverts avant son introduction, qui jouent la grille du jour.
+     */
+    date: v.optional(v.string()),
   },
   returns: submitGuessResult,
   handler: async (ctx, args): Promise<GuessResult> => {
     assertOperationId(args.operationId);
     assertClientId(args.clientId);
     assertCountryCode(args.countryCode);
+    if (args.date !== undefined) assertCanonicalDate(args.date);
 
-    const date = todayUTC();
+    // Le client envoie en arrière-plan et rejoue au rechargement : un coup peut
+    // arriver après minuit UTC. Sans sa date, il serait validé (et compté)
+    // contre la grille du lendemain.
+    const today = todayUTC();
+    const date = args.date ?? today;
     const identity = {
       operationId: args.operationId,
       operationType: "submit_guess" as const,
@@ -229,6 +239,10 @@ export const submitTodayGuess = mutation({
         return receipt;
       }
       throw new ConvexError("Invalid operation receipt");
+    }
+    // Après le reçu : un coup de la veille déjà compté renvoie son résultat.
+    if (date !== today) {
+      return { kind: "domain_rejected", reason: "date_mismatch" };
     }
 
     await rateLimiter.limit(ctx, "guess", {

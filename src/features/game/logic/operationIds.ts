@@ -70,6 +70,16 @@ export function getOrCreatePendingOperationId(slot: string): string {
   return operationId;
 }
 
+/** Opérations encore en attente d'accusé (purge de rétention appliquée). */
+export function listPendingOperations(): {
+  slot: string;
+  operationId: string;
+}[] {
+  return Object.entries(loadPendingOperations(Date.now())).map(
+    ([slot, operation]) => ({ slot, operationId: operation.operationId }),
+  );
+}
+
 export function clearPendingOperationId(
   slot: string,
   operationId: string,

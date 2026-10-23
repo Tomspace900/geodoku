@@ -12,7 +12,7 @@ export const fr = {
     typeAtLeast: "Saisis au moins\u00A03 caractères",
     noResults: "Aucun pays trouvé.",
     rarityEvolvesHint: "Les raretés évoluent au fil des parties du jour.",
-    constraintSourceConvention: "Classification Geodoku",
+    constraintSourceConvention: "arbitrage Geodoku",
     constraintSourcePrefix: "Source :",
     constraintSourcesPrefix: "Sources :",
     feedbackQuestion: "Comment as-tu trouvé la grille\u00A0?",
@@ -31,6 +31,8 @@ export const fr = {
       "Sélectionner case ligne {row} colonne {col} : {rowConstraint} × {colConstraint}",
     cellFilledAriaLabel:
       "Case ligne {row} colonne {col} : {rowConstraint} × {colConstraint}, remplie avec {country}",
+    blockedCellTitle: "Case bloquée",
+    blockedCellBody: "Tous ses pays possibles sont déjà placés ailleurs.",
     cellBlockedAriaLabel:
       "Case bloquée ligne {row} colonne {col} : {rowConstraint} × {colConstraint}",
     remainingLives: "{count} vies restantes",
@@ -38,7 +40,7 @@ export const fr = {
     possibleAnswersPartial: "{remaining}\u00A0réponses possibles sur {total}",
     viewAnswers: "Voir les réponses",
     viewMyResult: "Voir mon score",
-    replayPastGrids: "Archives",
+    replayPastGrids: "Entraînement",
     closeResult: "Fermer",
     closeDialog: "Fermer la fenêtre",
     resultDialogDescription:
@@ -95,6 +97,10 @@ export const fr = {
     title: "Nouveautés",
     backToGame: "Retour au jeu",
     entries: {
+      stabilityDate: "22 octobre 2026",
+      stabilityTitle: "Petites corrections",
+      stabilityBody:
+        "Une mise à jour mineure\u00A0: le jeu supporte mieux une mauvaise connexion, et en entraînement tu peux voir les réponses sans finir la grille. Plus quelques détails et de la stabilité.",
       answerSourcesDate: "15 octobre 2026",
       answerSourcesTitle: "D'o\u00F9 viennent les donn\u00E9es\u00A0?",
       answerSourcesBody:
@@ -177,7 +183,7 @@ export const fr = {
       "J'accueille toutes les suggestions avec plaisir. \u00C9cris-moi \u00E0",
   },
   seo: {
-    homeTitle: "Geodoku — Le sudoku de géographie quotidien",
+    homeTitle: "Geodoku, le sudoku de géographie quotidien",
     privacyTitle: "Confidentialité · Geodoku",
     changelogTitle: "Nouveautés · Geodoku",
     aboutTitle: "À propos de Geodoku : règles, score et questions fréquentes",
@@ -189,7 +195,7 @@ export const fr = {
       "Ce que Geodoku collecte, et ce qu'il ne collecte pas : pas de compte, pas de publicité, le strict minimum pour faire tourner le jeu.",
     changelogDescription:
       "Les nouveautés de Geodoku, mise à jour après mise à jour : nouvelles contraintes, fonctionnalités et corrections.",
-    imageAlt: "Geodoku — une grille 3×3 de sudoku géographique",
+    imageAlt: "Geodoku, une grille 3×3 de sudoku géographique",
     // Données structurées (JSON-LD) de l'accueil, lues par les moteurs.
     gameDescription:
       "Un sudoku de géographie. Chaque jour, une grille 3×3 dont chaque ligne et chaque colonne impose une contrainte géographique\u00A0: trouve un pays qui valide les deux.",
@@ -217,7 +223,7 @@ export const fr = {
     scoreTitle: "Le score",
     trainingTitle: "L'entraînement",
     trainingBody:
-      "Une fois la grille du jour terminée, les sept grilles précédentes restent jouables, sans limite d'essais. La partie ne s'arrête que si une case devient impossible à remplir. Le score y est sur 900\u00A0: sans vies, pas de bonus de vies.",
+      "Une fois la grille du jour terminée, les sept grilles précédentes restent jouables, sans limite d'essais. La partie s'arrête quand une case devient impossible à remplir, ou si tu abandonnes. Le score y est sur 900\u00A0: sans vies, pas de bonus de vies.",
     faqTitle: "Questions fréquentes",
     faqPriceQ: "Combien coûte Geodoku\u00A0?",
     faqPriceA: "Rien. Le jeu est gratuit, sans compte et sans publicité.",
@@ -259,8 +265,6 @@ export const fr = {
     wrong_col: "Ce pays ne respecte pas la contrainte {constraint}.",
     wrong_constraints:
       "Ce pays ne respecte ni {rowConstraint}, ni {colConstraint}.",
-    unavailable:
-      "Impossible de vérifier ce pays pour le moment. Réessaie dans un instant.",
     unknown: "Erreur inconnue.",
   },
   errorScreen: {
@@ -289,7 +293,7 @@ export const fr = {
       "Changer la date dans l'URL, l'idée était bonne, mais il va falloir attendre",
     timeTravellerBodyAccent: "le jour J",
     timeTravellerBodyPost: ".",
-    timeTravellerCta: "Retour aux archives",
+    timeTravellerCta: "Retour à l'entraînement",
   },
   rarity: {
     common: "Commun",
@@ -327,12 +331,14 @@ export const fr = {
       "Pas de vies à l'entraînement, donc pas de bonus de vies : seules la grille et la rareté comptent.",
   },
   archive: {
-    eyebrow: "Entraînement · Vies illimitées",
-    title: "Archives",
+    eyebrow: "Vies illimitées",
+    title: "Entraînement",
+    subtitle: "Rejoue les grilles des {days} derniers jours.",
     backToGame: "Retour au jeu",
     empty: "Aucune grille passée disponible pour le moment.",
     completed: "{attempts} essais",
     notPlayed: "Jamais jouée",
+    givenUp: "Abandon",
   },
   training: {
     eyebrow: "Entraînement",
@@ -341,7 +347,8 @@ export const fr = {
     attempts: "{count} essais",
     unlimitedLives: "Vies illimitées",
     restart: "Recommencer",
-    backToList: "Retour aux archives",
+    giveUp: "Abandonner",
+    backToList: "Retour à l'entraînement",
     resultDialogDescription:
       "Ton résultat d'entraînement : cases remplies, bonus de rareté et nombre d'essais.",
     noResult: "Cette grille n'est plus disponible.",
@@ -468,7 +475,7 @@ export const fr = {
     history_sovereignty_since_1990: "Indépendance récente (depuis 1990)",
     history_from_france: "Anciennement sous domination française",
     history_from_united_kingdom: "Anciennement sous domination britannique",
-    // Archivées — non générées, conservées pour rejouer d'anciennes grilles.
+    // Archivées : non générées, conservées pour rejouer d'anciennes grilles.
     nature_holocene_volcano: "Possède un volcan actif ou récent",
     area_gt_500k: "Grand pays (>500\u00A0000\u00A0km²)",
     area_lt_1k: "Micro-État (<1\u00A0000\u00A0km²)",

@@ -1,4 +1,11 @@
-import type { GameModeId, LivesState } from "../types";
+import type {
+  Cell,
+  CellKey,
+  GameModeId,
+  GameStatus,
+  LivesState,
+} from "../types";
+import { hasEmptyCell } from "./blockedDetection";
 import { STARTING_LIVES } from "./constants";
 
 /**
@@ -22,6 +29,30 @@ export function afterFailedAttempt(lives: LivesState): LivesState {
 /** Vrai seulement en régime limité : un entraînement ne se perd jamais par les essais. */
 export function isOutOfLives(lives: LivesState): boolean {
   return lives.kind === "limited" && lives.remaining <= 0;
+}
+
+/**
+ * Abandon possible seulement en régime illimité : à l'entraînement, faute de
+ * vies, un joueur coincé n'a pas d'autre issue (#148). Le quotidien n'abandonne
+ * pas, l'abandon toucherait les stats et le score partagé.
+ */
+export function canGiveUp(lives: LivesState): boolean {
+  return lives.kind === "unlimited";
+}
+
+/**
+ * Partie abandonnée, lue sur l'état seul (pas de statut dédié) : en régime
+ * illimité, seul le blocage fait perdre, et une partie bloquée n'a plus de case
+ * vide. Une défaite qui en garde une est donc un abandon.
+ */
+export function isGivenUp(game: {
+  status: GameStatus;
+  cells: Record<CellKey, Cell>;
+  lives: LivesState;
+}): boolean {
+  return (
+    canGiveUp(game.lives) && game.status === "lost" && hasEmptyCell(game.cells)
+  );
 }
 
 /** Nombre de coups ratés, quel que soit le régime. */

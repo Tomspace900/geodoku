@@ -280,9 +280,9 @@ test("tapping a header on the solution grid opens the constraint drawer with its
 
   // The source (or convention) line sits right under the title, same pure
   // view as the in-game toast (`constraintSourceView`).
-  await expect(
-    page.getByText(/Sources?:|Geodoku classification/).first(),
-  ).toBeVisible({ timeout: 5_000 });
+  await expect(page.getByText(/Sources?:/).first()).toBeVisible({
+    timeout: 5_000,
+  });
 
   const countryRow = page
     .getByRole("dialog")
