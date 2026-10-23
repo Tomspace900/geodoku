@@ -308,7 +308,7 @@ n'a pas.
 
 Complémentaire à Convex (`gridFeedback`/`dailyStats` = santé grilles ; PostHog = parcours joueur). **Convex = source de vérité** en cas de chevauchement.
 
-**Init** ([`src/main.tsx`](src/main.tsx)) : `autocapture: false`, `persistence: "localStorage"` (pas de cookies). **Pas d'init sans jeton** : les previews Vercel n'ont volontairement pas de `VITE_POSTHOG_PROJECT_TOKEN` (stats non polluées), chaque appel posthog y est un no-op. Pas de `identify()`, pas de PII. Tenir [`/privacy`](src/features/legal/PrivacyPage.tsx) à jour.
+**Init** ([`src/main.tsx`](src/main.tsx)) : `autocapture: false`, `persistence: "localStorage"` (pas de cookies). **Pas d'init sans jeton** : les previews Vercel n'ont volontairement pas de `VITE_POSTHOG_PROJECT_TOKEN` (stats non polluées), chaque appel posthog y est un no-op. **Pas d'init en local** non plus (`isDevHostname`, [`analyticsNoise.ts`](src/app/analyticsNoise.ts)), jeton présent ou non : le dev envoyait ses events et ses exceptions au projet de prod et déclenchait l'alerte d'exceptions (#151). Le même module fournit le `before_send` qui jette les exceptions inexploitables (`Script error.`, extensions, `ResizeObserver`) : en ajouter une seulement si elle n'a aucune piste d'action. Pas de `identify()`, pas de PII. Tenir [`/privacy`](src/features/legal/PrivacyPage.tsx) à jour.
 
 **Conventions.** Events `snake_case`, passé (`game_completed`). `posthog?.capture(...)` avec optional chaining. `grid_date` sur events partie. **Vérifier le catalogue avant d'en ajouter.**
 

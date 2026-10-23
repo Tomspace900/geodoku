@@ -36,6 +36,8 @@ export const STORAGE_KEYS = {
   pendingOperations: "geodoku:pending-operations",
   /** Token admin — éphémère, sessionStorage. */
   adminToken: "geodoku:admin-token",
+  /** Horodatage du dernier rechargement sur chunk périmé. sessionStorage. */
+  chunkReload: "geodoku:chunk-reload",
 } as const;
 
 export type StorageArea = "local" | "session";

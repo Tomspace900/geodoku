@@ -22,6 +22,7 @@ import { useLocale, useT } from "@/i18n/LocaleContext";
 import { todayUTC } from "@/lib/dates";
 import { cn } from "@/lib/utils";
 import { api } from "../../../convex/_generated/api";
+import { ExpiredReplayBoundary } from "./components/ExpiredReplayBoundary";
 import { TrainingResultScreen } from "./components/TrainingResultScreen";
 import { useTrainingGame } from "./hooks/useTrainingGame";
 import { isDailyGameFinished } from "./logic/dailyGate";
@@ -92,7 +93,14 @@ export function TrainingPage() {
     );
   }
 
-  return <TrainingBoard date={date} />;
+  return (
+    <ExpiredReplayBoundary
+      date={date}
+      fallback={<Navigate to={localizedPath("/archive")} replace />}
+    >
+      <TrainingBoard date={date} />
+    </ExpiredReplayBoundary>
+  );
 }
 
 /**
