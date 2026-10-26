@@ -29,9 +29,10 @@ import {
 import {
   canUseNativeShare,
   shareGameResult,
+  shareSiteUrl,
 } from "@/features/game/logic/share";
 import type { CellGuessDistribution, GameState } from "@/features/game/types";
-import { useT } from "@/i18n/LocaleContext";
+import { useLocale, useT } from "@/i18n/LocaleContext";
 import { cn } from "@/lib/utils";
 import { api } from "../../../../convex/_generated/api";
 import { ScoreDisplay } from "./ScoreDisplay";
@@ -80,6 +81,7 @@ export function ResultScreen({
   );
   const nativeShareAvailable = canUseNativeShare();
   const t = useT();
+  const { locale } = useLocale();
   // Snapshot à l'ouverture : si la grille était déjà notée (partie reprise),
   // on affiche directement « voir les réponses » plutôt que les boutons.
   const [hadFeedbackBeforeOpen] = useState(() => state.rated);
@@ -139,7 +141,12 @@ export function ResultScreen({
 
   async function handleShare() {
     if (!scoreReady) return;
-    const outcome = await shareGameResult(state, gridNumber, distribution);
+    const outcome = await shareGameResult(
+      state,
+      gridNumber,
+      distribution,
+      shareSiteUrl(locale),
+    );
     // Une annulation est un choix du joueur : ni retour visuel, ni event.
     if (outcome === "cancelled") return;
 
