@@ -102,6 +102,9 @@ const ENTRIES: { date: TKey; title: TKey; body: TKey }[] = [
 ];
 
 const ROADMAP: TKey[] = [
+  "changelog.roadmapStats",
+  "changelog.roadmapAccounts",
+  "changelog.roadmapLeagues",
   "changelog.roadmapCountrySheets",
   "changelog.roadmapConstraints",
   "changelog.roadmapLives",

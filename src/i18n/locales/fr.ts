@@ -70,7 +70,7 @@ export const fr = {
       " aide à couvrir les frais techniques (serveur, nom de domaine). Et c'est surtout une énorme motivation pour continuer à développer de nouvelles fonctionnalités\u00A0!",
   },
   privacy: {
-    eyebrow: "Derni\u00E8re mise \u00E0 jour · Ao\u00FBt 2026",
+    eyebrow: "Derni\u00E8re mise \u00E0 jour · Octobre 2026",
     title: "Confidentialit\u00E9",
     lead: "Geodoku est un jeu que je d\u00E9veloppe seul. Pas besoin de compte\u00A0: je ne collecte que le strict minimum, juste de quoi faire tourner le jeu et voir comment se portent les grilles.",
     backToGame: "Retour au jeu",
@@ -79,7 +79,7 @@ export const fr = {
       "Pas d'inscription, pas de connexion, pas de publicit\u00E9. Je ne vends aucune donn\u00E9e et ne les utilise pas \u00E0 des fins publicitaires. Il n'y a aucun traceur publicitaire sur le site.",
     deviceTitle: "Sur ton appareil",
     deviceBody:
-      "Ton navigateur garde quelques r\u00E9glages\u00A0: ta langue, dans un cookie de pr\u00E9f\u00E9rence pos\u00E9 seulement si tu la choisis\u00A0; la langue du pays d'o\u00F9 tu te connectes, dans un cookie de session qui ne contient que cette langue, pour te proposer la bonne version\u00A0; et en stockage local la progression de la grille du jour, tes parties d'entra\u00EEnement sur les grilles pass\u00E9es, un identifiant al\u00E9atoire anti-spam et de courtes cl\u00E9s techniques pour d\u00E9dupliquer les envois. Rien de tout \u00E7a n'est un cookie publicitaire. Effacer les donn\u00E9es du site les supprime.",
+      "Ton navigateur garde quelques r\u00E9glages\u00A0: ta langue, dans un cookie de pr\u00E9f\u00E9rence pos\u00E9 seulement si tu la choisis\u00A0; la langue du pays d'o\u00F9 tu te connectes, dans un cookie de session qui ne contient que cette langue, pour te proposer la bonne version\u00A0; et en stockage local la progression de la grille du jour, l'historique de tes parties quotidiennes (pays plac\u00E9s, erreurs par case et ressenti de difficult\u00E9, sans score), qui ne quitte pas ton appareil, tes parties d'entra\u00EEnement sur les grilles pass\u00E9es, un identifiant al\u00E9atoire anti-spam et de courtes cl\u00E9s techniques pour d\u00E9dupliquer les envois. Rien de tout \u00E7a n'est un cookie publicitaire. Effacer les donn\u00E9es du site les supprime.",
     serverTitle: "Ce qui m'est envoy\u00E9",
     serverBody:
       "Quand tu joues, j'enregistre les choix agr\u00E9g\u00E9s par case, les fins de partie et le ressenti de difficult\u00E9. Pour fiabiliser un nouvel envoi, le serveur conserve pendant sept jours un re\u00E7u technique de l'action (par exemple case et pays) avec une cl\u00E9 opaque, sans identifiant stable reliant tes actions. Des \u00E9v\u00E9nements d'usage pseudonymes m'aident aussi \u00E0 comprendre le parcours. Rien de cela ne contient de nom, d'e-mail ou de compte.",
@@ -88,7 +88,7 @@ export const fr = {
       "Geodoku s'appuie sur Vercel (h\u00E9bergement et mesure d'audience sans cookie publicitaire), Convex (base des statistiques de jeu) et PostHog (mesure d'\u00E9v\u00E9nements d'usage pseudonymes avec un identifiant enregistr\u00E9 localement, sans publicit\u00E9). Google Fonts re\u00E7oit aussi ton adresse IP au chargement des polices.",
     rightsTitle: "Tes droits",
     rightsBody:
-      "Il n'y a aucun compte \u00E0 consulter. Effacer les donn\u00E9es Geodoku de ton navigateur supprime les r\u00E9glages et identifiants locaux. Pour toute question sur les donn\u00E9es pseudonymes envoy\u00E9es aux services tiers, tu peux me contacter ci-dessous.",
+      "Il n'y a aucun compte \u00E0 consulter. Effacer les donn\u00E9es Geodoku de ton navigateur supprime les r\u00E9glages, l'historique de tes parties et les identifiants locaux. Pour toute question sur les donn\u00E9es pseudonymes envoy\u00E9es aux services tiers, tu peux me contacter ci-dessous.",
     contactTitle: "Contact",
     contactBodyPre: "Une question\u00A0? \u00C9cris-moi \u00E0",
   },
@@ -178,6 +178,10 @@ export const fr = {
     roadmapConstraints:
       "Des grilles \u00E0 th\u00E8me ou des \u00E9ditions sp\u00E9ciales",
     roadmapLives: "Mode facile et/ou mode hardcore",
+    roadmapStats: "Ton historique et tes statistiques de jeu",
+    roadmapAccounts:
+      "Un compte facultatif pour retrouver tes parties sur tous tes appareils",
+    roadmapLeagues: "Des ligues entre amis",
     contactTitle: "Une id\u00E9e, une remarque\u00A0?",
     contactBodyPre:
       "J'accueille toutes les suggestions avec plaisir. \u00C9cris-moi \u00E0",
