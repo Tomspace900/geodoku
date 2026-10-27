@@ -20,6 +20,11 @@ export const STORAGE_KEYS = {
   game: "geodoku:game",
   /** Partie canonique minimale v3 : seul format écrit et lu. */
   gameV3: "geodoku:game-v3",
+  /**
+   * Journal des parties quotidiennes, une entrée par jour joué (#154). Jamais
+   * purgé : c'est l'historique du joueur. localStorage.
+   */
+  history: "geodoku:history-v1",
   /** Parties d'entraînement (grilles passées), une entrée par date. localStorage. */
   training: "geodoku:training-v1",
   /** Affichage du panneau « Comment jouer ». localStorage. */

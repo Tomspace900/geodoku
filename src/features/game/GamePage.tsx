@@ -229,7 +229,7 @@ export function GamePage() {
           gridNumber={gridNumber}
           distribution={guessDistribution ?? undefined}
           onDismiss={() => dismissResultModal("dismiss_modal")}
-          onRated={() => markRated(state.date)}
+          onRated={(rating) => markRated(state.date, rating)}
           onViewAnswers={(source) => dismissResultModal(source)}
         />
       )}

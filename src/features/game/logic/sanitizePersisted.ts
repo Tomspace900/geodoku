@@ -1,17 +1,27 @@
-import type { Cell, CellKey, GameStatus, LivesState } from "../types";
+import type {
+  Cell,
+  CellKey,
+  DifficultyRating,
+  GameStatus,
+  LivesState,
+} from "../types";
 import { hasEmptyCell, markBlockedCells } from "./blockedDetection";
 import { STARTING_LIVES } from "./constants";
+import { isDifficultyRating } from "./difficultyRating";
+import { distributeLegacyFailures, parseFailedByCell } from "./failedByCell";
 import { CELL_KEYS, GRID_CELL_COUNT } from "./gridTopology";
-import { isOutOfLives } from "./lives";
+import { failedAttemptCount, isOutOfLives } from "./lives";
 import type { PersistedGame } from "./persistence";
 
 export type SanitizedPersistedGame = {
   date: string;
   cells: Record<CellKey, Cell>;
   lives: LivesState;
+  failed: Record<CellKey, number>;
   status: GameStatus;
   endRecorded: boolean;
   rated: boolean;
+  rating: DifficultyRating | null;
 };
 
 function clampInt(n: number, min: number, max: number): number {
@@ -145,17 +155,27 @@ export function sanitizePersistedForGrid(
   // Le statut n'est plus persisté depuis la v3 : il se redérive intégralement
   // des cases et des vies, donc il n'y a plus rien à recouper.
   const canonical = canonicalStatus(filledCount, lives, canonicalCells);
+  // Les vies font foi : un détail absent (sauvegarde d'avant #154) ou qui ne
+  // retombe pas sur leur total est remplacé par une répartition du total.
+  const totalFailures = failedAttemptCount(lives);
+  const failed =
+    parseFailedByCell(persisted.failed, totalFailures) ??
+    distributeLegacyFailures(totalFailures, cells);
+  const rated = typeof persisted.rated === "boolean" ? persisted.rated : false;
 
   return {
     date: persisted.date,
     cells: canonicalCells,
     lives,
+    failed,
     status: canonical,
     endRecorded:
       typeof persisted.endRecorded === "boolean"
         ? persisted.endRecorded
         : false,
-    rated: typeof persisted.rated === "boolean" ? persisted.rated : false,
+    rated,
+    rating:
+      rated && isDifficultyRating(persisted.rating) ? persisted.rating : null,
   };
 }
 
@@ -205,8 +225,12 @@ export function sanitizeTrainingGame(
     date: input.date,
     cells: canonicalCells,
     lives,
+    // Hors journal, l'entraînement ne persiste pas le détail par case : seul
+    // l'invariant de somme compte ici.
+    failed: distributeLegacyFailures(lives.failedAttempts, cells),
     status: status === "playing" && input.givenUp === true ? "lost" : status,
     endRecorded: false,
     rated: false,
+    rating: null,
   };
 }

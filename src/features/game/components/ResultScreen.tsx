@@ -31,14 +31,16 @@ import {
   shareGameResult,
   shareSiteUrl,
 } from "@/features/game/logic/share";
-import type { CellGuessDistribution, GameState } from "@/features/game/types";
+import type {
+  CellGuessDistribution,
+  DifficultyRating,
+  GameState,
+} from "@/features/game/types";
 import { useLocale, useT } from "@/i18n/LocaleContext";
 import { cn } from "@/lib/utils";
 import { api } from "../../../../convex/_generated/api";
 import { ScoreDisplay } from "./ScoreDisplay";
 import { ShareEmojiGrid } from "./ShareEmojiGrid";
-
-type DifficultyRating = "too_easy" | "balanced" | "too_hard";
 
 type RatingSubmissionState =
   | { status: "idle" }
@@ -60,7 +62,7 @@ type Props = {
   gridNumber: number | null;
   distribution: Record<string, CellGuessDistribution> | undefined;
   onDismiss: () => void;
-  onRated: () => void;
+  onRated: (rating: DifficultyRating) => void;
   onViewAnswers: (source: "view_answers_button" | "skip_feedback") => void;
 };
 
@@ -200,7 +202,7 @@ export function ResultScreen({
         clientId: getOrCreateClientId(),
       });
       clearPendingOperationId(operationSlot, operationId);
-      onRated();
+      onRated(rating);
       setRatingSubmission({ status: "success", rating });
       posthog?.capture("difficulty_rated", {
         $insert_id: operationId,
