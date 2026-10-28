@@ -1,5 +1,6 @@
 import { describe, expect, it } from "vitest";
 import type { Cell, CellKey } from "../../types";
+import { emptyFailedByCell, totalFailed } from "../failedByCell";
 import type { PersistedGame } from "../persistence";
 import {
   sanitizePersistedForGrid,
@@ -257,6 +258,56 @@ describe("sanitizePersistedForGrid", () => {
     });
     const out = sanitizePersistedForGrid(p, va);
     expect(out?.cells["0,2"].status).toBe("blocked");
+  });
+});
+
+describe("sanitizePersistedForGrid — erreurs par case et note (#154)", () => {
+  const validAnswers = uniqueAnswers();
+
+  it("reprend le détail par case quand il retombe sur le total des vies", () => {
+    const failed = { ...emptyFailedByCell(), "1,1": 2 };
+    const out = sanitizePersistedForGrid(
+      basePersisted({ failed }),
+      validAnswers,
+    );
+    expect(out?.failed).toEqual(failed);
+  });
+
+  it("répartit le total d'une sauvegarde d'avant #154 sur les cases non remplies", () => {
+    const cells = {
+      ...emptyCells(),
+      "0,0": { status: "filled" as const, countryCode: "FRA" },
+    };
+    const out = sanitizePersistedForGrid(
+      basePersisted({ cells, remainingLives: 3 }),
+      validAnswers,
+    );
+    expect(out?.failed).toEqual({ ...emptyFailedByCell(), "0,1": 1, "0,2": 1 });
+  });
+
+  it("remplace un détail qui contredit les vies par la répartition du total", () => {
+    const out = sanitizePersistedForGrid(
+      basePersisted({ failed: { ...emptyFailedByCell(), "2,2": 4 } }),
+      validAnswers,
+    );
+    expect(out && totalFailed(out.failed)).toBe(2);
+  });
+
+  it("garde la valeur d'une note valide", () => {
+    const out = sanitizePersistedForGrid(
+      basePersisted({ rated: true, rating: "too_easy" }),
+      validAnswers,
+    );
+    expect(out?.rating).toBe("too_easy");
+  });
+
+  it("recharge une note d'avant #154 comme notée, sans valeur", () => {
+    const out = sanitizePersistedForGrid(
+      basePersisted({ rated: true }),
+      validAnswers,
+    );
+    expect(out?.rated).toBe(true);
+    expect(out?.rating).toBeNull();
   });
 });
 

@@ -12,6 +12,7 @@ import {
   parseGuessOperationSlot,
 } from "../logic/guessCommand";
 import { evaluateGuess } from "../logic/guessEvaluation";
+import { recordDailyGame } from "../logic/history";
 import { failedAttemptCount, livesRemaining } from "../logic/lives";
 import {
   clearPendingOperationId,
@@ -35,7 +36,7 @@ import {
   type GuessFailureReason,
   isConstraintFailureReason,
 } from "../logic/validation";
-import type { CellPosition, GameState } from "../types";
+import type { CellPosition, DifficultyRating, GameState } from "../types";
 
 type GuessSubmitFailure = {
   kind: "domain_rejected";
@@ -110,6 +111,13 @@ export function useGameState() {
     if (!state.date) return;
     savePersistedGame(state);
   }, [state]);
+
+  // Journal local (#154) : seuls les coups et la note le font évoluer, pas la
+  // sélection d'une case. L'entrée naît au premier coup.
+  // biome-ignore lint/correctness/useExhaustiveDependencies: state is read only for the fields listed in deps
+  useEffect(() => {
+    recordDailyGame(state);
+  }, [state.date, state.cells, state.failed, state.rating]);
 
   // Notifie Convex de la fin de partie une seule fois (gagnée ou perdue) :
   // c'est ce qui alimente les compteurs de joueurs (wins/losses + agrégats),
@@ -230,8 +238,8 @@ export function useGameState() {
     });
   }, [todayGrid, sendGuess]);
 
-  const markRated = useCallback((date: string) => {
-    dispatch({ type: "setRated", date });
+  const markRated = useCallback((date: string, rating: DifficultyRating) => {
+    dispatch({ type: "setRated", date, rating });
   }, []);
 
   const selectCell = useCallback((cell: CellPosition | null) => {
@@ -250,7 +258,7 @@ export function useGameState() {
         const remaining = livesRemaining(state.lives) ?? 0;
         const gameOver = remaining === 1;
         const operationId = createOperationId();
-        dispatch({ type: "guessFailure" });
+        dispatch({ type: "guessFailure", cell });
         posthog?.capture("guess_failed", {
           $insert_id: operationId,
           reason,

@@ -1,7 +1,11 @@
 import { describe, expect, it } from "vitest";
 import type { CellKey, GameState } from "../../types";
+import { emptyFailedByCell, totalFailed } from "../failedByCell";
+import { failedAttemptCount } from "../lives";
 import { createInitialState, gameReducer } from "../reducer";
 import type { SanitizedPersistedGame } from "../sanitizePersisted";
+
+const CELL = { row: 0, col: 0 } as const;
 
 function freshState(): GameState {
   return createInitialState(
@@ -265,11 +269,11 @@ describe("gameReducer — guessSuccess", () => {
 
   it("is ignored when state is lost", () => {
     let state = freshState();
-    state = gameReducer(state, { type: "guessFailure" });
-    state = gameReducer(state, { type: "guessFailure" });
-    state = gameReducer(state, { type: "guessFailure" });
-    state = gameReducer(state, { type: "guessFailure" });
-    state = gameReducer(state, { type: "guessFailure" });
+    state = gameReducer(state, { type: "guessFailure", cell: CELL });
+    state = gameReducer(state, { type: "guessFailure", cell: CELL });
+    state = gameReducer(state, { type: "guessFailure", cell: CELL });
+    state = gameReducer(state, { type: "guessFailure", cell: CELL });
+    state = gameReducer(state, { type: "guessFailure", cell: CELL });
     expect(state.status).toBe("lost");
 
     const stateAfter = gameReducer(state, {
@@ -284,17 +288,60 @@ describe("gameReducer — guessSuccess", () => {
 
 describe("gameReducer — guessFailure", () => {
   it("decrements remainingLives", () => {
-    const state = gameReducer(freshState(), { type: "guessFailure" });
+    const state = gameReducer(freshState(), {
+      type: "guessFailure",
+      cell: CELL,
+    });
     expect(state.lives).toEqual({ kind: "limited", remaining: 4 });
+  });
+
+  it("compte l'erreur sur la case visée", () => {
+    let state = freshState();
+    state = gameReducer(state, {
+      type: "guessFailure",
+      cell: { row: 1, col: 2 },
+    });
+    state = gameReducer(state, {
+      type: "guessFailure",
+      cell: { row: 1, col: 2 },
+    });
+    state = gameReducer(state, { type: "guessFailure", cell: CELL });
+    expect(state.failed).toEqual({
+      ...emptyFailedByCell(),
+      "0,0": 1,
+      "1,2": 2,
+    });
+  });
+
+  it("garde la somme des erreurs par case égale aux vies perdues", () => {
+    let state = freshState();
+    state = gameReducer(state, {
+      type: "guessFailure",
+      cell: { row: 2, col: 1 },
+    });
+    state = gameReducer(state, { type: "guessFailure", cell: CELL });
+    state = gameReducer(state, {
+      type: "guessFailure",
+      cell: { row: 2, col: 1 },
+    });
+    expect(totalFailed(state.failed)).toBe(failedAttemptCount(state.lives));
+  });
+
+  it("ne compte plus rien une fois la partie perdue", () => {
+    let state = freshState();
+    for (let i = 0; i < 6; i++) {
+      state = gameReducer(state, { type: "guessFailure", cell: CELL });
+    }
+    expect(state.failed["0,0"]).toBe(5);
   });
 
   it("transitions to lost after 5 consecutive failures", () => {
     let state = freshState();
-    state = gameReducer(state, { type: "guessFailure" });
-    state = gameReducer(state, { type: "guessFailure" });
-    state = gameReducer(state, { type: "guessFailure" });
-    state = gameReducer(state, { type: "guessFailure" });
-    state = gameReducer(state, { type: "guessFailure" });
+    state = gameReducer(state, { type: "guessFailure", cell: CELL });
+    state = gameReducer(state, { type: "guessFailure", cell: CELL });
+    state = gameReducer(state, { type: "guessFailure", cell: CELL });
+    state = gameReducer(state, { type: "guessFailure", cell: CELL });
+    state = gameReducer(state, { type: "guessFailure", cell: CELL });
     expect(state.status).toBe("lost");
   });
 });
@@ -311,15 +358,15 @@ describe("gameReducer — mode entraînement", () => {
 
   it("compte les essais ratés sans jamais retirer de vie", () => {
     let state = trainingState();
-    state = gameReducer(state, { type: "guessFailure" });
-    state = gameReducer(state, { type: "guessFailure" });
+    state = gameReducer(state, { type: "guessFailure", cell: CELL });
+    state = gameReducer(state, { type: "guessFailure", cell: CELL });
     expect(state.lives).toEqual({ kind: "unlimited", failedAttempts: 2 });
   });
 
   it("ne se perd jamais par les essais, même bien au-delà de 5 échecs", () => {
     let state = trainingState();
     for (let i = 0; i < 20; i++) {
-      state = gameReducer(state, { type: "guessFailure" });
+      state = gameReducer(state, { type: "guessFailure", cell: CELL });
     }
     expect(state.status).toBe("playing");
   });
@@ -434,9 +481,11 @@ describe("gameReducer — rehydrate", () => {
         "2,2": { status: "empty" },
       },
       lives: { kind: "limited", remaining: 2 },
+      failed: { ...emptyFailedByCell(), "0,1": 3 },
       status: "playing",
       endRecorded: false,
       rated: false,
+      rating: null,
     };
   }
 
@@ -533,6 +582,23 @@ describe("gameReducer — rehydrate", () => {
     expect(state.rated).toBe(true);
   });
 
+  it("restaure les erreurs par case et la note", () => {
+    const persisted: SanitizedPersistedGame = {
+      ...makePersistedGame(),
+      rated: true,
+      rating: "too_hard",
+    };
+    const state = gameReducer(freshState(), {
+      type: "rehydrate",
+      persisted,
+      rows: ["borders_china", "borders_brazil", "borders_russia"],
+      cols: ["population_more_canada", "area_larger_france", "flag_has_star"],
+      validAnswers: emptyValidAnswers,
+    });
+    expect(state.failed).toEqual(persisted.failed);
+    expect(state.rating).toBe("too_hard");
+  });
+
   it("defaults endRecorded / rated to false when absent from persisted data", () => {
     const state = gameReducer(freshState(), {
       type: "rehydrate",
@@ -581,13 +647,28 @@ describe("gameReducer — setEndRecorded / setRated", () => {
     const state = gameReducer(initial, {
       type: "setRated",
       date: initial.date,
+      rating: "balanced",
     });
     expect(state.rated).toBe(true);
   });
 
+  it("garde la valeur de la note", () => {
+    const initial = freshState();
+    const state = gameReducer(initial, {
+      type: "setRated",
+      date: initial.date,
+      rating: "too_easy",
+    });
+    expect(state.rating).toBe("too_easy");
+  });
+
   it("ignores setRated for a different date", () => {
     const initial = freshState();
-    const next = gameReducer(initial, { type: "setRated", date: "1999-01-01" });
+    const next = gameReducer(initial, {
+      type: "setRated",
+      date: "1999-01-01",
+      rating: "balanced",
+    });
     expect(next).toBe(initial);
     expect(next.rated).toBe(false);
   });
@@ -596,9 +677,14 @@ describe("gameReducer — setEndRecorded / setRated", () => {
     const rated = gameReducer(freshState(), {
       type: "setRated",
       date: freshState().date,
+      rating: "balanced",
     });
-    expect(gameReducer(rated, { type: "setRated", date: rated.date })).toBe(
-      rated,
-    );
+    expect(
+      gameReducer(rated, {
+        type: "setRated",
+        date: rated.date,
+        rating: "balanced",
+      }),
+    ).toBe(rated);
   });
 });

@@ -55,11 +55,31 @@ describe("savePersistedGame / loadPersistedGame", () => {
       [...TEST_COLS],
     );
     state = gameReducer(state, { type: "setEndRecorded", date: state.date });
-    state = gameReducer(state, { type: "setRated", date: state.date });
+    state = gameReducer(state, {
+      type: "setRated",
+      date: state.date,
+      rating: "too_hard",
+    });
     savePersistedGame(state);
     const loaded = loadPersistedGame();
     expect(loaded?.endRecorded).toBe(true);
     expect(loaded?.rated).toBe(true);
+    expect(loaded?.rating).toBe("too_hard");
+  });
+
+  it("persiste les erreurs par case", () => {
+    let state = createInitialState(
+      "daily",
+      "2026-04-15",
+      [...TEST_ROWS],
+      [...TEST_COLS],
+    );
+    state = gameReducer(state, {
+      type: "guessFailure",
+      cell: { row: 1, col: 1 },
+    });
+    savePersistedGame(state);
+    expect(loadPersistedGame()?.failed?.["1,1"]).toBe(1);
   });
 
   it("persists filled cells without a duplicate used-countries cache", () => {

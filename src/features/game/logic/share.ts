@@ -1,3 +1,4 @@
+import type { Locale } from "@/i18n/types";
 import type { Cell, CellGuessDistribution, CellKey, GameState } from "../types";
 import { SHARE_EMOJIS, STARTING_LIVES } from "./constants";
 import { livesRemaining } from "./lives";
@@ -17,6 +18,17 @@ export function cellShareEmoji(
   }
   if (cell.status === "blocked") return SHARE_EMOJIS.blocked;
   return SHARE_EMOJIS.failed;
+}
+
+/**
+ * Lien en fin de partage : l'accueil dans la langue du joueur (#140). Les
+ * messageries qui génèrent l'aperçu depuis leurs serveurs n'annoncent aucune
+ * langue : la racine leur donnait une carte anglaise, même entre francophones.
+ * Un destinataire d'une autre langue arrive sur cette version et se voit
+ * proposer la sienne (`LocaleSuggestionToast`).
+ */
+export function shareSiteUrl(locale: Locale): string {
+  return `https://geodoku.app/${locale}`;
 }
 
 /**

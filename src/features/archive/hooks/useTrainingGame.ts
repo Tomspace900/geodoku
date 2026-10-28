@@ -143,7 +143,7 @@ export function useTrainingGame(date: string) {
 
       const local = evaluateGuess(state, cell, countryCode, grid.validAnswers);
       if (local.kind === "rejected") {
-        dispatch({ type: "guessFailure" });
+        dispatch({ type: "guessFailure", cell });
         return {
           kind: "domain_rejected",
           reason: local.reason,

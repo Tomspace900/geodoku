@@ -29,15 +29,18 @@ import {
 import {
   canUseNativeShare,
   shareGameResult,
+  shareSiteUrl,
 } from "@/features/game/logic/share";
-import type { CellGuessDistribution, GameState } from "@/features/game/types";
-import { useT } from "@/i18n/LocaleContext";
+import type {
+  CellGuessDistribution,
+  DifficultyRating,
+  GameState,
+} from "@/features/game/types";
+import { useLocale, useT } from "@/i18n/LocaleContext";
 import { cn } from "@/lib/utils";
 import { api } from "../../../../convex/_generated/api";
 import { ScoreDisplay } from "./ScoreDisplay";
 import { ShareEmojiGrid } from "./ShareEmojiGrid";
-
-type DifficultyRating = "too_easy" | "balanced" | "too_hard";
 
 type RatingSubmissionState =
   | { status: "idle" }
@@ -59,7 +62,7 @@ type Props = {
   gridNumber: number | null;
   distribution: Record<string, CellGuessDistribution> | undefined;
   onDismiss: () => void;
-  onRated: () => void;
+  onRated: (rating: DifficultyRating) => void;
   onViewAnswers: (source: "view_answers_button" | "skip_feedback") => void;
 };
 
@@ -80,6 +83,7 @@ export function ResultScreen({
   );
   const nativeShareAvailable = canUseNativeShare();
   const t = useT();
+  const { locale } = useLocale();
   // Snapshot à l'ouverture : si la grille était déjà notée (partie reprise),
   // on affiche directement « voir les réponses » plutôt que les boutons.
   const [hadFeedbackBeforeOpen] = useState(() => state.rated);
@@ -139,7 +143,12 @@ export function ResultScreen({
 
   async function handleShare() {
     if (!scoreReady) return;
-    const outcome = await shareGameResult(state, gridNumber, distribution);
+    const outcome = await shareGameResult(
+      state,
+      gridNumber,
+      distribution,
+      shareSiteUrl(locale),
+    );
     // Une annulation est un choix du joueur : ni retour visuel, ni event.
     if (outcome === "cancelled") return;
 
@@ -193,7 +202,7 @@ export function ResultScreen({
         clientId: getOrCreateClientId(),
       });
       clearPendingOperationId(operationSlot, operationId);
-      onRated();
+      onRated(rating);
       setRatingSubmission({ status: "success", rating });
       posthog?.capture("difficulty_rated", {
         $insert_id: operationId,

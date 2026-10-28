@@ -10,6 +10,7 @@ import {
   canUseNativeShare,
   formatShareString,
   shareGameResult,
+  shareSiteUrl,
 } from "../share";
 
 function makeState(overrides: Partial<GameState> = {}): GameState {
@@ -263,5 +264,11 @@ describe("shareGameResult", () => {
     expect(outcome).toBe("cancelled");
 
     vi.unstubAllGlobals();
+  });
+});
+
+describe("shareSiteUrl", () => {
+  it("partage l'accueil dans la langue du joueur", () => {
+    expect(shareSiteUrl("fr")).toBe("https://geodoku.app/fr");
   });
 });

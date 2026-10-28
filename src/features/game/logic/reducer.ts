@@ -2,6 +2,7 @@ import type {
   Cell,
   CellKey,
   CellPosition,
+  DifficultyRating,
   GameModeId,
   GameState,
 } from "../types";
@@ -10,6 +11,7 @@ import {
   resolveStatusAfterPlacement,
 } from "./blockedDetection";
 import type { ConstraintId } from "./constraints";
+import { emptyFailedByCell } from "./failedByCell";
 import { CELL_KEYS, toCellKey } from "./gridTopology";
 import {
   afterFailedAttempt,
@@ -29,10 +31,10 @@ export type GameAction =
       countryCode: string;
       validAnswers: Record<string, string[]>;
     }
-  | { type: "guessFailure" }
+  | { type: "guessFailure"; cell: CellPosition }
   | { type: "giveUp" }
   | { type: "setEndRecorded"; date: string }
-  | { type: "setRated"; date: string }
+  | { type: "setRated"; date: string; rating: DifficultyRating }
   | {
       type: "rehydrate";
       persisted: SanitizedPersistedGame;
@@ -57,10 +59,12 @@ export function createInitialState(
     cols,
     cells,
     lives: initialLives(mode),
+    failed: emptyFailedByCell(),
     selectedCell: null,
     status: "playing",
     endRecorded: false,
     rated: false,
+    rating: null,
   };
 }
 
@@ -119,12 +123,15 @@ export function gameReducer(state: GameState, action: GameAction): GameState {
 
     // Mode-agnostique : `afterFailedAttempt` décrémente une vie ou incrémente un
     // compteur d'essais, et seul le régime limité peut atteindre `isOutOfLives`.
+    // Le détail par case avance du même pas que le total.
     case "guessFailure": {
       if (state.status !== "playing") return state;
       const lives = afterFailedAttempt(state.lives);
+      const key = toCellKey(action.cell);
       return {
         ...state,
         lives,
+        failed: { ...state.failed, [key]: state.failed[key] + 1 },
         status: isOutOfLives(lives) ? "lost" : "playing",
       };
     }
@@ -147,7 +154,7 @@ export function gameReducer(state: GameState, action: GameAction): GameState {
     case "setRated":
       return state.date !== action.date || state.rated
         ? state
-        : { ...state, rated: true };
+        : { ...state, rated: true, rating: action.rating };
 
     case "rehydrate": {
       const usedCountries = getUsedCountryCodes(action.persisted.cells);
@@ -166,10 +173,12 @@ export function gameReducer(state: GameState, action: GameAction): GameState {
         cols: action.cols,
         cells,
         lives: action.persisted.lives,
+        failed: action.persisted.failed,
         selectedCell: null,
         status,
         endRecorded: action.persisted.endRecorded,
         rated: action.persisted.rated,
+        rating: action.persisted.rating,
       };
     }
   }

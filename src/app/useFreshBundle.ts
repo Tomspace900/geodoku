@@ -1,4 +1,5 @@
 import { useEffect } from "react";
+import { STORAGE_KEYS, safeGet, safeSet } from "@/lib/storage";
 
 /**
  * Recharge la page quand un nouveau bundle a été déployé, au retour sur
@@ -27,7 +28,37 @@ function moduleScriptFingerprint(doc: Document): string {
 const LOADED_FINGERPRINT =
   typeof document === "undefined" ? "" : moduleScriptFingerprint(document);
 
+/**
+ * Deux rechargements sur chunk périmé à moins d'une minute : ce n'est plus un
+ * déploiement mais le réseau, et l'erreur doit remonter au lieu de boucler.
+ */
+const CHUNK_RELOAD_COOLDOWN_MS = 60_000;
+
+/**
+ * Filet du cas que la vérification au focus ne couvre pas : le joueur navigue
+ * vers une page lazy (archive, admin) avant d'avoir quitté l'onglet, et l'ancien
+ * bundle réclame un chunk qu'un déploiement a supprimé. Vite émet alors
+ * `vite:preloadError` ; on recharge une fois, sur le nouveau bundle.
+ */
+function reloadOnStaleChunk(event: Event) {
+  const lastReload = Number(safeGet(STORAGE_KEYS.chunkReload, "session"));
+  if (Date.now() - lastReload < CHUNK_RELOAD_COOLDOWN_MS) return;
+  // Sans stockage, impossible de borner les rechargements : on n'en tente aucun.
+  if (!safeSet(STORAGE_KEYS.chunkReload, String(Date.now()), "session")) {
+    return;
+  }
+  event.preventDefault();
+  window.location.reload();
+}
+
 export function useFreshBundle() {
+  useEffect(() => {
+    window.addEventListener("vite:preloadError", reloadOnStaleChunk);
+    return () => {
+      window.removeEventListener("vite:preloadError", reloadOnStaleChunk);
+    };
+  }, []);
+
   useEffect(() => {
     let checking = false;
     async function checkForNewBundle() {
