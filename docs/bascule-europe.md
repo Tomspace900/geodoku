@@ -60,11 +60,15 @@ change le schéma ne part sur `develop` avant l'étape 1.7.
 
 4. **Créer develop en Europe, sans expiration.**
    ```bash
-   pnpm exec convex deployment create preview/develop --type preview --region eu --expiration none
+   pnpm exec convex deployment create develop --type preview --region eu --expiration none
    ```
    Vérifier : l'URL affichée finit par `.eu-west-1.convex.cloud`, et le
    dashboard montre « never expires ». Noter le nom (`EU_DEVELOP`).
-   Si la CLI refuse la référence `preview/develop` : régler la région par
+   Vérifier aussi que `pnpm exec convex env list --deployment preview/develop`
+   répond : c'est le nom que Vercel cherchera pour la branche `develop`. Passer
+   `preview/develop` à la création donne `preview/preview-develop`, que Vercel
+   ne trouverait pas.
+   Si la CLI refuse la référence `develop` : régler la région par
    défaut de l'équipe sur l'Europe (Team settings → General), faire l'étape 1.7
    (le push) avant 1.5 et 1.6. Vercel recrée alors `develop` en Europe et le
    remplit avec `seed:autoSeedIfEmpty`, que l'import remplace ; relancer
