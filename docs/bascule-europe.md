@@ -100,10 +100,10 @@ change le schéma ne part sur `develop` avant l'étape 1.7.
    `games:playMove`. Si les e2e sont partis avant la fin du déploiement Vercel,
    les relancer (`gh run rerun <id>`).
 
-8. **Jouer une vraie partie** sur le site develop, la finir, noter la grille,
+8. **Jouer une vraie partie** sur le site develop, la finir,
    faire glisser vers le graphique, passer les 4 calques.
    Vérifier : `pnpm exec convex data games --deployment EU_DEVELOP --limit 1` montre
-   la partie, avec la note ; l'admin (`/admin`) affiche la journée.
+   la partie ; l'admin (`/admin`) affiche la journée.
 
 ## 2. Prod : la veille
 

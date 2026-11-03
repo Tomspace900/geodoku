@@ -51,7 +51,8 @@ L'epic reste ouverte jusqu'à la mise en prod du dernier lot.
 
 - **Une ligne par partie, pour les anonymes comme pour les comptes** :
   `date`, `owner` (hash d'un jeton propre à la partie pour un anonyme, `userId`
-  pour un compte), `cells[9]`, `failed[9]`, `rating?`, `origin`. Ni vies, ni
+  pour un compte), `cells[9]`, `failed[9]`, `origin` (la note de difficulté
+  `rating?` a été retirée au lot 1, avec le sondage de fin de partie). Ni vies, ni
   statut, ni cause de fin, ni score : ils se recalculent.
 - **Le jeton anonyme ne vaut que pour une partie** : côté serveur, rien ne relie
   les parties d'un même joueur d'un jour à l'autre.
@@ -139,7 +140,7 @@ Placement tranché le 2026-11-03 sur maquettes dans la vraie app.
   se place lui-même. Le nombre de joueurs n'est **jamais affiché**.
 - **Seule la zone de la grille d'emojis glisse**, à l'horizontale : page 1 les
   emojis, page 2 l'histogramme du jour, page 3 réservée aux ligues (lot 3). Le
-  titre, l'anneau du score, la note et « Partager » ne bougent pas. Navigation par
+  titre, l'anneau du score, « Voir les réponses » et « Partager » ne bougent pas. Navigation par
   points discrets sous la zone, sans texte d'aide.
 - **Pilule « Mieux que X % des joueurs › »** en haut de la page 1, au-dessus des
   emojis, pour tout le monde, sans règle particulière sous la médiane. Un tap fait
@@ -167,9 +168,10 @@ Placement tranché le 2026-11-03 sur maquettes dans la vraie app.
   - **Erreurs** : le taux d'erreur par case en teinte rouge, et tes propres
     erreurs en croix, une par erreur, sans texte. Sous 5 parties finies, les
     croix seules, sans les taux ;
-  - **Meilleur score** : le combo le plus rare possible, un pays par case, sans
+  - **Meilleure grille** (« Meilleur score » sur les maquettes) : le combo le plus rare possible, un pays par case, sans
     doublon, calculé côté client depuis la répartition ;
-  - **Tes choix** : ton pays et sa part.
+  - **Ma grille** (« Tes choix » sur les maquettes) : ton pays et sa part ;
+    tiret pour une case vide, croix pour une case bloquée.
 - **Tiroir d'une case** : « X % des joueurs se sont trompés ici, toi aussi ». La
   ligne « Le plus choisi » est retirée.
 - **Aussi en entraînement**, sur la cohorte figée du jour rejoué : le serveur
@@ -193,6 +195,12 @@ Placement tranché le 2026-11-03 sur maquettes dans la vraie app.
 
 ### Choix techniques (livrés)
 
+- **Plus de note de difficulté** (décidé le 2026-11-04 après la répétition) :
+  il y a assez de joueurs pour lire la difficulté dans le taux de victoire et
+  les erreurs par case. La modale propose directement « Voir les réponses » ;
+  la note disparaît de la partie, du journal, de la ligne serveur et de
+  l'admin (`getGridFeedbackStats` devient `getDailyGameStats`).
+
 - **Jeton tiré par le navigateur** (UUID v4) au premier coup, plutôt que
   renvoyé par le serveur : le premier coup est idempotent comme les autres, et
   la saisie n'attend jamais le réseau. Le serveur n'en garde que le hash
@@ -211,7 +219,7 @@ Placement tranché le 2026-11-03 sur maquettes dans la vraie app.
 - **Cohorte** : `getTodayCohort` lit au plus 8 000 parties ; au-delà, le levier
   est l'instantané périodique (Notes). « Mieux que X % » compte les seaux
   inférieurs et la moitié du sien.
-- **Meilleur score** : affectation hongroise sur la fraction de rareté du
+- **Meilleure grille** : affectation hongroise sur la fraction de rareté du
   barème (à points égaux, le plus rare), [`bestCombo.ts`](../src/features/game/logic/bestCombo.ts).
 - **Entraînement** : `games.getReplayStats` remplace la lecture de la
   répartition figée ; la partie d'entraînement persiste désormais ses erreurs
