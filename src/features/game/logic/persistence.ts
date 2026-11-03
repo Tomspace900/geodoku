@@ -17,7 +17,7 @@ export type PersistedGame = {
    * lu dans `remainingLives`, est alors réparti (`distributeLegacyFailures`).
    */
   failed?: Record<CellKey, number>;
-  /** Fin de partie déjà notifiée au serveur (dédup `recordTodayGameEnd`). */
+  /** `game_completed` déjà émis pour cette partie. */
   endRecorded?: boolean;
   /** Difficulté déjà notée par le joueur pour cette grille. */
   rated?: boolean;

@@ -37,8 +37,16 @@ export const STORAGE_KEYS = {
   locale: "geodoku:locale",
   /** CTA sondage déjà cliqué/fermé. localStorage. */
   surveyDone: "geodoku:survey-done",
-  /** Clés opaques des opérations Convex en attente d'acquittement. localStorage. */
+  /**
+   * Ancienne file des opérations Convex en attente, remplacée par l'envoi des
+   * coups (#70). Conservée uniquement pour la purger (`loadMoveSync`).
+   */
   pendingOperations: "geodoku:pending-operations",
+  /**
+   * Coups de la partie du jour à envoyer au serveur, avec le jeton de la
+   * partie (#70). localStorage.
+   */
+  moveSync: "geodoku:move-sync-v1",
   /** Token admin — éphémère, sessionStorage. */
   adminToken: "geodoku:admin-token",
   /** Horodatage du dernier rechargement sur chunk périmé. sessionStorage. */

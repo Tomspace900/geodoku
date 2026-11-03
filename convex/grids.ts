@@ -5,7 +5,7 @@
  * implémentations vivent derrière trois modules profonds : parcours joueur,
  * lecture/commandes admin et opérations de pool.
  */
-import { action, internalAction, mutation, query } from "./_generated/server";
+import { action, internalAction, query } from "./_generated/server";
 import {
   adminTokenArgs,
   candidatePreviewDetailArgs,
@@ -37,15 +37,10 @@ import {
   getReplayGridArgs,
   getReplayGridHandler,
   getTodayGridHandler,
-  recordTodayGameEndArgs,
-  recordTodayGameEndHandler,
   replayableGridsReturns,
   replayGridReturns,
-  submitTodayGridFeedbackArgs,
-  submitTodayGridFeedbackHandler,
   todayGridReturns,
 } from "./gridGameplay";
-import { recordedResult } from "./operationResults";
 import {
   reconcileFutureGridContentHandler,
   reconcilePoolAndScheduleArgs,
@@ -95,18 +90,6 @@ export const getReplayGrid = query({
   args: getReplayGridArgs,
   returns: replayGridReturns,
   handler: getReplayGridHandler,
-});
-
-export const recordTodayGameEnd = mutation({
-  args: recordTodayGameEndArgs,
-  returns: recordedResult,
-  handler: recordTodayGameEndHandler,
-});
-
-export const submitTodayGridFeedback = mutation({
-  args: submitTodayGridFeedbackArgs,
-  returns: recordedResult,
-  handler: submitTodayGridFeedbackHandler,
 });
 
 // ─── Read model admin ────────────────────────────────────────────────────────

@@ -1,13 +1,24 @@
+import { Layers } from "lucide-react";
 import { useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { loadCountrySheetData } from "@/features/countries/logic/loadCountrySheetData";
 import { getCountryByIso3 } from "@/features/countries/logic/search";
+import {
+  SOLUTION_LAYERS,
+  type SolutionLayer,
+} from "@/features/game/hooks/useSolutionLayer";
+import { bestCombo } from "@/features/game/logic/bestCombo";
 import { RARITY_STYLES } from "@/features/game/logic/constants";
 import {
   CONSTRAINT_BY_ID,
   type ConstraintId,
 } from "@/features/game/logic/constraints";
-import { formatRarityPercent } from "@/features/game/logic/rarity";
+import { CELL_KEYS } from "@/features/game/logic/gridTopology";
+import {
+  filledCellShare,
+  formatRarityPercent,
+  isCohortComplete,
+} from "@/features/game/logic/rarity";
 import { orderSolutionCountries } from "@/features/game/logic/solutionGridOrder";
 import type {
   Cell,
@@ -22,6 +33,14 @@ import type { Locale } from "@/i18n/types";
 import { cn } from "@/lib/utils";
 import { ConstraintHeaderButton } from "./ConstraintHeaderButton";
 import { GridMatrix } from "./GridMatrix";
+import { errorHeatClass, SolutionLayerCell } from "./SolutionLayerCell";
+
+const LAYER_LABEL_KEYS = {
+  answers: "ui.layerAnswers",
+  errors: "ui.layerErrors",
+  best: "ui.layerBest",
+  choices: "ui.layerChoices",
+} as const satisfies Record<SolutionLayer, string>;
 
 function compareIsoByLocalizedName(
   locale: Locale,
@@ -42,6 +61,13 @@ type Props = {
   mode?: GameModeId;
   onHeaderClick: (constraintId: ConstraintId) => void;
   onCellClick: (cell: CellPosition, answerCount: number) => void;
+  /** Calque affiché (#70) ; le coin haut-gauche passe au suivant. */
+  layer: SolutionLayer;
+  onLayerNext: () => void;
+  /** Taux d'erreur par case (ordre de `CELL_KEYS`), `null` sur une cohorte mince. */
+  failureRates: number[] | null;
+  /** Tes erreurs par case : les croix du calque « Erreurs ». */
+  failed: Record<CellKey, number>;
 };
 
 export function SolutionGrid({
@@ -53,8 +79,14 @@ export function SolutionGrid({
   mode = "daily",
   onHeaderClick,
   onCellClick,
+  layer,
+  onLayerNext,
+  failureRates,
+  failed,
 }: Props) {
   const { locale, t } = useLocale();
+  const best = layer === "best" ? bestCombo(validAnswers, distribution) : null;
+  const layerLabel = t(LAYER_LABEL_KEYS[layer]);
 
   // Précharge le chunk des faits dès le montage de la grille solution, pour
   // que les valeurs de contrainte soient déjà là au premier tap sur une case
@@ -81,6 +113,32 @@ export function SolutionGrid({
       )}
       rowLabels={rowLabels}
       colLabels={colLabels}
+      renderCorner={() => (
+        <Button
+          type="button"
+          variant="ghost"
+          size="auto"
+          onClick={onLayerNext}
+          aria-label={t("ui.layerSwitchAriaLabel", { layer: layerLabel })}
+          className="absolute inset-0 flex h-auto flex-col items-center justify-center gap-1 whitespace-normal rounded-xl bg-brand/10 p-1 text-brand hover:bg-brand/15 hover:text-brand"
+        >
+          <Layers className="size-4" aria-hidden />
+          <span className="text-[9px] font-semibold leading-tight sm:text-xs">
+            {layerLabel}
+          </span>
+          <span className="flex gap-0.5" aria-hidden>
+            {SOLUTION_LAYERS.map((dot) => (
+              <span
+                key={dot}
+                className={cn(
+                  "h-1 rounded-full",
+                  dot === layer ? "w-2.5 bg-brand" : "w-1 bg-brand/30",
+                )}
+              />
+            ))}
+          </span>
+        </Button>
+      )}
       renderColumnHeader={(label, col) => (
         <ConstraintHeaderButton
           label={label}
@@ -159,19 +217,57 @@ export function SolutionGrid({
           );
         }
 
+        const cellLabel = t("ui.solutionCellAriaLabel", {
+          row: row + 1,
+          col: col + 1,
+          rowConstraint: rowLabel,
+          colConstraint: colLabel,
+          count: codes.length,
+        });
+
+        if (layer !== "answers") {
+          const failureRate = failureRates?.[CELL_KEYS.indexOf(key)] ?? null;
+          const share =
+            userCell.status === "filled"
+              ? filledCellShare(
+                  userCell.countryCode,
+                  cellDist,
+                  isCohortComplete(mode),
+                )
+              : null;
+          return (
+            <Button
+              type="button"
+              variant="ghost"
+              size="auto"
+              onClick={() => onCellClick({ row, col }, codes.length)}
+              aria-label={cellLabel}
+              className={cn(
+                "relative isolate flex aspect-square h-auto w-full min-h-0 flex-col items-center justify-center gap-0.5 whitespace-normal rounded-xl p-1 text-center shadow-editorial",
+                layer === "errors"
+                  ? errorHeatClass(failureRate)
+                  : "bg-surface-lowest",
+              )}
+            >
+              <SolutionLayerCell
+                layer={layer}
+                failureRate={failureRate}
+                ownFailures={failed[key]}
+                best={best?.[key] ?? null}
+                userCell={userCell}
+                userShare={share?.share ?? null}
+              />
+            </Button>
+          );
+        }
+
         return (
           <Button
             type="button"
             variant="ghost"
             size="auto"
             onClick={() => onCellClick({ row, col }, codes.length)}
-            aria-label={t("ui.solutionCellAriaLabel", {
-              row: row + 1,
-              col: col + 1,
-              rowConstraint: rowLabel,
-              colConstraint: colLabel,
-              count: codes.length,
-            })}
+            aria-label={cellLabel}
             className="relative isolate block aspect-square h-auto w-full min-h-0 whitespace-normal rounded-xl bg-surface-lowest p-0 text-left shadow-editorial"
           >
             {/* Le Button impose `whitespace-nowrap` et un texte centré, annulés

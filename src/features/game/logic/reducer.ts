@@ -143,8 +143,8 @@ export function gameReducer(state: GameState, action: GameAction): GameState {
         ? { ...state, status: "lost", selectedCell: null }
         : state;
 
-    // Garde par date : le dispatch peut résulter d'une promesse (recordGameEnd /
-    // submitGridFeedback) résolue après un basculement de grille à minuit UTC ;
+    // Garde par date : le dispatch peut résulter d'une promesse (note envoyée par
+    // `rateTodayGame`) résolue après un basculement de grille à minuit UTC ;
     // on ne marque que si l'état concerne toujours la même partie.
     case "setEndRecorded":
       return state.date !== action.date || state.endRecorded

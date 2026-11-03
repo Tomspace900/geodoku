@@ -365,14 +365,19 @@ function randomPartialMatching(
   return out;
 }
 
+/**
+ * Coups ratés sur des cases encore vides : à l'écran, une case remplie ou
+ * bloquée ne s'ouvre plus, et le serveur refuse un coup qui la vise.
+ */
 function randomFailActions(
   ctx: SimulationContext,
   count: number,
   rng: () => number,
+  openCells: readonly CellKey[] = CELL_KEYS,
 ): SimAction[] | null {
   const actions: SimAction[] = [];
   for (let index = 0; index < count; index++) {
-    const candidates = shuffleArray([...CELL_KEYS], rng)
+    const candidates = shuffleArray([...openCells], rng)
       .map((cellKey) => ({
         cellKey,
         countryCode: ALL_COUNTRY_CODES.find(
@@ -438,10 +443,20 @@ export function buildLivesDefeatPlan(
     }
   }
 
-  const failPart = randomFailActions(ctx, STARTING_LIVES, rng);
-  if (!failPart) return null;
+  // Toutes les erreurs sauf la dernière avant les pays posés, la dernière
+  // ensuite, sur une case restée vide : la partie ne s'arrête qu'à la fin.
+  const firstFails = randomFailActions(ctx, STARTING_LIVES - 1, rng);
+  if (!firstFails) return null;
+  const beforeLast = simulatePlanLocally(ctx, [...firstFails, ...submits]);
+  const lastFail = randomFailActions(
+    ctx,
+    1,
+    rng,
+    CELL_KEYS.filter((key) => beforeLast.cells[key].status === "empty"),
+  );
+  if (!lastFail) return null;
 
-  const actions = [...submits, ...failPart];
+  const actions = [...firstFails, ...submits, ...lastFail];
   const state = simulatePlanLocally(ctx, actions);
   const target: PlayerTarget = {
     endReason: "lives",

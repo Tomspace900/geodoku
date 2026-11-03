@@ -15,6 +15,9 @@ import { SolutionDrawer } from "@/features/game/components/SolutionDrawer";
 import { SolutionGrid } from "@/features/game/components/SolutionGrid";
 import { useConstraintSourceToast } from "@/features/game/hooks/useConstraintSourceToast";
 import { useSolutionDrawer } from "@/features/game/hooks/useSolutionDrawer";
+import { useSolutionLayer } from "@/features/game/hooks/useSolutionLayer";
+import { failureRates } from "@/features/game/logic/cohort";
+import { toGuessDistribution } from "@/features/game/logic/distribution";
 import { getGridNumberForDate } from "@/features/game/logic/gridIssue";
 import { loadPersistedGame } from "@/features/game/logic/persistence";
 import { classifyReplayDate } from "@/features/game/logic/replayWindow";
@@ -136,12 +139,21 @@ function TrainingBoard({ date }: { date: string }) {
     visible: hasGrid && state.status !== "playing" && resultDismissed,
   });
 
-  // Rareté de la cohorte du jour concerné : complète et figée, donc le score
-  // affiché est exact et stable (pas de marqueur « ≈ » qui bougerait).
-  const distribution = useQuery(
-    api.guesses.getGuessDistributionForDate,
+  // Cohorte du jour concerné : complète et figée, donc le score affiché est
+  // exact et stable (pas de marqueur « ≈ » qui bougerait). Elle donne aussi
+  // les taux d'erreur du calque « Erreurs ».
+  const replayStats = useQuery(
+    api.games.getReplayStats,
     state.date ? { date: state.date } : "skip",
   );
+  const distribution = replayStats
+    ? toGuessDistribution(replayStats.counts)
+    : undefined;
+  const cellFailureRates = replayStats ? failureRates(replayStats) : null;
+  const solutionLayer = useSolutionLayer({
+    gridDate: state.date,
+    mode: state.mode,
+  });
 
   useEffect(() => {
     if (state.status === "playing") setResultDismissed(false);
@@ -169,17 +181,21 @@ function TrainingBoard({ date }: { date: string }) {
               rows={state.rows}
               cols={state.cols}
               validAnswers={validAnswers}
-              distribution={distribution ?? undefined}
+              distribution={distribution}
               cells={state.cells}
               mode="training"
               onHeaderClick={solutionDrawer.openConstraint}
               onCellClick={solutionDrawer.openCell}
+              layer={solutionLayer.layer}
+              onLayerNext={solutionLayer.next}
+              failureRates={cellFailureRates}
+              failed={state.failed}
             />
           ) : (
             <>
               <GameGrid
                 state={state}
-                distribution={distribution ?? undefined}
+                distribution={distribution}
                 onCellClick={selectCell}
                 onHeaderClick={(id) => sourceToast.onHeaderClick(id)}
                 onBlockedCellClick={sourceToast.onBlockedCellClick}
@@ -245,7 +261,7 @@ function TrainingBoard({ date }: { date: string }) {
         <TrainingResultScreen
           state={state}
           gridNumber={gridNumber}
-          distribution={distribution ?? undefined}
+          distribution={distribution}
           onDismiss={() => setResultDismissed(true)}
           onRestart={handleRestart}
           onViewAnswers={() => setResultDismissed(true)}
@@ -258,7 +274,8 @@ function TrainingBoard({ date }: { date: string }) {
         <SolutionDrawer
           state={state}
           validAnswers={validAnswers}
-          distribution={distribution ?? undefined}
+          distribution={distribution}
+          failureRates={cellFailureRates}
           drawer={solutionDrawer}
         />
       )}

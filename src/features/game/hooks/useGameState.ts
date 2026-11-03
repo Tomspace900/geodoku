@@ -5,21 +5,22 @@ import { api } from "../../../../convex/_generated/api";
 import { getOrCreateClientId } from "../logic/clientId";
 import type { ConstraintId } from "../logic/constraints";
 import { toCellKey } from "../logic/gridTopology";
-import {
-  deliverGuess,
-  guessOperationSlot,
-  type PendingGuess,
-  parseGuessOperationSlot,
-} from "../logic/guessCommand";
 import { evaluateGuess } from "../logic/guessEvaluation";
 import { recordDailyGame } from "../logic/history";
-import { failedAttemptCount, livesRemaining } from "../logic/lives";
+import { livesRemaining } from "../logic/lives";
 import {
-  clearPendingOperationId,
-  createOperationId,
-  getOrCreatePendingOperationId,
-  listPendingOperations,
-} from "../logic/operationIds";
+  ackMove,
+  appendMove,
+  clearMoveSync,
+  loadMoveSync,
+  type MoveSync,
+  movesPlayed,
+  nextPendingMove,
+  type SyncedMove,
+  saveMoveSync,
+  startMoveSync,
+  stopMoveSync,
+} from "../logic/moveSync";
 import {
   clearPersistedGame,
   isPersistedForToday,
@@ -32,10 +33,7 @@ import {
   type SanitizedPersistedGame,
   sanitizePersistedForGrid,
 } from "../logic/sanitizePersisted";
-import {
-  type GuessFailureReason,
-  isConstraintFailureReason,
-} from "../logic/validation";
+import type { GuessFailureReason } from "../logic/validation";
 import type { CellPosition, DifficultyRating, GameState } from "../types";
 
 type GuessSubmitFailure = {
@@ -47,9 +45,8 @@ type GuessSubmitFailure = {
 export function useGameState() {
   const posthog = usePostHog();
   const todayGrid = useQuery(api.grids.getTodayGrid);
-  const submit = useMutation(api.guesses.submitTodayGuess);
-  const recordFailedGuess = useMutation(api.guesses.recordTodayFailedGuess);
-  const recordGameEnd = useMutation(api.grids.recordTodayGameEnd);
+  const playMove = useMutation(api.games.playMove);
+  const rateTodayGame = useMutation(api.games.rateTodayGame);
 
   const [state, dispatch] = useReducer(
     gameReducer,
@@ -57,11 +54,74 @@ export function useGameState() {
     () => createInitialState("daily", "", [], []),
   );
 
-  // Garde-fou anti-doublon intra-session : la date dont la fin est en cours
-  // d'envoi (ou déjà claimée). `state.endRecorded` gère l'idempotence
-  // cross-reload ; ce ref évite un second envoi le temps que le dispatch se
-  // propage. Scopé par date car le hook survit au changement de jour.
-  const endClaimedDateRef = useRef<string | null>(null);
+  // Coups à envoyer et jeton de la partie, hors du reducer : ils ne changent
+  // rien à l'écran. `sendingRef` garde un seul envoi à la fois, dans l'ordre.
+  const syncRef = useRef<MoveSync | null>(null);
+  const sendingRef = useRef(false);
+  // Coups déjà joués au chargement : leur envoi est un rejeu (`replayed`).
+  const movesAtLoadRef = useRef(0);
+
+  function updateSync(next: MoveSync): void {
+    syncRef.current = next;
+    saveMoveSync(next);
+  }
+
+  // Envoie les coups en attente, un par un. Le client Convex garde lui-même
+  // les mutations pendant une coupure ; une erreur serveur laisse le coup en
+  // attente jusqu'au prochain coup ou au prochain chargement. Un refus
+  // définitif arrête l'envoi : la partie continue en local seulement.
+  // biome-ignore lint/correctness/useExhaustiveDependencies: posthog is a stable ref
+  const flushMoves = useCallback(async () => {
+    if (sendingRef.current) return;
+    sendingRef.current = true;
+    try {
+      for (;;) {
+        const sync = syncRef.current;
+        const pending = sync ? nextPendingMove(sync) : null;
+        if (!sync || !pending) return;
+
+        const startedAt = performance.now();
+        let result: Awaited<ReturnType<typeof playMove>>;
+        try {
+          result = await playMove({
+            date: sync.date,
+            token: sync.token,
+            clientId: getOrCreateClientId(),
+            moveIndex: pending.moveIndex,
+            ...pending.move,
+          });
+        } catch {
+          return;
+        }
+        // Grille changée pendant l'envoi (minuit UTC) : l'accusé ne vaut plus.
+        const current = syncRef.current;
+        if (!current || current.token !== sync.token) return;
+        if (result.kind === "rejected") {
+          updateSync(stopMoveSync(current));
+          return;
+        }
+        updateSync(ackMove(current, pending.moveIndex));
+        if (result.kind === "applied" && result.outcome === "success") {
+          const replayed = pending.moveIndex < movesAtLoadRef.current;
+          posthog?.capture("guess_submitted", {
+            grid_date: sync.date,
+            cell: pending.move.cellKey,
+            country_code: pending.move.countryCode,
+            rarity_tier: rarityToTier(result.count / result.total),
+            replayed,
+            // Un rejeu ne mesure que l'aller-retour, pas l'attente du joueur.
+            ...(replayed
+              ? {}
+              : {
+                  submit_latency_ms: Math.round(performance.now() - startedAt),
+                }),
+          });
+        }
+      }
+    } finally {
+      sendingRef.current = false;
+    }
+  }, [playMove]);
 
   // biome-ignore lint/correctness/useExhaustiveDependencies: posthog is a stable ref
   useEffect(() => {
@@ -79,6 +139,22 @@ export function useGameState() {
     } else if (persisted) {
       clearPersistedGame();
     }
+
+    // L'envoi ne reprend que s'il décrit exactement la partie rechargée. Une
+    // partie commencée sans lui (avant #70, ou stockage plein) reste locale.
+    const stored = loadMoveSync();
+    const played = rehydratePayload
+      ? movesPlayed(rehydratePayload.cells, rehydratePayload.lives)
+      : 0;
+    let sync: MoveSync | null = null;
+    if (stored && stored.date === todayGrid.date && rehydratePayload) {
+      sync = stored.moves.length === played ? stored : stopMoveSync(stored);
+    } else {
+      clearMoveSync();
+    }
+    syncRef.current = sync;
+    if (sync) saveMoveSync(sync);
+    movesAtLoadRef.current = sync?.moves.length ?? 0;
 
     if (rehydratePayload) {
       dispatch({
@@ -105,6 +181,7 @@ export function useGameState() {
       });
       posthog?.capture("game_started", { grid_date: todayGrid.date });
     }
+    void flushMoves();
   }, [todayGrid, state.date]);
 
   useEffect(() => {
@@ -113,32 +190,27 @@ export function useGameState() {
   }, [state]);
 
   // Journal local (#154) : seuls les coups et la note le font évoluer, pas la
-  // sélection d'une case. L'entrée naît au premier coup.
+  // sélection d'une case. L'entrée naît au premier coup, avec le jeton de la
+  // partie, qui servira à la rattacher à un compte (#155).
   // biome-ignore lint/correctness/useExhaustiveDependencies: state is read only for the fields listed in deps
   useEffect(() => {
-    recordDailyGame(state);
+    const token =
+      syncRef.current?.date === state.date ? syncRef.current.token : undefined;
+    recordDailyGame(state, token);
   }, [state.date, state.cells, state.failed, state.rating]);
 
-  // Notifie Convex de la fin de partie une seule fois (gagnée ou perdue) :
-  // c'est ce qui alimente les compteurs de joueurs (wins/losses + agrégats),
-  // indépendamment du rating qui reste facultatif.
+  // `game_completed` une seule fois par partie, même après rechargement : le
+  // drapeau `endRecorded` est persisté avec la partie.
   // biome-ignore lint/correctness/useExhaustiveDependencies: posthog is stable; the payload derives from state fields already in deps
   useEffect(() => {
-    if (!state.date) return;
+    if (!state.date || state.endRecorded) return;
     if (state.status !== "won" && state.status !== "lost") return;
-    // Idempotence : déjà notifié (persisté) ou envoi en cours pour cette date.
-    if (state.endRecorded || endClaimedDateRef.current === state.date) return;
-    endClaimedDateRef.current = state.date;
 
     const filledCells = Object.values(state.cells).filter(
       (cell) => cell.status === "filled",
     ).length;
-    const failedGuesses = failedAttemptCount(state.lives);
     // Le hook ne sert que la grille du jour : le régime est toujours limité.
     const remainingLives = livesRemaining(state.lives) ?? 0;
-
-    // Cause de fin : gagné, sinon vies épuisées ou bloqué (perdu alors qu'il
-    // restait des vies → plus aucune case remplissable).
     const endReason =
       state.status === "won"
         ? "win"
@@ -147,100 +219,34 @@ export function useGameState() {
           : "blocked";
 
     // Rareté et score de fin non inclus ici (dynamiques, dépendent de la
-    // distribution) : captés par `result_screen_viewed`. `filled_cells` +
-    // `lives_left` suffisent à reconstituer la performance de grille.
-    const operationSlot = `game-end:${state.date}`;
-    const operationId = getOrCreatePendingOperationId(operationSlot);
-
+    // distribution) : captés par `result_screen_viewed`.
     posthog?.capture("game_completed", {
-      $insert_id: operationId,
       outcome: state.status,
       end_reason: endReason,
       grid_date: state.date,
       filled_cells: filledCells,
       lives_left: remainingLives,
     });
+    dispatch({ type: "setEndRecorded", date: state.date });
+  }, [state.date, state.status, state.endRecorded, state.cells, state.lives]);
 
-    recordGameEnd({
-      operationId,
-      endReason,
-      livesLeft: remainingLives,
-      filledCells,
-      guessesSubmitted: filledCells + failedGuesses,
-      clientId: getOrCreateClientId(),
-    })
-      .then(() => {
-        clearPendingOperationId(operationSlot, operationId);
-        // Persiste l'idempotence : plus jamais ré-émis, même après reload.
-        dispatch({ type: "setEndRecorded", date: state.date });
-      })
-      .catch(() => {
-        // Libère le ref pour permettre une nouvelle tentative au prochain
-        // changement d'état / reload si le serveur a rejeté l'enregistrement.
-        if (endClaimedDateRef.current === state.date) {
-          endClaimedDateRef.current = null;
-        }
-      });
-  }, [
-    state.date,
-    state.status,
-    state.endRecorded,
-    state.cells,
-    state.lives,
-    recordGameEnd,
-  ]);
-
-  // Envoie un coup déjà affiché. Le client Convex met lui-même les mutations
-  // en file pendant une coupure ; seul un rechargement perd l'envoi, d'où le
-  // rejeu au démarrage avec le même `operationId` (idempotent côté serveur).
-  // biome-ignore lint/correctness/useExhaustiveDependencies: posthog is a stable ref
-  const sendGuess = useCallback(
-    async (guess: PendingGuess, operationId: string, replayed: boolean) => {
-      const startedAt = performance.now();
-      const delivery = await deliverGuess(() =>
-        submit({
-          operationId,
-          cellKey: guess.cellKey,
-          countryCode: guess.countryCode,
-          clientId: getOrCreateClientId(),
-          date: guess.date,
-        }),
-      );
-      if (delivery.kind === "retry_later") return;
-      clearPendingOperationId(guessOperationSlot(guess), operationId);
-      if (delivery.kind === "dropped") return;
-      posthog?.capture("guess_submitted", {
-        $insert_id: operationId,
-        grid_date: guess.date,
-        cell: guess.cellKey,
-        country_code: guess.countryCode,
-        rarity_tier: rarityToTier(delivery.rarity),
-        replayed,
-        // Un rejeu ne mesure que l'aller-retour, pas l'attente du joueur.
-        ...(replayed
-          ? {}
-          : { submit_latency_ms: Math.round(performance.now() - startedAt) }),
-      });
+  /**
+   * Note de difficulté : gardée sur la ligne de la partie côté serveur, puis
+   * dans la partie locale. Lève en cas d'échec réseau (l'écran propose de
+   * réessayer). Une partie que le serveur n'a pas (locale seulement) garde sa
+   * note en local, sans erreur.
+   */
+  const rateGame = useCallback(
+    async (rating: DifficultyRating) => {
+      const date = state.date;
+      const sync = syncRef.current;
+      if (sync && sync.date === date && sync.acked > 0) {
+        await rateTodayGame({ date, token: sync.token, rating });
+      }
+      dispatch({ type: "setRated", date, rating });
     },
-    [submit],
+    [state.date, rateTodayGame],
   );
-
-  // Rejoue une fois par chargement les coups restés sans accusé (onglet fermé
-  // pendant l'envoi). Un coup d'un autre jour est refusé par le serveur, sauf
-  // s'il avait déjà été compté : dans les deux cas l'attente est soldée.
-  const replayedPendingRef = useRef(false);
-  useEffect(() => {
-    if (!todayGrid || replayedPendingRef.current) return;
-    replayedPendingRef.current = true;
-    listPendingOperations().forEach(({ slot, operationId }) => {
-      const guess = parseGuessOperationSlot(slot);
-      if (guess) void sendGuess(guess, operationId, true);
-    });
-  }, [todayGrid, sendGuess]);
-
-  const markRated = useCallback((date: string, rating: DifficultyRating) => {
-    dispatch({ type: "setRated", date, rating });
-  }, []);
 
   const selectCell = useCallback((cell: CellPosition | null) => {
     dispatch({ type: "selectCell", cell });
@@ -251,26 +257,36 @@ export function useGameState() {
     async (cell: CellPosition, countryCode: string) => {
       if (state.status !== "playing" || !todayGrid) return;
 
+      // Le coup rejoint la file d'envoi avant d'être affiché. Une partie déjà
+      // commencée sans file reste locale : son premier coup est perdu pour le
+      // serveur, la suite ne s'enchaînerait pas.
+      function queueMove(move: SyncedMove): void {
+        const sync =
+          syncRef.current ??
+          (movesPlayed(state.cells, state.lives) === 0
+            ? startMoveSync(state.date)
+            : null);
+        if (!sync || sync.stopped) return;
+        updateSync(appendMove(sync, move));
+      }
+
       function failGuess(
         reason: GuessSubmitFailure["reason"],
-        countryCode?: string,
       ): GuessSubmitFailure {
         const remaining = livesRemaining(state.lives) ?? 0;
-        const gameOver = remaining === 1;
-        const operationId = createOperationId();
         dispatch({ type: "guessFailure", cell });
         posthog?.capture("guess_failed", {
-          $insert_id: operationId,
           reason,
           grid_date: state.date,
           cell: `${cell.row},${cell.col}`,
           lives_remaining: remaining - 1,
-          ...(countryCode ? { country_code: countryCode } : {}),
+          country_code: countryCode,
         });
-        return { kind: "domain_rejected", reason, gameOver };
+        return { kind: "domain_rejected", reason, gameOver: remaining === 1 };
       }
 
       const cellKey = toCellKey(cell);
+      queueMove({ cellKey, countryCode });
       const local = evaluateGuess(
         state,
         cell,
@@ -278,43 +294,30 @@ export function useGameState() {
         todayGrid.validAnswers,
       );
       if (local.kind === "rejected") {
-        // Log la tentative infructueuse côté serveur (fire-and-forget) : un
-        // vrai pays qui rate le croisement est un signal de difficulté. On
-        // ignore `already_used` (pas un échec de croisement) et les non-pays.
-        if (isConstraintFailureReason(local.reason)) {
-          recordFailedGuess({
-            operationId: createOperationId(),
-            cellKey,
-            countryCode,
-            clientId: getOrCreateClientId(),
-          }).catch(() => {});
-        }
-        return failGuess(local.reason, countryCode);
+        const failure = failGuess(local.reason);
+        void flushMoves();
+        return failure;
       }
-      // Local-first : `validAnswers` est l'autorité publiée, le serveur ne peut
-      // plus changer le verdict. La case se remplit tout de suite et l'envoi
-      // part en arrière-plan ; sa rareté arrive avec la distribution réactive.
-      const guess = { date: state.date, cellKey, countryCode };
-      const operationId = getOrCreatePendingOperationId(
-        guessOperationSlot(guess),
-      );
+      // Local-first : `validAnswers` est l'autorité publiée, le serveur rejoue
+      // le coup avec la même règle. La case se remplit tout de suite, sa
+      // rareté arrive avec la répartition réactive.
       dispatch({
         type: "guessSuccess",
         cell,
         countryCode,
         validAnswers: todayGrid.validAnswers,
       });
-      void sendGuess(guess, operationId, false);
+      void flushMoves();
       return { kind: "accepted" } as const;
     },
-    [state, todayGrid, sendGuess, recordFailedGuess],
+    [state, todayGrid, flushMoves],
   );
 
   return {
     state,
     selectCell,
     submitGuess,
-    markRated,
+    rateGame,
     isLoading: todayGrid === undefined,
     hasGrid: !!todayGrid,
     validAnswers: todayGrid?.validAnswers ?? {},

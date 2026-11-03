@@ -296,3 +296,46 @@ test("tapping a header on the solution grid opens the constraint drawer with its
   await expect(countryRow).toBeHidden({ timeout: 3_000 });
   await expect(headerButton).toBeFocused();
 });
+
+// ── « Toi et les autres » (#70) ──────────────────────────────────────────────
+
+test("the result modal places the score among today's players", async ({
+  page,
+}) => {
+  test.setTimeout(60_000);
+  await playToDefeat(page, grid);
+
+  const resultDialog = getResultDialog(page);
+  // Toujours l'une des deux pilules, selon la taille de la cohorte du jour ;
+  // jamais le nombre de joueurs.
+  const pill = resultDialog.getByRole("button", {
+    name: /^(Better than \d+% of players|Among the first to finish)/,
+  });
+  await expect(pill).toBeVisible({ timeout: 10_000 });
+
+  await pill.click();
+  await expect(
+    resultDialog.getByRole("img", {
+      name: /^(Today's player scores|Too early to compare)/,
+    }),
+  ).toBeInViewport();
+});
+
+test("the solution grid corner cycles through its four layers", async ({
+  page,
+}) => {
+  test.setTimeout(60_000);
+  await playToDefeat(page, grid);
+  await page.getByRole("button", { name: "Skip and view answers" }).click();
+
+  for (const layer of ["Answers", "Mistakes", "Best score", "Your picks"]) {
+    const corner = page.getByRole("button", {
+      name: `Layer: ${layer}. Tap for the next one.`,
+    });
+    await expect(corner).toBeVisible();
+    await corner.click();
+  }
+  await expect(
+    page.getByRole("button", { name: "Layer: Answers. Tap for the next one." }),
+  ).toBeVisible();
+});

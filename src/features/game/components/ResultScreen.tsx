@@ -1,5 +1,4 @@
 import { usePostHog } from "@posthog/react";
-import { useMutation } from "convex/react";
 import { Copy, Share2 } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import { AccentBar } from "@/components/editorial/AccentBar";
@@ -12,12 +11,13 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { SurveyCta } from "@/features/game/components/SurveyCta";
-import { getOrCreateClientId } from "@/features/game/logic/clientId";
-import { isOutOfLives } from "@/features/game/logic/lives";
 import {
-  clearPendingOperationId,
-  getOrCreatePendingOperationId,
-} from "@/features/game/logic/operationIds";
+  betterThanPercent,
+  type Cohort,
+  emptyCohort,
+  isThinCohort,
+} from "@/features/game/logic/cohort";
+import { isOutOfLives } from "@/features/game/logic/lives";
 import {
   type ResultOutcome,
   resultTitleKeys,
@@ -38,9 +38,11 @@ import type {
 } from "@/features/game/types";
 import { useLocale, useT } from "@/i18n/LocaleContext";
 import { cn } from "@/lib/utils";
-import { api } from "../../../../convex/_generated/api";
+import { ResultSlides } from "./ResultSlides";
 import { ScoreDisplay } from "./ScoreDisplay";
+import { ScoreHistogram } from "./ScoreHistogram";
 import { ShareEmojiGrid } from "./ShareEmojiGrid";
+import { StandingPill } from "./StandingPill";
 
 type RatingSubmissionState =
   | { status: "idle" }
@@ -61,8 +63,11 @@ type Props = {
   state: GameState;
   gridNumber: number | null;
   distribution: Record<string, CellGuessDistribution> | undefined;
+  /** « Toi et les autres » du jour ; `undefined` tant qu'il charge. */
+  cohort: Cohort | null | undefined;
   onDismiss: () => void;
-  onRated: (rating: DifficultyRating) => void;
+  /** Envoie la note ; rejette en cas d'échec réseau. */
+  onRate: (rating: DifficultyRating) => Promise<void>;
   onViewAnswers: (source: "view_answers_button" | "skip_feedback") => void;
 };
 
@@ -70,8 +75,9 @@ export function ResultScreen({
   state,
   gridNumber,
   distribution,
+  cohort,
   onDismiss,
-  onRated,
+  onRate,
   onViewAnswers,
 }: Props) {
   const posthog = usePostHog();
@@ -122,7 +128,19 @@ export function ResultScreen({
     ];
   const hasRated =
     hadFeedbackBeforeOpen || ratingSubmission.status === "success";
-  const submitGridFeedback = useMutation(api.grids.submitTodayGridFeedback);
+  const histogram = cohort?.histogram ?? emptyCohort().histogram;
+  const thinCohort = isThinCohort(histogram);
+  const comparisonTrackedRef = useRef(false);
+
+  function handleSlideChange(index: number, source: "swipe" | "dots" | "link") {
+    if (index !== 1 || comparisonTrackedRef.current) return;
+    comparisonTrackedRef.current = true;
+    posthog?.capture("result_comparison_viewed", {
+      grid_date: state.date,
+      source: source === "link" ? "pill" : source,
+      thin: thinCohort,
+    });
+  }
 
   const viewedTrackedRef = useRef(false);
   // biome-ignore lint/correctness/useExhaustiveDependencies: une seule fois, dès que la rareté dynamique est résolue (sinon elle manquerait en analytics)
@@ -192,20 +210,11 @@ export function ResultScreen({
       return;
     }
 
-    const operationSlot = `grid-feedback:${state.date}`;
-    const operationId = getOrCreatePendingOperationId(operationSlot);
     setRatingSubmission({ status: "pending", rating });
     try {
-      await submitGridFeedback({
-        operationId,
-        rating,
-        clientId: getOrCreateClientId(),
-      });
-      clearPendingOperationId(operationSlot, operationId);
-      onRated(rating);
+      await onRate(rating);
       setRatingSubmission({ status: "success", rating });
       posthog?.capture("difficulty_rated", {
-        $insert_id: operationId,
         rating,
         grid_date: state.date,
         outcome: state.status,
@@ -244,10 +253,45 @@ export function ResultScreen({
           <ScoreDisplay breakdown={scoreBreakdown} />
         </div>
 
-        <ShareEmojiGrid
-          cells={state.cells}
-          distribution={distribution}
-          caption={`#GEODOKU${gridNumber !== null ? ` #${gridNumber}` : ""}`}
+        {/* Seule cette zone glisse (#70) : la grille d'emojis, puis les
+            scores du jour. Hauteur fixe, pour que rien ne saute autour. La
+            3ᵉ page reviendra aux ligues (#156). */}
+        <ResultSlides
+          onSlideChange={handleSlideChange}
+          slides={(goTo) => [
+            {
+              id: "grid",
+              label: t("ui.resultSlideGrid"),
+              content: (
+                <div className="flex h-[208px] flex-col items-center justify-center gap-3">
+                  {cohort && scoreReady && score.total !== null && (
+                    <StandingPill
+                      percent={
+                        thinCohort
+                          ? null
+                          : betterThanPercent(histogram, score.total)
+                      }
+                      onClick={() => goTo(1)}
+                    />
+                  )}
+                  <ShareEmojiGrid
+                    cells={state.cells}
+                    distribution={distribution}
+                    caption={`#GEODOKU${gridNumber !== null ? ` #${gridNumber}` : ""}`}
+                  />
+                </div>
+              ),
+            },
+            {
+              id: "others",
+              label: t("ui.resultSlideOthers"),
+              content: (
+                <div className="h-[208px] px-1">
+                  <ScoreHistogram histogram={histogram} score={score.total} />
+                </div>
+              ),
+            },
+          ]}
         />
 
         <div className="flex flex-col gap-3">

@@ -53,6 +53,41 @@ test("resumes an in-progress game after page reload", async ({ page }) => {
   await expect(emptyCells).toHaveCount(7);
 });
 
+// ── 1 bis. Envoi des coups (#70) ─────────────────────────────────────────────
+
+test("sends each move once, and nothing is left to send after a reload", async ({
+  page,
+}) => {
+  await page.goto("/");
+  await waitForGrid(page);
+
+  const solution = solveGrid(grid.validAnswers);
+  if (!solution) throw new Error("Invariant violated: grid is not solvable");
+  await fillCell(page, 1, 1, solution["0,0"].name);
+  await page.reload();
+  await waitForGrid(page);
+  await fillCell(page, 1, 2, solution["0,1"].name);
+
+  // Les deux coups acquittés par le serveur, sous le même jeton de partie.
+  await expect
+    .poll(
+      () =>
+        page.evaluate(() => {
+          const raw = localStorage.getItem("geodoku:move-sync-v1");
+          const sync = raw ? JSON.parse(raw) : null;
+          return (
+            sync && {
+              moves: sync.moves.length,
+              acked: sync.acked,
+              stopped: sync.stopped,
+            }
+          );
+        }),
+      { timeout: 10_000 },
+    )
+    .toEqual({ moves: 2, acked: 2, stopped: false });
+});
+
 // ── 2. localStorage corrompu → partie fraîche ────────────────────────────────
 
 test("corrupted localStorage JSON starts a fresh game without crashing", async ({

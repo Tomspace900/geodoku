@@ -1,30 +1,5 @@
 import { cronJobs } from "convex/server";
-import { v } from "convex/values";
 import { internal } from "./_generated/api";
-import { internalMutation } from "./_generated/server";
-
-const RECEIPT_DELETE_BATCH_SIZE = 512;
-
-/** Purge batchée ; se reprogramme jusqu'à avoir vidé tout le retard. */
-export const deleteExpiredOperationReceipts = internalMutation({
-  args: {},
-  returns: v.number(),
-  handler: async (ctx): Promise<number> => {
-    const expired = await ctx.db
-      .query("operationReceipts")
-      .withIndex("by_expires_at", (q) => q.lt("expiresAt", Date.now()))
-      .take(RECEIPT_DELETE_BATCH_SIZE);
-    await Promise.all(expired.map((receipt) => ctx.db.delete(receipt._id)));
-    if (expired.length === RECEIPT_DELETE_BATCH_SIZE) {
-      await ctx.scheduler.runAfter(
-        0,
-        internal.crons.deleteExpiredOperationReceipts,
-        {},
-      );
-    }
-    return expired.length;
-  },
-});
 
 const crons = cronJobs();
 
@@ -46,11 +21,19 @@ crons.cron(
   {},
 );
 
-// Daily at 03:30 UTC — operation receipts expire seven days after creation.
+// Hourly at :05 — `server_health_hourly` to PostHog for the hour just closed.
 crons.cron(
-  "delete expired operation receipts",
+  "server health hourly",
+  "5 * * * *",
+  internal.health.reportHourlyHealth,
+  {},
+);
+
+// Daily at 03:30 UTC — the rate limiter component never deletes its rows.
+crons.cron(
+  "purge rate limits",
   "30 3 * * *",
-  internal.crons.deleteExpiredOperationReceipts,
+  internal.health.purgeRateLimits,
   {},
 );
 

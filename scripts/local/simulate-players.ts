@@ -156,15 +156,7 @@ if (!cli.dryRun && unsafeReason && !cli.force) {
 
 const client = new ConvexHttpClient(convexUrl);
 const writer: SimulationWriter = {
-  submitGuess: async (args) => {
-    await client.mutation(api.guesses.submitTodayGuess, args);
-  },
-  recordFailedGuess: async (args) => {
-    await client.mutation(api.guesses.recordTodayFailedGuess, args);
-  },
-  recordGameEnd: async (args) => {
-    await client.mutation(api.grids.recordTodayGameEnd, args);
-  },
+  playMove: (args) => client.mutation(api.games.playMove, args),
 };
 const grid = await client.query(api.grids.getTodayGrid);
 if (!grid) {
@@ -275,9 +267,9 @@ for (let i = 0; i < cli.count; i++) {
     const written = await persistSimulationPlan({
       execute: !cli.dryRun,
       writer,
+      date: grid.date,
       clientId,
       actions,
-      target,
     });
     if (written) {
       console.log(`  ✓ enregistré (clientId=${clientId.slice(0, 18)}…)`);

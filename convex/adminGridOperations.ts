@@ -3,7 +3,11 @@ import { gridPopularity } from "../src/features/countries/logic/popularity";
 import { internal } from "./_generated/api";
 import type { Id } from "./_generated/dataModel";
 import type { ActionCtx, QueryCtx } from "./_generated/server";
-import { readGridCellMetrics, readPoolStats } from "./adminReadModel";
+import {
+  readDailyGameStats,
+  readGridCellMetrics,
+  readPoolStats,
+} from "./adminReadModel";
 import { checkAdminToken } from "./auth";
 import {
   getActivePoolCandidatesByStatus,
@@ -253,54 +257,41 @@ export async function getUpcomingScheduledPreviewHandler(
   return upcoming;
 }
 
-/** Agrégats observés des grilles récentes. */
+/** Agrégats observés des grilles récentes, recalculés depuis les parties. */
 export async function getGridFeedbackStatsHandler(
   ctx: QueryCtx,
   args: GridFeedbackStatsArgs,
 ) {
   checkAdminToken(args.adminToken);
   const limit = Math.min(args.limit ?? 60, 180);
-  const feedbackRows = await ctx.db
-    .query("gridFeedback")
-    .withIndex("by_date")
-    .order("desc")
-    .take(limit);
+  const days = await readDailyGameStats(ctx, limit);
 
-  return feedbackRows.map((row) => {
-    const ratings = row.totalRatings;
+  return days.map((row) => {
+    const ratings = row.tooEasyCount + row.balancedCount + row.tooHardCount;
     const gamesPlayed = row.wins + row.losses;
-    const difficultyObserved100 =
-      ratings === 0
-        ? null
-        : Math.round(
-            (row.balancedCount * 50 + row.tooHardCount * 100) / ratings,
-          );
+    const average = (total: number, digits: number) =>
+      gamesPlayed === 0 ? null : Number((total / gamesPlayed).toFixed(digits));
     return {
       date: row.date,
       ratingCount: ratings,
       gamesPlayed,
-      difficultyObserved100,
-      winRate:
-        gamesPlayed === 0 ? null : Number((row.wins / gamesPlayed).toFixed(3)),
-      avgLivesLeft:
-        gamesPlayed === 0
+      difficultyObserved100:
+        ratings === 0
           ? null
-          : Number((row.totalLivesLeft / gamesPlayed).toFixed(2)),
-      avgFilledCells:
-        gamesPlayed === 0
-          ? null
-          : Number((row.totalFilledCells / gamesPlayed).toFixed(2)),
-      avgGuessesSubmitted:
-        gamesPlayed === 0
-          ? null
-          : Number((row.totalGuessesSubmitted / gamesPlayed).toFixed(2)),
+          : Math.round(
+              (row.balancedCount * 50 + row.tooHardCount * 100) / ratings,
+            ),
+      winRate: average(row.wins, 3),
+      avgLivesLeft: average(row.totalLivesLeft, 2),
+      avgFilledCells: average(row.totalFilledCells, 2),
+      avgGuessesSubmitted: average(row.totalMoves, 2),
       tooEasyCount: row.tooEasyCount,
       balancedCount: row.balancedCount,
       tooHardCount: row.tooHardCount,
       wins: row.wins,
       losses: row.losses,
-      lostByLives: row.lostByLivesCount ?? 0,
-      lostByBlocked: row.lostByBlockedCount ?? 0,
+      lostByLives: row.lostByLives,
+      lostByBlocked: row.lostByBlocked,
     };
   });
 }

@@ -1,4 +1,4 @@
-import type { RarityTier } from "@/features/game/types";
+import type { RarityTier } from "../types";
 
 export { STARTING_LIVES } from "./gridTopology";
 

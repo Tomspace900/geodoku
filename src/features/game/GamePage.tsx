@@ -10,6 +10,10 @@ import { useBackendDownTimeout } from "@/features/errors/hooks/useBackendDownTim
 import { useConstraintSourceToast } from "@/features/game/hooks/useConstraintSourceToast";
 import { useGameState } from "@/features/game/hooks/useGameState";
 import { useSolutionDrawer } from "@/features/game/hooks/useSolutionDrawer";
+import { useSolutionLayer } from "@/features/game/hooks/useSolutionLayer";
+import { useTodayCohort } from "@/features/game/hooks/useTodayCohort";
+import { cohortSize, failureRates } from "@/features/game/logic/cohort";
+import { toGuessDistribution } from "@/features/game/logic/distribution";
 import {
   getGridNumberForDate,
   getGridNumberForTodayUtc,
@@ -38,7 +42,7 @@ export function GamePage() {
     state,
     selectCell,
     submitGuess,
-    markRated,
+    rateGame,
     isLoading,
     hasGrid,
     validAnswers,
@@ -50,10 +54,18 @@ export function GamePage() {
 
   // Abonnée dès le chargement de la grille, partie en cours incluse : les badges
   // de rareté sont dynamiques pendant le jeu comme sur l'écran de fin.
-  const guessDistribution = useQuery(
-    api.guesses.getTodayGuessDistribution,
-    state.date ? {} : "skip",
-  );
+  const cellCounts = useQuery(api.cellStats.getToday, state.date ? {} : "skip");
+  const guessDistribution = cellCounts
+    ? toGuessDistribution(cellCounts)
+    : undefined;
+  // « Toi et les autres » : lu à la demande, une fois la partie finie.
+  const cohort = useTodayCohort(hasGrid && state.status !== "playing");
+  const cellFailureRates = cohort
+    ? failureRates({
+        failedPlayers: cohort.failedPlayers,
+        finishedGames: cohortSize(cohort.histogram),
+      })
+    : null;
 
   const [resultModalDismissed, setResultModalDismissed] = useState(false);
   const resultTriggerRef = useRef<HTMLButtonElement>(null);
@@ -62,6 +74,10 @@ export function GamePage() {
     gridDate: state.date,
     mode: state.mode,
     selectedCell: state.selectedCell,
+  });
+  const solutionLayer = useSolutionLayer({
+    gridDate: state.date,
+    mode: state.mode,
   });
   const solutionDrawer = useSolutionDrawer({
     gridDate: state.date,
@@ -141,10 +157,14 @@ export function GamePage() {
                 rows={state.rows}
                 cols={state.cols}
                 validAnswers={validAnswers}
-                distribution={guessDistribution ?? undefined}
+                distribution={guessDistribution}
                 cells={state.cells}
                 onHeaderClick={solutionDrawer.openConstraint}
                 onCellClick={solutionDrawer.openCell}
+                layer={solutionLayer.layer}
+                onLayerNext={solutionLayer.next}
+                failureRates={cellFailureRates}
+                failed={state.failed}
               />
 
               <RarityHint />
@@ -189,7 +209,7 @@ export function GamePage() {
             <div className="flex flex-col gap-5">
               <GameGrid
                 state={state}
-                distribution={guessDistribution ?? undefined}
+                distribution={guessDistribution}
                 onCellClick={(cell) => {
                   posthog?.capture("cell_opened", {
                     grid_date: state.date,
@@ -227,9 +247,10 @@ export function GamePage() {
         <ResultScreen
           state={state}
           gridNumber={gridNumber}
-          distribution={guessDistribution ?? undefined}
+          distribution={guessDistribution}
+          cohort={cohort}
           onDismiss={() => dismissResultModal("dismiss_modal")}
-          onRated={(rating) => markRated(state.date, rating)}
+          onRate={rateGame}
           onViewAnswers={(source) => dismissResultModal(source)}
         />
       )}
@@ -240,7 +261,8 @@ export function GamePage() {
         <SolutionDrawer
           state={state}
           validAnswers={validAnswers}
-          distribution={guessDistribution ?? undefined}
+          distribution={guessDistribution}
+          failureRates={cellFailureRates}
           drawer={solutionDrawer}
         />
       )}

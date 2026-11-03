@@ -155,6 +155,18 @@ describe("sanitizeHistory", () => {
     expect(out).toEqual([entry()]);
   });
 
+  it("garde le jeton de la partie et ne perd que lui s'il est illisible", () => {
+    const token = "123e4567-e89b-42d3-a456-426614174000";
+    expect(
+      sanitizeHistory(
+        storeOf([
+          entry({ token }),
+          { ...entry({ date: "2026-10-28" }), token: "x" },
+        ]),
+      ),
+    ).toEqual([entry({ token }), entry({ date: "2026-10-28" })]);
+  });
+
   it("garde la dernière occurrence d'une date en double", () => {
     const later = entry({ failed: [3, 0, 0, 0, 0, 0, 0, 0, 0] });
     expect(sanitizeHistory(storeOf([entry(), later]))).toEqual([later]);

@@ -190,6 +190,7 @@ export function sanitizeTrainingGame(
     date: string;
     cells: unknown;
     failedAttempts: unknown;
+    failed?: unknown;
     givenUp?: unknown;
   },
   validAnswers: Record<string, string[]>,
@@ -225,9 +226,11 @@ export function sanitizeTrainingGame(
     date: input.date,
     cells: canonicalCells,
     lives,
-    // Hors journal, l'entraînement ne persiste pas le détail par case : seul
-    // l'invariant de somme compte ici.
-    failed: distributeLegacyFailures(lives.failedAttempts, cells),
+    // Le détail par case fait les croix du calque « Erreurs » (#70). Une partie
+    // enregistrée avant ne l'a pas : son total est alors réparti.
+    failed:
+      parseFailedByCell(input.failed, lives.failedAttempts) ??
+      distributeLegacyFailures(lives.failedAttempts, cells),
     status: status === "playing" && input.givenUp === true ? "lost" : status,
     endRecorded: false,
     rated: false,

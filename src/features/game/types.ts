@@ -10,7 +10,7 @@ export type FilledCell = {
   countryCode: string;
 };
 
-/** Distribution d'une case (Convex `getTodayGuessDistribution`) : total des tentatives + part (0..1) par pays. */
+/** Distribution d'une case, tirée de `cellStats` (`toGuessDistribution`) : total des pays posés + part (0..1) par pays. */
 export type CellGuessDistribution = {
   totalGuesses: number;
   rarityByCountry: Record<string, number>;
@@ -57,7 +57,7 @@ export type GameState = {
   failed: Record<CellKey, number>;
   selectedCell: CellPosition | null;
   status: GameStatus;
-  /** Fin de partie déjà notifiée au serveur (dédup `recordTodayGameEnd`). Daily uniquement. */
+  /** `game_completed` déjà émis pour cette partie (dédup après rechargement). Daily uniquement. */
   endRecorded: boolean;
   /** Difficulté déjà notée par le joueur pour cette grille. Daily uniquement. */
   rated: boolean;

@@ -1,11 +1,12 @@
 import { STORAGE_KEYS, safeGet, safeSet } from "@/lib/storage";
 import type { DifficultyRating, GameState } from "../types";
+import { isBrowserUuidV4 } from "./browserUuid";
 import { isDifficultyRating } from "./difficultyRating";
 import { CELL_KEYS, GRID_CELL_COUNT } from "./gridTopology";
 
 /**
  * Journal local des parties quotidiennes (#154), invisible pour le joueur : il
- * prépare « Mes stats » (#70) et l'import au login (#155). Une entrée par jour
+ * prépare « Mes stats » et l'import au login (#155). Une entrée par jour
  * joué, au format de la future ligne serveur, pour que l'import soit une copie.
  * Ni score, ni vies, ni statut : tout se recalcule depuis la grille et les
  * répartitions. L'entraînement n'y entre pas. Pas de plafond (~50 Ko par an).
@@ -22,6 +23,11 @@ export type HistoryEntry = {
   /** Erreurs par case. */
   failed: number[];
   rating?: DifficultyRating;
+  /**
+   * Jeton de la partie côté serveur (#70), absent d'une partie jouée avant ou
+   * restée locale. Il rattachera la partie au compte du joueur (#155).
+   */
+  token?: string;
 };
 
 type HistoryStore = {
@@ -39,6 +45,7 @@ const ISO3_PATTERN = /^[A-Z]{3}$/;
  */
 export function historyEntryFromGame(
   game: Pick<GameState, "date" | "cells" | "failed" | "rating">,
+  token?: string,
 ): HistoryEntry | null {
   const cells = CELL_KEYS.map((key) => {
     const cell = game.cells[key];
@@ -53,6 +60,7 @@ export function historyEntryFromGame(
     cells,
     failed,
     ...(game.rating ? { rating: game.rating } : {}),
+    ...(token ? { token } : {}),
   };
 }
 
@@ -96,6 +104,7 @@ function sanitizeEntry(raw: unknown): HistoryEntry | null {
     cells: cells as (string | null)[],
     failed: failed as number[],
     ...(isDifficultyRating(o.rating) ? { rating: o.rating } : {}),
+    ...(isBrowserUuidV4(o.token) ? { token: o.token } : {}),
   };
 }
 
@@ -126,9 +135,9 @@ export function loadHistory(): HistoryEntry[] {
 }
 
 /** Écrit ou met à jour l'entrée du jour. Sans effet hors grille quotidienne. */
-export function recordDailyGame(state: GameState): void {
+export function recordDailyGame(state: GameState, token?: string): void {
   if (state.mode !== "daily") return;
-  const entry = historyEntryFromGame(state);
+  const entry = historyEntryFromGame(state, token);
   if (!entry) return;
   const store: HistoryStore = {
     version: HISTORY_VERSION,
