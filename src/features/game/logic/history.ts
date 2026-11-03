@@ -1,7 +1,6 @@
 import { STORAGE_KEYS, safeGet, safeSet } from "@/lib/storage";
-import type { DifficultyRating, GameState } from "../types";
+import type { GameState } from "../types";
 import { isBrowserUuidV4 } from "./browserUuid";
-import { isDifficultyRating } from "./difficultyRating";
 import { CELL_KEYS, GRID_CELL_COUNT } from "./gridTopology";
 
 /**
@@ -22,7 +21,6 @@ export type HistoryEntry = {
   cells: (string | null)[];
   /** Erreurs par case. */
   failed: number[];
-  rating?: DifficultyRating;
   /**
    * Jeton de la partie côté serveur (#70), absent d'une partie jouée avant ou
    * restée locale. Il rattachera la partie au compte du joueur (#155).
@@ -44,7 +42,7 @@ const ISO3_PATTERN = /^[A-Z]{3}$/;
  * serveur, jamais au simple chargement de la grille.
  */
 export function historyEntryFromGame(
-  game: Pick<GameState, "date" | "cells" | "failed" | "rating">,
+  game: Pick<GameState, "date" | "cells" | "failed">,
   token?: string,
 ): HistoryEntry | null {
   const cells = CELL_KEYS.map((key) => {
@@ -59,7 +57,6 @@ export function historyEntryFromGame(
     date: game.date,
     cells,
     failed,
-    ...(game.rating ? { rating: game.rating } : {}),
     ...(token ? { token } : {}),
   };
 }
@@ -98,12 +95,12 @@ function sanitizeEntry(raw: unknown): HistoryEntry | null {
     return null;
   }
 
-  // Une note illisible ne coûte que la note, pas la partie.
+  // Un jeton illisible ne coûte que le jeton, pas la partie. Une note de
+  // difficulté (retirée avec #70) est simplement oubliée.
   return {
     date: o.date,
     cells: cells as (string | null)[],
     failed: failed as number[],
-    ...(isDifficultyRating(o.rating) ? { rating: o.rating } : {}),
     ...(isBrowserUuidV4(o.token) ? { token: o.token } : {}),
   };
 }

@@ -2,7 +2,6 @@ import { usePostHog } from "@posthog/react";
 import { Copy, Share2 } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import { AccentBar } from "@/components/editorial/AccentBar";
-import { Eyebrow } from "@/components/editorial/Eyebrow";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -31,11 +30,7 @@ import {
   shareGameResult,
   shareSiteUrl,
 } from "@/features/game/logic/share";
-import type {
-  CellGuessDistribution,
-  DifficultyRating,
-  GameState,
-} from "@/features/game/types";
+import type { CellGuessDistribution, GameState } from "@/features/game/types";
 import { useLocale, useT } from "@/i18n/LocaleContext";
 import { cn } from "@/lib/utils";
 import { ResultSlides } from "./ResultSlides";
@@ -44,21 +39,6 @@ import { ScoreHistogram } from "./ScoreHistogram";
 import { ShareEmojiGrid } from "./ShareEmojiGrid";
 import { StandingPill } from "./StandingPill";
 
-type RatingSubmissionState =
-  | { status: "idle" }
-  | { status: "pending"; rating: DifficultyRating }
-  | { status: "error"; rating: DifficultyRating }
-  | { status: "success"; rating: DifficultyRating };
-
-const DIFFICULTY_RATINGS: ReadonlyArray<{
-  rating: DifficultyRating;
-  labelKey: "ui.feedbackTooEasy" | "ui.feedbackBalanced" | "ui.feedbackTooHard";
-}> = [
-  { rating: "too_easy", labelKey: "ui.feedbackTooEasy" },
-  { rating: "balanced", labelKey: "ui.feedbackBalanced" },
-  { rating: "too_hard", labelKey: "ui.feedbackTooHard" },
-];
-
 type Props = {
   state: GameState;
   gridNumber: number | null;
@@ -66,9 +46,7 @@ type Props = {
   /** « Toi et les autres » du jour ; `undefined` tant qu'il charge. */
   cohort: Cohort | null | undefined;
   onDismiss: () => void;
-  /** Envoie la note ; rejette en cas d'échec réseau. */
-  onRate: (rating: DifficultyRating) => Promise<void>;
-  onViewAnswers: (source: "view_answers_button" | "skip_feedback") => void;
+  onViewAnswers: () => void;
 };
 
 export function ResultScreen({
@@ -77,7 +55,6 @@ export function ResultScreen({
   distribution,
   cohort,
   onDismiss,
-  onRate,
   onViewAnswers,
 }: Props) {
   const posthog = usePostHog();
@@ -90,11 +67,6 @@ export function ResultScreen({
   const nativeShareAvailable = canUseNativeShare();
   const t = useT();
   const { locale } = useLocale();
-  // Snapshot à l'ouverture : si la grille était déjà notée (partie reprise),
-  // on affiche directement « voir les réponses » plutôt que les boutons.
-  const [hadFeedbackBeforeOpen] = useState(() => state.rated);
-  const [ratingSubmission, setRatingSubmission] =
-    useState<RatingSubmissionState>({ status: "idle" });
   const scoreBreakdown = computeScoreBreakdown(state, distribution);
   const score = computeScore(scoreBreakdown);
   const scoreReady = scoreBreakdown.shares !== null;
@@ -126,8 +98,6 @@ export function ResultScreen({
     resultTitleKeysForOutcome[
       Math.floor(titleRoll * resultTitleKeysForOutcome.length)
     ];
-  const hasRated =
-    hadFeedbackBeforeOpen || ratingSubmission.status === "success";
   const histogram = cohort?.histogram ?? emptyCohort().histogram;
   const thinCohort = isThinCohort(histogram);
   const comparisonTrackedRef = useRef(false);
@@ -201,29 +171,6 @@ export function ResultScreen({
     };
   }, []);
 
-  async function handleRateDifficulty(rating: DifficultyRating) {
-    if (
-      hadFeedbackBeforeOpen ||
-      ratingSubmission.status === "pending" ||
-      ratingSubmission.status === "success"
-    ) {
-      return;
-    }
-
-    setRatingSubmission({ status: "pending", rating });
-    try {
-      await onRate(rating);
-      setRatingSubmission({ status: "success", rating });
-      posthog?.capture("difficulty_rated", {
-        rating,
-        grid_date: state.date,
-        outcome: state.status,
-      });
-    } catch {
-      setRatingSubmission({ status: "error", rating });
-    }
-  }
-
   return (
     <Dialog
       open
@@ -295,67 +242,16 @@ export function ResultScreen({
         />
 
         <div className="flex flex-col gap-3">
-          {hasRated ? (
-            <Button
-              onClick={() => onViewAnswers("view_answers_button")}
-              variant="secondary"
-              size="lg"
-              className="w-full"
-            >
-              {t("ui.viewAnswers")}
-            </Button>
-          ) : (
-            /* Bloc de notation soudé à son échappatoire : le lien « Passer »
-               appartient à ce groupe, il n'est pas un tertiaire flottant entre
-               deux blocs. L'espacement interne serré le dit à l'œil. */
-            <div className="flex flex-col gap-2">
-              <Eyebrow className="text-center">
-                {t("ui.feedbackQuestion")}
-              </Eyebrow>
-              <div className="grid grid-cols-3 gap-1.5">
-                {DIFFICULTY_RATINGS.map(({ rating, labelKey }) => (
-                  <Button
-                    key={rating}
-                    type="button"
-                    variant="secondary"
-                    size="sm"
-                    disabled={ratingSubmission.status !== "idle"}
-                    className="h-auto min-h-9 whitespace-normal px-2 py-2 text-xs leading-tight"
-                    onClick={() => handleRateDifficulty(rating)}
-                  >
-                    {t(labelKey)}
-                  </Button>
-                ))}
-              </div>
-              {ratingSubmission.status === "error" && (
-                <div
-                  role="alert"
-                  className="rounded-lg bg-error/10 px-3 py-2 text-center text-xs text-error"
-                >
-                  <p>{t("ui.feedbackError")}</p>
-                  <Button
-                    type="button"
-                    variant="link"
-                    size="sm"
-                    className="mt-1 text-error"
-                    onClick={() =>
-                      handleRateDifficulty(ratingSubmission.rating)
-                    }
-                  >
-                    {t("ui.feedbackRetry")}
-                  </Button>
-                </div>
-              )}
-              <Button
-                type="button"
-                variant="link"
-                onClick={() => onViewAnswers("skip_feedback")}
-                className="self-center text-xs"
-              >
-                {t("ui.skipFeedback")}
-              </Button>
-            </div>
-          )}
+          {/* Plus de note de difficulté (#70) : le taux de victoire et les
+              erreurs par case la disent mieux. Les réponses, puis le partage. */}
+          <Button
+            onClick={onViewAnswers}
+            variant="secondary"
+            size="lg"
+            className="w-full"
+          >
+            {t("ui.viewAnswers")}
+          </Button>
 
           <Button
             onClick={handleShare}

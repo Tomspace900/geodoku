@@ -16,7 +16,6 @@ import {
   incrementCellStat,
   readCellCounts,
 } from "./cellStats";
-import { ratingValidator } from "./gameValidators";
 import {
   assertCanonicalDate,
   assertClientId,
@@ -178,40 +177,6 @@ export const playMove = mutation({
   },
 });
 
-/** Note de difficulté de la partie du jour, gardée sur sa ligne. Première note retenue. */
-export const rateTodayGame = mutation({
-  args: { date: v.string(), token: v.string(), rating: ratingValidator },
-  returns: v.union(
-    v.object({ kind: v.literal("recorded") }),
-    v.object({
-      kind: v.literal("rejected"),
-      reason: v.union(
-        v.literal("date_mismatch"),
-        v.literal("unknown_game"),
-        v.literal("rate_limited"),
-      ),
-    }),
-  ),
-  handler: async (ctx, args) => {
-    assertCanonicalDate(args.date);
-    assertGameToken(args.token);
-    const tokenHash = await hashToken(args.token);
-    const game = await findGame(ctx, tokenHash);
-    if (!game || game.date !== args.date) {
-      return { kind: "rejected" as const, reason: "unknown_game" as const };
-    }
-    if (game.rating) return { kind: "recorded" as const };
-    if (args.date !== todayUTC()) {
-      return { kind: "rejected" as const, reason: "date_mismatch" as const };
-    }
-    if (!(await limit(ctx, "move", tokenHash))) {
-      return { kind: "rejected" as const, reason: "rate_limited" as const };
-    }
-    await ctx.db.patch(game._id, { rating: args.rating });
-    return { kind: "recorded" as const };
-  },
-});
-
 async function readGridAnswers(
   ctx: QueryCtx,
   date: string,
@@ -260,7 +225,7 @@ export const getTodayCohort = query({
 
 /**
  * Cohorte figée d'une grille rejouable (J-1 à J-7), pour l'entraînement : la
- * répartition (rareté et calque « Meilleur score ») et les erreurs par case
+ * répartition (rareté et calque « Meilleure grille ») et les erreurs par case
  * (calque « Erreurs »). Même garde de date que `getReplayGrid`.
  */
 export const getReplayStats = query({

@@ -81,16 +81,11 @@ const CONSTRAINT_BY_ID = new Map(CONSTRAINTS.map((c) => [c.id, c]));
 
 type FeedbackRow = {
   date: string;
-  ratingCount: number;
   gamesPlayed: number;
-  difficultyObserved100: number | null;
   winRate: number | null;
   avgLivesLeft: number | null;
   avgFilledCells: number | null;
   avgGuessesSubmitted: number | null;
-  tooEasyCount: number;
-  balancedCount: number;
-  tooHardCount: number;
   wins: number;
   losses: number;
   lostByLives: number;
@@ -180,7 +175,7 @@ function gridEngagement(m: CellMetricsResult): GridEngagement {
 
 async function fetchAll() {
   console.error(`Fetching last ${DAYS_WINDOW} days of feedback…`);
-  const feedback = (await client.query(api.grids.getGridFeedbackStats, {
+  const feedback = (await client.query(api.grids.getDailyGameStats, {
     adminToken: ADMIN_TOKEN!,
     limit: DAYS_WINDOW,
   })) as FeedbackRow[];
@@ -222,7 +217,6 @@ function renderHeader(
     for (const key of CELL_KEYS)
       totalFailed += m.cells[key]?.failedAttempts ?? 0;
   }
-  const totalRatings = feedback.reduce((s, r) => s + r.ratingCount, 0);
   const dated = feedback.map((r) => r.date).sort();
   const period = dated.length
     ? `${dated[0]} → ${dated[dated.length - 1]}`
@@ -239,7 +233,6 @@ function renderHeader(
       `${totalEngaged > 0 ? ` (${pct(totalAbandonGap / totalEngaged, 0)} des engagés)` : ""}`,
     `- Win rate global : ${totalFinished === 0 ? "—" : pct(totalWins / totalFinished, 1)}`,
     `- Échecs de croisement (failedAttempts) : ${totalFailed} sur ${instrumentedDays} j instrumentés (depuis ${FAILED_ATTEMPTS_SINCE})`,
-    `- Ratings : ${totalRatings}${totalFinished > 0 ? ` (${pct(totalRatings / totalFinished, 0)} des parties)` : ""}`,
     "",
     "> ⚠️ **Faible trafic — lecture directionnelle.** Peu de joueurs : la plupart des chiffres ont un `n` faible, à lire comme tendance, pas comme mesure. Chaque tableau porte son échantillon.",
     ">",
@@ -257,10 +250,10 @@ function renderDailySummary(
   const lines: string[] = [
     "## Tableau journalier",
     "",
-    "`abandon` = engagés − terminés. `failedΣ` / `avgStruggle` = `—` avant l'instrumentation (pas « zéro échec » : pas de tracking). `diffObs100` vient des ratings (faible `n`, biaisé).",
+    "`abandon` = engagés − terminés. `failedΣ` / `avgStruggle` = `—` avant l'instrumentation (pas « zéro échec » : pas de tracking).",
     "",
-    "| date | finished | engaged | abandon | winRate | failedΣ | avgStruggle | avgFilled | ratings |",
-    "|---|---:|---:|---:|---:|---:|---:|---:|---:|",
+    "| date | finished | engaged | abandon | winRate | failedΣ | avgStruggle | avgFilled |",
+    "|---|---:|---:|---:|---:|---:|---:|---:|",
   ];
   const sorted = [...feedback].sort((a, b) => (a.date < b.date ? 1 : -1));
   for (const f of sorted) {
@@ -285,7 +278,7 @@ function renderDailySummary(
     const avgStruggle =
       !tracked || struggleCount === 0 ? null : struggleSum / struggleCount;
     lines.push(
-      `| ${f.date} | ${f.gamesPlayed} | ${eng?.playersEngaged ?? "—"} | ${eng?.abandonGap ?? "—"} | ${pct(f.winRate, 0)} | ${tracked ? failedSum : "—"} | ${pct(avgStruggle, 0)} | ${num(f.avgFilledCells, 1)} | ${f.ratingCount} |`,
+      `| ${f.date} | ${f.gamesPlayed} | ${eng?.playersEngaged ?? "—"} | ${eng?.abandonGap ?? "—"} | ${pct(f.winRate, 0)} | ${tracked ? failedSum : "—"} | ${pct(avgStruggle, 0)} | ${num(f.avgFilledCells, 1)} |`,
     );
   }
   lines.push("");
@@ -486,7 +479,6 @@ function renderObservedDifficulty(
 
 function renderConstraintRollup(
   cellMetricsByDate: Record<string, CellMetricsResult>,
-  feedback: FeedbackRow[],
 ): string {
   type Agg = {
     appearances: number;
@@ -494,11 +486,8 @@ function renderConstraintRollup(
     fillSamples: number;
     sumStruggle: number;
     struggleCells: number;
-    sumTooHardShare: number;
-    tooHardGrids: number;
   };
   const byConstraint = new Map<string, Agg>();
-  const feedbackByDate = new Map(feedback.map((f) => [f.date, f]));
 
   function ensure(id: string): Agg {
     let a = byConstraint.get(id);
@@ -509,8 +498,6 @@ function renderConstraintRollup(
         fillSamples: 0,
         sumStruggle: 0,
         struggleCells: 0,
-        sumTooHardShare: 0,
-        tooHardGrids: 0,
       };
       byConstraint.set(id, a);
     }
@@ -546,15 +533,6 @@ function renderConstraintRollup(
   for (const m of Object.values(cellMetricsByDate)) {
     const ids = new Set([...m.rows, ...m.cols]);
     for (const id of ids) ensure(id).appearances += 1;
-    const fb = feedbackByDate.get(m.date);
-    if (fb && fb.ratingCount > 0) {
-      const share = fb.tooHardCount / fb.ratingCount;
-      for (const id of ids) {
-        const a = ensure(id);
-        a.sumTooHardShare += share;
-        a.tooHardGrids += 1;
-      }
-    }
   }
 
   const rows = [...byConstraint.entries()]
@@ -567,8 +545,6 @@ function renderConstraintRollup(
       avgStruggle:
         a.struggleCells === 0 ? null : a.sumStruggle / a.struggleCells,
       nStruggle: a.struggleCells,
-      avgTooHard:
-        a.tooHardGrids === 0 ? null : a.sumTooHardShare / a.tooHardGrids,
     }))
     // contraintes avec données struggle d'abord (tri desc), le reste après
     .sort((a, b) => {
@@ -583,14 +559,14 @@ function renderConstraintRollup(
   const lines: string[] = [
     "## Rollup par contrainte",
     "",
-    "Une apparition = une grille où la contrainte sort en ligne/colonne. `avgStruggle` = difficulté intrinsèque moyenne des cases tentées portant cette contrainte (`nStr` = nb de telles cases, `—` si aucune donnée instrumentée). `avgFillRate` = signal d'abandon (confondu). `tooHard%` vient des ratings. Tri : struggle décroissant, puis fillRate.",
+    "Une apparition = une grille où la contrainte sort en ligne/colonne. `avgStruggle` = difficulté intrinsèque moyenne des cases tentées portant cette contrainte (`nStr` = nb de telles cases, `—` si aucune donnée instrumentée). `avgFillRate` = signal d'abandon (confondu). Tri : struggle décroissant, puis fillRate.",
     "",
-    "| contrainte | catégorie | appar. | avgStruggle | nStr | avgFillRate | tooHard% |",
-    "|---|---|---:|---:|---:|---:|---:|",
+    "| contrainte | catégorie | appar. | avgStruggle | nStr | avgFillRate |",
+    "|---|---|---:|---:|---:|---:|",
   ];
   for (const r of rows) {
     lines.push(
-      `| ${r.label} | ${r.category} | ${r.appearances} | ${pct(r.avgStruggle, 0)} | ${r.nStruggle || "—"} | ${pct(r.avgFillRate, 0)} | ${pct(r.avgTooHard, 0)} |`,
+      `| ${r.label} | ${r.category} | ${r.appearances} | ${pct(r.avgStruggle, 0)} | ${r.nStruggle || "—"} | ${pct(r.avgFillRate, 0)} |`,
     );
   }
   lines.push("");
@@ -725,35 +701,6 @@ function renderConcentration(
   return lines.join("\n");
 }
 
-function renderRatingCoherence(feedback: FeedbackRow[]): string {
-  const lines: string[] = [
-    "## Cohérence sentiment ↔ performance _(faible confiance)_",
-    "",
-    "> ⚠️ 1-4 raters par grille : anecdotique, pas une tendance. À ignorer tant que le volume de ratings n'a pas franchi ~10/grille.",
-    "",
-    "`diffFromWinRate` = 100·(1 − winRate). `diffFromRatings` = balanced·50 + tooHard·100 / ratings. Δ > 20 = inconfort potentiel (réussissent mais notent pénible, ou l'inverse).",
-    "",
-    "| date | games | ratings | winRate | diffWinRate | diffRatings | Δ |",
-    "|---|---:|---:|---:|---:|---:|---:|",
-  ];
-  type Row = { delta: number; line: string };
-  const rows: Row[] = [];
-  for (const f of feedback) {
-    if (f.gamesPlayed === 0 || f.winRate === null) continue;
-    const diffWin = Math.round((1 - f.winRate) * 100);
-    const diffRat = f.difficultyObserved100;
-    const delta = diffRat === null ? null : diffRat - diffWin;
-    rows.push({
-      delta: delta === null ? 0 : Math.abs(delta),
-      line: `| ${f.date} | ${f.gamesPlayed} | ${f.ratingCount} | ${pct(f.winRate, 0)} | ${diffWin} | ${diffRat ?? "—"} | ${delta === null ? "—" : (delta >= 0 ? "+" : "") + delta} |`,
-    });
-  }
-  rows.sort((a, b) => b.delta - a.delta);
-  for (const r of rows.slice(0, 12)) lines.push(r.line);
-  lines.push("");
-  return lines.join("\n");
-}
-
 // ─── Main ────────────────────────────────────────────────────────────────────
 
 async function main() {
@@ -765,10 +712,9 @@ async function main() {
     renderAbandon(feedback, cellMetricsByDate),
     renderEndReason(feedback),
     renderObservedDifficulty(cellMetricsByDate),
-    renderConstraintRollup(cellMetricsByDate, feedback),
+    renderConstraintRollup(cellMetricsByDate),
     renderDeadCountries(cellMetricsByDate),
     renderConcentration(cellMetricsByDate),
-    renderRatingCoherence(feedback),
   ];
   const md = sections.join("\n");
 

@@ -179,8 +179,8 @@ test("viewing answers after a loss reveals the solution grid", async ({
   test.setTimeout(60_000);
   await playToDefeat(page, grid);
 
-  // Dismiss the result modal via the "skip feedback" link.
-  await page.getByRole("button", { name: "Skip and view answers" }).click();
+  // No difficulty survey any more (#70): the modal goes straight to the answers.
+  await page.getByRole("button", { name: "View answers" }).click();
 
   // The solution view replaces the modal: it lists the answers and offers a
   // "View my score" button to go back. (The "solution grid" title isn't
@@ -205,20 +205,6 @@ test("viewing answers after a loss reveals the solution grid", async ({
   ).toBeVisible();
 });
 
-// ── Note de difficulté — feedback ────────────────────────────────────────────
-
-test("rating the difficulty acknowledges the feedback", async ({ page }) => {
-  test.setTimeout(60_000);
-  await playToDefeat(page, grid);
-
-  await page.getByRole("button", { name: "Just right" }).click();
-
-  // After rating, the feedback buttons give way to a "View answers" button.
-  await expect(page.getByRole("button", { name: "View answers" })).toBeVisible({
-    timeout: 5_000,
-  });
-});
-
 // ── Grille solution — Drawers de case et de contrainte ───────────────────────
 
 test("opening a solution cell lists its answers as plain rows, not buttons", async ({
@@ -226,7 +212,7 @@ test("opening a solution cell lists its answers as plain rows, not buttons", asy
 }) => {
   test.setTimeout(60_000);
   await playToDefeat(page, grid);
-  await page.getByRole("button", { name: "Skip and view answers" }).click();
+  await page.getByRole("button", { name: "View answers" }).click();
 
   const cellKey = "0,0";
   const pick = pickCountry(grid.validAnswers, cellKey, new Set());
@@ -259,7 +245,7 @@ test("tapping a header on the solution grid opens the constraint drawer with its
 }) => {
   test.setTimeout(60_000);
   await playToDefeat(page, grid);
-  await page.getByRole("button", { name: "Skip and view answers" }).click();
+  await page.getByRole("button", { name: "View answers" }).click();
 
   // Any valid answer for cell (0,0) is necessarily a valid answer for its
   // column's constraint alone — the cell requires both row and column, so
@@ -326,9 +312,9 @@ test("the solution grid corner cycles through its four layers", async ({
 }) => {
   test.setTimeout(60_000);
   await playToDefeat(page, grid);
-  await page.getByRole("button", { name: "Skip and view answers" }).click();
+  await page.getByRole("button", { name: "View answers" }).click();
 
-  for (const layer of ["Answers", "Mistakes", "Best score", "Your picks"]) {
+  for (const layer of ["Answers", "Mistakes", "Best grid", "My grid"]) {
     const corner = page.getByRole("button", {
       name: `Layer: ${layer}. Tap for the next one.`,
     });

@@ -131,12 +131,10 @@ export function buildCalendarMarkers(args: {
 
 // ─── Tendance 7 jours (santé de jeu quotidienne) ────────────────────────────────
 
-/** Sous-ensemble de `getGridFeedbackStats` utilisé par la tendance. */
+/** Sous-ensemble de `getDailyGameStats` utilisé par la tendance. */
 export type FeedbackRow = {
   date: string;
-  ratingCount: number;
   gamesPlayed: number;
-  difficultyObserved100: number | null;
   winRate: number | null;
   avgFilledCells: number | null;
   wins: number;
@@ -155,14 +153,12 @@ export type TrendRow = {
   lostByBlocked: number;
   /** `endReason` pas encore déployé : des défaites existent mais aucune classée. */
   lossSplitPending: boolean;
-  difficultyObserved100: number | null;
-  ratingCount: number;
   avgFilledCells: number | null;
 };
 
 /**
  * Construit les `days` lignes les plus récentes de la tendance. `feedback` est
- * supposé trié décroissant par date (ordre de `getGridFeedbackStats`).
+ * supposé trié décroissant par date (ordre de `getDailyGameStats`).
  */
 export function buildTrend(
   feedback: ReadonlyArray<FeedbackRow>,
@@ -178,8 +174,6 @@ export function buildTrend(
     lostByBlocked: row.lostByBlocked,
     lossSplitPending:
       row.losses > 0 && row.lostByLives + row.lostByBlocked === 0,
-    difficultyObserved100: row.difficultyObserved100,
-    ratingCount: row.ratingCount,
     avgFilledCells: row.avgFilledCells,
   }));
 }

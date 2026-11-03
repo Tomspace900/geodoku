@@ -140,7 +140,7 @@ function AuthenticatedAdminDashboard({
   const scheduledGrids = useQuery(api.grids.getScheduledGrids, {
     adminToken: token,
   });
-  const feedbackStats = useQuery(api.grids.getGridFeedbackStats, {
+  const feedbackStats = useQuery(api.grids.getDailyGameStats, {
     adminToken: token,
     limit: 60,
   });

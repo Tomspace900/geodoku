@@ -7,7 +7,6 @@ import {
   type Summary,
   type TrendRow,
 } from "../logic/analytics";
-import { DifficultyPill } from "./DifficultyPill";
 import { PanelCard } from "./PanelCard";
 import { PanelHeader } from "./PanelHeader";
 import { StatGlyph } from "./StatGlyph";
@@ -127,7 +126,7 @@ export function GameHealthPanel({ feedbackStats }: Props) {
 
       {trend !== null && trend.length === 0 && (
         <p className="text-sm text-on-surface-variant">
-          Aucune donnée de feedback pour le moment.
+          Aucune partie enregistrée pour le moment.
         </p>
       )}
 
@@ -153,7 +152,6 @@ export function GameHealthPanel({ feedbackStats }: Props) {
                     <StatGlyph kind="blocage" showLabel />
                   </span>
                 </th>
-                <th className="pb-2 pr-4 text-center">Diff. ressentie</th>
                 <th className="pb-2 text-right">Remplies /9</th>
               </tr>
             </thead>
@@ -177,18 +175,6 @@ export function GameHealthPanel({ feedbackStats }: Props) {
                   </td>
                   <td className="py-1.5 pr-4 text-right tabular-nums text-on-surface-variant">
                     {splitCell(row)}
-                  </td>
-                  <td className="py-1.5 pr-4 text-center">
-                    {row.difficultyObserved100 !== null ? (
-                      <span className="inline-flex items-center gap-1">
-                        <DifficultyPill value={row.difficultyObserved100} />
-                        <span className="text-[10px] tabular-nums text-on-surface-variant">
-                          n{row.ratingCount}
-                        </span>
-                      </span>
-                    ) : (
-                      <span className="text-on-surface-variant">—</span>
-                    )}
                   </td>
                   <td className="py-1.5 text-right tabular-nums text-on-surface-variant">
                     {row.avgFilledCells === null

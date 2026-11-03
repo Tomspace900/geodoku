@@ -1,6 +1,5 @@
 import { defineSchema, defineTable } from "convex/server";
 import { v } from "convex/values";
-import { ratingValidator } from "./gameValidators";
 
 export default defineSchema({
   gridCandidates: defineTable({
@@ -62,7 +61,6 @@ export default defineSchema({
     owner: v.object({ kind: v.literal("anon"), tokenHash: v.string() }),
     cells: v.array(v.union(v.string(), v.null())),
     failed: v.array(v.number()),
-    rating: v.optional(ratingValidator),
     origin: v.literal("live"),
   })
     .index("by_date", ["date"])

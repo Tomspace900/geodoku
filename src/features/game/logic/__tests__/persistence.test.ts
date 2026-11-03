@@ -38,7 +38,6 @@ describe("savePersistedGame / loadPersistedGame", () => {
     expect(loaded?.remainingLives).toBe(5);
     expect(loaded?.cells["0,0"].status).toBe("empty");
     expect(loaded?.endRecorded).toBe(false);
-    expect(loaded?.rated).toBe(false);
     const raw = JSON.parse(localStorage.getItem(PERSISTENCE_STORAGE_KEY)!);
     expect(raw.version).toBe(3);
     expect(raw).not.toHaveProperty("usedCountries");
@@ -47,7 +46,7 @@ describe("savePersistedGame / loadPersistedGame", () => {
     expect(raw).not.toHaveProperty("finishedAt");
   });
 
-  it("round-trips the endRecorded / rated flags", () => {
+  it("round-trips the endRecorded flag", () => {
     let state = createInitialState(
       "daily",
       "2026-04-15",
@@ -55,16 +54,8 @@ describe("savePersistedGame / loadPersistedGame", () => {
       [...TEST_COLS],
     );
     state = gameReducer(state, { type: "setEndRecorded", date: state.date });
-    state = gameReducer(state, {
-      type: "setRated",
-      date: state.date,
-      rating: "too_hard",
-    });
     savePersistedGame(state);
-    const loaded = loadPersistedGame();
-    expect(loaded?.endRecorded).toBe(true);
-    expect(loaded?.rated).toBe(true);
-    expect(loaded?.rating).toBe("too_hard");
+    expect(loadPersistedGame()?.endRecorded).toBe(true);
   });
 
   it("persiste les erreurs par case", () => {

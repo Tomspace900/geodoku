@@ -100,11 +100,7 @@ async function readState(backend: Backend) {
     const games = await ctx.db.query("games").take(10);
     const stats = await ctx.db.query("cellStats").take(10);
     return {
-      games: games.map(({ cells, failed, rating }) => ({
-        cells,
-        failed,
-        rating,
-      })),
+      games: games.map(({ cells, failed }) => ({ cells, failed })),
       counts: Object.fromEntries(stats.map((row) => [row.cellKey, row.counts])),
     };
   });
@@ -193,7 +189,6 @@ describe("playMove", () => {
           {
             cells: Array.from({ length: 9 }, () => null),
             failed: [0, 1, 0, 0, 0, 0, 0, 0, 0],
-            rating: undefined,
           },
         ],
         counts: {},
@@ -301,39 +296,6 @@ describe("playMove", () => {
     await expect(
       backend.mutation(api.games.playMove, move(1, 0, "0,0", "FRA")),
     ).rejects.toThrow("Grid answers unavailable");
-  });
-});
-
-describe("rateTodayGame", () => {
-  it("keeps the first rating of the game", async () => {
-    const backend = createBackend();
-    await seedGrid(backend);
-    await backend.mutation(api.games.playMove, move(1, 0, "0,0", "FRA"));
-    const args = { date: todayUTC(), token: token(1) };
-
-    await backend.mutation(api.games.rateTodayGame, {
-      ...args,
-      rating: "balanced",
-    });
-    await backend.mutation(api.games.rateTodayGame, {
-      ...args,
-      rating: "too_hard",
-    });
-
-    expect((await readState(backend)).games[0].rating).toBe("balanced");
-  });
-
-  it("refuses a rating for a game the server never saw", async () => {
-    const backend = createBackend();
-    await seedGrid(backend);
-
-    expect(
-      await backend.mutation(api.games.rateTodayGame, {
-        date: todayUTC(),
-        token: token(9),
-        rating: "balanced",
-      }),
-    ).toEqual({ kind: "rejected", reason: "unknown_game" });
   });
 });
 

@@ -25,7 +25,7 @@ export function errorHeatClass(rate: number | null): string {
   );
 }
 
-/** Pays, nom et part, partagés par « Meilleur score » et « Tes choix ». */
+/** Pays, nom et part, partagés par « Meilleure grille » et « Ma grille ». */
 function CountryPick({ iso, share }: { iso: string; share: number | null }) {
   const { locale } = useLocale();
   const country = getCountryByIso3(iso);
@@ -119,9 +119,18 @@ export function SolutionLayerCell({
   if (userCell.status === "filled") {
     return <CountryPick iso={userCell.countryCode} share={userShare} />;
   }
-  return (
-    <span className="text-[10px] italic text-on-surface-variant sm:text-xs">
-      {t(userCell.status === "blocked" ? "ui.cellBlocked" : "ui.cellNotFound")}
+  // Mêmes signes qu'en jeu : la croix d'une case bloquée, le tiret d'une case
+  // sans pays.
+  return userCell.status === "blocked" ? (
+    <X
+      size={18}
+      className="text-on-surface-variant/40"
+      strokeWidth={1.5}
+      aria-hidden
+    />
+  ) : (
+    <span aria-hidden className="text-sm text-on-surface-variant/60">
+      —
     </span>
   );
 }

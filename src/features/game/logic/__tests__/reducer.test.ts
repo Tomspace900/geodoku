@@ -484,8 +484,6 @@ describe("gameReducer — rehydrate", () => {
       failed: { ...emptyFailedByCell(), "0,1": 3 },
       status: "playing",
       endRecorded: false,
-      rated: false,
-      rating: null,
     };
   }
 
@@ -569,7 +567,6 @@ describe("gameReducer — rehydrate", () => {
     const persisted = {
       ...makePersistedGame(),
       endRecorded: true,
-      rated: true,
     };
     const state = gameReducer(freshState(), {
       type: "rehydrate",
@@ -579,15 +576,10 @@ describe("gameReducer — rehydrate", () => {
       validAnswers: emptyValidAnswers,
     });
     expect(state.endRecorded).toBe(true);
-    expect(state.rated).toBe(true);
   });
 
-  it("restaure les erreurs par case et la note", () => {
-    const persisted: SanitizedPersistedGame = {
-      ...makePersistedGame(),
-      rated: true,
-      rating: "too_hard",
-    };
+  it("restaure les erreurs par case", () => {
+    const persisted: SanitizedPersistedGame = makePersistedGame();
     const state = gameReducer(freshState(), {
       type: "rehydrate",
       persisted,
@@ -596,10 +588,9 @@ describe("gameReducer — rehydrate", () => {
       validAnswers: emptyValidAnswers,
     });
     expect(state.failed).toEqual(persisted.failed);
-    expect(state.rating).toBe("too_hard");
   });
 
-  it("defaults endRecorded / rated to false when absent from persisted data", () => {
+  it("defaults endRecorded to false when absent from persisted data", () => {
     const state = gameReducer(freshState(), {
       type: "rehydrate",
       persisted: makePersistedGame(),
@@ -608,11 +599,10 @@ describe("gameReducer — rehydrate", () => {
       validAnswers: emptyValidAnswers,
     });
     expect(state.endRecorded).toBe(false);
-    expect(state.rated).toBe(false);
   });
 });
 
-describe("gameReducer — setEndRecorded / setRated", () => {
+describe("gameReducer — setEndRecorded", () => {
   it("marks endRecorded when the date matches", () => {
     const initial = freshState();
     const state = gameReducer(initial, {
@@ -640,51 +630,5 @@ describe("gameReducer — setEndRecorded / setRated", () => {
     expect(
       gameReducer(recorded, { type: "setEndRecorded", date: recorded.date }),
     ).toBe(recorded);
-  });
-
-  it("marks the game as rated when the date matches", () => {
-    const initial = freshState();
-    const state = gameReducer(initial, {
-      type: "setRated",
-      date: initial.date,
-      rating: "balanced",
-    });
-    expect(state.rated).toBe(true);
-  });
-
-  it("garde la valeur de la note", () => {
-    const initial = freshState();
-    const state = gameReducer(initial, {
-      type: "setRated",
-      date: initial.date,
-      rating: "too_easy",
-    });
-    expect(state.rating).toBe("too_easy");
-  });
-
-  it("ignores setRated for a different date", () => {
-    const initial = freshState();
-    const next = gameReducer(initial, {
-      type: "setRated",
-      date: "1999-01-01",
-      rating: "balanced",
-    });
-    expect(next).toBe(initial);
-    expect(next.rated).toBe(false);
-  });
-
-  it("returns the same reference when already rated", () => {
-    const rated = gameReducer(freshState(), {
-      type: "setRated",
-      date: freshState().date,
-      rating: "balanced",
-    });
-    expect(
-      gameReducer(rated, {
-        type: "setRated",
-        date: rated.date,
-        rating: "balanced",
-      }),
-    ).toBe(rated);
   });
 });

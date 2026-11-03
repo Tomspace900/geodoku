@@ -9,18 +9,18 @@ import { action, internalAction, query } from "./_generated/server";
 import {
   adminTokenArgs,
   candidatePreviewDetailArgs,
+  dailyGameStatsArgs,
   deletePoolCandidateArgs,
   deletePoolCandidateHandler,
   deleteScheduledGridHandler,
   getCandidatePreviewDetailHandler,
+  getDailyGameStatsHandler,
   getGridCellMetricsHandler,
-  getGridFeedbackStatsHandler,
   getPoolStatsHandler,
   getScheduledGridPreviewDetailHandler,
   getScheduledGridsHandler,
   getUpcomingScheduledPreviewHandler,
   gridCellMetricsArgs,
-  gridFeedbackStatsArgs,
   refreshPoolHandler,
   retryPoolFinalizationHandler,
   runEnsureTomorrowHandler,
@@ -119,9 +119,9 @@ export const getUpcomingScheduledPreview = query({
   handler: getUpcomingScheduledPreviewHandler,
 });
 
-export const getGridFeedbackStats = query({
-  args: gridFeedbackStatsArgs,
-  handler: getGridFeedbackStatsHandler,
+export const getDailyGameStats = query({
+  args: dailyGameStatsArgs,
+  handler: getDailyGameStatsHandler,
 });
 
 export const getGridCellMetrics = query({

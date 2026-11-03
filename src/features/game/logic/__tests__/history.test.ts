@@ -89,21 +89,15 @@ describe("historyEntryFromGame", () => {
     ]);
   });
 
-  it("porte la note une fois donnée, jamais de score ni de vies", () => {
-    let state = gameReducer(dailyGame(), {
+  it("ne porte jamais de score, de vies ni de note", () => {
+    const state = gameReducer(dailyGame(), {
       type: "guessFailure",
       cell: { row: 0, col: 0 },
-    });
-    state = gameReducer(state, {
-      type: "setRated",
-      date: state.date,
-      rating: "too_hard",
     });
     expect(historyEntryFromGame(state)).toEqual({
       date: "2026-10-27",
       cells: [null, null, null, null, null, null, null, null, null],
       failed: [1, 0, 0, 0, 0, 0, 0, 0, 0],
-      rating: "too_hard",
     });
   });
 });
@@ -148,10 +142,8 @@ describe("sanitizeHistory", () => {
     expect(out).toEqual([valid]);
   });
 
-  it("ne garde d'une note illisible que la partie", () => {
-    const out = sanitizeHistory(
-      storeOf([{ ...entry(), rating: "trop_facile" }]),
-    );
+  it("oublie la note de difficulté d'un ancien journal", () => {
+    const out = sanitizeHistory(storeOf([{ ...entry(), rating: "too_hard" }]));
     expect(out).toEqual([entry()]);
   });
 

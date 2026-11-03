@@ -22,9 +22,6 @@ export type Cell = FilledCell | EmptyCell | BlockedCell;
 
 export type GameStatus = "playing" | "won" | "lost";
 
-/** Ressenti de difficulté donné en fin de partie (Convex `ratingValidator`). */
-export type DifficultyRating = "too_easy" | "balanced" | "too_hard";
-
 /**
  * Mode de jeu. `daily` = la grille du jour (5 vies, résultats comptés côté
  * serveur) ; `training` = une grille passée rejouée depuis `/archive` (essais
@@ -59,11 +56,4 @@ export type GameState = {
   status: GameStatus;
   /** `game_completed` déjà émis pour cette partie (dédup après rechargement). Daily uniquement. */
   endRecorded: boolean;
-  /** Difficulté déjà notée par le joueur pour cette grille. Daily uniquement. */
-  rated: boolean;
-  /**
-   * Note choisie. `null` tant que la grille n'est pas notée, et aussi pour une
-   * note donnée avant que sa valeur soit gardée (`rated` seul). Daily uniquement.
-   */
-  rating: DifficultyRating | null;
 };

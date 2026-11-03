@@ -68,7 +68,7 @@ function assignMinCost(cost: number[][]): number[] {
 }
 
 /**
- * Calque « Meilleur score » de la grille solution : un pays par case, sans
+ * Calque « Meilleure grille » de la grille solution : un pays par case, sans
  * doublon, qui rapporte le plus de points de rareté sur la répartition donnée
  * (à score égal, le plus rare). Un pays que personne n'a choisi a une part de
  * 0, donc la rareté maximale. `null` si la grille n'a pas de solution complète.

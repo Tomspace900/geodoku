@@ -1,13 +1,6 @@
-import type {
-  Cell,
-  CellKey,
-  DifficultyRating,
-  GameStatus,
-  LivesState,
-} from "../types";
+import type { Cell, CellKey, GameStatus, LivesState } from "../types";
 import { hasEmptyCell, markBlockedCells } from "./blockedDetection";
 import { STARTING_LIVES } from "./constants";
-import { isDifficultyRating } from "./difficultyRating";
 import { distributeLegacyFailures, parseFailedByCell } from "./failedByCell";
 import { CELL_KEYS, GRID_CELL_COUNT } from "./gridTopology";
 import { failedAttemptCount, isOutOfLives } from "./lives";
@@ -20,8 +13,6 @@ export type SanitizedPersistedGame = {
   failed: Record<CellKey, number>;
   status: GameStatus;
   endRecorded: boolean;
-  rated: boolean;
-  rating: DifficultyRating | null;
 };
 
 function clampInt(n: number, min: number, max: number): number {
@@ -161,7 +152,6 @@ export function sanitizePersistedForGrid(
   const failed =
     parseFailedByCell(persisted.failed, totalFailures) ??
     distributeLegacyFailures(totalFailures, cells);
-  const rated = typeof persisted.rated === "boolean" ? persisted.rated : false;
 
   return {
     date: persisted.date,
@@ -173,9 +163,6 @@ export function sanitizePersistedForGrid(
       typeof persisted.endRecorded === "boolean"
         ? persisted.endRecorded
         : false,
-    rated,
-    rating:
-      rated && isDifficultyRating(persisted.rating) ? persisted.rating : null,
   };
 }
 
@@ -233,7 +220,5 @@ export function sanitizeTrainingGame(
       distributeLegacyFailures(lives.failedAttempts, cells),
     status: status === "playing" && input.givenUp === true ? "lost" : status,
     endRecorded: false,
-    rated: false,
-    rating: null,
   };
 }

@@ -14,7 +14,6 @@ import type * as auth from "../auth.js";
 import type * as cellKeys from "../cellKeys.js";
 import type * as cellStats from "../cellStats.js";
 import type * as crons from "../crons.js";
-import type * as gameValidators from "../gameValidators.js";
 import type * as gameWriteValidation from "../gameWriteValidation.js";
 import type * as games from "../games.js";
 import type * as gridData from "../gridData.js";
@@ -49,7 +48,6 @@ declare const fullApi: ApiFromModules<{
   cellKeys: typeof cellKeys;
   cellStats: typeof cellStats;
   crons: typeof crons;
-  gameValidators: typeof gameValidators;
   gameWriteValidation: typeof gameWriteValidation;
   games: typeof games;
   gridData: typeof gridData;

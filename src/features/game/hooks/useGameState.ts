@@ -34,7 +34,7 @@ import {
   sanitizePersistedForGrid,
 } from "../logic/sanitizePersisted";
 import type { GuessFailureReason } from "../logic/validation";
-import type { CellPosition, DifficultyRating, GameState } from "../types";
+import type { CellPosition, GameState } from "../types";
 
 type GuessSubmitFailure = {
   kind: "domain_rejected";
@@ -46,7 +46,6 @@ export function useGameState() {
   const posthog = usePostHog();
   const todayGrid = useQuery(api.grids.getTodayGrid);
   const playMove = useMutation(api.games.playMove);
-  const rateTodayGame = useMutation(api.games.rateTodayGame);
 
   const [state, dispatch] = useReducer(
     gameReducer,
@@ -189,15 +188,15 @@ export function useGameState() {
     savePersistedGame(state);
   }, [state]);
 
-  // Journal local (#154) : seuls les coups et la note le font évoluer, pas la
-  // sélection d'une case. L'entrée naît au premier coup, avec le jeton de la
+  // Journal local (#154) : seuls les coups le font évoluer, pas la sélection
+  // d'une case. L'entrée naît au premier coup, avec le jeton de la
   // partie, qui servira à la rattacher à un compte (#155).
   // biome-ignore lint/correctness/useExhaustiveDependencies: state is read only for the fields listed in deps
   useEffect(() => {
     const token =
       syncRef.current?.date === state.date ? syncRef.current.token : undefined;
     recordDailyGame(state, token);
-  }, [state.date, state.cells, state.failed, state.rating]);
+  }, [state.date, state.cells, state.failed]);
 
   // `game_completed` une seule fois par partie, même après rechargement : le
   // drapeau `endRecorded` est persisté avec la partie.
@@ -229,24 +228,6 @@ export function useGameState() {
     });
     dispatch({ type: "setEndRecorded", date: state.date });
   }, [state.date, state.status, state.endRecorded, state.cells, state.lives]);
-
-  /**
-   * Note de difficulté : gardée sur la ligne de la partie côté serveur, puis
-   * dans la partie locale. Lève en cas d'échec réseau (l'écran propose de
-   * réessayer). Une partie que le serveur n'a pas (locale seulement) garde sa
-   * note en local, sans erreur.
-   */
-  const rateGame = useCallback(
-    async (rating: DifficultyRating) => {
-      const date = state.date;
-      const sync = syncRef.current;
-      if (sync && sync.date === date && sync.acked > 0) {
-        await rateTodayGame({ date, token: sync.token, rating });
-      }
-      dispatch({ type: "setRated", date, rating });
-    },
-    [state.date, rateTodayGame],
-  );
 
   const selectCell = useCallback((cell: CellPosition | null) => {
     dispatch({ type: "selectCell", cell });
@@ -317,7 +298,6 @@ export function useGameState() {
     state,
     selectCell,
     submitGuess,
-    rateGame,
     isLoading: todayGrid === undefined,
     hasGrid: !!todayGrid,
     validAnswers: todayGrid?.validAnswers ?? {},

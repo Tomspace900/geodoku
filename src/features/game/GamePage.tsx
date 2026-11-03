@@ -38,15 +38,8 @@ export function GamePage() {
   const posthog = usePostHog();
   const t = useT();
   const { localizedPath } = useLocale();
-  const {
-    state,
-    selectCell,
-    submitGuess,
-    rateGame,
-    isLoading,
-    hasGrid,
-    validAnswers,
-  } = useGameState();
+  const { state, selectCell, submitGuess, isLoading, hasGrid, validAnswers } =
+    useGameState();
   const isBackendDown = useBackendDownTimeout(isLoading);
   const gridNumber = state.date
     ? getGridNumberForDate(state.date)
@@ -113,10 +106,7 @@ export function GamePage() {
   }, [resultModalDismissed, state.status]);
 
   function dismissResultModal(
-    source:
-      | "dismiss_modal"
-      | "view_answers_button"
-      | "skip_feedback" = "dismiss_modal",
+    source: "dismiss_modal" | "view_answers_button" = "dismiss_modal",
   ) {
     if (showResultModal) {
       posthog?.capture("solution_viewed", {
@@ -250,8 +240,7 @@ export function GamePage() {
           distribution={guessDistribution}
           cohort={cohort}
           onDismiss={() => dismissResultModal("dismiss_modal")}
-          onRate={rateGame}
-          onViewAnswers={(source) => dismissResultModal(source)}
+          onViewAnswers={() => dismissResultModal("view_answers_button")}
         />
       )}
 
