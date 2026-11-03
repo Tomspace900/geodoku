@@ -191,6 +191,35 @@ Placement tranché le 2026-11-03 sur maquettes dans la vraie app.
    ouvert voit « serveur indisponible »), gardé 7 jours comme retour arrière
    possible, en perdant les parties jouées entre-temps, puis supprimé.
 
+### Choix techniques (livrés)
+
+- **Jeton tiré par le navigateur** (UUID v4) au premier coup, plutôt que
+  renvoyé par le serveur : le premier coup est idempotent comme les autres, et
+  la saisie n'attend jamais le réseau. Le serveur n'en garde que le hash
+  SHA-256 ; le journal local le garde (`token`) pour le lot 2.
+- **`playMove`** rend `applied` (avec `count`/`total` pour un pays posé),
+  `duplicate` (rang déjà appliqué, rien n'est écrit) ou `rejected`
+  (`date_mismatch`, `unknown_game`, `out_of_order`, `game_over`,
+  `cell_unavailable`, `rate_limited`). Le serveur rejoue le coup avec la règle
+  du client (`applyMove`, [`gameRecord.ts`](../src/features/game/logic/gameRecord.ts)).
+  Un refus arrête l'envoi : la partie continue en local seulement. La file
+  d'envoi (`geodoku:move-sync-v1`) survit au rechargement ; une partie
+  commencée sans elle reste locale.
+- **Rate limit** : un refus rend `rate_limited` au lieu de lever, pour que le
+  compteur de surveillance de la même transaction survive. La purge du
+  composant retire chaque nuit les lignes créées il y a plus de deux jours.
+- **Cohorte** : `getTodayCohort` lit au plus 8 000 parties ; au-delà, le levier
+  est l'instantané périodique (Notes). « Mieux que X % » compte les seaux
+  inférieurs et la moitié du sien.
+- **Meilleur score** : affectation hongroise sur la fraction de rareté du
+  barème (à points égaux, le plus rare), [`bestCombo.ts`](../src/features/game/logic/bestCombo.ts).
+- **Entraînement** : `games.getReplayStats` remplace la lecture de la
+  répartition figée ; la partie d'entraînement persiste désormais ses erreurs
+  par case (les croix).
+- **Bascule** : même projet Convex, nouveaux déploiements en `eu-west-1` (la
+  région se choisit par déploiement) ; seule la clé de production Vercel
+  change. Script `pnpm migrate:eu`, runbook [`bascule-europe.md`](bascule-europe.md).
+
 ### Notes
 
 - Convex ne renvoie pas au client le résultat d'une query recalculée s'il n'a pas
