@@ -1,3 +1,10 @@
+/**
+ * Prod européenne, nommée explicitement : la prod « par défaut » du projet
+ * (celle de `--prod`) reste l'ancienne prod américaine, Convex n'en
+ * acceptant qu'une et refusant d'en créer une seconde.
+ */
+export const PROD_DEPLOYMENT = "fastidious-manatee-361";
+
 export type CopyMode = "prod-to-dev" | "develop-to-dev" | "prod-to-develop";
 
 export type CopyCommands = {
@@ -31,7 +38,7 @@ export function buildCopyCommands(
   const sourceArgs =
     mode === "develop-to-dev"
       ? ["export", "--preview-name", "develop"]
-      : ["export", "--prod"];
+      : ["export", "--deployment", PROD_DEPLOYMENT];
   const targetArgs =
     mode === "prod-to-develop"
       ? ["import", "--preview-name", "develop", "--replace-all", "-y"]

@@ -31,8 +31,8 @@ on ne passe à la suivante que si elle est bonne.
   sans valeur demande la valeur au clavier.
 
 Notation : `US_DEVELOP` = `wonderful-viper-134`, `US_PROD` =
-`kindly-elephant-663`. `EU_DEVELOP` et `EU_PROD` sont les noms donnés par
-Convex à la création (`mot-mot-123`).
+`kindly-elephant-663`, `EU_DEVELOP` = `deafening-terrier-913`, `EU_PROD` =
+`fastidious-manatee-361` (noms donnés par Convex à la création).
 
 ## 1. Répétition sur develop
 
@@ -123,13 +123,17 @@ change le schéma ne part sur `develop` avant l'étape 1.7.
    causes de défaite, notes, erreurs par case) hors du repo. La nuit, l'export
    final le complétera du dernier jour.
 
-4. **Créer la prod européenne, par défaut.**
+4. **Créer la prod européenne.**
    ```bash
-   pnpm exec convex deployment create prod-eu --type prod --region eu --default
+   pnpm exec convex deployment create prod-eu --type prod --region eu
    ```
    Vérifier : URL en `.eu-west-1.convex.cloud`. Noter le nom (`EU_PROD`).
-   Désormais `--prod` et `pnpm dump:prod` visent l'Europe (vide jusqu'à la
-   nuit) : ne pas lancer `dump:prod` d'ici là.
+   Sans `--default` : Convex refuse une seconde prod par défaut. `--prod`
+   reste donc l'Amérique, et ne sert plus ; Vercel déploie par sa clé
+   (`CONVEX_DEPLOY_KEY`), propre au déploiement. `pnpm dump:prod` vise
+   `EU_PROD` par son nom (`PROD_DEPLOYMENT`,
+   [`convex-data-operations.ts`](../scripts/local/convex-data-operations.ts)) :
+   ne pas le lancer avant la nuit, il copierait la répétition de la veille.
 
 5. **Variables d'environnement de `EU_PROD`.**
    ```bash
