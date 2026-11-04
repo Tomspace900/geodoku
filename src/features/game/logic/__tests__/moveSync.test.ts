@@ -2,6 +2,7 @@ import { describe, expect, it } from "vitest";
 import {
   ackMove,
   appendMove,
+  isMoveSyncSettled,
   nextPendingMove,
   sanitizeMoveSync,
   startMoveSync,
@@ -33,6 +34,23 @@ describe("moveSync", () => {
 
   it("tire un jeton UUID v4 propre à la partie", () => {
     expect(startMoveSync(DATE).token).not.toBe(startMoveSync(DATE).token);
+  });
+});
+
+describe("isMoveSyncSettled", () => {
+  it("attend tant qu'un coup n'est pas acquitté", () => {
+    expect(isMoveSyncSettled(appendMove(startMoveSync(DATE), FIRST))).toBe(
+      false,
+    );
+  });
+
+  it("est réglé une fois le dernier coup acquitté", () => {
+    const sync = ackMove(appendMove(startMoveSync(DATE), FIRST), 0);
+    expect(isMoveSyncSettled(sync)).toBe(true);
+  });
+
+  it("est réglé pour une partie restée locale", () => {
+    expect(isMoveSyncSettled(null)).toBe(true);
   });
 });
 

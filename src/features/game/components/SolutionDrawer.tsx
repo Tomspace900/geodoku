@@ -45,20 +45,12 @@ type Props = {
 };
 
 /**
- * « 41 % des joueurs se sont trompés ici, toi aussi. » Rien tant que la
+ * « 41 % des joueurs se sont trompés ici. » Rien tant que la
  * cohorte est mince : un taux sur trois joueurs ne dit rien.
  */
-function CellFailureLine({
-  rate,
-  ownFailures,
-}: {
-  rate: number;
-  ownFailures: number;
-}) {
+function CellFailureLine({ rate }: { rate: number }) {
   const { t } = useLocale();
-  const [before, after = ""] = t(
-    ownFailures > 0 ? "ui.cellFailureRateToo" : "ui.cellFailureRate",
-  ).split("{percent}");
+  const [before, after = ""] = t("ui.cellFailureRate").split("{percent}");
   return (
     <p className="flex items-center gap-1.5 px-4 pb-2 text-sm text-on-surface">
       <X className="size-4 shrink-0 text-error" strokeWidth={2.5} aria-hidden />
@@ -309,10 +301,7 @@ export function SolutionDrawer({
               </DrawerTitle>
             </DrawerHeader>
             {cellKey && cellFailureRate !== null && (
-              <CellFailureLine
-                rate={cellFailureRate}
-                ownFailures={state.failed[cellKey]}
-              />
+              <CellFailureLine rate={cellFailureRate} />
             )}
             <CellListView
               codes={cellCodes}

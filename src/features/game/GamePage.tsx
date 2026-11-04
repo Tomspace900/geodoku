@@ -38,8 +38,15 @@ export function GamePage() {
   const posthog = usePostHog();
   const t = useT();
   const { localizedPath } = useLocale();
-  const { state, selectCell, submitGuess, isLoading, hasGrid, validAnswers } =
-    useGameState();
+  const {
+    state,
+    selectCell,
+    submitGuess,
+    isLoading,
+    hasGrid,
+    movesSettled,
+    validAnswers,
+  } = useGameState();
   const isBackendDown = useBackendDownTimeout(isLoading);
   const gridNumber = state.date
     ? getGridNumberForDate(state.date)
@@ -51,8 +58,12 @@ export function GamePage() {
   const guessDistribution = cellCounts
     ? toGuessDistribution(cellCounts)
     : undefined;
-  // « Toi et les autres » : lu à la demande, une fois la partie finie.
-  const cohort = useTodayCohort(hasGrid && state.status !== "playing");
+  // « Toi et les autres » : lu à la demande, une fois la partie finie, et
+  // relu quand ses derniers coups sont arrivés au serveur.
+  const cohort = useTodayCohort(
+    hasGrid && state.status !== "playing",
+    movesSettled,
+  );
   const cellFailureRates = cohort
     ? failureRates({
         failedPlayers: cohort.failedPlayers,

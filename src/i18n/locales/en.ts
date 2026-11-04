@@ -58,7 +58,6 @@ export const en = {
     errorRateLabel: "mistakes",
     ownErrorsAriaLabel: "Your mistakes here: {count}",
     cellFailureRate: "{percent} of players got this one wrong.",
-    cellFailureRateToo: "{percent} of players got this one wrong, you too.",
   },
   footer: {
     loveCredit: "Made with love ❤️",

@@ -61,7 +61,6 @@ export const fr = {
     errorRateLabel: "d'erreurs",
     ownErrorsAriaLabel: "Tes erreurs ici\u00A0: {count}",
     cellFailureRate: "{percent} des joueurs se sont trompés ici.",
-    cellFailureRateToo: "{percent} des joueurs se sont trompés ici, toi aussi.",
   },
   footer: {
     loveCredit: "Fait avec amour ❤️",

@@ -76,6 +76,14 @@ export function nextPendingMove(
   return { moveIndex: sync.acked, move: sync.moves[sync.acked] };
 }
 
+/**
+ * Plus rien à envoyer : file vide, arrêtée, ou partie restée locale. La
+ * cohorte du jour ne compte la partie qu'à partir de là.
+ */
+export function isMoveSyncSettled(sync: MoveSync | null): boolean {
+  return sync === null || nextPendingMove(sync) === null;
+}
+
 function isSyncedMove(raw: unknown): raw is SyncedMove {
   if (!raw || typeof raw !== "object") return false;
   const move = raw as Record<string, unknown>;

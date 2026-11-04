@@ -1,6 +1,6 @@
 import { usePostHog } from "@posthog/react";
 import { useMutation, useQuery } from "convex/react";
-import { useCallback, useEffect, useReducer, useRef } from "react";
+import { useCallback, useEffect, useReducer, useRef, useState } from "react";
 import { api } from "../../../../convex/_generated/api";
 import { getOrCreateClientId } from "../logic/clientId";
 import type { ConstraintId } from "../logic/constraints";
@@ -12,6 +12,7 @@ import {
   ackMove,
   appendMove,
   clearMoveSync,
+  isMoveSyncSettled,
   loadMoveSync,
   type MoveSync,
   movesPlayed,
@@ -59,10 +60,14 @@ export function useGameState() {
   const sendingRef = useRef(false);
   // Coups déjà joués au chargement : leur envoi est un rejeu (`replayed`).
   const movesAtLoadRef = useRef(0);
+  // Tous les coups sont arrivés au serveur : la cohorte relue à partir de là
+  // compte la partie (le coup qui la finit part après l'écran de fin).
+  const [movesSettled, setMovesSettled] = useState(true);
 
   function updateSync(next: MoveSync): void {
     syncRef.current = next;
     saveMoveSync(next);
+    setMovesSettled(isMoveSyncSettled(next));
   }
 
   // Envoie les coups en attente, un par un. Le client Convex garde lui-même
@@ -153,6 +158,7 @@ export function useGameState() {
     }
     syncRef.current = sync;
     if (sync) saveMoveSync(sync);
+    setMovesSettled(isMoveSyncSettled(sync));
     movesAtLoadRef.current = sync?.moves.length ?? 0;
 
     if (rehydratePayload) {
@@ -300,6 +306,7 @@ export function useGameState() {
     submitGuess,
     isLoading: todayGrid === undefined,
     hasGrid: !!todayGrid,
+    movesSettled,
     validAnswers: todayGrid?.validAnswers ?? {},
   };
 }

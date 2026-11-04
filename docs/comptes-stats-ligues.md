@@ -172,7 +172,7 @@ Placement tranché le 2026-11-03 sur maquettes dans la vraie app.
     doublon, calculé côté client depuis la répartition ;
   - **Ma grille** (« Tes choix » sur les maquettes) : ton pays et sa part ;
     tiret pour une case vide, croix pour une case bloquée.
-- **Tiroir d'une case** : « X % des joueurs se sont trompés ici, toi aussi ». La
+- **Tiroir d'une case** : « X % des joueurs se sont trompés ici ». La
   ligne « Le plus choisi » est retirée.
 - **Aussi en entraînement**, sur la cohorte figée du jour rejoué : le serveur
   donne les taux d'erreur des 7 derniers jours, dans la même fenêtre que
