@@ -106,10 +106,10 @@ export const en = {
     title: "What's new",
     backToGame: "Back to the game",
     entries: {
-      othersDate: "November 2026",
-      othersTitle: "You and the other players",
+      othersDate: "November 5, 2026",
+      othersTitle: "Better than the other players?",
       othersBody:
-        "At the end of your game, swipe your emoji grid to see where your score stands among today's players. The solution grid now reads in layers, by tapping its corner: the cells where people slip the most, the best possible grid and your own. The difficulty question is gone, and game data is now hosted in Europe.",
+        "At the end of your game, swipe your emoji grid: you see where your score stands among today's players. The solution grid also has several faces now, depending on what interests you: the answers, the trickiest cells, the best possible grid or your own.",
       stabilityDate: "October 22, 2026",
       stabilityTitle: "Small fixes",
       stabilityBody:

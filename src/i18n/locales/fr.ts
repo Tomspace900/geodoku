@@ -109,10 +109,10 @@ export const fr = {
     title: "Nouveautés",
     backToGame: "Retour au jeu",
     entries: {
-      othersDate: "Novembre 2026",
-      othersTitle: "Toi et les autres joueurs",
+      othersDate: "5 novembre 2026",
+      othersTitle: "Mieux que les autres joueurs\u00A0?",
       othersBody:
-        "\u00C0 la fin de ta partie, fais glisser ta grille d'emojis\u00A0: tu vois o\u00F9 se place ton score parmi ceux des joueurs du jour. La grille solution se lit maintenant par calques, en touchant son coin\u00A0: les cases o\u00F9 l'on se trompe le plus, la meilleure grille possible et la tienne. La question sur la difficult\u00E9 de la grille dispara\u00EEt, et les donn\u00E9es du jeu sont d\u00E9sormais h\u00E9berg\u00E9es en Europe.",
+        "\u00C0 la fin de ta partie, fais glisser ta grille d'\u00E9mojis\u00A0: tu vois o\u00F9 se place ton score parmi ceux des joueurs du jour. Aussi, la grille solution a maintenant plusieurs visages, en fonction de ce qui t'int\u00E9resse\u00A0: les r\u00E9ponses, les cases les plus pi\u00E9geuses, la meilleure grille possible ou la tienne.",
       stabilityDate: "22 octobre 2026",
       stabilityTitle: "Petites corrections",
       stabilityBody:
