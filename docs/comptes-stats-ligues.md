@@ -41,7 +41,7 @@ L'epic reste ouverte jusqu'à la mise en prod du dernier lot.
 - **Connexion** : code par e-mail et Google au lancement, Apple plus tard.
 - **PostHog reste anonyme** : pas d'`identify()`, pas de PII.
 - **Données d'un compte** : l'e-mail, les parties, un pseudo généré et modifiable,
-  un pays facultatif (« Ton pays », affiché en drapeau, jamais « pays d'origine »).
+  un pays facultatif (« Mon pays », affiché en drapeau, jamais « pays d'origine »).
   Rien n'est repris du profil Google (ni nom, ni photo). Aucun score stocké.
 - **Droits du joueur** : suppression du compte en libre-service, export sur demande,
   effacement après 3 ans sans partie.
@@ -247,15 +247,38 @@ En prod depuis la bascule de la nuit du 4 au 5 novembre 2026 (prod Convex en
 - **Aucune donnée de profil Google reprise** : le `name` de Better Auth reçoit le
   pseudo, la photo n'est pas gardée.
 - **Budget bundle** : on accepte de relever celui de `check:bundle`.
+- **Envoi des codes par MailerSend** (tranché le 2026-11-05) : données hébergées
+  en Europe (Google Cloud, Belgique), société américaine (MailerSend, Inc.),
+  comme Convex. Gratuit jusqu'à 500 e-mails par mois, largement au-dessus du
+  besoin. Better Auth n'appelle qu'une fonction d'envoi (`sendVerificationOTP`) :
+  changer de service ne touche qu'elle. Écartés : Resend (données et journaux
+  aux États-Unis), Scaleway (français, mais moins éprouvé), Brevo (« la plupart »
+  des serveurs en Europe, sans dire lesquels). Enregistrements DNS (SPF, DKIM) à
+  poser sur `geodoku.app`, arrivée en boîte de réception à tester sur Gmail,
+  Outlook et iCloud avant le lancement.
 
 ### Données du compte
 
 - L'e-mail, les parties (lignes du lot 1) et `profiles { userId, pseudo, country? }`.
   Aucun score stocké.
-- **Pseudo** généré par un petit générateur amusant, modifiable.
-- **Pays** facultatif, « Ton pays (facultatif) », affiché en drapeau.
+- **Pseudo** généré par un petit générateur amusant, puis **modifiable en texte
+  libre** (3 à 20 caractères), avec un dé pour en tirer un autre (tranché le
+  2026-11-05, « pour l'instant ») : dans une ligue entre amis, se reconnaître
+  (« Camille ») compte plus que le risque, limité aux invités. Un filtre de mots
+  interdits à l'enregistrement ; le lot 3 dira s'il faut plus. **Pas d'unicité
+  sur tout le site** (le premier « Julie » en priverait les autres) : deux
+  pseudos identiques dans une même ligue se distingueront au lot 3.
+- **Pays** facultatif, « Mon pays (facultatif) », affiché en drapeau.
 - **Suppression** en libre-service, **export** sur demande, **effacement** après
   3 ans sans partie (date de la dernière partie, pas de champ dédié).
+- **Supprimer un compte détache ses parties** (tranché le 2026-11-05) : l'e-mail,
+  le profil et les sessions sont effacés ; le propriétaire de chaque ligne de
+  partie est remplacé par une empreinte tirée au hasard, que personne ne détient.
+  Les lignes deviennent celles d'un anonyme qui a perdu son jeton, des données
+  anonymes hors du champ du RGPD, et les chiffres passés (« Toi et les autres »,
+  taux d'erreur, admin) restent stables. Même geste pour l'effacement après 3 ans.
+  Le journal de l'appareil reste au joueur. `/privacy` : « tes parties restent,
+  anonymes, dans les statistiques du jeu ».
 
 ### Partie du jour et synchronisation
 
@@ -308,8 +331,14 @@ Tranché le 2026-11-05 sur maquettes dans la vraie app, comme au lot 1.
   - **Le jour** (tap sur une barre) : les 30 barres en tête, la date et le numéro
     de grille entre ‹ ›, l'anneau du score et la grille du joueur figée (pays et
     part, tiret pour une case vide, croix pour une case bloquée). On glisse d'un
-    jour joué à l'autre ; les jours non joués sont sautés.
+    jour joué à l'autre ; les jours non joués sont sautés. Pour les 7 derniers
+    jours, et seulement une fois la partie du jour finie (sinon l'archive
+    redirige), un lien discret « Rejouer cette grille › » ouvre l'entraînement
+    de ce jour, ou le reprend.
   - **Toutes les thématiques**, classées.
+- **Adresse** : `/fr/stats`, `/en/stats`, hors index (le contenu dépend du
+  joueur). **Tiroirs** à geste (vaul) sur téléphone, comme ceux de la grille
+  solution et de la saisie ; fenêtre centrée sur ordinateur.
 - **Ordinateur** : deux colonnes, les cases et la palette à gauche, les 30 jours
   et les thématiques à droite. Le survol d'une barre affiche « 26 nov. · 815 pts ».
 - **Au-delà de 30 jours**, le détail d'un jour n'est plus accessible ; les cases,
@@ -319,9 +348,18 @@ Tranché le 2026-11-05 sur maquettes dans la vraie app, comme au lot 1.
 
 - **Aucune partie** : une carte « Tes stats commencent avec ta première grille. »,
   puis l'invitation.
-- **Partie du jour pas finie** : elle ne compte nulle part, et sa barre est un
-  contour en pointillé. Une fois finie, elle entre partout avec son score du
-  moment, qui s'affine jusqu'à minuit comme dans la fenêtre de résultat.
+- **Seules les parties finies comptent**, comme dans « Toi et les autres ». Une
+  partie pas finie, celle du jour comme une partie passée abandonnée en route, ne
+  compte nulle part (parties jouées, moyenne, palette, thématiques) ; sa barre est
+  un contour en pointillé, et son détail montre la grille telle quelle, sans
+  l'anneau du score. Une fois finie, la partie du jour entre partout avec son
+  score du moment, qui s'affine jusqu'à minuit comme dans la fenêtre de résultat.
+  Un jour sans aucun coup n'existe pas dans le journal : un point dans les barres.
+- **Fin d'une partie passée** : plus de vies et 9 cases remplies se lisent dans
+  le journal. Une grille bloquée demande les réponses des cases qui en ont 8 ou
+  moins (on place au plus 9 pays, une case plus large ne se bloque jamais) :
+  quelques dizaines d'octets par jour, renvoyés avec la répartition finale. Les
+  mêmes données donnent les croix des cases bloquées dans le détail d'un jour.
 
 #### Invitation et compte
 
@@ -349,16 +387,13 @@ Tranché le 2026-11-05 sur maquettes dans la vraie app, comme au lot 1.
 
 ### À trancher avant de coder
 
-- Adresse de la page, « Ton pays » ou « Mon pays », tiroir à geste ou fenêtre
-  partout, lien « Rejouer cette grille » depuis le détail d'un jour.
 - Liste des thématiques et leur seuil, à vérifier sur de vraies données.
-- Parties passées laissées en cours dans le journal.
-- Envoi des e-mails, suppression du compte, générateur de pseudo ; leurs écrans
-  sur maquettes ensuite.
+- Écrans sur maquettes : connexion (code par e-mail et Google), e-mail du code,
+  vocabulaire du générateur de pseudo et son édition, choix du pays, suppression.
 
 ### Docs
 
-- `/privacy` à réécrire : e-mail, durée de conservation, droits. Dire que Better
+- `/privacy` à réécrire : e-mail, MailerSend, durée de conservation, droits. Dire que Better
   Auth garde par défaut l'IP et le navigateur dans les sessions, et les jetons
   Google dans ses comptes.
 - `AGENTS.md` : « Pas de compte » devient « Pas de compte obligatoire » ; stack
