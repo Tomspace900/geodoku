@@ -13,13 +13,6 @@ export const en = {
     constraintSourceConvention: "Geodoku's call",
     constraintSourcePrefix: "Source:",
     constraintSourcesPrefix: "Sources:",
-    feedbackQuestion: "How did you find this grid?",
-    feedbackError: "We couldn't save your rating.",
-    feedbackRetry: "Try again",
-    feedbackTooEasy: "Too easy",
-    feedbackBalanced: "Just right",
-    feedbackTooHard: "Too hard",
-    skipFeedback: "Skip and view answers",
     share: "Share my score",
     shareCopied: "Copied!\u00A0✓",
     shareShared: "Shared!\u00A0✓",
@@ -48,6 +41,23 @@ export const en = {
     solutionCellAriaLabel:
       "Row {row} column {col}: {rowConstraint} × {colConstraint}. {count} possible answers.",
     constraintAnswerCount: "{count} countries",
+    betterThan: "Better than {percent} of players",
+    amongFirstToFinish: "Among the first to finish",
+    tooEarlyToCompare: "Too early to compare",
+    scoreChartAriaLabel:
+      "Today's player scores, in bars of 50\u00A0points. Your bar is purple, the median dotted.",
+    chartYou: "You",
+    chartMedian: "median",
+    resultSlideGrid: "Your grid",
+    resultSlideOthers: "Today's scores",
+    layerAnswers: "Answers",
+    layerErrors: "Mistakes",
+    layerBest: "Best grid",
+    layerChoices: "My grid",
+    layerSwitchAriaLabel: "Layer: {layer}. Tap for the next one.",
+    errorRateLabel: "mistakes",
+    ownErrorsAriaLabel: "Your mistakes here: {count}",
+    cellFailureRate: "{percent} of players got this one wrong.",
   },
   footer: {
     loveCredit: "Made with love ❤️",
@@ -68,7 +78,7 @@ export const en = {
       " helps cover the technical costs (server, domain). And above all, it's a huge motivation to keep building new features!",
   },
   privacy: {
-    eyebrow: "Last updated · October 2026",
+    eyebrow: "Last updated · November 2026",
     title: "Privacy",
     lead: "Geodoku is a game I build on my own. No account needed: I only collect the bare minimum, just enough to run the game and see how the grids are doing.",
     backToGame: "Back to the game",
@@ -77,24 +87,28 @@ export const en = {
       "No sign-up, no login, no ads. I don't sell data or use it for advertising. There are no advertising trackers on the site.",
     deviceTitle: "On your device",
     deviceBody:
-      "Your browser keeps a few settings: your language, in a preference cookie set only if you pick one; the language of the country you connect from, in a session cookie holding only that language, to suggest the right version; and in local storage the current grid progress, the history of your daily games (countries placed, mistakes per cell and difficulty rating, no score), which never leaves your device, your practice games on past grids, a random anti-spam identifier, and short-lived technical keys used to deduplicate submissions. None of it is an advertising cookie. Clearing the site data removes it.",
+      "Your browser keeps a few settings: your language, in a preference cookie set only if you pick one; the language of the country you connect from, in a session cookie holding only that language, to suggest the right version; and in local storage the current grid progress, the history of your daily games (countries placed and mistakes per cell, no score), your practice games on past grids, a random anti-spam identifier, and for today's game a random token with the moves not sent yet. None of it is an advertising cookie. Clearing the site data removes it.",
     serverTitle: "What gets sent to me",
     serverBody:
-      "While you play, I record aggregated picks per cell, game outcomes, and difficulty feedback. To make retries reliable, the server keeps a technical receipt of the action (for example its cell and country) with an opaque key for seven days, without a stable identifier linking your actions. Pseudonymous usage events also help me understand the journey. None of this contains a name, email, or account.",
+      "While you play, today's game is recorded on the server: countries placed and mistakes per cell. It is only tied to a random token specific to that game, of which the server keeps a fingerprint: nothing links your games from one day to the next. The server derives the day's statistics from it (rarities, player scores, cells where people slip). Pseudonymous usage events also help me understand the journey. None of this contains a name, email, or account.",
     thirdPartyTitle: "Third-party services",
     thirdPartyBody:
-      "Geodoku relies on Vercel (hosting and audience metrics without advertising cookies), Convex (the game statistics database), and PostHog (pseudonymous usage-event measurement with an identifier stored locally, without advertising). Google Fonts also receives your IP address when fonts load.",
+      "Geodoku relies on Vercel (hosting and audience metrics without advertising cookies), Convex (the games and game statistics database, hosted in Europe, in Ireland), and PostHog (pseudonymous usage-event measurement with an identifier stored locally, without advertising). Google Fonts also receives your IP address when fonts load.",
     rightsTitle: "Your rights",
     rightsBody:
-      "There is no account to access. Clearing Geodoku site data removes local settings, your game history and identifiers. For questions about pseudonymous data sent to third-party services, contact me below.",
+      "There is no account to access. Clearing Geodoku site data removes local settings, your game history and identifiers. A game recorded on the server is only tied to the token your browser keeps: nothing lets anyone link it to you. For questions about pseudonymous data sent to third-party services, contact me below.",
     contactTitle: "Contact",
     contactBodyPre: "A question? Write to me at",
   },
   changelog: {
-    eyebrow: "Last updated · October 2026",
+    eyebrow: "Last updated · November 2026",
     title: "What's new",
     backToGame: "Back to the game",
     entries: {
+      othersDate: "November 5, 2026",
+      othersTitle: "Better than the other players?",
+      othersBody:
+        "At the end of your game, swipe your emoji grid: you see where your score stands among today's players. The solution grid also has several faces now, depending on what interests you: the answers, the trickiest cells, the best possible grid or your own.",
       stabilityDate: "October 22, 2026",
       stabilityTitle: "Small fixes",
       stabilityBody:
@@ -306,7 +320,7 @@ export const en = {
     rarityTitle: "Rarity bonus",
     rarityBody: "Up to 450 points depending on the country's rarity.",
     estimated:
-      "Few players so far today, this score will sharpen through the day.",
+      "A “≈” marks a provisional score: few players so far today, it will sharpen through the day.",
     legendCommon: "Over 50\u00A0% of players",
     legendUncommon: "25 to 50\u00A0%",
     legendRare: "10 to 25\u00A0%",

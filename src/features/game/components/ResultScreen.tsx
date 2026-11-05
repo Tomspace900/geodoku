@@ -1,9 +1,7 @@
 import { usePostHog } from "@posthog/react";
-import { useMutation } from "convex/react";
 import { Copy, Share2 } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import { AccentBar } from "@/components/editorial/AccentBar";
-import { Eyebrow } from "@/components/editorial/Eyebrow";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -12,12 +10,13 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { SurveyCta } from "@/features/game/components/SurveyCta";
-import { getOrCreateClientId } from "@/features/game/logic/clientId";
-import { isOutOfLives } from "@/features/game/logic/lives";
 import {
-  clearPendingOperationId,
-  getOrCreatePendingOperationId,
-} from "@/features/game/logic/operationIds";
+  betterThanPercent,
+  type Cohort,
+  emptyCohort,
+  isThinCohort,
+} from "@/features/game/logic/cohort";
+import { isOutOfLives } from "@/features/game/logic/lives";
 import {
   type ResultOutcome,
   resultTitleKeys,
@@ -31,47 +30,31 @@ import {
   shareGameResult,
   shareSiteUrl,
 } from "@/features/game/logic/share";
-import type {
-  CellGuessDistribution,
-  DifficultyRating,
-  GameState,
-} from "@/features/game/types";
+import type { CellGuessDistribution, GameState } from "@/features/game/types";
 import { useLocale, useT } from "@/i18n/LocaleContext";
 import { cn } from "@/lib/utils";
-import { api } from "../../../../convex/_generated/api";
+import { ResultSlides } from "./ResultSlides";
 import { ScoreDisplay } from "./ScoreDisplay";
+import { ScoreHistogram } from "./ScoreHistogram";
 import { ShareEmojiGrid } from "./ShareEmojiGrid";
-
-type RatingSubmissionState =
-  | { status: "idle" }
-  | { status: "pending"; rating: DifficultyRating }
-  | { status: "error"; rating: DifficultyRating }
-  | { status: "success"; rating: DifficultyRating };
-
-const DIFFICULTY_RATINGS: ReadonlyArray<{
-  rating: DifficultyRating;
-  labelKey: "ui.feedbackTooEasy" | "ui.feedbackBalanced" | "ui.feedbackTooHard";
-}> = [
-  { rating: "too_easy", labelKey: "ui.feedbackTooEasy" },
-  { rating: "balanced", labelKey: "ui.feedbackBalanced" },
-  { rating: "too_hard", labelKey: "ui.feedbackTooHard" },
-];
+import { StandingPill } from "./StandingPill";
 
 type Props = {
   state: GameState;
   gridNumber: number | null;
   distribution: Record<string, CellGuessDistribution> | undefined;
+  /** « Toi et les autres » du jour ; `undefined` tant qu'il charge. */
+  cohort: Cohort | null | undefined;
   onDismiss: () => void;
-  onRated: (rating: DifficultyRating) => void;
-  onViewAnswers: (source: "view_answers_button" | "skip_feedback") => void;
+  onViewAnswers: () => void;
 };
 
 export function ResultScreen({
   state,
   gridNumber,
   distribution,
+  cohort,
   onDismiss,
-  onRated,
   onViewAnswers,
 }: Props) {
   const posthog = usePostHog();
@@ -84,11 +67,6 @@ export function ResultScreen({
   const nativeShareAvailable = canUseNativeShare();
   const t = useT();
   const { locale } = useLocale();
-  // Snapshot à l'ouverture : si la grille était déjà notée (partie reprise),
-  // on affiche directement « voir les réponses » plutôt que les boutons.
-  const [hadFeedbackBeforeOpen] = useState(() => state.rated);
-  const [ratingSubmission, setRatingSubmission] =
-    useState<RatingSubmissionState>({ status: "idle" });
   const scoreBreakdown = computeScoreBreakdown(state, distribution);
   const score = computeScore(scoreBreakdown);
   const scoreReady = scoreBreakdown.shares !== null;
@@ -120,9 +98,19 @@ export function ResultScreen({
     resultTitleKeysForOutcome[
       Math.floor(titleRoll * resultTitleKeysForOutcome.length)
     ];
-  const hasRated =
-    hadFeedbackBeforeOpen || ratingSubmission.status === "success";
-  const submitGridFeedback = useMutation(api.grids.submitTodayGridFeedback);
+  const histogram = cohort?.histogram ?? emptyCohort().histogram;
+  const thinCohort = isThinCohort(histogram);
+  const comparisonTrackedRef = useRef(false);
+
+  function handleSlideChange(index: number, source: "swipe" | "dots" | "link") {
+    if (index !== 1 || comparisonTrackedRef.current) return;
+    comparisonTrackedRef.current = true;
+    posthog?.capture("result_comparison_viewed", {
+      grid_date: state.date,
+      source: source === "link" ? "pill" : source,
+      thin: thinCohort,
+    });
+  }
 
   const viewedTrackedRef = useRef(false);
   // biome-ignore lint/correctness/useExhaustiveDependencies: une seule fois, dès que la rareté dynamique est résolue (sinon elle manquerait en analytics)
@@ -183,38 +171,6 @@ export function ResultScreen({
     };
   }, []);
 
-  async function handleRateDifficulty(rating: DifficultyRating) {
-    if (
-      hadFeedbackBeforeOpen ||
-      ratingSubmission.status === "pending" ||
-      ratingSubmission.status === "success"
-    ) {
-      return;
-    }
-
-    const operationSlot = `grid-feedback:${state.date}`;
-    const operationId = getOrCreatePendingOperationId(operationSlot);
-    setRatingSubmission({ status: "pending", rating });
-    try {
-      await submitGridFeedback({
-        operationId,
-        rating,
-        clientId: getOrCreateClientId(),
-      });
-      clearPendingOperationId(operationSlot, operationId);
-      onRated(rating);
-      setRatingSubmission({ status: "success", rating });
-      posthog?.capture("difficulty_rated", {
-        $insert_id: operationId,
-        rating,
-        grid_date: state.date,
-        outcome: state.status,
-      });
-    } catch {
-      setRatingSubmission({ status: "error", rating });
-    }
-  }
-
   return (
     <Dialog
       open
@@ -244,74 +200,58 @@ export function ResultScreen({
           <ScoreDisplay breakdown={scoreBreakdown} />
         </div>
 
-        <ShareEmojiGrid
-          cells={state.cells}
-          distribution={distribution}
-          caption={`#GEODOKU${gridNumber !== null ? ` #${gridNumber}` : ""}`}
+        {/* Seule cette zone glisse (#70) : la grille d'emojis, puis les
+            scores du jour. Hauteur fixe, pour que rien ne saute autour. La
+            3ᵉ page reviendra aux ligues (#156). */}
+        <ResultSlides
+          onSlideChange={handleSlideChange}
+          slides={(goTo) => [
+            {
+              id: "grid",
+              label: t("ui.resultSlideGrid"),
+              content: (
+                <div className="flex h-[208px] flex-col items-center justify-center gap-3">
+                  {cohort && scoreReady && score.total !== null && (
+                    <StandingPill
+                      percent={
+                        thinCohort
+                          ? null
+                          : betterThanPercent(histogram, score.total)
+                      }
+                      onClick={() => goTo(1)}
+                    />
+                  )}
+                  <ShareEmojiGrid
+                    cells={state.cells}
+                    distribution={distribution}
+                    caption={`#GEODOKU${gridNumber !== null ? ` #${gridNumber}` : ""}`}
+                  />
+                </div>
+              ),
+            },
+            {
+              id: "others",
+              label: t("ui.resultSlideOthers"),
+              content: (
+                <div className="h-[208px] px-1">
+                  <ScoreHistogram histogram={histogram} score={score.total} />
+                </div>
+              ),
+            },
+          ]}
         />
 
         <div className="flex flex-col gap-3">
-          {hasRated ? (
-            <Button
-              onClick={() => onViewAnswers("view_answers_button")}
-              variant="secondary"
-              size="lg"
-              className="w-full"
-            >
-              {t("ui.viewAnswers")}
-            </Button>
-          ) : (
-            /* Bloc de notation soudé à son échappatoire : le lien « Passer »
-               appartient à ce groupe, il n'est pas un tertiaire flottant entre
-               deux blocs. L'espacement interne serré le dit à l'œil. */
-            <div className="flex flex-col gap-2">
-              <Eyebrow className="text-center">
-                {t("ui.feedbackQuestion")}
-              </Eyebrow>
-              <div className="grid grid-cols-3 gap-1.5">
-                {DIFFICULTY_RATINGS.map(({ rating, labelKey }) => (
-                  <Button
-                    key={rating}
-                    type="button"
-                    variant="secondary"
-                    size="sm"
-                    disabled={ratingSubmission.status !== "idle"}
-                    className="h-auto min-h-9 whitespace-normal px-2 py-2 text-xs leading-tight"
-                    onClick={() => handleRateDifficulty(rating)}
-                  >
-                    {t(labelKey)}
-                  </Button>
-                ))}
-              </div>
-              {ratingSubmission.status === "error" && (
-                <div
-                  role="alert"
-                  className="rounded-lg bg-error/10 px-3 py-2 text-center text-xs text-error"
-                >
-                  <p>{t("ui.feedbackError")}</p>
-                  <Button
-                    type="button"
-                    variant="link"
-                    size="sm"
-                    className="mt-1 text-error"
-                    onClick={() =>
-                      handleRateDifficulty(ratingSubmission.rating)
-                    }
-                  >
-                    {t("ui.feedbackRetry")}
-                  </Button>
-                </div>
-              )}
-              <Button
-                type="button"
-                variant="link"
-                onClick={() => onViewAnswers("skip_feedback")}
-                className="self-center text-xs"
-              >
-                {t("ui.skipFeedback")}
-              </Button>
-            </div>
-          )}
+          {/* Plus de note de difficulté (#70) : le taux de victoire et les
+              erreurs par case la disent mieux. Les réponses, puis le partage. */}
+          <Button
+            onClick={onViewAnswers}
+            variant="secondary"
+            size="lg"
+            className="w-full"
+          >
+            {t("ui.viewAnswers")}
+          </Button>
 
           <Button
             onClick={handleShare}

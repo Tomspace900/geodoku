@@ -5,22 +5,22 @@
  * implémentations vivent derrière trois modules profonds : parcours joueur,
  * lecture/commandes admin et opérations de pool.
  */
-import { action, internalAction, mutation, query } from "./_generated/server";
+import { action, internalAction, query } from "./_generated/server";
 import {
   adminTokenArgs,
   candidatePreviewDetailArgs,
+  dailyGameStatsArgs,
   deletePoolCandidateArgs,
   deletePoolCandidateHandler,
   deleteScheduledGridHandler,
   getCandidatePreviewDetailHandler,
+  getDailyGameStatsHandler,
   getGridCellMetricsHandler,
-  getGridFeedbackStatsHandler,
   getPoolStatsHandler,
   getScheduledGridPreviewDetailHandler,
   getScheduledGridsHandler,
   getUpcomingScheduledPreviewHandler,
   gridCellMetricsArgs,
-  gridFeedbackStatsArgs,
   refreshPoolHandler,
   retryPoolFinalizationHandler,
   runEnsureTomorrowHandler,
@@ -37,15 +37,10 @@ import {
   getReplayGridArgs,
   getReplayGridHandler,
   getTodayGridHandler,
-  recordTodayGameEndArgs,
-  recordTodayGameEndHandler,
   replayableGridsReturns,
   replayGridReturns,
-  submitTodayGridFeedbackArgs,
-  submitTodayGridFeedbackHandler,
   todayGridReturns,
 } from "./gridGameplay";
-import { recordedResult } from "./operationResults";
 import {
   reconcileFutureGridContentHandler,
   reconcilePoolAndScheduleArgs,
@@ -97,18 +92,6 @@ export const getReplayGrid = query({
   handler: getReplayGridHandler,
 });
 
-export const recordTodayGameEnd = mutation({
-  args: recordTodayGameEndArgs,
-  returns: recordedResult,
-  handler: recordTodayGameEndHandler,
-});
-
-export const submitTodayGridFeedback = mutation({
-  args: submitTodayGridFeedbackArgs,
-  returns: recordedResult,
-  handler: submitTodayGridFeedbackHandler,
-});
-
 // ─── Read model admin ────────────────────────────────────────────────────────
 
 export const getScheduledGrids = query({
@@ -136,9 +119,9 @@ export const getUpcomingScheduledPreview = query({
   handler: getUpcomingScheduledPreviewHandler,
 });
 
-export const getGridFeedbackStats = query({
-  args: gridFeedbackStatsArgs,
-  handler: getGridFeedbackStatsHandler,
+export const getDailyGameStats = query({
+  args: dailyGameStatsArgs,
+  handler: getDailyGameStatsHandler,
 });
 
 export const getGridCellMetrics = query({

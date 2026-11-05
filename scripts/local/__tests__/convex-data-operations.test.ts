@@ -7,7 +7,13 @@ import {
 describe("buildCopyCommands", () => {
   test("copie la production vers le cloud dev personnel", () => {
     expect(buildCopyCommands("prod-to-dev", "/tmp/geodoku.zip")).toEqual({
-      exportArgs: ["export", "--prod", "--path", "/tmp/geodoku.zip"],
+      exportArgs: [
+        "export",
+        "--deployment",
+        "fastidious-manatee-361",
+        "--path",
+        "/tmp/geodoku.zip",
+      ],
       importArgs: ["import", "--replace-all", "-y", "/tmp/geodoku.zip"],
       requiresDevelopConfirmation: false,
       requiresPersonalDevTarget: true,
@@ -31,7 +37,13 @@ describe("buildCopyCommands", () => {
 
   test("rend la copie production vers develop explicite", () => {
     expect(buildCopyCommands("prod-to-develop", "/tmp/geodoku.zip")).toEqual({
-      exportArgs: ["export", "--prod", "--path", "/tmp/geodoku.zip"],
+      exportArgs: [
+        "export",
+        "--deployment",
+        "fastidious-manatee-361",
+        "--path",
+        "/tmp/geodoku.zip",
+      ],
       importArgs: [
         "import",
         "--preview-name",

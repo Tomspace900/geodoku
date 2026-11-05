@@ -20,8 +20,8 @@ L'epic reste ouverte jusqu'à la mise en prod du dernier lot.
 | Lot | Issue | Contenu |
 | --- | ----- | ------- |
 | 0 | [#154](https://github.com/Tomspace900/geodoku/issues/154) | Journal local des parties, invisible pour le joueur |
-| 1 | [#70](https://github.com/Tomspace900/geodoku/issues/70) | Convex en Europe, une ligne par partie, « Mes stats » et « Toi et les autres aujourd'hui » |
-| 2 | [#155](https://github.com/Tomspace900/geodoku/issues/155) | Compte facultatif : code par e-mail et Google, synchro entre appareils, pseudo |
+| 1 | [#70](https://github.com/Tomspace900/geodoku/issues/70) | Convex en Europe, une ligne par partie, « Toi et les autres aujourd'hui », calques de la grille solution |
+| 2 | [#155](https://github.com/Tomspace900/geodoku/issues/155) | Compte facultatif : code par e-mail et Google, synchro entre appareils, pseudo, « Mes stats » |
 | 3 | [#156](https://github.com/Tomspace900/geodoku/issues/156) | Ligues entre amis |
 
 - **Le journal d'abord** : l'historique ne commence qu'au jour où on l'enregistre.
@@ -51,7 +51,8 @@ L'epic reste ouverte jusqu'à la mise en prod du dernier lot.
 
 - **Une ligne par partie, pour les anonymes comme pour les comptes** :
   `date`, `owner` (hash d'un jeton propre à la partie pour un anonyme, `userId`
-  pour un compte), `cells[9]`, `failed[9]`, `rating?`, `origin`. Ni vies, ni
+  pour un compte), `cells[9]`, `failed[9]`, `origin` (la note de difficulté
+  `rating?` a été retirée au lot 1, avec le sondage de fin de partie). Ni vies, ni
   statut, ni cause de fin, ni score : ils se recalculent.
 - **Le jeton anonyme ne vaut que pour une partie** : côté serveur, rien ne relie
   les parties d'un même joueur d'un jour à l'autre.
@@ -70,7 +71,7 @@ L'epic reste ouverte jusqu'à la mise en prod du dernier lot.
 
 ## Lot 0 — Journal local des parties (#154)
 
-Livré sur `develop`. Rien de visible : aucun écran, aucun event PostHog.
+En prod depuis le 28 octobre 2026. Rien de visible : aucun écran, aucun event PostHog.
 
 - **Clé** `geodoku:history-v1` (localStorage), `{ version: 1, entries: [...] }`,
   entrées triées par date. Module pur [`history.ts`](../src/features/game/logic/history.ts).
@@ -94,14 +95,17 @@ Livré sur `develop`. Rien de visible : aucun écran, aucun event PostHog.
 - **Note de difficulté** : `GameState.rating` garde la valeur, persistée dans
   `game-v3`. Une note donnée avant #154 recharge `rated: true` sans valeur.
 - **Lot 1** : le journal gardera aussi le jeton de la partie anonyme, pour le
-  rattachement au login (lot 2), et mettra en cache les répartitions finales.
+  rattachement au login (lot 2). Le cache des répartitions finales viendra avec
+  « Mes stats » (lot 2).
 
-## Lot 1 — Convex en Europe, une ligne par partie, deux écrans de stats (#70)
+## Lot 1 — Convex en Europe, une ligne par partie, « Toi et les autres » (#70)
+
+Placement tranché le 2026-11-03 sur maquettes dans la vraie app.
 
 ### Migration et refonte, en une seule bascule
 
 - Nouveau déploiement Convex en Europe (`eu-west-1`), export puis import des
-  données, bascule entre 23 h et 5 h UTC. Nouveau schéma et nouveau frontend
+  données, bascule de nuit (déroulé plus bas). Nouveau schéma et nouveau frontend
   partent ensemble.
 - **Une ligne par partie**, créée au premier coup d'un anonyme. Elle renvoie un
   jeton propre à la partie, aléatoire, gardé dans le navigateur et haché côté serveur.
@@ -128,26 +132,109 @@ Livré sur `develop`. Rien de visible : aucun écran, aucun event PostHog.
 - **Docs** : `/privacy` (hébergement en Europe) ; `AGENTS.md` (règle « une query
   publique ne lit jamais l'identité », tables et endpoints §6, events §10).
 
-### « Toi et les autres aujourd'hui »
+### « Toi et les autres aujourd'hui » : dans la modale de résultat
 
-Lu à la demande. Le serveur recalcule les scores et renvoie le nombre de joueurs,
-un histogramme de 101 seaux de 10 points (taille fixe) et le taux d'échec par case.
-Le client se place lui-même dans l'histogramme (« mieux que X % des joueurs »).
+- **Lu à la demande.** Le serveur recalcule les scores des parties finies du jour
+  et renvoie un histogramme de 101 seaux de 10 points et le taux d'erreur par case
+  (part des joueurs qui se sont trompés au moins une fois sur la case). Le client
+  se place lui-même. Le nombre de joueurs n'est **jamais affiché**.
+- **Seule la zone de la grille d'emojis glisse**, à l'horizontale : page 1 les
+  emojis, page 2 l'histogramme du jour, page 3 réservée aux ligues (lot 3). Le
+  titre, l'anneau du score, « Voir les réponses » et « Partager » ne bougent pas. Navigation par
+  points discrets sous la zone, sans texte d'aide.
+- **Pilule « Mieux que X % des joueurs › »** en haut de la page 1, au-dessus des
+  emojis, pour tout le monde, sans règle particulière sous la médiane. Un tap fait
+  glisser vers le graphique.
+- **Graphique** : barres de 50 points (le client regroupe les seaux), la tienne en
+  violet avec « Toi », la médiane en pointillé gris avec le repère « médiane » sur
+  l'axe (0 · médiane · 1000). Aucun autre texte.
+- **Cohorte mince** : sous 5 parties finies (même chiffre que
+  `ESTIMATED_MAX_TOTAL`), la pilule dit « Parmi les premiers à finir » et le
+  graphique est grisé, « Trop tôt pour comparer ».
+- La phrase « Peu de joueurs pour l'instant, ce score s'affinera… » disparaît dans
+  tous les cas : le « ≈ » reste dans la légende sous l'anneau, et la fenêtre Info
+  l'explique.
+- **La chaîne partagée ne change pas.**
+- **Pas d'histogramme en entraînement** : un score sur 900 avec essais illimités
+  ne se compare pas aux scores du jour.
 
-### « Mes stats »
+### Grille solution : 4 calques
 
-Calculé côté client depuis le journal local et les répartitions finales, mises en
-cache une fois le jour fini. Le score d'un jour passé est toujours recalculé.
+- Le **coin vide en haut à gauche** devient le sélecteur : fond violet clair,
+  icône calques, nom du calque, points de position. Un tap passe au calque
+  suivant, en boucle, sans menu.
+- Dans l'ordre :
+  - **Réponses** : la grille actuelle ;
+  - **Erreurs** : le taux d'erreur par case en teinte rouge, et tes propres
+    erreurs en croix, une par erreur, sans texte. Sous 5 parties finies, les
+    croix seules, sans les taux ;
+  - **Meilleure grille** (« Meilleur score » sur les maquettes) : le combo le plus rare possible, un pays par case, sans
+    doublon, calculé côté client depuis la répartition ;
+  - **Ma grille** (« Tes choix » sur les maquettes) : ton pays et sa part ;
+    tiret pour une case vide, croix pour une case bloquée.
+- **Tiroir d'une case** : « X % des joueurs se sont trompés ici ». La
+  ligne « Le plus choisi » est retirée.
+- **Aussi en entraînement**, sur la cohorte figée du jour rejoué : le serveur
+  donne les taux d'erreur des 7 derniers jours, dans la même fenêtre que
+  `getReplayGrid`. Les croix sont tes essais ratés de l'entraînement.
 
-### À trancher avant de coder
+### Déroulé de la bascule
 
-- Où vivent les deux écrans : écran de résultat, page dédiée, navigation ?
-- Contenu exact de « Mes stats » : records, évolution, parties jouées, pays rares…
-- Affichage quand peu de joueurs ont encore fini la partie du jour.
-- Convex renvoie-t-il le résultat d'une query recalculée quand il n'a pas changé ?
+1. **Répétition complète sur develop** : le code arrive sur develop en même temps
+   que develop passe sur un déploiement européen, avec le même script qu'en prod
+   (export, transformation, import), puis e2e et une vraie partie.
+2. **En prod, le mainteneur lance les commandes** à partir d'un runbook pas à pas
+   (chaque commande suivie de sa vérification). L'export des stats admin, hors du
+   repo, vient avant.
+3. **Juste après minuit UTC** : la grille de la veille est close, celle du jour
+   presque vide. Un joueur en pleine partie continue en local ; ses coups d'après
+   la bascule ne comptent pas.
+4. **L'ancien déploiement américain est mis en pause aussitôt** (un onglet resté
+   ouvert voit « serveur indisponible »), gardé 7 jours comme retour arrière
+   possible, en perdant les parties jouées entre-temps, puis supprimé.
 
-Plus tard, si le trafic grossit nettement : un instantané de la cohorte, recalculé
-toutes les 5 minutes.
+### Choix techniques (livrés)
+
+- **Plus de note de difficulté** (décidé le 2026-11-04 après la répétition) :
+  il y a assez de joueurs pour lire la difficulté dans le taux de victoire et
+  les erreurs par case. La modale propose directement « Voir les réponses » ;
+  la note disparaît de la partie, du journal, de la ligne serveur et de
+  l'admin (`getGridFeedbackStats` devient `getDailyGameStats`).
+
+- **Jeton tiré par le navigateur** (UUID v4) au premier coup, plutôt que
+  renvoyé par le serveur : le premier coup est idempotent comme les autres, et
+  la saisie n'attend jamais le réseau. Le serveur n'en garde que le hash
+  SHA-256 ; le journal local le garde (`token`) pour le lot 2.
+- **`playMove`** rend `applied` (avec `count`/`total` pour un pays posé),
+  `duplicate` (rang déjà appliqué, rien n'est écrit) ou `rejected`
+  (`date_mismatch`, `unknown_game`, `out_of_order`, `game_over`,
+  `cell_unavailable`, `rate_limited`). Le serveur rejoue le coup avec la règle
+  du client (`applyMove`, [`gameRecord.ts`](../src/features/game/logic/gameRecord.ts)).
+  Un refus arrête l'envoi : la partie continue en local seulement. La file
+  d'envoi (`geodoku:move-sync-v1`) survit au rechargement ; une partie
+  commencée sans elle reste locale.
+- **Rate limit** : un refus rend `rate_limited` au lieu de lever, pour que le
+  compteur de surveillance de la même transaction survive. La purge du
+  composant retire chaque nuit les lignes créées il y a plus de deux jours.
+- **Cohorte** : `getTodayCohort` lit au plus 8 000 parties ; au-delà, le levier
+  est l'instantané périodique (Notes). « Mieux que X % » compte les seaux
+  inférieurs et la moitié du sien.
+- **Meilleure grille** : affectation hongroise sur la fraction de rareté du
+  barème (à points égaux, le plus rare), [`bestCombo.ts`](../src/features/game/logic/bestCombo.ts).
+- **Entraînement** : `games.getReplayStats` remplace la lecture de la
+  répartition figée ; la partie d'entraînement persiste désormais ses erreurs
+  par case (les croix).
+- **Bascule** : même projet Convex, nouveaux déploiements en `eu-west-1` (la
+  région se choisit par déploiement) ; seule la clé de production Vercel
+  change. Script `pnpm migrate:eu`, runbook [`bascule-europe.md`](bascule-europe.md).
+
+### Notes
+
+- Convex ne renvoie pas au client le résultat d'une query recalculée s'il n'a pas
+  changé (empreinte comparée côté serveur, `crates/sync/src/state.rs` de
+  `convex-backend`) : une invalidation coûte un recalcul, pas de bande passante.
+- Plus tard, si le trafic grossit nettement : un instantané de la cohorte,
+  recalculé toutes les 5 minutes.
 
 ## Lot 2 — Compte facultatif (#155)
 
@@ -182,10 +269,25 @@ toutes les 5 minutes.
   - partie locale en cours alors que le compte a déjà joué : remplacée, sans message.
 - **L'entraînement reste local**, sans synchronisation.
 
-### Écran du compte
+### Écran du compte (profil)
 
-Pseudo, pays, déconnexion, suppression du compte, et l'annonce des ligues à venir
-(pas de bouton « me prévenir », aucune mesure du clic).
+- **Entrée** : une icône en haut à droite de l'en-tête, à côté des cœurs.
+- Pseudo, pays, déconnexion, suppression du compte, et l'annonce des ligues à
+  venir (pas de bouton « me prévenir », aucune mesure du clic).
+
+### « Mes stats » (venu du lot 1)
+
+- Dans l'écran profil.
+- Calculé côté client depuis le journal local et les répartitions finales des
+  jours passés, mises en cache une fois le jour fini. Le score d'un jour passé est
+  toujours recalculé. L'entraînement n'y entre pas.
+
+### À trancher avant de coder
+
+- Contenu exact de « Mes stats » : parties jouées, part de grilles complètes,
+  moyenne, record, 30 derniers jours, trouvailles ultra… (rien de décidé).
+- Sans compte : l'icône profil ouvre-t-elle « Mes stats » sur le journal local,
+  avec une invitation à créer un compte ?
 
 ### Docs
 
@@ -204,6 +306,8 @@ Pseudo, pays, déconnexion, suppression du compte, et l'annonce des ligues à ve
 - **Parties qui comptent** : une partie anonyme rattachée par son jeton compte ;
   une entrée importée sans ligne serveur (`origin: import`) ne compte pas.
 - Pas de classement mondial, pas de mécanique de série.
+- **Place** : la 3ᵉ page de la zone qui glisse dans la modale de résultat
+  (classement du jour de la ligue), réservée au lot 1.
 
 ### À trancher avant de coder
 

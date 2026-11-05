@@ -6,7 +6,7 @@ import { convexTest } from "convex-test";
 import { describe, expect, it } from "vitest";
 import { api, internal } from "./_generated/api";
 import { CELL_KEYS } from "./cellKeys";
-import { todayUTC } from "./lib/dates";
+import { daysAgoUTC, todayUTC } from "./lib/dates";
 import schema from "./schema";
 
 const modules = import.meta.glob([
@@ -16,7 +16,7 @@ const modules = import.meta.glob([
 ]);
 const CLIENT_ID = "client-12345678";
 
-function operationId(sequence: number): string {
+function token(sequence: number): string {
   return `00000000-0000-4000-8000-${String(sequence).padStart(12, "0")}`;
 }
 
@@ -26,11 +26,26 @@ function createBackend() {
   return backend;
 }
 
-async function seedTodayGrid(
-  backend: ReturnType<typeof createBackend>,
+type Backend = ReturnType<typeof createBackend>;
+
+/** Une réponse par case, toutes distinctes, plus DEU valable en 0,0. */
+const ANSWERS: Record<string, string[]> = {
+  "0,0": ["FRA", "DEU"],
+  "0,1": ["ITA"],
+  "0,2": ["ESP"],
+  "1,0": ["PRT"],
+  "1,1": ["BEL"],
+  "1,2": ["NLD"],
+  "2,0": ["AUT"],
+  "2,1": ["CHE"],
+  "2,2": ["POL"],
+};
+
+async function seedGrid(
+  backend: Backend,
+  date = todayUTC(),
   options: { includeAnswers?: boolean } = {},
 ): Promise<void> {
-  const includeAnswers = options.includeAnswers ?? true;
   await backend.run(async (ctx) => {
     const candidateId = await ctx.db.insert("gridCandidates", {
       rows: ["row-0", "row-1", "row-2"],
@@ -41,539 +56,342 @@ async function seedTodayGrid(
         categories: ["continent", "geography"],
         avgCellSize: 2,
         minCellSize: 1,
-        countryPool: ["FRA", "DEU"],
+        countryPool: Object.values(ANSWERS).flat(),
       },
       status: "used",
       usedAt: Date.now(),
-      usedForDate: todayUTC(),
+      usedForDate: date,
     });
-    if (includeAnswers) {
+    if (options.includeAnswers ?? true) {
       await ctx.db.insert("gridAnswers", {
         candidateId,
-        validAnswers: Object.fromEntries(
-          CELL_KEYS.map((cellKey) => [cellKey, ["FRA"]]),
-        ),
+        validAnswers: ANSWERS,
       });
     }
     await ctx.db.insert("grids", {
-      date: todayUTC(),
+      date,
       rows: ["row-0", "row-1", "row-2"],
       cols: ["col-0", "col-1", "col-2"],
-      countryPool: ["FRA", "DEU"],
+      countryPool: Object.values(ANSWERS).flat(),
       candidateId,
     });
   });
 }
 
-async function guessState(backend: ReturnType<typeof createBackend>) {
+function move(
+  sequence: number,
+  moveIndex: number,
+  cellKey: (typeof CELL_KEYS)[number],
+  countryCode: string,
+  overrides: { date?: string; clientId?: string } = {},
+) {
+  return {
+    date: overrides.date ?? todayUTC(),
+    token: token(sequence),
+    clientId: overrides.clientId ?? CLIENT_ID,
+    moveIndex,
+    cellKey,
+    countryCode,
+  };
+}
+
+async function readState(backend: Backend) {
   return await backend.run(async (ctx) => {
-    const guesses = await ctx.db
-      .query("guesses")
-      .withIndex("by_date_and_cell", (q) =>
-        q.eq("date", todayUTC()).eq("cellKey", "0,0"),
-      )
-      .take(10);
-    const stats = await ctx.db
-      .query("dailyStats")
-      .withIndex("by_date_and_cell", (q) =>
-        q.eq("date", todayUTC()).eq("cellKey", "0,0"),
-      )
-      .unique();
-    const receipts = await ctx.db
-      .query("operationReceipts")
-      .withIndex("by_expires_at")
-      .take(10);
+    const games = await ctx.db.query("games").take(10);
+    const stats = await ctx.db.query("cellStats").take(10);
     return {
-      guesses: guesses.map(({ countryCode, count }) => ({
-        countryCode,
-        count,
-      })),
-      totalGuesses: stats?.totalGuesses ?? 0,
-      failedAttempts: stats?.failedAttempts ?? 0,
-      receiptCount: receipts.length,
+      games: games.map(({ cells, failed }) => ({ cells, failed })),
+      counts: Object.fromEntries(stats.map((row) => [row.cellKey, row.counts])),
     };
   });
 }
 
-describe("today guess writes", () => {
-  it("returns the initial result and counts a sequential retry once", async () => {
+describe("playMove", () => {
+  it("creates the game row on the first move and counts the country", async () => {
     const backend = createBackend();
-    await seedTodayGrid(backend);
-    const args = {
-      operationId: operationId(1),
-      cellKey: "0,0" as const,
-      countryCode: "FRA",
-      clientId: CLIENT_ID,
-    };
+    await seedGrid(backend);
 
-    const first = await backend.mutation(api.guesses.submitTodayGuess, args);
-    const retry = await backend.mutation(api.guesses.submitTodayGuess, args);
+    const result = await backend.mutation(
+      api.games.playMove,
+      move(1, 0, "0,0", "FRA"),
+    );
 
-    expect({ first, retry, state: await guessState(backend) }).toEqual({
-      first: { kind: "accepted", count: 1, total: 1, rarity: 1 },
-      retry: { kind: "accepted", count: 1, total: 1, rarity: 1 },
+    expect({ result, state: await readState(backend) }).toMatchObject({
+      result: { kind: "applied", outcome: "success", count: 1, total: 1 },
       state: {
-        guesses: [{ countryCode: "FRA", count: 1 }],
-        totalGuesses: 1,
-        failedAttempts: 0,
-        receiptCount: 1,
+        games: [
+          { cells: ["FRA", null, null, null, null, null, null, null, null] },
+        ],
+        counts: { "0,0": { FRA: 1 } },
       },
     });
   });
 
-  it("serializes concurrent retries into one accepted guess", async () => {
+  it("never stores the token itself", async () => {
     const backend = createBackend();
-    await seedTodayGrid(backend);
-    const args = {
-      operationId: operationId(2),
-      cellKey: "0,0" as const,
-      countryCode: "FRA",
-      clientId: CLIENT_ID,
-    };
+    await seedGrid(backend);
+    await backend.mutation(api.games.playMove, move(1, 0, "0,0", "FRA"));
+
+    const owner = await backend.run(
+      async (ctx) => (await ctx.db.query("games").first())?.owner,
+    );
+
+    expect(JSON.stringify(owner)).not.toContain(token(1));
+  });
+
+  it("acknowledges a resent move without counting it twice", async () => {
+    const backend = createBackend();
+    await seedGrid(backend);
+    await backend.mutation(api.games.playMove, move(1, 0, "0,0", "FRA"));
+
+    const resent = await backend.mutation(
+      api.games.playMove,
+      move(1, 0, "0,0", "FRA"),
+    );
+
+    expect({ resent, counts: (await readState(backend)).counts }).toEqual({
+      resent: { kind: "duplicate" },
+      counts: { "0,0": { FRA: 1 } },
+    });
+  });
+
+  it("serializes concurrent copies of the same move into one", async () => {
+    const backend = createBackend();
+    await seedGrid(backend);
 
     const results = await Promise.all([
-      backend.mutation(api.guesses.submitTodayGuess, args),
-      backend.mutation(api.guesses.submitTodayGuess, args),
+      backend.mutation(api.games.playMove, move(1, 0, "0,0", "FRA")),
+      backend.mutation(api.games.playMove, move(1, 0, "0,0", "FRA")),
     ]);
 
-    expect({ results, state: await guessState(backend) }).toEqual({
-      results: [
-        { kind: "accepted", count: 1, total: 1, rarity: 1 },
-        { kind: "accepted", count: 1, total: 1, rarity: 1 },
-      ],
+    expect({
+      kinds: results.map((r) => r.kind).sort(),
+      counts: (await readState(backend)).counts,
+    }).toEqual({
+      kinds: ["applied", "duplicate"],
+      counts: { "0,0": { FRA: 1 } },
+    });
+  });
+
+  it("records a failed move on the game row only", async () => {
+    const backend = createBackend();
+    await seedGrid(backend);
+
+    const result = await backend.mutation(
+      api.games.playMove,
+      move(1, 0, "0,1", "FRA"),
+    );
+
+    expect({ result, state: await readState(backend) }).toEqual({
+      result: { kind: "applied", outcome: "failure" },
       state: {
-        guesses: [{ countryCode: "FRA", count: 1 }],
-        totalGuesses: 1,
-        failedAttempts: 0,
-        receiptCount: 1,
+        games: [
+          {
+            cells: Array.from({ length: 9 }, () => null),
+            failed: [0, 1, 0, 0, 0, 0, 0, 0, 0],
+          },
+        ],
+        counts: {},
       },
     });
   });
 
-  it("rejects reusing an operation id with another payload", async () => {
+  it("refuses a move ahead of the next expected index", async () => {
     const backend = createBackend();
-    await seedTodayGrid(backend);
-    const id = operationId(3);
-    await backend.mutation(api.guesses.submitTodayGuess, {
-      operationId: id,
-      cellKey: "0,0",
-      countryCode: "FRA",
-      clientId: CLIENT_ID,
-    });
+    await seedGrid(backend);
+    await backend.mutation(api.games.playMove, move(1, 0, "0,0", "FRA"));
 
-    await expect(
-      backend.mutation(api.guesses.submitTodayGuess, {
-        operationId: id,
-        cellKey: "0,1",
-        countryCode: "FRA",
-        clientId: CLIENT_ID,
-      }),
-    ).rejects.toThrow("operationId already used for another payload");
+    expect(
+      await backend.mutation(api.games.playMove, move(1, 2, "0,1", "ITA")),
+    ).toEqual({ kind: "rejected", reason: "out_of_order" });
   });
 
-  it("rejects reusing an operation id for another operation type", async () => {
+  it("refuses a later move of a game the server never saw", async () => {
     const backend = createBackend();
-    await seedTodayGrid(backend);
-    const id = operationId(4);
-    await backend.mutation(api.guesses.submitTodayGuess, {
-      operationId: id,
-      cellKey: "0,0",
-      countryCode: "FRA",
-      clientId: CLIENT_ID,
-    });
+    await seedGrid(backend);
 
-    await expect(
-      backend.mutation(api.guesses.recordTodayFailedGuess, {
-        operationId: id,
-        cellKey: "0,0",
-        countryCode: "DEU",
-        clientId: CLIENT_ID,
-      }),
-    ).rejects.toThrow("operationId already used for another payload");
+    expect(
+      await backend.mutation(api.games.playMove, move(1, 3, "0,1", "ITA")),
+    ).toEqual({ kind: "rejected", reason: "unknown_game" });
   });
 
-  it("deduplicates a domain rejection without touching aggregates", async () => {
+  it("refuses a new move addressed to another day without writing", async () => {
     const backend = createBackend();
-    await seedTodayGrid(backend);
-    const args = {
-      operationId: operationId(5),
-      cellKey: "0,0" as const,
-      countryCode: "DEU",
-      clientId: CLIENT_ID,
-    };
+    await seedGrid(backend);
 
-    const first = await backend.mutation(api.guesses.submitTodayGuess, args);
-    const retry = await backend.mutation(api.guesses.submitTodayGuess, args);
+    const result = await backend.mutation(
+      api.games.playMove,
+      move(1, 0, "0,0", "FRA", { date: daysAgoUTC(1) }),
+    );
 
-    expect({ first, retry, state: await guessState(backend) }).toEqual({
-      first: { kind: "domain_rejected", reason: "invalid_guess" },
-      retry: { kind: "domain_rejected", reason: "invalid_guess" },
-      state: {
-        guesses: [],
-        totalGuesses: 0,
-        failedAttempts: 0,
-        receiptCount: 1,
-      },
+    expect({ result, state: await readState(backend) }).toEqual({
+      result: { kind: "rejected", reason: "date_mismatch" },
+      state: { games: [], counts: {} },
     });
   });
 
-  it("refuses a guess addressed to another day's grid without counting it", async () => {
+  it("acknowledges a move counted yesterday when resent after midnight", async () => {
     const backend = createBackend();
-    await seedTodayGrid(backend);
-
-    const result = await backend.mutation(api.guesses.submitTodayGuess, {
-      operationId: operationId(20),
-      cellKey: "0,0",
-      countryCode: "FRA",
-      clientId: CLIENT_ID,
-      date: "2000-01-01",
-    });
-
-    expect({ result, state: await guessState(backend) }).toEqual({
-      result: { kind: "domain_rejected", reason: "date_mismatch" },
-      state: {
-        guesses: [],
-        totalGuesses: 0,
-        failedAttempts: 0,
-        receiptCount: 0,
-      },
-    });
-  });
-
-  it("returns the receipt of a guess counted before midnight when replayed after", async () => {
-    const backend = createBackend();
-    await seedTodayGrid(backend);
-    const counted = {
-      kind: "accepted" as const,
-      count: 1,
-      total: 1,
-      rarity: 1,
-    };
+    const yesterday = daysAgoUTC(1);
+    await seedGrid(backend);
+    await backend.mutation(api.games.playMove, move(2, 0, "0,0", "FRA"));
+    // La partie a été jouée hier : on recule la date de sa ligne.
     await backend.run(async (ctx) => {
-      await ctx.db.insert("operationReceipts", {
-        operationId: operationId(21),
-        operationType: "submit_guess",
-        date: "2000-01-01",
-        canonicalPayload: JSON.stringify({
-          cellKey: "0,0",
-          countryCode: "FRA",
-        }),
-        result: counted,
-        expiresAt: Date.now() + 1_000,
-      });
+      const game = await ctx.db.query("games").first();
+      if (game) await ctx.db.patch(game._id, { date: yesterday });
     });
 
-    const result = await backend.mutation(api.guesses.submitTodayGuess, {
-      operationId: operationId(21),
-      cellKey: "0,0",
-      countryCode: "FRA",
-      clientId: CLIENT_ID,
-      date: "2000-01-01",
-    });
-
-    expect(result).toEqual(counted);
+    expect(
+      await backend.mutation(
+        api.games.playMove,
+        move(2, 0, "0,0", "FRA", { date: yesterday }),
+      ),
+    ).toEqual({ kind: "duplicate" });
   });
 
-  it("rejects recording a snapshot answer as a failed guess", async () => {
+  it("refuses any move once the lives are spent", async () => {
     const backend = createBackend();
-    await seedTodayGrid(backend);
+    await seedGrid(backend);
+    for (let index = 0; index < 5; index++) {
+      await backend.mutation(api.games.playMove, move(1, index, "0,1", "FRA"));
+    }
 
-    await expect(
-      backend.mutation(api.guesses.recordTodayFailedGuess, {
-        operationId: operationId(6),
-        cellKey: "0,0",
-        countryCode: "FRA",
-        clientId: CLIENT_ID,
-      }),
-    ).rejects.toThrow("A valid answer cannot be recorded as failed");
+    expect(
+      await backend.mutation(api.games.playMove, move(1, 5, "0,0", "FRA")),
+    ).toEqual({ kind: "rejected", reason: "game_over" });
   });
 
-  it("deduplicates an invalid-country-for-cell failed attempt", async () => {
+  it("limits game creation per browser and counts the refusal", async () => {
     const backend = createBackend();
-    await seedTodayGrid(backend);
-    const args = {
-      operationId: operationId(7),
-      cellKey: "0,0" as const,
-      countryCode: "DEU",
-      clientId: CLIENT_ID,
-    };
+    await seedGrid(backend);
+    await backend.mutation(api.games.playMove, move(1, 0, "0,0", "FRA"));
 
-    const first = await backend.mutation(
-      api.guesses.recordTodayFailedGuess,
-      args,
+    const second = await backend.mutation(
+      api.games.playMove,
+      move(2, 0, "0,0", "DEU"),
     );
-    const retry = await backend.mutation(
-      api.guesses.recordTodayFailedGuess,
-      args,
+    const refusals = await backend.run(
+      async (ctx) =>
+        (await ctx.db.query("healthCounters").first())?.rateLimited,
     );
 
-    expect({ first, retry, state: await guessState(backend) }).toEqual({
-      first: { kind: "recorded" },
-      retry: { kind: "recorded" },
-      state: {
-        guesses: [],
-        totalGuesses: 0,
-        failedAttempts: 1,
-        receiptCount: 1,
-      },
+    expect({ second, refusals }).toEqual({
+      second: { kind: "rejected", reason: "rate_limited" },
+      refusals: 1,
     });
   });
 
-  it("serializes concurrent failed-attempt retries", async () => {
-    const backend = createBackend();
-    await seedTodayGrid(backend);
-    const args = {
-      operationId: operationId(15),
-      cellKey: "0,0" as const,
-      countryCode: "DEU",
-      clientId: CLIENT_ID,
-    };
-
-    const results = await Promise.all([
-      backend.mutation(api.guesses.recordTodayFailedGuess, args),
-      backend.mutation(api.guesses.recordTodayFailedGuess, args),
-    ]);
-
-    expect({ results, state: await guessState(backend) }).toEqual({
-      results: [{ kind: "recorded" }, { kind: "recorded" }],
-      state: {
-        guesses: [],
-        totalGuesses: 0,
-        failedAttempts: 1,
-        receiptCount: 1,
-      },
-    });
-  });
-});
-
-describe("today feedback writes", () => {
-  it("deduplicates game completion aggregates", async () => {
-    const backend = createBackend();
-    await seedTodayGrid(backend);
-    const args = {
-      operationId: operationId(8),
-      endReason: "win" as const,
-      livesLeft: 3,
-      filledCells: 9,
-      guessesSubmitted: 11,
-      clientId: CLIENT_ID,
-    };
-
-    const first = await backend.mutation(api.grids.recordTodayGameEnd, args);
-    const retry = await backend.mutation(api.grids.recordTodayGameEnd, args);
-    const state = await backend.run(async (ctx) => {
-      const feedback = await ctx.db
-        .query("gridFeedback")
-        .withIndex("by_date", (q) => q.eq("date", todayUTC()))
-        .unique();
-      const receipts = await ctx.db
-        .query("operationReceipts")
-        .withIndex("by_expires_at")
-        .take(10);
-      return { feedback, receiptCount: receipts.length };
-    });
-
-    expect({ first, retry, state }).toMatchObject({
-      first: { kind: "recorded" },
-      retry: { kind: "recorded" },
-      state: {
-        feedback: {
-          wins: 1,
-          losses: 0,
-          totalLivesLeft: 3,
-          totalFilledCells: 9,
-          totalGuessesSubmitted: 11,
-        },
-        receiptCount: 1,
-      },
-    });
-  });
-
-  it("rejects an inconsistent game completion total", async () => {
-    const backend = createBackend();
-    await seedTodayGrid(backend);
-
-    await expect(
-      backend.mutation(api.grids.recordTodayGameEnd, {
-        operationId: operationId(9),
-        endReason: "win",
-        livesLeft: 3,
-        filledCells: 9,
-        guessesSubmitted: 9,
-        clientId: CLIENT_ID,
-      }),
-    ).rejects.toThrow("Invalid guessesSubmitted");
-  });
-
-  it("serializes concurrent game-completion retries", async () => {
-    const backend = createBackend();
-    await seedTodayGrid(backend);
-    const args = {
-      operationId: operationId(16),
-      endReason: "win" as const,
-      livesLeft: 3,
-      filledCells: 9,
-      guessesSubmitted: 11,
-      clientId: CLIENT_ID,
-    };
-
-    const results = await Promise.all([
-      backend.mutation(api.grids.recordTodayGameEnd, args),
-      backend.mutation(api.grids.recordTodayGameEnd, args),
-    ]);
-    const feedback = await backend.run(async (ctx) => {
-      return await ctx.db
-        .query("gridFeedback")
-        .withIndex("by_date", (q) => q.eq("date", todayUTC()))
-        .unique();
-    });
-
-    expect({ results, feedback }).toMatchObject({
-      results: [{ kind: "recorded" }, { kind: "recorded" }],
-      feedback: {
-        wins: 1,
-        losses: 0,
-        totalLivesLeft: 3,
-        totalFilledCells: 9,
-        totalGuessesSubmitted: 11,
-      },
-    });
-  });
-
-  it("deduplicates difficulty feedback aggregates", async () => {
-    const backend = createBackend();
-    await seedTodayGrid(backend);
-    const args = {
-      operationId: operationId(10),
-      rating: "balanced" as const,
-      clientId: CLIENT_ID,
-    };
-
-    const first = await backend.mutation(
-      api.grids.submitTodayGridFeedback,
-      args,
-    );
-    const retry = await backend.mutation(
-      api.grids.submitTodayGridFeedback,
-      args,
-    );
-    const feedback = await backend.run(async (ctx) => {
-      return await ctx.db
-        .query("gridFeedback")
-        .withIndex("by_date", (q) => q.eq("date", todayUTC()))
-        .unique();
-    });
-
-    expect({ first, retry, feedback }).toMatchObject({
-      first: { kind: "recorded" },
-      retry: { kind: "recorded" },
-      feedback: {
-        balancedCount: 1,
-        tooEasyCount: 0,
-        tooHardCount: 0,
-        totalRatings: 1,
-      },
-    });
-  });
-
-  it("serializes concurrent difficulty-feedback retries", async () => {
-    const backend = createBackend();
-    await seedTodayGrid(backend);
-    const args = {
-      operationId: operationId(17),
-      rating: "balanced" as const,
-      clientId: CLIENT_ID,
-    };
-
-    const results = await Promise.all([
-      backend.mutation(api.grids.submitTodayGridFeedback, args),
-      backend.mutation(api.grids.submitTodayGridFeedback, args),
-    ]);
-    const feedback = await backend.run(async (ctx) => {
-      return await ctx.db
-        .query("gridFeedback")
-        .withIndex("by_date", (q) => q.eq("date", todayUTC()))
-        .unique();
-    });
-
-    expect({ results, feedback }).toMatchObject({
-      results: [{ kind: "recorded" }, { kind: "recorded" }],
-      feedback: {
-        balancedCount: 1,
-        tooEasyCount: 0,
-        tooHardCount: 0,
-        totalRatings: 1,
-      },
-    });
-  });
-});
-
-describe("write availability and retention", () => {
-  it("rejects a today write when the grid is absent", async () => {
+  it("fails loudly when today's grid is absent", async () => {
     const backend = createBackend();
 
     await expect(
-      backend.mutation(api.guesses.submitTodayGuess, {
-        operationId: operationId(11),
-        cellKey: "0,0",
-        countryCode: "FRA",
-        clientId: CLIENT_ID,
-      }),
+      backend.mutation(api.games.playMove, move(1, 0, "0,0", "FRA")),
     ).rejects.toThrow("Grid unavailable");
   });
 
-  it("rejects a today write when the answer satellite is absent", async () => {
+  it("fails loudly when the answer satellite is absent", async () => {
     const backend = createBackend();
-    await seedTodayGrid(backend, { includeAnswers: false });
+    await seedGrid(backend, todayUTC(), { includeAnswers: false });
 
     await expect(
-      backend.mutation(api.guesses.submitTodayGuess, {
-        operationId: operationId(12),
-        cellKey: "0,0",
-        countryCode: "FRA",
-        clientId: CLIENT_ID,
-      }),
+      backend.mutation(api.games.playMove, move(1, 0, "0,0", "FRA")),
     ).rejects.toThrow("Grid answers unavailable");
   });
+});
 
-  it("purges only expired operation receipts", async () => {
-    const backend = createBackend();
+describe("cohort reads", () => {
+  async function seedFinishedGames(backend: Backend, date: string) {
     await backend.run(async (ctx) => {
-      await ctx.db.insert("operationReceipts", {
-        operationId: operationId(13),
-        operationType: "grid_feedback",
-        date: todayUTC(),
-        canonicalPayload: JSON.stringify({ rating: "balanced" }),
-        result: { kind: "recorded" },
-        expiresAt: Date.now() - 60_000,
-      });
-      await ctx.db.insert("operationReceipts", {
-        operationId: operationId(14),
-        operationType: "grid_feedback",
-        date: todayUTC(),
-        canonicalPayload: JSON.stringify({ rating: "too_easy" }),
-        result: { kind: "recorded" },
-        expiresAt: Date.now() + 60_000,
-      });
+      const insert = (cells: (string | null)[], failed: number[]) =>
+        ctx.db.insert("games", {
+          date,
+          owner: { kind: "anon", tokenHash: `hash-${failed.join("")}` },
+          cells,
+          failed,
+          origin: "live",
+        });
+      const full = [
+        "FRA",
+        "ITA",
+        "ESP",
+        "PRT",
+        "BEL",
+        "NLD",
+        "AUT",
+        "CHE",
+        "POL",
+      ];
+      await insert(full, [1, 0, 0, 0, 0, 0, 0, 0, 0]);
+      await insert(full, [0, 0, 0, 0, 0, 0, 0, 0, 0]);
+      // En cours : hors cohorte.
+      await insert([null, ...full.slice(1)], [0, 0, 0, 0, 0, 0, 0, 0, 2]);
+      await Promise.all(
+        CELL_KEYS.map((cellKey, index) =>
+          ctx.db.insert("cellStats", {
+            date,
+            cellKey,
+            counts: { [full[index]]: index === 0 ? 2 : 3 },
+          }),
+        ),
+      );
     });
+  }
 
-    const deleted = await backend.mutation(
-      internal.crons.deleteExpiredOperationReceipts,
-      {},
-    );
-    const remaining = await backend.run(async (ctx) => {
-      return await ctx.db
-        .query("operationReceipts")
-        .withIndex("by_expires_at")
-        .take(10);
-    });
+  it("scores only the finished games of today", async () => {
+    const backend = createBackend();
+    await seedGrid(backend);
+    await seedFinishedGames(backend, todayUTC());
+
+    const cohort = await backend.query(api.games.getTodayCohort, {});
 
     expect({
-      deleted,
-      remaining: remaining.map((row) => row.operationId),
-    }).toEqual({
-      deleted: 1,
-      remaining: [operationId(14)],
+      finished: cohort?.histogram.reduce((a, b) => a + b, 0),
+      failedPlayers: cohort?.failedPlayers,
+    }).toEqual({ finished: 2, failedPlayers: [1, 0, 0, 0, 0, 0, 0, 0, 0] });
+  });
+
+  it("gives a past grid its frozen counts and failures", async () => {
+    const backend = createBackend();
+    const date = daysAgoUTC(2);
+    await seedGrid(backend, date);
+    await seedFinishedGames(backend, date);
+
+    const stats = await backend.query(api.games.getReplayStats, { date });
+
+    expect({
+      finishedGames: stats?.finishedGames,
+      firstCell: stats?.counts["0,0"],
+      failedPlayers: stats?.failedPlayers[0],
+    }).toEqual({ finishedGames: 2, firstCell: { FRA: 2 }, failedPlayers: 1 });
+  });
+
+  it("refuses today's grid as a replay", async () => {
+    const backend = createBackend();
+    await seedGrid(backend);
+
+    await expect(
+      backend.query(api.games.getReplayStats, { date: todayUTC() }),
+    ).rejects.toThrow("Date is not replayable");
+  });
+});
+
+describe("server health", () => {
+  it("reports the largest increase of a country since the last sample", async () => {
+    const backend = createBackend();
+    await seedGrid(backend);
+    await backend.run(async (ctx) => {
+      await ctx.db.insert("cellStats", {
+        date: todayUTC(),
+        cellKey: "0,0",
+        counts: { FRA: 7, DEU: 2 },
+      });
     });
+
+    const first = await backend.mutation(internal.health.takeHealthSample, {});
+    const second = await backend.mutation(internal.health.takeHealthSample, {});
+
+    expect([first.maxCountryIncrease, second.maxCountryIncrease]).toEqual([
+      7, 0,
+    ]);
   });
 });

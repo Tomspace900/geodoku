@@ -19,6 +19,8 @@ export type PersistedTrainingGame = {
   date: string;
   cells: Record<CellKey, Cell>;
   failedAttempts: number;
+  /** Erreurs par case (#70), absentes des parties enregistrées avant. */
+  failed?: Record<CellKey, number>;
   /** Absent des parties enregistrées avant l'abandon (#148) : vaut `false`. */
   givenUp?: boolean;
 };
@@ -89,6 +91,7 @@ export function saveTrainingGame(state: GameState, today: string): void {
       date: state.date,
       cells: state.cells,
       failedAttempts: failedAttemptCount(state.lives),
+      failed: state.failed,
       givenUp: isGivenUp(state),
     },
   ]);

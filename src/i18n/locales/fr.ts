@@ -15,13 +15,6 @@ export const fr = {
     constraintSourceConvention: "arbitrage Geodoku",
     constraintSourcePrefix: "Source :",
     constraintSourcesPrefix: "Sources :",
-    feedbackQuestion: "Comment as-tu trouvé la grille\u00A0?",
-    feedbackError: "La note n'a pas pu être enregistrée.",
-    feedbackRetry: "Réessayer",
-    feedbackTooEasy: "Trop facile",
-    feedbackBalanced: "Bien/modérée",
-    feedbackTooHard: "Trop difficile",
-    skipFeedback: "Passer et voir les réponses",
     share: "Partager mon score",
     shareCopied: "Copié\u00A0! ✓",
     shareShared: "Partagé\u00A0! ✓",
@@ -50,6 +43,24 @@ export const fr = {
     solutionCellAriaLabel:
       "Case ligne {row} colonne {col} : {rowConstraint} × {colConstraint}. {count} réponses possibles.",
     constraintAnswerCount: "{count} pays",
+    betterThan: "Mieux que {percent} des joueurs",
+    amongFirstToFinish: "Parmi les premiers à finir",
+    tooEarlyToCompare: "Trop tôt pour comparer",
+    scoreChartAriaLabel:
+      "Scores des joueurs du jour, en barres de 50\u00A0points. Ta barre est en violet, la médiane en pointillé.",
+    chartYou: "Toi",
+    chartMedian: "médiane",
+    resultSlideGrid: "Ta grille",
+    resultSlideOthers: "Les scores du jour",
+    layerAnswers: "Réponses",
+    layerErrors: "Erreurs",
+    layerBest: "Meilleure grille",
+    layerChoices: "Ma grille",
+    layerSwitchAriaLabel:
+      "Calque\u00A0: {layer}. Toucher pour passer au suivant.",
+    errorRateLabel: "d'erreurs",
+    ownErrorsAriaLabel: "Tes erreurs ici\u00A0: {count}",
+    cellFailureRate: "{percent} des joueurs se sont trompés ici.",
   },
   footer: {
     loveCredit: "Fait avec amour ❤️",
@@ -70,7 +81,7 @@ export const fr = {
       " aide à couvrir les frais techniques (serveur, nom de domaine). Et c'est surtout une énorme motivation pour continuer à développer de nouvelles fonctionnalités\u00A0!",
   },
   privacy: {
-    eyebrow: "Derni\u00E8re mise \u00E0 jour · Octobre 2026",
+    eyebrow: "Derni\u00E8re mise \u00E0 jour · Novembre 2026",
     title: "Confidentialit\u00E9",
     lead: "Geodoku est un jeu que je d\u00E9veloppe seul. Pas besoin de compte\u00A0: je ne collecte que le strict minimum, juste de quoi faire tourner le jeu et voir comment se portent les grilles.",
     backToGame: "Retour au jeu",
@@ -79,24 +90,28 @@ export const fr = {
       "Pas d'inscription, pas de connexion, pas de publicit\u00E9. Je ne vends aucune donn\u00E9e et ne les utilise pas \u00E0 des fins publicitaires. Il n'y a aucun traceur publicitaire sur le site.",
     deviceTitle: "Sur ton appareil",
     deviceBody:
-      "Ton navigateur garde quelques r\u00E9glages\u00A0: ta langue, dans un cookie de pr\u00E9f\u00E9rence pos\u00E9 seulement si tu la choisis\u00A0; la langue du pays d'o\u00F9 tu te connectes, dans un cookie de session qui ne contient que cette langue, pour te proposer la bonne version\u00A0; et en stockage local la progression de la grille du jour, l'historique de tes parties quotidiennes (pays plac\u00E9s, erreurs par case et ressenti de difficult\u00E9, sans score), qui ne quitte pas ton appareil, tes parties d'entra\u00EEnement sur les grilles pass\u00E9es, un identifiant al\u00E9atoire anti-spam et de courtes cl\u00E9s techniques pour d\u00E9dupliquer les envois. Rien de tout \u00E7a n'est un cookie publicitaire. Effacer les donn\u00E9es du site les supprime.",
+      "Ton navigateur garde quelques r\u00E9glages\u00A0: ta langue, dans un cookie de pr\u00E9f\u00E9rence pos\u00E9 seulement si tu la choisis\u00A0; la langue du pays d'o\u00F9 tu te connectes, dans un cookie de session qui ne contient que cette langue, pour te proposer la bonne version\u00A0; et en stockage local la progression de la grille du jour, l'historique de tes parties quotidiennes (pays plac\u00E9s et erreurs par case, sans score), tes parties d'entra\u00EEnement sur les grilles pass\u00E9es, un identifiant al\u00E9atoire anti-spam, et pour la partie du jour un jeton al\u00E9atoire avec les coups pas encore envoy\u00E9s. Rien de tout \u00E7a n'est un cookie publicitaire. Effacer les donn\u00E9es du site les supprime.",
     serverTitle: "Ce qui m'est envoy\u00E9",
     serverBody:
-      "Quand tu joues, j'enregistre les choix agr\u00E9g\u00E9s par case, les fins de partie et le ressenti de difficult\u00E9. Pour fiabiliser un nouvel envoi, le serveur conserve pendant sept jours un re\u00E7u technique de l'action (par exemple case et pays) avec une cl\u00E9 opaque, sans identifiant stable reliant tes actions. Des \u00E9v\u00E9nements d'usage pseudonymes m'aident aussi \u00E0 comprendre le parcours. Rien de cela ne contient de nom, d'e-mail ou de compte.",
+      "Quand tu joues, ta partie du jour est enregistr\u00E9e sur le serveur\u00A0: pays plac\u00E9s et erreurs par case. Elle n'est rattach\u00E9e qu'\u00E0 un jeton al\u00E9atoire propre \u00E0 cette partie, dont le serveur ne garde qu'une empreinte\u00A0: rien ne relie tes parties d'un jour \u00E0 l'autre. Le serveur en tire les statistiques du jour (raret\u00E9s, scores des joueurs, cases o\u00F9 l'on se trompe). Des \u00E9v\u00E9nements d'usage pseudonymes m'aident aussi \u00E0 comprendre le parcours. Rien de cela ne contient de nom, d'e-mail ou de compte.",
     thirdPartyTitle: "Services tiers",
     thirdPartyBody:
-      "Geodoku s'appuie sur Vercel (h\u00E9bergement et mesure d'audience sans cookie publicitaire), Convex (base des statistiques de jeu) et PostHog (mesure d'\u00E9v\u00E9nements d'usage pseudonymes avec un identifiant enregistr\u00E9 localement, sans publicit\u00E9). Google Fonts re\u00E7oit aussi ton adresse IP au chargement des polices.",
+      "Geodoku s'appuie sur Vercel (h\u00E9bergement et mesure d'audience sans cookie publicitaire), Convex (base des parties et des statistiques de jeu, h\u00E9berg\u00E9e en Europe, en Irlande) et PostHog (mesure d'\u00E9v\u00E9nements d'usage pseudonymes avec un identifiant enregistr\u00E9 localement, sans publicit\u00E9). Google Fonts re\u00E7oit aussi ton adresse IP au chargement des polices.",
     rightsTitle: "Tes droits",
     rightsBody:
-      "Il n'y a aucun compte \u00E0 consulter. Effacer les donn\u00E9es Geodoku de ton navigateur supprime les r\u00E9glages, l'historique de tes parties et les identifiants locaux. Pour toute question sur les donn\u00E9es pseudonymes envoy\u00E9es aux services tiers, tu peux me contacter ci-dessous.",
+      "Il n'y a aucun compte \u00E0 consulter. Effacer les donn\u00E9es Geodoku de ton navigateur supprime les r\u00E9glages, l'historique de tes parties et les identifiants locaux. Une partie enregistr\u00E9e sur le serveur n'est reli\u00E9e qu'au jeton gard\u00E9 par ton navigateur\u00A0: rien ne permet de la rattacher \u00E0 toi. Pour toute question sur les donn\u00E9es pseudonymes envoy\u00E9es aux services tiers, tu peux me contacter ci-dessous.",
     contactTitle: "Contact",
     contactBodyPre: "Une question\u00A0? \u00C9cris-moi \u00E0",
   },
   changelog: {
-    eyebrow: "Derni\u00E8re mise \u00E0 jour · Octobre 2026",
+    eyebrow: "Derni\u00E8re mise \u00E0 jour · Novembre 2026",
     title: "Nouveautés",
     backToGame: "Retour au jeu",
     entries: {
+      othersDate: "5 novembre 2026",
+      othersTitle: "Mieux que les autres joueurs\u00A0?",
+      othersBody:
+        "\u00C0 la fin de ta partie, fais glisser ta grille d'\u00E9mojis\u00A0: tu vois o\u00F9 se place ton score parmi ceux des joueurs du jour. Aussi, la grille solution a maintenant plusieurs visages, en fonction de ce qui t'int\u00E9resse\u00A0: les r\u00E9ponses, les cases les plus pi\u00E9geuses, la meilleure grille possible ou la tienne.",
       stabilityDate: "22 octobre 2026",
       stabilityTitle: "Petites corrections",
       stabilityBody:
@@ -316,7 +331,7 @@ export const fr = {
     rarityTitle: "Bonus de rareté",
     rarityBody: "Jusqu'à 450 points en fonction de la rareté du pays.",
     estimated:
-      "Peu de joueurs pour l'instant, ce score s'affinera au fil de la journée.",
+      "Un «\u00A0≈\u00A0» signale un score encore provisoire\u00A0: peu de joueurs pour l'instant, il s'affinera au fil de la journée.",
     legendCommon: "Plus de 50\u00A0% des joueurs",
     legendUncommon: "25 à 50\u00A0%",
     legendRare: "10 à 25\u00A0%",

@@ -15,9 +15,7 @@ function feedbackRow(
 ): FeedbackRow {
   return {
     date: over.date,
-    ratingCount: over.ratingCount ?? 0,
     gamesPlayed: over.gamesPlayed ?? 0,
-    difficultyObserved100: over.difficultyObserved100 ?? null,
     winRate: over.winRate ?? null,
     avgFilledCells: over.avgFilledCells ?? null,
     wins: over.wins ?? 0,
@@ -125,9 +123,7 @@ describe("buildTrend", () => {
   function row(over: Partial<FeedbackRow> & { date: string }): FeedbackRow {
     return {
       date: over.date,
-      ratingCount: over.ratingCount ?? 0,
       gamesPlayed: over.gamesPlayed ?? 0,
-      difficultyObserved100: over.difficultyObserved100 ?? null,
       winRate: over.winRate ?? null,
       avgFilledCells: over.avgFilledCells ?? null,
       wins: over.wins ?? 0,

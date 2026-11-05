@@ -1,36 +1,24 @@
 import { ConvexError } from "convex/values";
-import { isCountryCode } from "../content/countries/countryCodes";
-import {
-  GRID_CELL_COUNT,
-  STARTING_LIVES,
-} from "../src/features/game/logic/gridTopology";
 import { classifyReplayDate } from "../src/features/game/logic/replayWindow";
 import type { Doc } from "./_generated/dataModel";
 import type { MutationCtx, QueryCtx } from "./_generated/server";
 import { getGridAnswers } from "./gridData";
 import { todayUTC } from "./lib/dates";
 
-const UUID_PATTERN =
+// Le jeton d'une partie est un UUID v4 tiré par le navigateur : 122 bits
+// aléatoires, jamais stocké en clair côté serveur.
+const GAME_TOKEN_PATTERN =
   /^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
 const CLIENT_ID_PATTERN = /^[A-Za-z0-9:_-]+$/;
+const COUNTRY_CODE_PATTERN = /^[A-Z]{3}$/;
 const DATE_PATTERN = /^\d{4}-\d{2}-\d{2}$/;
 
 const MIN_CLIENT_ID_LENGTH = 8;
 const MAX_CLIENT_ID_LENGTH = 128;
 
-export { GRID_CELL_COUNT, STARTING_LIVES };
-
-export type GameEndReason = "win" | "lives" | "blocked";
-export type GameEndInput = {
-  endReason: GameEndReason;
-  livesLeft: number;
-  filledCells: number;
-  guessesSubmitted: number;
-};
-
-export function assertOperationId(operationId: string): void {
-  if (!UUID_PATTERN.test(operationId)) {
-    throw new ConvexError("Invalid operationId");
+export function assertGameToken(token: string): void {
+  if (!GAME_TOKEN_PATTERN.test(token)) {
+    throw new ConvexError("Invalid game token");
   }
 }
 
@@ -44,8 +32,12 @@ export function assertClientId(clientId: string): void {
   }
 }
 
+/**
+ * Forme seule : un code inconnu reste un coup raté, comme à l'écran, où il
+ * coûte une vie. Le refuser bloquerait la suite des coups de la partie.
+ */
 export function assertCountryCode(countryCode: string): void {
-  if (!isCountryCode(countryCode)) {
+  if (!COUNTRY_CODE_PATTERN.test(countryCode)) {
     throw new ConvexError("Invalid countryCode");
   }
 }
@@ -78,47 +70,6 @@ export function assertReplayableDate(date: string): void {
   }
   if (verdict !== "ok") {
     throw new ConvexError("Date is not replayable");
-  }
-}
-
-export function assertValidGameEnd(input: GameEndInput): void {
-  if (
-    !Number.isInteger(input.livesLeft) ||
-    input.livesLeft < 0 ||
-    input.livesLeft > STARTING_LIVES
-  ) {
-    throw new ConvexError("Invalid livesLeft");
-  }
-  if (
-    !Number.isInteger(input.filledCells) ||
-    input.filledCells < 0 ||
-    input.filledCells > GRID_CELL_COUNT
-  ) {
-    throw new ConvexError("Invalid filledCells");
-  }
-  const expectedGuesses =
-    input.filledCells + (STARTING_LIVES - input.livesLeft);
-  if (
-    !Number.isInteger(input.guessesSubmitted) ||
-    input.guessesSubmitted !== expectedGuesses
-  ) {
-    throw new ConvexError("Invalid guessesSubmitted");
-  }
-
-  if (input.endReason === "win") {
-    if (input.filledCells !== GRID_CELL_COUNT || input.livesLeft <= 0) {
-      throw new ConvexError("Invalid win state");
-    }
-    return;
-  }
-  if (input.filledCells >= GRID_CELL_COUNT) {
-    throw new ConvexError("Invalid loss state");
-  }
-  if (input.endReason === "lives" && input.livesLeft !== 0) {
-    throw new ConvexError("Invalid lives loss state");
-  }
-  if (input.endReason === "blocked" && input.livesLeft <= 0) {
-    throw new ConvexError("Invalid blocked loss state");
   }
 }
 

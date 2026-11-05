@@ -2,7 +2,6 @@ import type {
   Cell,
   CellKey,
   CellPosition,
-  DifficultyRating,
   GameModeId,
   GameState,
 } from "../types";
@@ -34,7 +33,6 @@ export type GameAction =
   | { type: "guessFailure"; cell: CellPosition }
   | { type: "giveUp" }
   | { type: "setEndRecorded"; date: string }
-  | { type: "setRated"; date: string; rating: DifficultyRating }
   | {
       type: "rehydrate";
       persisted: SanitizedPersistedGame;
@@ -63,8 +61,6 @@ export function createInitialState(
     selectedCell: null,
     status: "playing",
     endRecorded: false,
-    rated: false,
-    rating: null,
   };
 }
 
@@ -143,18 +139,12 @@ export function gameReducer(state: GameState, action: GameAction): GameState {
         ? { ...state, status: "lost", selectedCell: null }
         : state;
 
-    // Garde par date : le dispatch peut résulter d'une promesse (recordGameEnd /
-    // submitGridFeedback) résolue après un basculement de grille à minuit UTC ;
-    // on ne marque que si l'état concerne toujours la même partie.
+    // Garde par date : on ne marque que si l'état concerne toujours la même
+    // partie (le hook survit au basculement de grille à minuit UTC).
     case "setEndRecorded":
       return state.date !== action.date || state.endRecorded
         ? state
         : { ...state, endRecorded: true };
-
-    case "setRated":
-      return state.date !== action.date || state.rated
-        ? state
-        : { ...state, rated: true, rating: action.rating };
 
     case "rehydrate": {
       const usedCountries = getUsedCountryCodes(action.persisted.cells);
@@ -177,8 +167,6 @@ export function gameReducer(state: GameState, action: GameAction): GameState {
         selectedCell: null,
         status,
         endRecorded: action.persisted.endRecorded,
-        rated: action.persisted.rated,
-        rating: action.persisted.rating,
       };
     }
   }

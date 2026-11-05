@@ -105,10 +105,17 @@ export function ScoreInfoDialog({ scale = "daily" }: Props) {
           <IconRuleList rules={SCORE_PARTS_BY_SCALE[scale]} />
 
           {/* La rareté d'une grille passée est figée (cohorte complète) : le
-              rappel « ça s'affinera » ne vaut que pour la grille du jour. */}
+              rappel « ça s'affinera » et le « ≈ » ne valent que pour la grille
+              du jour. L'écran de résultat n'en dit plus rien (#70) : c'est ici
+              que le « ≈ » de la légende s'explique. */}
           <p className="font-sans text-xs italic text-on-surface-variant">
             {t(isTraining ? "scoring.trainingNoLives" : "ui.rarityEvolvesHint")}
           </p>
+          {!isTraining && (
+            <p className="font-sans text-xs italic text-on-surface-variant">
+              {t("scoring.estimated")}
+            </p>
+          )}
         </div>
       </DialogContent>
     </Dialog>

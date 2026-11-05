@@ -56,79 +56,36 @@ async function seedObservedGrid(
       countryPool: ["FRA", "DEU", "BEL", "ESP"],
       candidateId,
     });
+    const finished = (cells: (string | null)[], failed: number[]) =>
+      ctx.db.insert("games", {
+        date: DATE,
+        owner: { kind: "anon", tokenHash: `hash-${failed.join("")}` },
+        cells,
+        failed,
+        origin: "live",
+      });
+    const empty = Array.from({ length: 7 }, () => null);
     await Promise.all([
-      ctx.db.insert("dailyStats", {
+      ctx.db.insert("cellStats", {
         date: DATE,
         cellKey: "0,0",
-        totalGuesses: 10,
-        failedAttempts: 2,
+        counts: { FRA: 6, DEU: 3, BEL: 1 },
       }),
-      ctx.db.insert("dailyStats", {
+      ctx.db.insert("cellStats", {
         date: DATE,
         cellKey: "0,1",
-        totalGuesses: 4,
-        failedAttempts: 1,
+        counts: { ESP: 4 },
       }),
-      ctx.db.insert("guesses", {
-        date: DATE,
-        cellKey: "0,0",
-        countryCode: "FRA",
-        count: 6,
-        isReplay: false,
-      }),
-      ctx.db.insert("guesses", {
-        date: DATE,
-        cellKey: "0,0",
-        countryCode: "DEU",
-        count: 3,
-        isReplay: false,
-      }),
-      ctx.db.insert("guesses", {
-        date: DATE,
-        cellKey: "0,0",
-        countryCode: "BEL",
-        count: 1,
-        isReplay: false,
-      }),
-      ctx.db.insert("guesses", {
-        date: DATE,
-        cellKey: "0,0",
-        countryCode: "ESP",
-        count: 99,
-        isReplay: true,
-      }),
-      ctx.db.insert("guesses", {
-        date: DATE,
-        cellKey: "0,1",
-        countryCode: "ESP",
-        count: 4,
-        isReplay: false,
-      }),
-      ctx.db.insert("guesses", {
-        date: DATE,
-        cellKey: "9,9",
-        countryCode: "FRA",
-        count: 100,
-        isReplay: false,
-      }),
-      ctx.db.insert("gridFeedback", {
-        date: DATE,
-        tooEasyCount: 0,
-        balancedCount: 0,
-        tooHardCount: 0,
-        totalRatings: 0,
-        wins: 3,
-        losses: 2,
-        totalLivesLeft: 8,
-        totalFilledCells: 35,
-        totalGuessesSubmitted: 45,
-      }),
+      // Perdue aux vies, deux erreurs en 0,0 et trois en 0,1.
+      finished(["FRA", null, ...empty], [2, 3, 0, 0, 0, 0, 0, 0, 0]),
+      // En cours : compte parmi les joueurs engagés, pas parmi les finies.
+      finished([null, "ESP", ...empty], [0, 1, 0, 0, 0, 0, 0, 0, 0]),
     ]);
   });
 }
 
 describe("admin read model", () => {
-  it("groups the two date ranges into the nine cell metrics", async () => {
+  it("rebuilds the nine cell metrics from cellStats and game rows", async () => {
     const backend = convexTest(schema, modules);
     await seedObservedGrid(backend);
 
@@ -149,10 +106,10 @@ describe("admin read model", () => {
       empty: metrics?.cells["2,2"],
     }).toEqual({
       summary: {
-        gamesFinished: 5,
+        gamesFinished: 1,
         playersEngaged: 10,
-        wins: 3,
-        losses: 2,
+        wins: 0,
+        losses: 1,
         cellCount: CELL_KEYS.length,
       },
       first: {
@@ -185,7 +142,7 @@ describe("admin read model", () => {
         observedDifficulty100: 60,
         topAnswers: [{ countryCode: "ESP", count: 4, share: 1 }],
         missingCountries: [],
-        failedAttempts: 1,
+        failedAttempts: 4,
         validAnswers: ["ESP"],
         picks: [{ countryCode: "ESP", count: 4 }],
       },

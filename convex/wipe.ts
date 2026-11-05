@@ -4,7 +4,7 @@
  * Usage : `pnpm wipe:db` then `pnpm seed:grids` (seed refuses non-empty `grids`).
  *
  * The action is internal and paginates deletes to avoid Convex transaction
- * limits on tables with thousands of documents (e.g. `guesses`).
+ * limits on tables with thousands of documents (e.g. `games`).
  */
 import { v } from "convex/values";
 import { internal } from "./_generated/api";
@@ -17,20 +17,20 @@ type WipeTable =
   | "gridCandidates"
   | "gridAnswers"
   | "poolState"
-  | "guesses"
-  | "dailyStats"
-  | "gridFeedback"
-  | "operationReceipts";
+  | "games"
+  | "cellStats"
+  | "healthCounters"
+  | "healthSnapshots";
 
 const WIPE_TABLES: WipeTable[] = [
   "grids",
   "gridCandidates",
   "gridAnswers",
   "poolState",
-  "guesses",
-  "dailyStats",
-  "gridFeedback",
-  "operationReceipts",
+  "games",
+  "cellStats",
+  "healthCounters",
+  "healthSnapshots",
 ];
 
 export const deleteBatch = internalMutation({
@@ -40,10 +40,10 @@ export const deleteBatch = internalMutation({
       v.literal("gridCandidates"),
       v.literal("gridAnswers"),
       v.literal("poolState"),
-      v.literal("guesses"),
-      v.literal("dailyStats"),
-      v.literal("gridFeedback"),
-      v.literal("operationReceipts"),
+      v.literal("games"),
+      v.literal("cellStats"),
+      v.literal("healthCounters"),
+      v.literal("healthSnapshots"),
     ),
     limit: v.number(),
   },

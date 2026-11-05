@@ -1,13 +1,6 @@
-import type {
-  Cell,
-  CellKey,
-  DifficultyRating,
-  GameStatus,
-  LivesState,
-} from "../types";
+import type { Cell, CellKey, GameStatus, LivesState } from "../types";
 import { hasEmptyCell, markBlockedCells } from "./blockedDetection";
 import { STARTING_LIVES } from "./constants";
-import { isDifficultyRating } from "./difficultyRating";
 import { distributeLegacyFailures, parseFailedByCell } from "./failedByCell";
 import { CELL_KEYS, GRID_CELL_COUNT } from "./gridTopology";
 import { failedAttemptCount, isOutOfLives } from "./lives";
@@ -20,8 +13,6 @@ export type SanitizedPersistedGame = {
   failed: Record<CellKey, number>;
   status: GameStatus;
   endRecorded: boolean;
-  rated: boolean;
-  rating: DifficultyRating | null;
 };
 
 function clampInt(n: number, min: number, max: number): number {
@@ -161,7 +152,6 @@ export function sanitizePersistedForGrid(
   const failed =
     parseFailedByCell(persisted.failed, totalFailures) ??
     distributeLegacyFailures(totalFailures, cells);
-  const rated = typeof persisted.rated === "boolean" ? persisted.rated : false;
 
   return {
     date: persisted.date,
@@ -173,9 +163,6 @@ export function sanitizePersistedForGrid(
       typeof persisted.endRecorded === "boolean"
         ? persisted.endRecorded
         : false,
-    rated,
-    rating:
-      rated && isDifficultyRating(persisted.rating) ? persisted.rating : null,
   };
 }
 
@@ -190,6 +177,7 @@ export function sanitizeTrainingGame(
     date: string;
     cells: unknown;
     failedAttempts: unknown;
+    failed?: unknown;
     givenUp?: unknown;
   },
   validAnswers: Record<string, string[]>,
@@ -225,12 +213,12 @@ export function sanitizeTrainingGame(
     date: input.date,
     cells: canonicalCells,
     lives,
-    // Hors journal, l'entraînement ne persiste pas le détail par case : seul
-    // l'invariant de somme compte ici.
-    failed: distributeLegacyFailures(lives.failedAttempts, cells),
+    // Le détail par case fait les croix du calque « Erreurs » (#70). Une partie
+    // enregistrée avant ne l'a pas : son total est alors réparti.
+    failed:
+      parseFailedByCell(input.failed, lives.failedAttempts) ??
+      distributeLegacyFailures(lives.failedAttempts, cells),
     status: status === "playing" && input.givenUp === true ? "lost" : status,
     endRecorded: false,
-    rated: false,
-    rating: null,
   };
 }

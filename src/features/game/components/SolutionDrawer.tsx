@@ -1,3 +1,4 @@
+import { X } from "lucide-react";
 import { useRef, useState } from "react";
 import {
   Drawer,
@@ -21,6 +22,7 @@ import {
   CONSTRAINT_BY_ID,
   constraintAnswers,
 } from "@/features/game/logic/constraints";
+import { CELL_KEYS } from "@/features/game/logic/gridTopology";
 import { formatRarityPercent } from "@/features/game/logic/rarity";
 import { orderSolutionCountries } from "@/features/game/logic/solutionGridOrder";
 import type {
@@ -37,8 +39,31 @@ type Props = {
   state: GameState;
   validAnswers: Record<string, string[]>;
   distribution: Record<string, CellGuessDistribution> | undefined;
+  /** Taux d'erreur par case (ordre de `CELL_KEYS`), `null` sur une cohorte mince. */
+  failureRates: number[] | null;
   drawer: ReturnType<typeof useSolutionDrawer>;
 };
+
+/**
+ * « 41 % des joueurs se sont trompés ici. » Rien tant que la
+ * cohorte est mince : un taux sur trois joueurs ne dit rien.
+ */
+function CellFailureLine({ rate }: { rate: number }) {
+  const { t } = useLocale();
+  const [before, after = ""] = t("ui.cellFailureRate").split("{percent}");
+  return (
+    <p className="flex items-center gap-1.5 px-4 pb-2 text-sm text-on-surface">
+      <X className="size-4 shrink-0 text-error" strokeWidth={2.5} aria-hidden />
+      <span>
+        {before}
+        <span className="font-semibold text-error">
+          {formatRarityPercent(rate)}
+        </span>
+        {after}
+      </span>
+    </p>
+  );
+}
 
 /**
  * Ligne d'un pays, partagée par les deux listes : drapeau, nom, éventuelle
@@ -196,6 +221,7 @@ export function SolutionDrawer({
   state,
   validAnswers,
   distribution,
+  failureRates,
   drawer,
 }: Props) {
   const { t } = useLocale();
@@ -211,6 +237,8 @@ export function SolutionDrawer({
   const cellKey = cell ? (`${cell.row},${cell.col}` as CellKey) : null;
   const cellCodes = cellKey ? (validAnswers[cellKey] ?? []) : [];
   const cellDist = cellKey ? distribution?.[cellKey] : undefined;
+  const cellFailureRate =
+    cellKey && failureRates ? failureRates[CELL_KEYS.indexOf(cellKey)] : null;
 
   const rowConstraint = cell
     ? CONSTRAINT_BY_ID.get(state.rows[cell.row])
@@ -272,6 +300,9 @@ export function SolutionDrawer({
                 {rowLabel} × {colLabel}
               </DrawerTitle>
             </DrawerHeader>
+            {cellKey && cellFailureRate !== null && (
+              <CellFailureLine rate={cellFailureRate} />
+            )}
             <CellListView
               codes={cellCodes}
               cellDist={cellDist}

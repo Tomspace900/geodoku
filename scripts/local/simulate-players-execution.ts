@@ -1,71 +1,64 @@
 import { randomUUID } from "node:crypto";
-import { STARTING_LIVES } from "../../src/features/game/logic/constants";
-import type {
-  PlayerTarget,
-  SimAction,
-} from "../../src/features/game/testing/simulation";
+import type { SimAction } from "../../src/features/game/testing/simulation";
 import type { CellKey } from "../../src/features/game/types";
 
-type GuessWrite = {
-  operationId: string;
+type MoveWrite = {
+  date: string;
+  token: string;
+  clientId: string;
+  moveIndex: number;
   cellKey: CellKey;
   countryCode: string;
-  clientId: string;
 };
 
-type GameEndWrite = {
-  operationId: string;
-  endReason: PlayerTarget["endReason"];
-  livesLeft: number;
-  filledCells: number;
-  guessesSubmitted: number;
-  clientId: string;
-};
+/** Issue d'un coup côté serveur : seul `rejected` interrompt la partie. */
+type MoveWriteResult =
+  | { kind: "applied" | "duplicate" }
+  | {
+      kind: "rejected";
+      reason: string;
+    };
 
 export type SimulationWriter = {
-  submitGuess: (args: GuessWrite) => Promise<void>;
-  recordFailedGuess: (args: GuessWrite) => Promise<void>;
-  recordGameEnd: (args: GameEndWrite) => Promise<void>;
+  playMove: (args: MoveWrite) => Promise<MoveWriteResult>;
 };
 
 type PersistSimulationPlanArgs = {
   execute: boolean;
   writer: SimulationWriter;
+  date: string;
   clientId: string;
   actions: SimAction[];
-  target: PlayerTarget;
-  createOperationId?: () => string;
+  createToken?: () => string;
 };
 
-/** Écrit un plan uniquement après consentement explicite et idempotence par opération. */
+/**
+ * Joue un plan coup par coup, comme le navigateur : un jeton par partie et le
+ * rang de chaque coup. Rien n'est écrit sans consentement explicite.
+ */
 export async function persistSimulationPlan({
   execute,
   writer,
+  date,
   clientId,
   actions,
-  target,
-  createOperationId = randomUUID,
+  createToken = randomUUID,
 }: PersistSimulationPlanArgs): Promise<boolean> {
   if (!execute) return false;
 
-  for (const action of actions) {
-    const args = {
-      operationId: createOperationId(),
+  const token = createToken();
+  for (const [moveIndex, action] of actions.entries()) {
+    const result = await writer.playMove({
+      date,
+      token,
+      clientId,
+      moveIndex,
       cellKey: action.cellKey,
       countryCode: action.countryCode,
-      clientId,
-    };
-    if (action.type === "submit") await writer.submitGuess(args);
-    else await writer.recordFailedGuess(args);
+    });
+    if (result.kind === "rejected") {
+      throw new Error(`coup ${moveIndex} refusé : ${result.reason}`);
+    }
   }
-
-  await writer.recordGameEnd({
-    operationId: createOperationId(),
-    endReason: target.endReason,
-    livesLeft: target.livesLeft,
-    filledCells: target.filledCells,
-    guessesSubmitted: target.filledCells + (STARTING_LIVES - target.livesLeft),
-    clientId,
-  });
   return true;
 }

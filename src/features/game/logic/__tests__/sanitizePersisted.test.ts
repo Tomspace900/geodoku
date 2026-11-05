@@ -292,23 +292,6 @@ describe("sanitizePersistedForGrid — erreurs par case et note (#154)", () => {
     );
     expect(out && totalFailed(out.failed)).toBe(2);
   });
-
-  it("garde la valeur d'une note valide", () => {
-    const out = sanitizePersistedForGrid(
-      basePersisted({ rated: true, rating: "too_easy" }),
-      validAnswers,
-    );
-    expect(out?.rating).toBe("too_easy");
-  });
-
-  it("recharge une note d'avant #154 comme notée, sans valeur", () => {
-    const out = sanitizePersistedForGrid(
-      basePersisted({ rated: true }),
-      validAnswers,
-    );
-    expect(out?.rated).toBe(true);
-    expect(out?.rating).toBeNull();
-  });
 });
 
 describe("sanitizeTrainingGame — abandon", () => {

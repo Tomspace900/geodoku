@@ -241,12 +241,6 @@ export function ScoreDisplay({ breakdown, scale = "daily" }: Props) {
         </Eyebrow>
         <ScoreInfoDialog scale={scale} />
       </div>
-
-      {estimated && (
-        <p className="text-center text-xs italic text-on-surface-variant">
-          {t("scoring.estimated")}
-        </p>
-      )}
     </div>
   );
 }

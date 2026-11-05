@@ -69,9 +69,9 @@ export function queryReplayGridRaw(date: string): Promise<unknown> {
 
 /**
  * Partie du jour terminée, sérialisée pour injection dans localStorage : c'est
- * ce que lit le garde d'accès à l'archive. `endRecorded: true` évite toute
- * écriture Convex depuis cette partie fabriquée (les stats resteraient sinon
- * polluées par les runs E2E).
+ * ce que lit le garde d'accès à l'archive. Sans file de coups à envoyer, elle
+ * reste locale : rien ne part vers Convex. `endRecorded: true` évite d'émettre
+ * `game_completed` pour une partie fabriquée.
  */
 export function makeFinishedDailyGameJSON(): string {
   return JSON.stringify({

@@ -10,7 +10,7 @@ export type FilledCell = {
   countryCode: string;
 };
 
-/** Distribution d'une case (Convex `getTodayGuessDistribution`) : total des tentatives + part (0..1) par pays. */
+/** Distribution d'une case, tirée de `cellStats` (`toGuessDistribution`) : total des pays posés + part (0..1) par pays. */
 export type CellGuessDistribution = {
   totalGuesses: number;
   rarityByCountry: Record<string, number>;
@@ -21,9 +21,6 @@ export type BlockedCell = { status: "blocked" };
 export type Cell = FilledCell | EmptyCell | BlockedCell;
 
 export type GameStatus = "playing" | "won" | "lost";
-
-/** Ressenti de difficulté donné en fin de partie (Convex `ratingValidator`). */
-export type DifficultyRating = "too_easy" | "balanced" | "too_hard";
 
 /**
  * Mode de jeu. `daily` = la grille du jour (5 vies, résultats comptés côté
@@ -57,13 +54,6 @@ export type GameState = {
   failed: Record<CellKey, number>;
   selectedCell: CellPosition | null;
   status: GameStatus;
-  /** Fin de partie déjà notifiée au serveur (dédup `recordTodayGameEnd`). Daily uniquement. */
+  /** `game_completed` déjà émis pour cette partie (dédup après rechargement). Daily uniquement. */
   endRecorded: boolean;
-  /** Difficulté déjà notée par le joueur pour cette grille. Daily uniquement. */
-  rated: boolean;
-  /**
-   * Note choisie. `null` tant que la grille n'est pas notée, et aussi pour une
-   * note donnée avant que sa valeur soit gardée (`rated` seul). Daily uniquement.
-   */
-  rating: DifficultyRating | null;
 };

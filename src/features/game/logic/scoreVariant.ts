@@ -31,7 +31,7 @@ const RARITY_ZERO_SHARE = 0.6;
  * `RARITY_ZERO_SHARE` (0,6). Un pays très commun (part ≥ 0,6) ne rapporte rien ; un
  * commun proche du seuil, une miette. Part (0..1) → fraction de `RARITY_PER_CELL` (0..1).
  */
-const rarityFraction = (share: number): number =>
+export const rarityFraction = (share: number): number =>
   Math.max(
     0,
     Math.min(
@@ -62,7 +62,7 @@ export type ScoreBreakdown = {
 };
 
 export function computeScoreBreakdown(
-  state: GameState,
+  state: Pick<GameState, "mode" | "cells" | "lives">,
   distribution: Record<string, CellGuessDistribution> | undefined,
 ): ScoreBreakdown {
   const cohortComplete = isCohortComplete(state.mode);

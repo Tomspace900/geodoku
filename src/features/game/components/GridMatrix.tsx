@@ -16,6 +16,8 @@ type GridMatrixProps = {
     rowLabel: string;
     colLabel: string;
   }) => ReactNode;
+  /** Contenu du coin haut-gauche, vide par défaut (sélecteur de calque, #70). */
+  renderCorner?: () => ReactNode;
   className?: string;
 };
 
@@ -30,6 +32,7 @@ export function GridMatrix({
   renderColumnHeader,
   renderRowHeader,
   renderCell,
+  renderCorner,
   className,
 }: GridMatrixProps) {
   return (
@@ -45,8 +48,12 @@ export function GridMatrix({
           {/* Coin haut-gauche décoratif : un <th> n'est pas focusable (pas de
               tabindex), donc aria-hidden y est valide et évite d'annoncer un
               en-tête de colonne vide. La règle le signale à tort. */}
-          {/* biome-ignore lint/a11y/noAriaHiddenOnFocusable: <th> sans tabindex n'est pas focusable */}
-          <th aria-hidden="true" className="p-0" />
+          {renderCorner ? (
+            <td className="relative p-0 align-middle">{renderCorner()}</td>
+          ) : (
+            // biome-ignore lint/a11y/noAriaHiddenOnFocusable: <th> sans tabindex n'est pas focusable
+            <th aria-hidden="true" className="p-0" />
+          )}
           {GRID_INDICES.map((col) => (
             <th
               key={`col-${col}`}

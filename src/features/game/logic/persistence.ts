@@ -1,5 +1,5 @@
 import { STORAGE_KEYS, safeGet, safeRemove, safeSet } from "@/lib/storage";
-import type { Cell, CellKey, DifficultyRating, GameState } from "../types";
+import type { Cell, CellKey, GameState } from "../types";
 import { STARTING_LIVES } from "./constants";
 import { livesRemaining } from "./lives";
 
@@ -17,12 +17,8 @@ export type PersistedGame = {
    * lu dans `remainingLives`, est alors réparti (`distributeLegacyFailures`).
    */
   failed?: Record<CellKey, number>;
-  /** Fin de partie déjà notifiée au serveur (dédup `recordTodayGameEnd`). */
+  /** `game_completed` déjà émis pour cette partie. */
   endRecorded?: boolean;
-  /** Difficulté déjà notée par le joueur pour cette grille. */
-  rated?: boolean;
-  /** Valeur de la note. Absente d'une note donnée avant #154. */
-  rating?: DifficultyRating;
 };
 
 function parsePersisted(raw: string | null): PersistedGame | null {
@@ -53,8 +49,6 @@ export function savePersistedGame(state: GameState): void {
     remainingLives: livesRemaining(state.lives) ?? STARTING_LIVES,
     failed: state.failed,
     endRecorded: state.endRecorded,
-    rated: state.rated,
-    ...(state.rating ? { rating: state.rating } : {}),
   };
   safeSet(PERSISTENCE_STORAGE_KEY, JSON.stringify(data));
 }
