@@ -36,8 +36,8 @@ L'epic reste ouverte jusqu'à la mise en prod du dernier lot.
 - **Pas de classement mondial** : les réponses sont envoyées au navigateur, tricher
   serait facile, et il n'y a pas assez de joueurs.
 - **Pas de mécanique de série.**
-- **Pas d'écran de ligues grisé** : un simple teaser sur l'écran du compte, sans
-  bouton « me prévenir ».
+- **Pas d'écran de ligues grisé** : une simple annonce sur la page « Mes stats »
+  d'un joueur connecté, sans bouton « me prévenir ».
 - **Connexion** : code par e-mail et Google au lancement, Apple plus tard.
 - **PostHog reste anonyme** : pas d'`identify()`, pas de PII.
 - **Données d'un compte** : l'e-mail, les parties, un pseudo généré et modifiable,
@@ -77,13 +77,13 @@ En prod depuis le 28 octobre 2026. Rien de visible : aucun écran, aucun event P
   entrées triées par date. Module pur [`history.ts`](../src/features/game/logic/history.ts).
 - **Une entrée par jour joué de la grille quotidienne**, au format de la future
   ligne serveur : `date`, `cells[9]` (ISO3 ou `null`, cases vides et bloquées
-  confondues), `failed[9]`, `rating?`. Les tableaux suivent l'ordre row-major de
+  confondues), `failed[9]` et, depuis le lot 1, `token?` (le jeton de la partie,
+  pour le rattachement au compte). Les tableaux suivent l'ordre row-major de
   `CELL_KEYS` (`"0,0"`, `"0,1"`… `"2,2"`), celui de toute la topologie du jeu.
-- **Créée au premier coup** (réussi ou raté) **et réécrite à chaque coup** et à la
-  note. Une partie abandonnée reste donc dans le journal. L'entraînement n'y entre pas.
+- **Créée au premier coup** (réussi ou raté) **et réécrite à chaque coup**. Une partie abandonnée reste donc dans le journal. L'entraînement n'y entre pas.
 - **Lecture tolérante** : `sanitizeHistory` écarte une à une les entrées invalides
-  (date, ISO3, pays en double, tableaux de 9, erreurs entières positives) ; une
-  note illisible ne coûte que la note. Pas de plafond (~50 Ko par an).
+  (date, ISO3, pays en double, tableaux de 9, erreurs entières positives) ; un
+  jeton illisible ne coûte que le jeton. Pas de plafond (~50 Ko par an).
 - **Erreurs par case** : `GameState.failed`, tenu par le reducer (`guessFailure`
   reçoit la case), avec `somme(failed) == failedAttemptCount(lives)`. Les vies
   restent lues dans `LivesState`. `game-v3` persiste le détail ; une sauvegarde
@@ -92,15 +92,15 @@ En prod depuis le 28 octobre 2026. Rien de visible : aucun écran, aucun event P
   ([`failedByCell.ts`](../src/features/game/logic/failedByCell.ts)) : le total
   est exact, seule sa répartition est reconstruite, et sans case « record »
   artificielle. Cela ne touche que la partie en cours le jour du déploiement.
-- **Note de difficulté** : `GameState.rating` garde la valeur, persistée dans
-  `game-v3`. Une note donnée avant #154 recharge `rated: true` sans valeur.
-- **Lot 1** : le journal gardera aussi le jeton de la partie anonyme, pour le
-  rattachement au login (lot 2). Le cache des répartitions finales viendra avec
-  « Mes stats » (lot 2).
+- **Note de difficulté** : gardée dans le journal par le lot 0, retirée avec le
+  lot 1 ; une note encore présente dans une entrée est simplement oubliée à la
+  lecture.
+- **Le cache des répartitions finales** viendra avec « Mes stats » (lot 2).
 
 ## Lot 1 — Convex en Europe, une ligne par partie, « Toi et les autres » (#70)
 
-Placement tranché le 2026-11-03 sur maquettes dans la vraie app.
+En prod depuis la bascule de la nuit du 4 au 5 novembre 2026 (prod Convex en
+`eu-west-1`). Placement tranché le 2026-11-03 sur maquettes dans la vraie app.
 
 ### Migration et refonte, en une seule bascule
 
@@ -269,25 +269,92 @@ Placement tranché le 2026-11-03 sur maquettes dans la vraie app.
   - partie locale en cours alors que le compte a déjà joué : remplacée, sans message.
 - **L'entraînement reste local**, sans synchronisation.
 
-### Écran du compte (profil)
+### « Mes stats » et le compte : une seule page
 
-- **Entrée** : une icône en haut à droite de l'en-tête, à côté des cœurs.
-- Pseudo, pays, déconnexion, suppression du compte, et l'annonce des ligues à
-  venir (pas de bouton « me prévenir », aucune mesure du clic).
+Tranché le 2026-11-05 sur maquettes dans la vraie app, comme au lot 1.
 
-### « Mes stats » (venu du lot 1)
+- **« Mes stats » et le compte arrivent dans la même livraison.**
+- **Une page à part, avec son adresse**, et « ← Retour à la grille » en haut. Ni
+  tiroir ni modale : le contenu est long, le compte y vit (une confirmation de
+  suppression ferait une fenêtre sur une fenêtre), et une page a son adresse et
+  le bouton retour du téléphone.
+- **Entrée : une icône graphique** (Lucide `ChartColumnBig`) à droite des cœurs,
+  la même pour tous, connecté ou non. Une silhouette ferait croire qu'il faut se
+  connecter pour jouer. Une icône choisie par le joueur (personnalisation, voire
+  succès) pourra venir avec les ligues, sans réintroduire de série.
+- **Sans compte, la même page**, calculée sur le journal local, avec le
+  sous-titre « Sur cet appareil ». **Connecté**, le titre devient le drapeau et le
+  pseudo (un crayon pour le modifier), avec « Mes stats · tous mes appareils ».
 
-- Dans l'écran profil.
-- Calculé côté client depuis le journal local et les répartitions finales des
-  jours passés, mises en cache une fois le jour fini. Le score d'un jour passé est
-  toujours recalculé. L'entraînement n'y entre pas.
+#### Contenu, de haut en bas
+
+1. **4 cases** : parties jouées, part de grilles complètes, score moyen, record
+   (avec sa date). Le même écran dès la première partie.
+2. **« Ma palette »** : la part de chaque tier de rareté (🟪 🟦 🟨 🟥) parmi tous
+   les pays placés, en pourcentages.
+3. **« Mes 30 derniers jours › »** : une barre par jour (hauteur = score), la
+   moyenne en pointillé, un point pour un jour non joué, le meilleur score des
+   30 jours en violet.
+4. **« Mes thématiques › »** : les 3 premières, en « % du premier coup » (case
+   remplie sans erreur ; une case compte pour ses deux thématiques). Chaque
+   continent compte à part, les autres contraintes sont regroupées par famille.
+   Une thématique n'apparaît qu'à partir d'un nombre minimal de cases.
+5. Sans compte, l'invitation ; connecté, l'annonce des ligues puis « Mon compte › ».
+
+- **Titres de section à la première personne** (« Mon », « Ma », « Mes ») ; les
+  phrases adressées au joueur gardent le tutoiement.
+- **Le titre d'une section ouvre son détail** (chevron à droite) : un tiroir sur
+  téléphone, une fenêtre centrée sur ordinateur, comme la fenêtre de résultat.
+  - **Le jour** (tap sur une barre) : les 30 barres en tête, la date et le numéro
+    de grille entre ‹ ›, l'anneau du score et la grille du joueur figée (pays et
+    part, tiret pour une case vide, croix pour une case bloquée). On glisse d'un
+    jour joué à l'autre ; les jours non joués sont sautés.
+  - **Toutes les thématiques**, classées.
+- **Ordinateur** : deux colonnes, les cases et la palette à gauche, les 30 jours
+  et les thématiques à droite. Le survol d'une barre affiche « 26 nov. · 815 pts ».
+- **Au-delà de 30 jours**, le détail d'un jour n'est plus accessible ; les cases,
+  la palette et les thématiques couvrent tout l'historique.
+
+#### États
+
+- **Aucune partie** : une carte « Tes stats commencent avec ta première grille. »,
+  puis l'invitation.
+- **Partie du jour pas finie** : elle ne compte nulle part, et sa barre est un
+  contour en pointillé. Une fois finie, elle entre partout avec son score du
+  moment, qui s'affine jusqu'à minuit comme dans la fenêtre de résultat.
+
+#### Invitation et compte
+
+- **Sans compte, l'invitation à deux endroits** : un lien « Créer un compte › »
+  sous le titre, visible sans défiler, et une carte en bas, « Crée un compte pour
+  les retrouver sur tous tes appareils ».
+- **Connecté** : la carte « Bientôt · Les ligues entre amis », sans bouton ni
+  mesure du clic, puis la ligne « Mon compte › » avec l'e-mail. Elle ouvre un
+  tiroir (une fenêtre sur ordinateur) : le pays, l'e-mail, « Se déconnecter » et
+  « Supprimer mon compte ». La suppression reste ainsi loin du pouce qui défile.
+
+#### Données
+
+- Parties jouées et part de grilles complètes : le journal seul (ou les lignes
+  du compte), sans réseau.
+- Score, record, barres et palette : la **répartition finale** de chaque jour
+  joué, environ 1 à 3 Ko par jour. La grille d'un jour et les thématiques
+  demandent en plus ses 6 contraintes, environ 150 octets.
+- **Une query publique sans identité par jour fini**, pour tous les jours passés :
+  `getReplayGrid` ne couvre que J-1 à J-7, et `getReplayStats` relit toutes les
+  parties du jour. Un jour fini ne change plus, donc le cache Convex est partagé
+  entre joueurs et le navigateur peut le garder.
+- **Pas de rang d'un jour passé** (« mieux que X % ce jour-là ») : pas de rang
+  permanent, et ce serait le seul élément coûteux.
 
 ### À trancher avant de coder
 
-- Contenu exact de « Mes stats » : parties jouées, part de grilles complètes,
-  moyenne, record, 30 derniers jours, trouvailles ultra… (rien de décidé).
-- Sans compte : l'icône profil ouvre-t-elle « Mes stats » sur le journal local,
-  avec une invitation à créer un compte ?
+- Adresse de la page, « Ton pays » ou « Mon pays », tiroir à geste ou fenêtre
+  partout, lien « Rejouer cette grille » depuis le détail d'un jour.
+- Liste des thématiques et leur seuil, à vérifier sur de vraies données.
+- Parties passées laissées en cours dans le journal.
+- Envoi des e-mails, suppression du compte, générateur de pseudo ; leurs écrans
+  sur maquettes ensuite.
 
 ### Docs
 
