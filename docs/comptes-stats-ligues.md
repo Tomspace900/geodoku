@@ -21,7 +21,7 @@ L'epic reste ouverte jusqu'à la mise en prod du dernier lot.
 | --- | ----- | ------- |
 | 0 | [#154](https://github.com/Tomspace900/geodoku/issues/154) | Journal local des parties, invisible pour le joueur |
 | 1 | [#70](https://github.com/Tomspace900/geodoku/issues/70) | Convex en Europe, une ligne par partie, « Toi et les autres aujourd'hui », calques de la grille solution |
-| 2 | [#155](https://github.com/Tomspace900/geodoku/issues/155) | Compte facultatif : code par e-mail et Google, synchro entre appareils, pseudo, « Mes stats » |
+| 2 | [#155](https://github.com/Tomspace900/geodoku/issues/155) | Compte facultatif : code par e-mail et Google, synchro entre appareils, nom de joueur, « Mes stats » |
 | 3 | [#156](https://github.com/Tomspace900/geodoku/issues/156) | Ligues entre amis |
 
 - **Le journal d'abord** : l'historique ne commence qu'au jour où on l'enregistre.
@@ -40,7 +40,7 @@ L'epic reste ouverte jusqu'à la mise en prod du dernier lot.
   d'un joueur connecté, sans bouton « me prévenir ».
 - **Connexion** : code par e-mail et Google au lancement, Apple plus tard.
 - **PostHog reste anonyme** : pas d'`identify()`, pas de PII.
-- **Données d'un compte** : l'e-mail, les parties, un pseudo généré et modifiable,
+- **Données d'un compte** : l'e-mail, les parties, un nom généré et modifiable,
   un pays facultatif (« Mon pays », affiché en drapeau, jamais « pays d'origine »).
   Rien n'est repris du profil Google (ni nom, ni photo). Aucun score stocké.
 - **Droits du joueur** : suppression du compte en libre-service, export sur demande,
@@ -261,14 +261,19 @@ En prod depuis la bascule de la nuit du 4 au 5 novembre 2026 (prod Convex en
 
 - L'e-mail, les parties (lignes du lot 1) et `profiles { userId, pseudo, country? }`.
   Aucun score stocké.
-- **Pseudo** généré par un petit générateur amusant, puis **modifiable en texte
-  libre** (3 à 20 caractères), avec un dé pour en tirer un autre (tranché le
-  2026-11-05, « pour l'instant ») : dans une ligue entre amis, se reconnaître
-  (« Camille ») compte plus que le risque, limité aux invités. Un filtre de mots
-  interdits à l'enregistrement ; le lot 3 dira s'il faut plus. **Pas d'unicité
-  sur tout le site** (le premier « Julie » en priverait les autres) : deux
-  pseudos identiques dans une même ligue se distingueront au lot 3.
-- **Pays** facultatif, « Mon pays (facultatif) », affiché en drapeau.
+- **Nom** (le mot « pseudo » n'apparaît pas à l'écran : « Ton nom », « Mon nom »).
+  Tiré à la création par un générateur **Animal + lieu** (« Okapi du Sahara »,
+  « Sahara Okapi » en anglais : l'absurde est voulu), 50 animaux × 50 lieux,
+  20 caractères au plus. Puis **modifiable en texte libre** : 3 à 20 caractères,
+  lettres, chiffres, espaces, tirets et apostrophes, sans emoji, avec un filtre
+  de mots refusés (« Ce nom n'est pas possible. Essaie autre chose. », sans
+  dire le mot). Dans une ligue entre amis, se reconnaître (« Camille ») compte
+  plus que le risque, limité aux invités ; le lot 3 dira s'il faut plus.
+  **Le dé ne tire que des noms que personne n'a** (vérification serveur, index
+  sur le nom) ; **un nom écrit à la main n'est pas unique** (le premier « Julie »
+  en priverait les autres).
+- **Pays** facultatif, « Mon pays », affiché en drapeau ; sans pays, le drapeau
+  blanc 🏳️ « Aucun ».
 - **Suppression** en libre-service, **export** sur demande, **effacement** après
   3 ans sans partie (date de la dernière partie, pas de champ dédié).
 - **Supprimer un compte détache ses parties** (tranché le 2026-11-05) : l'e-mail,
@@ -278,7 +283,8 @@ En prod depuis la bascule de la nuit du 4 au 5 novembre 2026 (prod Convex en
   anonymes hors du champ du RGPD, et les chiffres passés (« Toi et les autres »,
   taux d'erreur, admin) restent stables. Même geste pour l'effacement après 3 ans.
   Le journal de l'appareil reste au joueur. `/privacy` : « tes parties restent,
-  anonymes, dans les statistiques du jeu ».
+  anonymes, dans les statistiques du jeu ». La suppression se confirme par un
+  code envoyé par e-mail (voir « Écrans du compte »).
 
 ### Partie du jour et synchronisation
 
@@ -306,8 +312,9 @@ Tranché le 2026-11-05 sur maquettes dans la vraie app, comme au lot 1.
   connecter pour jouer. Une icône choisie par le joueur (personnalisation, voire
   succès) pourra venir avec les ligues, sans réintroduire de série.
 - **Sans compte, la même page**, calculée sur le journal local, avec le
-  sous-titre « Sur cet appareil ». **Connecté**, le titre devient le drapeau et le
-  pseudo (un crayon pour le modifier), avec « Mes stats · tous mes appareils ».
+  sous-titre « Sur cet appareil ». **Connecté**, le titre devient le drapeau
+  (tapable : il ouvre « Mon pays ») et le nom, avec un crayon qui ouvre « Mon
+  nom » ; le sous-titre est « Mes stats ».
 
 #### Contenu, de haut en bas
 
@@ -326,19 +333,20 @@ Tranché le 2026-11-05 sur maquettes dans la vraie app, comme au lot 1.
 
 - **Titres de section à la première personne** (« Mon », « Ma », « Mes ») ; les
   phrases adressées au joueur gardent le tutoiement.
-- **Le titre d'une section ouvre son détail** (chevron à droite) : un tiroir sur
-  téléphone, une fenêtre centrée sur ordinateur, comme la fenêtre de résultat.
-  - **Le jour** (tap sur une barre) : les 30 barres en tête, la date et le numéro
-    de grille entre ‹ ›, l'anneau du score et la grille du joueur figée (pays et
+- **Le titre d'une section ouvre son détail** (chevron à droite), **en tiroir sur
+  téléphone comme sur ordinateur** (règle des contenants plus bas ; la fenêtre
+  centrée sur ordinateur, d'abord retenue, est abandonnée le 2026-11-06).
+  - **Le jour** (tap sur une barre) : les 30 barres en tête, puis la date et le
+    numéro de grille comme titre simple entre ‹ › (« Vendredi 4 décembre ·
+    #187 »), l'anneau du score et la grille du joueur figée (pays et
     part, tiret pour une case vide, croix pour une case bloquée). On glisse d'un
     jour joué à l'autre ; les jours non joués sont sautés. Pour les 7 derniers
     jours, et seulement une fois la partie du jour finie (sinon l'archive
     redirige), un lien discret « Rejouer cette grille › » ouvre l'entraînement
     de ce jour, ou le reprend.
-  - **Toutes les thématiques**, classées.
+  - **Mes thématiques** : toutes, classées.
 - **Adresse** : `/fr/stats`, `/en/stats`, hors index (le contenu dépend du
-  joueur). **Tiroirs** à geste (vaul) sur téléphone, comme ceux de la grille
-  solution et de la saisie ; fenêtre centrée sur ordinateur.
+  joueur).
 - **Ordinateur** : deux colonnes, les cases et la palette à gauche, les 30 jours
   et les thématiques à droite. Le survol d'une barre affiche « 26 nov. · 815 pts ».
 - **Au-delà de 30 jours**, le détail d'un jour n'est plus accessible ; les cases,
@@ -367,9 +375,10 @@ Tranché le 2026-11-05 sur maquettes dans la vraie app, comme au lot 1.
   sous le titre, visible sans défiler, et une carte en bas, « Crée un compte pour
   les retrouver sur tous tes appareils ».
 - **Connecté** : la carte « Bientôt · Les ligues entre amis », sans bouton ni
-  mesure du clic, puis la ligne « Mon compte › » avec l'e-mail. Elle ouvre un
-  tiroir (une fenêtre sur ordinateur) : le pays, l'e-mail, « Se déconnecter » et
-  « Supprimer mon compte ». La suppression reste ainsi loin du pouce qui défile.
+  mesure du clic, puis la ligne « Mon compte › » avec l'e-mail. Elle ouvre le
+  tiroir « Mon compte » : l'e-mail, « Se déconnecter » et « Supprimer mon
+  compte » (lien rouge), rien d'autre. La suppression reste ainsi loin du pouce
+  qui défile.
 
 #### Données
 
@@ -385,11 +394,116 @@ Tranché le 2026-11-05 sur maquettes dans la vraie app, comme au lot 1.
 - **Pas de rang d'un jour passé** (« mieux que X % ce jour-là ») : pas de rang
   permanent, et ce serait le seul élément coûteux.
 
-### À trancher avant de coder
+### Écrans du compte
 
-- Liste des thématiques et leur seuil, à vérifier sur de vraies données.
-- Écrans sur maquettes : connexion (code par e-mail et Google), e-mail du code,
-  vocabulaire du générateur de pseudo et son édition, choix du pays, suppression.
+Tranchés les 5 et 6 novembre 2026 sur maquettes dans la vraie app.
+
+#### Règle des contenants (tout le site)
+
+- **Tiroir** (vaul, à geste, sur téléphone **et** sur ordinateur) : une saisie
+  rapide au clavier, ou une seule sorte d'information qu'on parcourt. Titre
+  simple (serif droit, `text-lg`, sans barre), comme la saisie et la grille
+  solution ; un sous-titre est une petite ligne en minuscules.
+- **Fenêtre** (celle du résultat, `DialogContent placement="bottom-sheet"` :
+  monte du bas sur téléphone, centrée sur ordinateur, fermée par la croix) : un
+  contenu riche à lire en entier, un contenu avec lequel on joue, ou un parcours
+  qu'on ne doit pas perdre. Titre éditorial (italique, barre violette,
+  sous-titre en capitales).
+- L'existant est déjà conforme (résultat, « Comment jouer ? », calcul du score en
+  fenêtres ; saisie, grille solution en tiroirs). Dans le lot 2 : connexion et
+  bienvenue en fenêtre ; le jour, « Mes thématiques », « Mon compte », « Mon
+  nom » et « Mon pays » en tiroirs, y compris par-dessus une fenêtre. Règle à
+  reporter dans `docs/DESIGN_SYSTEM.md` au développement ; elle demande un
+  tiroir vaul utilisable sur ordinateur (aujourd'hui `max-w-lg` centré en bas).
+- **Aucun message flottant pour le compte** : ni bienvenue, ni retour, ni
+  déconnexion, ni suppression.
+
+#### Connexion
+
+- **Un seul parcours** pour créer un compte ou le retrouver : le lien « Créer un
+  compte › » sous le titre et la carte du bas (bouton « Créer un compte » et lien
+  « J'ai déjà un compte ») ouvrent la même fenêtre, titre « Mon compte »,
+  sous-titre « Créer ou retrouver mon compte ».
+- **Choix** : « Continuer avec mon e-mail » (bouton principal, enveloppe) et
+  « Continuer avec Google » (secondaire, « G » officiel), avec « Seul ton e-mail
+  est gardé, rien de ton profil Google. ». Le premier remplace les boutons par le
+  champ « E-mail » et « Recevoir un code » ; « ← Retour » ramène au choix.
+- **Code** : « Vérifie tes e-mails », « Code envoyé à … » et « Changer
+  d'adresse », **six cases** (3 + 3, comme une mini-grille) qui valident seules
+  au 6ᵉ chiffre, avec `autocomplete="one-time-code"`. « Renvoyer le code » grisé
+  une minute avec un décompte ; au bout de 30 s, « Rien reçu ? Regarde dans tes
+  spams : l'e-mail vient de compte@geodoku.app. ».
+- **Better Auth `emailOTP`** : 6 chiffres, 5 minutes (défaut), **5 essais**
+  (`allowedAttempts: 5`, au lieu de 3), **sans décompte affiché** ; le compte se
+  crée au premier code (défaut).
+- **Messages** : « Ce n'est pas le bon code. » (cases rouges, secousse) ;
+  « Trop d'essais : ce code ne marche plus. » et « Ce code a expiré. », chacun
+  avec « Recevoir un nouveau code » ; « Nouveau code envoyé. » ; « Cette adresse
+  n'est pas valide. » ; « Pas de réseau : le code n'est pas parti. »
+  (« Réessayer ») ; « Trop de codes demandés d'un coup. ». Google annulé : retour
+  au choix, sans message.
+
+#### L'e-mail du code
+
+- **Expéditeur** « Geodoku <compte@geodoku.app> » (adresse d'envoi, pas une
+  boîte), **Reply-To** support@geodoku.app.
+- **Le code dans l'objet** : « 481207 est ton code Geodoku » / « 481207 is your
+  Geodoku code », le même pour la suppression.
+- **Corps sobre** : logo, « Ton code pour te connecter : » (ou « pour supprimer
+  ton compte »), le code en grand **d'un seul tenant** (détection par le clavier,
+  copier-coller), « Il vaut 5 minutes. », « Tu n'as rien demandé ? Ignore cet
+  e-mail. », « geodoku.app ». Version texte jointe. Langue : celle de la page au
+  moment de la demande.
+
+#### Bienvenue (nouveau compte)
+
+- **Fenêtre « Bienvenue »**, sous-titre « Ton compte est prêt ». « Ton nom » : un
+  champ souligné, le nom tiré en serif italique, le dé à droite hors du champ.
+  « Ton pays » : un champ de choix au même trait (drapeau 🏳️ « Aucun » au
+  départ, ▾) qui ouvre la liste en tiroir, avec son propre dé. Puis « Tes 27
+  parties de cet appareil sont sur ton compte. » (seulement s'il y en avait) et
+  « C'est parti » (grisé si le nom est invalide).
+- **Compte existant** : retour direct à la page connectée, sans message.
+
+#### Nom, pays, compte
+
+- **« Mon nom »** (tiroir, ouvert par le crayon) : le même champ et le dé,
+  « Enregistrer » ; rien n'est enregistré avant.
+- **« Mon pays »** (tiroir, ouvert par le drapeau), sous-titre « Facultatif » :
+  un dé, une recherche dès la première lettre (mêmes alias que la saisie en
+  jeu), le pays actuel en tête avec « Retirer », puis les 197 pays par ordre
+  alphabétique avec leur drapeau.
+- **Déconnexion** : sans confirmation. La page redevient exactement celle d'un
+  joueur sans compte, calculée sur le journal de l'appareil, avec l'invitation.
+  Aucune trace du compte sur l'appareil.
+- **Suppression** : dans le tiroir « Mon compte », le contenu change sur place
+  (« ← Mon compte » pour revenir) : « Supprimer mon compte ? », « Effacés : ton
+  e-mail, ton nom et ton pays. », « Tes 40 parties restent dans les statistiques
+  du jeu, anonymes : plus personne ne peut les relier à toi. », « Sur cet
+  appareil, tes statistiques restent. », bouton rouge « Recevoir le code de
+  suppression ». Puis le code, et la suppression part au 6ᵉ chiffre. Après : la
+  page sans compte, sans message.
+- **Pourquoi un code** : sans mot de passe, Better Auth n'accepte la suppression
+  que d'une session « fraîche » (`freshAge`, un jour depuis sa création). Une
+  session dure 7 jours et se prolonge chaque jour, donc un joueur assidu n'est
+  presque jamais frais. Le code réutilise la connexion et vaut confirmation
+  (`user.deleteUser.enabled: true`).
+
+### À trancher ou vérifier pendant le développement
+
+- **Listes du générateur** : 50 animaux et 50 lieux en français et en anglais,
+  provisoires (le mainteneur les peaufine) ; elles vivent hors du repo jusqu'au
+  développement. Liste des mots refusés à écrire (la maquette n'a que des mots
+  réservés : « geodoku », « admin », « modérateur », « officiel »).
+- **Thématiques** : leur liste et leur seuil, sur une copie des données de prod.
+- **Limite d'envoi du code côté serveur** : Better Auth ne limite rien par défaut
+  sur `send-verification-otp` au-delà de 100 requêtes par 10 s ; une minute entre
+  deux envois côté interface.
+- **support@geodoku.app** : la boîte de réponse est à créer.
+- **À tester sur téléphone** : le clavier de l'iPhone dans une fenêtre et dans un
+  tiroir fixés en bas (le champ ne doit pas être caché) ; un tiroir vaul ouvert
+  par-dessus une fenêtre Radix (focus, clavier) ; la suggestion du code par le
+  clavier sur iOS et Android.
 
 ### Docs
 
@@ -418,4 +532,6 @@ Tranché le 2026-11-05 sur maquettes dans la vraie app, comme au lot 1.
 - Score du jour : il évolue tant que la cohorte se remplit. Que montre le
   classement du jour avant qu'il soit figé (marqueur « ≈ ») ?
 - Égalités, départ d'une ligue, retrait d'un membre.
-- Pseudos visibles par les autres : faut-il de la modération ?
+- Noms visibles par les autres : faut-il plus que le filtre de mots ? Qui est
+  qui quand le nom est tiré (« Fennec des Alpes », c'est Camille ?) ; deux noms
+  identiques écrits à la main dans une même ligue.
