@@ -89,7 +89,8 @@ export const TIER_ORDER: readonly RarityTier[] = [
 
 /**
  * Sous ce nombre de cases, une thématique n'est pas classée : un seul tirage
- * ne dit rien. Seuil à confirmer sur une copie des données de prod.
+ * ne dit rien. Gardé à 6 après mesure sur les grilles de prod (#155) : les
+ * premières thématiques vers le 3ᵉ jour, un continent en 1 mois environ.
  */
 export const THEME_MIN_CELLS = 6;
 

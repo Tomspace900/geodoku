@@ -515,7 +515,8 @@ Tranchés les 5 et 6 novembre 2026 sur maquettes dans la vraie app.
 
 ### Tranché au développement (2026-11-06)
 
-- **Thématiques** : la liste des maquettes, seuil de 6 cases gardé. Mesuré sur une
+- **Thématiques** : la liste des maquettes, seuil de 6 cases confirmé par le
+  mainteneur le 2026-11-06. Mesuré sur une
   copie des grilles de prod (221 grilles) : « Histoire et politique », « Nature et
   relief » et « Mers et océans » reviennent 2 à 2,5 fois par grille, un continent
   0,2 à 0,4 fois. Au seuil de 6, un joueur quotidien voit ses premières thématiques
