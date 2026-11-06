@@ -80,23 +80,29 @@ export const en = {
   privacy: {
     eyebrow: "Last updated · November 2026",
     title: "Privacy",
-    lead: "Geodoku is a game I build on my own. No account needed: I only collect the bare minimum, just enough to run the game and see how the grids are doing.",
+    lead: "Geodoku is a game I build on my own. The account is optional: without it, I only collect the bare minimum, just enough to run the game and see how the grids are doing.",
     backToGame: "Back to the game",
-    essenceTitle: "No account or advertising",
+    essenceTitle: "No required account, no advertising",
     essenceBody:
-      "No sign-up, no login, no ads. I don't sell data or use it for advertising. There are no advertising trackers on the site.",
+      "You play without signing up. The account only lets you find your games and stats on all your devices. No ads: I don't sell data or use it for advertising. There are no advertising trackers on the site.",
     deviceTitle: "On your device",
     deviceBody:
-      "Your browser keeps a few settings: your language, in a preference cookie set only if you pick one; the language of the country you connect from, in a session cookie holding only that language, to suggest the right version; and in local storage the current grid progress, the history of your daily games (countries placed and mistakes per cell, no score), your practice games on past grids, a random anti-spam identifier, and for today's game a random token with the moves not sent yet. None of it is an advertising cookie. Clearing the site data removes it.",
+      "Your browser keeps a few settings: your language, in a preference cookie set only if you pick one; the language of the country you connect from, in a session cookie holding only that language, to suggest the right version; and in local storage the current grid progress, the history of your daily games (countries placed and mistakes per cell, no score), past days' distributions for \"My stats\", your practice games on past grids, a random anti-spam identifier, and for today's game a random token with the moves not sent yet. If you're signed in, your session is kept there too, then erased when you sign out. None of it is an advertising cookie. Clearing the site data removes it.",
     serverTitle: "What gets sent to me",
     serverBody:
-      "While you play, today's game is recorded on the server: countries placed and mistakes per cell. It is only tied to a random token specific to that game, of which the server keeps a fingerprint: nothing links your games from one day to the next. The server derives the day's statistics from it (rarities, player scores, cells where people slip). Pseudonymous usage events also help me understand the journey. None of this contains a name, email, or account.",
+      "When you play without an account, today's game is recorded on the server: countries placed and mistakes per cell. It is only tied to a random token specific to that game, of which the server keeps a fingerprint: nothing links your games from one day to the next. The server derives the day's statistics from it (rarities, player scores, cells where people slip). Pseudonymous usage events also help me understand the journey; they never contain your email, your name or your account.",
+    accountTitle: "If you create an account",
+    accountBody:
+      "I keep your email address, the name and country you pick (the country is optional), and your games: those played while signed in, and the ones from your device you attach when you sign in. No score is stored, it is recomputed. If you use Google, I take neither your name nor your photo: only your email address is kept. Like any sign-in service, the session keeps the IP address and browser of the signed-in device, and the link with Google keeps the tokens Google hands over. Your name and country may be seen by the friends in your future leagues; your email, never.",
+    retentionTitle: "How long",
+    retentionBody:
+      "A sign-in code is valid for 5 minutes. A session lasts 7 days and is extended when you come back. Your account is kept as long as you play: with no game for 3 years, it is erased, the same way as a deletion. Games played without an account stay anonymous in the game's statistics.",
     thirdPartyTitle: "Third-party services",
     thirdPartyBody:
-      "Geodoku relies on Vercel (hosting and audience metrics without advertising cookies), Convex (the games and game statistics database, hosted in Europe, in Ireland), and PostHog (pseudonymous usage-event measurement with an identifier stored locally, without advertising). Google Fonts also receives your IP address when fonts load.",
+      "Geodoku relies on Vercel (hosting and audience metrics without advertising cookies), Convex (the games, accounts and game statistics database, hosted in Europe, in Ireland), MailerSend (sending sign-in codes, data hosted in Europe, in Belgium), Google (only if you choose to sign in with Google), and PostHog (pseudonymous usage-event measurement with an identifier stored locally, without advertising). Convex and MailerSend are American companies. Google Fonts also receives your IP address when fonts load.",
     rightsTitle: "Your rights",
     rightsBody:
-      "There is no account to access. Clearing Geodoku site data removes local settings, your game history and identifiers. A game recorded on the server is only tied to the token your browser keeps: nothing lets anyone link it to you. For questions about pseudonymous data sent to third-party services, contact me below.",
+      'You change your name and country in "My stats". You can delete your account yourself, in "My stats", then "My account": your email, name and country are erased, your games stay in the game\'s statistics, anonymous, with no one left to link them to you. To get a copy of your data, write to me from your account\'s address. Without an account, clearing Geodoku site data removes local settings, your game history and identifiers, and a game recorded on the server is only tied to the token your browser keeps.',
     contactTitle: "Contact",
     contactBodyPre: "A question? Write to me at",
   },
@@ -105,6 +111,10 @@ export const en = {
     title: "What's new",
     backToGame: "Back to the game",
     entries: {
+      statsDate: "November 6, 2026",
+      statsTitle: "Your stats, and an account if you like",
+      statsBody:
+        'A new "My stats" page, behind the icon next to your hearts: your games, average score, best score, rarity palette, last 30 days and the themes you shine at. It\'s computed on your device. And if you want all of it on your phone as well as your computer, you can now create an account, with a simple email code or your Google account. It stays optional: you can still play without one.',
       othersDate: "November 5, 2026",
       othersTitle: "Better than the other players?",
       othersBody:

@@ -60,6 +60,21 @@ Background = couleur à 10% opacity, texte à 100%, pill `rounded-full`.
 
 **Grilles (GameGrid)** — jamais de bordures ; `gap-1` ou `gap-2` ; cellule vide `surface-low`, remplie `surface-lowest`.
 
+## Règle des contenants
+
+Tranchée le 2026-11-06 sur maquettes (#155), pour tout le site. Une page a son adresse ; par-dessus, deux contenants seulement.
+
+| Contenant | Pour | Composant | Titre |
+| --------- | ---- | --------- | ----- |
+| **Tiroir** | une saisie rapide au clavier, ou une seule sorte d'information qu'on parcourt (une liste, un jour qu'on feuillette) | [`SheetDrawer`](../src/components/SheetDrawer.tsx) (vaul) : monte du bas et se ferme d'un geste, sur téléphone **et** sur ordinateur, où il garde une largeur de lecture (`max-w-lg`, `max-w-3xl` pour une grille et son anneau) et une croix, faute de geste naturel à la souris | **simple** : serif droit, `text-lg`, sans barre ; un sous-titre est une petite ligne en minuscules |
+| **Fenêtre** | un contenu riche à lire en entier, un contenu avec lequel on joue, ou un parcours qu'on ne doit pas perdre | `DialogContent placement="bottom-sheet"` (celle du résultat) : monte du bas sur téléphone, centrée sur ordinateur, fermée par la croix | **éditorial** : italique, barre violette, sous-titre en capitales |
+
+- Fenêtres : résultat, « Comment jouer ? », calcul du score, connexion et bienvenue du compte (on y va chercher un code dans sa messagerie : pas de fermeture par mégarde).
+- Tiroirs : saisie, grille solution, et dans « Mes stats » le jour, « Mes thématiques », « Mon compte », « Mon nom », « Mon pays ».
+- Un tiroir peut s'ouvrir par-dessus une fenêtre (le pays depuis la bienvenue) ; jamais une fenêtre par-dessus une fenêtre.
+- Un tiroir dont la liste se filtre en tapant garde une hauteur fixe (`tall`) : il ne se tasse pas sous le clavier quand les résultats raccourcissent.
+- Aucun message flottant pour le compte (ni bienvenue, ni déconnexion, ni suppression) : le `toast flottant` reste réservé au jeu.
+
 ## Patterns éditoriaux nommés
 
 Référence visuelle : [`ResultScreen.tsx`](../src/features/game/components/ResultScreen.tsx).

@@ -28,6 +28,14 @@ export function PrivacyPage() {
           <LegalParagraph>{t("privacy.serverBody")}</LegalParagraph>
         </LegalSection>
 
+        <LegalSection title={t("privacy.accountTitle")}>
+          <LegalParagraph>{t("privacy.accountBody")}</LegalParagraph>
+        </LegalSection>
+
+        <LegalSection title={t("privacy.retentionTitle")}>
+          <LegalParagraph>{t("privacy.retentionBody")}</LegalParagraph>
+        </LegalSection>
+
         <LegalSection title={t("privacy.thirdPartyTitle")}>
           <LegalParagraph>{t("privacy.thirdPartyBody")}</LegalParagraph>
         </LegalSection>

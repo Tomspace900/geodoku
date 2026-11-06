@@ -21,7 +21,7 @@ L'epic reste ouverte jusqu'à la mise en prod du dernier lot.
 | --- | ----- | ------- |
 | 0 | [#154](https://github.com/Tomspace900/geodoku/issues/154) | Journal local des parties, invisible pour le joueur |
 | 1 | [#70](https://github.com/Tomspace900/geodoku/issues/70) | Convex en Europe, une ligne par partie, « Toi et les autres aujourd'hui », calques de la grille solution |
-| 2 | [#155](https://github.com/Tomspace900/geodoku/issues/155) | Compte facultatif : code par e-mail et Google, synchro entre appareils, nom de joueur, « Mes stats » |
+| 2 | [#155](https://github.com/Tomspace900/geodoku/issues/155) | Compte facultatif : code par e-mail et Google, synchro entre appareils, nom de joueur, « Mes stats » (développé le 2026-11-06) |
 | 3 | [#156](https://github.com/Tomspace900/geodoku/issues/156) | Ligues entre amis |
 
 - **Le journal d'abord** : l'historique ne commence qu'au jour où on l'enregistre.
@@ -512,6 +512,31 @@ Tranchés les 5 et 6 novembre 2026 sur maquettes dans la vraie app.
   Google dans ses comptes.
 - `AGENTS.md` : « Pas de compte » devient « Pas de compte obligatoire » ; stack
   (§2), backend (§6), events (§10).
+
+### Tranché au développement (2026-11-06)
+
+- **Thématiques** : la liste des maquettes, seuil de 6 cases gardé. Mesuré sur une
+  copie des grilles de prod (221 grilles) : « Histoire et politique », « Nature et
+  relief » et « Mers et océans » reviennent 2 à 2,5 fois par grille, un continent
+  0,2 à 0,4 fois. Au seuil de 6, un joueur quotidien voit ses premières thématiques
+  au 3ᵉ jour et 15 au bout d'un mois ; au seuil de 9, 7 au bout d'une semaine et un
+  continent en 1 à 2 mois. `THEME_MIN_CELLS` est la seule constante à changer.
+- **Un jour fini pèse 0,6 Ko** (0,7 au 9ᵉ décile), bien sous l'estimation : le
+  navigateur en garde 730 (`geodoku:finished-days-v1`).
+- **Mots refusés** : liste de départ dans `refusedWords.ts` (mots réservés à
+  l'équipe, insultes courtes refusées comme mots entiers, racines longues partout),
+  à compléter ; le dé ne tire jamais un nom refusé (test sur les 2 × 2 500 noms).
+- **Limite d'envoi des codes** : 4 d'affilée puis 10 par jour et par adresse, et
+  100 par jour en tout pour protéger le quota MailerSend. Le limiteur de Better Auth,
+  en mémoire, est désactivé (inutile sur Convex).
+- **Un code renvoyé reste le même** tant qu'il vaut (stocké chiffré) : un renvoi
+  refusé n'invalide pas celui déjà reçu.
+- **Partie locale du jour sans ligne serveur** : elle reste locale à la connexion
+  (on ne la ferait pas entrer à moitié dans la répartition). Les entrées passées
+  importées sont vérifiées contre la grille du jour ; elles n'entrent ni dans les
+  cohortes, ni dans l'admin, ni dans la surveillance.
+- **Effacement après 3 ans** : cron hebdomadaire, même geste qu'une suppression.
+- **Budget bundle** relevé de 280 à 300 KiB : le client Better Auth est à la racine.
 
 ## Lot 3 — Ligues entre amis (#156)
 
