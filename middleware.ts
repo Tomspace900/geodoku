@@ -28,7 +28,14 @@ import {
  * que des chemins sans langue : `/fr/…` et `/en/…` ne passent jamais ici.
  */
 export const config = {
-  matcher: ["/", "/about", "/privacy", "/changelog", "/archive/:path*"],
+  matcher: [
+    "/",
+    "/about",
+    "/privacy",
+    "/changelog",
+    "/stats",
+    "/archive/:path*",
+  ],
 };
 
 export default function middleware(

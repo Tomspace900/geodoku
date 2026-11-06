@@ -1,3 +1,5 @@
+import { ChartColumnBig } from "lucide-react";
+import { Link } from "react-router";
 import { AppMark } from "@/components/AppMark";
 import { DisplayHeader } from "@/components/editorial/DisplayHeader";
 import { formatGridDateLabel } from "@/features/game/logic/gridDateLabel";
@@ -12,7 +14,7 @@ type Props = {
 };
 
 export function Header({ lives, date, gridNumber }: Props) {
-  const { locale } = useLocale();
+  const { locale, localizedPath } = useLocale();
   const t = useT();
 
   const dateLabel = formatGridDateLabel(date, locale);
@@ -37,7 +39,18 @@ export function Header({ lives, date, gridNumber }: Props) {
         accentBar={eyebrow !== undefined}
       />
 
-      <LivesMeter lives={lives} />
+      <div className="flex items-center gap-3">
+        <LivesMeter lives={lives} />
+        {/* « Mes stats » (#155) : la même entrée pour tous, connecté ou non. */}
+        <Link
+          to={localizedPath("/stats")}
+          aria-label={t("stats.iconLabel")}
+          title={t("stats.iconLabel")}
+          className="-mr-1.5 rounded-md p-1.5 text-on-surface-variant transition-colors hover:text-on-surface focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-on-surface/20"
+        >
+          <ChartColumnBig className="size-5" aria-hidden />
+        </Link>
+      </div>
     </header>
   );
 }

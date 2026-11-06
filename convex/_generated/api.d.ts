@@ -33,6 +33,7 @@ import type * as poolOperations from "../poolOperations.js";
 import type * as rateLimit from "../rateLimit.js";
 import type * as scheduling from "../scheduling.js";
 import type * as seed from "../seed.js";
+import type * as stats from "../stats.js";
 import type * as wipe from "../wipe.js";
 
 import type {
@@ -67,6 +68,7 @@ declare const fullApi: ApiFromModules<{
   rateLimit: typeof rateLimit;
   scheduling: typeof scheduling;
   seed: typeof seed;
+  stats: typeof stats;
   wipe: typeof wipe;
 }>;
 

@@ -61,11 +61,15 @@ export type ScoreBreakdown = {
   livesCapacity: number;
 };
 
+/**
+ * `cohortComplete` suit le mode par défaut ; « Mes stats » le force pour une
+ * partie quotidienne d'un jour passé, dont la cohorte est close (#155).
+ */
 export function computeScoreBreakdown(
   state: Pick<GameState, "mode" | "cells" | "lives">,
   distribution: Record<string, CellGuessDistribution> | undefined,
+  cohortComplete = isCohortComplete(state.mode),
 ): ScoreBreakdown {
-  const cohortComplete = isCohortComplete(state.mode);
   const shares: number[] = [];
   let filledCount = 0;
   let pending = false;

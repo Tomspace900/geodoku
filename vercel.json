@@ -3,6 +3,8 @@
   "cleanUrls": true,
   "trailingSlash": false,
   "rewrites": [
+    { "source": "/fr/stats", "destination": "/app-shell" },
+    { "source": "/en/stats", "destination": "/app-shell" },
     { "source": "/fr/archive/:path*", "destination": "/app-shell" },
     { "source": "/en/archive/:path*", "destination": "/app-shell" },
     { "source": "/admin/:path*", "destination": "/app-shell" }

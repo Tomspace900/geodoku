@@ -80,6 +80,12 @@ describe("middleware de langue", () => {
     expect(response.headers.get("Set-Cookie")).toContain("Max-Age=0");
   });
 
+  it("envoie « Mes stats » sans langue vers celle du visiteur", () => {
+    expect(redirectFor("/stats", { "accept-language": "fr" })).toBe(
+      "https://www.geodoku.app/fr/stats",
+    );
+  });
+
   it("couvre chaque page publique sans langue", () => {
     expect(config.matcher).toEqual(
       expect.arrayContaining([...PRERENDERED_PAGES]),

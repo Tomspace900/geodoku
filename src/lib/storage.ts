@@ -25,6 +25,11 @@ export const STORAGE_KEYS = {
    * purgé : c'est l'historique du joueur. localStorage.
    */
   history: "geodoku:history-v1",
+  /**
+   * Jours finis lus par « Mes stats » (#155) : contraintes et répartition
+   * finale, qui ne changent plus. Simple cache, plafonné. localStorage.
+   */
+  finishedDays: "geodoku:finished-days-v1",
   /** Parties d'entraînement (grilles passées), une entrée par date. localStorage. */
   training: "geodoku:training-v1",
   /** Affichage du panneau « Comment jouer ». localStorage. */
