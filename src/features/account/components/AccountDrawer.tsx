@@ -11,7 +11,7 @@ import { SheetDrawer } from "@/components/SheetDrawer";
 import { Button } from "@/components/ui/button";
 import { useLocale } from "@/i18n/LocaleContext";
 import { authClient } from "@/lib/authClient";
-import { useAccount } from "../AccountContext";
+import { forgetSessionOnDevice, useAccount } from "../AccountContext";
 import { useEmailCode } from "../hooks/useEmailCode";
 import type { SendOutcome } from "../logic/codeOutcome";
 import { CodeStep } from "./CodeStep";
@@ -105,6 +105,7 @@ export function AccountDrawer({
       return;
     }
     posthog?.capture("account_deleted");
+    forgetSessionOnDevice();
     reset();
     onClose();
   }

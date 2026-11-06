@@ -57,6 +57,12 @@ export const STORAGE_KEYS = {
    * `geodoku:auth_cookie` et `geodoku:auth_session_data`. localStorage.
    */
   authPrefix: "geodoku:auth",
+  /**
+   * Jusqu'où le journal a déjà été rattaché au compte pendant cette session
+   * (#155), pour ne pas tout renvoyer à chaque chargement. Effacé à la
+   * déconnexion. localStorage.
+   */
+  accountSync: "geodoku:account-sync-v1",
   /** Token admin — éphémère, sessionStorage. */
   adminToken: "geodoku:admin-token",
   /** Horodatage du dernier rechargement sur chunk périmé. sessionStorage. */

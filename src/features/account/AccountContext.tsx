@@ -14,7 +14,13 @@ import { useLocale } from "@/i18n/LocaleContext";
 import { authClient } from "@/lib/authClient";
 import { STORAGE_KEYS, safeRemove } from "@/lib/storage";
 import { api } from "../../../convex/_generated/api";
-import { chunkEntries } from "./logic/syncChunks";
+import {
+  chunkEntries,
+  clearSyncMarker,
+  entriesToSync,
+  loadSyncMarker,
+  saveSyncMarker,
+} from "./logic/syncChunks";
 
 export type AccountProfile = {
   email: string;
@@ -37,6 +43,16 @@ type AccountContextValue = {
   signOut: () => Promise<void>;
 };
 
+/**
+ * Aucune trace du compte sur l'appareil après une déconnexion ou une
+ * suppression, pas même une session expirée. Le journal, lui, reste au joueur.
+ */
+export function forgetSessionOnDevice(): void {
+  safeRemove(`${STORAGE_KEYS.authPrefix}_cookie`);
+  safeRemove(`${STORAGE_KEYS.authPrefix}_session_data`);
+  clearSyncMarker();
+}
+
 const AccountContext = createContext<AccountContextValue | null>(null);
 
 /**
@@ -48,6 +64,7 @@ export function AccountProvider({ children }: { children: ReactNode }) {
   const { locale } = useLocale();
   const posthog = usePostHog();
   const { isLoading, isAuthenticated } = useConvexAuth();
+  const sessionId = authClient.useSession().data?.session.id ?? null;
   const syncAccount = useMutation(api.account.syncAccount);
   const profile = useQuery(api.account.me, isAuthenticated ? {} : "skip");
   const [synced, setSynced] = useState(false);
@@ -60,18 +77,22 @@ export function AccountProvider({ children }: { children: ReactNode }) {
       setSynced(false);
       return;
     }
-    if (synced || syncingRef.current) return;
+    if (synced || syncingRef.current || !sessionId) return;
     syncingRef.current = true;
     (async () => {
       let isNew = false;
       let attached = 0;
       try {
+        const journal = loadHistory();
+        const pending = entriesToSync(journal, loadSyncMarker(), sessionId);
         // Un appel par tranche : le premier crée le profil s'il manque.
-        for (const entries of chunkEntries(loadHistory())) {
+        for (const entries of chunkEntries(pending)) {
           const result = await syncAccount({ entries, locale });
           isNew ||= result.isNew;
           attached += result.attached;
         }
+        const last = journal.at(-1);
+        if (last) saveSyncMarker({ session: sessionId, through: last.date });
         if (isNew) {
           setWelcome({ attached });
           // Anonyme : ni identifiant ni e-mail, seulement le fait.
@@ -85,14 +106,12 @@ export function AccountProvider({ children }: { children: ReactNode }) {
         setSynced(true);
       }
     })();
-  }, [isAuthenticated, synced, syncAccount, locale]);
+  }, [isAuthenticated, synced, syncAccount, locale, sessionId]);
 
   const signOut = useCallback(async () => {
     setWelcome(null);
     await authClient.signOut();
-    // Aucune trace du compte sur l'appareil, pas même une session expirée.
-    safeRemove(`${STORAGE_KEYS.authPrefix}_cookie`);
-    safeRemove(`${STORAGE_KEYS.authPrefix}_session_data`);
+    forgetSessionOnDevice();
   }, []);
 
   const value: AccountContextValue = {
