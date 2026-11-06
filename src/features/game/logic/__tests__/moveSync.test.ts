@@ -4,9 +4,12 @@ import {
   appendMove,
   isMoveSyncSettled,
   nextPendingMove,
+  resumeAccountSync,
   sanitizeMoveSync,
   startMoveSync,
   stopMoveSync,
+  syncedMoveCount,
+  toAccountSync,
 } from "../moveSync";
 
 const DATE = "2026-11-03";
@@ -79,5 +82,42 @@ describe("sanitizeMoveSync", () => {
         moves: [{ cellKey: "3,3", countryCode: "FRA" }],
       }),
     ).toBeNull();
+  });
+});
+
+describe("file d'une partie du compte (#155)", () => {
+  it("reprend la partie du serveur à la suite de ses coups", () => {
+    const sync = appendMove(resumeAccountSync("2026-11-06", 3), {
+      cellKey: "0,0",
+      countryCode: "FRA",
+    });
+    expect(nextPendingMove(sync)?.moveIndex).toBe(3);
+  });
+
+  it("acquitte un coup repris au bon rang", () => {
+    const sync = appendMove(resumeAccountSync("2026-11-06", 3), {
+      cellKey: "0,0",
+      countryCode: "FRA",
+    });
+    expect(nextPendingMove(ackMove(sync, 3))).toBeNull();
+  });
+
+  it("compte les coups acquis et à envoyer", () => {
+    expect(syncedMoveCount(resumeAccountSync("2026-11-06", 4))).toBe(4);
+  });
+
+  it("relit une file d'avant #155 comme anonyme, partie de zéro", () => {
+    const sync = sanitizeMoveSync({
+      version: 1,
+      date: "2026-11-06",
+      token: "00000000-0000-4000-8000-000000000001",
+      moves: [],
+      acked: 0,
+    });
+    expect([sync?.owner, sync?.base]).toEqual(["anon", 0]);
+  });
+
+  it("passe au compte une partie anonyme rattachée", () => {
+    expect(toAccountSync(startMoveSync("2026-11-06")).owner).toBe("account");
   });
 });

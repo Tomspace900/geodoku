@@ -1,7 +1,13 @@
-import { ConvexProvider, ConvexReactClient } from "convex/react";
+import {
+  type AuthClient,
+  ConvexBetterAuthProvider,
+} from "@convex-dev/better-auth/react";
+import { ConvexReactClient } from "convex/react";
 import type { Key, ReactNode } from "react";
+import { AccountProvider } from "@/features/account/AccountContext";
 import { ErrorBoundary } from "@/features/errors/components/ErrorBoundary";
 import { LocaleProvider } from "@/i18n/LocaleContext";
+import { authClient } from "@/lib/authClient";
 
 /**
  * Sous Node (pré-rendu, #139), le client reçoit une adresse factice : il ne se
@@ -16,17 +22,27 @@ const convex = import.meta.env.SSR
     })
   : new ConvexReactClient(import.meta.env.VITE_CONVEX_URL);
 
+// Les types du fournisseur ne connaissent pas le plugin `emailOTP` : le
+// client reste celui de Better Auth, seul son type est élargi.
+const providerAuthClient = authClient as unknown as AuthClient;
+
 type Props = {
   children: ReactNode;
   errorBoundaryKey: Key;
 };
 
+/**
+ * Le client Convex porte la session du compte facultatif (#155) : un joueur
+ * sans compte joue exactement comme avant, ses requêtes partent sans jeton.
+ */
 export function Providers({ children, errorBoundaryKey }: Props) {
   return (
-    <ConvexProvider client={convex}>
+    <ConvexBetterAuthProvider client={convex} authClient={providerAuthClient}>
       <LocaleProvider>
-        <ErrorBoundary key={errorBoundaryKey}>{children}</ErrorBoundary>
+        <AccountProvider>
+          <ErrorBoundary key={errorBoundaryKey}>{children}</ErrorBoundary>
+        </AccountProvider>
       </LocaleProvider>
-    </ConvexProvider>
+    </ConvexBetterAuthProvider>
   );
 }

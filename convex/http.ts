@@ -1,9 +1,21 @@
 import { httpRouter } from "convex/server";
 import { internal } from "./_generated/api";
 import { httpAction } from "./_generated/server";
+import {
+  authComponent,
+  createAuth,
+  LOCALE_HEADER,
+  PURPOSE_HEADER,
+} from "./auth";
 import { todayUTC, tomorrowUTC } from "./lib/dates";
 
 const http = httpRouter();
+
+// Routes Better Auth (#155), appelées depuis la page (autre domaine) : CORS,
+// avec les deux en-têtes qui portent la langue et l'objet du code.
+authComponent.registerRoutes(http, createAuth, {
+  cors: { allowedHeaders: [LOCALE_HEADER, PURPOSE_HEADER] },
+});
 
 /**
  * Health check public (sans auth, zéro PII) : renvoie l'existence des grilles

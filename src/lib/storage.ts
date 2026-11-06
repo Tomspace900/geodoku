@@ -52,6 +52,11 @@ export const STORAGE_KEYS = {
    * partie (#70). localStorage.
    */
   moveSync: "geodoku:move-sync-v1",
+  /**
+   * Préfixe des clés de session du compte (#155), tenues par Better Auth :
+   * `geodoku:auth_cookie` et `geodoku:auth_session_data`. localStorage.
+   */
+  authPrefix: "geodoku:auth",
   /** Token admin — éphémère, sessionStorage. */
   adminToken: "geodoku:admin-token",
   /** Horodatage du dernier rechargement sur chunk périmé. sessionStorage. */

@@ -9,3 +9,8 @@ allowBuilds:
   rolldown: true
 
 minimumReleaseAge: 1440
+
+# @convex-dev/better-auth tire convex-helpers en ^0.1.95 : la dernière exige
+# convex ≥ 1.46. On reste sur la dernière qui accepte notre convex (1.43).
+overrides:
+  convex-helpers: 0.1.124

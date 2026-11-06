@@ -20,9 +20,16 @@ type Props = {
    */
   hideTitle?: boolean;
   subtitle?: ReactNode;
+  /** Bouton d'action à droite du titre (le dé de « Mon pays »). */
+  action?: ReactNode;
   closeLabel: string;
   /** `lg` pour une grille et son anneau côte à côte sur ordinateur. */
   width?: "md" | "lg";
+  /**
+   * Hauteur fixe pour une liste qu'on filtre en tapant : le tiroir ne se
+   * tasse pas sous le clavier quand les résultats raccourcissent.
+   */
+  tall?: boolean;
   children: ReactNode;
 };
 
@@ -39,8 +46,10 @@ export function SheetDrawer({
   title,
   hideTitle = false,
   subtitle,
+  action,
   closeLabel,
   width = "md",
+  tall = false,
   children,
 }: Props) {
   return (
@@ -51,6 +60,7 @@ export function SheetDrawer({
         className={cn(
           "mx-auto mt-10 flex max-h-[94svh] w-full flex-col overflow-x-clip pb-[env(safe-area-inset-bottom)] sm:mt-24",
           width === "md" ? "sm:max-w-lg" : "sm:max-w-3xl",
+          tall && "h-[88svh] sm:h-[min(680px,88svh)]",
         )}
       >
         <DrawerClose asChild>
@@ -64,15 +74,23 @@ export function SheetDrawer({
             <X aria-hidden />
           </Button>
         </DrawerClose>
-        <div className={cn("px-5 pt-3", hideTitle ? "sr-only" : "pb-2")}>
-          <DrawerTitle className="font-serif text-lg font-medium leading-snug text-on-surface">
-            {title}
-          </DrawerTitle>
-          {subtitle && (
-            <DrawerDescription className="mt-1 text-xs text-on-surface-variant">
-              {subtitle}
-            </DrawerDescription>
+        <div
+          className={cn(
+            "flex items-start justify-between gap-3 px-5 pt-3 sm:pr-14",
+            hideTitle ? "sr-only" : "pb-2",
           )}
+        >
+          <div className="min-w-0">
+            <DrawerTitle className="font-serif text-lg font-medium leading-snug text-on-surface">
+              {title}
+            </DrawerTitle>
+            {subtitle && (
+              <DrawerDescription className="mt-1 text-xs text-on-surface-variant">
+                {subtitle}
+              </DrawerDescription>
+            )}
+          </div>
+          {action}
         </div>
         <div className="flex min-h-0 flex-1 flex-col overflow-y-auto px-5 pb-8">
           {children}

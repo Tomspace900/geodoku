@@ -1,27 +1,157 @@
-import { ConvexError } from "convex/values";
+import {
+  type AuthFunctions,
+  createClient,
+  type GenericCtx,
+} from "@convex-dev/better-auth";
+import { convex, crossDomain } from "@convex-dev/better-auth/plugins";
+import { APIError } from "better-auth/api";
+import { type BetterAuthOptions, betterAuth } from "better-auth/minimal";
+import { emailOTP } from "better-auth/plugins";
+import { components, internal } from "./_generated/api";
+import type { DataModel } from "./_generated/dataModel";
+import authConfig from "./auth.config";
+import { deliverCodeEmail } from "./authEmail";
+import {
+  buildCodeEmail,
+  type CodeEmailLocale,
+  type CodeEmailPurpose,
+} from "./lib/codeEmail";
 
 /**
- * Constant-time string comparison.
- * Avoids timing side-channels when validating the admin token in V8 runtime
- * (Node's crypto.timingSafeEqual is not available in Convex queries).
+ * Compte facultatif (#155) : Better Auth dans un composant Convex, code par
+ * e-mail et Google. Réglages par défaut, sauf ce que la décision fixe : un
+ * code de 6 chiffres, valable 5 minutes, 5 essais ; aucune donnée de profil
+ * Google reprise (ni nom, ni photo) ; suppression en libre-service.
  */
-export function safeEqual(a: string, b: string): boolean {
-  if (a.length !== b.length) return false;
-  let mismatch = 0;
-  for (let i = 0; i < a.length; i++) {
-    mismatch |= a.charCodeAt(i) ^ b.charCodeAt(i);
-  }
-  return mismatch === 0;
-}
 
 /**
- * Throws ConvexError("Unauthorized") if the provided token does not match
- * the ADMIN_TOKEN environment variable. To be called as the first line of
- * any admin-only query/mutation/action.
+ * La page envoie sa langue et l'objet du code dans deux en-têtes : la seule
+ * entrée de Better Auth vers l'envoi est `sendVerificationOTP`, sans champ
+ * libre. Ils sont autorisés par le CORS des routes (`http.ts`).
  */
-export function checkAdminToken(provided: string | undefined): void {
-  const expected = process.env.ADMIN_TOKEN;
-  if (!expected || !provided || !safeEqual(provided, expected)) {
-    throw new ConvexError("Unauthorized");
-  }
+export const LOCALE_HEADER = "x-geodoku-locale";
+export const PURPOSE_HEADER = "x-geodoku-purpose";
+
+const authFunctions: AuthFunctions = internal.auth;
+
+export const authComponent = createClient<DataModel>(components.betterAuth, {
+  authFunctions,
+  triggers: {
+    user: {
+      // Même transaction que la suppression : le profil part avec le compte,
+      // les parties sont détachées juste après (`account.detachGames`).
+      onDelete: async (ctx, doc) => {
+        const profile = await ctx.db
+          .query("profiles")
+          .withIndex("by_user_id", (q) => q.eq("userId", doc._id))
+          .unique();
+        if (profile) await ctx.db.delete(profile._id);
+        await ctx.scheduler.runAfter(0, internal.account.detachGames, {
+          userId: doc._id,
+        });
+      },
+    },
+  },
+});
+
+export const { onCreate, onUpdate, onDelete } = authComponent.triggersApi();
+
+/** Origines de la page (`SITE_URL`) et, en dev, d'autres ports ou un téléphone. */
+function siteOrigins(): string[] {
+  return [
+    process.env.SITE_URL,
+    ...(process.env.EXTRA_TRUSTED_ORIGINS ?? "").split(","),
+  ]
+    .map((origin) => origin?.trim())
+    .filter((origin): origin is string => Boolean(origin));
 }
+
+function headerOf(
+  endpointCtx: { headers?: Headers; request?: Request } | undefined,
+  name: string,
+): string | null {
+  return (
+    endpointCtx?.headers?.get(name) ??
+    endpointCtx?.request?.headers.get(name) ??
+    null
+  );
+}
+
+export const createAuth = (ctx: GenericCtx<DataModel>) => {
+  const siteUrl = process.env.SITE_URL ?? "http://localhost:5173";
+  const googleId = process.env.GOOGLE_CLIENT_ID;
+  const googleSecret = process.env.GOOGLE_CLIENT_SECRET;
+
+  return betterAuth({
+    baseURL: process.env.CONVEX_SITE_URL,
+    secret: process.env.BETTER_AUTH_SECRET,
+    trustedOrigins: siteOrigins(),
+    database: authComponent.adapter(ctx),
+    user: { deleteUser: { enabled: true } },
+    account: {
+      // Un même e-mail par code puis par Google : un seul compte.
+      accountLinking: { enabled: true, trustedProviders: ["google"] },
+    },
+    // Le limiteur de Better Auth garde ses compteurs en mémoire, que les
+    // fonctions Convex ne partagent pas : les envois sont limités par
+    // `authEmail.reserveCodeSend`, les essais par code par `allowedAttempts`.
+    rateLimit: { enabled: false },
+    databaseHooks: {
+      user: {
+        create: {
+          // Rien du profil Google : le nom est tiré au rattachement
+          // (`account.syncAccount`), la photo n'est jamais gardée.
+          before: async (user) => ({
+            data: { ...user, name: "", image: null },
+          }),
+        },
+      },
+    },
+    ...(googleId && googleSecret
+      ? {
+          socialProviders: {
+            google: { clientId: googleId, clientSecret: googleSecret },
+          },
+        }
+      : {}),
+    plugins: [
+      crossDomain({ siteUrl }),
+      convex({ authConfig }),
+      emailOTP({
+        otpLength: 6,
+        expiresIn: 300,
+        allowedAttempts: 5,
+        // Un code renvoyé reste le même tant qu'il vaut : un renvoi refusé
+        // par la limite n'invalide pas celui déjà reçu.
+        storeOTP: "encrypted",
+        resendStrategy: "reuse",
+        sendVerificationOTP: async ({ email, otp, type }, endpointCtx) => {
+          if (type !== "sign-in") return;
+          if (!("runMutation" in ctx)) {
+            throw new Error("Codes are sent from an HTTP action only");
+          }
+          const allowed = await ctx.runMutation(
+            internal.authEmail.reserveCodeSend,
+            { email },
+          );
+          if (!allowed) {
+            throw new APIError("TOO_MANY_REQUESTS", {
+              code: "TOO_MANY_CODES",
+              message: "Too many codes requested",
+            });
+          }
+          const locale: CodeEmailLocale =
+            headerOf(endpointCtx, LOCALE_HEADER) === "en" ? "en" : "fr";
+          const purpose: CodeEmailPurpose =
+            headerOf(endpointCtx, PURPOSE_HEADER) === "delete-account"
+              ? "delete-account"
+              : "sign-in";
+          await deliverCodeEmail(
+            email,
+            buildCodeEmail({ otp, locale, purpose }),
+          );
+        },
+      }),
+    ],
+  } satisfies BetterAuthOptions);
+};

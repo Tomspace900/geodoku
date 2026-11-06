@@ -10,7 +10,8 @@ import {
 import type { Doc } from "./_generated/dataModel";
 import type { MutationCtx, QueryCtx } from "./_generated/server";
 import { mutation, query } from "./_generated/server";
-import { cellKeyValidator } from "./cellKeys";
+import { authComponent } from "./auth";
+import { type CellKey, cellKeyValidator } from "./cellKeys";
 import {
   cellCountsValidator,
   incrementCellStat,
@@ -43,6 +44,8 @@ const rejectionReason = v.union(
   v.literal("game_over"),
   v.literal("cell_unavailable"),
   v.literal("rate_limited"),
+  /** Coup d'un compte sans session valide : rejoué une fois reconnecté. */
+  v.literal("signed_out"),
 );
 type RejectionReason = typeof rejectionReason.type;
 
@@ -60,7 +63,7 @@ const playMoveResult = v.union(
 );
 type PlayMoveResult = typeof playMoveResult.type;
 
-async function hashToken(token: string): Promise<string> {
+export async function hashToken(token: string): Promise<string> {
   const digest = await crypto.subtle.digest(
     "SHA-256",
     new TextEncoder().encode(token),
@@ -77,6 +80,20 @@ async function findGame(
   return await ctx.db
     .query("games")
     .withIndex("by_owner_token_hash", (q) => q.eq("owner.tokenHash", tokenHash))
+    .unique();
+}
+
+/** La partie d'un compte pour une date : une par compte et par jour. */
+export async function findAccountGame(
+  ctx: QueryCtx | MutationCtx,
+  userId: string,
+  date: string,
+): Promise<Doc<"games"> | null> {
+  return await ctx.db
+    .query("games")
+    .withIndex("by_owner_user_id_and_date", (q) =>
+      q.eq("owner.userId", userId).eq("date", date),
+    )
     .unique();
 }
 
@@ -128,54 +145,113 @@ export const playMove = mutation({
     const game = await findGame(ctx, tokenHash);
     if (game && game.date !== args.date) return rejected("unknown_game");
 
-    const record: GameRecord = game
-      ? { cells: game.cells, failed: game.failed }
-      : emptyGameRecord();
-    const expected = recordMoveCount(record);
-    if (args.moveIndex < expected) return { kind: "duplicate" };
-    if (args.moveIndex > expected) {
-      return rejected(game ? "out_of_order" : "unknown_game");
-    }
-    // Après la recherche des doublons : un coup d'hier déjà compté reste acquitté.
-    if (args.date !== todayUTC()) return rejected("date_mismatch");
-
-    const allowed = game
-      ? await limit(ctx, "move", tokenHash)
-      : (await limit(ctx, "createGamePerMinute", args.clientId)) &&
-        (await limit(ctx, "createGamePerDay", args.clientId));
-    if (!allowed) return rejected("rate_limited");
-
-    const { validAnswers } = await requireGridSnapshot(ctx, args.date);
-    const outcome = applyMove(
-      record,
-      args.cellKey,
-      args.countryCode,
-      validAnswers,
-    );
-    if (outcome.kind === "refused") return rejected(outcome.reason);
-
-    if (game) {
-      await ctx.db.patch(game._id, outcome.record);
-    } else {
-      await ctx.db.insert("games", {
-        date: args.date,
-        owner: { kind: "anon", tokenHash },
-        ...outcome.record,
-        origin: "live",
-      });
-    }
-    if (outcome.kind === "failure") {
-      return { kind: "applied", outcome: "failure" };
-    }
-    const stat = await incrementCellStat(
-      ctx,
-      args.date,
-      args.cellKey,
-      args.countryCode,
-    );
-    return { kind: "applied", outcome: "success", ...stat };
+    return await applyDailyMove(ctx, {
+      ...args,
+      game,
+      owner: { kind: "anon", tokenHash },
+      allow: async (creating) =>
+        creating
+          ? (await limit(ctx, "createGamePerMinute", args.clientId)) &&
+            (await limit(ctx, "createGamePerDay", args.clientId))
+          : await limit(ctx, "move", tokenHash),
+    });
   },
 });
+
+/**
+ * Le même coup pour un joueur connecté (#155) : la partie est celle du
+ * compte pour la date, une par compte et par jour, partagée par tous ses
+ * appareils. Le serveur fait foi ; le navigateur n'en garde qu'un cache.
+ */
+export const playAccountMove = mutation({
+  args: {
+    date: v.string(),
+    moveIndex: v.number(),
+    cellKey: cellKeyValidator,
+    countryCode: v.string(),
+  },
+  returns: playMoveResult,
+  handler: async (ctx, args): Promise<PlayMoveResult> => {
+    assertCanonicalDate(args.date);
+    assertCountryCode(args.countryCode);
+    if (!Number.isInteger(args.moveIndex) || args.moveIndex < 0) {
+      return rejected("out_of_order");
+    }
+    const user = await authComponent.safeGetAuthUser(ctx);
+    if (!user) return rejected("signed_out");
+    const game = await findAccountGame(ctx, user._id, args.date);
+    return await applyDailyMove(ctx, {
+      ...args,
+      game,
+      owner: { kind: "user", userId: user._id },
+      // Une partie par compte et par jour : pas de seau de création à part.
+      allow: async () => await limit(ctx, "move", `user:${user._id}`),
+    });
+  },
+});
+
+type GameOwner = Doc<"games">["owner"];
+
+/**
+ * Rejoue un coup sur la ligne de la partie, avec la règle du client. Le rang
+ * attendu se lit dans la ligne : un coup déjà appliqué renvoie `duplicate`
+ * sans rien écrire, un coup en avance est refusé.
+ */
+async function applyDailyMove(
+  ctx: MutationCtx,
+  args: {
+    date: string;
+    moveIndex: number;
+    cellKey: CellKey;
+    countryCode: string;
+    game: Doc<"games"> | null;
+    owner: GameOwner;
+    allow: (creating: boolean) => Promise<boolean>;
+  },
+): Promise<PlayMoveResult> {
+  const { game } = args;
+  const record: GameRecord = game
+    ? { cells: game.cells, failed: game.failed }
+    : emptyGameRecord();
+  const expected = recordMoveCount(record);
+  if (args.moveIndex < expected) return { kind: "duplicate" };
+  if (args.moveIndex > expected) {
+    return rejected(game ? "out_of_order" : "unknown_game");
+  }
+  // Après la recherche des doublons : un coup d'hier déjà compté reste acquitté.
+  if (args.date !== todayUTC()) return rejected("date_mismatch");
+  if (!(await args.allow(game === null))) return rejected("rate_limited");
+
+  const { validAnswers } = await requireGridSnapshot(ctx, args.date);
+  const outcome = applyMove(
+    record,
+    args.cellKey,
+    args.countryCode,
+    validAnswers,
+  );
+  if (outcome.kind === "refused") return rejected(outcome.reason);
+
+  if (game) {
+    await ctx.db.patch(game._id, outcome.record);
+  } else {
+    await ctx.db.insert("games", {
+      date: args.date,
+      owner: args.owner,
+      ...outcome.record,
+      origin: "live",
+    });
+  }
+  if (outcome.kind === "failure") {
+    return { kind: "applied", outcome: "failure" };
+  }
+  const stat = await incrementCellStat(
+    ctx,
+    args.date,
+    args.cellKey,
+    args.countryCode,
+  );
+  return { kind: "applied", outcome: "success", ...stat };
+}
 
 async function readGridAnswers(
   ctx: QueryCtx,
@@ -188,14 +264,20 @@ async function readGridAnswers(
   return grid ? await getGridAnswers(ctx, grid) : null;
 }
 
+/**
+ * Les parties jouées d'une date. Les entrées importées d'un journal (#155)
+ * n'y entrent pas : jamais validées coup par coup, elles ne servent qu'à
+ * « Mes stats » de leur compte.
+ */
 export async function readGamesForDate(
   ctx: QueryCtx,
   date: string,
 ): Promise<Doc<"games">[]> {
-  return await ctx.db
+  const games = await ctx.db
     .query("games")
     .withIndex("by_date", (q) => q.eq("date", date))
     .take(MAX_COHORT_GAMES);
+  return games.filter((game) => game.origin === "live");
 }
 
 const cohortValidator = v.object({

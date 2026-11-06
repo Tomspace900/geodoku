@@ -13,15 +13,26 @@ import { failedAttemptCount } from "./lives";
  *
  * Le jeton, tiré au premier coup, identifie la partie côté serveur (qui n'en
  * garde que le hash). Il ne sert qu'à cette partie.
+ *
+ * Pour un joueur connecté (#155), la partie est celle du compte : les coups
+ * partent par `playAccountMove`, sans jeton. Une partie anonyme commencée
+ * avant la connexion passe au compte une fois rattachée. Quand l'appareil
+ * reprend la partie du serveur (jouée ailleurs), la file repart de ses coups
+ * (`base`), dont on ne connaît que le nombre.
  */
 
 export type SyncedMove = { cellKey: CellKey; countryCode: string };
 
+export type MoveSyncOwner = "anon" | "account";
+
 export type MoveSync = {
   date: string;
   token: string;
+  owner: MoveSyncOwner;
+  /** Coups déjà au serveur avant le premier de `moves` (partie reprise). */
+  base: number;
   moves: SyncedMove[];
-  /** Coups acquittés par le serveur, dans l'ordre : le rang du prochain envoi. */
+  /** Coups de `moves` acquittés par le serveur, dans l'ordre. */
   acked: number;
   /**
    * Refus définitif du serveur (autre jour, partie inconnue, rate limit) : la
@@ -45,14 +56,37 @@ export function movesPlayed(
   );
 }
 
-export function startMoveSync(date: string): MoveSync {
+export function startMoveSync(
+  date: string,
+  owner: MoveSyncOwner = "anon",
+): MoveSync {
   return {
     date,
     token: createBrowserUuidV4(),
+    owner,
+    base: 0,
     moves: [],
     acked: 0,
     stopped: false,
   };
+}
+
+/**
+ * La partie reprise du serveur (compte, jouée sur un autre appareil) : ses
+ * `played` coups sont acquis, les suivants partiront à leur suite.
+ */
+export function resumeAccountSync(date: string, played: number): MoveSync {
+  return { ...startMoveSync(date, "account"), base: played };
+}
+
+/** Coups de la partie connus de la file : acquis et à envoyer. */
+export function syncedMoveCount(sync: MoveSync): number {
+  return sync.base + sync.moves.length;
+}
+
+/** La partie anonyme rattachée au compte : la suite part par le compte. */
+export function toAccountSync(sync: MoveSync): MoveSync {
+  return { ...sync, owner: "account" };
 }
 
 export function appendMove(sync: MoveSync, move: SyncedMove): MoveSync {
@@ -61,7 +95,7 @@ export function appendMove(sync: MoveSync, move: SyncedMove): MoveSync {
 
 /** Un accusé, même en double ou hors d'ordre, ne fait jamais reculer. */
 export function ackMove(sync: MoveSync, moveIndex: number): MoveSync {
-  return { ...sync, acked: Math.max(sync.acked, moveIndex + 1) };
+  return { ...sync, acked: Math.max(sync.acked, moveIndex - sync.base + 1) };
 }
 
 export function stopMoveSync(sync: MoveSync): MoveSync {
@@ -73,7 +107,7 @@ export function nextPendingMove(
   sync: MoveSync,
 ): { moveIndex: number; move: SyncedMove } | null {
   if (sync.stopped || sync.acked >= sync.moves.length) return null;
-  return { moveIndex: sync.acked, move: sync.moves[sync.acked] };
+  return { moveIndex: sync.base + sync.acked, move: sync.moves[sync.acked] };
 }
 
 /**
@@ -110,9 +144,16 @@ export function sanitizeMoveSync(raw: unknown): MoveSync | null {
   ) {
     return null;
   }
+  // Absents avant #155 : une partie anonyme, partie de zéro.
+  const base = o.base ?? 0;
+  if (typeof base !== "number" || !Number.isInteger(base) || base < 0) {
+    return null;
+  }
   return {
     date: o.date,
     token: o.token,
+    owner: o.owner === "account" ? "account" : "anon",
+    base,
     moves: o.moves,
     acked,
     stopped: o.stopped === true,

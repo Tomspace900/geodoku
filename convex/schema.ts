@@ -55,16 +55,34 @@ export default defineSchema({
   // Une ligne par partie de la grille du jour (#70), au format du journal
   // local : ni vies, ni statut, ni score, tout se recalcule (`gameRecord.ts`).
   // Un anonyme est identifié par le hash d'un jeton propre à la partie : rien
-  // ne relie deux parties d'un même joueur. Le lot 2 élargira `owner` aux comptes.
+  // ne relie deux parties d'un même joueur. Un compte (#155) l'est par son id
+  // Better Auth, une partie par jour. `import` : entrée du journal d'un
+  // appareil sans ligne serveur, copiée au rattachement ; elle ne compte que
+  // pour « Mes stats », jamais dans les cohortes ni l'admin.
   games: defineTable({
     date: v.string(),
-    owner: v.object({ kind: v.literal("anon"), tokenHash: v.string() }),
+    owner: v.union(
+      v.object({ kind: v.literal("anon"), tokenHash: v.string() }),
+      v.object({ kind: v.literal("user"), userId: v.string() }),
+    ),
     cells: v.array(v.union(v.string(), v.null())),
     failed: v.array(v.number()),
-    origin: v.literal("live"),
+    origin: v.union(v.literal("live"), v.literal("import")),
   })
     .index("by_date", ["date"])
-    .index("by_owner_token_hash", ["owner.tokenHash"]),
+    .index("by_owner_token_hash", ["owner.tokenHash"])
+    .index("by_owner_user_id_and_date", ["owner.userId", "date"]),
+
+  // Profil d'un compte (#155) : le nom (« pseudo » ici, « nom » à l'écran) et
+  // le pays facultatif. L'e-mail et les sessions vivent chez Better Auth.
+  // Aucun score : tout se recalcule depuis les parties.
+  profiles: defineTable({
+    userId: v.string(),
+    pseudo: v.string(),
+    country: v.optional(v.string()),
+  })
+    .index("by_user_id", ["userId"])
+    .index("by_pseudo", ["pseudo"]),
 
   // Nombre de joueurs par pays, un document par case et par jour. Seule donnée
   // dérivée stockée, tenue dans la même transaction que le coup : la lire coûte

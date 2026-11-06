@@ -146,10 +146,12 @@ export async function readDailyGameStats(ctx: QueryCtx, days: number) {
   let budget = MAX_TREND_GAMES;
   for (const grid of grids) {
     if (budget <= 0) break;
-    const games = await ctx.db
-      .query("games")
-      .withIndex("by_date", (q) => q.eq("date", grid.date))
-      .take(budget);
+    const games = (
+      await ctx.db
+        .query("games")
+        .withIndex("by_date", (q) => q.eq("date", grid.date))
+        .take(budget)
+    ).filter((game) => game.origin === "live");
     budget -= games.length;
     if (games.length === 0) continue;
     const validAnswers = (await getGridAnswers(ctx, grid)) ?? {};

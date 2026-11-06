@@ -8,7 +8,7 @@ import {
   readGridCellMetrics,
   readPoolStats,
 } from "./adminReadModel";
-import { checkAdminToken } from "./auth";
+import { checkAdminToken } from "./adminToken";
 import {
   getActivePoolCandidatesByStatus,
   getCandidateAnswers,

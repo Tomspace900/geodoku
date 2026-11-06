@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { safeEqual } from "../auth";
+import { safeEqual } from "../adminToken";
 
 describe("safeEqual", () => {
   it("returns true for two identical strings", () => {
