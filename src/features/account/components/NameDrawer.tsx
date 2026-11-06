@@ -78,6 +78,7 @@ export function NameDrawer({
       >
         <NameField
           label={t("account.myName")}
+          hideLabel
           value={value}
           onChange={(next) => {
             setValue(next);

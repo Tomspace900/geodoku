@@ -9,6 +9,7 @@
  */
 
 import type * as account from "../account.js";
+import type * as accountErasure from "../accountErasure.js";
 import type * as adminGridOperations from "../adminGridOperations.js";
 import type * as adminReadModel from "../adminReadModel.js";
 import type * as adminToken from "../adminToken.js";
@@ -48,6 +49,7 @@ import type {
 
 declare const fullApi: ApiFromModules<{
   account: typeof account;
+  accountErasure: typeof accountErasure;
   adminGridOperations: typeof adminGridOperations;
   adminReadModel: typeof adminReadModel;
   adminToken: typeof adminToken;

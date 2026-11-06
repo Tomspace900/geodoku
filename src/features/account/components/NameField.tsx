@@ -19,8 +19,11 @@ export function NameField({
   onDraw,
   drawing = false,
   serverError = null,
+  hideLabel = false,
 }: {
   label: string;
+  /** Le titre du tiroir dit déjà « Mon nom » : l'étiquette n'est que lue. */
+  hideLabel?: boolean;
   value: string;
   onChange: (value: string) => void;
   onDraw: () => void;
@@ -33,7 +36,7 @@ export function NameField({
   const errorKey = pseudoErrorKey(value) ?? serverError;
   return (
     <div className="flex flex-col gap-1">
-      <label htmlFor={id}>
+      <label htmlFor={id} className={hideLabel ? "sr-only" : undefined}>
         <Eyebrow as="span">{label}</Eyebrow>
       </label>
       <div className="flex items-end gap-2">

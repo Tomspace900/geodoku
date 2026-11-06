@@ -13,6 +13,7 @@ import { components, internal } from "./_generated/api";
 import type { Doc } from "./_generated/dataModel";
 import type { MutationCtx, QueryCtx } from "./_generated/server";
 import { internalMutation, mutation, query } from "./_generated/server";
+import { forgetAccount } from "./accountErasure";
 import { authComponent } from "./auth";
 import { CELL_KEYS } from "./cellKeys";
 import { findAccountGame, hashToken } from "./games";
@@ -35,6 +36,10 @@ export const MAX_SYNC_ENTRIES = 60;
 const PSEUDO_DRAW_ATTEMPTS = 12;
 /** Parties détachées par transaction à la suppression d'un compte. */
 const DETACH_BATCH_SIZE = 200;
+/** Effacement après 3 ans sans partie (#155). */
+const INACTIVE_DAYS = 3 * 365;
+const PURGE_BATCH_SIZE = 100;
+const DAY_MS = 86_400_000;
 
 const COUNTRY_SET = new Set<string>(COUNTRY_CODES);
 
@@ -364,6 +369,64 @@ export const detachGames = internalMutation({
     }
     if (games.length === DETACH_BATCH_SIZE) {
       await ctx.scheduler.runAfter(0, internal.account.detachGames, args);
+    }
+    return null;
+  },
+});
+
+// ─── Effacement après 3 ans sans partie ─────────────────────────────────────
+
+/**
+ * Efface un compte sans passer par Better Auth (pas de session à vérifier) :
+ * ses sessions, son lien Google, l'utilisateur, puis ce que le compte laisse
+ * chez nous (`forgetAccount`), comme une suppression en libre-service.
+ */
+async function eraseAccount(ctx: MutationCtx, userId: string): Promise<void> {
+  for (const model of ["session", "account"] as const) {
+    await ctx.runMutation(components.betterAuth.adapter.deleteMany, {
+      input: { model, where: [{ field: "userId", value: userId }] },
+      paginationOpts: { numItems: 100, cursor: null },
+    });
+  }
+  await ctx.runMutation(components.betterAuth.adapter.deleteOne, {
+    input: { model: "user", where: [{ field: "_id", value: userId }] },
+  });
+  await forgetAccount(ctx, userId);
+}
+
+/**
+ * Un compte sans partie depuis 3 ans est effacé (#155), même geste qu'une
+ * suppression : ses parties restent, détachées. L'activité se lit dans la
+ * date de la dernière partie, sans champ dédié ; un compte sans partie, dans
+ * la date de son profil. Par lots, relancée par le cron hebdomadaire.
+ */
+export const purgeInactiveAccounts = internalMutation({
+  args: { cursor: v.union(v.string(), v.null()) },
+  returns: v.null(),
+  handler: async (ctx, args) => {
+    const cutoff = new Date(Date.now() - INACTIVE_DAYS * DAY_MS)
+      .toISOString()
+      .slice(0, 10);
+    const page = await ctx.db
+      .query("profiles")
+      .paginate({ numItems: PURGE_BATCH_SIZE, cursor: args.cursor });
+    for (const profile of page.page) {
+      const last = await ctx.db
+        .query("games")
+        .withIndex("by_owner_user_id_and_date", (q) =>
+          q.eq("owner.userId", profile.userId),
+        )
+        .order("desc")
+        .first();
+      const lastActive =
+        last?.date ??
+        new Date(profile._creationTime).toISOString().slice(0, 10);
+      if (lastActive < cutoff) await eraseAccount(ctx, profile.userId);
+    }
+    if (!page.isDone) {
+      await ctx.scheduler.runAfter(0, internal.account.purgeInactiveAccounts, {
+        cursor: page.continueCursor,
+      });
     }
     return null;
   },

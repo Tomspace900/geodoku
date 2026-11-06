@@ -9,6 +9,7 @@ import { type BetterAuthOptions, betterAuth } from "better-auth/minimal";
 import { emailOTP } from "better-auth/plugins";
 import { components, internal } from "./_generated/api";
 import type { DataModel } from "./_generated/dataModel";
+import { forgetAccount } from "./accountErasure";
 import authConfig from "./auth.config";
 import { deliverCodeEmail } from "./authEmail";
 import {
@@ -41,14 +42,7 @@ export const authComponent = createClient<DataModel>(components.betterAuth, {
       // Même transaction que la suppression : le profil part avec le compte,
       // les parties sont détachées juste après (`account.detachGames`).
       onDelete: async (ctx, doc) => {
-        const profile = await ctx.db
-          .query("profiles")
-          .withIndex("by_user_id", (q) => q.eq("userId", doc._id))
-          .unique();
-        if (profile) await ctx.db.delete(profile._id);
-        await ctx.scheduler.runAfter(0, internal.account.detachGames, {
-          userId: doc._id,
-        });
+        await forgetAccount(ctx, doc._id);
       },
     },
   },

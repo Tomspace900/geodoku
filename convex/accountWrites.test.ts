@@ -397,3 +397,42 @@ describe("parties importées", () => {
     expect(stats?.finishedGames).toBe(0);
   });
 });
+
+describe("effacement après 3 ans sans partie", () => {
+  it("efface un compte dont la dernière partie a plus de 3 ans", async () => {
+    const backend = createBackend();
+    const old = daysAgoUTC(1200);
+    await seedGrid(backend, old);
+    const { as } = await signIn(backend);
+    await as.mutation(api.account.syncAccount, {
+      entries: [entry(old, cellsWith(0, "FRA"))],
+      locale: "fr",
+    });
+    await backend.mutation(internal.account.purgeInactiveAccounts, {
+      cursor: null,
+    });
+    await backend.finishAllScheduledFunctions(() => {});
+    const [game] = await gamesOf(backend);
+    expect([await as.query(api.account.me, {}), game.owner.kind]).toEqual([
+      null,
+      "anon",
+    ]);
+  });
+
+  it("garde un compte qui a joué récemment", async () => {
+    const backend = createBackend();
+    const recent = daysAgoUTC(10);
+    await seedGrid(backend, recent);
+    const { as } = await signIn(backend);
+    await as.mutation(api.account.syncAccount, {
+      entries: [entry(recent, cellsWith(0, "FRA"))],
+      locale: "fr",
+    });
+    await backend.mutation(internal.account.purgeInactiveAccounts, {
+      cursor: null,
+    });
+    expect((await as.query(api.account.me, {}))?.email).toBe(
+      "camille@exemple.fr",
+    );
+  });
+});
