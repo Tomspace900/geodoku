@@ -69,4 +69,22 @@ describe("useScoreAnimation — total live après la révélation", () => {
     expect(result.current.displayTotal).toBe(886); // 450 + 336 + 100
     expect(result.current.finalTotal).toBe(886);
   });
+
+  it("figé (tiroir du jour de « Mes stats ») : total final d'emblée, sans séquence ni sursaut", () => {
+    const { result } = renderHook(() =>
+      useScoreAnimation({
+        gridValue: 450,
+        rarityValue: 341,
+        livesValue: 100,
+        ready: true,
+        animate: false,
+      }),
+    );
+
+    expect({
+      displayTotal: result.current.displayTotal,
+      done: result.current.done,
+      frames: frames.length,
+    }).toEqual({ displayTotal: 891, done: false, frames: 0 });
+  });
 });

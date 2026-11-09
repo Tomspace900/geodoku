@@ -45,6 +45,8 @@ type Props = {
   breakdown: ScoreBreakdown;
   /** Barème expliqué par la popup d'info : /1000 en daily, /900 à l'entraînement. */
   scale?: ScoreScale;
+  /** Un score relu (tiroir du jour de « Mes stats ») : affiché d'emblée, sans comptage ni rebond. */
+  still?: boolean;
 };
 
 const R_GRID = 46;
@@ -52,7 +54,11 @@ const R_BONUS = 58;
 /** Écart entre l'arc rareté et l'arc vies, en unités de tracé. */
 const ARC_GAP = 6;
 
-export function ScoreDisplay({ breakdown, scale = "daily" }: Props) {
+export function ScoreDisplay({
+  breakdown,
+  scale = "daily",
+  still = false,
+}: Props) {
   const t = useT();
   const { gridMax, gridValue, rarityMax, rarityValue, livesMax, livesValue } =
     computeScore(breakdown);
@@ -71,7 +77,13 @@ export function ScoreDisplay({ breakdown, scale = "daily" }: Props) {
     livesProgress,
     finalTotal,
     done,
-  } = useScoreAnimation({ gridValue, rarityValue, livesValue, ready });
+  } = useScoreAnimation({
+    gridValue,
+    rarityValue,
+    livesValue,
+    ready,
+    animate: !still,
+  });
 
   // Sursaut final du score, calqué sur le rebond du drapeau à la pose (Cell.tsx).
   const [scoreBounce, setScoreBounce] = useState(false);

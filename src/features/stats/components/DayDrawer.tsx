@@ -1,5 +1,5 @@
 import { ChevronLeft, ChevronRight } from "lucide-react";
-import { useEffect, useRef, useState } from "react";
+import { memo, useEffect, useRef, useState } from "react";
 import { Link } from "react-router";
 import { SheetDrawer } from "@/components/SheetDrawer";
 import { Button } from "@/components/ui/button";
@@ -20,20 +20,22 @@ type SlideProps = {
   result: DayResult;
   today: string;
   replayAllowed: boolean;
-  hasPrevious: boolean;
-  hasNext: boolean;
-  onPrevious: () => void;
-  onNext: () => void;
+  previous: string | null;
+  next: string | null;
+  onGo: (date: string) => void;
 };
 
-function DaySlide({
+/**
+ * Un jour : mémorisé, pour que le suivi du doigt (un rendu du tiroir chaque
+ * fois que la barre violette change de jour) ne redessine pas les grilles.
+ */
+const DaySlide = memo(function DaySlide({
   result,
   today,
   replayAllowed,
-  hasPrevious,
-  hasNext,
-  onPrevious,
-  onNext,
+  previous,
+  next,
+  onGo,
 }: SlideProps) {
   const { t, locale, localizedPath } = useLocale();
   const gridNumber = getGridNumberForDate(result.date);
@@ -45,8 +47,8 @@ function DaySlide({
           type="button"
           variant="ghost"
           size="icon"
-          onClick={onPrevious}
-          disabled={!hasPrevious}
+          onClick={() => previous && onGo(previous)}
+          disabled={previous === null}
           aria-label={t("stats.previousDay")}
           className="-ml-2 size-8"
         >
@@ -62,8 +64,8 @@ function DaySlide({
           type="button"
           variant="ghost"
           size="icon"
-          onClick={onNext}
-          disabled={!hasNext}
+          onClick={() => next && onGo(next)}
+          disabled={next === null}
           aria-label={t("stats.nextDay")}
           className="-mr-2 size-8"
         >
@@ -73,7 +75,8 @@ function DaySlide({
       <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-center sm:gap-10">
         {result.finished ? (
           <div className="flex shrink-0 justify-center">
-            <ScoreDisplay breakdown={result.breakdown} />
+            {/* Figé : glisser d'un jour à l'autre ne relance ni comptage ni rebond. */}
+            <ScoreDisplay breakdown={result.breakdown} still />
           </div>
         ) : (
           <p className="text-center text-xs text-on-surface-variant">
@@ -99,7 +102,7 @@ function DaySlide({
       )}
     </div>
   );
-}
+});
 
 type Props = {
   open: boolean;
@@ -133,21 +136,36 @@ export function DayDrawer({
   // pas dans une ref lue trop tôt.
   const [track, setTrack] = useState<HTMLDivElement | null>(null);
   const settleRef = useRef<number | null>(null);
+  const frameRef = useRef<number | null>(null);
   const instantRef = useRef(true);
+  // Un glissement lancé par le tiroir (tap sur une barre, chevron, ouverture) :
+  // la barre violette est déjà sur le jour visé, le défilement ne la déplace pas.
+  const steeringRef = useRef(false);
+  // Le jour sous le doigt, lu à chaque image : la barre violette le suit
+  // pendant le glissement, `onSelect` n'arrive qu'au repos. Il ne vaut que
+  // pour le jour choisi d'où il est parti (`from`) : un tap sur une barre
+  // reprend la main dès le rendu qui suit.
+  const [live, setLive] = useState<{
+    at: number;
+    from: string | null;
+  } | null>(null);
   const dates = recent.days
     .filter((day) => day.kind !== "none" && results.has(day.date))
     .map((day) => day.date);
   const index = selected ? Math.max(0, dates.indexOf(selected)) : 0;
+  const shown = live && live.from === selected ? live.at : index;
 
   // Un tap sur une barre fait glisser jusqu'au jour tapé ; à l'ouverture, le
   // jour s'affiche sans glissement.
   useEffect(() => {
     if (!open || !track) {
       instantRef.current = true;
+      setLive(null);
       return;
     }
     const left = index * track.clientWidth;
     if (Math.abs(track.scrollLeft - left) < 2) return;
+    steeringRef.current = true;
     track.scrollTo({
       left,
       behavior: instantRef.current ? "instant" : "smooth",
@@ -155,10 +173,43 @@ export function DayDrawer({
     instantRef.current = false;
   }, [index, open, track]);
 
+  useEffect(
+    () => () => {
+      if (frameRef.current !== null) cancelAnimationFrame(frameRef.current);
+      if (settleRef.current !== null) window.clearTimeout(settleRef.current);
+    },
+    [],
+  );
+
+  // Le doigt reprend la main sur un glissement lancé par le tiroir.
+  function release() {
+    steeringRef.current = false;
+  }
+
   function handleScroll() {
-    if (settleRef.current) window.clearTimeout(settleRef.current);
+    if (frameRef.current === null) {
+      frameRef.current = requestAnimationFrame(() => {
+        frameRef.current = null;
+        if (!track || track.clientWidth === 0) return;
+        const at = Math.round(track.scrollLeft / track.clientWidth);
+        if (steeringRef.current) {
+          if (Math.abs(track.scrollLeft - index * track.clientWidth) < 2) {
+            steeringRef.current = false;
+          }
+          return;
+        }
+        setLive((previous) =>
+          previous?.at === at && previous.from === selected
+            ? previous
+            : { at, from: selected },
+        );
+      });
+    }
+    if (settleRef.current !== null) window.clearTimeout(settleRef.current);
     settleRef.current = window.setTimeout(() => {
-      if (!track || track.clientWidth === 0) return;
+      // Le tiroir conduit déjà vers le jour choisi : un défilement lent (onglet
+      // en arrière-plan, téléphone chargé) ne doit pas le ramener en route.
+      if (steeringRef.current || !track || track.clientWidth === 0) return;
       const next = dates[Math.round(track.scrollLeft / track.clientWidth)];
       if (next && next !== selected) onSelect(next);
     }, SCROLL_SETTLE_MS);
@@ -178,25 +229,29 @@ export function DayDrawer({
       <div className="flex flex-col gap-5 pt-2">
         <RecentDaysChart
           recent={recent}
-          selected={selected}
+          selected={dates[shown] ?? selected}
           onSelect={onSelect}
           height={64}
         />
         <div
           ref={setTrack}
           onScroll={handleScroll}
+          onPointerDown={release}
+          onTouchStart={release}
+          onWheel={release}
           className="-mx-5 flex snap-x snap-mandatory overflow-x-auto overscroll-x-contain [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
         >
           {dates.map((date, i) => {
             const result = results.get(date);
-            const near = Math.abs(i - index) <= 1;
+            // Montés : les voisins du jour choisi et de celui sous le doigt.
+            const near = Math.abs(i - index) <= 1 || Math.abs(i - shown) <= 1;
             return (
               <section
                 key={date}
                 // Les jours voisins sont montés pour glisser, pas pour le
                 // clavier ni les lecteurs d'écran (`inert`, absent des types
                 // de React 18).
-                {...(i === index ? {} : { inert: "" })}
+                {...(i === shown ? {} : { inert: "" })}
                 className="w-full shrink-0 snap-start px-5"
               >
                 {result && near && (
@@ -204,10 +259,9 @@ export function DayDrawer({
                     result={result}
                     today={today}
                     replayAllowed={replayAllowed}
-                    hasPrevious={i > 0}
-                    hasNext={i < dates.length - 1}
-                    onPrevious={() => onSelect(dates[i - 1])}
-                    onNext={() => onSelect(dates[i + 1])}
+                    previous={dates[i - 1] ?? null}
+                    next={dates[i + 1] ?? null}
+                    onGo={onSelect}
                   />
                 )}
               </section>
