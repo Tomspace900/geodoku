@@ -39,6 +39,16 @@ export function RecentDaysChart({
     (day) => day.date === hovered && day.kind === "finished",
   );
   const hoveredIndex = hoveredDay ? recent.days.indexOf(hoveredDay) : -1;
+  // Sur la page, la barre violette porte son score : le meilleur des 30 jours,
+  // pas forcément le record de toujours, d'où le chiffre seul. Le tiroir, lui,
+  // a déjà la date et l'anneau du jour affiché.
+  const bestDay =
+    selected === null
+      ? recent.days.find(
+          (day) => day.date === recent.bestDate && day.kind === "finished",
+        )
+      : undefined;
+  const bestIndex = bestDay ? recent.days.indexOf(bestDay) : -1;
 
   return (
     <div className="flex flex-col gap-1">
@@ -46,7 +56,7 @@ export function RecentDaysChart({
           de hauteur fixe, sur lequel leurs pourcentages se calculent. */}
       <fieldset
         aria-label={t("stats.chartAriaLabel")}
-        className="m-0 min-w-0 border-0 p-0"
+        className={cn("m-0 min-w-0 border-0 p-0", bestDay && "pt-4")}
       >
         <div className="relative flex items-end gap-[3px]" style={{ height }}>
           {recent.days.map((day) => {
@@ -110,6 +120,18 @@ export function RecentDaysChart({
               className="pointer-events-none absolute inset-x-0 border-t border-dashed border-on-surface-variant/50"
               style={{ bottom: `${recent.average / SCORE_TO_PERCENT}%` }}
             />
+          )}
+          {bestDay && bestDay.kind === "finished" && !hoveredDay && (
+            <span
+              aria-hidden
+              className="pointer-events-none absolute -translate-x-1/2 text-[10px] font-semibold leading-none tabular-nums text-brand"
+              style={{
+                left: `${((bestIndex + 0.5) / recent.days.length) * 100}%`,
+                bottom: `calc(${barHeight(bestDay.total)} + 3px)`,
+              }}
+            >
+              {bestDay.total}
+            </span>
           )}
           {hoveredDay && hoveredDay.kind === "finished" && (
             <span
