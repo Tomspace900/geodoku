@@ -4,16 +4,8 @@ import {
 } from "@convex-dev/better-auth/client/plugins";
 import { emailOTPClient } from "better-auth/client/plugins";
 import { createAuthClient } from "better-auth/react";
+import { convexSiteUrl } from "@/lib/convexSite";
 import { STORAGE_KEYS, safeGet, safeSet } from "@/lib/storage";
-
-/**
- * Adresse HTTP du déploiement Convex (`.convex.site`), où vivent les routes
- * de Better Auth (#155). Déduite de `VITE_CONVEX_URL` (`.convex.cloud`) : la
- * commande de build Vercel ne pose que celle-ci.
- */
-export function convexSiteUrl(cloudUrl: string): string {
-  return cloudUrl.replace(/\.convex\.cloud\/?$/, ".convex.site");
-}
 
 /**
  * La page et Convex n'ont pas le même domaine : Better Auth garde sa session

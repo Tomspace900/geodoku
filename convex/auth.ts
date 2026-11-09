@@ -104,7 +104,14 @@ export const createAuth = (ctx: GenericCtx<DataModel>) => {
     ...(googleId && googleSecret
       ? {
           socialProviders: {
-            google: { clientId: googleId, clientSecret: googleSecret },
+            google: {
+              clientId: googleId,
+              clientSecret: googleSecret,
+              // Google ne renvoie que vers un domaine qu'on possède : le site,
+              // qui relaie vers Convex (`src/lib/convexSite.ts`). La même
+              // adresse sert à l'échange du code.
+              redirectURI: `${siteUrl}/api/auth/callback/google`,
+            },
           },
         }
       : {}),

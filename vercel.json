@@ -3,6 +3,7 @@
   "cleanUrls": true,
   "trailingSlash": false,
   "rewrites": [
+    { "source": "/api/auth/callback/google", "destination": "/app-shell" },
     { "source": "/fr/stats", "destination": "/app-shell" },
     { "source": "/en/stats", "destination": "/app-shell" },
     { "source": "/fr/archive/:path*", "destination": "/app-shell" },
