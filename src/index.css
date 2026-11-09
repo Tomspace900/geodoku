@@ -82,6 +82,15 @@ body {
   }
 }
 
+@keyframes dice-roll {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
 @keyframes lives-tick {
   0% {
     transform: translateY(0);
@@ -125,6 +134,11 @@ body {
     transform-origin: center;
   }
 
+  .animate-dice-roll {
+    animation: dice-roll 0.4s ease-out;
+    transform-origin: center;
+  }
+
   .animate-lives-tick {
     animation: lives-tick 0.35s ease-out;
   }
@@ -136,6 +150,7 @@ body {
 
   @media (prefers-reduced-motion: reduce) {
     .animate-flag-bounce,
+    .animate-dice-roll,
     .animate-lives-tick,
     .animate-heart-shake {
       animation: none;

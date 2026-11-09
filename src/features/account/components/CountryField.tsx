@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { getCountryByIso3 } from "@/features/countries/logic/search";
 import { useLocale } from "@/i18n/LocaleContext";
 import { cn } from "@/lib/utils";
+import { useBounce } from "../hooks/useBounce";
 import { WHITE_FLAG } from "../logic/countryPick";
 import { DiceButton } from "./DiceButton";
 
@@ -24,6 +25,7 @@ export function CountryField({
 }) {
   const { t, locale } = useLocale();
   const country = value ? getCountryByIso3(value) : undefined;
+  const bouncing = useBounce(value);
   return (
     <div className="flex flex-col gap-1">
       <Eyebrow as="span">{label}</Eyebrow>
@@ -37,7 +39,13 @@ export function CountryField({
           className="flex h-11 w-full min-w-0 items-center justify-between gap-2 rounded-none border-b border-outline-variant/40 px-0 text-base font-normal text-on-surface hover:text-on-surface"
         >
           <span className="flex min-w-0 items-center gap-2.5">
-            <span aria-hidden className="text-xl leading-none">
+            <span
+              aria-hidden
+              className={cn(
+                "inline-block origin-center text-xl leading-none",
+                bouncing && "animate-flag-bounce",
+              )}
+            >
               {country?.flagEmoji ?? WHITE_FLAG}
             </span>
             <span

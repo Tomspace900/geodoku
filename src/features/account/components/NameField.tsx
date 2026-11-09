@@ -1,9 +1,10 @@
-import { useId } from "react";
+import { useEffect, useId, useRef, useState } from "react";
 import { Eyebrow } from "@/components/editorial/Eyebrow";
 import { Input } from "@/components/ui/input";
 import { useLocale } from "@/i18n/LocaleContext";
 import type { TKey } from "@/i18n/types";
 import { cn } from "@/lib/utils";
+import { useBounce } from "../hooks/useBounce";
 import { PSEUDO_MAX_LENGTH } from "../logic/pseudo";
 import { pseudoErrorKey } from "../logic/pseudoMessage";
 import { DiceButton } from "./DiceButton";
@@ -34,6 +35,20 @@ export function NameField({
   const { t } = useLocale();
   const id = useId();
   const errorKey = pseudoErrorKey(value) ?? serverError;
+  // Un tirage abouti (fin de `drawing` avec un nom nouveau) fait rebondir le nom.
+  const [drawn, setDrawn] = useState(0);
+  const drawStart = useRef<string | null>(null);
+  useEffect(() => {
+    if (drawing) {
+      drawStart.current = value;
+      return;
+    }
+    if (drawStart.current !== null && drawStart.current !== value) {
+      setDrawn((count) => count + 1);
+    }
+    drawStart.current = null;
+  }, [drawing, value]);
+  const bouncing = useBounce(drawn);
   return (
     <div className="flex flex-col gap-1">
       <label htmlFor={id} className={hideLabel ? "sr-only" : undefined}>
@@ -51,8 +66,9 @@ export function NameField({
           aria-invalid={errorKey !== null}
           aria-describedby={errorKey ? `${id}-error` : undefined}
           className={cn(
-            "h-12 font-serif text-2xl font-medium italic",
+            "h-12 origin-left font-serif text-2xl font-medium italic",
             errorKey && "border-error focus-visible:border-error",
+            bouncing && "animate-flag-bounce",
           )}
         />
         <DiceButton

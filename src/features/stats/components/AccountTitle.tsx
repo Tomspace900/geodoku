@@ -1,9 +1,11 @@
 import { Pencil } from "lucide-react";
 import { DisplayHeader } from "@/components/editorial/DisplayHeader";
 import { Button } from "@/components/ui/button";
+import { useBounce } from "@/features/account/hooks/useBounce";
 import { WHITE_FLAG } from "@/features/account/logic/countryPick";
 import { getCountryByIso3 } from "@/features/countries/logic/search";
 import { useLocale } from "@/i18n/LocaleContext";
+import { cn } from "@/lib/utils";
 
 /**
  * Connecté, le titre de « Mes stats » devient le joueur : son drapeau
@@ -23,6 +25,8 @@ export function AccountTitle({
 }) {
   const { t, locale } = useLocale();
   const chosen = country ? getCountryByIso3(country) : undefined;
+  // Le pays choisi ou tiré dans « Mon pays » se pose avec le rebond de la grille.
+  const bouncing = useBounce(country);
   return (
     <DisplayHeader
       as="h1"
@@ -40,7 +44,15 @@ export function AccountTitle({
           }
           className="grid size-10 shrink-0 place-items-center rounded-full bg-surface-low text-2xl leading-none hover:bg-surface-highest/60"
         >
-          <span aria-hidden>{chosen?.flagEmoji ?? WHITE_FLAG}</span>
+          <span
+            aria-hidden
+            className={cn(
+              "inline-block origin-center",
+              bouncing && "animate-flag-bounce",
+            )}
+          >
+            {chosen?.flagEmoji ?? WHITE_FLAG}
+          </span>
         </Button>
       }
       title={

@@ -7,6 +7,8 @@ export const UI_ANIMATION_MS = {
   errorFeedback: 1500,
   heartBreak: 450,
   flagBounce: 700,
+  /** Le tour du dé (tirage d'un nom ou d'un pays). */
+  diceRoll: 400,
   /** Laisse l'animation de fermeture du Drawer (vaul) se jouer avant de démonter. */
   drawerClose: 300,
 } as const;

@@ -1,5 +1,5 @@
 import { Check, Search } from "lucide-react";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { SheetDrawer } from "@/components/SheetDrawer";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -7,7 +7,9 @@ import {
   getCountryByIso3,
   searchCountries,
 } from "@/features/countries/logic/search";
+import { UI_ANIMATION_MS } from "@/features/game/logic/constants";
 import { useLocale } from "@/i18n/LocaleContext";
+import { prefersReducedMotion } from "@/lib/motion";
 import { cn } from "@/lib/utils";
 import { randomCountry, sortedCountries } from "../logic/countryPick";
 import { DiceButton } from "./DiceButton";
@@ -38,10 +40,35 @@ export function CountryDrawer({
   const searching = query.trim().length > 0;
   const results = searching ? searchCountries(query, SEARCH_LIMIT) : all;
   const chosen = current ? getCountryByIso3(current) : undefined;
+  const rollRef = useRef<number | null>(null);
+
+  function cancelRoll() {
+    if (rollRef.current !== null) window.clearTimeout(rollRef.current);
+    rollRef.current = null;
+  }
+
+  // Un tirage en cours ne survit pas au tiroir.
+  useEffect(
+    () => () => {
+      if (rollRef.current !== null) window.clearTimeout(rollRef.current);
+    },
+    [],
+  );
 
   function choose(iso3: string | null) {
+    cancelRoll();
     setQuery("");
     onChoose(iso3);
+  }
+
+  // Le tiroir se ferme sur le pays tiré : on laisse d'abord le dé finir son tour.
+  function draw() {
+    const drawn = randomCountry(current);
+    cancelRoll();
+    rollRef.current = window.setTimeout(
+      () => choose(drawn),
+      prefersReducedMotion() ? 0 : UI_ANIMATION_MS.diceRoll,
+    );
   }
 
   return (
@@ -49,6 +76,7 @@ export function CountryDrawer({
       open={open}
       onOpenChange={(next) => {
         if (!next) {
+          cancelRoll();
           setQuery("");
           onClose();
         }
@@ -58,7 +86,7 @@ export function CountryDrawer({
       action={
         <DiceButton
           label={t("account.drawCountry")}
-          onClick={() => choose(randomCountry(current))}
+          onClick={draw}
           className="-mt-1"
         />
       }
