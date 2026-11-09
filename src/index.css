@@ -82,6 +82,17 @@ body {
   }
 }
 
+/* Le rebond du nom tiré : celui des drapeaux, en plus doux (du texte, pas un emoji). */
+@keyframes name-bounce {
+  0%,
+  100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.1);
+  }
+}
+
 @keyframes dice-roll {
   from {
     transform: rotate(0deg);
@@ -134,6 +145,11 @@ body {
     transform-origin: center;
   }
 
+  .animate-name-bounce {
+    animation: name-bounce 0.7s ease-in-out;
+    transform-origin: left center;
+  }
+
   .animate-dice-roll {
     animation: dice-roll 0.4s ease-out;
     transform-origin: center;
@@ -150,6 +166,7 @@ body {
 
   @media (prefers-reduced-motion: reduce) {
     .animate-flag-bounce,
+    .animate-name-bounce,
     .animate-dice-roll,
     .animate-lives-tick,
     .animate-heart-shake {

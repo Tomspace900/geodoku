@@ -9,6 +9,9 @@ import { PSEUDO_MAX_LENGTH } from "../logic/pseudo";
 import { pseudoErrorKey } from "../logic/pseudoMessage";
 import { DiceButton } from "./DiceButton";
 
+/** Le texte du nom, partagé par le champ et la copie qui rebondit. */
+const NAME_TEXT = "font-serif text-2xl font-medium italic";
+
 /**
  * Le nom : un champ souligné, comme l'e-mail, en serif italique ; on le
  * touche pour l'écrire. Le dé, à droite, tire un nom que personne n'a.
@@ -55,22 +58,38 @@ export function NameField({
         <Eyebrow as="span">{label}</Eyebrow>
       </label>
       <div className="flex items-end gap-2">
-        <Input
-          id={id}
-          value={value}
-          onChange={(event) => onChange(event.target.value)}
-          maxLength={PSEUDO_MAX_LENGTH}
-          autoComplete="off"
-          autoCapitalize="words"
-          spellCheck={false}
-          aria-invalid={errorKey !== null}
-          aria-describedby={errorKey ? `${id}-error` : undefined}
-          className={cn(
-            "h-12 origin-left font-serif text-2xl font-medium italic",
-            errorKey && "border-error focus-visible:border-error",
-            bouncing && "animate-flag-bounce",
+        {/* Un champ n'anime pas son texte seul : pendant le rebond, le texte du
+            champ s'efface sous une copie qui rebondit, sans le trait. */}
+        <div className="relative min-w-0 flex-1">
+          <Input
+            id={id}
+            value={value}
+            onChange={(event) => onChange(event.target.value)}
+            maxLength={PSEUDO_MAX_LENGTH}
+            autoComplete="off"
+            autoCapitalize="words"
+            spellCheck={false}
+            aria-invalid={errorKey !== null}
+            aria-describedby={errorKey ? `${id}-error` : undefined}
+            className={cn(
+              NAME_TEXT,
+              "h-12",
+              errorKey && "border-error focus-visible:border-error",
+              bouncing && "text-transparent",
+            )}
+          />
+          {bouncing && (
+            <span
+              aria-hidden
+              className={cn(
+                NAME_TEXT,
+                "pointer-events-none absolute inset-y-0 left-0 flex items-center whitespace-pre text-on-surface animate-name-bounce",
+              )}
+            >
+              {value}
+            </span>
           )}
-        />
+        </div>
         <DiceButton
           label={t("account.drawName")}
           onClick={onDraw}
