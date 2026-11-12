@@ -95,8 +95,8 @@ async function isPseudoTaken(
 
 /**
  * Le dé ne tire que des noms que personne n'a ; un nom écrit à la main, lui,
- * n'est pas unique. Si tous les tirages sont pris (2 500 noms par langue),
- * le dernier sert quand même.
+ * n'est pas unique. Si tous les tirages sont pris (plus de 36 000
+ * noms par langue), le dernier sert quand même.
  */
 async function drawFreePseudo(
   ctx: MutationCtx,

@@ -11,11 +11,11 @@ import {
 
 describe("drawPseudo", () => {
   it("place le lieu après l'animal en français", () => {
-    expect(composePseudo(ANIMALS[0], PLACES[0], "fr")).toBe("Okapi du Sahara");
+    expect(composePseudo(ANIMALS[0], PLACES[0], "fr")).toBe("Renard du Nord");
   });
 
   it("place le lieu devant l'animal en anglais", () => {
-    expect(composePseudo(ANIMALS[0], PLACES[0], "en")).toBe("Sahara Okapi");
+    expect(composePseudo(ANIMALS[0], PLACES[0], "en")).toBe("Northern Fox");
   });
 
   it("ne tire jamais un nom trop long", () => {
@@ -26,6 +26,19 @@ describe("drawPseudo", () => {
       ),
     );
     expect(Math.max(...lengths)).toBeLessThanOrEqual(PSEUDO_MAX_LENGTH);
+  });
+
+  it("compte 193 animaux et 225 lieux", () => {
+    expect([ANIMALS.length, PLACES.length]).toEqual([193, 225]);
+  });
+
+  it("n'a aucun doublon, en français comme en anglais", () => {
+    const sizes = [ANIMALS, PLACES].flatMap((parts) =>
+      (["fr", "en"] as const).map(
+        (locale) => new Set(parts.map((part) => part[locale])).size,
+      ),
+    );
+    expect(sizes).toEqual([193, 193, 225, 225]);
   });
 
   it("ne tire que des noms acceptés par le filtre", () => {
@@ -54,6 +67,18 @@ describe("checkPseudo", () => {
       ok: true,
       pseudo: "Camille B",
     });
+  });
+
+  it("accepte l'apostrophe typographique", () => {
+    expect(checkPseudo("Zoé l’Ourse").ok).toBe(true);
+  });
+
+  it("accepte un prénom qui n'est pas un sigle", () => {
+    expect(checkPseudo("Isis").ok).toBe(true);
+  });
+
+  it("accepte le raton laveur du générateur", () => {
+    expect(checkPseudo("Raton laveur du Nord").ok).toBe(true);
   });
 
   it("refuse moins de 3 caractères", () => {
@@ -103,5 +128,46 @@ describe("isRefusedPseudo", () => {
 
   it("ne confond pas un pays avec une insulte", () => {
     expect(isRefusedPseudo("Lynx du Montenegro")).toBe(false);
+  });
+
+  it("lit les détournements de Geodoku, les chiffres, les mots collés, les lettres étirées et le I pour un l", () => {
+    const samples = [
+      "Geodoku",
+      "Geodocul",
+      "Geoducul",
+      "G30d0cul",
+      "G30d0ku",
+      "Admin",
+      "Admln",
+      "M0d0",
+      "Officiel",
+      "Connard",
+      "C0nn4rd",
+      "C000nnard",
+      "Conard",
+      "Sa10pe",
+      "SaIope",
+      "Pute69",
+      "JeanCul",
+      "Cuuuul",
+      "Fuuuuck",
+      "B1tch",
+      "H1tl3r",
+    ];
+    expect(samples.filter((sample) => checkPseudo(sample).ok)).toEqual([]);
+  });
+
+  it("laisse passer les prénoms et les pays ordinaires", () => {
+    const samples = [
+      "Thomas",
+      "Camille",
+      "Léo du 69",
+      "Petit Prince",
+      "Renard du Niger",
+      "Loup du Congo",
+      "Aigle du Titicaca",
+      "Hibou des Shetland",
+    ];
+    expect(samples.filter((sample) => !checkPseudo(sample).ok)).toEqual([]);
   });
 });

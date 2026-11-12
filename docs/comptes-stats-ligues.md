@@ -536,9 +536,13 @@ Tranchés les 5 et 6 novembre 2026 sur maquettes dans la vraie app.
   continent en 1 à 2 mois. `THEME_MIN_CELLS` est la seule constante à changer.
 - **Un jour fini pèse 0,6 Ko** (0,7 au 9ᵉ décile), bien sous l'estimation : le
   navigateur en garde 730 (`geodoku:finished-days-v1`).
-- **Mots refusés** : liste de départ dans `refusedWords.ts` (mots réservés à
-  l'équipe, insultes courtes refusées comme mots entiers, racines longues partout),
-  à compléter ; le dé ne tire jamais un nom refusé (test sur les 2 × 2 500 noms).
+- **Noms et mots refusés** (tranchés le 12 novembre) : 193 animaux × 225 lieux
+  dans `nameParts.ts` (« Raton laveur », sans grands singes ni « d'Orient »),
+  liste noire en trois blocs dans `refusedWords.ts` (usurpation de Geodoku et de
+  l'équipe, haine, vulgarité). Le filtre lit les chiffres pour des lettres, les
+  mots collés, les lettres étirées et le « I » pour un « l » ; le dé ne tire
+  jamais un nom refusé (test sur tous les noms du générateur, dans les deux
+  langues).
 - **Limite d'envoi des codes** : 4 d'affilée puis 10 par jour et par adresse, et
   100 par jour en tout pour protéger le quota MailerSend. Le limiteur de Better Auth,
   en mémoire, est désactivé (inutile sur Convex).
