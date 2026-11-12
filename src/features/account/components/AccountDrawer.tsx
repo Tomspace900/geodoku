@@ -1,23 +1,63 @@
 import { usePostHog } from "@posthog/react";
+import { useMutation } from "convex/react";
 import {
   ArrowLeft,
+  ChevronRight,
   EyeOff,
   LoaderCircle,
   Smartphone,
   Trash2,
+  WifiOff,
 } from "lucide-react";
-import { type ReactNode, useState } from "react";
+import { type FormEvent, type ReactNode, useId, useState } from "react";
+import { Eyebrow } from "@/components/editorial/Eyebrow";
 import { SheetDrawer } from "@/components/SheetDrawer";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 import { useLocale } from "@/i18n/LocaleContext";
+import type { TKey } from "@/i18n/types";
 import { authClient } from "@/lib/authClient";
-import { forgetSessionOnDevice, useAccount } from "../AccountContext";
+import { cn } from "@/lib/utils";
+import { api } from "../../../../convex/_generated/api";
+import {
+  type AccountProfile,
+  forgetSessionOnDevice,
+  useAccount,
+} from "../AccountContext";
+import { useAfterRoll } from "../hooks/useAfterRoll";
 import { useEmailCode } from "../hooks/useEmailCode";
-import type { SendOutcome } from "../logic/codeOutcome";
+import { looksLikeEmail, type SendOutcome } from "../logic/codeOutcome";
+import { randomCountry } from "../logic/countryPick";
+import { pseudoErrorKey, refusalKey } from "../logic/pseudoMessage";
 import { CodeStep } from "./CodeStep";
+import { CountryField } from "./CountryField";
+import { CountryPicker } from "./CountryPicker";
+import { DiceButton } from "./DiceButton";
+import { NameField } from "./NameField";
 import { Notice } from "./Notice";
 
-type View = "account" | "confirm" | "code";
+type View =
+  | "account"
+  | "country"
+  | "email"
+  | "email-code"
+  | "confirm"
+  | "delete-code";
+
+/** Refus d'une nouvelle adresse : sous le champ, ou en encadré (réseau, limite). */
+type EmailError = "invalid" | "same" | "taken" | "offline" | "too_many";
+
+const EMAIL_ERROR_KEY: Record<"invalid" | "same" | "taken", TKey> = {
+  invalid: "account.invalidEmail",
+  same: "account.emailSame",
+  taken: "account.emailTaken",
+};
+
+function emailErrorFromSend(outcome: Exclude<SendOutcome, "sent">): EmailError {
+  if (outcome === "too_many") return "too_many";
+  if (outcome === "invalid_email") return "invalid";
+  return "offline";
+}
 
 function BackTo({ label, onClick }: { label: string; onClick: () => void }) {
   return (
@@ -26,7 +66,7 @@ function BackTo({ label, onClick }: { label: string; onClick: () => void }) {
       variant="ghost"
       size="auto"
       onClick={onClick}
-      className="mb-4 w-fit gap-1.5 text-xs font-normal"
+      className="w-fit gap-1.5 text-xs font-normal"
     >
       <ArrowLeft className="!size-3.5" aria-hidden />
       {label}
@@ -51,48 +91,253 @@ function DeleteLine({
   );
 }
 
+/** « Mon e-mail » : au même trait que le pays, il ouvre « Changer d'e-mail ». */
+function EmailRow({ email, onOpen }: { email: string; onOpen: () => void }) {
+  const { t } = useLocale();
+  return (
+    <div className="flex flex-col gap-1">
+      <Eyebrow as="span">{t("account.myEmail")}</Eyebrow>
+      <Button
+        type="button"
+        variant="ghost"
+        size="auto"
+        onClick={onOpen}
+        aria-label={`${t("account.myEmail")} : ${email}`}
+        className="flex h-11 w-full min-w-0 items-center justify-between gap-2 rounded-none border-b border-outline-variant/40 px-0 text-base font-normal text-on-surface hover:text-on-surface"
+      >
+        <span className="truncate">{email}</span>
+        <ChevronRight
+          className="!size-4 shrink-0 text-on-surface-variant"
+          aria-hidden
+        />
+      </Button>
+    </div>
+  );
+}
+
+/** « Changer d'e-mail » : la nouvelle adresse, vérifiée avant l'envoi du code. */
+function NewEmailForm({
+  value,
+  onChange,
+  onSent,
+}: {
+  value: string;
+  onChange: (value: string) => void;
+  onSent: () => void;
+}) {
+  const { t } = useLocale();
+  const id = useId();
+  const checkNewEmail = useMutation(api.account.checkNewEmail);
+  const { send } = useEmailCode("change-email");
+  const [error, setError] = useState<EmailError | null>(null);
+  const [sending, setSending] = useState(false);
+  const fieldError =
+    error === "invalid" || error === "same" || error === "taken" ? error : null;
+
+  async function submit(event: FormEvent) {
+    event.preventDefault();
+    if (!looksLikeEmail(value)) {
+      setError("invalid");
+      return;
+    }
+    setSending(true);
+    try {
+      const check = await checkNewEmail({ email: value });
+      if (!check.ok) {
+        setError(check.reason);
+        return;
+      }
+      const outcome = await send(value);
+      if (outcome === "sent") {
+        setError(null);
+        onSent();
+        return;
+      }
+      setError(emailErrorFromSend(outcome));
+    } catch {
+      // Hors ligne, ou la limite d'écritures du compte.
+      setError("offline");
+    } finally {
+      setSending(false);
+    }
+  }
+
+  return (
+    <form
+      className="flex flex-col gap-6 pt-2"
+      onSubmit={(event) => void submit(event)}
+    >
+      <div className="flex flex-col gap-1">
+        <label htmlFor={id}>
+          <Eyebrow as="span">{t("account.newEmail")}</Eyebrow>
+        </label>
+        <Input
+          id={id}
+          type="email"
+          inputMode="email"
+          autoComplete="email"
+          autoCapitalize="off"
+          spellCheck={false}
+          placeholder={t("account.emailPlaceholder")}
+          value={value}
+          onChange={(event) => {
+            onChange(event.target.value);
+            if (fieldError) setError(null);
+          }}
+          aria-invalid={fieldError !== null}
+          aria-describedby={fieldError ? `${id}-error` : undefined}
+          className={cn(
+            "h-11 text-base",
+            fieldError && "border-error focus-visible:border-error",
+          )}
+        />
+        {fieldError && (
+          <p id={`${id}-error`} className="pt-1 text-xs text-error">
+            {t(EMAIL_ERROR_KEY[fieldError])}
+          </p>
+        )}
+      </div>
+      {error === "offline" && (
+        <Notice icon={<WifiOff />}>{t("account.offline")}</Notice>
+      )}
+      {error === "too_many" && <Notice>{t("account.tooManyCodes")}</Notice>}
+      <Button
+        type="submit"
+        className="h-11 w-full gap-2"
+        disabled={sending || error === "too_many"}
+      >
+        {sending && (
+          <LoaderCircle className="size-4 animate-spin" aria-hidden />
+        )}
+        {t("account.sendCode")}
+      </Button>
+    </form>
+  );
+}
+
 /**
- * « Mon compte » (#155) : l'e-mail, la déconnexion et la suppression, rien
- * d'autre. La suppression change le contenu sur place et se confirme par un
- * code reçu par e-mail : il redonne la session « fraîche » que Better Auth
- * exige pour supprimer sans mot de passe. Les parties restent, anonymes.
+ * « Mon compte » (#155) : un seul tiroir pour tout, ouvert par le crayon du
+ * titre comme par « Mon compte › ». Le nom s'enregistre en quittant le champ,
+ * le pays dès qu'il est choisi ; aucun bouton « Enregistrer ». La liste des
+ * pays, le changement d'e-mail et la suppression s'affichent sur place, avec
+ * « ← Mon compte ». La suppression se confirme par un code : il redonne la
+ * session « fraîche » que Better Auth exige pour supprimer sans mot de passe.
  */
 export function AccountDrawer({
   open,
-  email,
+  profile,
   gamesCount,
   onClose,
 }: {
   open: boolean;
-  email: string;
+  profile: AccountProfile;
   gamesCount: number;
   onClose: () => void;
 }) {
-  const { t } = useLocale();
+  const { t, locale } = useLocale();
   const posthog = usePostHog();
   const account = useAccount();
+  const updateProfile = useMutation(api.account.updateProfile);
+  const drawPseudo = useMutation(api.account.drawPseudoFor);
   const { send } = useEmailCode("delete-account");
+  const roll = useAfterRoll();
   const [view, setView] = useState<View>("account");
+  // Le nom en cours d'écriture ; `null` : celui du compte.
+  const [draft, setDraft] = useState<string | null>(null);
+  const [nameError, setNameError] = useState<TKey | null>(null);
+  const [drawing, setDrawing] = useState(false);
+  const [newEmail, setNewEmail] = useState("");
   const [sending, setSending] = useState(false);
   const [sendError, setSendError] = useState<Exclude<
     SendOutcome,
     "sent"
   > | null>(null);
   const [deleteFailed, setDeleteFailed] = useState(false);
+  const saved = profile.pseudo ?? "";
+  const name = draft ?? saved;
 
-  function reset() {
+  function backToAccount() {
+    roll.cancel();
     setView("account");
     setSendError(null);
     setDeleteFailed(false);
   }
 
-  async function requestCode() {
+  async function saveName(value: string) {
+    let result: Awaited<ReturnType<typeof updateProfile>>;
+    try {
+      result = await updateProfile({ pseudo: value });
+    } catch {
+      // Hors ligne ou trop d'écritures : le nom reste à l'écran, pas enregistré.
+      setNameError("account.genericError");
+      return;
+    }
+    if (!result.ok) {
+      setNameError(refusalKey(result.reason));
+      return;
+    }
+    // Enregistré : le champ suit de nouveau le compte, sauf si l'on a déjà
+    // réécrit par-dessus.
+    setDraft((current) => (current === value ? null : current));
+  }
+
+  function commitName() {
+    if (draft === null) return;
+    if (draft.trim() === saved) {
+      setDraft(null);
+      return;
+    }
+    // Un nom invalide garde son message sous le champ, rien ne part.
+    if (pseudoErrorKey(draft) !== null) return;
+    void saveName(draft);
+  }
+
+  async function drawName() {
+    setDrawing(true);
+    try {
+      const drawn = await drawPseudo({ locale, current: name });
+      setDraft(drawn);
+      setNameError(null);
+      await saveName(drawn);
+    } catch {
+      setNameError("account.genericError");
+    } finally {
+      setDrawing(false);
+    }
+  }
+
+  function saveCountry(country: string | null) {
+    // Un échec laisse simplement le pays d'avant à l'écran.
+    updateProfile({ country }).catch(() => {});
+  }
+
+  // Retour au compte d'abord, puis l'enregistrement : le drapeau du champ
+  // change sous les yeux et rebondit.
+  function chooseCountry(country: string | null) {
+    backToAccount();
+    saveCountry(country);
+  }
+
+  /** Après une déconnexion ou une suppression, plus rien à enregistrer. */
+  function close({ commit = true }: { commit?: boolean } = {}) {
+    if (commit) commitName();
+    roll.cancel();
+    setView("account");
+    setDraft(null);
+    setNameError(null);
+    setNewEmail("");
+    setSendError(null);
+    setDeleteFailed(false);
+    onClose();
+  }
+
+  async function requestDeleteCode() {
     setSending(true);
-    const outcome = await send(email);
+    const outcome = await send(profile.email);
     setSending(false);
     if (outcome === "sent") {
       setSendError(null);
-      setView("code");
+      setView("delete-code");
       return;
     }
     setSendError(outcome);
@@ -106,67 +351,155 @@ export function AccountDrawer({
     }
     posthog?.capture("account_deleted");
     forgetSessionOnDevice();
-    reset();
-    onClose();
+    close({ commit: false });
   }
 
-  const title =
-    view === "account"
-      ? t("account.myAccount")
-      : view === "confirm"
-        ? t("account.deleteTitle")
-        : t("account.deleteLastStep");
+  const header: Record<
+    View,
+    { title: string; subtitle?: string; back?: ReactNode; action?: ReactNode }
+  > = {
+    account: { title: t("account.myAccount") },
+    country: {
+      title: t("account.myCountry"),
+      subtitle: t("account.optional"),
+      back: (
+        <BackTo label={t("account.backToAccount")} onClick={backToAccount} />
+      ),
+      action: (
+        <DiceButton
+          label={t("account.drawCountry")}
+          onClick={() => {
+            const drawn = randomCountry(profile.country);
+            roll.after(() => chooseCountry(drawn));
+          }}
+          className="-mt-1"
+        />
+      ),
+    },
+    email: {
+      title: t("account.changeEmailTitle"),
+      back: (
+        <BackTo label={t("account.backToAccount")} onClick={backToAccount} />
+      ),
+    },
+    "email-code": {
+      title: t("account.checkEmail"),
+      back: (
+        <BackTo
+          label={t("account.changeEmailTitle")}
+          onClick={() => setView("email")}
+        />
+      ),
+    },
+    confirm: {
+      title: t("account.deleteTitle"),
+      back: (
+        <BackTo label={t("account.backToAccount")} onClick={backToAccount} />
+      ),
+    },
+    "delete-code": {
+      title: t("account.deleteLastStep"),
+      subtitle: t("account.deleteCodeSubtitle"),
+      back: (
+        <BackTo label={t("account.backToAccount")} onClick={backToAccount} />
+      ),
+    },
+  };
 
   return (
     <SheetDrawer
       open={open}
       onOpenChange={(next) => {
-        if (!next) {
-          reset();
-          onClose();
-        }
+        if (!next) close();
       }}
-      title={title}
-      subtitle={view === "code" ? t("account.deleteCodeSubtitle") : undefined}
+      title={header[view].title}
+      subtitle={header[view].subtitle}
+      back={header[view].back}
+      action={header[view].action}
       closeLabel={t("stats.closeDrawer")}
+      tall={view === "country"}
     >
       {view === "account" && (
-        <div className="flex flex-col gap-3 pt-2">
-          <div className="flex items-center justify-between gap-3 rounded-xl bg-surface-low px-4 py-3">
-            <span className="text-sm text-on-surface">
-              {t("account.email")}
-            </span>
-            <span className="truncate text-sm text-on-surface-variant">
-              {email}
-            </span>
-          </div>
-          <Button
-            type="button"
-            variant="secondary"
-            className="h-11 w-full"
-            onClick={() => {
-              posthog?.capture("account_signed_out");
-              void account.signOut();
-              onClose();
+        <div className="flex flex-col gap-6 pt-2">
+          <NameField
+            label={t("account.myName")}
+            value={name}
+            onChange={(next) => {
+              setDraft(next);
+              setNameError(null);
             }}
-          >
-            {t("account.signOut")}
-          </Button>
-          <Button
-            type="button"
-            variant="link"
-            onClick={() => setView("confirm")}
-            className="mx-auto mt-3 text-xs text-error decoration-error/30 hover:text-error"
-          >
-            {t("account.deleteAccount")}
-          </Button>
+            onDraw={() => void drawName()}
+            onCommit={commitName}
+            drawing={drawing}
+            serverError={nameError}
+          />
+          <CountryField
+            label={t("account.myCountry")}
+            value={profile.country}
+            onOpen={() => setView("country")}
+            onDraw={() => saveCountry(randomCountry(profile.country))}
+          />
+          <EmailRow
+            email={profile.email}
+            onOpen={() => {
+              setNewEmail("");
+              setView("email");
+            }}
+          />
+          <div className="flex flex-col gap-3 pt-2">
+            <Button
+              type="button"
+              variant="secondary"
+              className="h-11 w-full"
+              onClick={() => {
+                posthog?.capture("account_signed_out");
+                void account.signOut();
+                close({ commit: false });
+              }}
+            >
+              {t("account.signOut")}
+            </Button>
+            <Button
+              type="button"
+              variant="link"
+              onClick={() => setView("confirm")}
+              className="mx-auto mt-1 text-xs text-error decoration-error/30 hover:text-error"
+            >
+              {t("account.deleteAccount")}
+            </Button>
+          </div>
+        </div>
+      )}
+
+      {view === "country" && (
+        <CountryPicker current={profile.country} onChoose={chooseCountry} />
+      )}
+
+      {view === "email" && (
+        <NewEmailForm
+          value={newEmail}
+          onChange={setNewEmail}
+          onSent={() => setView("email-code")}
+        />
+      )}
+
+      {view === "email-code" && (
+        <div className="pt-2">
+          <CodeStep
+            email={newEmail}
+            purpose="change-email"
+            onVerified={() => {
+              posthog?.capture("account_email_changed");
+              setNewEmail("");
+              backToAccount();
+            }}
+          />
         </div>
       )}
 
       {view === "confirm" && (
-        <div className="flex flex-col gap-6">
-          <BackTo label={t("account.backToAccount")} onClick={reset} />
-          <ul className="-mt-4 flex flex-col gap-3.5">
+        <div className="flex flex-col gap-6 pt-2">
+          <ul className="flex flex-col gap-3.5">
             <DeleteLine icon={<Trash2 />}>
               <span className="font-medium">
                 {t("account.deleteErasedLabel")}
@@ -198,7 +531,7 @@ export function AccountDrawer({
               type="button"
               className="h-11 w-full gap-2 bg-error text-surface-lowest hover:bg-error/90"
               disabled={sending || sendError === "too_many"}
-              onClick={() => void requestCode()}
+              onClick={() => void requestDeleteCode()}
             >
               {sending && (
                 <LoaderCircle className="size-4 animate-spin" aria-hidden />
@@ -209,7 +542,7 @@ export function AccountDrawer({
               type="button"
               variant="secondary"
               className="h-11 w-full"
-              onClick={reset}
+              onClick={backToAccount}
             >
               {t("account.cancel")}
             </Button>
@@ -217,12 +550,11 @@ export function AccountDrawer({
         </div>
       )}
 
-      {view === "code" && (
-        <div className="flex flex-col gap-4">
-          <BackTo label={t("account.backToAccount")} onClick={reset} />
+      {view === "delete-code" && (
+        <div className="flex flex-col gap-4 pt-2">
           {deleteFailed && <Notice>{t("account.deleteFailed")}</Notice>}
           <CodeStep
-            email={email}
+            email={profile.email}
             purpose="delete-account"
             onVerified={deleteAccount}
           />

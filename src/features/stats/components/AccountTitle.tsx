@@ -9,41 +9,28 @@ import { cn } from "@/lib/utils";
 
 /**
  * Connecté, le titre de « Mes stats » devient le joueur : son drapeau
- * (tapable : « Mon pays », drapeau blanc sans pays) et son nom, avec un
- * crayon qui ouvre « Mon nom ». Le sous-titre redevient « Mes stats ».
+ * (drapeau blanc sans pays, simple affichage) et son nom, avec un crayon qui
+ * ouvre « Mon compte ». Le sous-titre redevient « Mes stats ».
  */
 export function AccountTitle({
   pseudo,
   country,
-  onEditName,
-  onEditCountry,
+  onEdit,
 }: {
   pseudo: string;
   country: string | null;
-  onEditName: () => void;
-  onEditCountry: () => void;
+  onEdit: () => void;
 }) {
   const { t, locale } = useLocale();
   const chosen = country ? getCountryByIso3(country) : undefined;
-  // Le pays choisi ou tiré dans « Mon pays » se pose avec le rebond de la grille.
+  // Le pays choisi ou tiré dans « Mon compte » se pose avec le rebond de la grille.
   const bouncing = useBounce(country);
   return (
     <DisplayHeader
       as="h1"
       size="lg"
       leftIcon={
-        <Button
-          type="button"
-          variant="ghost"
-          size="auto"
-          onClick={onEditCountry}
-          aria-label={
-            chosen
-              ? t("account.countryButton", { country: chosen.names[locale] })
-              : t("account.chooseCountry")
-          }
-          className="grid size-10 shrink-0 place-items-center rounded-full bg-surface-low text-2xl leading-none hover:bg-surface-highest/60"
-        >
+        <span className="grid size-10 shrink-0 place-items-center rounded-full bg-surface-low text-2xl leading-none">
           <span
             aria-hidden
             className={cn(
@@ -53,7 +40,12 @@ export function AccountTitle({
           >
             {chosen?.flagEmoji ?? WHITE_FLAG}
           </span>
-        </Button>
+          {chosen && (
+            <span className="sr-only">
+              {t("account.countryLabel", { country: chosen.names[locale] })}
+            </span>
+          )}
+        </span>
       }
       title={
         <span className="inline-flex min-w-0 items-center gap-1.5">
@@ -62,8 +54,8 @@ export function AccountTitle({
             type="button"
             variant="ghost"
             size="auto"
-            onClick={onEditName}
-            aria-label={t("account.editName")}
+            onClick={onEdit}
+            aria-label={t("account.editAccount")}
             className="shrink-0 p-1"
           >
             <Pencil className="!size-4" aria-hidden />

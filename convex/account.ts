@@ -4,6 +4,7 @@ import {
   type AccountEntry,
   sanitizeAccountEntry,
 } from "../src/features/account/logic/accountEntry";
+import { looksLikeEmail } from "../src/features/account/logic/codeOutcome";
 import {
   checkPseudo,
   drawPseudo,
@@ -333,6 +334,48 @@ export const updateProfile = mutation({
     }
     await ctx.db.patch(profile._id, patch);
     return { ok: true as const };
+  },
+});
+
+// ─── Changer d'e-mail ────────────────────────────────────────────────────────
+
+/**
+ * Avant d'envoyer le code d'un changement d'e-mail : la nouvelle adresse
+ * est-elle libre ? Better Auth ne le dit pas (il répond « envoyé » sans rien
+ * envoyer) ; l'écran, lui, dit « Un compte existe déjà avec cette adresse ».
+ * Connecté seulement et sur le budget d'écritures du compte : on ne sonde pas
+ * des adresses en rafale.
+ */
+export const checkNewEmail = mutation({
+  args: { email: v.string() },
+  returns: v.union(
+    v.object({ ok: v.literal(true) }),
+    v.object({
+      ok: v.literal(false),
+      reason: v.union(
+        v.literal("invalid"),
+        v.literal("same"),
+        v.literal("taken"),
+      ),
+    }),
+  ),
+  handler: async (ctx, args) => {
+    const user = await requireUser(ctx);
+    await requireWriteBudget(ctx, user._id);
+    const email = args.email.trim().toLowerCase();
+    if (!looksLikeEmail(email)) {
+      return { ok: false as const, reason: "invalid" as const };
+    }
+    if (email === user.email.toLowerCase()) {
+      return { ok: false as const, reason: "same" as const };
+    }
+    const holder = await ctx.runQuery(components.betterAuth.adapter.findOne, {
+      model: "user",
+      where: [{ field: "email", value: email }],
+    });
+    return holder
+      ? { ok: false as const, reason: "taken" as const }
+      : { ok: true as const };
   },
 });
 

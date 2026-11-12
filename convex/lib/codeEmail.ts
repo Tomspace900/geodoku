@@ -2,11 +2,12 @@
  * L'e-mail du code (#155), en français ou en anglais selon la page au moment
  * de la demande. Le code est dans l'objet (on le lit sans ouvrir l'e-mail) et
  * d'un seul tenant dans le corps, pour la suggestion du clavier et le
- * copier-coller. Même objet pour la connexion et la suppression du compte.
+ * copier-coller. Même objet pour la connexion, le changement d'adresse et la
+ * suppression du compte.
  */
 
 export type CodeEmailLocale = "fr" | "en";
-export type CodeEmailPurpose = "sign-in" | "delete-account";
+export type CodeEmailPurpose = "sign-in" | "change-email" | "delete-account";
 
 export const CODE_EMAIL_FROM = { email: "compte@geodoku.app", name: "Geodoku" };
 export const CODE_EMAIL_REPLY_TO = { email: "support@geodoku.app" };
@@ -18,6 +19,7 @@ const TEXTS = {
   fr: {
     subject: (otp: string) => `${otp} est ton code Geodoku`,
     "sign-in": "Ton code pour te connecter :",
+    "change-email": "Ton code pour changer d'adresse e-mail :",
     "delete-account": "Ton code pour supprimer ton compte :",
     validity: "Il vaut 5 minutes.",
     ignore: "Tu n'as rien demandé ? Ignore cet e-mail.",
@@ -25,6 +27,7 @@ const TEXTS = {
   en: {
     subject: (otp: string) => `${otp} is your Geodoku code`,
     "sign-in": "Your code to sign in:",
+    "change-email": "Your code to change your email address:",
     "delete-account": "Your code to delete your account:",
     validity: "It's valid for 5 minutes.",
     ignore: "Didn't ask for it? Ignore this email.",

@@ -31,4 +31,11 @@ describe("buildCodeEmail", () => {
       }).html,
     ).toContain("Ton code pour supprimer ton compte :");
   });
+
+  it("dit l'objet du changement d'adresse dans le corps", () => {
+    expect(
+      buildCodeEmail({ otp: "481207", locale: "en", purpose: "change-email" })
+        .text,
+    ).toContain("Your code to change your email address:");
+  });
 });

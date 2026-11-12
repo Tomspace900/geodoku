@@ -126,8 +126,12 @@ export const createAuth = (ctx: GenericCtx<DataModel>) => {
         // par la limite n'invalide pas celui déjà reçu.
         storeOTP: "encrypted",
         resendStrategy: "reuse",
+        // Changer d'e-mail : un seul code, envoyé à la nouvelle adresse. Une
+        // adresse déjà prise est refusée avant l'envoi (`account.checkNewEmail`) :
+        // Better Auth, lui, répond « envoyé » sans rien envoyer.
+        changeEmail: { enabled: true, verifyCurrentEmail: false },
         sendVerificationOTP: async ({ email, otp, type }, endpointCtx) => {
-          if (type !== "sign-in") return;
+          if (type !== "sign-in" && type !== "change-email") return;
           if (!("runMutation" in ctx)) {
             throw new Error("Codes are sent from an HTTP action only");
           }
@@ -144,9 +148,11 @@ export const createAuth = (ctx: GenericCtx<DataModel>) => {
           const locale: CodeEmailLocale =
             headerOf(endpointCtx, LOCALE_HEADER) === "en" ? "en" : "fr";
           const purpose: CodeEmailPurpose =
-            headerOf(endpointCtx, PURPOSE_HEADER) === "delete-account"
-              ? "delete-account"
-              : "sign-in";
+            type === "change-email"
+              ? "change-email"
+              : headerOf(endpointCtx, PURPOSE_HEADER) === "delete-account"
+                ? "delete-account"
+                : "sign-in";
           await deliverCodeEmail(
             email,
             buildCodeEmail({ otp, locale, purpose }),

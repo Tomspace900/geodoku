@@ -467,12 +467,20 @@ Tranchés les 5 et 6 novembre 2026 sur maquettes dans la vraie app.
 
 #### Nom, pays, compte
 
-- **« Mon nom »** (tiroir, ouvert par le crayon) : le même champ et le dé,
-  « Enregistrer » ; rien n'est enregistré avant.
-- **« Mon pays »** (tiroir, ouvert par le drapeau), sous-titre « Facultatif » :
-  un dé, une recherche dès la première lettre (mêmes alias que la saisie en
-  jeu), le pays actuel en tête avec « Retirer », puis les 197 pays par ordre
-  alphabétique avec leur drapeau.
+- **Un seul tiroir « Mon compte »** (retouche du 10 novembre, X1), ouvert par
+  le crayon du titre comme par « Mon compte › » ; le drapeau du titre n'est
+  qu'un affichage. De haut en bas : « Mon nom » (le champ de la bienvenue, dé
+  dehors), « Mon pays » (le champ de choix, dé dehors), « Mon e-mail » (au même
+  trait, avec ›), « Se déconnecter », « Supprimer mon compte ». Pas de bouton
+  « Enregistrer » : le nom part en quittant le champ (ou à Entrée) s'il est
+  valide, le pays dès qu'il est choisi.
+- **La liste des pays** s'affiche sur place dans le tiroir (« ← Mon compte »),
+  sous-titre « Facultatif » : un dé, une recherche dès la première lettre
+  (mêmes alias que la saisie en jeu), le pays actuel en tête avec « Retirer »,
+  puis les 197 pays par ordre alphabétique avec leur drapeau.
+- **Changer d'e-mail** (sur place) : « Nouvel e-mail », « Recevoir un code » ;
+  le code part à la nouvelle adresse, l'e-mail ne change qu'une fois le code
+  saisi. Adresse prise : « Un compte existe déjà avec cette adresse. »
 - **Déconnexion** : sans confirmation. La page redevient exactement celle d'un
   joueur sans compte, calculée sur le journal de l'appareil, avec l'invitation.
   Aucune trace du compte sur l'appareil.

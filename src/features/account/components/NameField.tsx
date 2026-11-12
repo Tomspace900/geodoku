@@ -21,16 +21,19 @@ export function NameField({
   value,
   onChange,
   onDraw,
+  onCommit,
   drawing = false,
   serverError = null,
-  hideLabel = false,
 }: {
   label: string;
-  /** Le titre du tiroir dit déjà « Mon nom » : l'étiquette n'est que lue. */
-  hideLabel?: boolean;
   value: string;
   onChange: (value: string) => void;
   onDraw: () => void;
+  /**
+   * « Mon compte » n'a pas de bouton « Enregistrer » : le nom part en quittant
+   * le champ (ou à Entrée, qui ferme aussi le clavier).
+   */
+  onCommit?: () => void;
   drawing?: boolean;
   /** Refus du serveur, qui reste juge (même règle). */
   serverError?: TKey | null;
@@ -54,7 +57,7 @@ export function NameField({
   const bouncing = useBounce(drawn);
   return (
     <div className="flex flex-col gap-1">
-      <label htmlFor={id} className={hideLabel ? "sr-only" : undefined}>
+      <label htmlFor={id}>
         <Eyebrow as="span">{label}</Eyebrow>
       </label>
       <div className="flex items-end gap-2">
@@ -65,6 +68,14 @@ export function NameField({
             id={id}
             value={value}
             onChange={(event) => onChange(event.target.value)}
+            onBlur={onCommit}
+            onKeyDown={(event) => {
+              if (event.key === "Enter" && onCommit) {
+                event.preventDefault();
+                event.currentTarget.blur();
+              }
+            }}
+            enterKeyHint={onCommit ? "done" : undefined}
             maxLength={PSEUDO_MAX_LENGTH}
             autoComplete="off"
             autoCapitalize="words"

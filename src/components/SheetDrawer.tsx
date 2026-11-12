@@ -20,6 +20,8 @@ type Props = {
    */
   hideTitle?: boolean;
   subtitle?: ReactNode;
+  /** Lien de retour au-dessus du titre, quand le contenu change sur place (« ← Mon compte »). */
+  back?: ReactNode;
   /** Bouton d'action à droite du titre (le dé de « Mon pays »). */
   action?: ReactNode;
   closeLabel: string;
@@ -46,6 +48,7 @@ export function SheetDrawer({
   title,
   hideTitle = false,
   subtitle,
+  back,
   action,
   closeLabel,
   width = "md",
@@ -74,6 +77,7 @@ export function SheetDrawer({
             <X aria-hidden />
           </Button>
         </DrawerClose>
+        {back && !hideTitle && <div className="px-5 pt-3">{back}</div>}
         <div
           className={cn(
             "flex items-start justify-between gap-3 px-5 pt-3 sm:pr-14",

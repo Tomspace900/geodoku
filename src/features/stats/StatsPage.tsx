@@ -1,5 +1,5 @@
 import { usePostHog } from "@posthog/react";
-import { useMutation, useQuery } from "convex/react";
+import { useQuery } from "convex/react";
 import { type ReactNode, useEffect, useMemo, useState } from "react";
 import { useSearchParams } from "react-router";
 import AppFooter from "@/app/AppFooter";
@@ -9,8 +9,6 @@ import { Button } from "@/components/ui/button";
 import { useAccount } from "@/features/account/AccountContext";
 import { AccountDialog } from "@/features/account/components/AccountDialog";
 import { AccountDrawer } from "@/features/account/components/AccountDrawer";
-import { CountryDrawer } from "@/features/account/components/CountryDrawer";
-import { NameDrawer } from "@/features/account/components/NameDrawer";
 import { isDailyGameFinished } from "@/features/archive/logic/dailyGate";
 import { loadHistory } from "@/features/game/logic/history";
 import { loadPersistedGame } from "@/features/game/logic/persistence";
@@ -157,10 +155,7 @@ export function StatsPage() {
   const account = useAccount();
   const [params, setParams] = useSearchParams();
   const [dialogOpen, setDialogOpen] = useState(false);
-  const [drawer, setDrawer] = useState<"name" | "country" | "account" | null>(
-    null,
-  );
-  const updateProfile = useMutation(api.account.updateProfile);
+  const [accountOpen, setAccountOpen] = useState(false);
   const signedIn = account.status === "signedIn";
   const accountGames = useQuery(api.account.myGames, signedIn ? {} : "skip");
   // Relu à chaque passage sans compte : une déconnexion ramène au journal.
@@ -202,7 +197,7 @@ export function StatsPage() {
         <LeaguesTeaser />
         <AccountLine
           email={profile.email}
-          onOpen={() => setDrawer("account")}
+          onOpen={() => setAccountOpen(true)}
         />
       </div>
     ) : account.status === "anonymous" ? (
@@ -218,8 +213,7 @@ export function StatsPage() {
             <AccountTitle
               pseudo={profile.pseudo}
               country={profile.country}
-              onEditName={() => setDrawer("name")}
-              onEditCountry={() => setDrawer("country")}
+              onEdit={() => setAccountOpen(true)}
             />
           ) : (
             <DisplayHeader
@@ -253,28 +247,12 @@ export function StatsPage() {
 
       <AccountDialog open={dialogOpen} onOpenChange={setDialogOpen} />
       {signedIn && profile && (
-        <>
-          <NameDrawer
-            open={drawer === "name"}
-            current={profile.pseudo ?? ""}
-            onClose={() => setDrawer(null)}
-          />
-          <CountryDrawer
-            open={drawer === "country"}
-            current={profile.country}
-            onChoose={(country) => {
-              void updateProfile({ country });
-              setDrawer(null);
-            }}
-            onClose={() => setDrawer(null)}
-          />
-          <AccountDrawer
-            open={drawer === "account"}
-            email={profile.email}
-            gamesCount={accountGames?.length ?? 0}
-            onClose={() => setDrawer(null)}
-          />
-        </>
+        <AccountDrawer
+          open={accountOpen}
+          profile={profile}
+          gamesCount={accountGames?.length ?? 0}
+          onClose={() => setAccountOpen(false)}
+        />
       )}
     </div>
   );
