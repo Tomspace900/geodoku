@@ -188,7 +188,7 @@ pnpm typecheck
 pnpm test                         # Vitest (e2e/ exclu)
 pnpm format
 pnpm check:design-system          # audit tokens/DS sur src/**/*.tsx (job quality)
-pnpm check:bundle                 # vite build + budget bundle joueur 280 KiB (job quality)
+pnpm check:bundle                 # vite build + budget bundle joueur 300 KiB (job quality)
 
 # E2E Playwright — nécessite une grille du jour
 pnpm test:e2e
