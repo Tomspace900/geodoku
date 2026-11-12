@@ -14,8 +14,9 @@ import { components } from "./_generated/api";
  *   profil et rattachement par compte (`accountWrite`).
  * - Codes par e-mail : 4 d'affilée puis 10 par jour et par adresse (5 essais
  *   par code : deviner un code à 6 chiffres reste hors de portée), et un
- *   plafond global par jour qui protège le quota MailerSend (500 par mois en
- *   gratuit) d'un script qui changerait d'adresse à chaque appel.
+ *   plafond global par jour qui protège le quota Mailjet (200 par jour et
+ *   6 000 par mois en gratuit) d'un script qui changerait d'adresse à chaque
+ *   appel.
  *
  * Pas une barrière contre un attaquant qui change de clé à chaque appel, mais
  * de quoi arrêter un script naïf et plafonner la facture. La table du

@@ -247,15 +247,20 @@ En prod depuis la bascule de la nuit du 4 au 5 novembre 2026 (prod Convex en
 - **Aucune donnée de profil Google reprise** : le `name` de Better Auth reçoit le
   pseudo, la photo n'est pas gardée.
 - **Budget bundle** : on accepte de relever celui de `check:bundle`.
-- **Envoi des codes par MailerSend** (tranché le 2026-11-05) : données hébergées
-  en Europe (Google Cloud, Belgique), société américaine (MailerSend, Inc.),
-  comme Convex. Gratuit jusqu'à 500 e-mails par mois, largement au-dessus du
-  besoin. Better Auth n'appelle qu'une fonction d'envoi (`sendVerificationOTP`) :
-  changer de service ne touche qu'elle. Écartés : Resend (données et journaux
-  aux États-Unis), Scaleway (français, mais moins éprouvé), Brevo (« la plupart »
-  des serveurs en Europe, sans dire lesquels). Enregistrements DNS (SPF, DKIM) à
-  poser sur `geodoku.app`, arrivée en boîte de réception à tester sur Gmail,
-  Outlook et iCloud avant le lancement.
+- **Envoi des codes par Mailjet** (tranché le 2026-11-12, à la place de
+  MailerSend retenu le 2026-11-05) : société française (Mailjet SAS, groupe
+  Sinch), données en Europe (Google Cloud, Saint-Ghislain en Belgique et
+  Francfort en Allemagne). Gratuit jusqu'à 200 e-mails par jour et 6 000 par
+  mois, quand MailerSend s'arrêtait à 500 par mois : un pic d'inscriptions ou
+  l'arrivée des ligues l'aurait épuisé en quelques jours. Suivi des ouvertures
+  et des clics coupé à chaque envoi (`TrackOpens`, `TrackClicks`). Better Auth
+  n'appelle qu'une fonction d'envoi (`sendVerificationOTP`) : changer de
+  service ne touche que `deliverCodeEmail`. Écartés : Resend (données et
+  journaux aux États-Unis), Scaleway (carte bancaire et vérification d'identité
+  exigées), Brevo (« la plupart » des serveurs en Europe, sans dire lesquels).
+  Enregistrements DNS (SPF, DKIM) sur `geodoku.app`, chez OVH ; arrivée en boîte
+  de réception à tester sur Gmail, Outlook et iCloud avant le lancement. Le
+  plan gratuit ajoute un petit logo Mailjet au bas de l'e-mail.
 
 ### Données du compte
 
@@ -519,7 +524,7 @@ Tranchés les 5 et 6 novembre 2026 sur maquettes dans la vraie app.
 
 ### Docs
 
-- `/privacy` à réécrire : e-mail, MailerSend, durée de conservation, droits. Dire que Better
+- `/privacy` à réécrire : e-mail, Mailjet, durée de conservation, droits. Dire que Better
   Auth garde par défaut l'IP et le navigateur dans les sessions, et les jetons
   Google dans ses comptes.
 - `AGENTS.md` : « Pas de compte » devient « Pas de compte obligatoire » ; stack
@@ -544,7 +549,7 @@ Tranchés les 5 et 6 novembre 2026 sur maquettes dans la vraie app.
   jamais un nom refusé (test sur tous les noms du générateur, dans les deux
   langues).
 - **Limite d'envoi des codes** : 4 d'affilée puis 10 par jour et par adresse, et
-  100 par jour en tout pour protéger le quota MailerSend. Le limiteur de Better Auth,
+  100 par jour en tout pour protéger le quota Mailjet (200 par jour). Le limiteur de Better Auth,
   en mémoire, est désactivé (inutile sur Convex).
 - **Un code renvoyé reste le même** tant qu'il vaut (stocké chiffré) : un renvoi
   refusé n'invalide pas celui déjà reçu.
