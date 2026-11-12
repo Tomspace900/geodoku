@@ -127,8 +127,8 @@ export const createAuth = (ctx: GenericCtx<DataModel>) => {
         storeOTP: "encrypted",
         resendStrategy: "reuse",
         // Changer d'e-mail : un seul code, envoyé à la nouvelle adresse. Une
-        // adresse déjà prise est refusée avant l'envoi (`account.checkNewEmail`) :
-        // Better Auth, lui, répond « envoyé » sans rien envoyer.
+        // adresse qui a déjà un compte ne reçoit rien et l'écran ne le dit
+        // pas : seul le propriétaire de la boîte voit que rien n'arrive.
         changeEmail: { enabled: true, verifyCurrentEmail: false },
         sendVerificationOTP: async ({ email, otp, type }, endpointCtx) => {
           if (type !== "sign-in" && type !== "change-email") return;

@@ -343,56 +343,6 @@ describe("profil", () => {
   });
 });
 
-describe("changer d'e-mail", () => {
-  it("accepte une adresse libre", async () => {
-    const backend = createBackend();
-    const { as } = await signIn(backend);
-    expect(
-      await as.mutation(api.account.checkNewEmail, {
-        email: "camille@nouveau.fr",
-      }),
-    ).toEqual({ ok: true });
-  });
-
-  it("refuse une adresse qui a déjà un compte, quelle que soit sa casse", async () => {
-    const backend = createBackend();
-    await signIn(backend, "dominique@exemple.fr");
-    const { as } = await signIn(backend);
-    expect(
-      await as.mutation(api.account.checkNewEmail, {
-        email: " Dominique@Exemple.fr ",
-      }),
-    ).toEqual({ ok: false, reason: "taken" });
-  });
-
-  it("refuse sa propre adresse", async () => {
-    const backend = createBackend();
-    const { as } = await signIn(backend);
-    expect(
-      await as.mutation(api.account.checkNewEmail, {
-        email: "CAMILLE@exemple.fr",
-      }),
-    ).toEqual({ ok: false, reason: "same" });
-  });
-
-  it("refuse une adresse mal formée", async () => {
-    const backend = createBackend();
-    const { as } = await signIn(backend);
-    expect(
-      await as.mutation(api.account.checkNewEmail, { email: "camille@" }),
-    ).toEqual({ ok: false, reason: "invalid" });
-  });
-
-  it("ne répond pas sans compte", async () => {
-    const backend = createBackend();
-    await expect(
-      backend.mutation(api.account.checkNewEmail, {
-        email: "camille@nouveau.fr",
-      }),
-    ).rejects.toThrow();
-  });
-});
-
 describe("suppression du compte", () => {
   it("efface le profil et détache chaque partie avec sa propre empreinte", async () => {
     const backend = createBackend();

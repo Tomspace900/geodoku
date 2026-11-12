@@ -439,6 +439,8 @@ export const en = {
     resendIn: "Resend the code in {time}",
     notReceivedTitle: "Nothing yet?",
     notReceivedBody: "Check your spam folder: the email comes from {sender}.",
+    notReceivedChangeEmail:
+      "If this address already has a Geodoku account, no code is sent to it.",
     welcomeTitle: "Welcome",
     welcomeSubtitle: "Your account is ready",
     welcomeDescription: "Pick your name and, if you like, your country.",
@@ -466,7 +468,6 @@ export const en = {
     myEmail: "My email",
     changeEmailTitle: "Change email",
     newEmail: "New email",
-    emailTaken: "An account already exists with this address.",
     emailSame: "That's already your address.",
     signOut: "Sign out",
     deleteAccount: "Delete my account",

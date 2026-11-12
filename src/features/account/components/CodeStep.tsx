@@ -149,6 +149,8 @@ export function CodeStep({
           <span className="font-medium">{t("account.notReceivedTitle")}</span>
           <span className="text-on-surface-variant">
             {t("account.notReceivedBody", { sender: CODE_SENDER })}
+            {purpose === "change-email" &&
+              ` ${t("account.notReceivedChangeEmail")}`}
           </span>
         </Notice>
       )}

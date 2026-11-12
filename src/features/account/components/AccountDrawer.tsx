@@ -45,12 +45,11 @@ type View =
   | "delete-code";
 
 /** Refus d'une nouvelle adresse : sous le champ, ou en encadré (réseau, limite). */
-type EmailError = "invalid" | "same" | "taken" | "offline" | "too_many";
+type EmailError = "invalid" | "same" | "offline" | "too_many";
 
-const EMAIL_ERROR_KEY: Record<"invalid" | "same" | "taken", TKey> = {
+const EMAIL_ERROR_KEY: Record<"invalid" | "same", TKey> = {
   invalid: "account.invalidEmail",
   same: "account.emailSame",
-  taken: "account.emailTaken",
 };
 
 function emailErrorFromSend(outcome: Exclude<SendOutcome, "sent">): EmailError {
@@ -115,24 +114,28 @@ function EmailRow({ email, onOpen }: { email: string; onOpen: () => void }) {
   );
 }
 
-/** « Changer d'e-mail » : la nouvelle adresse, vérifiée avant l'envoi du code. */
+/**
+ * « Changer d'e-mail » : la nouvelle adresse. Qu'elle ait déjà un compte ou
+ * non, l'écran du code suit (Better Auth n'envoie alors rien) : quelqu'un qui
+ * essaie l'adresse d'un autre n'apprend rien, comme à la connexion.
+ */
 function NewEmailForm({
   value,
+  currentEmail,
   onChange,
   onSent,
 }: {
   value: string;
+  currentEmail: string;
   onChange: (value: string) => void;
   onSent: () => void;
 }) {
   const { t } = useLocale();
   const id = useId();
-  const checkNewEmail = useMutation(api.account.checkNewEmail);
   const { send } = useEmailCode("change-email");
   const [error, setError] = useState<EmailError | null>(null);
   const [sending, setSending] = useState(false);
-  const fieldError =
-    error === "invalid" || error === "same" || error === "taken" ? error : null;
+  const fieldError = error === "invalid" || error === "same" ? error : null;
 
   async function submit(event: FormEvent) {
     event.preventDefault();
@@ -140,26 +143,19 @@ function NewEmailForm({
       setError("invalid");
       return;
     }
-    setSending(true);
-    try {
-      const check = await checkNewEmail({ email: value });
-      if (!check.ok) {
-        setError(check.reason);
-        return;
-      }
-      const outcome = await send(value);
-      if (outcome === "sent") {
-        setError(null);
-        onSent();
-        return;
-      }
-      setError(emailErrorFromSend(outcome));
-    } catch {
-      // Hors ligne, ou la limite d'écritures du compte.
-      setError("offline");
-    } finally {
-      setSending(false);
+    if (value.trim().toLowerCase() === currentEmail.toLowerCase()) {
+      setError("same");
+      return;
     }
+    setSending(true);
+    const outcome = await send(value);
+    setSending(false);
+    if (outcome === "sent") {
+      setError(null);
+      onSent();
+      return;
+    }
+    setError(emailErrorFromSend(outcome));
   }
 
   return (
@@ -478,6 +474,7 @@ export function AccountDrawer({
       {view === "email" && (
         <NewEmailForm
           value={newEmail}
+          currentEmail={profile.email}
           onChange={setNewEmail}
           onSent={() => setView("email-code")}
         />

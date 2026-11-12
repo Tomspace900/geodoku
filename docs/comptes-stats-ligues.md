@@ -480,7 +480,11 @@ Tranchés les 5 et 6 novembre 2026 sur maquettes dans la vraie app.
   puis les 197 pays par ordre alphabétique avec leur drapeau.
 - **Changer d'e-mail** (sur place) : « Nouvel e-mail », « Recevoir un code » ;
   le code part à la nouvelle adresse, l'e-mail ne change qu'une fois le code
-  saisi. Adresse prise : « Un compte existe déjà avec cette adresse. »
+  saisi. Aucune vérification préalable de l'adresse : l'écran du code dit
+  toujours « Code envoyé à … », et une adresse qui a déjà un compte ne reçoit
+  rien (seul le propriétaire de la boîte voit que rien n'arrive). Au bout de
+  30 s, la carte « Rien reçu ? » de ce parcours ajoute « Si cette adresse a
+  déjà un compte Geodoku, aucun code n'y est envoyé. »
 - **Déconnexion** : sans confirmation. La page redevient exactement celle d'un
   joueur sans compte, calculée sur le journal de l'appareil, avec l'invitation.
   Aucune trace du compte sur l'appareil.
