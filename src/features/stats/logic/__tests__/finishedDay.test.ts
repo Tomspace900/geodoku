@@ -23,6 +23,7 @@ describe("sanitizeFinishedDay", () => {
     cols: ["d", "e", "f"],
     counts: { "0,0": { FRA: 3 } },
     blockableAnswers: { "0,0": ["FRA"] },
+    histogram: Array.from({ length: 101 }, () => 0),
   };
 
   it("relit un jour valide", () => {
@@ -33,6 +34,11 @@ describe("sanitizeFinishedDay", () => {
     expect(
       sanitizeFinishedDay({ ...valid, counts: { "0,0": { FRA: 1.5 } } }),
     ).toBeNull();
+  });
+
+  it("écarte un jour sans histogramme, mis en cache avant lui", () => {
+    const { histogram: _, ...withoutHistogram } = valid;
+    expect(sanitizeFinishedDay(withoutHistogram)).toBeNull();
   });
 
   it("écarte une réponse qui n'est pas un ISO3", () => {

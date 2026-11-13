@@ -4,13 +4,14 @@ import { Link } from "react-router";
 import { SheetDrawer } from "@/components/SheetDrawer";
 import { Button } from "@/components/ui/button";
 import { ScoreDisplay } from "@/features/game/components/ScoreDisplay";
+import { ShareEmojiGrid } from "@/features/game/components/ShareEmojiGrid";
+import { StandingPill } from "@/features/game/components/StandingPill";
 import { formatGridDateLabel } from "@/features/game/logic/gridDateLabel";
 import { getGridNumberForDate } from "@/features/game/logic/gridIssue";
 import { isReplayableDate } from "@/features/game/logic/replayWindow";
 import { useLocale } from "@/i18n/LocaleContext";
 import type { DayResult, RecentDays } from "../logic/myStats";
 import { formatStatsDate } from "../logic/statsDates";
-import { FrozenGrid } from "./FrozenGrid";
 import { RecentDaysChart } from "./RecentDaysChart";
 
 /** Laisse le défilement se poser avant de lire le jour affiché. */
@@ -72,7 +73,9 @@ const DaySlide = memo(function DaySlide({
           <ChevronRight aria-hidden />
         </Button>
       </div>
-      <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-center sm:gap-10">
+      {/* L'écran de résultat de ce jour-là : le score, le rang du jour (fixe,
+          sans graphique) et la grille d'emojis du partage, sur cohorte close. */}
+      <div className="flex flex-col items-center gap-5 sm:flex-row sm:justify-center sm:gap-16">
         {result.finished ? (
           <div className="flex shrink-0 justify-center">
             {/* Figé : glisser d'un jour à l'autre ne relance ni comptage ni rebond. */}
@@ -83,13 +86,29 @@ const DaySlide = memo(function DaySlide({
             {t("stats.unfinished")}
           </p>
         )}
-        <div className="min-w-0 flex-1 sm:max-w-[420px]">
-          <FrozenGrid
-            result={result}
-            ariaLabel={t("stats.dayGridAriaLabel", {
+        <div className="flex flex-col items-center gap-4">
+          {result.standing.kind !== "none" && (
+            <StandingPill
+              percent={
+                result.standing.kind === "ranked"
+                  ? result.standing.percent
+                  : null
+              }
+            />
+          )}
+          <div
+            role="img"
+            aria-label={t("stats.dayGridAriaLabel", {
               date: formatStatsDate(result.date, locale, "long"),
             })}
-          />
+          >
+            <ShareEmojiGrid
+              cells={result.cells}
+              distribution={result.distribution}
+              cohortComplete={result.complete}
+              caption={`#GEODOKU${gridNumber !== null ? ` #${gridNumber}` : ""}`}
+            />
+          </div>
         </div>
       </div>
       {replayable && (

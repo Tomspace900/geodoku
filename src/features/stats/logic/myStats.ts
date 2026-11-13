@@ -1,4 +1,9 @@
 import {
+  betterThanPercent,
+  cohortSize,
+  isThinCohort,
+} from "@/features/game/logic/cohort";
+import {
   type CellCounts,
   toGuessDistribution,
 } from "@/features/game/logic/distribution";
@@ -15,7 +20,12 @@ import {
   computeScoreBreakdown,
   type ScoreBreakdown,
 } from "@/features/game/logic/scoreVariant";
-import type { Cell, CellKey, RarityTier } from "@/features/game/types";
+import type {
+  Cell,
+  CellGuessDistribution,
+  CellKey,
+  RarityTier,
+} from "@/features/game/types";
 import { type ThemeId, themeOf } from "./themes";
 
 /**
@@ -44,7 +54,20 @@ export type StatsDay = {
   blockableAnswers: Record<string, string[]>;
   /** Jour fini : la cohorte est close, un pays absent vaut une part de 0. */
   complete: boolean;
+  /** Scores des parties finies du jour (`cohort.ts`) ; `null` tant qu'inconnus. */
+  histogram: readonly number[] | null;
 };
+
+/**
+ * Le rang du joueur ce jour-là, dans le tiroir du jour : « Mieux que X % »,
+ * « Parmi les premiers à finir » sous 5 parties finies, rien pour une partie
+ * pas finie ni pour un jour sans parties côté serveur (avant la bascule du
+ * 5 novembre 2026, ou seulement des imports).
+ */
+export type DayStanding =
+  | { kind: "none" }
+  | { kind: "thin" }
+  | { kind: "ranked"; percent: number };
 
 export type DayResult = {
   date: string;
@@ -57,8 +80,13 @@ export type DayResult = {
   errors: number;
   /** Part du pays posé, par case remplie. */
   shares: Partial<Record<CellKey, number>>;
+  /** Répartition du jour, pour les emojis du partage. */
+  distribution: Record<string, CellGuessDistribution>;
+  /** Cohorte close : un pays absent de la répartition est ultra. */
+  complete: boolean;
   breakdown: ScoreBreakdown;
   total: number;
+  standing: DayStanding;
 };
 
 export type ThemeStat = {
@@ -94,7 +122,19 @@ export const TIER_ORDER: readonly RarityTier[] = [
  */
 export const THEME_MIN_CELLS = 6;
 
-/** Partie lue sur la grille de son jour : cases, statut, score. */
+export function dayStanding(
+  histogram: readonly number[] | null,
+  total: number,
+  finished: boolean,
+): DayStanding {
+  if (!finished || !histogram || cohortSize(histogram) === 0) {
+    return { kind: "none" };
+  }
+  if (isThinCohort(histogram)) return { kind: "thin" };
+  return { kind: "ranked", percent: betterThanPercent(histogram, total) };
+}
+
+/** Partie lue sur la grille de son jour : cases, statut, score, rang. */
 export function computeDayResult(game: PlayedGame, day: StatsDay): DayResult {
   const record: GameRecord = { cells: game.cells, failed: game.failed };
   const cells = recordCells(record, day.blockableAnswers);
@@ -123,18 +163,23 @@ export function computeDayResult(game: PlayedGame, day: StatsDay): DayResult {
   const failed = Object.fromEntries(
     CELL_KEYS.map((key, index) => [key, game.failed[index] ?? 0]),
   ) as Record<CellKey, number>;
+  const finished = status !== "playing";
+  const total = computeScore(breakdown).total ?? 0;
   return {
     date: game.date,
     rows: day.rows,
     cols: day.cols,
     cells,
     failed,
-    finished: status !== "playing",
+    finished,
     won: status === "won",
     errors: game.failed.reduce((sum, n) => sum + n, 0),
     shares,
+    distribution,
+    complete: day.complete,
     breakdown,
-    total: computeScore(breakdown).total ?? 0,
+    total,
+    standing: dayStanding(day.histogram, total, finished),
   };
 }
 

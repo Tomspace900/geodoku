@@ -83,6 +83,42 @@ describe("getFinishedDay", () => {
     ).rejects.toThrow("Date is not finished");
   });
 
+  it("compte les parties finies du jour dans l'histogramme, sans les imports ni les parties en cours", async () => {
+    const backend = convexTest(schema, modules);
+    const date = daysAgoUTC(4);
+    await seedDay(backend, date);
+    const nineNulls = Array.from({ length: 9 }, () => null);
+    const lost = [5, 0, 0, 0, 0, 0, 0, 0, 0];
+    await backend.run(async (ctx) => {
+      await ctx.db.insert("games", {
+        date,
+        owner: { kind: "anon", tokenHash: "fini" },
+        cells: nineNulls,
+        failed: lost,
+        origin: "live",
+      });
+      await ctx.db.insert("games", {
+        date,
+        owner: { kind: "user", userId: "importe" },
+        cells: nineNulls,
+        failed: lost,
+        origin: "import",
+      });
+      await ctx.db.insert("games", {
+        date,
+        owner: { kind: "anon", tokenHash: "en-cours" },
+        cells: nineNulls,
+        failed: [1, 0, 0, 0, 0, 0, 0, 0, 0],
+        origin: "live",
+      });
+    });
+    const day = await backend.query(api.stats.getFinishedDay, { date });
+    expect([
+      day?.histogram[0],
+      day?.histogram.reduce((sum, n) => sum + n, 0),
+    ]).toEqual([1, 1]);
+  });
+
   it("renvoie null pour un jour sans grille", async () => {
     const backend = convexTest(schema, modules);
     const day = await backend.query(api.stats.getFinishedDay, {

@@ -3,11 +3,13 @@ import { type FinishedDay, sanitizeFinishedDay } from "./finishedDay";
 
 /**
  * Cache navigateur des jours finis (#155). Un jour fini ne change plus : on
- * ne le redemande pas. Un jour pèse environ 0,6 Ko (0,7 Ko au 9ᵉ décile sur
- * la prod de novembre 2026) : deux ans tiennent dans 500 Ko, loin de priver
- * la partie en cours de place. Un jour plus ancien se relit au serveur.
+ * ne le redemande pas. Un jour pèse environ 0,8 Ko, histogramme compris
+ * (0,6 Ko sans lui sur la prod de novembre 2026) : deux ans tiennent dans
+ * 600 Ko, loin de priver la partie en cours de place. Un jour plus ancien se
+ * relit au serveur.
  */
-const DAY_CACHE_VERSION = 1;
+/** 2 : l'histogramme du jour s'ajoute (rang du tiroir du jour) ; les jours v1 se relisent. */
+const DAY_CACHE_VERSION = 2;
 export const MAX_CACHED_DAYS = 730;
 
 export function loadDayCache(): Map<string, FinishedDay> {

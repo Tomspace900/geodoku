@@ -1,5 +1,6 @@
 import { useQueries, useQuery } from "convex/react";
 import { useEffect, useMemo, useState } from "react";
+import { useTodayCohort } from "@/features/game/hooks/useTodayCohort";
 import { todayUTC } from "@/lib/dates";
 import { api } from "../../../../convex/_generated/api";
 import { loadDayCache, saveDayCache } from "../logic/dayCache";
@@ -24,7 +25,9 @@ function finishedStatsDay(day: FinishedDay): StatsDay {
  * du cache du navigateur, sinon de `stats.getFinishedDay` (une query par jour,
  * partagée en cache entre joueurs), puis rejoint le cache. Le jour en cours
  * vient de la grille du jour et de sa répartition live : une partie finie
- * aujourd'hui compte avec son score du moment, qui s'affine jusqu'à minuit.
+ * aujourd'hui compte avec son score du moment, qui s'affine jusqu'à minuit,
+ * et son rang se lit dans la cohorte du jour, lue à la demande comme dans la
+ * modale de résultat (sans elle, le tiroir du jour se passe de pilule).
  */
 export function useStatsResults(
   games: readonly PlayedGame[] | undefined,
@@ -37,6 +40,7 @@ export function useStatsResults(
     api.cellStats.getToday,
     hasTodayGame ? {} : "skip",
   );
+  const todayCohort = useTodayCohort(hasTodayGame, today);
 
   const [cache, setCache] = useState(() => loadDayCache());
   const pastDates = useMemo(
@@ -102,6 +106,7 @@ export function useStatsResults(
           counts: todayCounts,
           blockableAnswers: todayGrid.validAnswers,
           complete: false,
+          histogram: todayCohort?.histogram ?? null,
         }),
       ];
     }

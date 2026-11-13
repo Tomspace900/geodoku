@@ -1,11 +1,13 @@
 // Importé par Convex (`stats.getFinishedDay`) : imports relatifs seulement.
+import { SCORE_BUCKET_COUNT } from "../../game/logic/cohort";
 import type { CellCounts } from "../../game/logic/distribution";
 import { CELL_KEYS, GRID_CELL_COUNT } from "../../game/logic/gridTopology";
 
 /**
  * Un jour fini, tel que `stats.getFinishedDay` le renvoie (#155) : ses 6
- * contraintes, sa répartition finale et les réponses des cases qui peuvent
- * se bloquer. Il ne change plus : le navigateur le garde (`dayCache.ts`).
+ * contraintes, sa répartition finale, les réponses des cases qui peuvent se
+ * bloquer et l'histogramme des scores des parties finies ce jour-là. Il ne
+ * change plus : le navigateur le garde (`dayCache.ts`).
  */
 export type FinishedDay = {
   date: string;
@@ -13,6 +15,8 @@ export type FinishedDay = {
   cols: string[];
   counts: CellCounts;
   blockableAnswers: Record<string, string[]>;
+  /** 101 seaux de 10 points (`cohort.ts`) ; tout à zéro sans partie côté serveur. */
+  histogram: number[];
 };
 
 /**
@@ -86,11 +90,20 @@ export function sanitizeFinishedDay(raw: unknown): FinishedDay | null {
   ) {
     return null;
   }
+  const histogram = o.histogram;
+  if (
+    !Array.isArray(histogram) ||
+    histogram.length !== SCORE_BUCKET_COUNT ||
+    !histogram.every(isCount)
+  ) {
+    return null;
+  }
   return {
     date: o.date,
     rows: o.rows,
     cols: o.cols,
     counts,
     blockableAnswers: answers,
+    histogram,
   };
 }

@@ -9,6 +9,7 @@ function day(date: string): FinishedDay {
     cols: ["d", "e", "f"],
     counts: {},
     blockableAnswers: {},
+    histogram: Array.from({ length: 101 }, () => 0),
   };
 }
 

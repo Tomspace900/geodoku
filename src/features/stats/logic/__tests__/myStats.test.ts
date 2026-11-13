@@ -5,6 +5,7 @@ import {
   computeDayResult,
   computeMyStats,
   computeThemes,
+  dayStanding,
   lastDates,
   type PlayedGame,
   recentDays,
@@ -32,6 +33,7 @@ function day(overrides: Partial<StatsDay> = {}): StatsDay {
     counts,
     blockableAnswers: {},
     complete: true,
+    histogram: null,
     ...overrides,
   };
 }
@@ -209,5 +211,33 @@ describe("recentDays", () => {
 
   it("ne fait pas de moyenne sans partie finie", () => {
     expect(recentDays([], "2026-11-30").average).toBeNull();
+  });
+});
+
+describe("dayStanding", () => {
+  // Seaux de 10 points : 2 joueurs à 300, 6 à 600, 2 à 900.
+  const histogram = Array.from({ length: 101 }, (_, bucket) =>
+    bucket === 30 ? 2 : bucket === 60 ? 6 : bucket === 90 ? 2 : 0,
+  );
+
+  it("place une partie finie dans les scores du jour", () => {
+    expect(dayStanding(histogram, 900, true)).toEqual({
+      kind: "ranked",
+      percent: 90,
+    });
+  });
+
+  it("dit « parmi les premiers » sous 5 parties finies", () => {
+    const thin = Array.from({ length: 101 }, (_, b) => (b === 60 ? 3 : 0));
+    expect(dayStanding(thin, 600, true)).toEqual({ kind: "thin" });
+  });
+
+  it("ne place pas une partie pas finie", () => {
+    expect(dayStanding(histogram, 600, false)).toEqual({ kind: "none" });
+  });
+
+  it("ne place personne un jour sans parties côté serveur", () => {
+    const empty = Array.from({ length: 101 }, () => 0);
+    expect(dayStanding(empty, 600, true)).toEqual({ kind: "none" });
   });
 });
