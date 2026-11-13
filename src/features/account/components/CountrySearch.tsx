@@ -5,6 +5,7 @@ import { Input } from "@/components/ui/input";
 import { searchCountries } from "@/features/countries/logic/search";
 import { useLocale } from "@/i18n/LocaleContext";
 import { cn } from "@/lib/utils";
+import { NO_PASSWORD_MANAGER } from "../logic/autofill";
 import { sortedCountries, WHITE_FLAG } from "../logic/countryPick";
 
 /** Assez pour couvrir un nom tapé en entier, alias compris. */
@@ -102,12 +103,19 @@ export function CountrySearch({
                 event.preventDefault();
                 onCancel();
               }
+              // Entrée : le premier pays trouvé.
+              if (event.key === "Enter" && searching && results[0]) {
+                event.preventDefault();
+                onPick(results[0].iso3);
+              }
             }}
             placeholder={t("account.searchCountry")}
             aria-label={t("account.searchCountry")}
+            enterKeyHint="done"
             autoComplete="off"
             autoCorrect="off"
             spellCheck={false}
+            {...NO_PASSWORD_MANAGER}
             className={cn("h-11 text-base", leading ? "pl-9" : "pl-6")}
           />
         </div>

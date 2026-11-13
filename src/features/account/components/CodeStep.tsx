@@ -19,7 +19,8 @@ type Status = "idle" | "verifying" | Exclude<VerifyOutcome, "ok">;
 /**
  * Le code reçu par e-mail : six cases qui valident seules au 6ᵉ chiffre,
  * pour se connecter comme pour supprimer son compte. Le premier code est
- * déjà parti quand l'étape s'affiche.
+ * déjà parti quand l'étape s'affiche, parfois quelques minutes plus tôt (un
+ * code encore bon resert) : l'attente de « Renvoyer » part de son envoi.
  */
 export function CodeStep({
   email,
@@ -33,11 +34,11 @@ export function CodeStep({
   onChangeEmail?: () => void;
 }) {
   const { t } = useLocale();
-  const { send, verify } = useEmailCode(purpose);
+  const { send, verify, sentAt: lastSentAt } = useEmailCode(purpose);
   const [value, setValue] = useState("");
   const [status, setStatus] = useState<Status>("idle");
   const [shakeKey, setShakeKey] = useState(0);
-  const [sentAt, setSentAt] = useState(() => Date.now());
+  const [sentAt, setSentAt] = useState(() => lastSentAt(email) ?? Date.now());
   const [now, setNow] = useState(() => Date.now());
   const [notice, setNotice] = useState<
     "resent" | "too_many" | "send_offline" | null
@@ -67,7 +68,7 @@ export function CodeStep({
 
   async function resend() {
     setSending(true);
-    const outcome = await send(email);
+    const outcome = await send(email, { reuse: false });
     setSending(false);
     if (outcome === "sent") {
       setSentAt(Date.now());

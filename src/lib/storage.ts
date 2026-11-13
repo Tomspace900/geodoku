@@ -63,6 +63,12 @@ export const STORAGE_KEYS = {
    * déconnexion. localStorage.
    */
   accountSync: "geodoku:account-sync-v1",
+  /**
+   * Heure d'envoi des derniers codes par e-mail (#155), par objet et par
+   * adresse : relancer le parcours ne renvoie pas un code encore bon.
+   * sessionStorage.
+   */
+  recentCodes: "geodoku:recent-codes-v1",
   /** Token admin — éphémère, sessionStorage. */
   adminToken: "geodoku:admin-token",
   /** Horodatage du dernier rechargement sur chunk périmé. sessionStorage. */

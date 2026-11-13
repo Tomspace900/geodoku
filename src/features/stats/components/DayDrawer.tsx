@@ -157,6 +157,9 @@ export function DayDrawer({
   const settleRef = useRef<number | null>(null);
   const frameRef = useRef<number | null>(null);
   const instantRef = useRef(true);
+  // Fermé, le tiroir ne choisit plus de jour : un glissement qui se pose
+  // pendant la fermeture le rouvrirait (le jour choisi vaut ouverture).
+  const openRef = useRef(open);
   // Un glissement lancé par le tiroir (tap sur une barre, chevron, ouverture) :
   // la barre violette est déjà sur le jour visé, le défilement ne la déplace pas.
   const steeringRef = useRef(false);
@@ -177,9 +180,12 @@ export function DayDrawer({
   // Un tap sur une barre fait glisser jusqu'au jour tapé ; à l'ouverture, le
   // jour s'affiche sans glissement.
   useEffect(() => {
+    openRef.current = open;
     if (!open || !track) {
       instantRef.current = true;
       setLive(null);
+      if (settleRef.current !== null) window.clearTimeout(settleRef.current);
+      settleRef.current = null;
       return;
     }
     const left = index * track.clientWidth;
@@ -206,6 +212,7 @@ export function DayDrawer({
   }
 
   function handleScroll() {
+    if (!openRef.current) return;
     if (frameRef.current === null) {
       frameRef.current = requestAnimationFrame(() => {
         frameRef.current = null;
@@ -228,7 +235,9 @@ export function DayDrawer({
     settleRef.current = window.setTimeout(() => {
       // Le tiroir conduit déjà vers le jour choisi : un défilement lent (onglet
       // en arrière-plan, téléphone chargé) ne doit pas le ramener en route.
-      if (steeringRef.current || !track || track.clientWidth === 0) return;
+      settleRef.current = null;
+      if (!openRef.current || steeringRef.current) return;
+      if (!track || track.clientWidth === 0) return;
       const next = dates[Math.round(track.scrollLeft / track.clientWidth)];
       if (next && next !== selected) onSelect(next);
     }, SCROLL_SETTLE_MS);
@@ -238,7 +247,11 @@ export function DayDrawer({
     <SheetDrawer
       open={open}
       onOpenChange={(next) => {
-        if (!next) onClose();
+        if (next) return;
+        // Tout de suite, avant le rendu : un glissement qui se pose entre-temps
+        // ne doit plus choisir de jour.
+        openRef.current = false;
+        onClose();
       }}
       title={t("stats.recent")}
       hideTitle

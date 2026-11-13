@@ -7,6 +7,14 @@ import {
   type VerifyOutcome,
   verifyOutcome,
 } from "../logic/codeOutcome";
+import {
+  codeKey,
+  loadRecentCodes,
+  reusableSentAt,
+  saveRecentCodes,
+  withoutCode,
+  withSentCode,
+} from "../logic/recentCodes";
 
 /** En-têtes lus par `sendVerificationOTP` (`convex/auth.ts`). */
 const LOCALE_HEADER = "x-geodoku-locale";
@@ -20,12 +28,27 @@ export type CodePurpose = "sign-in" | "change-email" | "delete-account";
  * Better Auth exige pour supprimer sans mot de passe, et vaut confirmation.
  * Changer d'e-mail envoie le code à la nouvelle adresse, qui ne remplace
  * l'ancienne qu'une fois le code saisi.
+ *
+ * Un code encore bon n'est pas renvoyé quand on relance le parcours (le
+ * tiroir s'est fermé pendant qu'on lisait ses e-mails) : `send` le resert,
+ * sauf `reuse: false` (« Renvoyer le code »).
  */
 export function useEmailCode(purpose: CodePurpose) {
   const { locale } = useLocale();
 
+  /** Heure d'envoi d'un code encore bon pour cette adresse, sinon `null`. */
+  const sentAt = useCallback(
+    (email: string): number | null =>
+      reusableSentAt(loadRecentCodes(), codeKey(purpose, email), Date.now()),
+    [purpose],
+  );
+
   const send = useCallback(
-    async (email: string): Promise<SendOutcome> => {
+    async (
+      email: string,
+      { reuse = true }: { reuse?: boolean } = {},
+    ): Promise<SendOutcome> => {
+      if (reuse && sentAt(email) !== null) return "sent";
       const fetchOptions = {
         headers: { [LOCALE_HEADER]: locale, [PURPOSE_HEADER]: purpose },
       };
@@ -41,12 +64,22 @@ export function useEmailCode(purpose: CodePurpose) {
                 type: "sign-in",
                 fetchOptions,
               });
-        return sendOutcome(error);
+        const outcome = sendOutcome(error);
+        if (outcome === "sent") {
+          saveRecentCodes(
+            withSentCode(
+              loadRecentCodes(),
+              codeKey(purpose, email),
+              Date.now(),
+            ),
+          );
+        }
+        return outcome;
       } catch {
         return "offline";
       }
     },
-    [locale, purpose],
+    [locale, purpose, sentAt],
   );
 
   const verify = useCallback(
@@ -59,7 +92,19 @@ export function useEmailCode(purpose: CodePurpose) {
                 otp,
               })
             : await authClient.signIn.emailOtp({ email: email.trim(), otp });
-        return verifyOutcome(error);
+        const outcome = verifyOutcome(error);
+        // Utilisé ou mort, le code ne resert plus : le prochain parcours en
+        // demande un nouveau.
+        if (
+          outcome === "ok" ||
+          outcome === "expired" ||
+          outcome === "too_many_attempts"
+        ) {
+          saveRecentCodes(
+            withoutCode(loadRecentCodes(), codeKey(purpose, email)),
+          );
+        }
+        return outcome;
       } catch {
         return "offline";
       }
@@ -67,5 +112,5 @@ export function useEmailCode(purpose: CodePurpose) {
     [purpose],
   );
 
-  return { send, verify };
+  return { send, verify, sentAt };
 }

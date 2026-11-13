@@ -5,6 +5,7 @@ import { useLocale } from "@/i18n/LocaleContext";
 import type { TKey } from "@/i18n/types";
 import { cn } from "@/lib/utils";
 import { useBounce } from "../hooks/useBounce";
+import { NO_PASSWORD_MANAGER } from "../logic/autofill";
 import { PSEUDO_MAX_LENGTH } from "../logic/pseudo";
 import { pseudoErrorKey } from "../logic/pseudoMessage";
 
@@ -95,6 +96,7 @@ export function NameField({
             autoComplete="off"
             autoCapitalize="words"
             spellCheck={false}
+            {...NO_PASSWORD_MANAGER}
             autoFocus={autoFocus}
             aria-invalid={errorKey !== null}
             aria-describedby={errorKey ? `${id}-error` : undefined}
