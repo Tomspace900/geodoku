@@ -29,7 +29,7 @@ describe("buildCodeEmail", () => {
         locale: "fr",
         purpose: "delete-account",
       }).html,
-    ).toContain("Ton code pour supprimer ton compte :");
+    ).toContain("Ton code pour supprimer ton compte\u00A0:");
   });
 
   it("dit l'objet du changement d'adresse dans le corps", () => {
@@ -37,5 +37,19 @@ describe("buildCodeEmail", () => {
       buildCodeEmail({ otp: "481207", locale: "en", purpose: "change-email" })
         .text,
     ).toContain("Your code to change your email address:");
+  });
+
+  it("ne coupe pas « e-mail » au trait d'union", () => {
+    expect(
+      buildCodeEmail({ otp: "481207", locale: "fr", purpose: "change-email" })
+        .html,
+    ).toContain('<span style="white-space:nowrap;">e-mail</span>\u00A0:');
+  });
+
+  it("garde le texte brut sans balise", () => {
+    expect(
+      buildCodeEmail({ otp: "481207", locale: "fr", purpose: "change-email" })
+        .text,
+    ).not.toContain("<span");
   });
 });
