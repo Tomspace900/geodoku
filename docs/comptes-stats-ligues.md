@@ -318,8 +318,23 @@ Tranché le 2026-11-05 sur maquettes dans la vraie app, comme au lot 1.
   succès) pourra venir avec les ligues, sans réintroduire de série.
 - **Sans compte, la même page**, calculée sur le journal local, avec le
   sous-titre « Sur cet appareil ». **Connecté**, le titre devient le drapeau
-  (tapable : il ouvre « Mon pays ») et le nom, avec un crayon qui ouvre « Mon
-  nom » ; le sous-titre est « Mes stats ».
+  et le nom, et le sous-titre « Mes stats ».
+- **Le titre s'édite au tap** (retouche du 13 novembre, après test sur develop) :
+  aucun indice au repos (ni crayon, ni pointillé), et il n'ouvre plus « Mon
+  compte ». Un tap sur le nom l'écrit sur place (même serif italique, souligné),
+  avec le dé à droite ; Entrée ou un tap ailleurs enregistre, Échap annule,
+  l'erreur s'affiche sous le champ, et tirer au dé ne ferme pas l'édition. Un tap
+  sur le drapeau remplace le nom par la recherche : drapeau actuel à gauche,
+  « Chercher un pays », dé à droite, et la liste dessous dans un encart gris
+  (« Aucun » en tête, puis les 197 pays ; 20 résultats en recherche), haute
+  d'environ 6 lignes pour tenir au-dessus du clavier. Un pays de la liste est
+  enregistré et ramène le titre ; le dé enregistre le pays tiré et laisse la
+  recherche ouverte ; un tap ailleurs, Échap ou le drapeau ferment sans rien
+  changer. Écartés : la recherche sous le titre, le nom en pointillé.
+- **Rebonds** : le drapeau rebondit seul à chaque pays posé (liste ou dé),
+  partout où il s'affiche ; le nom rebondit seul après chaque tirage au dé, y
+  compris pendant qu'on l'écrit. Jamais à l'affichage (revenir de la recherche
+  ne relance rien), et jamais pour un nom tapé à la main.
 
 #### Contenu, de haut en bas
 
@@ -343,8 +358,13 @@ Tranché le 2026-11-05 sur maquettes dans la vraie app, comme au lot 1.
   centrée sur ordinateur, d'abord retenue, est abandonnée le 2026-11-06).
   - **Le jour** (tap sur une barre) : les 30 barres en tête, puis la date et le
     numéro de grille comme titre simple entre ‹ › (« Vendredi 4 décembre ·
-    #187 »), l'anneau du score et la grille du joueur figée (pays et
-    part, tiret pour une case vide, croix pour une case bloquée). On glisse d'un
+    #187 »), puis l'écran de résultat de ce jour-là (retouche du 13 novembre,
+    à la place de la grille figée) : l'anneau du score, figé ; la pilule
+    « Mieux que X % des joueurs » de ce jour, fixe (ni chevron, ni
+    histogramme) ; la grille d'emojis du partage et « #GEODOKU #N ». Sous
+    5 parties finies, la pilule dit « Parmi les premiers à finir » ; un jour
+    sans parties côté serveur (avant la bascule du 5 novembre, ou seulement des
+    imports) n'a pas de pilule. On glisse d'un
     jour joué à l'autre ; les jours non joués sont sautés. Pour les 7 derniers
     jours, et seulement une fois la partie du jour finie (sinon l'archive
     redirige), un lien discret « Rejouer cette grille › » ouvre l'entraînement
@@ -381,9 +401,8 @@ Tranché le 2026-11-05 sur maquettes dans la vraie app, comme au lot 1.
   les retrouver sur tous tes appareils ».
 - **Connecté** : la carte « Bientôt · Les ligues entre amis », sans bouton ni
   mesure du clic, puis la ligne « Mon compte › » avec l'e-mail. Elle ouvre le
-  tiroir « Mon compte » : l'e-mail, « Se déconnecter » et « Supprimer mon
-  compte » (lien rouge), rien d'autre. La suppression reste ainsi loin du pouce
-  qui défile.
+  tiroir « Mon compte » (« Nom, pays, compte », plus bas). La suppression reste
+  ainsi loin du pouce qui défile.
 
 #### Données
 
@@ -396,8 +415,13 @@ Tranché le 2026-11-05 sur maquettes dans la vraie app, comme au lot 1.
   `getReplayGrid` ne couvre que J-1 à J-7, et `getReplayStats` relit toutes les
   parties du jour. Un jour fini ne change plus, donc le cache Convex est partagé
   entre joueurs et le navigateur peut le garder.
-- **Pas de rang d'un jour passé** (« mieux que X % ce jour-là ») : pas de rang
-  permanent, et ce serait le seul élément coûteux.
+- **Le rang d'un jour passé** (« mieux que X % ce jour-là », retouche du
+  13 novembre) : écarté le 5 novembre, il revient dans le tiroir du jour. C'est
+  le rang de ce jour, lu dans son tiroir, pas un rang permanent. Il demande
+  l'histogramme des parties finies du jour (imports exclus, cohorte close), qui
+  ne bouge plus une fois le jour passé : il peut s'ajouter à
+  `stats.getFinishedDay` et à son cache navigateur, en changeant la version de
+  la clé.
 
 ### Écrans du compte
 
@@ -416,8 +440,9 @@ Tranchés les 5 et 6 novembre 2026 sur maquettes dans la vraie app.
   sous-titre en capitales).
 - L'existant est déjà conforme (résultat, « Comment jouer ? », calcul du score en
   fenêtres ; saisie, grille solution en tiroirs). Dans le lot 2 : connexion et
-  bienvenue en fenêtre ; le jour, « Mes thématiques », « Mon compte », « Mon
-  nom » et « Mon pays » en tiroirs, y compris par-dessus une fenêtre. Règle à
+  bienvenue en fenêtre ; le jour, « Mes thématiques » et « Mon compte » en
+  tiroirs. Le pays se cherche sur place, dans le titre, la bienvenue et « Mon
+  compte » (retouche du 13 novembre) : plus de tiroir des pays. Règle à
   reporter dans `docs/DESIGN_SYSTEM.md` au développement ; elle demande un
   tiroir vaul utilisable sur ordinateur (aujourd'hui `max-w-lg` centré en bas).
 - **Aucun message flottant pour le compte** : ni bienvenue, ni retour, ni
@@ -459,13 +484,24 @@ Tranchés les 5 et 6 novembre 2026 sur maquettes dans la vraie app.
   copier-coller), « Il vaut 5 minutes. », « Tu n'as rien demandé ? Ignore cet
   e-mail. », « geodoku.app ». Version texte jointe. Langue : celle de la page au
   moment de la demande.
+- **Retouches du 13 novembre** : le code dans un encart gris (`#f2f4f4`, coins
+  de 14 px) qui suit sa largeur, avec une marge intérieure un peu plus large à
+  gauche pour compenser l'espacement des chiffres. Le logo devient un PNG
+  transparent tiré de `favicon.svg` (rendu à 96 px, affiché à 24) : celui de
+  l'appli a son propre fond, et Gmail n'affiche pas le SVG. Il est servi depuis
+  www.geodoku.app, donc absent des e-mails de develop tant que la prod n'est pas
+  déployée. En français, une espace insécable avant « : » et un « e-mail » qui ne
+  se coupe pas en fin de ligne. Treize autres variantes ont été écartées (fond
+  inversé, encart blanc, centré, code violet, six cases…).
 
 #### Bienvenue (nouveau compte)
 
 - **Fenêtre « Bienvenue »**, sous-titre « Ton compte est prêt ». « Ton nom » : un
   champ souligné, le nom tiré en serif italique, le dé à droite hors du champ.
-  « Ton pays » : un champ de choix au même trait (drapeau 🏳️ « Aucun » au
-  départ, ▾) qui ouvre la liste en tiroir, avec son propre dé. Puis « Tes 27
+  « Ton pays » : un champ au même trait (drapeau 🏳️ « Aucun » au départ) qui se
+  change en recherche sur place, comme dans le titre, avec la liste dessous et
+  le même dé (retouche du 13 novembre : plus de tiroir des pays par-dessus la
+  fenêtre, plus de second dé). Puis « Tes 27
   parties de cet appareil sont sur ton compte. » (seulement s'il y en avait) et
   « C'est parti » (grisé si le nom est invalide).
 - **Compte existant** : retour direct à la page connectée, sans message.
@@ -473,16 +509,19 @@ Tranchés les 5 et 6 novembre 2026 sur maquettes dans la vraie app.
 #### Nom, pays, compte
 
 - **Un seul tiroir « Mon compte »** (retouche du 10 novembre, X1), ouvert par
-  le crayon du titre comme par « Mon compte › » ; le drapeau du titre n'est
-  qu'un affichage. De haut en bas : « Mon nom » (le champ de la bienvenue, dé
-  dehors), « Mon pays » (le champ de choix, dé dehors), « Mon e-mail » (au même
-  trait, avec ›), « Se déconnecter », « Supprimer mon compte ». Pas de bouton
+  « Mon compte › » seulement depuis le 13 novembre (le titre s'édite sur
+  place). De haut en bas : « Mon nom » (le champ de la bienvenue, dé
+  dehors), « Mon pays », « Mon e-mail » (au même trait, avec ›),
+  « Se déconnecter », « Supprimer mon compte ». Pas de bouton
   « Enregistrer » : le nom part en quittant le champ (ou à Entrée) s'il est
   valide, le pays dès qu'il est choisi.
-- **La liste des pays** s'affiche sur place dans le tiroir (« ← Mon compte »),
-  sous-titre « Facultatif » : un dé, une recherche dès la première lettre
-  (mêmes alias que la saisie en jeu), le pays actuel en tête avec « Retirer »,
-  puis les 197 pays par ordre alphabétique avec leur drapeau.
+- **Le pays se cherche sur place** (retouche du 13 novembre) : le champ devient
+  la recherche, comme dans le titre, avec la liste dessous et le même dé. Plus
+  d'écran « Mon pays » ni de dé dans l'en-tête du tiroir. La recherche part dès
+  la première lettre, avec les mêmes alias que la saisie en jeu.
+- **Sur la page**, la section « Mon compte › » garde son encart gris avec
+  l'e-mail, sans flèche à droite. Écartés le 13 novembre : l'e-mail écrit sur
+  place dans le tiroir, les actions sur la page, la page sans tiroir.
 - **Changer d'e-mail** (sur place) : « Nouvel e-mail », « Recevoir un code » ;
   le code part à la nouvelle adresse, l'e-mail ne change qu'une fois le code
   saisi. Aucune vérification préalable de l'adresse : l'écran du code dit
@@ -508,15 +547,12 @@ Tranchés les 5 et 6 novembre 2026 sur maquettes dans la vraie app.
 
 ### À trancher ou vérifier pendant le développement
 
-- **Listes du générateur** : 50 animaux et 50 lieux en français et en anglais,
-  provisoires (le mainteneur les peaufine) ; elles vivent hors du repo jusqu'au
-  développement. Liste des mots refusés à écrire (la maquette n'a que des mots
-  réservés : « geodoku », « admin », « modérateur », « officiel »).
-- **Thématiques** : leur liste et leur seuil, sur une copie des données de prod.
-- **Limite d'envoi du code côté serveur** : Better Auth ne limite rien par défaut
-  sur `send-verification-otp` au-delà de 100 requêtes par 10 s ; une minute entre
-  deux envois côté interface.
-- **support@geodoku.app** : la boîte de réponse est à créer.
+- Tranchés depuis (section suivante) : les listes du générateur et les mots
+  refusés, les thématiques et leur seuil, la limite d'envoi des codes. La boîte
+  support@geodoku.app est créée.
+- **DMARC** : en `p=none` au lancement ; passer à `p=quarantine` quelques
+  semaines après la mise en prod, une fois que les rapports reçus sur support@
+  ne montrent que Mailjet et OVH comme expéditeurs.
 - **À tester sur téléphone** : le clavier de l'iPhone dans une fenêtre et dans un
   tiroir fixés en bas (le champ ne doit pas être caché) ; un tiroir vaul ouvert
   par-dessus une fenêtre Radix (focus, clavier) ; la suggestion du code par le
