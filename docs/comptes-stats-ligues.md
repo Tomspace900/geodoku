@@ -226,7 +226,9 @@ En prod depuis la bascule de la nuit du 4 au 5 novembre 2026 (prod Convex en
   par case (les croix).
 - **Bascule** : même projet Convex, nouveaux déploiements en `eu-west-1` (la
   région se choisit par déploiement) ; seule la clé de production Vercel
-  change. Script `pnpm migrate:eu`, runbook [`bascule-europe.md`](bascule-europe.md).
+  change. Faite le 2026-11-05 (prod `fastidious-manatee-361`), par export,
+  transformation et import ; le script et le runbook ont été retirés le
+  2026-11-13 avec l'ancienne prod américaine, l'historique git les garde.
 
 ### Notes
 

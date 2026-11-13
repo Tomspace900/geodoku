@@ -212,7 +212,6 @@ pnpm export:analytics             # écrit par défaut dans docs/reports/ (gitig
 pnpm dump:prod                    # copie l'état prod → cloud dev local
 pnpm dump:develop                 # copie l'état develop → cloud dev local
 pnpm dump:prod-to-develop         # ops : aligner develop sur prod (confirmation interactive)
-pnpm migrate:eu export|transform|import  # bascule vers l'Europe (#70), runbook docs/bascule-europe.md
 # … puis re-générer le pool via l'UI /admin (refreshPool). JAMAIS wipe+seed pour ça.
 
 # Dev local VIDE / nouvel environnement UNIQUEMENT (ne reproduit PAS prod)
@@ -254,7 +253,7 @@ le déploiement est donc réglé pour ne jamais expirer dans le dashboard Convex
 depuis le 2026-10-20. Recréé ce jour-là (`seed:autoSeedIfEmpty`), il a été
 réaligné sur la prod par `pnpm dump:prod-to-develop` le même jour. À la
 bascule de #70, il a été recréé en `eu-west-1` (même réglage, nouvelle adresse,
-données reprises par `pnpm migrate:eu`). Aucun outil ne
+données reprises de l'ancien déploiement par export, transformation et import). Aucun outil ne
 resynchronise l'adresse : si les e2e ne joignent plus Convex, c'est que ce réglage
 a sauté.
 

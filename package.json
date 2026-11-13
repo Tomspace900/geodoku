@@ -23,7 +23,6 @@
     "dump:prod": "tsx --env-file-if-exists=.env.local scripts/local/copy-convex-data.ts prod-to-dev",
     "dump:develop": "tsx --env-file-if-exists=.env.local scripts/local/copy-convex-data.ts develop-to-dev",
     "dump:prod-to-develop": "tsx --env-file-if-exists=.env.local scripts/local/copy-convex-data.ts prod-to-develop",
-    "migrate:eu": "tsx scripts/local/migrate-to-eu.ts",
     "seed:grids": "pnpm exec convex run seed:seedHistoricalGrids",
     "wipe:db": "tsx --env-file-if-exists=.env.local scripts/local/wipe-db.ts",
     "preview": "vite preview",

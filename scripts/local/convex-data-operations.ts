@@ -1,7 +1,7 @@
 /**
- * Prod européenne, nommée explicitement : la prod « par défaut » du projet
- * (celle de `--prod`) reste l'ancienne prod américaine, Convex n'en
- * acceptant qu'une et refusant d'en créer une seconde.
+ * Prod européenne, nommée explicitement : créée à la bascule de #70 alors que
+ * l'ancienne prod américaine occupait la place de prod « par défaut » (Convex
+ * n'en accepte qu'une), elle n'est pas celle que vise `--prod`.
  */
 export const PROD_DEPLOYMENT = "fastidious-manatee-361";
 
