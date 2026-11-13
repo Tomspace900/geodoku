@@ -23,7 +23,7 @@ function nextFace(current: number): number {
 /**
  * Le dé : un tirage au hasard, toujours à droite, hors du champ. Chaque clic
  * le fait tourner (`animate-dice-roll`, coupé sous reduced motion) et change
- * sa face.
+ * sa face, sans prendre le focus du champ.
  */
 export function DiceButton({
   label,
@@ -47,6 +47,10 @@ export function DiceButton({
       size="icon"
       aria-label={label}
       title={label}
+      // Le champ à côté garde le focus (et le clavier) : tirer ne ferme pas
+      // une édition en cours.
+      onPointerDown={(event) => event.preventDefault()}
+      onMouseDown={(event) => event.preventDefault()}
       onClick={() => {
         setFace(nextFace);
         setRolls((count) => count + 1);

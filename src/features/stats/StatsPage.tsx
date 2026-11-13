@@ -210,11 +210,7 @@ export function StatsPage() {
         <header className="flex flex-col gap-5">
           <BackLink to={localizedPath("/")} label={t("stats.backToGrid")} />
           {signedIn && profile?.pseudo ? (
-            <AccountTitle
-              pseudo={profile.pseudo}
-              country={profile.country}
-              onEdit={() => setAccountOpen(true)}
-            />
+            <AccountTitle pseudo={profile.pseudo} country={profile.country} />
           ) : (
             <DisplayHeader
               as="h1"

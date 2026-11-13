@@ -24,25 +24,15 @@ import {
   forgetSessionOnDevice,
   useAccount,
 } from "../AccountContext";
-import { useAfterRoll } from "../hooks/useAfterRoll";
 import { useEmailCode } from "../hooks/useEmailCode";
+import { useNameEditing } from "../hooks/useNameEditing";
 import { looksLikeEmail, type SendOutcome } from "../logic/codeOutcome";
-import { randomCountry } from "../logic/countryPick";
-import { pseudoErrorKey, refusalKey } from "../logic/pseudoMessage";
 import { CodeStep } from "./CodeStep";
 import { CountryField } from "./CountryField";
-import { CountryPicker } from "./CountryPicker";
-import { DiceButton } from "./DiceButton";
 import { NameField } from "./NameField";
 import { Notice } from "./Notice";
 
-type View =
-  | "account"
-  | "country"
-  | "email"
-  | "email-code"
-  | "confirm"
-  | "delete-code";
+type View = "account" | "email" | "email-code" | "confirm" | "delete-code";
 
 /** Refus d'une nouvelle adresse : sous le champ, ou en encadré (réseau, limite). */
 type EmailError = "invalid" | "same" | "offline" | "too_many";
@@ -212,11 +202,11 @@ function NewEmailForm({
 }
 
 /**
- * « Mon compte » (#155) : un seul tiroir pour tout, ouvert par le crayon du
- * titre comme par « Mon compte › ». Le nom s'enregistre en quittant le champ,
- * le pays dès qu'il est choisi ; aucun bouton « Enregistrer ». La liste des
- * pays, le changement d'e-mail et la suppression s'affichent sur place, avec
- * « ← Mon compte ». La suppression se confirme par un code : il redonne la
+ * « Mon compte » (#155) : un seul tiroir pour tout, ouvert par « Mon
+ * compte › » en bas de « Mes stats ». Le nom s'enregistre en quittant le
+ * champ, le pays dès qu'il est choisi, cherché sur place ; aucun bouton
+ * « Enregistrer ». Le changement d'e-mail et la suppression s'affichent sur
+ * place, avec « ← Mon compte ». La suppression se confirme par un code : il redonne la
  * session « fraîche » que Better Auth exige pour supprimer sans mot de passe.
  */
 export function AccountDrawer({
@@ -230,18 +220,13 @@ export function AccountDrawer({
   gamesCount: number;
   onClose: () => void;
 }) {
-  const { t, locale } = useLocale();
+  const { t } = useLocale();
   const posthog = usePostHog();
   const account = useAccount();
   const updateProfile = useMutation(api.account.updateProfile);
-  const drawPseudo = useMutation(api.account.drawPseudoFor);
   const { send } = useEmailCode("delete-account");
-  const roll = useAfterRoll();
+  const name = useNameEditing(profile.pseudo ?? "");
   const [view, setView] = useState<View>("account");
-  // Le nom en cours d'écriture ; `null` : celui du compte.
-  const [draft, setDraft] = useState<string | null>(null);
-  const [nameError, setNameError] = useState<TKey | null>(null);
-  const [drawing, setDrawing] = useState(false);
   const [newEmail, setNewEmail] = useState("");
   const [sending, setSending] = useState(false);
   const [sendError, setSendError] = useState<Exclude<
@@ -249,57 +234,11 @@ export function AccountDrawer({
     "sent"
   > | null>(null);
   const [deleteFailed, setDeleteFailed] = useState(false);
-  const saved = profile.pseudo ?? "";
-  const name = draft ?? saved;
 
   function backToAccount() {
-    roll.cancel();
     setView("account");
     setSendError(null);
     setDeleteFailed(false);
-  }
-
-  async function saveName(value: string) {
-    let result: Awaited<ReturnType<typeof updateProfile>>;
-    try {
-      result = await updateProfile({ pseudo: value });
-    } catch {
-      // Hors ligne ou trop d'écritures : le nom reste à l'écran, pas enregistré.
-      setNameError("account.genericError");
-      return;
-    }
-    if (!result.ok) {
-      setNameError(refusalKey(result.reason));
-      return;
-    }
-    // Enregistré : le champ suit de nouveau le compte, sauf si l'on a déjà
-    // réécrit par-dessus.
-    setDraft((current) => (current === value ? null : current));
-  }
-
-  function commitName() {
-    if (draft === null) return;
-    if (draft.trim() === saved) {
-      setDraft(null);
-      return;
-    }
-    // Un nom invalide garde son message sous le champ, rien ne part.
-    if (pseudoErrorKey(draft) !== null) return;
-    void saveName(draft);
-  }
-
-  async function drawName() {
-    setDrawing(true);
-    try {
-      const drawn = await drawPseudo({ locale, current: name });
-      setDraft(drawn);
-      setNameError(null);
-      await saveName(drawn);
-    } catch {
-      setNameError("account.genericError");
-    } finally {
-      setDrawing(false);
-    }
   }
 
   function saveCountry(country: string | null) {
@@ -307,20 +246,11 @@ export function AccountDrawer({
     updateProfile({ country }).catch(() => {});
   }
 
-  // Retour au compte d'abord, puis l'enregistrement : le drapeau du champ
-  // change sous les yeux et rebondit.
-  function chooseCountry(country: string | null) {
-    backToAccount();
-    saveCountry(country);
-  }
-
   /** Après une déconnexion ou une suppression, plus rien à enregistrer. */
   function close({ commit = true }: { commit?: boolean } = {}) {
-    if (commit) commitName();
-    roll.cancel();
+    if (commit) void name.commit();
+    name.reset();
     setView("account");
-    setDraft(null);
-    setNameError(null);
     setNewEmail("");
     setSendError(null);
     setDeleteFailed(false);
@@ -352,26 +282,9 @@ export function AccountDrawer({
 
   const header: Record<
     View,
-    { title: string; subtitle?: string; back?: ReactNode; action?: ReactNode }
+    { title: string; subtitle?: string; back?: ReactNode }
   > = {
     account: { title: t("account.myAccount") },
-    country: {
-      title: t("account.myCountry"),
-      subtitle: t("account.optional"),
-      back: (
-        <BackTo label={t("account.backToAccount")} onClick={backToAccount} />
-      ),
-      action: (
-        <DiceButton
-          label={t("account.drawCountry")}
-          onClick={() => {
-            const drawn = randomCountry(profile.country);
-            roll.after(() => chooseCountry(drawn));
-          }}
-          className="-mt-1"
-        />
-      ),
-    },
     email: {
       title: t("account.changeEmailTitle"),
       back: (
@@ -411,29 +324,24 @@ export function AccountDrawer({
       title={header[view].title}
       subtitle={header[view].subtitle}
       back={header[view].back}
-      action={header[view].action}
       closeLabel={t("stats.closeDrawer")}
-      tall={view === "country"}
     >
       {view === "account" && (
         <div className="flex flex-col gap-6 pt-2">
           <NameField
             label={t("account.myName")}
-            value={name}
-            onChange={(next) => {
-              setDraft(next);
-              setNameError(null);
-            }}
-            onDraw={() => void drawName()}
-            onCommit={commitName}
-            drawing={drawing}
-            serverError={nameError}
+            value={name.value}
+            onChange={name.change}
+            onDraw={() => void name.draw()}
+            onCommit={() => void name.commit()}
+            drawing={name.drawing}
+            drawCount={name.drawCount}
+            serverError={name.serverError}
           />
           <CountryField
             label={t("account.myCountry")}
             value={profile.country}
-            onOpen={() => setView("country")}
-            onDraw={() => saveCountry(randomCountry(profile.country))}
+            onChange={saveCountry}
           />
           <EmailRow
             email={profile.email}
@@ -465,10 +373,6 @@ export function AccountDrawer({
             </Button>
           </div>
         </div>
-      )}
-
-      {view === "country" && (
-        <CountryPicker current={profile.country} onChoose={chooseCountry} />
       )}
 
       {view === "email" && (

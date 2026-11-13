@@ -26,10 +26,8 @@ import { api } from "../../../../convex/_generated/api";
 import { useAccount } from "../AccountContext";
 import { useEmailCode } from "../hooks/useEmailCode";
 import { looksLikeEmail, type SendOutcome } from "../logic/codeOutcome";
-import { randomCountry } from "../logic/countryPick";
 import { pseudoErrorKey, refusalKey } from "../logic/pseudoMessage";
 import { CodeStep } from "./CodeStep";
-import { CountryDrawer } from "./CountryDrawer";
 import { CountryField } from "./CountryField";
 import { GoogleMark } from "./GoogleMark";
 import { NameField } from "./NameField";
@@ -79,8 +77,8 @@ function WelcomeStep({ onDone }: { onDone: () => void }) {
   const updateProfile = useMutation(api.account.updateProfile);
   const [pseudo, setPseudo] = useState(account.profile?.pseudo ?? "");
   const [country, setCountry] = useState<string | null>(null);
-  const [countryOpen, setCountryOpen] = useState(false);
   const [drawing, setDrawing] = useState(false);
+  const [drawCount, setDrawCount] = useState(0);
   const [saving, setSaving] = useState(false);
   const [serverError, setServerError] = useState<ReturnType<
     typeof refusalKey
@@ -92,6 +90,7 @@ function WelcomeStep({ onDone }: { onDone: () => void }) {
     try {
       setPseudo(await drawPseudo({ locale, current: pseudo }));
       setServerError(null);
+      setDrawCount((count) => count + 1);
     } finally {
       setDrawing(false);
     }
@@ -129,13 +128,13 @@ function WelcomeStep({ onDone }: { onDone: () => void }) {
         }}
         onDraw={() => void draw()}
         drawing={drawing}
+        drawCount={drawCount}
         serverError={serverError}
       />
       <CountryField
         label={t("account.yourCountry")}
         value={country}
-        onOpen={() => setCountryOpen(true)}
-        onDraw={() => setCountry(randomCountry(country))}
+        onChange={setCountry}
       />
       {attached > 0 && (
         <p className="flex items-start gap-2.5 text-sm text-on-surface-variant">
@@ -157,15 +156,6 @@ function WelcomeStep({ onDone }: { onDone: () => void }) {
         {saving && <LoaderCircle className="size-4 animate-spin" aria-hidden />}
         {t("account.letsGo")}
       </Button>
-      <CountryDrawer
-        open={countryOpen}
-        current={country}
-        onChoose={(iso3) => {
-          setCountry(iso3);
-          setCountryOpen(false);
-        }}
-        onClose={() => setCountryOpen(false)}
-      />
     </div>
   );
 }
