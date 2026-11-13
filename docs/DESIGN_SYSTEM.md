@@ -70,7 +70,8 @@ Tranchée le 2026-11-06 sur maquettes (#155), pour tout le site. Une page a son 
 | **Fenêtre** | un contenu riche à lire en entier, un contenu avec lequel on joue, ou un parcours qu'on ne doit pas perdre | `DialogContent placement="bottom-sheet"` (celle du résultat) : monte du bas sur téléphone, centrée sur ordinateur, fermée par la croix | **éditorial** : italique, barre violette, sous-titre en capitales |
 
 - Fenêtres : résultat, « Comment jouer ? », calcul du score, connexion et bienvenue du compte (on y va chercher un code dans sa messagerie : pas de fermeture par mégarde).
-- Tiroirs : saisie, grille solution, et dans « Mes stats » le jour, « Mes thématiques », « Mon compte » (nom, pays, e-mail ; la liste des pays, le changement d'e-mail et la suppression y changent le contenu sur place, avec « ← Mon compte »), et « Ton pays » par-dessus la fenêtre de bienvenue.
+- Tiroirs : saisie, grille solution, et dans « Mes stats » le jour, « Mes thématiques », « Mon compte » (nom, pays, e-mail ; le changement d'e-mail et la suppression y changent le contenu sur place, avec « ← Mon compte »).
+- Sur place, sans contenant : le titre de « Mes stats » (nom et pays s'éditent au tap) et le pays, qui se cherche dans son champ, la liste dessous dans un encart gris, dans le titre, « Mon compte » et la fenêtre de bienvenue.
 - Un tiroir peut s'ouvrir par-dessus une fenêtre (le pays depuis la bienvenue) ; jamais une fenêtre par-dessus une fenêtre.
 - Un tiroir dont la liste se filtre en tapant garde une hauteur fixe (`tall`) : il ne se tasse pas sous le clavier quand les résultats raccourcissent.
 - Aucun message flottant pour le compte (ni bienvenue, ni déconnexion, ni suppression) : le `toast flottant` reste réservé au jeu.
