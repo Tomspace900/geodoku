@@ -274,9 +274,12 @@ En prod depuis la bascule de la nuit du 4 au 5 novembre 2026 (prod Convex en
   de mots refusés (« Ce nom n'est pas possible. Essaie autre chose. », sans
   dire le mot). Dans une ligue entre amis, se reconnaître (« Camille ») compte
   plus que le risque, limité aux invités ; le lot 3 dira s'il faut plus.
-  **Le dé ne tire que des noms que personne n'a** (vérification serveur, index
-  sur le nom) ; **un nom écrit à la main n'est pas unique** (le premier « Julie »
-  en priverait les autres).
+  **Le nom est tiré une seule fois, parmi ceux que personne n'a** (vérification
+  serveur, index sur le nom) ; **un nom écrit à la main n'est pas unique** (le
+  premier « Julie » en priverait les autres). **Pas de dé** (retouche du 13
+  novembre au soir), ni pour le nom ni pour le pays : on garde le premier nom
+  ou on écrit le sien. Le tirage comme sous-titre, à gagner, est une piste
+  écartée du lot 2, à creuser comme une vraie feature.
 - **Pays** facultatif, « Mon pays », affiché en drapeau ; sans pays, le drapeau
   blanc 🏳️ « Aucun ».
 - **Suppression** en libre-service, **export** sur demande, **effacement** après
@@ -319,22 +322,21 @@ Tranché le 2026-11-05 sur maquettes dans la vraie app, comme au lot 1.
 - **Sans compte, la même page**, calculée sur le journal local, avec le
   sous-titre « Sur cet appareil ». **Connecté**, le titre devient le drapeau
   et le nom, et le sous-titre « Mes stats ».
-- **Le titre s'édite au tap** (retouche du 13 novembre, après test sur develop) :
-  aucun indice au repos (ni crayon, ni pointillé), et il n'ouvre plus « Mon
-  compte ». Un tap sur le nom l'écrit sur place (même serif italique, souligné),
-  avec le dé à droite ; Entrée ou un tap ailleurs enregistre, Échap annule,
-  l'erreur s'affiche sous le champ, et tirer au dé ne ferme pas l'édition. Un tap
-  sur le drapeau remplace le nom par la recherche : drapeau actuel à gauche,
-  « Chercher un pays », dé à droite, et la liste dessous dans un encart gris
-  (« Aucun » en tête, puis les 197 pays ; 20 résultats en recherche), haute
-  d'environ 6 lignes pour tenir au-dessus du clavier. Un pays de la liste est
-  enregistré et ramène le titre ; le dé enregistre le pays tiré et laisse la
-  recherche ouverte ; un tap ailleurs, Échap ou le drapeau ferment sans rien
-  changer. Écartés : la recherche sous le titre, le nom en pointillé.
-- **Rebonds** : le drapeau rebondit seul à chaque pays posé (liste ou dé),
-  partout où il s'affiche ; le nom rebondit seul après chaque tirage au dé, y
-  compris pendant qu'on l'écrit. Jamais à l'affichage (revenir de la recherche
-  ne relance rien), et jamais pour un nom tapé à la main.
+- **Le titre s'édite au tap** (retouche du 13 novembre, après test sur
+  develop) : aucun indice au repos (ni crayon, ni pointillé), et il n'ouvre plus
+  « Mon compte ». Un tap sur le nom l'écrit sur place (même serif italique,
+  souligné) ; Entrée ou un tap ailleurs enregistre, Échap annule, l'erreur
+  s'affiche sous le champ. Un tap sur le drapeau remplace le nom par la
+  recherche : drapeau actuel à gauche, « Chercher un pays », et la liste dessous
+  dans un encart gris (« Aucun » en tête, puis les 197 pays ; 20 résultats en
+  recherche), haute d'environ 6 lignes pour tenir au-dessus du clavier. Un pays
+  de la liste est enregistré et ramène le titre ; un tap ailleurs, Échap ou le
+  drapeau ferment sans rien changer. Écartés : la recherche sous le titre, le
+  nom en pointillé.
+- **Rebonds** : le drapeau rebondit seul à chaque pays posé, partout où il
+  s'affiche ; le nom rebondit seul une fois validé (Entrée ou champ quitté),
+  s'il a changé (depuis le retrait du dé, le 13 novembre au soir). Jamais à
+  l'affichage (revenir de la recherche ne relance rien).
 
 #### Contenu, de haut en bas
 
@@ -496,29 +498,27 @@ Tranchés les 5 et 6 novembre 2026 sur maquettes dans la vraie app.
 
 #### Bienvenue (nouveau compte)
 
-- **Fenêtre « Bienvenue »**, sous-titre « Ton compte est prêt ». « Ton nom » : un
-  champ souligné, le nom tiré en serif italique, le dé à droite hors du champ.
-  « Ton pays » : un champ au même trait (drapeau 🏳️ « Aucun » au départ) qui se
-  change en recherche sur place, comme dans le titre, avec la liste dessous et
-  le même dé (retouche du 13 novembre : plus de tiroir des pays par-dessus la
-  fenêtre, plus de second dé). Puis « Tes 27
-  parties de cet appareil sont sur ton compte. » (seulement s'il y en avait) et
-  « C'est parti » (grisé si le nom est invalide).
+- **Fenêtre « Bienvenue »**, sous-titre « Ton compte est prêt ». « Ton nom » :
+  un champ souligné, le nom tiré en serif italique. « Ton pays » : un champ au
+  même trait (drapeau 🏳️ « Aucun » au départ) qui se change en recherche sur
+  place, comme dans le titre, avec la liste dessous (retouche du 13 novembre :
+  plus de tiroir des pays par-dessus la fenêtre, et plus de dé du tout le soir
+  même). Puis « Tes 27 parties de cet appareil sont sur ton compte. » (seulement
+  s'il y en avait) et « C'est parti » (grisé si le nom est invalide).
 - **Compte existant** : retour direct à la page connectée, sans message.
 
 #### Nom, pays, compte
 
 - **Un seul tiroir « Mon compte »** (retouche du 10 novembre, X1), ouvert par
-  « Mon compte › » seulement depuis le 13 novembre (le titre s'édite sur
-  place). De haut en bas : « Mon nom » (le champ de la bienvenue, dé
-  dehors), « Mon pays », « Mon e-mail » (au même trait, avec ›),
-  « Se déconnecter », « Supprimer mon compte ». Pas de bouton
-  « Enregistrer » : le nom part en quittant le champ (ou à Entrée) s'il est
-  valide, le pays dès qu'il est choisi.
+  « Mon compte › » seulement depuis le 13 novembre (le titre s'édite sur place).
+  De haut en bas : « Mon nom » (le champ de la bienvenue), « Mon pays », « Mon
+  e-mail » (au même trait, avec ›), « Se déconnecter », « Supprimer mon
+  compte ». Pas de bouton « Enregistrer » : le nom part en quittant le champ (ou
+  à Entrée) s'il est valide, le pays dès qu'il est choisi.
 - **Le pays se cherche sur place** (retouche du 13 novembre) : le champ devient
-  la recherche, comme dans le titre, avec la liste dessous et le même dé. Plus
-  d'écran « Mon pays » ni de dé dans l'en-tête du tiroir. La recherche part dès
-  la première lettre, avec les mêmes alias que la saisie en jeu.
+  la recherche, comme dans le titre, avec la liste dessous. Plus d'écran « Mon
+  pays » ni de dé. La recherche part dès la première lettre, avec les mêmes
+  alias que la saisie en jeu.
 - **Sur la page**, la section « Mon compte › » garde son encart gris avec
   l'e-mail, sans flèche à droite. Écartés le 13 novembre : l'e-mail écrit sur
   place dans le tiroir, les actions sur la page, la page sans tiroir.
@@ -581,8 +581,8 @@ Tranchés les 5 et 6 novembre 2026 sur maquettes dans la vraie app.
   dans `nameParts.ts` (« Raton laveur », sans grands singes ni « d'Orient »),
   liste noire en trois blocs dans `refusedWords.ts` (usurpation de Geodoku et de
   l'équipe, haine, vulgarité). Le filtre lit les chiffres pour des lettres, les
-  mots collés, les lettres étirées et le « I » pour un « l » ; le dé ne tire
-  jamais un nom refusé (test sur tous les noms du générateur, dans les deux
+  mots collés, les lettres étirées et le « I » pour un « l » ; le tirage ne
+  donne jamais un nom refusé (test sur tous les noms du générateur, dans les deux
   langues).
 - **Limite d'envoi des codes** : 4 d'affilée puis 10 par jour et par adresse, et
   100 par jour en tout pour protéger le quota Mailjet (200 par jour). Le limiteur de Better Auth,

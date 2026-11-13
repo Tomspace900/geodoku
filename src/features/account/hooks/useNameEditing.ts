@@ -1,6 +1,5 @@
 import { useMutation } from "convex/react";
 import { useState } from "react";
-import { useLocale } from "@/i18n/LocaleContext";
 import type { TKey } from "@/i18n/types";
 import { api } from "../../../../convex/_generated/api";
 import { pseudoErrorKey, refusalKey } from "../logic/pseudoMessage";
@@ -8,18 +7,15 @@ import { pseudoErrorKey, refusalKey } from "../logic/pseudoMessage";
 /**
  * Le nom d'un compte, écrit sur place (#155) : titre de « Mes stats » et
  * « Mon compte ». Rien n'est enregistré avant `commit` (Entrée, tap ailleurs,
- * fermeture) ; un nom tiré au dé, lui, part aussitôt, et `drawCount` avance
- * pour le faire rebondir (un nom tapé à la main ne rebondit pas).
+ * fermeture) ; chaque nom changé et enregistré fait avancer `savedCount`,
+ * qui le fait rebondir.
  */
 export function useNameEditing(saved: string) {
-  const { locale } = useLocale();
   const updateProfile = useMutation(api.account.updateProfile);
-  const drawPseudo = useMutation(api.account.drawPseudoFor);
   // Le nom en cours d'écriture ; `null` : celui du compte.
   const [draft, setDraft] = useState<string | null>(null);
   const [serverError, setServerError] = useState<TKey | null>(null);
-  const [drawing, setDrawing] = useState(false);
-  const [drawCount, setDrawCount] = useState(0);
+  const [savedCount, setSavedCount] = useState(0);
   const value = draft ?? saved;
 
   /** `true` : rien ne reste à enregistrer. */
@@ -38,6 +34,7 @@ export function useNameEditing(saved: string) {
     // Enregistré : le champ suit de nouveau le compte, sauf si l'on a déjà
     // réécrit par-dessus.
     setDraft((current) => (current === next ? null : current));
+    setSavedCount((count) => count + 1);
     return true;
   }
 
@@ -57,21 +54,6 @@ export function useNameEditing(saved: string) {
     return await save(draft);
   }
 
-  async function draw() {
-    setDrawing(true);
-    try {
-      const drawn = await drawPseudo({ locale, current: value });
-      setDraft(drawn);
-      setServerError(null);
-      setDrawCount((count) => count + 1);
-      await save(drawn);
-    } catch {
-      setServerError("account.genericError");
-    } finally {
-      setDrawing(false);
-    }
-  }
-
   /** Abandonne ce qui est écrit : le champ revient au nom du compte. */
   function reset() {
     setDraft(null);
@@ -83,11 +65,9 @@ export function useNameEditing(saved: string) {
     serverError,
     /** Une erreur s'affiche sous le champ (règle locale ou refus du serveur). */
     hasError: pseudoErrorKey(value) !== null || serverError !== null,
-    drawing,
-    drawCount,
+    savedCount,
     change,
     commit,
-    draw,
     reset,
   };
 }

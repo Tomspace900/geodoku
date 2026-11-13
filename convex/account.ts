@@ -94,20 +94,18 @@ async function isPseudoTaken(
 }
 
 /**
- * Le dé ne tire que des noms que personne n'a ; un nom écrit à la main, lui,
- * n'est pas unique. Si tous les tirages sont pris (plus de 36 000
- * noms par langue), le dernier sert quand même.
+ * Le premier nom d'un compte, tiré une seule fois à sa création (pas de dé) :
+ * un nom que personne n'a ; un nom écrit ensuite à la main, lui, n'est pas
+ * unique. Si tous les tirages sont pris (plus de 36 000 noms par langue), le
+ * dernier sert quand même.
  */
 async function drawFreePseudo(
   ctx: MutationCtx,
   locale: PseudoLocale,
-  avoid?: string,
 ): Promise<string> {
   let candidate = drawPseudo(locale);
   for (let attempt = 0; attempt < PSEUDO_DRAW_ATTEMPTS; attempt++) {
-    if (candidate !== avoid && !(await isPseudoTaken(ctx, candidate))) {
-      return candidate;
-    }
+    if (!(await isPseudoTaken(ctx, candidate))) return candidate;
     candidate = drawPseudo(locale);
   }
   return candidate;
@@ -285,17 +283,6 @@ export const syncAccount = mutation({
 });
 
 // ─── Profil ──────────────────────────────────────────────────────────────────
-
-/** Le dé : un nom que personne n'a, différent de celui affiché. */
-export const drawPseudoFor = mutation({
-  args: { locale: localeValidator, current: v.optional(v.string()) },
-  returns: v.string(),
-  handler: async (ctx, args) => {
-    const user = await requireUser(ctx);
-    await requireWriteBudget(ctx, user._id);
-    return await drawFreePseudo(ctx, args.locale, args.current);
-  },
-});
 
 const pseudoRefusal = v.union(
   v.literal("too_short"),

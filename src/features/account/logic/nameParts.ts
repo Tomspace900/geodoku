@@ -1,10 +1,13 @@
-// Importé par Convex (`account.drawPseudo`) : imports relatifs seulement.
+// Importé par Convex (`account.ts`, via `drawPseudo`) : imports relatifs seulement.
 
 /**
  * Listes du générateur de noms « Animal + lieu » (#155) : « Renard du Sahara »,
  * « Sahara Fox » en anglais. 193 animaux connus de tous et 225 lieux, tous
  * en « de / du / de la / de l' / des / d' » (aucun adjectif autonome, donc
- * aucun accord à faire). Ce module se remplace d'un bloc.
+ * aucun accord à faire). Un compte reçoit un nom tiré une seule fois, à sa
+ * création. Ne pas retoucher ces listes à la légère : chaque nom tiré se
+ * relit en « animal n° i + lieu n° j », ce dont aurait besoin un sous-titre
+ * tiré de ces noms (piste écartée du lot 2).
  *
  * Le français place le lieu après l'animal, avec sa préposition ; l'anglais
  * le place devant, en nom ou en adjectif (« Alpine », « Andean »). Un nom de

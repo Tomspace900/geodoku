@@ -10,14 +10,5 @@ export function sortedCountries(locale: Locale): Country[] {
   );
 }
 
-/** Le dé du pays : un pays au hasard, différent de l'actuel. */
-export function randomCountry(
-  current: string | null,
-  random: () => number = Math.random,
-): string {
-  const others = COUNTRY_CATALOG.filter((c) => c.iso3 !== current);
-  return others[Math.floor(random() * others.length) % others.length].iso3;
-}
-
 /** Sans pays choisi : le drapeau blanc, « Aucun ». */
 export const WHITE_FLAG = "🏳️";

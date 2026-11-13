@@ -82,7 +82,7 @@ body {
   }
 }
 
-/* Le rebond du nom tiré : celui des drapeaux, en plus doux (du texte, pas un emoji). */
+/* Le rebond du nom validé : celui des drapeaux, en plus doux (du texte, pas un emoji). */
 @keyframes name-bounce {
   0%,
   100% {
@@ -90,15 +90,6 @@ body {
   }
   50% {
     transform: scale(1.1);
-  }
-}
-
-@keyframes dice-roll {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
   }
 }
 
@@ -150,11 +141,6 @@ body {
     transform-origin: left center;
   }
 
-  .animate-dice-roll {
-    animation: dice-roll 0.4s ease-out;
-    transform-origin: center;
-  }
-
   .animate-lives-tick {
     animation: lives-tick 0.35s ease-out;
   }
@@ -167,7 +153,6 @@ body {
   @media (prefers-reduced-motion: reduce) {
     .animate-flag-bounce,
     .animate-name-bounce,
-    .animate-dice-roll,
     .animate-lives-tick,
     .animate-heart-shake {
       animation: none;

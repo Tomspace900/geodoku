@@ -450,8 +450,6 @@ export const en = {
     attachedOne: "Your game from this device is on your account.",
     attachedMany: "Your {count} games from this device are on your account.",
     letsGo: "Let's go",
-    drawName: "Draw another name",
-    drawCountry: "A random country",
     nameTooShort: "At least 3 characters.",
     nameTooLong: "20 characters at most.",
     nameInvalid: "Letters, digits, spaces, hyphens and apostrophes only.",

@@ -71,29 +71,26 @@ function StepBack({ label, onClick }: { label: string; onClick: () => void }) {
 
 /** Nouveau compte : le nom tiré, le pays, et c'est parti. */
 function WelcomeStep({ onDone }: { onDone: () => void }) {
-  const { t, locale } = useLocale();
+  const { t } = useLocale();
   const account = useAccount();
-  const drawPseudo = useMutation(api.account.drawPseudoFor);
   const updateProfile = useMutation(api.account.updateProfile);
   const [pseudo, setPseudo] = useState(account.profile?.pseudo ?? "");
   const [country, setCountry] = useState<string | null>(null);
-  const [drawing, setDrawing] = useState(false);
-  const [drawCount, setDrawCount] = useState(0);
+  // Le dernier nom validé : le nom ne rebondit, au champ quitté, que s'il a
+  // changé depuis. Il n'est enregistré qu'avec « C'est parti ».
+  const [validated, setValidated] = useState(pseudo);
+  const [bounceCount, setBounceCount] = useState(0);
   const [saving, setSaving] = useState(false);
   const [serverError, setServerError] = useState<ReturnType<
     typeof refusalKey
   > | null>(null);
   const attached = account.welcome?.attached ?? 0;
 
-  async function draw() {
-    setDrawing(true);
-    try {
-      setPseudo(await drawPseudo({ locale, current: pseudo }));
-      setServerError(null);
-      setDrawCount((count) => count + 1);
-    } finally {
-      setDrawing(false);
-    }
+  function validate() {
+    const next = pseudo.trim();
+    if (next === validated || pseudoErrorKey(pseudo) !== null) return;
+    setValidated(next);
+    setBounceCount((count) => count + 1);
   }
 
   async function finish() {
@@ -126,9 +123,8 @@ function WelcomeStep({ onDone }: { onDone: () => void }) {
           setPseudo(next);
           setServerError(null);
         }}
-        onDraw={() => void draw()}
-        drawing={drawing}
-        drawCount={drawCount}
+        onCommit={validate}
+        bounceCount={bounceCount}
         serverError={serverError}
       />
       <CountryField

@@ -6,16 +6,15 @@ import { useLocale } from "@/i18n/LocaleContext";
 import { cn } from "@/lib/utils";
 import { useBounce } from "../hooks/useBounce";
 import { useOutsidePointer } from "../hooks/useOutsidePointer";
-import { randomCountry, WHITE_FLAG } from "../logic/countryPick";
+import { WHITE_FLAG } from "../logic/countryPick";
 import { CountrySearch } from "./CountrySearch";
-import { DiceButton } from "./DiceButton";
 
 /**
  * Le pays, au même trait que le nom (« Ton pays » de la bienvenue, « Mon
  * pays » de « Mon compte ») : un tap change le champ en recherche, la liste
  * s'ouvre dessous, sur place. Un pays de la liste est posé et referme la
- * recherche ; le dé en pose un au hasard sans la fermer. Tap ailleurs ou
- * Échap : fermé sans changement. Le drapeau rebondit à chaque pays posé.
+ * recherche. Tap ailleurs ou Échap : fermé sans changement. Le drapeau
+ * rebondit à chaque pays posé.
  */
 export function CountryField({
   label,
@@ -58,31 +57,24 @@ export function CountryField({
             onChange(iso3);
             setOpen(false);
           }}
-          onDraw={() => onChange(randomCountry(value))}
           onCancel={() => setOpen(false)}
         />
       ) : (
-        <div className="flex items-end gap-2">
-          <Button
-            type="button"
-            variant="ghost"
-            size="auto"
-            onClick={() => setOpen(true)}
-            aria-label={`${label} : ${country ? country.names[locale] : t("account.noCountry")}`}
-            className="flex h-11 w-full min-w-0 items-center justify-start gap-2.5 rounded-none border-b border-outline-variant/40 px-0 text-base font-normal text-on-surface hover:text-on-surface"
+        <Button
+          type="button"
+          variant="ghost"
+          size="auto"
+          onClick={() => setOpen(true)}
+          aria-label={`${label} : ${country ? country.names[locale] : t("account.noCountry")}`}
+          className="flex h-11 w-full min-w-0 items-center justify-start gap-2.5 rounded-none border-b border-outline-variant/40 px-0 text-base font-normal text-on-surface hover:text-on-surface"
+        >
+          {flag}
+          <span
+            className={cn("truncate", !country && "text-on-surface-variant")}
           >
-            {flag}
-            <span
-              className={cn("truncate", !country && "text-on-surface-variant")}
-            >
-              {country ? country.names[locale] : t("account.noCountry")}
-            </span>
-          </Button>
-          <DiceButton
-            label={t("account.drawCountry")}
-            onClick={() => onChange(randomCountry(value))}
-          />
-        </div>
+            {country ? country.names[locale] : t("account.noCountry")}
+          </span>
+        </Button>
       )}
     </div>
   );

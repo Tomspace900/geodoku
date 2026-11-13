@@ -332,10 +332,8 @@ export function AccountDrawer({
             label={t("account.myName")}
             value={name.value}
             onChange={name.change}
-            onDraw={() => void name.draw()}
             onCommit={() => void name.commit()}
-            drawing={name.drawing}
-            drawCount={name.drawCount}
+            bounceCount={name.savedCount}
             serverError={name.serverError}
           />
           <CountryField

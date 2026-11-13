@@ -9,9 +9,9 @@ import {
 
 /**
  * Nom de joueur (#155). Le mot « pseudo » reste interne : à l'écran, c'est
- * « Ton nom », « Mon nom ». Tiré par le générateur « Animal + lieu », puis
- * modifiable en texte libre. Règle commune au client (message immédiat) et
- * au serveur (seul juge).
+ * « Ton nom », « Mon nom ». Tiré une fois, à la création du compte, par le
+ * générateur « Animal + lieu », puis modifiable en texte libre (pas de dé).
+ * Règle commune au client (message immédiat) et au serveur (seul juge).
  */
 
 export const PSEUDO_MIN_LENGTH = 3;

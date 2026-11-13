@@ -7,7 +7,6 @@ import { cn } from "@/lib/utils";
 import { useBounce } from "../hooks/useBounce";
 import { PSEUDO_MAX_LENGTH } from "../logic/pseudo";
 import { pseudoErrorKey } from "../logic/pseudoMessage";
-import { DiceButton } from "./DiceButton";
 
 /** Le texte du nom, partagé par le champ et la copie qui rebondit. */
 const NAME_TEXT = {
@@ -17,19 +16,17 @@ const NAME_TEXT = {
 
 /**
  * Le nom : un champ souligné, comme l'e-mail, en serif italique ; on le
- * touche pour l'écrire. Le dé, à droite, tire un nom que personne n'a. En
- * titre de « Mes stats » (`variant="title"`), le même champ prend la taille
- * du titre, sans étiquette visible, le drapeau devant.
+ * touche pour l'écrire, et il rebondit une fois validé. En titre de « Mes
+ * stats » (`variant="title"`), le même champ prend la taille du titre, sans
+ * étiquette visible, le drapeau devant.
  */
 export function NameField({
   label,
   value,
   onChange,
-  onDraw,
   onCommit,
   onCancel,
-  drawing = false,
-  drawCount = 0,
+  bounceCount = 0,
   serverError = null,
   variant = "field",
   leading,
@@ -38,7 +35,6 @@ export function NameField({
   label: string;
   value: string;
   onChange: (value: string) => void;
-  onDraw: () => void;
   /**
    * Pas de bouton « Enregistrer » dans « Mon compte » ni dans le titre : le
    * nom part en quittant le champ, ou à Entrée (qui ferme aussi le clavier).
@@ -46,9 +42,8 @@ export function NameField({
   onCommit?: () => void;
   /** Échap : on abandonne ce qui est écrit. */
   onCancel?: () => void;
-  drawing?: boolean;
-  /** Avance à chaque nom tiré : le nom rebondit, jamais un nom tapé. */
-  drawCount?: number;
+  /** Avance à chaque nom validé (champ quitté, Entrée) : le nom rebondit. */
+  bounceCount?: number;
   /** Refus du serveur, qui reste juge (même règle). */
   serverError?: TKey | null;
   variant?: "field" | "title";
@@ -59,7 +54,7 @@ export function NameField({
   const { t } = useLocale();
   const id = useId();
   const errorKey = pseudoErrorKey(value) ?? serverError;
-  const bounce = useBounce(drawCount);
+  const bounce = useBounce(bounceCount);
   const text = NAME_TEXT[variant];
   return (
     <div className="flex flex-col gap-1">
@@ -123,11 +118,6 @@ export function NameField({
             </span>
           )}
         </div>
-        <DiceButton
-          label={t("account.drawName")}
-          onClick={onDraw}
-          disabled={drawing}
-        />
       </div>
       {errorKey && (
         <p id={`${id}-error`} className="pt-1 text-xs text-error">

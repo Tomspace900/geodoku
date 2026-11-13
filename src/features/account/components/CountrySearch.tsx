@@ -6,7 +6,6 @@ import { searchCountries } from "@/features/countries/logic/search";
 import { useLocale } from "@/i18n/LocaleContext";
 import { cn } from "@/lib/utils";
 import { sortedCountries, WHITE_FLAG } from "../logic/countryPick";
-import { DiceButton } from "./DiceButton";
 
 /** Assez pour couvrir un nom tapé en entier, alias compris. */
 const SEARCH_LIMIT = 20;
@@ -55,15 +54,14 @@ function Row({
 /**
  * Le pays cherché sur place (#155), le même partout (titre de « Mes stats »,
  * « Mon compte », bienvenue) : la recherche dès la première lettre (mêmes
- * alias que la saisie en jeu), le dé à droite, et la liste dessous dans un
- * encart haut d'environ 6 lignes, pour tenir au-dessus du clavier. Sans
- * recherche : « Aucun » en tête, puis les 197 pays. Le dé et la liste ne
- * prennent pas le focus du champ.
+ * alias que la saisie en jeu), et la liste dessous dans un encart haut
+ * d'environ 6 lignes, pour tenir au-dessus du clavier. Sans recherche :
+ * « Aucun » en tête, puis les 197 pays. La liste ne prend pas le focus du
+ * champ.
  */
 export function CountrySearch({
   current,
   onPick,
-  onDraw,
   onCancel,
   before,
   leading,
@@ -71,8 +69,6 @@ export function CountrySearch({
   current: string | null;
   /** Un pays de la liste (`null` : aucun). */
   onPick: (iso3: string | null) => void;
-  /** Le dé : un pays au hasard, la recherche reste ouverte. */
-  onDraw: () => void;
   /** Échap. */
   onCancel: () => void;
   /** En tête de ligne, hors du champ (le drapeau du titre). */
@@ -115,7 +111,6 @@ export function CountrySearch({
             className={cn("h-11 text-base", leading ? "pl-9" : "pl-6")}
           />
         </div>
-        <DiceButton label={t("account.drawCountry")} onClick={onDraw} />
       </div>
       {/* Garde le focus du champ : le clavier ne se ferme pas avant le choix. */}
       <ul

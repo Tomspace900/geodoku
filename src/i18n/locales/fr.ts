@@ -462,8 +462,6 @@ export const fr = {
     attachedOne: "Ta partie de cet appareil est sur ton compte.",
     attachedMany: "Tes {count} parties de cet appareil sont sur ton compte.",
     letsGo: "C'est parti",
-    drawName: "Tirer un autre nom",
-    drawCountry: "Un pays au hasard",
     nameTooShort: "3 caractères au moins.",
     nameTooLong: "20 caractères au plus.",
     nameInvalid: "Lettres, chiffres, espaces, tirets et apostrophes seulement.",
