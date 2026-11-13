@@ -111,10 +111,10 @@ export const en = {
     title: "What's new",
     backToGame: "Back to the game",
     entries: {
-      statsDate: "November 6, 2026",
-      statsTitle: "Your stats, and an account if you like",
+      statsDate: "November 14, 2026",
+      statsTitle: "Stats at last, and an account if you like!",
       statsBody:
-        'A new "My stats" page, behind the icon next to your hearts: your games, average score, best score, rarity palette, last 30 days and the themes you shine at. It\'s computed on your device. And if you want all of it on your phone as well as your computer, you can now create an account, with a simple email code or your Google account. It stays optional: you can still play without one.',
+        "One of the biggest updates yet, adding a full statistics page that many players were waiting for. Among other things: your average score, your past games, your record, the themes where you shine... or not, and more. It's all computed on your device. But if you want all of it on your phone as well as on your computer, you can now create an account, with a simple email code or your Google account. It stays optional: you can still play without one.",
       othersDate: "November 5, 2026",
       othersTitle: "Better than the other players?",
       othersBody:

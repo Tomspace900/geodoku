@@ -114,10 +114,10 @@ export const fr = {
     title: "Nouveautés",
     backToGame: "Retour au jeu",
     entries: {
-      statsDate: "6 novembre 2026",
-      statsTitle: "Tes stats, et un compte si tu veux",
+      statsDate: "14 novembre 2026",
+      statsTitle: "Enfin des stats, et un compte si tu veux\u00A0!",
       statsBody:
-        "Une nouvelle page «\u00A0Mes stats\u00A0», derrière l'icône à côté de tes cœurs\u00A0: tes parties, ton score moyen, ton record, ta palette de raretés, tes 30 derniers jours et les thématiques où tu brilles. Elle se calcule sur ton appareil. Et si tu veux retrouver tout ça sur ton téléphone comme sur ton ordinateur, tu peux maintenant créer un compte, avec un simple code par e-mail ou ton compte Google. Il reste facultatif\u00A0: on joue toujours sans.",
+        "Une des plus grosses mises à jour, elle ajoute une page de statistiques complètes attendue par beaucoup de joueurs. Entre autres\u00A0: ton score moyen, tes parties passées, ton record, les thématiques où tu brilles... ou pas, etc. Tout se calcule sur ton appareil. Mais si tu veux retrouver tout ça sur ton téléphone comme sur ton ordinateur, tu peux maintenant créer un compte, avec un simple code par e-mail ou ton compte Google. Il reste facultatif\u00A0: on joue toujours sans.",
       othersDate: "5 novembre 2026",
       othersTitle: "Mieux que les autres joueurs\u00A0?",
       othersBody:
