@@ -37,4 +37,13 @@ crons.cron(
   {},
 );
 
+// Weekly, Monday 04:00 UTC — accounts without a game for 3 years are erased
+// (#155): same as a self-service deletion, their games stay, detached.
+crons.cron(
+  "purge inactive accounts",
+  "0 4 * * 1",
+  internal.account.purgeInactiveAccounts,
+  { cursor: null },
+);
+
 export default crons;

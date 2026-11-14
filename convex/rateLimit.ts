@@ -10,6 +10,14 @@ import { components } from "./_generated/api";
  * - Coups et note : clé hash du jeton de la partie. Une partie compte au plus
  *   14 coups ; le seau absorbe les renvois d'un client qui a perdu ses accusés.
  *
+ * - Compte (#155) : coups par id de compte (même seau `move`), écritures du
+ *   profil et rattachement par compte (`accountWrite`).
+ * - Codes par e-mail : 4 d'affilée puis 10 par jour et par adresse (5 essais
+ *   par code : deviner un code à 6 chiffres reste hors de portée), et un
+ *   plafond global par jour qui protège le quota Mailjet (200 par jour et
+ *   6 000 par mois en gratuit) d'un script qui changerait d'adresse à chaque
+ *   appel.
+ *
  * Pas une barrière contre un attaquant qui change de clé à chaque appel, mais
  * de quoi arrêter un script naïf et plafonner la facture. La table du
  * composant ne s'efface jamais seule : `health.purgeRateLimits` la vide.
@@ -23,4 +31,17 @@ export const rateLimiter = new RateLimiter(components.rateLimiter, {
   },
   createGamePerDay: { kind: "token bucket", rate: 3, period: DAY, capacity: 3 },
   move: { kind: "token bucket", rate: 30, period: MINUTE, capacity: 30 },
+  accountWrite: {
+    kind: "token bucket",
+    rate: 30,
+    period: MINUTE,
+    capacity: 30,
+  },
+  sendCodePerEmail: {
+    kind: "token bucket",
+    rate: 10,
+    period: DAY,
+    capacity: 4,
+  },
+  sendCodeGlobal: { kind: "fixed window", rate: 100, period: DAY },
 });

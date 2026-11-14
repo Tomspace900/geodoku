@@ -14,6 +14,11 @@ type Props = {
   /** Légende sous la grille (`#GEODOKU #53`, date d'une grille passée…). */
   caption?: string;
   mode?: GameModeId;
+  /**
+   * Cohorte close (un pays absent vaut une part de 0) ; par défaut celle du
+   * mode. Un jour passé de « Mes stats » est clos, même partie quotidienne.
+   */
+  cohortComplete?: boolean;
 };
 
 /**
@@ -26,8 +31,8 @@ export function ShareEmojiGrid({
   distribution,
   caption,
   mode = "daily",
+  cohortComplete = isCohortComplete(mode),
 }: Props) {
-  const cohortComplete = isCohortComplete(mode);
   return (
     <div className="flex flex-col items-center gap-1">
       {GRID_INDICES.map((row) => (

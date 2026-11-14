@@ -111,7 +111,8 @@ export const takeHealthSample = internalMutation({
 
     return {
       hour,
-      gamesCreated: created.length,
+      // Les rattachements de journal (#155) créent des lignes, pas des parties.
+      gamesCreated: created.filter((game) => game.origin === "live").length,
       rateLimited: counter?.rateLimited ?? 0,
       maxCountryIncrease,
     };

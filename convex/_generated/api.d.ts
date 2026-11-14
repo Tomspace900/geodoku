@@ -8,9 +8,13 @@
  * @module
  */
 
+import type * as account from "../account.js";
+import type * as accountErasure from "../accountErasure.js";
 import type * as adminGridOperations from "../adminGridOperations.js";
 import type * as adminReadModel from "../adminReadModel.js";
+import type * as adminToken from "../adminToken.js";
 import type * as auth from "../auth.js";
+import type * as authEmail from "../authEmail.js";
 import type * as cellKeys from "../cellKeys.js";
 import type * as cellStats from "../cellStats.js";
 import type * as crons from "../crons.js";
@@ -22,6 +26,7 @@ import type * as grids from "../grids.js";
 import type * as health from "../health.js";
 import type * as http from "../http.js";
 import type * as lib_cellMetrics from "../lib/cellMetrics.js";
+import type * as lib_codeEmail from "../lib/codeEmail.js";
 import type * as lib_dates from "../lib/dates.js";
 import type * as lib_gameStats from "../lib/gameStats.js";
 import type * as lib_gridConstants from "../lib/gridConstants.js";
@@ -33,6 +38,7 @@ import type * as poolOperations from "../poolOperations.js";
 import type * as rateLimit from "../rateLimit.js";
 import type * as scheduling from "../scheduling.js";
 import type * as seed from "../seed.js";
+import type * as stats from "../stats.js";
 import type * as wipe from "../wipe.js";
 
 import type {
@@ -42,9 +48,13 @@ import type {
 } from "convex/server";
 
 declare const fullApi: ApiFromModules<{
+  account: typeof account;
+  accountErasure: typeof accountErasure;
   adminGridOperations: typeof adminGridOperations;
   adminReadModel: typeof adminReadModel;
+  adminToken: typeof adminToken;
   auth: typeof auth;
+  authEmail: typeof authEmail;
   cellKeys: typeof cellKeys;
   cellStats: typeof cellStats;
   crons: typeof crons;
@@ -56,6 +66,7 @@ declare const fullApi: ApiFromModules<{
   health: typeof health;
   http: typeof http;
   "lib/cellMetrics": typeof lib_cellMetrics;
+  "lib/codeEmail": typeof lib_codeEmail;
   "lib/dates": typeof lib_dates;
   "lib/gameStats": typeof lib_gameStats;
   "lib/gridConstants": typeof lib_gridConstants;
@@ -67,6 +78,7 @@ declare const fullApi: ApiFromModules<{
   rateLimit: typeof rateLimit;
   scheduling: typeof scheduling;
   seed: typeof seed;
+  stats: typeof stats;
   wipe: typeof wipe;
 }>;
 
@@ -98,4 +110,5 @@ export declare const internal: FilterApi<
 
 export declare const components: {
   rateLimiter: import("@convex-dev/rate-limiter/_generated/component.js").ComponentApi<"rateLimiter">;
+  betterAuth: import("@convex-dev/better-auth/_generated/component.js").ComponentApi<"betterAuth">;
 };

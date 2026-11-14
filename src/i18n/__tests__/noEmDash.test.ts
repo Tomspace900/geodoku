@@ -20,6 +20,8 @@ const PLAYER_TEXT_FILES = [
     join("src/i18n/locales", name),
   ),
   "content/sources.ts",
+  // L'e-mail du code (#155) : ses textes vivent côté serveur.
+  "convex/lib/codeEmail.ts",
   "index.html",
   "public/site.webmanifest",
   ...aboutFiles,

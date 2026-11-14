@@ -25,6 +25,11 @@ export const STORAGE_KEYS = {
    * purgé : c'est l'historique du joueur. localStorage.
    */
   history: "geodoku:history-v1",
+  /**
+   * Jours finis lus par « Mes stats » (#155) : contraintes et répartition
+   * finale, qui ne changent plus. Simple cache, plafonné. localStorage.
+   */
+  finishedDays: "geodoku:finished-days-v1",
   /** Parties d'entraînement (grilles passées), une entrée par date. localStorage. */
   training: "geodoku:training-v1",
   /** Affichage du panneau « Comment jouer ». localStorage. */
@@ -47,6 +52,28 @@ export const STORAGE_KEYS = {
    * partie (#70). localStorage.
    */
   moveSync: "geodoku:move-sync-v1",
+  /**
+   * Préfixe des clés de session du compte (#155), tenues par Better Auth :
+   * `geodoku:auth_cookie` et `geodoku:auth_session_data`. localStorage.
+   */
+  authPrefix: "geodoku:auth",
+  /**
+   * Jusqu'où le journal a déjà été rattaché au compte pendant cette session
+   * (#155), pour ne pas tout renvoyer à chaque chargement. Effacé à la
+   * déconnexion. localStorage.
+   */
+  accountSync: "geodoku:account-sync-v1",
+  /**
+   * Heure d'envoi des derniers codes par e-mail (#155), par objet et par
+   * adresse : relancer le parcours ne renvoie pas un code encore bon.
+   * sessionStorage.
+   */
+  recentCodes: "geodoku:recent-codes-v1",
+  /**
+   * Connexion Google en cours (#155) : posé au départ vers Google, lu au
+   * retour pour compter la connexion (`account_signed_in`). sessionStorage.
+   */
+  googleSignIn: "geodoku:google-sign-in",
   /** Token admin — éphémère, sessionStorage. */
   adminToken: "geodoku:admin-token",
   /** Horodatage du dernier rechargement sur chunk périmé. sessionStorage. */

@@ -20,7 +20,8 @@ type WipeTable =
   | "games"
   | "cellStats"
   | "healthCounters"
-  | "healthSnapshots";
+  | "healthSnapshots"
+  | "profiles";
 
 const WIPE_TABLES: WipeTable[] = [
   "grids",
@@ -31,6 +32,7 @@ const WIPE_TABLES: WipeTable[] = [
   "cellStats",
   "healthCounters",
   "healthSnapshots",
+  "profiles",
 ];
 
 export const deleteBatch = internalMutation({
@@ -44,6 +46,7 @@ export const deleteBatch = internalMutation({
       v.literal("cellStats"),
       v.literal("healthCounters"),
       v.literal("healthSnapshots"),
+      v.literal("profiles"),
     ),
     limit: v.number(),
   },

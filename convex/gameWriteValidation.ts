@@ -73,6 +73,18 @@ export function assertReplayableDate(date: string): void {
   }
 }
 
+/**
+ * Garde des lectures d'un jour fini (« Mes stats », #155) : une date passée,
+ * jamais aujourd'hui ni demain, dont la grille et la répartition ne bougent
+ * plus. Comme pour l'archive, c'est le serveur qui refuse une date future.
+ */
+export function assertFinishedDate(date: string): void {
+  assertCanonicalDate(date);
+  if (date >= todayUTC()) {
+    throw new ConvexError("Date is not finished");
+  }
+}
+
 export async function requireGridForDate(
   ctx: QueryCtx | MutationCtx,
   date: string,

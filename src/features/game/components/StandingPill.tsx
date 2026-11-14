@@ -5,8 +5,12 @@ import { useT } from "@/i18n/LocaleContext";
 type Props = {
   /** `null` : cohorte mince, « Parmi les premiers à finir ». */
   percent: number | null;
-  onClick: () => void;
+  /** Sans lui, la pilule est fixe (tiroir du jour de « Mes stats ») : ni chevron ni tap. */
+  onClick?: () => void;
 };
+
+const PILL =
+  "mx-auto flex w-fit items-center gap-1 rounded-full bg-surface-low px-4 py-2 text-sm font-normal text-on-surface";
 
 /**
  * Pilule « Mieux que X % des joueurs › » de la modale de résultat (#70), pour
@@ -16,24 +20,27 @@ type Props = {
 export function StandingPill({ percent, onClick }: Props) {
   const t = useT();
   const [before, after = ""] = t("ui.betterThan").split("{percent}");
+  const label =
+    percent === null ? (
+      t("ui.amongFirstToFinish")
+    ) : (
+      <span>
+        {before}
+        <span className="font-medium text-brand">{`${percent}%`}</span>
+        {after}
+      </span>
+    );
 
+  if (!onClick) return <p className={PILL}>{label}</p>;
   return (
     <Button
       type="button"
       variant="ghost"
       size="auto"
       onClick={onClick}
-      className="mx-auto flex w-fit items-center gap-1 rounded-full bg-surface-low px-4 py-2 text-sm font-normal text-on-surface hover:bg-surface-highest/50 hover:text-on-surface"
+      className={`${PILL} hover:bg-surface-highest/50 hover:text-on-surface`}
     >
-      {percent === null ? (
-        t("ui.amongFirstToFinish")
-      ) : (
-        <span>
-          {before}
-          <span className="font-medium text-brand">{`${percent}%`}</span>
-          {after}
-        </span>
-      )}
+      {label}
       <ChevronRight className="size-4 text-on-surface-variant" aria-hidden />
     </Button>
   );

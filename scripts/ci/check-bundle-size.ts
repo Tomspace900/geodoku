@@ -18,7 +18,11 @@ const MAX_NON_INITIAL_CHUNK_GZIP_BYTES = 150 * 1024;
 // différé. 280 laisse ~24 KiB de marge au-dessus de l'état actuel — assez pour
 // absorber les bumps d'analytics, assez serré pour rattraper une vraie dérive.
 // Le garde-fou reste **bloquant** : un budget qui warn ne se lit jamais.
-const MAX_PLAYER_INITIAL_GZIP_BYTES = 280 * 1024;
+// Relevé de 280 à 300 KiB le 2026-11-06 (#155, décision du lot 2) : le compte
+// facultatif met le client Better Auth et son fournisseur Convex à la racine
+// (la session doit accompagner chaque requête), environ 10 KiB de plus. « Mes
+// stats » et les écrans du compte restent dans un chunk à la demande.
+const MAX_PLAYER_INITIAL_GZIP_BYTES = 300 * 1024;
 
 const chunks = readdirSync(ASSETS_DIRECTORY)
   .filter((file) => file.endsWith(".js"))
@@ -102,11 +106,14 @@ if (oversizedNonInitial.length > 0) {
 
 // Routes volontairement chargées en lazy : l'admin (hors parcours joueur), plus
 // l'archive et l'entraînement (inatteignables tant que la grille du jour n'est
-// pas terminée). Les sortir du chemin critique ne coûte donc rien au quotidien.
+// pas terminée), et « Mes stats » avec les écrans du compte (#155), qu'on
+// ouvre depuis l'en-tête. Les sortir du chemin critique ne coûte donc rien au
+// quotidien.
 const LAZY_ROUTE_MODULES = [
   "/src/features/admin/AdminPage.tsx",
   "/src/features/archive/ArchivePage.tsx",
   "/src/features/archive/TrainingPage.tsx",
+  "/src/features/stats/StatsPage.tsx",
 ];
 
 // Entrées dynamiques hors routes : le chunk des faits (P4 lot 2), seul

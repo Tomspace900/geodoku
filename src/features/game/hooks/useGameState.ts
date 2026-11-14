@@ -1,7 +1,13 @@
 import { usePostHog } from "@posthog/react";
 import { useMutation, useQuery } from "convex/react";
 import { useCallback, useEffect, useReducer, useRef, useState } from "react";
+import { useAccount } from "@/features/account/AccountContext";
 import { api } from "../../../../convex/_generated/api";
+import {
+  persistedFromRecord,
+  recordOfState,
+  sameRecord,
+} from "../logic/accountGame";
 import { getOrCreateClientId } from "../logic/clientId";
 import type { ConstraintId } from "../logic/constraints";
 import { toCellKey } from "../logic/gridTopology";
@@ -17,10 +23,13 @@ import {
   type MoveSync,
   movesPlayed,
   nextPendingMove,
+  resumeAccountSync,
   type SyncedMove,
   saveMoveSync,
   startMoveSync,
   stopMoveSync,
+  syncedMoveCount,
+  toAccountSync,
 } from "../logic/moveSync";
 import {
   clearPersistedGame,
@@ -47,6 +56,11 @@ export function useGameState() {
   const posthog = usePostHog();
   const todayGrid = useQuery(api.grids.getTodayGrid);
   const playMove = useMutation(api.games.playMove);
+  const playAccountMove = useMutation(api.games.playAccountMove);
+  const account = useAccount();
+  // Lu par l'envoi, qui vit dans un callback stable.
+  const accountRef = useRef(account);
+  accountRef.current = account;
 
   const [state, dispatch] = useReducer(
     gameReducer,
@@ -60,6 +74,8 @@ export function useGameState() {
   const sendingRef = useRef(false);
   // Coups déjà joués au chargement : leur envoi est un rejeu (`replayed`).
   const movesAtLoadRef = useRef(0);
+  // Partie reprise du serveur : le journal de l'appareil ne la garde pas.
+  const adoptedRef = useRef(false);
   // Tous les coups sont arrivés au serveur : la cohorte relue à partir de là
   // compte la partie (le coup qui la finit part après l'écran de fin).
   const [movesSettled, setMovesSettled] = useState(true);
@@ -80,26 +96,51 @@ export function useGameState() {
     sendingRef.current = true;
     try {
       for (;;) {
-        const sync = syncRef.current;
+        let sync = syncRef.current;
         const pending = sync ? nextPendingMove(sync) : null;
         if (!sync || !pending) return;
+
+        // Compte (#155) : rien ne part tant que la session se vérifie. Une
+        // partie anonyme attend le rattachement, puis continue par le compte ;
+        // une partie du compte s'arrête à la déconnexion.
+        const { status, synced } = accountRef.current;
+        if (status === "loading") return;
+        if (sync.owner === "anon" && status === "signedIn") {
+          if (!synced) return;
+          sync = toAccountSync(sync);
+          updateSync(sync);
+        }
+        if (sync.owner === "account" && status !== "signedIn") {
+          updateSync(stopMoveSync(sync));
+          return;
+        }
 
         const startedAt = performance.now();
         let result: Awaited<ReturnType<typeof playMove>>;
         try {
-          result = await playMove({
-            date: sync.date,
-            token: sync.token,
-            clientId: getOrCreateClientId(),
-            moveIndex: pending.moveIndex,
-            ...pending.move,
-          });
+          result =
+            sync.owner === "account"
+              ? await playAccountMove({
+                  date: sync.date,
+                  moveIndex: pending.moveIndex,
+                  ...pending.move,
+                })
+              : await playMove({
+                  date: sync.date,
+                  token: sync.token,
+                  clientId: getOrCreateClientId(),
+                  moveIndex: pending.moveIndex,
+                  ...pending.move,
+                });
         } catch {
           return;
         }
         // Grille changée pendant l'envoi (minuit UTC) : l'accusé ne vaut plus.
         const current = syncRef.current;
         if (!current || current.token !== sync.token) return;
+        // Session expirée entre-temps : le coup repartira une fois reconnecté.
+        if (result.kind === "rejected" && result.reason === "signed_out")
+          return;
         if (result.kind === "rejected") {
           updateSync(stopMoveSync(current));
           return;
@@ -125,7 +166,14 @@ export function useGameState() {
     } finally {
       sendingRef.current = false;
     }
-  }, [playMove]);
+  }, [playMove, playAccountMove]);
+
+  // La session tranchée, le rattachement fait ou la déconnexion : l'envoi
+  // reprend (ou s'arrête) selon le nouvel état du compte.
+  // biome-ignore lint/correctness/useExhaustiveDependencies: flushMoves lit l'état du compte par ref
+  useEffect(() => {
+    void flushMoves();
+  }, [account.status, account.synced, flushMoves]);
 
   // biome-ignore lint/correctness/useExhaustiveDependencies: posthog is a stable ref
   useEffect(() => {
@@ -152,7 +200,7 @@ export function useGameState() {
       : 0;
     let sync: MoveSync | null = null;
     if (stored && stored.date === todayGrid.date && rehydratePayload) {
-      sync = stored.moves.length === played ? stored : stopMoveSync(stored);
+      sync = syncedMoveCount(stored) === played ? stored : stopMoveSync(stored);
     } else {
       clearMoveSync();
     }
@@ -199,10 +247,56 @@ export function useGameState() {
   // partie, qui servira à la rattacher à un compte (#155).
   // biome-ignore lint/correctness/useExhaustiveDependencies: state is read only for the fields listed in deps
   useEffect(() => {
+    // Une partie reprise du serveur a été jouée sur un autre appareil : elle
+    // n'entre pas dans le journal de celui-ci.
+    if (adoptedRef.current) {
+      adoptedRef.current = false;
+      return;
+    }
+    // Le jeton ne sert qu'à rattacher une partie anonyme à un compte.
+    const sync = syncRef.current;
     const token =
-      syncRef.current?.date === state.date ? syncRef.current.token : undefined;
+      sync?.date === state.date && sync.owner === "anon"
+        ? sync.token
+        : undefined;
     recordDailyGame(state, token);
   }, [state.date, state.cells, state.failed]);
+
+  // Joueur connecté : la partie du compte au serveur fait foi. Tant qu'aucun
+  // coup de cet appareil n'attend, une ligne différente de la partie affichée
+  // la remplace, sans message (jouée ailleurs, ou partie locale écartée).
+  const serverGame = useQuery(
+    api.account.myGameForDate,
+    account.status === "signedIn" && account.synced && state.date
+      ? { date: state.date }
+      : "skip",
+  );
+  // biome-ignore lint/correctness/useExhaustiveDependencies: state est lu pour la comparaison, la ligne du serveur déclenche
+  useEffect(() => {
+    if (!serverGame || !todayGrid || serverGame.date !== state.date) return;
+    const sync = syncRef.current;
+    if (sync && !isMoveSyncSettled(sync)) return;
+    if (sameRecord(serverGame, recordOfState(state))) return;
+    const persisted = persistedFromRecord(
+      serverGame.date,
+      serverGame,
+      todayGrid.validAnswers,
+    );
+    updateSync(
+      resumeAccountSync(
+        serverGame.date,
+        movesPlayed(persisted.cells, persisted.lives),
+      ),
+    );
+    adoptedRef.current = true;
+    dispatch({
+      type: "rehydrate",
+      persisted,
+      rows: todayGrid.rows as ConstraintId[],
+      cols: todayGrid.cols as ConstraintId[],
+      validAnswers: todayGrid.validAnswers,
+    });
+  }, [serverGame, todayGrid]);
 
   // `game_completed` une seule fois par partie, même après rechargement : le
   // drapeau `endRecorded` est persisté avec la partie.
@@ -251,7 +345,10 @@ export function useGameState() {
         const sync =
           syncRef.current ??
           (movesPlayed(state.cells, state.lives) === 0
-            ? startMoveSync(state.date)
+            ? startMoveSync(
+                state.date,
+                account.status === "signedIn" ? "account" : "anon",
+              )
             : null);
         if (!sync || sync.stopped) return;
         updateSync(appendMove(sync, move));
@@ -297,7 +394,7 @@ export function useGameState() {
       void flushMoves();
       return { kind: "accepted" } as const;
     },
-    [state, todayGrid, flushMoves],
+    [state, todayGrid, flushMoves, account.status],
   );
 
   return {

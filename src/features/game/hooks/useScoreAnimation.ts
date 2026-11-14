@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from "react";
+import { prefersReducedMotion } from "@/lib/motion";
 import {
   ANIMATION_TIMING,
   countAt,
@@ -20,6 +21,8 @@ type Input = {
   livesValue: number;
   /** `breakdown.shares !== null` : la rareté est résolue. */
   ready: boolean;
+  /** Faux : valeurs finales d'emblée, sans comptage ni sursaut (un score relu, pas révélé). */
+  animate?: boolean;
 };
 
 type Frame = {
@@ -32,7 +35,7 @@ type Frame = {
 type ScoreAnimation = Frame & {
   /** Total final figé (aria-label stable). `null` tant que la rareté charge. */
   finalTotal: number | null;
-  /** Vrai une fois la séquence animée terminée (jamais sous reduced-motion). */
+  /** Vrai une fois la séquence animée terminée (jamais sous reduced-motion ni figé). */
   done: boolean;
 };
 
@@ -45,22 +48,16 @@ const ZERO_FRAME: Frame = {
   livesProgress: 0,
 };
 
-function prefersReducedMotion(): boolean {
-  return (
-    typeof window !== "undefined" &&
-    typeof window.matchMedia === "function" &&
-    window.matchMedia("(prefers-reduced-motion: reduce)").matches
-  );
-}
-
 export function useScoreAnimation(input: Input): ScoreAnimation {
-  const { gridValue, rarityValue, livesValue, ready } = input;
+  const { gridValue, rarityValue, livesValue, ready, animate = true } = input;
 
   // Dernières valeurs lues par la boucle rAF (montée une seule fois).
   const inputRef = useRef(input);
   inputRef.current = input;
 
-  const [reduced] = useState(prefersReducedMotion);
+  const [reducedMotion] = useState(prefersReducedMotion);
+  // Figé ou reduced motion : même chemin, aucune séquence ne joue.
+  const reduced = reducedMotion || !animate;
   const [frame, setFrame] = useState<Frame>(ZERO_FRAME);
   const [done, setDone] = useState(false);
 

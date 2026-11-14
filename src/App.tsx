@@ -31,6 +31,12 @@ const ArchivePage = lazy(() =>
     default: module.ArchivePage,
   })),
 );
+// « Mes stats » (#155) : hors du chemin critique, chargée à la demande.
+const StatsPage = lazy(() =>
+  import("@/features/stats/StatsPage").then((module) => ({
+    default: module.StatsPage,
+  })),
+);
 const TrainingPage = lazy(() =>
   import("@/features/archive/TrainingPage").then((module) => ({
     default: module.TrainingPage,
@@ -73,11 +79,13 @@ function RouteAnnouncer({ pathname: localizedPathname }: { pathname: string }) {
         ? t("footer.privacy")
         : pathname === "/changelog"
           ? t("footer.changelog")
-          : pathname === "/admin"
-            ? "Administration"
-            : pathname.startsWith("/archive")
-              ? t("archive.title")
-              : t("ui.appName");
+          : pathname === "/stats"
+            ? t("stats.title")
+            : pathname === "/admin"
+              ? "Administration"
+              : pathname.startsWith("/archive")
+                ? t("archive.title")
+                : t("ui.appName");
 
   return (
     <output
@@ -154,6 +162,15 @@ function AppRoutes() {
             key={`${locale}-changelog`}
             path={localizePath("/changelog", locale)}
             element={<ChangelogPage />}
+          />,
+          <Route
+            key={`${locale}-stats`}
+            path={localizePath("/stats", locale)}
+            element={
+              <Suspense fallback={<RouteLoading />}>
+                <StatsPage />
+              </Suspense>
+            }
           />,
           <Route
             key={`${locale}-archive`}
