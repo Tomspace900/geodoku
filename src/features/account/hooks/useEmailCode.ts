@@ -1,3 +1,4 @@
+import { usePostHog } from "@posthog/react";
 import { useCallback } from "react";
 import { useLocale } from "@/i18n/LocaleContext";
 import { authClient } from "@/lib/authClient";
@@ -32,9 +33,14 @@ export type CodePurpose = "sign-in" | "change-email" | "delete-account";
  * Un code encore bon n'est pas renvoyé quand on relance le parcours (le
  * tiroir s'est fermé pendant qu'on lisait ses e-mails) : `send` le resert,
  * sauf `reuse: false` (« Renvoyer le code »).
+ *
+ * Mesure (anonyme, ni adresse ni code) : `account_code_requested` à chaque
+ * demande partie au serveur, avec son issue, et `account_code_rejected` à
+ * chaque code refusé. Un code resservi ne compte pas : aucun e-mail ne part.
  */
 export function useEmailCode(purpose: CodePurpose) {
   const { locale } = useLocale();
+  const posthog = usePostHog();
 
   /** Heure d'envoi d'un code encore bon pour cette adresse, sinon `null`. */
   const sentAt = useCallback(
@@ -65,6 +71,11 @@ export function useEmailCode(purpose: CodePurpose) {
                 fetchOptions,
               });
         const outcome = sendOutcome(error);
+        posthog?.capture("account_code_requested", {
+          purpose,
+          outcome,
+          resent: !reuse,
+        });
         if (outcome === "sent") {
           saveRecentCodes(
             withSentCode(
@@ -76,10 +87,15 @@ export function useEmailCode(purpose: CodePurpose) {
         }
         return outcome;
       } catch {
+        posthog?.capture("account_code_requested", {
+          purpose,
+          outcome: "offline",
+          resent: !reuse,
+        });
         return "offline";
       }
     },
-    [locale, purpose, sentAt],
+    [locale, purpose, sentAt, posthog],
   );
 
   const verify = useCallback(
@@ -93,6 +109,12 @@ export function useEmailCode(purpose: CodePurpose) {
               })
             : await authClient.signIn.emailOtp({ email: email.trim(), otp });
         const outcome = verifyOutcome(error);
+        if (outcome !== "ok") {
+          posthog?.capture("account_code_rejected", {
+            purpose,
+            reason: outcome,
+          });
+        }
         // Utilisé ou mort, le code ne resert plus : le prochain parcours en
         // demande un nouveau.
         if (
@@ -106,10 +128,14 @@ export function useEmailCode(purpose: CodePurpose) {
         }
         return outcome;
       } catch {
+        posthog?.capture("account_code_rejected", {
+          purpose,
+          reason: "offline",
+        });
         return "offline";
       }
     },
-    [purpose],
+    [purpose, posthog],
   );
 
   return { send, verify, sentAt };

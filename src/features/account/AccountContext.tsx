@@ -14,6 +14,7 @@ import { useLocale } from "@/i18n/LocaleContext";
 import { authClient } from "@/lib/authClient";
 import { STORAGE_KEYS, safeRemove } from "@/lib/storage";
 import { api } from "../../../convex/_generated/api";
+import { takeGoogleSignIn } from "./logic/googleSignIn";
 import {
   chunkEntries,
   clearSyncMarker,
@@ -79,6 +80,11 @@ export function AccountProvider({ children }: { children: ReactNode }) {
     }
     if (synced || syncingRef.current || !sessionId) return;
     syncingRef.current = true;
+    const method = takeGoogleSignIn() ? "google" : "email";
+    // Le code juste est compté par la fenêtre ; Google, seulement au retour.
+    if (method === "google") {
+      posthog?.capture("account_signed_in", { method });
+    }
     (async () => {
       let isNew = false;
       let attached = 0;
@@ -96,7 +102,10 @@ export function AccountProvider({ children }: { children: ReactNode }) {
         if (isNew) {
           setWelcome({ attached });
           // Anonyme : ni identifiant ni e-mail, seulement le fait.
-          posthog?.capture("account_created", { attached_games: attached });
+          posthog?.capture("account_created", {
+            attached_games: attached,
+            method,
+          });
         }
       } catch {
         // Rattachement manqué : il sera retenté à la prochaine connexion. La

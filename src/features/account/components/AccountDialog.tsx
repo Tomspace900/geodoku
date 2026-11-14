@@ -26,6 +26,7 @@ import { api } from "../../../../convex/_generated/api";
 import { useAccount } from "../AccountContext";
 import { useEmailCode } from "../hooks/useEmailCode";
 import { looksLikeEmail, type SendOutcome } from "../logic/codeOutcome";
+import { forgetGoogleSignIn, markGoogleSignIn } from "../logic/googleSignIn";
 import { pseudoErrorKey, refusalKey } from "../logic/pseudoMessage";
 import { CodeStep } from "./CodeStep";
 import { CountryField } from "./CountryField";
@@ -72,6 +73,7 @@ function StepBack({ label, onClick }: { label: string; onClick: () => void }) {
 /** Nouveau compte : le nom tiré, le pays, et c'est parti. */
 function WelcomeStep({ onDone }: { onDone: () => void }) {
   const { t } = useLocale();
+  const posthog = usePostHog();
   const account = useAccount();
   const updateProfile = useMutation(api.account.updateProfile);
   const [pseudo, setPseudo] = useState(account.profile?.pseudo ?? "");
@@ -101,6 +103,11 @@ function WelcomeStep({ onDone }: { onDone: () => void }) {
         setServerError(refusalKey(result.reason));
         return;
       }
+      // Ni le nom ni le pays : seulement ce que le joueur en a fait.
+      posthog?.capture("account_welcome_completed", {
+        name_changed: pseudo.trim() !== account.profile?.pseudo,
+        country_set: country !== null,
+      });
       onDone();
     } finally {
       setSaving(false);
@@ -279,6 +286,7 @@ export function AccountDialog({
 
   function continueWithGoogle() {
     posthog?.capture("account_sign_in_started", { method: "google" });
+    markGoogleSignIn();
     const page = `${window.location.origin}${localizedPath("/stats")}`;
     void authClient.signIn.social({
       provider: "google",
@@ -360,6 +368,7 @@ export function AccountDialog({
                     posthog?.capture("account_sign_in_started", {
                       method: "email",
                     });
+                    forgetGoogleSignIn();
                     setStep("email");
                   }}
                   className="h-11 w-full gap-2.5"

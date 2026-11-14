@@ -69,6 +69,11 @@ export const STORAGE_KEYS = {
    * sessionStorage.
    */
   recentCodes: "geodoku:recent-codes-v1",
+  /**
+   * Connexion Google en cours (#155) : posé au départ vers Google, lu au
+   * retour pour compter la connexion (`account_signed_in`). sessionStorage.
+   */
+  googleSignIn: "geodoku:google-sign-in",
   /** Token admin — éphémère, sessionStorage. */
   adminToken: "geodoku:admin-token",
   /** Horodatage du dernier rechargement sur chunk périmé. sessionStorage. */

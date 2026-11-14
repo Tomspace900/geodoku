@@ -9,6 +9,7 @@ import { Button } from "@/components/ui/button";
 import { useAccount } from "@/features/account/AccountContext";
 import { AccountDialog } from "@/features/account/components/AccountDialog";
 import { AccountDrawer } from "@/features/account/components/AccountDrawer";
+import { forgetGoogleSignIn } from "@/features/account/logic/googleSignIn";
 import { isDailyGameFinished } from "@/features/archive/logic/dailyGate";
 import { loadHistory } from "@/features/game/logic/history";
 import { loadPersistedGame } from "@/features/game/logic/persistence";
@@ -27,6 +28,7 @@ import { StatTiles } from "./components/StatTiles";
 import { ThemeSummary } from "./components/ThemeSummary";
 import { ThemesDrawer } from "./components/ThemesDrawer";
 import { useStatsResults } from "./hooks/useStatsResults";
+import { type StatsDetail, useStatsVisit } from "./hooks/useStatsVisit";
 import {
   computeMyStats,
   type DayResult,
@@ -56,12 +58,13 @@ function StatsSkeleton() {
 function StatsBody({
   games,
   footer,
+  onDetailOpened,
 }: {
   games: readonly PlayedGame[] | undefined;
   footer: ReactNode;
+  onDetailOpened: (detail: StatsDetail) => void;
 }) {
   const { t } = useLocale();
-  const posthog = usePostHog();
   const data = useStatsResults(games);
   const [selectedDay, setSelectedDay] = useState<string | null>(null);
   const [themesOpen, setThemesOpen] = useState(false);
@@ -91,13 +94,11 @@ function StatsBody({
     .reverse()
     .find((day) => day.kind !== "none")?.date;
   const openDay = (date: string) => {
-    if (selectedDay === null) {
-      posthog?.capture("stats_detail_opened", { detail: "day" });
-    }
+    if (selectedDay === null) onDetailOpened("day");
     setSelectedDay(date);
   };
   const openThemes = () => {
-    posthog?.capture("stats_detail_opened", { detail: "themes" });
+    onDetailOpened("themes");
     setThemesOpen(true);
   };
 
@@ -168,14 +169,12 @@ export function StatsPage() {
         ? (accountGames ?? undefined)
         : deviceGames;
   const profile = account.profile;
-
-  useEffect(() => {
-    posthog?.capture("stats_page_viewed", { signed_in: signedIn });
-  }, [posthog, signedIn]);
+  const { detailOpened } = useStatsVisit(account.status);
 
   // Google annulé : retour au choix, sans message.
   useEffect(() => {
     if (params.get(ACCOUNT_PARAM) === null) return;
+    forgetGoogleSignIn();
     setDialogOpen(true);
     setParams(
       (current) => {
@@ -237,7 +236,11 @@ export function StatsPage() {
             />
           )}
         </header>
-        <StatsBody games={games} footer={footer} />
+        <StatsBody
+          games={games}
+          footer={footer}
+          onDetailOpened={detailOpened}
+        />
       </div>
       <AppFooter className="mt-auto w-full shrink-0" />
 
