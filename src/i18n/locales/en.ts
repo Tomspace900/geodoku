@@ -441,12 +441,15 @@ export const en = {
     notReceivedBody: "Check your spam folder: the email comes from {sender}.",
     notReceivedChangeEmail:
       "If this address already has a Geodoku account, no code is sent to it.",
-    welcomeTitle: "Welcome",
-    welcomeSubtitle: "Your account is ready",
-    welcomeDescription: "Pick your name and, if you like, your country.",
+    welcomeTitle: "Your account is ready",
+    welcomeSubtitle: "Keep this name or pick your own",
+    welcomeDescription:
+      "We picked a random name for you: keep it or pick your own, and your country if you like.",
     yourName: "Your name",
     yourCountry: "Your country",
     noCountry: "None",
+    chooseCountry: "Choose my country",
+    optional: "Optional",
     attachedOne: "Your game from this device is on your account.",
     attachedMany: "Your {count} games from this device are on your account.",
     letsGo: "Let's go",

@@ -453,12 +453,15 @@ export const fr = {
       "Si cette adresse a déjà un compte Geodoku, aucun code n'y est envoyé.",
     notReceivedBody:
       "Regarde dans tes spams\u00A0: l'e-mail vient de {sender}.",
-    welcomeTitle: "Bienvenue",
-    welcomeSubtitle: "Ton compte est prêt",
-    welcomeDescription: "Choisis ton nom et, si tu veux, ton pays.",
+    welcomeTitle: "Ton compte est prêt",
+    welcomeSubtitle: "Garde ce nom ou choisis le tien",
+    welcomeDescription:
+      "On t'a choisi un nom au hasard\u00A0: garde-le ou choisis le tien, et ton pays si tu veux.",
     yourName: "Ton nom",
     yourCountry: "Ton pays",
     noCountry: "Aucun",
+    chooseCountry: "Choisir mon pays",
+    optional: "Facultatif",
     attachedOne: "Ta partie de cet appareil est sur ton compte.",
     attachedMany: "Tes {count} parties de cet appareil sont sur ton compte.",
     letsGo: "C'est parti",

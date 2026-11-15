@@ -500,9 +500,13 @@ Tranchés les 5 et 6 novembre 2026 sur maquettes dans la vraie app.
 
 #### Bienvenue (nouveau compte)
 
-- **Fenêtre « Bienvenue »**, sous-titre « Ton compte est prêt ». « Ton nom » :
-  un champ souligné, le nom tiré en serif italique. « Ton pays » : un champ au
-  même trait (drapeau 🏳️ « Aucun » au départ) qui se change en recherche sur
+- **Fenêtre « Ton compte est prêt »**, sous-titre « Garde ce nom ou choisis le
+  tien » (#164, 15 novembre : les joueurs ne voyaient ni que le nom était tiré
+  pour eux, ni qu'il se changeait ; la fenêtre s'appelait « Bienvenue »). « Ton
+  nom » : un champ souligné, le nom tiré en serif italique, un crayon à droite
+  qui s'efface pendant qu'on écrit. « Ton pays », « Facultatif » à droite : un
+  champ au même trait (🏳️ « Choisir mon pays » et un chevron au départ, comme
+  dans « Mon compte ») qui se change en recherche sur
   place, comme dans le titre, avec la liste dessous (retouche du 13 novembre :
   plus de tiroir des pays par-dessus la fenêtre, et plus de dé du tout le soir
   même). Puis « Tes 27 parties de cet appareil sont sur ton compte. » (seulement
