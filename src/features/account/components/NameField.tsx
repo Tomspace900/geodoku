@@ -1,3 +1,4 @@
+import { Pencil } from "lucide-react";
 import { type ReactNode, useId } from "react";
 import { Eyebrow } from "@/components/editorial/Eyebrow";
 import { Input } from "@/components/ui/input";
@@ -17,7 +18,8 @@ const NAME_TEXT = {
 
 /**
  * Le nom : un champ souligné, comme l'e-mail, en serif italique ; on le
- * touche pour l'écrire, et il rebondit une fois validé. En titre de « Mes
+ * touche pour l'écrire, et il rebondit une fois validé. Un crayon, à droite,
+ * dit qu'il s'écrit (#164) et s'efface pendant qu'on écrit. En titre de « Mes
  * stats » (`variant="title"`), le même champ prend la taille du titre, sans
  * étiquette visible, le drapeau devant.
  */
@@ -74,7 +76,7 @@ export function NameField({
         {leading}
         {/* Un champ n'anime pas son texte seul : pendant le rebond, le texte du
             champ s'efface sous une copie qui rebondit, sans le trait. */}
-        <div className="relative min-w-0 flex-1">
+        <div className="group relative min-w-0 flex-1">
           <Input
             id={id}
             value={value}
@@ -102,7 +104,7 @@ export function NameField({
             aria-describedby={errorKey ? `${id}-error` : undefined}
             className={cn(
               text,
-              variant === "field" ? "h-12" : "h-11",
+              variant === "field" ? "h-12 pr-7" : "h-11",
               errorKey && "border-error focus-visible:border-error",
               bounce.bouncing && "text-transparent",
             )}
@@ -118,6 +120,12 @@ export function NameField({
             >
               {value}
             </span>
+          )}
+          {variant === "field" && (
+            <Pencil
+              aria-hidden
+              className="pointer-events-none absolute right-0 top-1/2 size-4 -translate-y-1/2 text-on-surface-variant group-focus-within:hidden"
+            />
           )}
         </div>
       </div>
