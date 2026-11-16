@@ -12,17 +12,20 @@ const MODULE_MANIFEST = "dist/.bundle-modules.json";
 // principe : hors chemin critique, chargé à la demande. Les chunks non
 // initiaux gardent leur budget anti-monolithe.
 const MAX_NON_INITIAL_CHUNK_GZIP_BYTES = 150 * 1024;
-// Relevé de 250 à 280 KiB le 2026-08-11. posthog-js pèse à lui seul ~12 KiB de
-// plus entre 1.386 et 1.415, et il est `init()` de façon synchrone avant le
-// premier render : il est dans le chemin critique tant qu'on ne le charge pas en
-// différé. 280 laisse ~24 KiB de marge au-dessus de l'état actuel — assez pour
-// absorber les bumps d'analytics, assez serré pour rattraper une vraie dérive.
-// Le garde-fou reste **bloquant** : un budget qui warn ne se lit jamais.
-// Relevé de 280 à 300 KiB le 2026-11-06 (#155, décision du lot 2) : le compte
-// facultatif met le client Better Auth et son fournisseur Convex à la racine
-// (la session doit accompagner chaque requête), environ 10 KiB de plus. « Mes
-// stats » et les écrans du compte restent dans un chunk à la demande.
-const MAX_PLAYER_INITIAL_GZIP_BYTES = 300 * 1024;
+// Budget du chargement joueur initial : ce qu'il faut pour afficher et jouer
+// la grille du jour, avant tout chunk à la demande. 250 KiB en juillet 2026,
+// relevé à chaque gros ajout (posthog-js, client Better Auth) jusqu'à 300.
+// Porté à 400 KiB le 2026-11-16, sur décision du user, pour laisser de la marge
+// aux fonctionnalités. Pourquoi 400 et pas plus : deux joueurs sur trois sont
+// sur téléphone, et chaque 100 KiB gzip coûte à un Android moyen ~0,1 à 0,15 s
+// de téléchargement en 4G plus ~0,15 à 0,3 s d'analyse du JS. À 400, les Web
+// Vitals Android (PostHog) restent sous le seuil « bon » de Google (LCP ≤ 2,5 s
+// au 75e percentile) ; vers 500 ils l'atteignent, et le joueur qui arrive par un
+// lien partagé, sans rien en cache, le sent.
+// Le garde-fou reste **bloquant** : il sert surtout à attraper une dérive
+// involontaire (le 2026-11-16, posthog-js +44 KiB et une copie de Radix en
+// double). Une nouvelle page se charge à la demande (`LAZY_ROUTE_MODULES`).
+const MAX_PLAYER_INITIAL_GZIP_BYTES = 400 * 1024;
 
 const chunks = readdirSync(ASSETS_DIRECTORY)
   .filter((file) => file.endsWith(".js"))
