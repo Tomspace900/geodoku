@@ -234,9 +234,6 @@ export const fr = {
     roadmapConstraints:
       "Des grilles \u00E0 th\u00E8me ou des \u00E9ditions sp\u00E9ciales",
     roadmapLives: "Mode facile et/ou mode hardcore",
-    roadmapStats: "Ton historique et tes statistiques de jeu",
-    roadmapAccounts:
-      "Un compte facultatif pour retrouver tes parties sur tous tes appareils",
     roadmapLeagues: "Des ligues entre amis",
     contactTitle: "Une id\u00E9e, une remarque\u00A0?",
     contactBodyPre:
@@ -252,7 +249,7 @@ export const fr = {
     homeDescription:
       "Sudoku de géographie gratuit. Chaque jour, une grille 3×3 : trouve les pays qui valident leur ligne et leur colonne. Sans inscription.",
     privacyDescription:
-      "Ce que Geodoku collecte, et ce qu'il ne collecte pas : pas de compte, pas de publicité, le strict minimum pour faire tourner le jeu.",
+      "Ce que Geodoku collecte, et ce qu'il ne collecte pas : compte facultatif, pas de publicité, le strict minimum pour faire tourner le jeu.",
     changelogDescription:
       "Les nouveautés de Geodoku, mise à jour après mise à jour : nouvelles contraintes, fonctionnalités et corrections.",
     imageAlt: "Geodoku, une grille 3×3 de sudoku géographique",
@@ -286,7 +283,8 @@ export const fr = {
       "Une fois la grille du jour terminée, les sept grilles précédentes restent jouables, sans limite d'essais. La partie s'arrête quand une case devient impossible à remplir, ou si tu abandonnes. Le score y est sur 900\u00A0: sans vies, pas de bonus de vies.",
     faqTitle: "Questions fréquentes",
     faqPriceQ: "Combien coûte Geodoku\u00A0?",
-    faqPriceA: "Rien. Le jeu est gratuit, sans compte et sans publicité.",
+    faqPriceA:
+      "Rien. Le jeu est gratuit, sans publicité, et le compte est facultatif.",
     faqNewGridQ: "Quand arrive la nouvelle grille\u00A0?",
     faqNewGridA:
       "Chaque jour à minuit UTC, soit 1\u00A0h du matin en France l'hiver et 2\u00A0h l'été. Tout le monde joue la même grille.",

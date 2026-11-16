@@ -229,9 +229,6 @@ export const en = {
     roadmapCountrySheets: "Detailed sheets for every country",
     roadmapConstraints: "Themed grids or special editions",
     roadmapLives: "Easy mode and/or hardcore mode",
-    roadmapStats: "Your game history and stats",
-    roadmapAccounts:
-      "An optional account to find your games on all your devices",
     roadmapLeagues: "Leagues with friends",
     contactTitle: "Got an idea or a remark?",
     contactBodyPre: "I welcome every suggestion. Write to me at",
@@ -246,7 +243,7 @@ export const en = {
     homeDescription:
       "Free daily geography puzzle. Every day, a 3×3 grid: find countries that match both their row and their column. No sign-up.",
     privacyDescription:
-      "What Geodoku collects and what it doesn't: no account, no ads, just the bare minimum to run the game.",
+      "What Geodoku collects and what it doesn't: optional account, no ads, just the bare minimum to run the game.",
     changelogDescription:
       "What's new in Geodoku, update after update: new constraints, features and fixes.",
     imageAlt: "Geodoku, a 3×3 geography sudoku grid",
@@ -279,7 +276,8 @@ export const en = {
       "Once today's grid is done, the previous seven grids stay playable, with unlimited attempts. A game ends when a cell can no longer be filled, or when you give up. Practice is scored out of 900: no lives, so no lives bonus.",
     faqTitle: "Frequently asked questions",
     faqPriceQ: "How much does Geodoku cost?",
-    faqPriceA: "Nothing. The game is free, with no account and no ads.",
+    faqPriceA:
+      "Nothing. The game is free, with no ads, and an account is optional.",
     faqNewGridQ: "When does the new grid come out?",
     faqNewGridA: "Every day at midnight UTC. Everyone plays the same grid.",
     faqBlockedQ: "What happens when a cell has no answer left?",
