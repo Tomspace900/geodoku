@@ -1,4 +1,4 @@
-import { Ban, Gamepad2, type LucideIcon, ShieldCheck } from "lucide-react";
+import { Ban, Feather, type LucideIcon, ShieldCheck } from "lucide-react";
 import { useT } from "@/i18n/LocaleContext";
 import type { TKey } from "@/i18n/types";
 import { LegalBullet } from "./components/LegalBullet";
@@ -13,9 +13,9 @@ const PROMISES: readonly {
   bodyKey: TKey;
 }[] = [
   {
-    icon: Gamepad2,
-    titleKey: "privacy.promiseNoAccountTitle",
-    bodyKey: "privacy.promiseNoAccountBody",
+    icon: Feather,
+    titleKey: "privacy.promiseMinimalTitle",
+    bodyKey: "privacy.promiseMinimalBody",
   },
   {
     icon: Ban,
@@ -24,8 +24,8 @@ const PROMISES: readonly {
   },
   {
     icon: ShieldCheck,
-    titleKey: "privacy.promiseEuropeTitle",
-    bodyKey: "privacy.promiseEuropeBody",
+    titleKey: "privacy.promiseEuTitle",
+    bodyKey: "privacy.promiseEuBody",
   },
 ];
 
@@ -73,21 +73,12 @@ const DATA_ROWS: readonly (readonly TKey[])[] = [
     "privacy.dataUsageWhy",
     "privacy.dataUsageRetention",
   ],
-];
-
-const DATA_NOTES: readonly { titleKey: TKey; bodyKey: TKey }[] = [
-  {
-    titleKey: "privacy.dataNoteGoogleTitle",
-    bodyKey: "privacy.dataNoteGoogleBody",
-  },
-  {
-    titleKey: "privacy.dataNoteNetworkTitle",
-    bodyKey: "privacy.dataNoteNetworkBody",
-  },
-  {
-    titleKey: "privacy.dataNoteLeaguesTitle",
-    bodyKey: "privacy.dataNoteLeaguesBody",
-  },
+  [
+    "privacy.dataDeliveryName",
+    "privacy.dataDeliveryWhere",
+    "privacy.dataDeliveryWhy",
+    "privacy.dataDeliveryRetention",
+  ],
 ];
 
 const RIGHTS: readonly { titleKey: TKey; bodyKey: TKey }[] = [
@@ -144,16 +135,6 @@ export function PrivacyPage() {
             headers={DATA_HEADERS.map((key) => t(key))}
             rows={DATA_ROWS.map((row) => row.map((key) => t(key)))}
           />
-          <ul className="mt-2 flex flex-col gap-2.5">
-            {DATA_NOTES.map(({ titleKey, bodyKey }) => (
-              <LegalBullet key={titleKey}>
-                <span className="font-semibold text-on-surface">
-                  {t(titleKey)}
-                </span>{" "}
-                {t(bodyKey)}
-              </LegalBullet>
-            ))}
-          </ul>
         </LegalSection>
 
         <LegalSection title={t("privacy.rightsTitle")}>

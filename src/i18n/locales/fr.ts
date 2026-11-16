@@ -85,14 +85,14 @@ export const fr = {
     title: "Confidentialité",
     lead: "Geodoku est un jeu que je développe seul. Le compte est facultatif\u00A0: sans lui, je ne collecte que le strict minimum, juste de quoi faire tourner le jeu et voir comment se portent les grilles.",
     backToGame: "Retour au jeu",
-    promiseNoAccountTitle: "Sans compte obligatoire",
-    promiseNoAccountBody:
-      "On joue sans inscription. Le compte sert uniquement à retrouver ses parties et ses stats sur tous ses appareils.",
+    promiseMinimalTitle: "Strict minimum",
+    promiseMinimalBody:
+      "On joue sans inscription. Sans compte, je ne garde que l'essentiel pour faire tourner le jeu.",
     promiseNoAdsTitle: "Zéro publicité",
     promiseNoAdsBody:
       "Aucune vente de données, aucun ciblage et aucun cookie ou traceur publicitaire sur le site.",
-    promiseEuropeTitle: "Hébergé en Europe",
-    promiseEuropeBody:
+    promiseEuTitle: "Hébergé en UE",
+    promiseEuBody:
       "Je m'efforce de tout garder en Union européenne\u00A0: tes parties, ton compte, les e-mails de connexion et la mesure d'usage y restent hébergés (Irlande, Belgique, Allemagne).",
     dataTitle: "Ce qui est stocké et où",
     dataColData: "Donnée",
@@ -100,46 +100,34 @@ export const fr = {
     dataColWhy: "Pourquoi",
     dataColRetention: "Durée",
     dataLangName: "Langue",
-    dataLangWhere: "Cookies sur ton appareil",
-    dataLangWhy:
-      "Afficher FR ou EN (langue choisie, ou cookie de session du pays de connexion)",
+    dataLangWhere: "Cookies sur l'appareil",
+    dataLangWhy: "Afficher FR ou EN",
     dataLangRetention: "Session ou choix manuel",
     dataDeviceName: "Jeu sur l'appareil",
-    dataDeviceWhere: "Stockage local du navigateur",
-    dataDeviceWhy:
-      "Grille du jour, coups en attente, historique quotidien, archives, stats passées, jeton anti-spam",
+    dataDeviceWhere: "Stockage local",
+    dataDeviceWhy: "Grille en cours, historique, archives et anti-spam",
     dataDeviceRetention: "Jusqu'à effacement du site",
     dataDailyName: "Partie du jour",
-    dataDailyWhere: "Serveur en Irlande (UE), via un jeton aléatoire",
-    dataDailyWhy:
-      "Pays placés et erreurs par case, pour les raretés et les stats du jour (rien ne relie tes parties sans compte)",
+    dataDailyWhere: "Serveur (Irlande, UE)",
+    dataDailyWhy: "Raretés et stats du jour, via un jeton aléatoire",
     dataDailyRetention: "Anonyme, sans limite",
     dataAccountName: "Compte (facultatif)",
-    dataAccountWhere: "Serveur en Irlande (UE)",
+    dataAccountWhere: "Serveur (Irlande, UE)",
     dataAccountWhy:
-      "E-mail, nom et pays choisis (pays facultatif), parties jouées ou rattachées",
+      "E-mail, nom, pays facultatif et parties (si Google\u00A0: e-mail seul)",
     dataAccountRetention: "Effacé après 3 ans sans partie",
     dataSessionName: "Codes et sessions",
-    dataSessionWhere:
-      "Serveur (Irlande), envoi d'e-mail (Belgique, Allemagne) et appareil",
-    dataSessionWhy:
-      "Connexion par code et maintien de session (IP et navigateur de l'appareil)",
-    dataSessionRetention:
-      "Code\u00A0: 5 min · Session\u00A0: 7 j glissants (effacée à la déconnexion)",
+    dataSessionWhere: "UE (Irlande, Belgique, Allemagne) et appareil",
+    dataSessionWhy: "Connexion par code et session (IP, navigateur)",
+    dataSessionRetention: "Code\u00A0: 5 min · Session\u00A0: 7 j",
     dataUsageName: "Mesure d'usage",
-    dataUsageWhere: "Serveur en Europe (UE), identifiant local aléatoire",
-    dataUsageWhy:
-      "Événements pseudonymes pour comprendre le parcours (jamais d'e-mail ni de nom)",
+    dataUsageWhere: "Serveur (UE) + ID local",
+    dataUsageWhy: "Comprendre le parcours (pseudonyme, sans e-mail)",
     dataUsageRetention: "Pseudonyme",
-    dataNoteGoogleTitle: "Connexion avec Google\u00A0:",
-    dataNoteGoogleBody:
-      "si tu la choisis, je ne reprends ni ton nom ni ta photo, seule ton adresse e-mail est gardée avec les jetons remis par Google.",
-    dataNoteNetworkTitle: "Affichage et polices\u00A0:",
-    dataNoteNetworkBody:
-      "l'accès au site et une mesure d'audience sans cookie publicitaire passent par le réseau mondial d'hébergement, et Google Fonts reçoit ton adresse IP au chargement des polices.",
-    dataNoteLeaguesTitle: "Futures ligues\u00A0:",
-    dataNoteLeaguesBody:
-      "ton nom et ton pays pourront être vus par les amis de tes ligues\u00A0; ton e-mail, jamais.",
+    dataDeliveryName: "Affichage et polices",
+    dataDeliveryWhere: "Réseau mondial et Google Fonts",
+    dataDeliveryWhy: "Servir le site, audience et polices (IP)",
+    dataDeliveryRetention: "Sans cookie publicitaire",
     rightsTitle: "Tes droits",
     rightsAccountTitle: "Modifier ou supprimer ton compte",
     rightsAccountBody:

@@ -82,14 +82,14 @@ export const en = {
     title: "Privacy",
     lead: "Geodoku is a game I build on my own. The account is optional: without it, I only collect the bare minimum, just enough to run the game and see how the grids are doing.",
     backToGame: "Back to the game",
-    promiseNoAccountTitle: "No required account",
-    promiseNoAccountBody:
-      "You play without signing up. The account only lets you find your games and stats across your devices.",
+    promiseMinimalTitle: "Bare minimum",
+    promiseMinimalBody:
+      "You play without signing up. Without an account, I only keep what is needed to run the game.",
     promiseNoAdsTitle: "Zero advertising",
     promiseNoAdsBody:
       "No data selling, no ad targeting, and no advertising cookies or trackers on the site.",
-    promiseEuropeTitle: "Hosted in Europe",
-    promiseEuropeBody:
+    promiseEuTitle: "Hosted in the EU",
+    promiseEuBody:
       "I work to keep everything in the European Union: your games, account, sign-in emails and usage metrics stay hosted there (Ireland, Belgium, Germany).",
     dataTitle: "What is stored and where",
     dataColData: "Data",
@@ -97,45 +97,34 @@ export const en = {
     dataColWhy: "Why",
     dataColRetention: "Retention",
     dataLangName: "Language",
-    dataLangWhere: "Cookies on your device",
-    dataLangWhy:
-      "Show FR or EN (chosen language, or session cookie from your connection country)",
+    dataLangWhere: "Device cookies",
+    dataLangWhy: "Show FR or EN",
     dataLangRetention: "Session or manual choice",
     dataDeviceName: "On your device",
-    dataDeviceWhere: "Browser local storage",
-    dataDeviceWhy:
-      "Today's grid, pending moves, daily history, practice archive, past stats, anti-spam ID",
+    dataDeviceWhere: "Local storage",
+    dataDeviceWhy: "Current grid, history, archive and anti-spam ID",
     dataDeviceRetention: "Until site data is cleared",
     dataDailyName: "Today's game",
-    dataDailyWhere: "Server in Ireland (EU), via a random token",
-    dataDailyWhy:
-      "Countries placed and mistakes per cell, for today's rarities and stats (nothing links your games without an account)",
-    dataDailyRetention: "Anonymous, kept in game stats",
+    dataDailyWhere: "Server (Ireland, EU)",
+    dataDailyWhy: "Daily rarities and stats, via a random token",
+    dataDailyRetention: "Anonymous, kept in stats",
     dataAccountName: "Account (optional)",
-    dataAccountWhere: "Server in Ireland (EU)",
+    dataAccountWhere: "Server (Ireland, EU)",
     dataAccountWhy:
-      "Email, chosen name and country (country optional), played or attached games",
+      "Email, name, optional country and games (Google: email only)",
     dataAccountRetention: "Erased after 3 years with no game",
     dataSessionName: "Codes & sessions",
-    dataSessionWhere:
-      "Server (Ireland), email delivery (Belgium, Germany) & device",
-    dataSessionWhy: "Code sign-in and active session (device IP and browser)",
-    dataSessionRetention:
-      "Code: 5 min · Session: 7 rolling days (cleared on sign-out)",
+    dataSessionWhere: "EU (Ireland, Belgium, Germany) & device",
+    dataSessionWhy: "Code sign-in and active session (IP, browser)",
+    dataSessionRetention: "Code: 5 min · Session: 7 d",
     dataUsageName: "Usage metrics",
-    dataUsageWhere: "Server in Europe (EU), random local ID",
-    dataUsageWhy:
-      "Pseudonymous events to understand the journey (never your email or name)",
+    dataUsageWhere: "Server (EU) + local ID",
+    dataUsageWhy: "Understand the journey (pseudonymous, no email)",
     dataUsageRetention: "Pseudonymous",
-    dataNoteGoogleTitle: "Google sign-in:",
-    dataNoteGoogleBody:
-      "if you choose it, I take neither your name nor your photo; only your email address is kept with the tokens Google hands over.",
-    dataNoteNetworkTitle: "Delivery and fonts:",
-    dataNoteNetworkBody:
-      "serving the site and cookieless audience metrics run on a global hosting network, and Google Fonts receives your IP address when loading fonts.",
-    dataNoteLeaguesTitle: "Future leagues:",
-    dataNoteLeaguesBody:
-      "your name and country may be seen by the friends in your leagues; your email, never.",
+    dataDeliveryName: "Delivery & fonts",
+    dataDeliveryWhere: "Global network & Google Fonts",
+    dataDeliveryWhy: "Serve the site, audience metrics and fonts (IP)",
+    dataDeliveryRetention: "No advertising cookies",
     rightsTitle: "Your rights",
     rightsAccountTitle: "Edit or delete your account",
     rightsAccountBody:
