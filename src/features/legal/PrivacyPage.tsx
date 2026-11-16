@@ -1,4 +1,4 @@
-import { Ban, Feather, Gamepad2, type LucideIcon } from "lucide-react";
+import { Ban, Gamepad2, type LucideIcon, ShieldCheck } from "lucide-react";
 import { useT } from "@/i18n/LocaleContext";
 import type { TKey } from "@/i18n/types";
 import { LegalBullet } from "./components/LegalBullet";
@@ -23,9 +23,9 @@ const PROMISES: readonly {
     bodyKey: "privacy.promiseNoAdsBody",
   },
   {
-    icon: Feather,
-    titleKey: "privacy.promiseMinimalTitle",
-    bodyKey: "privacy.promiseMinimalBody",
+    icon: ShieldCheck,
+    titleKey: "privacy.promiseEuropeTitle",
+    bodyKey: "privacy.promiseEuropeBody",
   },
 ];
 
@@ -81,43 +81,13 @@ const DATA_NOTES: readonly { titleKey: TKey; bodyKey: TKey }[] = [
     bodyKey: "privacy.dataNoteGoogleBody",
   },
   {
+    titleKey: "privacy.dataNoteNetworkTitle",
+    bodyKey: "privacy.dataNoteNetworkBody",
+  },
+  {
     titleKey: "privacy.dataNoteLeaguesTitle",
     bodyKey: "privacy.dataNoteLeaguesBody",
   },
-];
-
-const THIRD_PARTY_HEADERS: readonly TKey[] = [
-  "privacy.thirdPartyColService",
-  "privacy.thirdPartyColRole",
-  "privacy.thirdPartyColDetails",
-];
-
-const THIRD_PARTY_ROWS: readonly (readonly TKey[])[] = [
-  [
-    "privacy.thirdPartyVercelName",
-    "privacy.thirdPartyVercelRole",
-    "privacy.thirdPartyVercelDetails",
-  ],
-  [
-    "privacy.thirdPartyConvexName",
-    "privacy.thirdPartyConvexRole",
-    "privacy.thirdPartyConvexDetails",
-  ],
-  [
-    "privacy.thirdPartyMailjetName",
-    "privacy.thirdPartyMailjetRole",
-    "privacy.thirdPartyMailjetDetails",
-  ],
-  [
-    "privacy.thirdPartyPosthogName",
-    "privacy.thirdPartyPosthogRole",
-    "privacy.thirdPartyPosthogDetails",
-  ],
-  [
-    "privacy.thirdPartyGoogleName",
-    "privacy.thirdPartyGoogleRole",
-    "privacy.thirdPartyGoogleDetails",
-  ],
 ];
 
 const RIGHTS: readonly { titleKey: TKey; bodyKey: TKey }[] = [
@@ -184,13 +154,6 @@ export function PrivacyPage() {
               </LegalBullet>
             ))}
           </ul>
-        </LegalSection>
-
-        <LegalSection title={t("privacy.thirdPartyTitle")}>
-          <LegalTable
-            headers={THIRD_PARTY_HEADERS.map((key) => t(key))}
-            rows={THIRD_PARTY_ROWS.map((row) => row.map((key) => t(key)))}
-          />
         </LegalSection>
 
         <LegalSection title={t("privacy.rightsTitle")}>
