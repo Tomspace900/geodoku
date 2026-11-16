@@ -85,27 +85,86 @@ export const fr = {
     title: "Confidentialité",
     lead: "Geodoku est un jeu que je développe seul. Le compte est facultatif\u00A0: sans lui, je ne collecte que le strict minimum, juste de quoi faire tourner le jeu et voir comment se portent les grilles.",
     backToGame: "Retour au jeu",
-    essenceTitle: "Sans compte obligatoire ni publicité",
-    essenceBody:
-      "On joue sans inscription. Le compte ne sert qu'à retrouver ses parties et ses stats sur tous ses appareils. Pas de publicité\u00A0: je ne vends aucune donnée et ne les utilise pas à des fins publicitaires. Il n'y a aucun traceur publicitaire sur le site.",
-    deviceTitle: "Sur ton appareil",
-    deviceBody:
-      "Ton navigateur garde quelques réglages\u00A0: ta langue, dans un cookie de préférence posé seulement si tu la choisis\u00A0; la langue du pays d'où tu te connectes, dans un cookie de session qui ne contient que cette langue, pour te proposer la bonne version\u00A0; et en stockage local la progression de la grille du jour, l'historique de tes parties quotidiennes (pays placés et erreurs par case, sans score), les répartitions des jours passés pour « Mes stats », tes parties d'entraînement sur les grilles passées, un identifiant aléatoire anti-spam, et pour la partie du jour un jeton aléatoire avec les coups pas encore envoyés. Si tu es connecté, ta session y est aussi gardée, puis effacée à la déconnexion. Rien de tout ça n'est un cookie publicitaire. Effacer les données du site les supprime.",
-    serverTitle: "Ce qui m'est envoyé",
-    serverBody:
-      "Quand tu joues sans compte, ta partie du jour est enregistrée sur le serveur\u00A0: pays placés et erreurs par case. Elle n'est rattachée qu'à un jeton aléatoire propre à cette partie, dont le serveur ne garde qu'une empreinte\u00A0: rien ne relie tes parties d'un jour à l'autre. Le serveur en tire les statistiques du jour (raretés, scores des joueurs, cases où l'on se trompe). Des événements d'usage pseudonymes m'aident aussi à comprendre le parcours\u00A0; ils ne contiennent jamais ton e-mail, ton nom ni ton compte.",
-    accountTitle: "Si tu crées un compte",
-    accountBody:
-      "Je garde ton adresse e-mail, le nom et le pays que tu choisis (le pays est facultatif), et tes parties\u00A0: celles jouées connecté, et celles de ton appareil que tu y rattaches à la connexion. Aucun score n'est stocké, il se recalcule. Si tu passes par Google, je ne reprends ni ton nom ni ta photo\u00A0: seule ton adresse e-mail est gardée. Comme tout service de connexion, la session garde l'adresse IP et le navigateur de l'appareil connecté, et le lien avec Google garde les jetons que Google lui remet. Ton nom et ton pays pourront être vus par les amis de tes futures ligues\u00A0; ton e-mail, jamais.",
-    retentionTitle: "Combien de temps",
-    retentionBody:
-      "Un code de connexion vaut 5 minutes. Une session dure 7 jours et se prolonge quand tu reviens. Ton compte est gardé tant que tu joues\u00A0: sans aucune partie pendant 3 ans, il est effacé, de la même façon qu'une suppression. Les parties sans compte restent anonymes dans les statistiques du jeu.",
+    promiseNoAccountTitle: "Sans compte obligatoire",
+    promiseNoAccountBody:
+      "On joue sans inscription. Le compte sert uniquement à retrouver ses parties et ses stats sur tous ses appareils.",
+    promiseNoAdsTitle: "Zéro publicité",
+    promiseNoAdsBody:
+      "Aucune vente de données, aucun ciblage et aucun cookie ou traceur publicitaire sur le site.",
+    promiseMinimalTitle: "Strict minimum",
+    promiseMinimalBody:
+      "Aucun score n'est stocké (il est recalculé). Sans compte, rien ne relie tes parties d'un jour à l'autre.",
+    dataTitle: "Données et durées",
+    dataColData: "Donnée",
+    dataColWhere: "Où",
+    dataColWhy: "Pourquoi",
+    dataColRetention: "Durée",
+    dataLangName: "Langue",
+    dataLangWhere: "Cookies sur l'appareil",
+    dataLangWhy:
+      "Afficher FR ou EN (préférence choisie, ou cookie de session du pays de connexion)",
+    dataLangRetention: "Session ou choix manuel",
+    dataDeviceName: "Jeu sur l'appareil",
+    dataDeviceWhere: "Stockage local",
+    dataDeviceWhy:
+      "Grille du jour, coups en attente, historique quotidien, archives, stats passées, jeton anti-spam",
+    dataDeviceRetention: "Jusqu'à effacement du site",
+    dataDailyName: "Partie du jour",
+    dataDailyWhere: "Serveur (jeton aléatoire, empreinte seule)",
+    dataDailyWhy:
+      "Pays placés et erreurs par case, pour les raretés et les stats du jour",
+    dataDailyRetention: "Anonyme, sans limite",
+    dataAccountName: "Compte (facultatif)",
+    dataAccountWhere: "Serveur",
+    dataAccountWhy:
+      "E-mail, nom et pays choisis (pays facultatif), parties jouées ou rattachées",
+    dataAccountRetention: "Effacé après 3 ans sans partie",
+    dataSessionName: "Codes et sessions",
+    dataSessionWhere: "Serveur et stockage local",
+    dataSessionWhy:
+      "Connexion par code et session (IP et navigateur de l'appareil)",
+    dataSessionRetention:
+      "Code\u00A0: 5 min · Session\u00A0: 7 j glissants (effacée à la déconnexion)",
+    dataUsageName: "Mesure d'usage",
+    dataUsageWhere: "PostHog (ID local aléatoire)",
+    dataUsageWhy:
+      "Événements pseudonymes pour comprendre le parcours (jamais d'e-mail ni de nom)",
+    dataUsageRetention: "Pseudonyme",
+    dataNoteGoogleTitle: "Connexion avec Google\u00A0:",
+    dataNoteGoogleBody:
+      "je ne reprends ni ton nom ni ta photo, seule ton adresse e-mail est gardée avec les jetons remis par Google.",
+    dataNoteLeaguesTitle: "Futures ligues\u00A0:",
+    dataNoteLeaguesBody:
+      "ton nom et ton pays pourront être vus par les amis de tes ligues\u00A0; ton e-mail, jamais.",
     thirdPartyTitle: "Services tiers",
-    thirdPartyBody:
-      "Geodoku s'appuie sur Vercel (hébergement et mesure d'audience sans cookie publicitaire), Convex (base des parties, des comptes et des statistiques de jeu, hébergée en Europe, en Irlande), Mailjet (envoi des codes de connexion, données hébergées en Europe, en Belgique et en Allemagne), Google (seulement si tu choisis de te connecter avec Google) et PostHog (mesure d'événements d'usage pseudonymes avec un identifiant enregistré localement, sans publicité). Convex est une société américaine, Mailjet une société française. Google Fonts reçoit aussi ton adresse IP au chargement des polices. Là où le système n'a pas de drapeaux emoji (Windows surtout), ils viennent de Twemoji (Twitter, licence CC-BY 4.0), servis par Geodoku lui-même.",
+    thirdPartyColService: "Service",
+    thirdPartyColRole: "Rôle",
+    thirdPartyColDetails: "Précisions",
+    thirdPartyVercelName: "Vercel",
+    thirdPartyVercelRole: "Hébergement et mesure d'audience",
+    thirdPartyVercelDetails: "Sans cookie publicitaire",
+    thirdPartyConvexName: "Convex",
+    thirdPartyConvexRole: "Base des parties, comptes et stats",
+    thirdPartyConvexDetails: "Hébergée en Irlande (UE) · société américaine",
+    thirdPartyMailjetName: "Mailjet",
+    thirdPartyMailjetRole: "Envoi des codes de connexion",
+    thirdPartyMailjetDetails:
+      "Hébergée en Belgique et Allemagne (UE) · société française",
+    thirdPartyPosthogName: "PostHog",
+    thirdPartyPosthogRole: "Événements d'usage pseudonymes",
+    thirdPartyPosthogDetails: "Identifiant local, sans publicité",
+    thirdPartyGoogleName: "Google",
+    thirdPartyGoogleRole: "Connexion (si choisie) et polices",
+    thirdPartyGoogleDetails: "Google Fonts reçoit ton IP au chargement",
     rightsTitle: "Tes droits",
-    rightsBody:
-      "Tu modifies ton nom, ton pays et ton e-mail dans « Mes stats », puis « Mon compte » (une nouvelle adresse se confirme par un code). Tu peux aussi y supprimer ton compte toi-même\u00A0: ton e-mail, ton nom et ton pays sont effacés, tes parties restent dans les statistiques du jeu, anonymes, sans plus personne pour les relier à toi. Pour obtenir une copie de tes données, écris-moi depuis l'adresse de ton compte. Sans compte, effacer les données Geodoku de ton navigateur supprime les réglages, l'historique de tes parties et les identifiants locaux, et une partie enregistrée sur le serveur n'est reliée qu'au jeton gardé par ton navigateur.",
+    rightsAccountTitle: "Modifier ou supprimer ton compte",
+    rightsAccountBody:
+      "Dans « Mes stats », puis « Mon compte » (un nouvel e-mail se confirme par un code). À la suppression, e-mail, nom et pays sont effacés\u00A0; tes parties restent anonymes dans les stats du jeu.",
+    rightsCopyTitle: "Obtenir une copie de tes données",
+    rightsCopyBody: "Écris-moi depuis l'adresse de ton compte.",
+    rightsBrowserTitle: "Sans compte",
+    rightsBrowserBody:
+      "Effacer les données Geodoku de ton navigateur supprime tes réglages, ton historique local et le jeton qui reliait ta partie au serveur.",
     contactTitle: "Contact",
     contactBodyPre: "Une question\u00A0? Écris-moi à",
   },
