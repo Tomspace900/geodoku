@@ -3,11 +3,14 @@ import { internal } from "./_generated/api";
 
 const crons = cronJobs();
 
-// Hourly — ensure today's and tomorrow's grids exist. Idempotent (early-return
-// if already present), so this doubles as a self-heal with no extra cost.
-crons.interval(
+// Hourly on the hour — ensure today's and tomorrow's grids exist. Idempotent
+// (early-return if already present), so this doubles as a self-heal with no
+// extra cost. Pinned to :00 rather than an interval (whose minute depends on
+// the deploy time): right after midnight UTC the new "tomorrow" has no grid
+// yet, and `/health` answers 503 until this runs (#128).
+crons.cron(
   "ensure grids",
-  { hours: 1 },
+  "0 * * * *",
   internal.scheduling.ensureDailyGrids,
   {},
 );
