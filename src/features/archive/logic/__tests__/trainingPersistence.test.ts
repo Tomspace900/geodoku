@@ -86,12 +86,12 @@ describe("saveTrainingGame / loadTrainingGame", () => {
 describe("loadTrainingGames — purge de la fenêtre", () => {
   it("écarte et purge les dates sorties de l'archive", () => {
     saveTrainingGame(trainingState("2026-07-24"), TODAY);
-    saveTrainingGame(trainingState("2026-07-10"), TODAY);
+    saveTrainingGame(trainingState("2026-06-10"), TODAY);
 
     expect(loadTrainingGames(TODAY).map((g) => g.date)).toEqual(["2026-07-24"]);
     // La purge est réécrite : la date périmée a bien disparu du stockage.
     expect(localStorage.getItem(STORAGE_KEYS.training)).not.toContain(
-      "2026-07-10",
+      "2026-06-10",
     );
   });
 

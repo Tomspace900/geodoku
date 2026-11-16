@@ -245,7 +245,7 @@ export const fr = {
     changelogTitle: "Nouveautés · Geodoku",
     aboutTitle: "À propos de Geodoku : règles, score et questions fréquentes",
     aboutDescription:
-      "Tout sur Geodoku, le sudoku de géographie quotidien : une grille 3×3 de pays, cinq vies, un bonus pour les réponses rares, un entraînement sur les sept dernières grilles, et les questions fréquentes.",
+      "Tout sur Geodoku, le sudoku de géographie quotidien : une grille 3×3 de pays, cinq vies, un bonus pour les réponses rares, un entraînement sur les 30 dernières grilles, et les questions fréquentes.",
     homeDescription:
       "Sudoku de géographie gratuit. Chaque jour, une grille 3×3 : trouve les pays qui valident leur ligne et leur colonne. Sans inscription.",
     privacyDescription:
@@ -280,7 +280,7 @@ export const fr = {
     scoreTitle: "Le score",
     trainingTitle: "L'entraînement",
     trainingBody:
-      "Une fois la grille du jour terminée, les sept grilles précédentes restent jouables, sans limite d'essais. La partie s'arrête quand une case devient impossible à remplir, ou si tu abandonnes. Le score y est sur 900\u00A0: sans vies, pas de bonus de vies.",
+      "Une fois la grille du jour terminée, les grilles des 30 jours précédents restent jouables, sans limite d'essais. La partie s'arrête quand une case devient impossible à remplir, ou si tu abandonnes. Le score y est sur 900\u00A0: sans vies, pas de bonus de vies.",
     faqTitle: "Questions fréquentes",
     faqPriceQ: "Combien coûte Geodoku\u00A0?",
     faqPriceA:

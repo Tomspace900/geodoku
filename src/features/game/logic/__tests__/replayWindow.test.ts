@@ -28,21 +28,21 @@ describe("classifyReplayDate — bornes de la fenêtre", () => {
     expect(classifyReplayDate("2026-07-24", TODAY)).toBe("ok");
   });
 
-  it("accepte la borne basse J-7", () => {
-    expect(classifyReplayDate("2026-07-18", TODAY)).toBe("ok");
+  it("accepte la borne basse J-30", () => {
+    expect(classifyReplayDate("2026-06-25", TODAY)).toBe("ok");
   });
 
-  it("refuse J-8, juste hors fenêtre", () => {
-    expect(classifyReplayDate("2026-07-17", TODAY)).toBe("too_old");
+  it("refuse J-31, juste hors fenêtre", () => {
+    expect(classifyReplayDate("2026-06-24", TODAY)).toBe("too_old");
   });
 
   it("garde la fenêtre alignée sur la constante", () => {
-    expect(REPLAY_WINDOW_DAYS).toBe(7);
+    expect(REPLAY_WINDOW_DAYS).toBe(30);
   });
 
   it("traverse correctement un changement de mois", () => {
-    expect(classifyReplayDate("2026-06-30", "2026-07-02")).toBe("ok");
-    expect(classifyReplayDate("2026-06-24", "2026-07-02")).toBe("too_old");
+    expect(classifyReplayDate("2026-06-02", "2026-07-02")).toBe("ok");
+    expect(classifyReplayDate("2026-06-01", "2026-07-02")).toBe("too_old");
   });
 });
 
@@ -63,6 +63,6 @@ describe("isReplayableDate", () => {
   it("n'est vrai que pour le verdict ok", () => {
     expect(isReplayableDate("2026-07-24", TODAY)).toBe(true);
     expect(isReplayableDate("2026-07-26", TODAY)).toBe(false);
-    expect(isReplayableDate("2026-07-17", TODAY)).toBe(false);
+    expect(isReplayableDate("2026-06-24", TODAY)).toBe(false);
   });
 });

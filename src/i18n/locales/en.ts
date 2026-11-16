@@ -239,7 +239,7 @@ export const en = {
     changelogTitle: "What's new · Geodoku",
     aboutTitle: "About Geodoku: rules, scoring and FAQ",
     aboutDescription:
-      "All about Geodoku, the daily geography grid: a 3×3 grid of countries, five lives, a bonus for rare answers, practice on the last seven grids, and frequently asked questions.",
+      "All about Geodoku, the daily geography grid: a 3×3 grid of countries, five lives, a bonus for rare answers, practice on the last 30 grids, and frequently asked questions.",
     homeDescription:
       "Free daily geography puzzle. Every day, a 3×3 grid: find countries that match both their row and their column. No sign-up.",
     privacyDescription:
@@ -273,7 +273,7 @@ export const en = {
     scoreTitle: "Scoring",
     trainingTitle: "Practice",
     trainingBody:
-      "Once today's grid is done, the previous seven grids stay playable, with unlimited attempts. A game ends when a cell can no longer be filled, or when you give up. Practice is scored out of 900: no lives, so no lives bonus.",
+      "Once today's grid is done, the grids from the previous 30 days stay playable, with unlimited attempts. A game ends when a cell can no longer be filled, or when you give up. Practice is scored out of 900: no lives, so no lives bonus.",
     faqTitle: "Frequently asked questions",
     faqPriceQ: "How much does Geodoku cost?",
     faqPriceA:
