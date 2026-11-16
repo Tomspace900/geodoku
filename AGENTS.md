@@ -325,6 +325,8 @@ Complémentaire à Convex (`games`/`cellStats` = santé grilles ; PostHog = parc
 
 **Conventions.** Events `snake_case`, passé (`game_completed`). `posthog?.capture(...)` avec optional chaining. `grid_date` sur events partie. **Vérifier le catalogue avant d'en ajouter.**
 
+**Super-propriétés** (`posthog.register`, portées par tous les events, persistées en localStorage) : `locale` (langue active, [`LocaleContext`](src/i18n/LocaleContext.tsx)) et `signed_in` (booléen, compte connecté ou non, [`AccountContext`](src/features/account/AccountContext.tsx), mis à jour à la connexion comme à la déconnexion ; rien n'est posé pendant la vérification de la session, les events gardent la dernière valeur). Jamais d'identifiant ni de donnée du compte dans une super-propriété.
+
 | Domaine | Events |
 | ------- | ------ |
 | Partie | `game_started`, `session_resumed`, `cell_opened`, `guess_submitted` (émis à l'accusé serveur d'un coup réussi par `playMove`, jamais pour un `duplicate`, avec `replayed` (coup joué avant le chargement) et `submit_latency_ms` hors rejeu), `guess_failed`, `game_completed` (n'émet plus `grid_score_percent` — dérivable de `filled_cells`+`lives_left`) |
