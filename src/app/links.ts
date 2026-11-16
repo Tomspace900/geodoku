@@ -2,4 +2,3 @@
 export const SUPPORT_EMAIL = "support@geodoku.app";
 export const METRODOKU_URL = "https://metrodoku.fr";
 export const KOFI_URL = "https://ko-fi.com/geodoku/tip";
-export const TWEMOJI_URL = "https://github.com/twitter/twemoji";

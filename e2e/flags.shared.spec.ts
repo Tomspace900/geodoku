@@ -17,15 +17,21 @@ test("without native flag emojis, the flag font is served by our own domain", as
       fillText.call(this, text, ...rest);
     };
   });
+  // A page without any flag: the font must load anyway, at startup, so the
+  // first flag the player places never shows up as two letters first.
   await page.goto("/en/about");
 
-  const faces = await page.evaluate(async (family) => {
-    await document.fonts.load(`16px "${family}"`, "\u{1F1EB}\u{1F1F7}");
-    return [...document.fonts]
-      .filter((face) => face.family.replaceAll('"', "") === family)
-      .map((face) => face.status);
-  }, FLAG_FONT_FAMILY);
-  expect(faces).toEqual(["loaded"]);
+  await expect
+    .poll(() =>
+      page.evaluate(
+        (family) =>
+          [...document.fonts]
+            .filter((face) => face.family.replaceAll('"', "") === family)
+            .map((face) => face.status),
+        FLAG_FONT_FAMILY,
+      ),
+    )
+    .toEqual(["loaded"]);
 
   const fontOrigins = await page.evaluate(() =>
     performance

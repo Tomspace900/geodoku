@@ -1,5 +1,7 @@
 import type { Config } from "tailwindcss";
-import { FLAG_FONT_FAMILY } from "./src/app/flagFont";
+
+// Drapeaux emoji sous Windows : voir src/app/flagEmojiFont.ts.
+const FLAG_FONT_FAMILY = "Twemoji Country Flags";
 
 const config: Config = {
   darkMode: "media",

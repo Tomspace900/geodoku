@@ -102,7 +102,7 @@ export const fr = {
       "Un code de connexion vaut 5 minutes. Une session dure 7 jours et se prolonge quand tu reviens. Ton compte est gardé tant que tu joues\u00A0: sans aucune partie pendant 3 ans, il est effacé, de la même façon qu'une suppression. Les parties sans compte restent anonymes dans les statistiques du jeu.",
     thirdPartyTitle: "Services tiers",
     thirdPartyBody:
-      "Geodoku s'appuie sur Vercel (hébergement et mesure d'audience sans cookie publicitaire), Convex (base des parties, des comptes et des statistiques de jeu, hébergée en Europe, en Irlande), Mailjet (envoi des codes de connexion, données hébergées en Europe, en Belgique et en Allemagne), Google (seulement si tu choisis de te connecter avec Google) et PostHog (mesure d'événements d'usage pseudonymes avec un identifiant enregistré localement, sans publicité). Convex est une société américaine, Mailjet une société française. Google Fonts reçoit aussi ton adresse IP au chargement des polices.",
+      "Geodoku s'appuie sur Vercel (hébergement et mesure d'audience sans cookie publicitaire), Convex (base des parties, des comptes et des statistiques de jeu, hébergée en Europe, en Irlande), Mailjet (envoi des codes de connexion, données hébergées en Europe, en Belgique et en Allemagne), Google (seulement si tu choisis de te connecter avec Google) et PostHog (mesure d'événements d'usage pseudonymes avec un identifiant enregistré localement, sans publicité). Convex est une société américaine, Mailjet une société française. Google Fonts reçoit aussi ton adresse IP au chargement des polices. Là où le système n'a pas de drapeaux emoji (Windows surtout), ils viennent de Twemoji (Twitter, licence CC-BY 4.0), servis par Geodoku lui-même.",
     rightsTitle: "Tes droits",
     rightsBody:
       "Tu modifies ton nom, ton pays et ton e-mail dans « Mes stats », puis « Mon compte » (une nouvelle adresse se confirme par un code). Tu peux aussi y supprimer ton compte toi-même\u00A0: ton e-mail, ton nom et ton pays sont effacés, tes parties restent dans les statistiques du jeu, anonymes, sans plus personne pour les relier à toi. Pour obtenir une copie de tes données, écris-moi depuis l'adresse de ton compte. Sans compte, effacer les données Geodoku de ton navigateur supprime les réglages, l'historique de tes parties et les identifiants locaux, et une partie enregistrée sur le serveur n'est reliée qu'au jeton gardé par ton navigateur.",
@@ -268,10 +268,6 @@ export const fr = {
     faqSourcesQ: "D'où viennent les réponses\u00A0?",
     faqSourcesA:
       "De sources publiques datées, comme REST Countries, le CIA World Factbook, la Banque mondiale, la FAO ou Wikidata. Pendant la partie, touche une contrainte pour voir les siennes.",
-    creditsTitle: "Crédits",
-    creditsFlagsPre:
-      "Sur les ordinateurs qui n'affichent pas les drapeaux emoji (Windows surtout), Geodoku utilise ceux de ",
-    creditsFlagsPost: ", publiés par Twitter sous licence CC-BY 4.0.",
     contactTitle: "Contact",
     contactBodyPre: "Une question, une idée, un bug\u00A0? Écris-moi à",
   },
