@@ -233,7 +233,7 @@ pnpm exec convex env set ADMIN_TOKEN "xxx"
 
 **GitHub Actions** ([`.github/workflows/ci.yml`](.github/workflows/ci.yml)) :
 
-- `quality` (sans secret) — lint, typechecks, Vitest, design system et bundle. Push `main`/`develop` + PR vers `main`/`develop`.
+- `quality` (sans secret) — doublons de dépendances (`pnpm dedupe --check`), lint, typechecks, Vitest, design system et bundle. Push `main`/`develop` + PR vers `main`/`develop`. Le contrôle des doublons compte d'autant plus que l'e2e saute les PR Dependabot : en 2026-11, `vaul` gardait son ancienne copie de `@radix-ui/react-dialog` après une montée, et la page ne répondait plus aux clics une fois la modale de résultat fermée. Une PR qui échoue là se corrige par `pnpm dedupe`.
 - `e2e` — Playwright contre `vars.VITE_CONVEX_URL` = deploy `preview/develop`, d'adresse fixe (cf. ci-dessous). Pas de deploy key ni seed (develop déjà seedé, cron horaire). **Sérialisé** (`concurrency: e2e-develop`). ⚠️ soumet de vrais guesses → bruite les stats develop (staging assumé). **Sauté sur les PR Dependabot** (`github.actor`) pour cette raison précise : un bump de dépendance ne vaut pas de polluer les stats de staging. Le build reste couvert, `quality` lançant `check:bundle` (qui fait un `vite build`), et la suite complète tourne au merge dans `develop`.
 
 **Mapping branche → environnement :**
