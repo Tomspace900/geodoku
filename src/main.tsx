@@ -7,6 +7,7 @@ import { createRoot } from "react-dom/client";
 import { BrowserRouter } from "react-router";
 import App from "@/App";
 import { dropNoiseExceptions, isDevHostname } from "@/app/analyticsNoise";
+import { installFlagEmojiFont } from "@/app/flagEmojiFont";
 import { oauthCallbackRelay } from "@/lib/convexSite";
 import "@/index.css";
 
@@ -35,6 +36,7 @@ if (!relay && posthogToken && !isDevHostname(window.location.hostname)) {
 }
 
 if (!relay) {
+  installFlagEmojiFont();
   createRoot(document.getElementById("root")!).render(
     <StrictMode>
       <PostHogProvider client={posthog}>

@@ -82,27 +82,58 @@ export const en = {
     title: "Privacy",
     lead: "Geodoku is a game I build on my own. The account is optional: without it, I only collect the bare minimum, just enough to run the game and see how the grids are doing.",
     backToGame: "Back to the game",
-    essenceTitle: "No required account, no advertising",
-    essenceBody:
-      "You play without signing up. The account only lets you find your games and stats on all your devices. No ads: I don't sell data or use it for advertising. There are no advertising trackers on the site.",
-    deviceTitle: "On your device",
-    deviceBody:
-      "Your browser keeps a few settings: your language, in a preference cookie set only if you pick one; the language of the country you connect from, in a session cookie holding only that language, to suggest the right version; and in local storage the current grid progress, the history of your daily games (countries placed and mistakes per cell, no score), past days' distributions for \"My stats\", your practice games on past grids, a random anti-spam identifier, and for today's game a random token with the moves not sent yet. If you're signed in, your session is kept there too, then erased when you sign out. None of it is an advertising cookie. Clearing the site data removes it.",
-    serverTitle: "What gets sent to me",
-    serverBody:
-      "When you play without an account, today's game is recorded on the server: countries placed and mistakes per cell. It is only tied to a random token specific to that game, of which the server keeps a fingerprint: nothing links your games from one day to the next. The server derives the day's statistics from it (rarities, player scores, cells where people slip). Pseudonymous usage events also help me understand the journey; they never contain your email, your name or your account.",
-    accountTitle: "If you create an account",
-    accountBody:
-      "I keep your email address, the name and country you pick (the country is optional), and your games: those played while signed in, and the ones from your device you attach when you sign in. No score is stored, it is recomputed. If you use Google, I take neither your name nor your photo: only your email address is kept. Like any sign-in service, the session keeps the IP address and browser of the signed-in device, and the link with Google keeps the tokens Google hands over. Your name and country may be seen by the friends in your future leagues; your email, never.",
-    retentionTitle: "How long",
-    retentionBody:
-      "A sign-in code is valid for 5 minutes. A session lasts 7 days and is extended when you come back. Your account is kept as long as you play: with no game for 3 years, it is erased, the same way as a deletion. Games played without an account stay anonymous in the game's statistics.",
-    thirdPartyTitle: "Third-party services",
-    thirdPartyBody:
-      "Geodoku relies on Vercel (hosting and audience metrics without advertising cookies), Convex (the games, accounts and game statistics database, hosted in Europe, in Ireland), Mailjet (sending sign-in codes, data hosted in Europe, in Belgium and Germany), Google (only if you choose to sign in with Google), and PostHog (pseudonymous usage-event measurement with an identifier stored locally, without advertising). Convex is an American company, Mailjet a French one. Google Fonts also receives your IP address when fonts load.",
+    promiseMinimalTitle: "Bare minimum",
+    promiseMinimalBody:
+      "Fully playable without an account. I only keep what is needed to run the game.",
+    promiseNoAdsTitle: "Zero advertising",
+    promiseNoAdsBody:
+      "No data selling, no ad targeting, and no advertising cookies or trackers on the site.",
+    promiseEuTitle: "Hosted in the EU",
+    promiseEuBody:
+      "I work to keep everything in the European Union: your games, account, emails and usage metrics (Ireland, Belgium, Germany).",
+    dataTitle: "What is stored and where",
+    dataColData: "Data",
+    dataColWhere: "Where",
+    dataColWhy: "Why",
+    dataColRetention: "Retention",
+    dataLangName: "Language",
+    dataLangWhere: "Device cookies",
+    dataLangWhy: "Show FR or EN",
+    dataLangRetention: "Current visit, or until cleared",
+    dataDeviceName: "On your device",
+    dataDeviceWhere: "Local storage",
+    dataDeviceWhy: "Current grid, history, archive and anti-spam ID",
+    dataDeviceRetention: "Until site data is cleared",
+    dataDailyName: "Today's game",
+    dataDailyWhere: "Server (Ireland, EU)",
+    dataDailyWhy: "Daily rarities and stats, via a random token",
+    dataDailyRetention: "No limit (anonymous)",
+    dataAccountName: "Account (optional)",
+    dataAccountWhere: "Server (Ireland, EU)",
+    dataAccountWhy:
+      "Email, name, optional country and games (Google: email only)",
+    dataAccountRetention: "Erased after 3 years with no game",
+    dataSessionName: "Codes & sessions",
+    dataSessionWhere: "EU (Ireland, Belgium, Germany) & device",
+    dataSessionWhy: "Code sign-in and active session (IP, browser)",
+    dataSessionRetention: "5 min (code) · 7 days (session)",
+    dataUsageName: "Usage metrics",
+    dataUsageWhere: "Server (EU) + local ID",
+    dataUsageWhy: "Understand the journey (no email or name)",
+    dataUsageRetention: "Local ID until cleared · stats kept",
+    dataDeliveryName: "Delivery & fonts",
+    dataDeliveryWhere: "Global network & Google Fonts",
+    dataDeliveryWhy: "Serve the site, cookieless audience and fonts (IP)",
+    dataDeliveryRetention: "Only while loading",
     rightsTitle: "Your rights",
-    rightsBody:
-      'You change your name, country and email in "My stats", then "My account" (a new address is confirmed with a code). You can also delete your account yourself there: your email, name and country are erased, your games stay in the game\'s statistics, anonymous, with no one left to link them to you. To get a copy of your data, write to me from your account\'s address. Without an account, clearing Geodoku site data removes local settings, your game history and identifiers, and a game recorded on the server is only tied to the token your browser keeps.',
+    rightsAccountTitle: "Edit or delete your account",
+    rightsAccountBody:
+      'In "My stats", then "My account" (a new email is confirmed with a code). On deletion, email, name and country are erased; your games stay anonymous in the game\'s stats.',
+    rightsCopyTitle: "Get a copy of your data",
+    rightsCopyBody: "Write to me from your account's email address.",
+    rightsBrowserTitle: "Without an account",
+    rightsBrowserBody:
+      "Clearing Geodoku site data in your browser removes your settings, local history and the token tying your game to the server.",
     contactTitle: "Contact",
     contactBodyPre: "A question? Write to me at",
   },
@@ -198,9 +229,6 @@ export const en = {
     roadmapCountrySheets: "Detailed sheets for every country",
     roadmapConstraints: "Themed grids or special editions",
     roadmapLives: "Easy mode and/or hardcore mode",
-    roadmapStats: "Your game history and stats",
-    roadmapAccounts:
-      "An optional account to find your games on all your devices",
     roadmapLeagues: "Leagues with friends",
     contactTitle: "Got an idea or a remark?",
     contactBodyPre: "I welcome every suggestion. Write to me at",
@@ -215,7 +243,7 @@ export const en = {
     homeDescription:
       "Free daily geography puzzle. Every day, a 3×3 grid: find countries that match both their row and their column. No sign-up.",
     privacyDescription:
-      "What Geodoku collects and what it doesn't: no account, no ads, just the bare minimum to run the game.",
+      "What Geodoku collects and what it doesn't: optional account, no ads, just the bare minimum to run the game.",
     changelogDescription:
       "What's new in Geodoku, update after update: new constraints, features and fixes.",
     imageAlt: "Geodoku, a 3×3 geography sudoku grid",
@@ -248,7 +276,8 @@ export const en = {
       "Once today's grid is done, the previous seven grids stay playable, with unlimited attempts. A game ends when a cell can no longer be filled, or when you give up. Practice is scored out of 900: no lives, so no lives bonus.",
     faqTitle: "Frequently asked questions",
     faqPriceQ: "How much does Geodoku cost?",
-    faqPriceA: "Nothing. The game is free, with no account and no ads.",
+    faqPriceA:
+      "Nothing. The game is free, with no ads, and an account is optional.",
     faqNewGridQ: "When does the new grid come out?",
     faqNewGridA: "Every day at midnight UTC. Everyone plays the same grid.",
     faqBlockedQ: "What happens when a cell has no answer left?",

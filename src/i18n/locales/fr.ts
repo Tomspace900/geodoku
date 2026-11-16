@@ -85,27 +85,58 @@ export const fr = {
     title: "Confidentialité",
     lead: "Geodoku est un jeu que je développe seul. Le compte est facultatif\u00A0: sans lui, je ne collecte que le strict minimum, juste de quoi faire tourner le jeu et voir comment se portent les grilles.",
     backToGame: "Retour au jeu",
-    essenceTitle: "Sans compte obligatoire ni publicité",
-    essenceBody:
-      "On joue sans inscription. Le compte ne sert qu'à retrouver ses parties et ses stats sur tous ses appareils. Pas de publicité\u00A0: je ne vends aucune donnée et ne les utilise pas à des fins publicitaires. Il n'y a aucun traceur publicitaire sur le site.",
-    deviceTitle: "Sur ton appareil",
-    deviceBody:
-      "Ton navigateur garde quelques réglages\u00A0: ta langue, dans un cookie de préférence posé seulement si tu la choisis\u00A0; la langue du pays d'où tu te connectes, dans un cookie de session qui ne contient que cette langue, pour te proposer la bonne version\u00A0; et en stockage local la progression de la grille du jour, l'historique de tes parties quotidiennes (pays placés et erreurs par case, sans score), les répartitions des jours passés pour « Mes stats », tes parties d'entraînement sur les grilles passées, un identifiant aléatoire anti-spam, et pour la partie du jour un jeton aléatoire avec les coups pas encore envoyés. Si tu es connecté, ta session y est aussi gardée, puis effacée à la déconnexion. Rien de tout ça n'est un cookie publicitaire. Effacer les données du site les supprime.",
-    serverTitle: "Ce qui m'est envoyé",
-    serverBody:
-      "Quand tu joues sans compte, ta partie du jour est enregistrée sur le serveur\u00A0: pays placés et erreurs par case. Elle n'est rattachée qu'à un jeton aléatoire propre à cette partie, dont le serveur ne garde qu'une empreinte\u00A0: rien ne relie tes parties d'un jour à l'autre. Le serveur en tire les statistiques du jour (raretés, scores des joueurs, cases où l'on se trompe). Des événements d'usage pseudonymes m'aident aussi à comprendre le parcours\u00A0; ils ne contiennent jamais ton e-mail, ton nom ni ton compte.",
-    accountTitle: "Si tu crées un compte",
-    accountBody:
-      "Je garde ton adresse e-mail, le nom et le pays que tu choisis (le pays est facultatif), et tes parties\u00A0: celles jouées connecté, et celles de ton appareil que tu y rattaches à la connexion. Aucun score n'est stocké, il se recalcule. Si tu passes par Google, je ne reprends ni ton nom ni ta photo\u00A0: seule ton adresse e-mail est gardée. Comme tout service de connexion, la session garde l'adresse IP et le navigateur de l'appareil connecté, et le lien avec Google garde les jetons que Google lui remet. Ton nom et ton pays pourront être vus par les amis de tes futures ligues\u00A0; ton e-mail, jamais.",
-    retentionTitle: "Combien de temps",
-    retentionBody:
-      "Un code de connexion vaut 5 minutes. Une session dure 7 jours et se prolonge quand tu reviens. Ton compte est gardé tant que tu joues\u00A0: sans aucune partie pendant 3 ans, il est effacé, de la même façon qu'une suppression. Les parties sans compte restent anonymes dans les statistiques du jeu.",
-    thirdPartyTitle: "Services tiers",
-    thirdPartyBody:
-      "Geodoku s'appuie sur Vercel (hébergement et mesure d'audience sans cookie publicitaire), Convex (base des parties, des comptes et des statistiques de jeu, hébergée en Europe, en Irlande), Mailjet (envoi des codes de connexion, données hébergées en Europe, en Belgique et en Allemagne), Google (seulement si tu choisis de te connecter avec Google) et PostHog (mesure d'événements d'usage pseudonymes avec un identifiant enregistré localement, sans publicité). Convex est une société américaine, Mailjet une société française. Google Fonts reçoit aussi ton adresse IP au chargement des polices.",
+    promiseMinimalTitle: "Strict minimum",
+    promiseMinimalBody:
+      "Jouable entièrement sans compte. Je ne garde que l'essentiel pour faire tourner le jeu.",
+    promiseNoAdsTitle: "Zéro publicité",
+    promiseNoAdsBody:
+      "Aucune vente de données, aucun ciblage et aucun cookie ou traceur publicitaire sur le site.",
+    promiseEuTitle: "Hébergé en UE",
+    promiseEuBody:
+      "Je m'efforce de tout garder en Union Européenne\u00A0: tes parties, ton compte, les e-mails et la mesure d'usage (Irlande, Belgique, Allemagne).",
+    dataTitle: "Ce qui est stocké et où",
+    dataColData: "Donnée",
+    dataColWhere: "Où",
+    dataColWhy: "Pourquoi",
+    dataColRetention: "Durée",
+    dataLangName: "Langue",
+    dataLangWhere: "Cookies sur l'appareil",
+    dataLangWhy: "Afficher FR ou EN",
+    dataLangRetention: "Visite en cours, ou jusqu'au retrait",
+    dataDeviceName: "Jeu sur l'appareil",
+    dataDeviceWhere: "Stockage local",
+    dataDeviceWhy: "Grille en cours, historique, archives et anti-spam",
+    dataDeviceRetention: "Jusqu'à effacement du site",
+    dataDailyName: "Partie du jour",
+    dataDailyWhere: "Serveur (Irlande, UE)",
+    dataDailyWhy: "Raretés et stats du jour, via un jeton aléatoire",
+    dataDailyRetention: "Sans limite (anonyme)",
+    dataAccountName: "Compte (facultatif)",
+    dataAccountWhere: "Serveur (Irlande, UE)",
+    dataAccountWhy:
+      "E-mail, nom, pays facultatif et parties (si Google\u00A0: e-mail seul)",
+    dataAccountRetention: "Supprimé après 3 ans sans partie",
+    dataSessionName: "Codes et sessions",
+    dataSessionWhere: "UE (Irlande, Belgique, Allemagne) et appareil",
+    dataSessionWhy: "Connexion par code et session (IP, navigateur)",
+    dataSessionRetention: "5 min (code) · 7 jours (session)",
+    dataUsageName: "Mesure d'usage",
+    dataUsageWhere: "Serveur (UE) + ID local",
+    dataUsageWhy: "Comprendre le parcours (sans e-mail ni nom)",
+    dataUsageRetention: "ID local jusqu'à effacement · stats sans limite",
+    dataDeliveryName: "Affichage et polices",
+    dataDeliveryWhere: "Réseau mondial et Google Fonts",
+    dataDeliveryWhy: "Servir le site, audience sans cookie et polices (IP)",
+    dataDeliveryRetention: "Ponctuel, au chargement",
     rightsTitle: "Tes droits",
-    rightsBody:
-      "Tu modifies ton nom, ton pays et ton e-mail dans « Mes stats », puis « Mon compte » (une nouvelle adresse se confirme par un code). Tu peux aussi y supprimer ton compte toi-même\u00A0: ton e-mail, ton nom et ton pays sont effacés, tes parties restent dans les statistiques du jeu, anonymes, sans plus personne pour les relier à toi. Pour obtenir une copie de tes données, écris-moi depuis l'adresse de ton compte. Sans compte, effacer les données Geodoku de ton navigateur supprime les réglages, l'historique de tes parties et les identifiants locaux, et une partie enregistrée sur le serveur n'est reliée qu'au jeton gardé par ton navigateur.",
+    rightsAccountTitle: "Modifier ou supprimer ton compte",
+    rightsAccountBody:
+      "Dans « Mes stats », puis « Mon compte » (un nouvel e-mail se confirme par un code). À la suppression, e-mail, nom et pays sont effacés\u00A0; tes parties restent anonymes dans les stats du jeu.",
+    rightsCopyTitle: "Obtenir une copie de tes données",
+    rightsCopyBody: "Écris-moi depuis l'adresse de ton compte.",
+    rightsBrowserTitle: "Sans compte",
+    rightsBrowserBody:
+      "Effacer les données Geodoku de ton navigateur supprime tes réglages, ton historique local et le jeton qui reliait ta partie au serveur.",
     contactTitle: "Contact",
     contactBodyPre: "Une question\u00A0? Écris-moi à",
   },
@@ -203,9 +234,6 @@ export const fr = {
     roadmapConstraints:
       "Des grilles \u00E0 th\u00E8me ou des \u00E9ditions sp\u00E9ciales",
     roadmapLives: "Mode facile et/ou mode hardcore",
-    roadmapStats: "Ton historique et tes statistiques de jeu",
-    roadmapAccounts:
-      "Un compte facultatif pour retrouver tes parties sur tous tes appareils",
     roadmapLeagues: "Des ligues entre amis",
     contactTitle: "Une id\u00E9e, une remarque\u00A0?",
     contactBodyPre:
@@ -221,7 +249,7 @@ export const fr = {
     homeDescription:
       "Sudoku de géographie gratuit. Chaque jour, une grille 3×3 : trouve les pays qui valident leur ligne et leur colonne. Sans inscription.",
     privacyDescription:
-      "Ce que Geodoku collecte, et ce qu'il ne collecte pas : pas de compte, pas de publicité, le strict minimum pour faire tourner le jeu.",
+      "Ce que Geodoku collecte, et ce qu'il ne collecte pas : compte facultatif, pas de publicité, le strict minimum pour faire tourner le jeu.",
     changelogDescription:
       "Les nouveautés de Geodoku, mise à jour après mise à jour : nouvelles contraintes, fonctionnalités et corrections.",
     imageAlt: "Geodoku, une grille 3×3 de sudoku géographique",
@@ -255,7 +283,8 @@ export const fr = {
       "Une fois la grille du jour terminée, les sept grilles précédentes restent jouables, sans limite d'essais. La partie s'arrête quand une case devient impossible à remplir, ou si tu abandonnes. Le score y est sur 900\u00A0: sans vies, pas de bonus de vies.",
     faqTitle: "Questions fréquentes",
     faqPriceQ: "Combien coûte Geodoku\u00A0?",
-    faqPriceA: "Rien. Le jeu est gratuit, sans compte et sans publicité.",
+    faqPriceA:
+      "Rien. Le jeu est gratuit, sans publicité, et le compte est facultatif.",
     faqNewGridQ: "Quand arrive la nouvelle grille\u00A0?",
     faqNewGridA:
       "Chaque jour à minuit UTC, soit 1\u00A0h du matin en France l'hiver et 2\u00A0h l'été. Tout le monde joue la même grille.",

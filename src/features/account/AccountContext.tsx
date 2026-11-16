@@ -71,6 +71,20 @@ export function AccountProvider({ children }: { children: ReactNode }) {
   const [synced, setSynced] = useState(false);
   const [welcome, setWelcome] = useState<{ attached: number } | null>(null);
   const syncingRef = useRef(false);
+  const status = isLoading
+    ? "loading"
+    : isAuthenticated
+      ? "signedIn"
+      : "anonymous";
+
+  // Porte l'état du compte sur tous les events PostHog (super-property),
+  // comme la langue : un booléen, jamais d'identifiant. Rien pendant la
+  // vérification de la session : les events gardent la dernière valeur connue.
+  // biome-ignore lint/correctness/useExhaustiveDependencies: posthog is a stable ref
+  useEffect(() => {
+    if (status === "loading") return;
+    posthog?.register({ signed_in: status === "signedIn" });
+  }, [status]);
 
   // biome-ignore lint/correctness/useExhaustiveDependencies: posthog is a stable ref
   useEffect(() => {
@@ -124,7 +138,7 @@ export function AccountProvider({ children }: { children: ReactNode }) {
   }, []);
 
   const value: AccountContextValue = {
-    status: isLoading ? "loading" : isAuthenticated ? "signedIn" : "anonymous",
+    status,
     synced: isAuthenticated && synced,
     profile: isAuthenticated ? profile : null,
     welcome,
