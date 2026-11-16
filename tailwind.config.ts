@@ -1,4 +1,5 @@
 import type { Config } from "tailwindcss";
+import { FLAG_FONT_FAMILY } from "./src/app/flagFont";
 
 const config: Config = {
   darkMode: "media",
@@ -13,8 +14,8 @@ const config: Config = {
     },
     extend: {
       fontFamily: {
-        serif: ["Newsreader", "Georgia", "serif"],
-        sans: ["Inter", "system-ui", "sans-serif"],
+        serif: [FLAG_FONT_FAMILY, "Newsreader", "Georgia", "serif"],
+        sans: [FLAG_FONT_FAMILY, "Inter", "system-ui", "sans-serif"],
       },
       colors: {
         surface: {

@@ -1,12 +1,15 @@
 import { PostHogProvider } from "@posthog/react";
 import { Analytics } from "@vercel/analytics/react";
 import { SpeedInsights } from "@vercel/speed-insights/react";
+import { polyfillCountryFlagEmojis } from "country-flag-emoji-polyfill";
+import flagFontUrl from "country-flag-emoji-polyfill/dist/TwemojiCountryFlags.woff2?url";
 import posthog from "posthog-js";
 import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
 import { BrowserRouter } from "react-router";
 import App from "@/App";
 import { dropNoiseExceptions, isDevHostname } from "@/app/analyticsNoise";
+import { FLAG_FONT_FAMILY } from "@/app/flagFont";
 import { oauthCallbackRelay } from "@/lib/convexSite";
 import "@/index.css";
 
@@ -35,6 +38,9 @@ if (!relay && posthogToken && !isDevHostname(window.location.hostname)) {
 }
 
 if (!relay) {
+  // Drapeaux emoji sous Windows (#51) : police servie par notre domaine, jamais
+  // par le CDN par défaut du paquet. No-op là où les drapeaux s'affichent déjà.
+  polyfillCountryFlagEmojis(FLAG_FONT_FAMILY, flagFontUrl);
   createRoot(document.getElementById("root")!).render(
     <StrictMode>
       <PostHogProvider client={posthog}>

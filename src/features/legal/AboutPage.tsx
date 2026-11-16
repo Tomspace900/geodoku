@@ -1,4 +1,4 @@
-import { METRODOKU_URL } from "@/app/links";
+import { METRODOKU_URL, TWEMOJI_URL } from "@/app/links";
 import { HOW_TO_PLAY_RULES } from "@/features/game/components/HowToPlayLink";
 import { IconRuleList } from "@/features/game/components/IconRuleList";
 import { SCORE_PARTS_BY_SCALE } from "@/features/game/components/ScoreInfoDialog";
@@ -89,6 +89,21 @@ export function AboutPage() {
               </LegalBullet>
             ))}
           </ul>
+        </LegalSection>
+
+        <LegalSection title={t("aboutPage.creditsTitle")}>
+          <LegalParagraph>
+            {t("aboutPage.creditsFlagsPre")}
+            <a
+              href={TWEMOJI_URL}
+              className={inlineLinkClass}
+              rel="noopener noreferrer"
+              target="_blank"
+            >
+              Twemoji
+            </a>
+            {t("aboutPage.creditsFlagsPost")}
+          </LegalParagraph>
         </LegalSection>
 
         <LegalContactSection

@@ -268,6 +268,10 @@ export const fr = {
     faqSourcesQ: "D'où viennent les réponses\u00A0?",
     faqSourcesA:
       "De sources publiques datées, comme REST Countries, le CIA World Factbook, la Banque mondiale, la FAO ou Wikidata. Pendant la partie, touche une contrainte pour voir les siennes.",
+    creditsTitle: "Crédits",
+    creditsFlagsPre:
+      "Sur les ordinateurs qui n'affichent pas les drapeaux emoji (Windows surtout), Geodoku utilise ceux de ",
+    creditsFlagsPost: ", publiés par Twitter sous licence CC-BY 4.0.",
     contactTitle: "Contact",
     contactBodyPre: "Une question, une idée, un bug\u00A0? Écris-moi à",
   },

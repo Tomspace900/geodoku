@@ -50,6 +50,9 @@ importers:
       convex:
         specifier: ^1.43.0
         version: 1.43.0(react@18.3.1)
+      country-flag-emoji-polyfill:
+        specifier: 0.1.10
+        version: 0.1.10
       lucide-react:
         specifier: ^1.31.0
         version: 1.31.0(react@18.3.1)
@@ -1350,6 +1353,9 @@ packages:
 
   core-js@3.50.0:
     resolution: {integrity: sha512-BRWgOLKkFeCgRudR6zrs8p9XJZcE14grzKMMssoYrk6krtuEZ7MTKPIY5RzOnqsEKIR9kst7wNzphttraT+Yqw==}
+
+  country-flag-emoji-polyfill@0.1.10:
+    resolution: {integrity: sha512-5O50p2mq/d8+4AfHz3monRQaBA4TIQ0XcKqJUhCYR6SMsLqlO4m8f87og6R1D68Z1sNXGkjLkcEccuzC6T9i5g==}
 
   cssesc@3.0.0:
     resolution: {integrity: sha512-/Tb/JcjK111nNScGob5MNtsntNM1aCNUDipB/TkwZFhyDrrE47SOx/18wF2bbjgc3ZzCSKW1T5nt5EbFoAz/Vg==}
@@ -2957,6 +2963,8 @@ snapshots:
   cookie@1.1.1: {}
 
   core-js@3.50.0: {}
+
+  country-flag-emoji-polyfill@0.1.10: {}
 
   cssesc@3.0.0: {}
 

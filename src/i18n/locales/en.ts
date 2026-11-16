@@ -259,6 +259,10 @@ export const en = {
     faqSourcesQ: "Where do the answers come from?",
     faqSourcesA:
       "From dated public sources such as REST Countries, the CIA World Factbook, the World Bank, the FAO and Wikidata. During a game, tap a constraint to see its own.",
+    creditsTitle: "Credits",
+    creditsFlagsPre:
+      "On computers that can't display flag emojis (mostly Windows), Geodoku uses the ones from ",
+    creditsFlagsPost: ", published by Twitter under the CC-BY 4.0 license.",
     contactTitle: "Contact",
     contactBodyPre: "A question, an idea, a bug? Write to me at",
   },
