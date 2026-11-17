@@ -32,6 +32,15 @@ crons.cron(
   {},
 );
 
+// Hourly at :15, after "ensure grids" — email once per missing grid date
+// (today or tomorrow) to ALERT_EMAIL_TO, set on prod only (#127, #128).
+crons.cron(
+  "missing grid alert",
+  "15 * * * *",
+  internal.alerts.checkMissingGrids,
+  {},
+);
+
 // Daily at 03:30 UTC — the rate limiter component never deletes its rows.
 crons.cron(
   "purge rate limits",
@@ -48,5 +57,9 @@ crons.cron(
   internal.account.purgeInactiveAccounts,
   { cursor: null },
 );
+
+// Weekly, Monday 04:30 UTC — player reports are erased one year after being
+// handled, and three years after being sent at most (#127).
+crons.cron("purge reports", "30 4 * * 1", internal.reports.purgeReports, {});
 
 export default crons;

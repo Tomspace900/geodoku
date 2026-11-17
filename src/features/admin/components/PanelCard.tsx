@@ -4,11 +4,15 @@ import { cn } from "@/lib/utils";
 type Props = {
   children: ReactNode;
   className?: string;
+  id?: string;
 };
 
-export function PanelCard({ children, className }: Props) {
+export function PanelCard({ children, className, id }: Props) {
   return (
-    <section className={cn("rounded-lg bg-surface-low p-4 md:p-5", className)}>
+    <section
+      id={id}
+      className={cn("rounded-lg bg-surface-low p-4 md:p-5", className)}
+    >
       {children}
     </section>
   );

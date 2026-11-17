@@ -22,6 +22,13 @@ export function assertGameToken(token: string): void {
   }
 }
 
+/** L'identifiant d'un signalement (#127) : un UUID v4, comme un jeton. */
+export function assertReportId(reportId: string): void {
+  if (!GAME_TOKEN_PATTERN.test(reportId)) {
+    throw new ConvexError("Invalid reportId");
+  }
+}
+
 export function assertClientId(clientId: string): void {
   if (
     clientId.length < MIN_CLIENT_ID_LENGTH ||

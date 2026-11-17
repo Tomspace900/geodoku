@@ -117,6 +117,10 @@ export const en = {
     dataSessionWhere: "EU (Ireland, Belgium, Germany) & device",
     dataSessionWhy: "Code sign-in and active session (IP, browser)",
     dataSessionRetention: "5 min (code) · 7 days (session)",
+    dataReportName: "Report",
+    dataReportWhere: "Server (Ireland, EU) & my mailbox (OVH, France)",
+    dataReportWhy: "Your text, the cell concerned and language, no identifier",
+    dataReportRetention: "1 year after handling, 3 years max",
     dataUsageName: "Usage metrics",
     dataUsageWhere: "Server (EU) + local ID",
     dataUsageWhy: "Understand the journey (no email or name)",
@@ -142,6 +146,10 @@ export const en = {
     title: "What's new",
     backToGame: "Back to the game",
     entries: {
+      reportDate: "November 17, 2026",
+      reportTitle: "Report a mistake, and a month of practice",
+      reportBody:
+        "Doubt an answer? A small update that now lets you report a mistake from a cell of the solution grid, by clicking the little flag. Or a general bug, straight from the bottom of the page. I've also opened practice to the last 30 days, up from 7.",
       statsDate: "November 14, 2026",
       statsTitle: "Stats at last, and an account if you like!",
       statsBody:
@@ -239,7 +247,7 @@ export const en = {
     changelogTitle: "What's new · Geodoku",
     aboutTitle: "About Geodoku: rules, scoring and FAQ",
     aboutDescription:
-      "All about Geodoku, the daily geography grid: a 3×3 grid of countries, five lives, a bonus for rare answers, practice on the last seven grids, and frequently asked questions.",
+      "All about Geodoku, the daily geography grid: a 3×3 grid of countries, five lives, a bonus for rare answers, practice on the last 30 grids, and frequently asked questions.",
     homeDescription:
       "Free daily geography puzzle. Every day, a 3×3 grid: find countries that match both their row and their column. No sign-up.",
     privacyDescription:
@@ -273,7 +281,7 @@ export const en = {
     scoreTitle: "Scoring",
     trainingTitle: "Practice",
     trainingBody:
-      "Once today's grid is done, the previous seven grids stay playable, with unlimited attempts. A game ends when a cell can no longer be filled, or when you give up. Practice is scored out of 900: no lives, so no lives bonus.",
+      "Once today's grid is done, the grids from the previous 30 days stay playable, with unlimited attempts. A game ends when a cell can no longer be filled, or when you give up. Practice is scored out of 900: no lives, so no lives bonus.",
     faqTitle: "Frequently asked questions",
     faqPriceQ: "How much does Geodoku cost?",
     faqPriceA:
@@ -289,7 +297,8 @@ export const en = {
     faqSourcesA:
       "From dated public sources such as REST Countries, the CIA World Factbook, the World Bank, the FAO and Wikidata. During a game, tap a constraint to see its own.",
     contactTitle: "Contact",
-    contactBodyPre: "A question, an idea, a bug? Write to me at",
+    reportBodyPre: "A bug, a doubtful answer?",
+    contactBodyPre: "A question, an idea? Write to me at",
   },
   howToPlay: {
     title: "How to play?",
@@ -515,6 +524,34 @@ export const en = {
     deleteCodeSubtitle: "Deletion code",
     deleteFailed: "The deletion didn't go through. Try again.",
     genericError: "That didn't work. Try again in a moment.",
+  },
+  report: {
+    entryLink: "Report a mistake",
+    title: "Report a mistake",
+    generalTitle: "Report a problem",
+    backToAnswers: "Back to answers",
+    entryShort: "Report",
+    gridHint:
+      "You can report straight from the answer grid: tap the cell or constraint, then the flag.",
+    contextCell: "Cell {target} · {date} grid",
+    contextConstraint: "Constraint {target} · {date} grid",
+    categoryLabel: "Kind of report",
+    categoryContent: "Answer or constraint",
+    categoryBug: "Bug or other",
+    messageLabel: "Your message",
+    placeholderContent:
+      "Which country is wrong, why, and your source if you have one.",
+    placeholderBug:
+      "What happened, on which screen, on which device and browser, and how to reproduce it.",
+    privacyHint:
+      "Sent without your name or account. Don't include personal information.",
+    counter: "{count}/{max}",
+    submit: "Send",
+    sentTitle: "Thanks, noted!",
+    sentBody: "I read every report and fix the lists when needed.",
+    close: "Close",
+    failed: "Couldn't send. Check your connection, then try again.",
+    rateLimited: "Lots of reports at once. Try again a bit later.",
   },
   theme: {
     continent_africa: "Africa",

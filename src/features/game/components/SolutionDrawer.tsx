@@ -1,5 +1,6 @@
-import { X } from "lucide-react";
+import { ArrowLeft, X } from "lucide-react";
 import { useRef, useState } from "react";
+import { Button } from "@/components/ui/button";
 import {
   Drawer,
   DrawerContent,
@@ -30,6 +31,13 @@ import type {
   CellKey,
   GameState,
 } from "@/features/game/types";
+import { ReportFlagButton } from "@/features/reports/components/ReportFlagButton";
+import { ReportForm } from "@/features/reports/components/ReportForm";
+import { useReportSubmit } from "@/features/reports/hooks/useReportSubmit";
+import {
+  formatReportGridDate,
+  type ReportTarget,
+} from "@/features/reports/logic/report";
 import { useLocale } from "@/i18n/LocaleContext";
 import type { Locale, Translate } from "@/i18n/types";
 import { focusWithoutVisibleRing } from "@/lib/focus";
@@ -224,8 +232,10 @@ export function SolutionDrawer({
   failureRates,
   drawer,
 }: Props) {
-  const { t } = useLocale();
+  const { t, locale } = useLocale();
   const [open, setOpen] = useState(true);
+  // Le signalement remplace la liste sur place, avec « ← » pour y revenir.
+  const [view, setView] = useState<"answers" | "report">("answers");
   const openerRef = useRef<HTMLElement | null>(
     document.activeElement instanceof HTMLElement
       ? document.activeElement
@@ -272,12 +282,45 @@ export function SolutionDrawer({
     valueConstraintIds,
   );
 
+  // La case ou la contrainte part avec le signalement : le joueur n'écrit que
+  // son texte. Sans cible (tiroir qui se ferme), rien n'est envoyé.
+  const reportTarget: ReportTarget = cellKey
+    ? { kind: "cell", date: state.date, mode: state.mode, cellKey }
+    : constraintId
+      ? { kind: "constraint", date: state.date, mode: state.mode, constraintId }
+      : { kind: "general", page: "/" };
+  const report = useReportSubmit({
+    source: cellKey ? "solution_cell" : "solution_constraint",
+    mode: state.mode,
+    target: reportTarget,
+  });
+
+  function openReport() {
+    report.trackOpened();
+    setView("report");
+  }
+
   function handleClose() {
     setOpen(false);
     setTimeout(drawer.close, UI_ANIMATION_MS.drawerClose);
   }
 
   if (!target) return null;
+
+  const answersTitle =
+    target.kind === "cell" ? `${rowLabel} × ${colLabel}` : constraintLabel;
+  const reportSubtitle = t(
+    target.kind === "cell" ? "report.contextCell" : "report.contextConstraint",
+    {
+      target: answersTitle,
+      date: formatReportGridDate(state.date, locale),
+    },
+  );
+  const flag = (
+    <div className="-mr-1.5 -mt-0.5">
+      <ReportFlagButton onClick={openReport} />
+    </div>
+  );
 
   return (
     <Drawer
@@ -293,12 +336,44 @@ export function SolutionDrawer({
           focusWithoutVisibleRing(openerRef.current);
         }}
       >
-        {target.kind === "cell" ? (
+        {view === "report" ? (
           <>
-            <DrawerHeader className="text-left px-4 pb-2 pt-3 sm:pt-4">
+            <div className="px-4 pt-3 sm:pt-4">
+              <Button
+                type="button"
+                variant="ghost"
+                size="auto"
+                onClick={() => setView("answers")}
+                className="w-fit gap-1.5 text-xs font-normal"
+              >
+                <ArrowLeft className="!size-3.5" aria-hidden />
+                {t("report.backToAnswers")}
+              </Button>
+            </div>
+            <DrawerHeader className="text-left px-4 pb-2 pt-2">
+              <DrawerTitle className="font-serif text-lg font-medium text-on-surface leading-snug">
+                {t("report.title")}
+              </DrawerTitle>
+              <p className="text-xs text-on-surface-variant">
+                {reportSubtitle}
+              </p>
+            </DrawerHeader>
+            <div className="overflow-y-auto px-4 pb-6">
+              <ReportForm
+                initialCategory="content"
+                hasGridTarget
+                onSubmit={report.submit}
+                onDone={handleClose}
+              />
+            </div>
+          </>
+        ) : target.kind === "cell" ? (
+          <>
+            <DrawerHeader className="flex items-start justify-between gap-2 text-left px-4 pb-2 pt-3 sm:pt-4">
               <DrawerTitle className="font-serif text-lg font-medium text-on-surface leading-snug">
                 {rowLabel} × {colLabel}
               </DrawerTitle>
+              {flag}
             </DrawerHeader>
             {cellKey && cellFailureRate !== null && (
               <CellFailureLine rate={cellFailureRate} />
@@ -311,10 +386,11 @@ export function SolutionDrawer({
           </>
         ) : (
           <>
-            <DrawerHeader className="text-left px-4 pb-0 pt-3 sm:pt-4">
+            <DrawerHeader className="flex items-start justify-between gap-2 text-left px-4 pb-0 pt-3 sm:pt-4">
               <DrawerTitle className="font-serif text-lg font-medium text-on-surface leading-snug">
                 {constraintLabel}
               </DrawerTitle>
+              {flag}
             </DrawerHeader>
             <div className="px-4 pb-2">
               {constraintId && (

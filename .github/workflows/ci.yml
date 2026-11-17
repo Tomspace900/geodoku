@@ -28,6 +28,10 @@ jobs:
           node-version: 22.19.0
           cache: pnpm
       - run: pnpm install --frozen-lockfile
+      # One copy of each package: two Radix Dialog copies (vaul kept the old
+      # one) left the page unclickable after closing the result modal, and e2e
+      # does not run on Dependabot PRs. Fix with `pnpm dedupe`.
+      - run: pnpm dedupe --check
       - run: pnpm lint # biome check + tsc --noEmit
       - run: pnpm test # vitest
       - run: pnpm check:content

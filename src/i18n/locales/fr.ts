@@ -120,6 +120,11 @@ export const fr = {
     dataSessionWhere: "UE (Irlande, Belgique, Allemagne) et appareil",
     dataSessionWhy: "Connexion par code et session (IP, navigateur)",
     dataSessionRetention: "5 min (code) · 7 jours (session)",
+    dataReportName: "Signalement",
+    dataReportWhere: "Serveur (Irlande, UE) et ma boîte mail (OVH, France)",
+    dataReportWhy:
+      "Ton texte, la case visée et la langue, sans aucun identifiant",
+    dataReportRetention: "1 an après traitement, 3 ans au plus",
     dataUsageName: "Mesure d'usage",
     dataUsageWhere: "Serveur (UE) + ID local",
     dataUsageWhy: "Comprendre le parcours (sans e-mail ni nom)",
@@ -145,6 +150,10 @@ export const fr = {
     title: "Nouveautés",
     backToGame: "Retour au jeu",
     entries: {
+      reportDate: "17 novembre 2026",
+      reportTitle: "Signaler une erreur et un mois d'entraînement",
+      reportBody:
+        "Un doute sur une réponse\u00A0? Une petite mise à jour qui te permet maintenant de signaler une erreur depuis une case de la grille solution, en cliquant sur le petit drapeau. Ou bien un bug global directement depuis le bas de page. J'ai aussi ouvert l'entraînement aux 30 derniers jours, contre 7 avant.",
       statsDate: "14 novembre 2026",
       statsTitle: "Enfin des stats, et un compte si tu veux\u00A0!",
       statsBody:
@@ -245,7 +254,7 @@ export const fr = {
     changelogTitle: "Nouveautés · Geodoku",
     aboutTitle: "À propos de Geodoku : règles, score et questions fréquentes",
     aboutDescription:
-      "Tout sur Geodoku, le sudoku de géographie quotidien : une grille 3×3 de pays, cinq vies, un bonus pour les réponses rares, un entraînement sur les sept dernières grilles, et les questions fréquentes.",
+      "Tout sur Geodoku, le sudoku de géographie quotidien : une grille 3×3 de pays, cinq vies, un bonus pour les réponses rares, un entraînement sur les 30 dernières grilles, et les questions fréquentes.",
     homeDescription:
       "Sudoku de géographie gratuit. Chaque jour, une grille 3×3 : trouve les pays qui valident leur ligne et leur colonne. Sans inscription.",
     privacyDescription:
@@ -280,7 +289,7 @@ export const fr = {
     scoreTitle: "Le score",
     trainingTitle: "L'entraînement",
     trainingBody:
-      "Une fois la grille du jour terminée, les sept grilles précédentes restent jouables, sans limite d'essais. La partie s'arrête quand une case devient impossible à remplir, ou si tu abandonnes. Le score y est sur 900\u00A0: sans vies, pas de bonus de vies.",
+      "Une fois la grille du jour terminée, les grilles des 30 jours précédents restent jouables, sans limite d'essais. La partie s'arrête quand une case devient impossible à remplir, ou si tu abandonnes. Le score y est sur 900\u00A0: sans vies, pas de bonus de vies.",
     faqTitle: "Questions fréquentes",
     faqPriceQ: "Combien coûte Geodoku\u00A0?",
     faqPriceA:
@@ -298,7 +307,8 @@ export const fr = {
     faqSourcesA:
       "De sources publiques datées, comme REST Countries, le CIA World Factbook, la Banque mondiale, la FAO ou Wikidata. Pendant la partie, touche une contrainte pour voir les siennes.",
     contactTitle: "Contact",
-    contactBodyPre: "Une question, une idée, un bug\u00A0? Écris-moi à",
+    reportBodyPre: "Un bug, une réponse douteuse\u00A0?",
+    contactBodyPre: "Une question, une idée\u00A0? Écris-moi à",
   },
   howToPlay: {
     title: "Comment jouer\u00A0?",
@@ -527,6 +537,36 @@ export const fr = {
     deleteCodeSubtitle: "Code de suppression",
     deleteFailed: "La suppression n'a pas abouti. Réessaie.",
     genericError: "Ça n'a pas marché. Réessaie dans un instant.",
+  },
+  report: {
+    entryLink: "Signaler une erreur",
+    title: "Signaler une erreur",
+    generalTitle: "Signaler un problème",
+    backToAnswers: "Retour aux réponses",
+    entryShort: "Signaler",
+    gridHint:
+      "Tu peux signaler directement depuis la grille des réponses\u00A0: touche la case ou la contrainte, puis le drapeau.",
+    contextCell: "Case {target} · grille du {date}",
+    contextConstraint: "Contrainte {target} · grille du {date}",
+    categoryLabel: "Nature du signalement",
+    categoryContent: "Réponse ou contrainte",
+    categoryBug: "Bug ou autre",
+    messageLabel: "Ton message",
+    placeholderContent:
+      "Quel pays pose problème, pourquoi, et ta source si tu en as une.",
+    placeholderBug:
+      "Ce qui s'est passé, sur quel écran, avec quel appareil et quel navigateur, et comment le reproduire.",
+    privacyHint:
+      "Envoyé sans ton nom ni ton compte. N'écris pas d'informations personnelles.",
+    counter: "{count}/{max}",
+    submit: "Envoyer",
+    sentTitle: "Merci, c'est noté\u00A0!",
+    sentBody:
+      "Je lis chaque signalement et je corrige les listes quand il le faut.",
+    close: "Fermer",
+    failed: "Envoi impossible. Vérifie ta connexion, puis réessaie.",
+    rateLimited:
+      "Beaucoup de signalements d'un coup. Réessaie un peu plus tard.",
   },
   theme: {
     continent_africa: "Afrique",

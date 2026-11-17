@@ -13,11 +13,13 @@
  *
  * ─── Principes de lecture (faible trafic) ─────────────────────────────────────
  * Le jeu reçoit peu de joueurs : la plupart des chiffres sont **directionnels**,
- * pas des mesures. Chaque agrégat porte donc son `n`. Deux signaux seulement
- * sont fiables à ce stade :
- *   - `struggle` = échecs / (échecs + succès) sur une case → difficulté
- *     INTRINSÈQUE, dépouillée de l'abandon. Ne vaut que pour les cases tentées
- *     depuis le déploiement de `failedAttempts` (cf. FAILED_ATTEMPTS_SINCE).
+ * pas des mesures. Chaque agrégat porte donc son `n`. Les signaux fiables :
+ *   - `trompés` = part des parties finies où le joueur s'est trompé au moins
+ *     une fois sur la case (la règle du calque « Erreurs », comme l'admin). Ne
+ *     vaut qu'à partir de la bascule (cf. GAME_ROWS_SINCE) et à partir de
+ *     CELL_RATE_MIN_FINISHED parties finies.
+ *   - `vides` = part des parties finies où la case est restée vide : le joueur
+ *     qui ne sait pas ne tente rien, et ses erreurs ne le disent pas.
  *   - `abandon` = joueurs engagés − parties terminées → où les gens décrochent.
  * `fillRate` reste CONFONDU par l'abandon (une case du bas a un fillRate bas
  * parce que peu de gens l'atteignent, pas parce qu'elle est dure). On le garde
@@ -29,10 +31,10 @@ import { ConvexHttpClient } from "convex/browser";
 import { COUNTRY_CATALOG } from "../../content/countries/catalog";
 import { api } from "../../convex/_generated/api";
 import {
-  FAILED_ATTEMPTS_SINCE,
-  hasStruggleData,
-  STRUGGLE_MIN_ATTEMPTS,
-  struggleRate,
+  CELL_RATE_MIN_FINISHED,
+  cellRate,
+  GAME_ROWS_SINCE,
+  hasGameRows,
 } from "../../src/features/admin/logic/observedMetrics";
 import { countryPopularity } from "../../src/features/countries/logic/popularity";
 import { CONSTRAINTS } from "../../src/features/game/logic/constraints";
@@ -95,6 +97,10 @@ type FeedbackRow = {
 type CellMetric = {
   totalGuesses: number;
   failedAttempts: number;
+  /** Parties finies où le joueur s'est trompé au moins une fois sur la case. */
+  erred: number;
+  /** Parties finies où la case est restée vide (hors case bloquée). */
+  leftEmpty: number;
   distinctCountries: number;
   validAnswersCount: number;
   coverage: number;
@@ -159,6 +165,16 @@ function cellPosition(i: number): { row: number; col: number } {
   return { row: Math.floor(i / 3), col: i % 3 };
 }
 
+/** Part des parties finies où le joueur s'est trompé sur la case (calque « Erreurs »). */
+function erredRate(m: CellMetricsResult, cell: CellMetric): number | null {
+  return cellRate(cell.erred, gridEngagement(m).gamesFinished);
+}
+
+/** Part des parties finies où la case est restée vide. */
+function leftEmptyRate(m: CellMetricsResult, cell: CellMetric): number | null {
+  return cellRate(cell.leftEmpty, gridEngagement(m).gamesFinished);
+}
+
 function gridEngagement(m: CellMetricsResult): GridEngagement {
   const gamesFinished = m.gamesFinished ?? m.gamesPlayed ?? m.wins + m.losses;
   const playersEngaged =
@@ -213,7 +229,7 @@ function renderHeader(
   );
   let totalFailed = 0;
   for (const m of Object.values(cellMetricsByDate)) {
-    if (!hasStruggleData(m.date)) continue;
+    if (!hasGameRows(m.date)) continue;
     for (const key of CELL_KEYS)
       totalFailed += m.cells[key]?.failedAttempts ?? 0;
   }
@@ -221,7 +237,7 @@ function renderHeader(
   const period = dated.length
     ? `${dated[0]} → ${dated[dated.length - 1]}`
     : "—";
-  const instrumentedDays = dated.filter(hasStruggleData).length;
+  const instrumentedDays = dated.filter(hasGameRows).length;
 
   return [
     "# Geodoku — analytics bundle",
@@ -232,11 +248,11 @@ function renderHeader(
     `- **Abandon** (engagés − terminés) : ${totalAbandonGap}` +
       `${totalEngaged > 0 ? ` (${pct(totalAbandonGap / totalEngaged, 0)} des engagés)` : ""}`,
     `- Win rate global : ${totalFinished === 0 ? "—" : pct(totalWins / totalFinished, 1)}`,
-    `- Échecs de croisement (failedAttempts) : ${totalFailed} sur ${instrumentedDays} j instrumentés (depuis ${FAILED_ATTEMPTS_SINCE})`,
+    `- Échecs de croisement (failedAttempts) : ${totalFailed} sur ${instrumentedDays} j avec lignes de partie (depuis ${GAME_ROWS_SINCE})`,
     "",
     "> ⚠️ **Faible trafic — lecture directionnelle.** Peu de joueurs : la plupart des chiffres ont un `n` faible, à lire comme tendance, pas comme mesure. Chaque tableau porte son échantillon.",
     ">",
-    `> **Métriques fiables :** \`struggle\` = échecs/(échecs+succès) par case = difficulté INTRINSÈQUE (seulement depuis ${FAILED_ATTEMPTS_SINCE}) ; \`abandon\` = engagés − terminés.`,
+    `> **Métriques fiables :** \`trompés\` = part des parties finies où le joueur s'est trompé sur la case ; \`vides\` = part des parties finies où la case est restée vide (seulement depuis ${GAME_ROWS_SINCE}, et à partir de ${CELL_RATE_MIN_FINISHED} parties finies) ; \`abandon\` = engagés − terminés.`,
     ">",
     "> **Métrique confondue :** `fillRate` (et `observed = 100·(1−fillRate)`) dépend de qui ATTEINT la case → mesure surtout l'abandon, pas la difficulté. À ne jamais lire comme difficulté seule.",
     "",
@@ -250,35 +266,36 @@ function renderDailySummary(
   const lines: string[] = [
     "## Tableau journalier",
     "",
-    "`abandon` = engagés − terminés. `failedΣ` / `avgStruggle` = `—` avant l'instrumentation (pas « zéro échec » : pas de tracking).",
+    "`abandon` = engagés − terminés. `failedΣ` / `avgTrompés` / `avgVides` = `—` avant la bascule (pas de lignes de partie, pas « zéro »).",
     "",
-    "| date | finished | engaged | abandon | winRate | failedΣ | avgStruggle | avgFilled |",
-    "|---|---:|---:|---:|---:|---:|---:|---:|",
+    "| date | finished | engaged | abandon | winRate | failedΣ | avgTrompés | avgVides | avgFilled |",
+    "|---|---:|---:|---:|---:|---:|---:|---:|---:|",
   ];
   const sorted = [...feedback].sort((a, b) => (a.date < b.date ? 1 : -1));
   for (const f of sorted) {
     const m = cellMetricsByDate[f.date];
     const eng = m ? gridEngagement(m) : null;
-    const tracked = hasStruggleData(f.date);
+    const tracked = hasGameRows(f.date);
     let failedSum = 0;
-    let struggleSum = 0;
-    let struggleCount = 0;
+    const erred: number[] = [];
+    const leftEmpty: number[] = [];
     if (m && tracked) {
       for (const key of CELL_KEYS) {
         const cell = m.cells[key];
         if (!cell) continue;
         failedSum += cell.failedAttempts;
-        const s = struggleRate(cell);
-        if (s !== null) {
-          struggleSum += s;
-          struggleCount += 1;
-        }
+        const e = erredRate(m, cell);
+        if (e !== null) erred.push(e);
+        const v = leftEmptyRate(m, cell);
+        if (v !== null) leftEmpty.push(v);
       }
     }
-    const avgStruggle =
-      !tracked || struggleCount === 0 ? null : struggleSum / struggleCount;
+    const mean = (values: number[]) =>
+      values.length === 0
+        ? null
+        : values.reduce((s, x) => s + x, 0) / values.length;
     lines.push(
-      `| ${f.date} | ${f.gamesPlayed} | ${eng?.playersEngaged ?? "—"} | ${eng?.abandonGap ?? "—"} | ${pct(f.winRate, 0)} | ${tracked ? failedSum : "—"} | ${pct(avgStruggle, 0)} | ${num(f.avgFilledCells, 1)} |`,
+      `| ${f.date} | ${f.gamesPlayed} | ${eng?.playersEngaged ?? "—"} | ${eng?.abandonGap ?? "—"} | ${pct(f.winRate, 0)} | ${tracked ? failedSum : "—"} | ${pct(mean(erred), 0)} | ${pct(mean(leftEmpty), 0)} | ${num(f.avgFilledCells, 1)} |`,
     );
   }
   lines.push("");
@@ -414,64 +431,68 @@ function renderObservedDifficulty(
   type Row = {
     date: string;
     rc: string;
-    struggle: number;
-    struggle100: number;
-    attempts: number;
-    fillRate: number | null;
+    erred100: number;
+    leftEmpty100: number;
+    finished: number;
   };
   const rows: Row[] = [];
 
   for (const [date, m] of Object.entries(cellMetricsByDate)) {
-    if (!hasStruggleData(date)) continue;
+    if (!hasGameRows(date)) continue;
     for (let i = 0; i < CELL_KEYS.length; i++) {
       const cell = m.cells[CELL_KEYS[i]];
       if (!cell) continue;
-      const attempts = cell.totalGuesses + cell.failedAttempts;
-      if (attempts < STRUGGLE_MIN_ATTEMPTS) continue;
-      const s = struggleRate(cell);
-      if (s === null) continue;
-      const struggle100 = Math.round(s * 100);
+      const erred = erredRate(m, cell);
+      const leftEmpty = leftEmptyRate(m, cell);
+      if (erred === null || leftEmpty === null) continue;
       const { row, col } = cellPosition(i);
       rows.push({
         date,
         rc: `${constraintLabel(m.rows[row])} × ${constraintLabel(m.cols[col])}`,
-        struggle: s,
-        struggle100,
-        attempts,
-        fillRate: cell.fillRate,
+        erred100: Math.round(erred * 100),
+        leftEmpty100: Math.round(leftEmpty * 100),
+        finished: gridEngagement(m).gamesFinished,
       });
     }
   }
 
-  rows.sort((a, b) => b.struggle100 - a.struggle100);
+  rows.sort(
+    (a, b) =>
+      Math.max(b.erred100, b.leftEmpty100) -
+      Math.max(a.erred100, a.leftEmpty100),
+  );
 
   const lines: string[] = [
-    "## Difficulté observée par case (struggle)",
+    "## Difficulté observée par case (trompés, vides)",
     "",
-    `Cases réellement tentées (≥ ${STRUGGLE_MIN_ATTEMPTS} tentatives) depuis ${FAILED_ATTEMPTS_SINCE}. \`struggle\` = part des tentatives qui échouent = difficulté ressentie une fois la case atteinte. \`fillRate\` en regard pour repérer l'abandon (bas + struggle bas = case esquivée, pas dure).`,
+    `Journées depuis ${GAME_ROWS_SINCE} avec au moins ${CELL_RATE_MIN_FINISHED} parties finies. \`trompés\` = part des parties finies où le joueur s'est trompé sur la case ; \`vides\` = part où la case est restée vide (le joueur qui ne sait pas ne tente rien). Tri : le plus haut des deux.`,
     "",
-    "| date | row × col | struggle | attempts | fillRate |",
+    "| date | row × col | trompés | vides | finished |",
     "|---|---|---:|---:|---:|",
   ];
   for (const r of rows.slice(0, 40)) {
     lines.push(
-      `| ${r.date} | ${r.rc} | ${r.struggle100} | ${r.attempts} | ${pct(r.fillRate, 0)} |`,
+      `| ${r.date} | ${r.rc} | ${r.erred100} | ${r.leftEmpty100} | ${r.finished} |`,
     );
   }
   if (rows.length === 0) {
     lines.push(
-      `| _aucune case avec ≥ ${STRUGGLE_MIN_ATTEMPTS} tentatives dans la fenêtre instrumentée_ | | | | |`,
+      `| _aucune journée avec ≥ ${CELL_RATE_MIN_FINISHED} parties finies dans la fenêtre_ | | | | |`,
     );
   } else {
-    const meanStruggle =
-      rows.reduce((s, r) => s + r.struggle100, 0) / rows.length;
-    const hard = rows.filter((r) => r.struggle100 >= 50).length;
+    const mean = (key: "erred100" | "leftEmpty100") =>
+      rows.reduce((s, r) => s + r[key], 0) / rows.length;
+    const hard = rows.filter(
+      (r) => Math.max(r.erred100, r.leftEmpty100) >= 50,
+    ).length;
     lines.push("");
     lines.push(
-      `- Cases avec assez de tentatives : **${rows.length}** _(échantillon faible — directionnel)_`,
+      `- Cases lisibles : **${rows.length}** _(échantillon faible — directionnel)_`,
     );
-    lines.push(`- Struggle moyen : **${meanStruggle.toFixed(1)}** %`);
-    lines.push(`- Cases struggle ≥ 50 % : ${hard}`);
+    lines.push(
+      `- Trompés moyen : **${mean("erred100").toFixed(1)}** % · vides moyen : **${mean("leftEmpty100").toFixed(1)}** %`,
+    );
+    lines.push(`- Cases à 50 % ou plus (trompés ou vides) : ${hard}`);
   }
   lines.push("");
   return lines.join("\n");
@@ -505,7 +526,7 @@ function renderConstraintRollup(
   }
 
   for (const m of Object.values(cellMetricsByDate)) {
-    const tracked = hasStruggleData(m.date);
+    const tracked = hasGameRows(m.date);
     for (let i = 0; i < CELL_KEYS.length; i++) {
       const cell = m.cells[CELL_KEYS[i]];
       if (!cell) continue;
@@ -516,15 +537,11 @@ function renderConstraintRollup(
           a.sumFillRate += cell.fillRate;
           a.fillSamples += 1;
         }
-        if (tracked) {
-          const s = struggleRate(cell);
-          if (
-            s !== null &&
-            cell.totalGuesses + cell.failedAttempts >= STRUGGLE_MIN_ATTEMPTS
-          ) {
-            a.sumStruggle += s;
-            a.struggleCells += 1;
-          }
+        // Part de trompés (calque « Erreurs »), nulle sur une cohorte mince.
+        const s = tracked ? erredRate(m, cell) : null;
+        if (s !== null) {
+          a.sumStruggle += s;
+          a.struggleCells += 1;
         }
       }
     }
@@ -546,7 +563,7 @@ function renderConstraintRollup(
         a.struggleCells === 0 ? null : a.sumStruggle / a.struggleCells,
       nStruggle: a.struggleCells,
     }))
-    // contraintes avec données struggle d'abord (tri desc), le reste après
+    // contraintes avec une part de trompés d'abord (tri desc), le reste après
     .sort((a, b) => {
       if (a.avgStruggle === null && b.avgStruggle === null) {
         return (a.avgFillRate ?? 1) - (b.avgFillRate ?? 1);
@@ -559,9 +576,9 @@ function renderConstraintRollup(
   const lines: string[] = [
     "## Rollup par contrainte",
     "",
-    "Une apparition = une grille où la contrainte sort en ligne/colonne. `avgStruggle` = difficulté intrinsèque moyenne des cases tentées portant cette contrainte (`nStr` = nb de telles cases, `—` si aucune donnée instrumentée). `avgFillRate` = signal d'abandon (confondu). Tri : struggle décroissant, puis fillRate.",
+    "Une apparition = une grille où la contrainte sort en ligne/colonne. `avgTrompés` = part moyenne de joueurs trompés sur les cases portant cette contrainte (`nCases` = nb de cases lisibles, `—` avant la bascule ou sur une cohorte mince). `avgFillRate` = signal d'abandon (confondu). Tri : trompés décroissant, puis fillRate.",
     "",
-    "| contrainte | catégorie | appar. | avgStruggle | nStr | avgFillRate |",
+    "| contrainte | catégorie | appar. | avgTrompés | nCases | avgFillRate |",
     "|---|---|---:|---:|---:|---:|",
   ];
   for (const r of rows) {

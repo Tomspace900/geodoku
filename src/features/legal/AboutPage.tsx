@@ -2,8 +2,10 @@ import { METRODOKU_URL } from "@/app/links";
 import { HOW_TO_PLAY_RULES } from "@/features/game/components/HowToPlayLink";
 import { IconRuleList } from "@/features/game/components/IconRuleList";
 import { SCORE_PARTS_BY_SCALE } from "@/features/game/components/ScoreInfoDialog";
+import { GeneralReportEntry } from "@/features/reports/components/GeneralReportEntry";
 import { useT } from "@/i18n/LocaleContext";
 import type { TKey } from "@/i18n/types";
+import { cn } from "@/lib/utils";
 import { inlineLinkClass } from "./components/constants";
 import { LegalBullet } from "./components/LegalBullet";
 import { LegalContactSection } from "./components/LegalContactSection";
@@ -94,6 +96,18 @@ export function AboutPage() {
         <LegalContactSection
           title="aboutPage.contactTitle"
           bodyPre="aboutPage.contactBodyPre"
+          lead={
+            <>
+              {t("aboutPage.reportBodyPre")}{" "}
+              <GeneralReportEntry
+                source="about"
+                className={cn("text-sm align-baseline", inlineLinkClass)}
+              >
+                {t("report.generalTitle")}
+              </GeneralReportEntry>
+              .
+            </>
+          }
         />
       </div>
     </LegalLayout>

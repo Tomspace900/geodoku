@@ -10,6 +10,11 @@ import { LegalSupportSection } from "./components/LegalSupportSection";
 // Étapes marquantes côté joueur, de la plus récente à la plus ancienne.
 const ENTRIES: { date: TKey; title: TKey; body: TKey }[] = [
   {
+    date: "changelog.entries.reportDate",
+    title: "changelog.entries.reportTitle",
+    body: "changelog.entries.reportBody",
+  },
+  {
     date: "changelog.entries.statsDate",
     title: "changelog.entries.statsTitle",
     body: "changelog.entries.statsBody",

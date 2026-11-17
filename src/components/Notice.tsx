@@ -1,7 +1,7 @@
 import type { ReactNode } from "react";
 import { cn } from "@/lib/utils";
 
-/** Un message sous un champ du compte : erreur, information ou réussite. */
+/** Un message en encart sous un champ : erreur, information ou réussite (compte, signalement). */
 export function Notice({
   icon,
   children,

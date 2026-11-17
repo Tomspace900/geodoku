@@ -5,26 +5,30 @@
  * exactement les mêmes seuils et formules que l'interface opérateur.
  */
 
+import { THIN_COHORT_MAX } from "../../game/logic/cohort";
+
 /**
- * Date de déploiement de `failedAttempts`. Avant cette date, zéro signifie
- * « non instrumenté » et non « aucune erreur ».
+ * Premier jour qui a des lignes de partie (bascule de #70). Avant, une journée
+ * n'a que sa répartition des pays, importée : ni parties, ni victoires, ni
+ * erreurs par case. Ses compteurs à zéro ne veulent pas dire « aucune ».
  */
-export const FAILED_ATTEMPTS_SINCE = "2026-05-30";
+export const GAME_ROWS_SINCE = "2026-11-05";
 
-/** Nombre minimal de tentatives avant d'afficher le struggle d'une case. */
-export const STRUGGLE_MIN_ATTEMPTS = 3;
-
-/** Les échecs sont-ils instrumentés pour cette date ? */
-export function hasStruggleData(date: string): boolean {
-  return date >= FAILED_ATTEMPTS_SINCE;
+export function hasGameRows(date: string): boolean {
+  return date >= GAME_ROWS_SINCE;
 }
 
-/** Part des tentatives ayant échoué, ou `null` si la case n'a pas été tentée. */
-export function struggleRate(cell: {
-  failedAttempts: number;
-  totalGuesses: number;
-}): number | null {
-  const attempts = cell.failedAttempts + cell.totalGuesses;
-  if (attempts === 0) return null;
-  return cell.failedAttempts / attempts;
+/**
+ * Sous ce nombre de parties finies, un taux par case n'est que du bruit : la
+ * règle de la cohorte mince du calque « Erreurs » de la grille solution.
+ */
+export const CELL_RATE_MIN_FINISHED = THIN_COHORT_MAX;
+
+/**
+ * Part des parties finies concernées (trompés au moins une fois, case laissée
+ * vide), ou `null` tant que la cohorte est trop mince pour la lire.
+ */
+export function cellRate(count: number, finished: number): number | null {
+  if (finished < CELL_RATE_MIN_FINISHED) return null;
+  return count / finished;
 }

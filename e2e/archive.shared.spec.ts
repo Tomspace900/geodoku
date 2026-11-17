@@ -1,4 +1,5 @@
 import { expect, test } from "@playwright/test";
+import { REPLAY_WINDOW_DAYS } from "../src/features/game/logic/replayWindow";
 import {
   fetchReplayableGrids,
   fetchReplayGrid,
@@ -208,7 +209,7 @@ test("shows the time-traveller screen for a future date", async ({ page }) => {
 // l'endpoint est public. Sans lui, la grille de demain fuiterait avec ses réponses.
 test("the backend refuses a future date, today, and a date out of the window", async () => {
   const outOfWindow = new Date();
-  outOfWindow.setUTCDate(outOfWindow.getUTCDate() - 8);
+  outOfWindow.setUTCDate(outOfWindow.getUTCDate() - (REPLAY_WINDOW_DAYS + 1));
 
   await expect(queryReplayGridRaw(tomorrowIso())).rejects.toThrow();
   await expect(

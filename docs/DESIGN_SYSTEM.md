@@ -70,7 +70,7 @@ Tranchée le 2026-11-06 sur maquettes (#155), pour tout le site. Une page a son 
 | **Fenêtre** | un contenu riche à lire en entier, un contenu avec lequel on joue, ou un parcours qu'on ne doit pas perdre | `DialogContent placement="bottom-sheet"` (celle du résultat) : monte du bas sur téléphone, centrée sur ordinateur, fermée par la croix | **éditorial** : italique, barre violette, sous-titre en capitales |
 
 - Fenêtres : résultat, « Comment jouer ? », calcul du score, connexion et bienvenue du compte (on y va chercher un code dans sa messagerie : pas de fermeture par mégarde).
-- Tiroirs : saisie, grille solution, et dans « Mes stats » le jour, « Mes thématiques », « Mon compte » (nom, pays, e-mail ; le changement d'e-mail et la suppression y changent le contenu sur place, avec « ← Mon compte »).
+- Tiroirs : saisie, grille solution, signalement (#127 : depuis la grille solution il remplace la liste sur place, avec « ← Retour aux réponses » ; depuis « ⚑ Signaler » du pied de page, un `SheetDrawer`), et dans « Mes stats » le jour, « Mes thématiques », « Mon compte » (nom, pays, e-mail ; le changement d'e-mail et la suppression y changent le contenu sur place, avec « ← Mon compte »).
 - Sur place, sans contenant : le titre de « Mes stats » (nom et pays s'éditent au tap) et le pays, qui se cherche dans son champ, la liste dessous dans un encart gris, dans le titre, « Mon compte » et la fenêtre de bienvenue.
 - Un tiroir peut s'ouvrir par-dessus une fenêtre (le pays depuis la bienvenue) ; jamais une fenêtre par-dessus une fenêtre.
 - Un tiroir dont la liste se filtre en tapant garde une hauteur fixe (`tall`) : il ne se tasse pas sous le clavier quand les résultats raccourcissent.
@@ -86,6 +86,7 @@ Référence visuelle : [`ResultScreen.tsx`](../src/features/game/components/Resu
 | `hero-number` | `font-serif font-medium text-brand text-5xl` + caption `text-xs text-on-surface-variant`. Un seul par vue. |
 | `accent-word` | `<span className="text-brand font-medium">` |
 | `eyebrow` | [`Eyebrow`](../src/components/editorial/Eyebrow.tsx) ou [`PanelHeader`](../src/features/admin/components/PanelHeader.tsx) en admin |
+| `encart` | [`Notice`](../src/components/Notice.tsx) : message sous un champ, erreur (rouge), information (gris) ou réussite (vert), icône à gauche. Compte et signalement. |
 | `toast flottant` | [`ConstraintSourceToast`](../src/features/game/components/ConstraintSourceToast.tsx) : conteneur `fixed` bas d'écran `pointer-events-none`, toast lui-même `pointer-events-auto`, marge `env(safe-area-inset-bottom)`, `rounded-xl` + `shadow-editorial`, `role="status"` `aria-live="polite"`, z-index sous les Drawers/Dialogs (`z-40`). Un seul à la fois. |
 
 ### Composants admin

@@ -6,17 +6,17 @@ import { gridEaseScore100 } from "@/features/countries/logic/popularity";
 import { api } from "../../../../convex/_generated/api";
 import type { Id } from "../../../../convex/_generated/dataModel";
 import {
-  averageObservedSuccess100,
-  FAILED_ATTEMPTS_SINCE,
-  hasStruggleData,
-  STRUGGLE_MIN_ATTEMPTS,
-  struggleRate,
+  averageRate,
+  CELL_RATE_MIN_FINISHED,
+  cellRate,
+  GAME_ROWS_SINCE,
+  hasGameRows,
 } from "../logic/analytics";
-import { formatGridDateHeadingFr } from "../logic/display";
+import { formatGridDateHeadingFr, formatRate } from "../logic/display";
 import { isUnauthorizedError } from "../logic/errors";
 import { AlertBanner } from "./AlertBanner";
 import { ConfirmDialog } from "./ConfirmDialog";
-import { GridHeaderStatDelta, GridHeaderStatKind } from "./GridHeaderStat";
+import { GridHeaderStatKind } from "./GridHeaderStat";
 import { GridPreview, type ObservedCell } from "./GridPreview";
 import { StatLegend } from "./StatGlyph";
 import { StatusPill } from "./StatusPill";
@@ -114,31 +114,37 @@ function ObservedDetail({
   }
 
   const { playersEngaged, gamesFinished, wins } = metrics;
+  // Avant la bascule, la journée n'a que sa répartition des pays : ses
+  // compteurs de parties sont vides, pas nuls.
+  const withRows = hasGameRows(view.date);
   const noData = playersEngaged === 0;
-  const abandon = Math.max(0, playersEngaged - gamesFinished);
+  const unfinished = Math.max(0, playersEngaged - gamesFinished);
   const winRate =
     gamesFinished === 0 ? null : Math.round((wins / gamesFinished) * 100);
-  const tracked = hasStruggleData(view.date);
+  const thin = gamesFinished < CELL_RATE_MIN_FINISHED;
 
   const validAnswers: Record<string, string[]> = {};
   const observed: Record<string, ObservedCell> = {};
-  for (const [key, cell] of Object.entries(metrics.cells)) {
+  Object.entries(metrics.cells).forEach(([key, cell]) => {
     validAnswers[key] = cell.validAnswers;
-    const essais = cell.failedAttempts + cell.totalGuesses;
-    const struggle =
-      tracked && essais >= STRUGGLE_MIN_ATTEMPTS ? struggleRate(cell) : null;
     observed[key] = {
-      reussite: struggle === null ? null : 1 - struggle,
-      essais,
       picks: Object.fromEntries(
         cell.picks.map((p) => [p.countryCode, p.count]),
       ),
+      rates: withRows
+        ? {
+            erred: cellRate(cell.erred, gamesFinished),
+            leftEmpty: cellRate(cell.leftEmpty, gamesFinished),
+          }
+        : null,
     };
-  }
+  });
 
   const gridEase = gridEaseScore100(validAnswers);
-  const gridObservedEase = averageObservedSuccess100(
-    Object.values(observed).map((cell) => cell.reussite),
+  const cellRates = Object.values(observed).map((cell) => cell.rates);
+  const gridErred = averageRate(cellRates.map((rates) => rates?.erred ?? null));
+  const gridLeftEmpty = averageRate(
+    cellRates.map((rates) => rates?.leftEmpty ?? null),
   );
 
   return (
@@ -153,51 +159,61 @@ function ObservedDetail({
           }
         />
 
-        <div className="flex flex-wrap items-center gap-x-5 gap-y-2">
-          <GridHeaderStatKind
-            kind="engages"
-            value={noData ? "—" : playersEngaged}
-          />
-          <GridHeaderStatKind
-            kind="terminees"
-            value={noData ? "—" : gamesFinished}
-          />
-          <GridHeaderStatKind kind="abandon" value={noData ? "—" : abandon} />
-          <GridHeaderStatKind
-            kind="victoires"
-            tone="text-warning"
-            value={
-              noData
-                ? "—"
-                : `${wins}${winRate === null ? "" : ` · ${winRate}%`}`
-            }
-          />
-        </div>
-
-        {(gridEase !== null || gridObservedEase !== null) && (
+        {withRows ? (
           <div className="flex flex-wrap items-center gap-x-5 gap-y-2">
-            {gridEase !== null && (
-              <GridHeaderStatKind kind="faciliteEst" value={gridEase} />
-            )}
-            {gridObservedEase !== null && (
-              <GridHeaderStatKind
-                kind="reussiteObs"
-                value={`${gridObservedEase}%`}
-              />
-            )}
-            {gridEase !== null && gridObservedEase !== null && (
-              <GridHeaderStatDelta
-                predicted={gridEase}
-                observed={gridObservedEase}
-              />
-            )}
+            <GridHeaderStatKind
+              kind="engages"
+              value={noData ? "—" : playersEngaged}
+            />
+            <GridHeaderStatKind
+              kind="terminees"
+              value={noData ? "—" : gamesFinished}
+            />
+            <GridHeaderStatKind
+              kind={view.status === "active" ? "enCours" : "abandon"}
+              value={noData ? "—" : unfinished}
+            />
+            <GridHeaderStatKind
+              kind="victoires"
+              tone="text-warning"
+              value={
+                noData
+                  ? "—"
+                  : `${wins}${winRate === null ? "" : ` · ${winRate}%`}`
+              }
+            />
           </div>
+        ) : (
+          <p className="rounded-lg bg-surface-low px-3 py-2 text-xs text-on-surface-variant">
+            Avant la bascule du {formatGridDateHeadingFr(GAME_ROWS_SINCE)} : pas
+            de lignes de partie. Seule la répartition des pays est conservée.
+          </p>
         )}
 
-        {!tracked && (
-          <p className="rounded-lg bg-warning/10 px-3 py-2 text-xs text-warning">
-            Struggle instrumenté depuis {FAILED_ATTEMPTS_SINCE} — réussite par
-            case indisponible pour ce jour.
+        <div className="flex flex-wrap items-center gap-x-5 gap-y-2">
+          {gridEase !== null && (
+            <GridHeaderStatKind kind="faciliteEst" value={gridEase} />
+          )}
+          {gridErred !== null && (
+            <GridHeaderStatKind
+              kind="trompes"
+              tone="text-error"
+              value={formatRate(gridErred)}
+            />
+          )}
+          {gridLeftEmpty !== null && (
+            <GridHeaderStatKind
+              kind="vides"
+              tone="text-error"
+              value={formatRate(gridLeftEmpty)}
+            />
+          )}
+        </div>
+
+        {withRows && !noData && thin && (
+          <p className="text-xs text-on-surface-variant">
+            Moins de {CELL_RATE_MIN_FINISHED} parties finies : taux par case pas
+            encore lisibles.
           </p>
         )}
 
@@ -210,7 +226,9 @@ function ObservedDetail({
 
         <div className="flex flex-wrap items-center gap-x-3 gap-y-1 text-[10px] text-on-surface-variant/70">
           <StatLegend
-            kinds={["faciliteEst", "reussiteObs", "ecartDown", "essais"]}
+            kinds={
+              withRows ? ["faciliteEst", "trompes", "vides"] : ["faciliteEst"]
+            }
           />
         </div>
       </div>

@@ -1,4 +1,3 @@
-import { CONSTRAINTS } from "../src/features/game/logic/constraints";
 import type { QueryCtx } from "./_generated/server";
 import { CELL_KEYS, type CellKey } from "./cellKeys";
 import { readCellCounts } from "./cellStats";
@@ -13,6 +12,8 @@ type CellInput = {
   validForCell: string[];
   totalGuesses: number;
   failedAttempts: number;
+  erred: number;
+  leftEmpty: number;
   guessRows: GuessPick[];
 };
 
@@ -22,32 +23,7 @@ type CellInput = {
  */
 export async function readPoolStats(ctx: QueryCtx) {
   const available = await getActivePoolCandidatesByStatus(ctx, "available");
-  const constraintCounts: Record<string, number> = {};
-  CONSTRAINTS.forEach((constraint) => {
-    constraintCounts[constraint.id] = 0;
-  });
-  const countryCounts: Record<string, number> = {};
-
-  available.forEach((candidate) => {
-    candidate.metadata.constraintIds.forEach((id) => {
-      constraintCounts[id] = (constraintCounts[id] ?? 0) + 1;
-    });
-    candidate.metadata.countryPool.forEach((code) => {
-      countryCounts[code] = (countryCounts[code] ?? 0) + 1;
-    });
-  });
-
-  return {
-    available: available.length,
-    constraintCoverage: Object.entries(constraintCounts).map(([id, count]) => ({
-      id,
-      gridsInPool: count,
-    })),
-    countryCoverage: Object.entries(countryCounts).map(([code, count]) => ({
-      code,
-      gridsInPool: count,
-    })),
-  };
+  return { available: available.length };
 }
 
 /**
@@ -81,6 +57,8 @@ export async function readGridCellMetrics(ctx: QueryCtx, date: string) {
           validForCell: answers[cellKey] ?? [],
           totalGuesses: guessRows.reduce((sum, row) => sum + row.count, 0),
           failedAttempts: stats.failedByCell[index],
+          erred: stats.erredByCell[index],
+          leftEmpty: stats.leftEmptyByCell[index],
           guessRows,
         },
       ];
@@ -108,6 +86,8 @@ export async function readGridCellMetrics(ctx: QueryCtx, date: string) {
             playersEngaged,
           }),
           failedAttempts: input.failedAttempts,
+          erred: input.erred,
+          leftEmpty: input.leftEmpty,
           validAnswers: input.validForCell,
           picks: input.guessRows,
         },

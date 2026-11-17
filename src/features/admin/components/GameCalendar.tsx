@@ -1,3 +1,4 @@
+import { createContext, useContext } from "react";
 import type { DayButton } from "react-day-picker";
 import { Calendar, CalendarDayButton } from "@/components/ui/calendar";
 import { todayUTC } from "@/lib/dates";
@@ -10,6 +11,10 @@ import { TagPill } from "./TagPill";
 
 const calendarMarkerBadgeClass =
   "mx-auto inline-flex min-w-0 shrink-0 items-center justify-center rounded-full px-1 text-[6px] font-medium leading-none tabular-nums opacity-100";
+
+/** Jour d'avant la bascule : pas de lignes de partie, donc pas de % victoires. */
+const BEFORE_ROWS_LABEL = "·";
+const BEFORE_ROWS_CLASS = "bg-transparent text-on-surface-variant/50";
 
 function neutralMarkerBadgeClass(): string {
   return "bg-surface-low text-on-surface-variant";
@@ -28,6 +33,10 @@ function markerBadgeLook(marker: CalendarMarker): {
           ? neutralMarkerBadgeClass()
           : difficultyPillClass((1 - marker.winRate) * 100),
     };
+  }
+
+  if (marker.kind === "beforeRows") {
+    return { label: BEFORE_ROWS_LABEL, pillClass: BEFORE_ROWS_CLASS };
   }
 
   if (marker.kind === "scheduled" || marker.kind === "predicted") {
@@ -76,6 +85,35 @@ function LegendBadge({
   );
 }
 
+// The day button must be a module-level component: defined inside
+// `GameCalendar`, it was a new type on every render and React remounted every
+// day of the month. The markers reach it through context instead of a closure.
+const MarkersContext = createContext<Map<string, CalendarMarker>>(new Map());
+
+function GameDayButton({
+  children,
+  day,
+  modifiers,
+  className,
+  ...rest
+}: React.ComponentProps<typeof DayButton>) {
+  const marker = useContext(MarkersContext).get(dateToStr(day.date));
+
+  return (
+    <CalendarDayButton
+      day={day}
+      modifiers={modifiers}
+      className={className}
+      {...rest}
+    >
+      {children}
+      {marker && <MarkerBadge marker={marker} />}
+    </CalendarDayButton>
+  );
+}
+
+const CALENDAR_COMPONENTS = { DayButton: GameDayButton };
+
 type Props = {
   markers: Map<string, CalendarMarker>;
   selectedDate: string | null;
@@ -90,39 +128,19 @@ export function GameCalendar({ markers, selectedDate, onSelectDate }: Props) {
     onSelectDate(date ? dateToStr(date) : null);
   }
 
-  function GameDayButton({
-    children,
-    day,
-    modifiers,
-    className,
-    ...rest
-  }: React.ComponentProps<typeof DayButton>) {
-    const marker = markers.get(dateToStr(day.date));
-
-    return (
-      <CalendarDayButton
-        day={day}
-        modifiers={modifiers}
-        className={className}
-        {...rest}
-      >
-        {children}
-        {marker && <MarkerBadge marker={marker} />}
-      </CalendarDayButton>
-    );
-  }
-
   return (
     <div className="bg-surface-lowest rounded-xl p-4 shadow-editorial w-full h-full">
       <PanelHeader title="Calendrier de jeu" />
-      <Calendar
-        mode="single"
-        selected={selected}
-        today={today}
-        onSelect={handleSelect}
-        components={{ DayButton: GameDayButton }}
-        className="w-full bg-transparent p-0"
-      />
+      <MarkersContext.Provider value={markers}>
+        <Calendar
+          mode="single"
+          selected={selected}
+          today={today}
+          onSelect={handleSelect}
+          components={CALENDAR_COMPONENTS}
+          className="w-full bg-transparent p-0"
+        />
+      </MarkersContext.Provider>
 
       <div className="mt-3 space-y-1.5 border-t border-outline-variant/15 pt-3">
         <div className="flex flex-wrap items-center gap-2 text-[10px] text-on-surface-variant/60">
@@ -131,6 +149,13 @@ export function GameCalendar({ markers, selectedDate, onSelectDate }: Props) {
           <LegendBadge pillClass="bg-warning/15 text-warning">45</LegendBadge>
           <LegendBadge pillClass="bg-error/15 text-error">18</LegendBadge>
           <span>% victoires</span>
+        </div>
+        <div className="flex flex-wrap items-center gap-2 text-[10px] text-on-surface-variant/60">
+          <span className="w-12 shrink-0 uppercase tracking-widest">avant</span>
+          <LegendBadge pillClass={BEFORE_ROWS_CLASS}>
+            {BEFORE_ROWS_LABEL}
+          </LegendBadge>
+          <span>la bascule, pas de lignes de partie</span>
         </div>
         <div className="flex flex-wrap items-center gap-2 text-[10px] text-on-surface-variant/60">
           <span className="w-12 shrink-0 uppercase tracking-widest">futur</span>

@@ -11,6 +11,7 @@ import {
 import { type FormEvent, useEffect, useId, useState } from "react";
 import { AccentBar } from "@/components/editorial/AccentBar";
 import { Eyebrow } from "@/components/editorial/Eyebrow";
+import { Notice } from "@/components/Notice";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -32,7 +33,6 @@ import { CodeStep } from "./CodeStep";
 import { CountryField } from "./CountryField";
 import { GoogleMark } from "./GoogleMark";
 import { NameField } from "./NameField";
-import { Notice } from "./Notice";
 
 type Step = "choice" | "email" | "code" | "finishing";
 

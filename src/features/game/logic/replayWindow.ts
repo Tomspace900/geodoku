@@ -4,8 +4,11 @@
  * une seule règle, pas deux définitions à garder en phase.
  */
 
-/** Profondeur de l'archive : J-1 à J-7. */
-export const REPLAY_WINDOW_DAYS = 7;
+/**
+ * Profondeur de l'archive : J-1 à J-30 (#72), la même profondeur que
+ * « Mes 30 derniers jours » dans « Mes stats ».
+ */
+export const REPLAY_WINDOW_DAYS = 30;
 
 const DATE_PATTERN = /^\d{4}-\d{2}-\d{2}$/;
 const MS_PER_DAY = 24 * 60 * 60 * 1000;
