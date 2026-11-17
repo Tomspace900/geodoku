@@ -1,11 +1,11 @@
 import { Check, LoaderCircle, Mail, WifiOff } from "lucide-react";
 import { useEffect, useState } from "react";
+import { Notice } from "@/components/Notice";
 import { Button } from "@/components/ui/button";
 import { useLocale } from "@/i18n/LocaleContext";
 import { type CodePurpose, useEmailCode } from "../hooks/useEmailCode";
 import { formatCountdown, type VerifyOutcome } from "../logic/codeOutcome";
 import { CodeInput } from "./CodeInput";
-import { Notice } from "./Notice";
 
 /** « Renvoyer le code » grisé une minute après chaque envoi. */
 const RESEND_COOLDOWN_MS = 60_000;

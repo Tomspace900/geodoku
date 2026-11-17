@@ -17,6 +17,9 @@ import { components } from "./_generated/api";
  *   plafond global par jour qui protège le quota Mailjet (200 par jour et
  *   6 000 par mois en gratuit) d'un script qui changerait d'adresse à chaque
  *   appel.
+ * - Signalements (#127) : 3 d'affilée puis 10 par jour par `clientId`, et 50
+ *   par jour en tout. Chaque signalement accepté part par e-mail : le plafond
+ *   global garde au quota Mailjet de quoi envoyer les 100 codes du jour.
  *
  * Pas une barrière contre un attaquant qui change de clé à chaque appel, mais
  * de quoi arrêter un script naïf et plafonner la facture. La table du
@@ -44,4 +47,11 @@ export const rateLimiter = new RateLimiter(components.rateLimiter, {
     capacity: 4,
   },
   sendCodeGlobal: { kind: "fixed window", rate: 100, period: DAY },
+  reportPerClient: {
+    kind: "token bucket",
+    rate: 10,
+    period: DAY,
+    capacity: 3,
+  },
+  reportGlobal: { kind: "fixed window", rate: 50, period: DAY },
 });

@@ -1,5 +1,10 @@
 import { defineSchema, defineTable } from "convex/server";
 import { v } from "convex/values";
+import {
+  reportCategoryValidator,
+  reportStatusValidator,
+  reportTargetValidator,
+} from "./reportValidators";
 
 export default defineSchema({
   gridCandidates: defineTable({
@@ -103,5 +108,29 @@ export default defineSchema({
     key: v.literal("singleton"),
     date: v.string(),
     counts: v.record(v.string(), v.record(v.string(), v.number())),
+  }).index("by_key", ["key"]),
+
+  // Signalements des joueurs (#127). Aucun identifiant du joueur : ni
+  // `clientId`, ni jeton, ni compte. `reportId` est tiré par le navigateur à
+  // chaque ouverture du formulaire (idempotence d'un renvoi), pas par joueur.
+  // Date d'envoi = `_creationTime`. Effacés un an après traitement, trois ans
+  // au plus (`reports.purgeReports`).
+  reports: defineTable({
+    reportId: v.string(),
+    category: reportCategoryValidator,
+    target: reportTargetValidator,
+    message: v.string(),
+    locale: v.union(v.literal("fr"), v.literal("en")),
+    status: reportStatusValidator,
+    statusChangedAt: v.optional(v.number()),
+  })
+    .index("by_report_id", ["reportId"])
+    .index("by_status", ["status"])
+    .index("by_status_and_status_changed_at", ["status", "statusChangedAt"]),
+
+  // Alertes déjà envoyées par e-mail (une grille manquante, par date), pour
+  // n'en envoyer qu'une par événement. Clé lisible : `missing-grid:2026-11-18`.
+  sentAlerts: defineTable({
+    key: v.string(),
   }).index("by_key", ["key"]),
 });

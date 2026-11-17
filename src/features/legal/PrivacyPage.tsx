@@ -68,6 +68,12 @@ const DATA_ROWS: readonly (readonly TKey[])[] = [
     "privacy.dataSessionRetention",
   ],
   [
+    "privacy.dataReportName",
+    "privacy.dataReportWhere",
+    "privacy.dataReportWhy",
+    "privacy.dataReportRetention",
+  ],
+  [
     "privacy.dataUsageName",
     "privacy.dataUsageWhere",
     "privacy.dataUsageWhy",

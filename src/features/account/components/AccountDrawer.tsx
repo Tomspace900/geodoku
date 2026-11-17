@@ -11,6 +11,7 @@ import {
 } from "lucide-react";
 import { type FormEvent, type ReactNode, useId, useState } from "react";
 import { Eyebrow } from "@/components/editorial/Eyebrow";
+import { Notice } from "@/components/Notice";
 import { SheetDrawer } from "@/components/SheetDrawer";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -30,7 +31,6 @@ import { looksLikeEmail, type SendOutcome } from "../logic/codeOutcome";
 import { CodeStep } from "./CodeStep";
 import { CountryField } from "./CountryField";
 import { NameField } from "./NameField";
-import { Notice } from "./Notice";
 
 type View = "account" | "email" | "email-code" | "confirm" | "delete-code";
 

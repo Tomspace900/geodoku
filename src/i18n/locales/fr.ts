@@ -120,6 +120,11 @@ export const fr = {
     dataSessionWhere: "UE (Irlande, Belgique, Allemagne) et appareil",
     dataSessionWhy: "Connexion par code et session (IP, navigateur)",
     dataSessionRetention: "5 min (code) · 7 jours (session)",
+    dataReportName: "Signalement",
+    dataReportWhere: "Serveur (Irlande, UE) et ma boîte mail (OVH, France)",
+    dataReportWhy:
+      "Ton texte, la case visée et la langue, sans aucun identifiant",
+    dataReportRetention: "1 an après traitement, 3 ans au plus",
     dataUsageName: "Mesure d'usage",
     dataUsageWhere: "Serveur (UE) + ID local",
     dataUsageWhy: "Comprendre le parcours (sans e-mail ni nom)",
@@ -527,6 +532,34 @@ export const fr = {
     deleteCodeSubtitle: "Code de suppression",
     deleteFailed: "La suppression n'a pas abouti. Réessaie.",
     genericError: "Ça n'a pas marché. Réessaie dans un instant.",
+  },
+  report: {
+    entryLink: "Signaler une erreur",
+    title: "Signaler une erreur",
+    footerTitle: "Signaler un problème",
+    backToAnswers: "Retour aux réponses",
+    entryShort: "Signaler",
+    gridHint:
+      "Tu peux signaler directement depuis la grille des réponses\u00A0: touche la case ou la contrainte, puis le drapeau.",
+    contextCell: "Case {target} · grille du {date}",
+    contextConstraint: "Contrainte {target} · grille du {date}",
+    categoryLabel: "Nature du signalement",
+    categoryContent: "Réponse ou contrainte",
+    categoryBug: "Bug ou autre",
+    messageLabel: "Ton message",
+    placeholderContent: "Ex.\u00A0: ce pays devrait compter ici, parce que…",
+    placeholderBug: "Ce qui s'est passé, et sur quel écran.",
+    privacyHint:
+      "Envoyé sans ton nom ni ton compte. N'écris pas d'informations personnelles.",
+    counter: "{count}/{max}",
+    submit: "Envoyer",
+    sentTitle: "Merci, c'est noté\u00A0!",
+    sentBody:
+      "Je lis chaque signalement et je corrige les listes quand il le faut.",
+    close: "Fermer",
+    failed: "Envoi impossible. Vérifie ta connexion, puis réessaie.",
+    rateLimited:
+      "Beaucoup de signalements d'un coup. Réessaie un peu plus tard.",
   },
   theme: {
     continent_africa: "Afrique",

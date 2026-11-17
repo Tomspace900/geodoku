@@ -18,10 +18,13 @@ import { type DayView, GridDayDetail } from "./components/GridDayDetail";
 import { PanelCard } from "./components/PanelCard";
 import { PanelHeader } from "./components/PanelHeader";
 import { PoolOverviewPanel } from "./components/PoolOverviewPanel";
+import { ReportsPanel } from "./components/ReportsPanel";
 import { useAdminToken } from "./hooks/useAdminToken";
 import { buildCalendarMarkers } from "./logic/analytics";
 
 const UPCOMING_DAYS = 14;
+/** Ancre du panneau « Planification », où « Voir le jour » d'un signalement mène. */
+const PLANNING_ID = "planification";
 
 // ─── Header ───────────────────────────────────────────────────────────────────
 
@@ -222,7 +225,18 @@ function AuthenticatedAdminDashboard({
           hasTomorrowGrid={hasTomorrowGrid}
         />
 
-        <PanelCard>
+        <ReportsPanel
+          token={token}
+          gridsByDate={scheduledByDate}
+          onOpenDay={(date) => {
+            setSelectedDate(date);
+            document
+              .getElementById(PLANNING_ID)
+              ?.scrollIntoView({ behavior: "smooth", block: "start" });
+          }}
+        />
+
+        <PanelCard className="scroll-mt-4" id={PLANNING_ID}>
           <PanelHeader title="Planification" />
           <div className="grid grid-cols-1 items-stretch gap-4 md:grid-cols-5">
             <div className="col-span-1 h-full md:col-span-2">
