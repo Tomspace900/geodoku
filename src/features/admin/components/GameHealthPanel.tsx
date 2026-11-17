@@ -1,12 +1,15 @@
 import { Eyebrow } from "@/components/editorial/Eyebrow";
 import { GRID_LAUNCH_DATE_ISO } from "@/features/game/logic/gridIssue";
+import { todayUTC } from "@/lib/dates";
 import {
   buildSummary,
   buildTrend,
   type FeedbackRow,
+  GAME_ROWS_SINCE,
   type Summary,
   type TrendRow,
 } from "../logic/analytics";
+import { formatGridDateHeadingFr } from "../logic/display";
 import { PanelCard } from "./PanelCard";
 import { PanelHeader } from "./PanelHeader";
 import { StatGlyph } from "./StatGlyph";
@@ -51,7 +54,7 @@ function SummaryCard({ summary }: { summary: Summary }) {
             showLabel
             value={summary.losses}
           />
-          {!summary.lossSplitPending && summary.losses > 0 && (
+          {summary.losses > 0 && (
             <span className="inline-flex items-center gap-1">
               <StatGlyph kind="vies" showLabel value={summary.lostByLives} />
               <span className="text-on-surface-variant/40">/</span>
@@ -83,7 +86,15 @@ function SummaryCard({ summary }: { summary: Summary }) {
             {summary.peakMin}
           </span>
         </span>
+        <span>hors jour en cours</span>
       </div>
+      {summary.shortWindow && (
+        <p className="mt-2 text-xs text-on-surface-variant">
+          {summary.days} j seulement : les journées d'avant la bascule du{" "}
+          {formatGridDateHeadingFr(GAME_ROWS_SINCE)} n'ont pas de lignes de
+          partie.
+        </p>
+      )}
     </div>
   );
 }
@@ -95,7 +106,6 @@ function winCell(row: TrendRow): string {
 
 function splitCell(row: TrendRow): string {
   if (row.losses === 0) return "—";
-  if (row.lossSplitPending) return "— en attente";
   return `${row.lostByLives} / ${row.lostByBlocked}`;
 }
 
@@ -107,7 +117,9 @@ export function GameHealthPanel({ feedbackStats }: Props) {
   const trend =
     sinceLaunch === undefined ? null : buildTrend(sinceLaunch, TREND_DAYS);
   const summary =
-    sinceLaunch === undefined ? null : buildSummary(sinceLaunch, SUMMARY_DAYS);
+    sinceLaunch === undefined
+      ? null
+      : buildSummary(sinceLaunch, todayUTC(), SUMMARY_DAYS);
 
   return (
     <PanelCard>
@@ -186,13 +198,6 @@ export function GameHealthPanel({ feedbackStats }: Props) {
             </tbody>
           </table>
         </div>
-      )}
-
-      {trend?.some((r) => r.lossSplitPending) && (
-        <p className="mt-3 text-[10px] text-on-surface-variant/60">
-          Ventilation vies / blocage « en attente » jusqu'au déploiement de{" "}
-          <code>endReason</code>.
-        </p>
       )}
     </PanelCard>
   );

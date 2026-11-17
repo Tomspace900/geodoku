@@ -9,57 +9,29 @@
  */
 
 import { popularityScore100 } from "@/features/countries/logic/popularity";
+import { hasGameRows } from "./observedMetrics";
 
 export {
-  FAILED_ATTEMPTS_SINCE,
-  hasStruggleData,
-  STRUGGLE_MIN_ATTEMPTS,
-  struggleRate,
+  CELL_RATE_MIN_FINISHED,
+  cellRate,
+  GAME_ROWS_SINCE,
+  hasGameRows,
 } from "./observedMetrics";
 
-// ─── Écart prédiction vs observé ────────────────────────────────────────────────
-
-/** Qualité de la prédiction : écart faible (vert) / moyen (orange) / raté (rouge). */
-export type DeltaSeverity = "good" | "off" | "missed";
-
-/** Seuils sur |écart| (points 0–100). Valeurs de départ, à affiner avec les données. */
-const DELTA_GOOD_MAX = 15;
-const DELTA_OFF_MAX = 30;
-
-function deltaSeverity(absDelta: number): DeltaSeverity {
-  if (absDelta <= DELTA_GOOD_MAX) return "good";
-  if (absDelta <= DELTA_OFF_MAX) return "off";
-  return "missed";
-}
-
-/**
- * Écart signé entre la facilité estimée d'une case/grille (0–100, prédiction
- * issue de `topKPopularity`) et la réussite observée (0–100). `value > 0` = on a
- * prédit plus facile que la réalité (sur-estimation) ; `< 0` = sous-estimation.
- */
-export function predictionDelta(
-  predicted: number,
-  observed: number,
-): { value: number; severity: DeltaSeverity } {
-  const value = Math.round(predicted - observed);
-  return { value, severity: deltaSeverity(Math.abs(value)) };
-}
-
-/** Moyenne des taux de réussite observés (0–1) → score 0–100, ou null si vide. */
-export function averageObservedSuccess100(
+/** Moyenne des taux lisibles (0–1) d'une grille, ou `null` si aucun. */
+export function averageRate(
   rates: ReadonlyArray<number | null>,
 ): number | null {
-  const observed = rates.filter((rate): rate is number => rate !== null);
-  if (observed.length === 0) return null;
-  return Math.round(
-    (observed.reduce((sum, rate) => sum + rate, 0) / observed.length) * 100,
-  );
+  const known = rates.filter((rate): rate is number => rate !== null);
+  if (known.length === 0) return null;
+  return known.reduce((sum, rate) => sum + rate, 0) / known.length;
 }
 
 // ─── Marqueurs du calendrier ────────────────────────────────────────────────────
 
 export type CalendarMarker =
   | { kind: "observed"; winRate: number | null } // jour passé planifié
+  | { kind: "beforeRows" } // jour passé d'avant la bascule : pas de lignes de partie
   | { kind: "scheduled"; popScore: number | null } // aujourd'hui / futur planifié (facilité est.)
   | { kind: "predicted"; popScore: number | null } // prédit (simulation pool)
   | { kind: "missing" }; // pool vide pour ce jour
@@ -79,9 +51,9 @@ type UpcomingForMarkers = {
 /**
  * Construit la table date → marqueur du calendrier à partir des 3 queries
  * légères. Un jour planifié est OBSERVÉ s'il est passé (pastille winRate),
- * SCHEDULED s'il est aujourd'hui ou futur (pastille notoriété des solutions —
- * seul prédicteur validé de la difficulté). Les jours non encore inscrits
- * viennent de `upcoming` : `predicted` ou `missing`.
+ * BEFOREROWS s'il précède la bascule (aucun winRate à lire), SCHEDULED s'il est
+ * aujourd'hui ou futur (pastille facilité estimée). Les jours non encore
+ * inscrits viennent de `upcoming` : `predicted` ou `missing`.
  */
 export function buildCalendarMarkers(args: {
   today: string;
@@ -92,12 +64,14 @@ export function buildCalendarMarkers(args: {
   const { today, scheduled, winRateByDate, upcoming } = args;
   const markers = new Map<string, CalendarMarker>();
 
-  for (const grid of scheduled) {
+  scheduled.forEach((grid) => {
     if (grid.date < today) {
-      markers.set(grid.date, {
-        kind: "observed",
-        winRate: winRateByDate.get(grid.date) ?? null,
-      });
+      markers.set(
+        grid.date,
+        hasGameRows(grid.date)
+          ? { kind: "observed", winRate: winRateByDate.get(grid.date) ?? null }
+          : { kind: "beforeRows" },
+      );
     } else {
       markers.set(grid.date, {
         kind: "scheduled",
@@ -107,12 +81,12 @@ export function buildCalendarMarkers(args: {
             : popularityScore100(grid.gridPopTop3),
       });
     }
-  }
+  });
 
   // `upcoming` ne sert qu'aux jours pas encore inscrits (les scheduled futurs
   // sont déjà couverts ci-dessus).
-  for (const day of upcoming) {
-    if (markers.has(day.date)) continue;
+  upcoming.forEach((day) => {
+    if (markers.has(day.date)) return;
     if (day.kind === "predicted") {
       markers.set(day.date, {
         kind: "predicted",
@@ -124,7 +98,7 @@ export function buildCalendarMarkers(args: {
     } else if (day.kind === "missing") {
       markers.set(day.date, { kind: "missing" });
     }
-  }
+  });
 
   return markers;
 }
@@ -151,8 +125,6 @@ export type TrendRow = {
   losses: number;
   lostByLives: number;
   lostByBlocked: number;
-  /** `endReason` pas encore déployé : des défaites existent mais aucune classée. */
-  lossSplitPending: boolean;
   avgFilledCells: number | null;
 };
 
@@ -172,8 +144,6 @@ export function buildTrend(
     losses: row.losses,
     lostByLives: row.lostByLives,
     lostByBlocked: row.lostByBlocked,
-    lossSplitPending:
-      row.losses > 0 && row.lostByLives + row.lostByBlocked === 0,
     avgFilledCells: row.avgFilledCells,
   }));
 }
@@ -181,8 +151,13 @@ export function buildTrend(
 // ─── Synthèse agrégée (fenêtre) ─────────────────────────────────────────────────
 
 export type Summary = {
-  /** Nb de jours (grilles avec activité) agrégés dans la fenêtre. */
+  /** Nb de jours (grilles avec des lignes de partie) agrégés dans la fenêtre. */
   days: number;
+  /**
+   * La fenêtre compte moins de jours que demandé : elle remonte avant la
+   * bascule, dont les journées n'ont pas de lignes de partie.
+   */
+  shortWindow: boolean;
   finished: number;
   wins: number;
   losses: number;
@@ -190,11 +165,9 @@ export type Summary = {
   winRate: number | null;
   lostByLives: number;
   lostByBlocked: number;
-  /** Des défaites existent mais aucune classée (endReason pas déployé). */
-  lossSplitPending: boolean;
-  /** Parties terminées par jour, moyennées sur les jours actifs. */
+  /** Parties terminées par jour, moyennées sur les jours complets. */
   avgFinishedPerDay: number;
-  /** Jour le plus / le moins actif (parties terminées) sur la fenêtre. */
+  /** Jour complet le plus / le moins actif (parties terminées) sur la fenêtre. */
   peakMax: number;
   peakMin: number;
 };
@@ -202,43 +175,36 @@ export type Summary = {
 /**
  * Agrège les `days` jours les plus récents en une synthèse. L'agrégation est le
  * seul moyen d'avoir des chiffres fiables à faible trafic (gros dénominateur).
- * Volume basé sur les parties terminées (query légère ; l'engagement distinct
- * vivrait dans le lourd `getGridCellMetrics`).
+ * Le jour en cours compte dans les totaux, mais pas dans la moyenne, le pic ni
+ * le creux : sa journée n'est pas finie, il serait toujours le creux.
  */
 export function buildSummary(
   feedback: ReadonlyArray<FeedbackRow>,
+  today: string,
   days = 30,
 ): Summary {
   const rows = feedback.slice(0, days);
-  let finished = 0;
-  let wins = 0;
-  let losses = 0;
-  let lostByLives = 0;
-  let lostByBlocked = 0;
-  let peakMax = 0;
-  let peakMin = Number.POSITIVE_INFINITY;
-
-  for (const r of rows) {
-    finished += r.gamesPlayed;
-    wins += r.wins;
-    losses += r.losses;
-    lostByLives += r.lostByLives;
-    lostByBlocked += r.lostByBlocked;
-    peakMax = Math.max(peakMax, r.gamesPlayed);
-    peakMin = Math.min(peakMin, r.gamesPlayed);
-  }
+  const complete = rows.filter((row) => row.date !== today);
+  const sum = (key: keyof Omit<FeedbackRow, "date">) =>
+    rows.reduce((total, row) => total + (row[key] ?? 0), 0);
+  const finished = sum("gamesPlayed");
+  const wins = sum("wins");
+  const perDay = complete.map((row) => row.gamesPlayed);
 
   return {
     days: rows.length,
+    shortWindow: rows.length < days,
     finished,
     wins,
-    losses,
+    losses: sum("losses"),
     winRate: finished === 0 ? null : wins / finished,
-    lostByLives,
-    lostByBlocked,
-    lossSplitPending: losses > 0 && lostByLives + lostByBlocked === 0,
-    avgFinishedPerDay: rows.length === 0 ? 0 : finished / rows.length,
-    peakMax,
-    peakMin: rows.length === 0 ? 0 : peakMin,
+    lostByLives: sum("lostByLives"),
+    lostByBlocked: sum("lostByBlocked"),
+    avgFinishedPerDay:
+      perDay.length === 0
+        ? 0
+        : perDay.reduce((total, n) => total + n, 0) / perDay.length,
+    peakMax: perDay.length === 0 ? 0 : Math.max(...perDay),
+    peakMin: perDay.length === 0 ? 0 : Math.min(...perDay),
   };
 }

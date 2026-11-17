@@ -126,6 +126,8 @@ describe("admin read model", () => {
         ],
         missingCountries: [],
         failedAttempts: 2,
+        erred: 1,
+        leftEmpty: 0,
         validAnswers: ["FRA", "DEU", "BEL"],
         picks: [
           { countryCode: "FRA", count: 6 },
@@ -143,6 +145,9 @@ describe("admin read model", () => {
         topAnswers: [{ countryCode: "ESP", count: 4, share: 1 }],
         missingCountries: [],
         failedAttempts: 4,
+        // La partie en cours ne compte ni parmi les trompés ni parmi les vides.
+        erred: 1,
+        leftEmpty: 1,
         validAnswers: ["ESP"],
         picks: [{ countryCode: "ESP", count: 4 }],
       },
@@ -156,6 +161,8 @@ describe("admin read model", () => {
         topAnswers: [],
         missingCountries: [],
         failedAttempts: 0,
+        erred: 0,
+        leftEmpty: 1,
         validAnswers: [],
         picks: [],
       },
@@ -203,22 +210,6 @@ describe("admin read model", () => {
 
     const stats = await backend.run(async (ctx) => await readPoolStats(ctx));
 
-    expect({
-      keys: Object.keys(stats).sort(),
-      available: stats.available,
-      countries: stats.countryCoverage,
-      firstConstraint: stats.constraintCoverage.find(
-        ({ id }) => id === CONSTRAINTS[0].id,
-      ),
-      usedConstraint: stats.constraintCoverage.find(
-        ({ id }) => id === CONSTRAINTS[1].id,
-      ),
-    }).toEqual({
-      keys: ["available", "constraintCoverage", "countryCoverage"],
-      available: 1,
-      countries: [{ code: "FRA", gridsInPool: 1 }],
-      firstConstraint: { id: CONSTRAINTS[0].id, gridsInPool: 1 },
-      usedConstraint: { id: CONSTRAINTS[1].id, gridsInPool: 0 },
-    });
+    expect(stats).toEqual({ available: 1 });
   });
 });

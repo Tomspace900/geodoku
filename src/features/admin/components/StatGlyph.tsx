@@ -1,44 +1,37 @@
 import {
-  ArrowDown,
-  ArrowUp,
-  Check,
+  CircleDashed,
   DoorOpen,
   Flag,
   Gauge,
-  Hash,
   Heart,
+  Hourglass,
   Lock,
   type LucideIcon,
-  Minus,
   Trophy,
   Users,
   X,
 } from "lucide-react";
 import type { ReactNode } from "react";
-import { predictionDelta } from "@/features/admin/logic/analytics";
-import { deltaSeverityTextClass } from "@/features/admin/logic/display";
 import { cn } from "@/lib/utils";
 
 /**
  * Vocabulaire d'icônes partagé des métriques admin (style « KDA »). Une seule
- * source de vérité pour l'engagement, la prédiction (facilité / réussite / écart),
- * les KDA de case, la légende et la tendance Santé de jeu. Le header
- * GridDayDetail utilise `GridHeaderStat`.
+ * source de vérité pour l'engagement, la facilité estimée, les taux observés
+ * par case (trompés, laissées vides), la légende et la tendance Santé de jeu.
+ * Le header GridDayDetail utilise `GridHeaderStat`.
  */
 export type StatKind =
   | "engages"
   | "terminees"
   | "abandon"
+  | "enCours"
   | "victoires"
   | "defaites"
-  | "essais"
   | "vies"
   | "blocage"
   | "faciliteEst"
-  | "reussiteObs"
-  | "ecartDown"
-  | "ecartUp"
-  | "ecartNeutre";
+  | "trompes"
+  | "vides";
 
 type GlyphDef = {
   Icon: LucideIcon;
@@ -55,9 +48,13 @@ const GLYPHS: Record<StatKind, GlyphDef> = {
     cls: "text-on-surface-variant",
     label: "abandon",
   },
+  enCours: {
+    Icon: Hourglass,
+    cls: "text-on-surface-variant",
+    label: "en cours",
+  },
   victoires: { Icon: Trophy, cls: "text-warning", label: "victoires" },
   defaites: { Icon: X, cls: "text-error", label: "défaites" },
-  essais: { Icon: Hash, cls: "text-on-surface-variant", label: "essais" },
   vies: { Icon: Heart, cls: "text-error", label: "vies" },
   blocage: { Icon: Lock, cls: "text-error", label: "blocage" },
   faciliteEst: {
@@ -66,42 +63,19 @@ const GLYPHS: Record<StatKind, GlyphDef> = {
     label: "facilité est.",
     legendLabel: "facilité estimée",
   },
-  reussiteObs: {
-    Icon: Check,
-    cls: "text-on-surface-variant",
-    label: "réussite obs.",
-    legendLabel: "réussite observée",
+  trompes: {
+    Icon: X,
+    cls: "text-error",
+    label: "trompés",
+    legendLabel: "parties finies où le joueur s'est trompé sur la case",
   },
-  ecartDown: {
-    Icon: ArrowDown,
-    cls: "text-on-surface-variant",
-    label: "écart",
-    legendLabel: "écart prédit − observé",
-  },
-  ecartUp: {
-    Icon: ArrowUp,
-    cls: "text-on-surface-variant",
-    label: "écart",
-    legendLabel: "écart prédit − observé",
-  },
-  ecartNeutre: {
-    Icon: Minus,
-    cls: "text-on-surface-variant",
-    label: "écart",
-    legendLabel: "écart prédit − observé",
+  vides: {
+    Icon: CircleDashed,
+    cls: "text-error",
+    label: "vides",
+    legendLabel: "parties finies où la case est restée vide",
   },
 };
-
-export const STAT_DELTA_TITLE =
-  "Écart facilité estimée − réussite observée moyenne par case";
-
-export type DeltaStatKind = "ecartDown" | "ecartUp" | "ecartNeutre";
-
-export function deltaStatKind(signedDelta: number): DeltaStatKind {
-  if (signedDelta > 0) return "ecartDown";
-  if (signedDelta < 0) return "ecartUp";
-  return "ecartNeutre";
-}
 
 type Size = "sm" | "md";
 
@@ -111,7 +85,7 @@ export function getStatGlyph(kind: StatKind): (typeof GLYPHS)[StatKind] {
 
 /**
  * Icône + valeur. `showLabel` ajoute le mot inline (Santé de jeu, tableaux) ;
- * sinon icône seule (cases de grille + légende sous la preview).
+ * sinon icône seule (légende sous la preview).
  */
 export function StatGlyph({
   kind,
@@ -125,7 +99,7 @@ export function StatGlyph({
   value?: ReactNode;
   size?: Size;
   showLabel?: boolean;
-  /** Remplace la couleur par défaut du glyph (ex. sévérité d'écart). */
+  /** Remplace la couleur par défaut du glyph. */
   tone?: string;
   title?: string;
 }) {
@@ -149,40 +123,17 @@ export function StatGlyph({
   );
 }
 
-/** Écart signé prédit − observé (flèche de sens + |écart|, teinté sévérité). */
-export function StatGlyphDelta({
-  predicted,
-  observed,
-  size = "sm",
-  showLabel = false,
-}: {
-  predicted: number;
-  observed: number;
-  size?: Size;
-  showLabel?: boolean;
-}) {
-  const { value, severity } = predictionDelta(predicted, observed);
-  return (
-    <StatGlyph
-      kind={deltaStatKind(value)}
-      value={Math.abs(value)}
-      size={size}
-      showLabel={showLabel}
-      tone={deltaSeverityTextClass(severity)}
-      title={STAT_DELTA_TITLE}
-    />
-  );
-}
-
-/** Pastille score + picto (facilité estimée ou réussite observée par case). */
+/** Pastille score + picto (facilité estimée, taux observés par case). */
 export function StatScorePill({
   kind,
   score,
   pillClass,
+  title,
 }: {
-  kind: "faciliteEst" | "reussiteObs";
+  kind: "faciliteEst" | "trompes" | "vides";
   score: ReactNode;
   pillClass: string;
+  title?: string;
 }) {
   const { Icon } = GLYPHS[kind];
   return (
@@ -191,6 +142,7 @@ export function StatScorePill({
         "inline-flex items-center gap-1 rounded-full px-1.5 py-0.5 text-[11px] font-semibold tabular-nums",
         pillClass,
       )}
+      title={title}
     >
       <Icon aria-hidden="true" className="size-3 shrink-0" />
       {score}

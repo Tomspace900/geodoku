@@ -3,7 +3,6 @@ import {
   type ConstraintId,
 } from "@/features/game/logic/constraints";
 import { translate } from "@/i18n/index";
-import type { DeltaSeverity } from "./analytics";
 
 export function constraintLabel(id: string): string {
   const c = CONSTRAINT_BY_ID.get(id as ConstraintId);
@@ -25,9 +24,9 @@ export function formatGridDateHeadingFr(dateStr: string): string {
 const DIFFICULTY_EASY_MAX = 33;
 const DIFFICULTY_MEDIUM_MAX = 66;
 
-export type DifficultyTier = "easy" | "medium" | "hard";
+type DifficultyTier = "easy" | "medium" | "hard";
 
-export function difficultyTierFromScore(d: number): DifficultyTier {
+function difficultyTierFromScore(d: number): DifficultyTier {
   if (d <= DIFFICULTY_EASY_MAX) return "easy";
   if (d <= DIFFICULTY_MEDIUM_MAX) return "medium";
   return "hard";
@@ -39,14 +38,9 @@ const TIER_SURFACE_TEXT: Record<DifficultyTier, string> = {
   hard: "bg-error/15 text-error",
 };
 
-/** Pastille avec fond léger + texte (scores dans la grille preview). */
+/** Pastille avec fond léger + texte (score de difficulté 0–100). */
 export function difficultyPillClass(d: number): string {
   return TIER_SURFACE_TEXT[difficultyTierFromScore(d)];
-}
-
-/** Badges « X faciles / moyennes / difficiles » (tier sans score numérique). */
-export function difficultyTierSurfaceClass(tier: DifficultyTier): string {
-  return TIER_SURFACE_TEXT[tier];
 }
 
 // ─── Notoriété des solutions (popTop3) ─────────────────────────────────────────
@@ -59,13 +53,25 @@ export function popularityPillClass(score: number): string {
   return TIER_SURFACE_TEXT[difficultyTierFromScore(100 - score)];
 }
 
-const DELTA_SEVERITY_TEXT: Record<DeltaSeverity, string> = {
-  good: "text-success",
-  off: "text-warning",
-  missed: "text-error",
-};
+// ─── Taux observés par case (trompés, laissées vides) ──────────────────────────
+// Plus le taux est haut, plus le rouge est soutenu : la case dure saute aux yeux.
 
-/** Couleur de texte d'un écart prédiction/observé selon sa sévérité. */
-export function deltaSeverityTextClass(severity: DeltaSeverity): string {
-  return DELTA_SEVERITY_TEXT[severity];
+const RATE_TIERS: ReadonlyArray<{ min: number; className: string }> = [
+  { min: 0.4, className: "bg-error text-surface-lowest" },
+  { min: 0.2, className: "bg-error/20 text-error" },
+  { min: 0.1, className: "bg-error/10 text-error" },
+];
+const RATE_LOW_CLASS = "bg-surface-low text-on-surface-variant";
+
+/** Pastille d'un taux par case (0–1), `null` = cohorte trop mince. */
+export function cellRatePillClass(rate: number | null): string {
+  if (rate === null) return RATE_LOW_CLASS;
+  return (
+    RATE_TIERS.find((tier) => rate >= tier.min)?.className ?? RATE_LOW_CLASS
+  );
+}
+
+/** Pourcentage arrondi d'un taux, `—` quand il n'est pas lisible. */
+export function formatRate(rate: number | null): string {
+  return rate === null ? "—" : `${Math.round(rate * 100)} %`;
 }

@@ -13,24 +13,21 @@
  * trackés) pour re-trancher top3 vs top4/top5 et recalibrer si besoin.
  *
  * Usage:
- *   pnpm analyze:observed                # depuis FAILED_ATTEMPTS_SINCE
+ *   pnpm analyze:observed                # depuis la bascule (GAME_ROWS_SINCE)
  *   pnpm analyze:observed --days=14      # fenêtre bornée aux 14 derniers jours
  *
  * `VITE_CONVEX_URL` + `ADMIN_TOKEN` lus depuis `.env.local` (cf. package.json).
  */
 import { ConvexHttpClient } from "convex/browser";
 import { api } from "../../convex/_generated/api";
+import {
+  cellRate,
+  GAME_ROWS_SINCE,
+} from "../../src/features/admin/logic/observedMetrics";
 import { countryPopularity } from "../../src/features/countries/logic/popularity";
 import { offsetUTC, todayUTC } from "../../src/lib/dates";
 
 // ─── Constantes ───────────────────────────────────────────────────────────────
-
-/**
- * Date de déploiement de `recordFailedGuess` / `dailyStats.failedAttempts`.
- * AVANT : pas de tracking des échecs → taux d'échec incalculable, jours exclus.
- * Garder aligné avec FAILED_ATTEMPTS_SINCE de scripts/local/export-analytics.ts.
- */
-const FAILED_ATTEMPTS_SINCE = "2026-05-30";
 
 /** Réplicats du bootstrap apparié (resampling des jours). */
 const BOOTSTRAP_REPLICATES = 1000;
@@ -71,9 +68,11 @@ type CellRecord = {
   rowId: string;
   colId: string;
   codes: string[];
+  /** Joueurs trompés au moins une fois sur la case. */
   fails: number;
+  /** Parties finies du jour (dénominateur et poids). */
   attempts: number;
-  /** Taux d'échec observé = fails / attempts (la variable à prédire). */
+  /** Part de trompés = fails / attempts (la variable à prédire). */
   y: number;
   features: Record<string, number>;
 };
@@ -114,8 +113,7 @@ function geoDecay(popsDesc: number[], q: number): number {
 async function fetchCells(): Promise<CellRecord[]> {
   const today = todayUTC();
   const windowStart = offsetUTC(-(DAYS_WINDOW - 1));
-  const start =
-    windowStart > FAILED_ATTEMPTS_SINCE ? windowStart : FAILED_ATTEMPTS_SINCE;
+  const start = windowStart > GAME_ROWS_SINCE ? windowStart : GAME_ROWS_SINCE;
 
   const records: CellRecord[] = [];
   for (let date = start; date <= today; date = nextDay(date)) {
@@ -125,9 +123,11 @@ async function fetchCells(): Promise<CellRecord[]> {
     });
     if (!metrics) continue;
     for (const [cellKey, cell] of Object.entries(metrics.cells)) {
-      const fails = cell.failedAttempts;
-      const attempts = fails + cell.totalGuesses;
-      if (attempts === 0) continue;
+      // La règle du calque « Erreurs », comme l'admin : joueurs trompés au
+      // moins une fois sur la case, parmi les parties finies du jour.
+      const fails = cell.erred;
+      const attempts = metrics.gamesFinished;
+      if (cellRate(fails, attempts) === null) continue;
       const [r, c] = cellKey.split(",").map(Number);
       const codes = cell.validAnswers;
       const popsDesc = codes.map(countryPopularity).sort((a, b) => b - a);
@@ -401,7 +401,7 @@ async function main(): Promise<void> {
   const totalAttempts = cells.reduce((s, c) => s + c.attempts, 0);
 
   console.log(
-    `Données : ${dates.length} jours trackés (≥ ${FAILED_ATTEMPTS_SINCE}), ` +
+    `Données : ${dates.length} jours avec lignes de partie (≥ ${GAME_ROWS_SINCE}), ` +
       `${cells.length} cases avec ≥ 1 tentative, ${totalAttempts} tentatives\n`,
   );
   if (dates.length < 5) {

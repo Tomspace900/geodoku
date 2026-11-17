@@ -7,7 +7,6 @@ import {
   type ConstraintId,
   constraintAnswers,
 } from "@/features/game/logic/constraints";
-import { useT } from "@/i18n/LocaleContext";
 // `content/` est terminal : import relatif, jamais l'alias `@/`.
 import { COUNTRY_CATALOG } from "../../../../content/countries/catalog";
 import {
@@ -15,6 +14,7 @@ import {
   constraintCandidateMetric,
   intersectSelectedConstraints,
 } from "../logic/constraintExplorer";
+import { constraintLabel } from "../logic/display";
 import { PanelCard } from "./PanelCard";
 import { PanelHeader } from "./PanelHeader";
 
@@ -48,7 +48,6 @@ type ExplorerOption = {
 };
 
 export function ConstraintExplorerPanel() {
-  const t = useT();
   const [selectedIds, setSelectedIds] = useState<ConstraintId[]>([]);
   const [query, setQuery] = useState("");
   const selectedAnswers = intersectSelectedConstraints(
@@ -60,7 +59,7 @@ export function ConstraintExplorerPanel() {
   const selectedConstraints = selectedIds.map((constraintId) => {
     const constraint = CONSTRAINTS.find(({ id }) => id === constraintId);
     if (!constraint) throw new Error(`Unknown constraint: ${constraintId}`);
-    return { ...constraint, label: t(constraint.labelKey) };
+    return { ...constraint, label: constraintLabel(constraint.id) };
   });
   const options: ExplorerOption[] = CONSTRAINTS.filter(
     ({ id }) => !selectedIds.includes(id),
@@ -70,7 +69,7 @@ export function ConstraintExplorerPanel() {
       const metric = constraintCandidateMetric(selectedAnswers, answers);
       return {
         id: constraint.id,
-        label: t(constraint.labelKey),
+        label: constraintLabel(constraint.id),
         answerCount: answers.size,
         ...metric,
       };

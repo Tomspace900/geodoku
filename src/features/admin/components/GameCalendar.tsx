@@ -12,6 +12,10 @@ import { TagPill } from "./TagPill";
 const calendarMarkerBadgeClass =
   "mx-auto inline-flex min-w-0 shrink-0 items-center justify-center rounded-full px-1 text-[6px] font-medium leading-none tabular-nums opacity-100";
 
+/** Jour d'avant la bascule : pas de lignes de partie, donc pas de % victoires. */
+const BEFORE_ROWS_LABEL = "·";
+const BEFORE_ROWS_CLASS = "bg-transparent text-on-surface-variant/50";
+
 function neutralMarkerBadgeClass(): string {
   return "bg-surface-low text-on-surface-variant";
 }
@@ -29,6 +33,10 @@ function markerBadgeLook(marker: CalendarMarker): {
           ? neutralMarkerBadgeClass()
           : difficultyPillClass((1 - marker.winRate) * 100),
     };
+  }
+
+  if (marker.kind === "beforeRows") {
+    return { label: BEFORE_ROWS_LABEL, pillClass: BEFORE_ROWS_CLASS };
   }
 
   if (marker.kind === "scheduled" || marker.kind === "predicted") {
@@ -141,6 +149,13 @@ export function GameCalendar({ markers, selectedDate, onSelectDate }: Props) {
           <LegendBadge pillClass="bg-warning/15 text-warning">45</LegendBadge>
           <LegendBadge pillClass="bg-error/15 text-error">18</LegendBadge>
           <span>% victoires</span>
+        </div>
+        <div className="flex flex-wrap items-center gap-2 text-[10px] text-on-surface-variant/60">
+          <span className="w-12 shrink-0 uppercase tracking-widest">avant</span>
+          <LegendBadge pillClass={BEFORE_ROWS_CLASS}>
+            {BEFORE_ROWS_LABEL}
+          </LegendBadge>
+          <span>la bascule, pas de lignes de partie</span>
         </div>
         <div className="flex flex-wrap items-center gap-2 text-[10px] text-on-surface-variant/60">
           <span className="w-12 shrink-0 uppercase tracking-widest">futur</span>

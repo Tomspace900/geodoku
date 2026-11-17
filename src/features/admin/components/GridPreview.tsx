@@ -1,6 +1,7 @@
 import {
+  cellRatePillClass,
   constraintLabel,
-  difficultyPillClass,
+  formatRate,
   popularityPillClass,
 } from "@/features/admin/logic/display";
 import {
@@ -10,18 +11,20 @@ import {
 import { getCountryByIso3 } from "@/features/countries/logic/search";
 import { GridMatrix } from "@/features/game/components/GridMatrix";
 import { cn } from "@/lib/utils";
-import { StatGlyph, StatGlyphDelta, StatScorePill } from "./StatGlyph";
+import { StatScorePill } from "./StatGlyph";
 
 const headerClass =
   "flex items-center justify-center text-center text-[10px] font-medium text-on-surface-variant bg-surface-low rounded-xl p-1.5 leading-tight min-h-[52px]";
 
+/** Taux observés d'une case, parmi les parties finies (`null` = cohorte trop mince). */
+export type CellRates = { erred: number | null; leftEmpty: number | null };
+
 /** Métriques observées d'une case (grille passée / active). */
 export type ObservedCell = {
-  /** Taux de réussite (réussites / essais), `null` si non instrumenté / trop peu d'essais. */
-  reussite: number | null;
-  essais: number;
   /** Distribution des choix : countryCode → nb de fois choisi. */
   picks: Record<string, number>;
+  /** `null` avant la bascule : la journée n'a pas de lignes de partie. */
+  rates: CellRates | null;
 };
 
 type GridPreviewData = {
@@ -62,22 +65,10 @@ export function GridPreview({
         const codes = obs
           ? sortByPicks(validAnswers[key] ?? [], obs.picks)
           : (validAnswers[key] ?? []);
-
-        // Facilité estimée de la case (0–100, vert = solutions connues =
-        // facile) : seul prédicteur validé du taux d'échec. Picto jauge.
+        // Facilité estimée de la case (0–100, vert = solutions connues).
         const popScore = popularityScore100(
           topKPopularity(validAnswers[key] ?? []),
         );
-        // Pastille basse : % réussite OBSERVÉ (passé/actif), `—` si non
-        // instrumenté ; null pour une grille future (rien d'observé).
-        const observedBadge = obs
-          ? obs.reussite === null
-            ? { cls: "bg-surface-low text-on-surface-variant", text: "—" }
-            : {
-                cls: difficultyPillClass((1 - obs.reussite) * 100),
-                text: `${Math.round(obs.reussite * 100)}%`,
-              }
-          : null;
 
         return (
           <div className="flex aspect-square w-full min-h-0 flex-col rounded-xl bg-surface-lowest p-1.5 shadow-editorial">
@@ -116,41 +107,32 @@ export function GridPreview({
               )}
             </div>
 
-            {observedBadge ? (
-              // Passé : (1) réussite observée + essais ; (2) facilité + écart.
-              <div className="mt-1 flex shrink-0 flex-col gap-1">
-                <div className="flex items-center gap-1.5">
-                  <StatScorePill
-                    kind="reussiteObs"
-                    score={observedBadge.text}
-                    pillClass={observedBadge.cls}
-                  />
-                  {obs && <StatGlyph kind="essais" value={obs.essais} />}
-                </div>
-                <div className="flex items-center gap-1.5">
-                  <StatScorePill
-                    kind="faciliteEst"
-                    score={popScore}
-                    pillClass={popularityPillClass(popScore)}
-                  />
-                  {obs && obs.reussite !== null && (
-                    <StatGlyphDelta
-                      predicted={popScore}
-                      observed={Math.round(obs.reussite * 100)}
-                    />
-                  )}
-                </div>
-              </div>
-            ) : (
-              // Futur : facilité estimée seule (pas d'observé).
-              <div className="mt-1 flex shrink-0 items-center">
+            <div className="mt-1 flex shrink-0 flex-col gap-1">
+              <div className="flex items-center">
                 <StatScorePill
                   kind="faciliteEst"
                   score={popScore}
                   pillClass={popularityPillClass(popScore)}
+                  title="Facilité estimée"
                 />
               </div>
-            )}
+              {obs?.rates && (
+                <div className="flex items-center gap-1">
+                  <StatScorePill
+                    kind="trompes"
+                    score={formatRate(obs.rates.erred)}
+                    pillClass={cellRatePillClass(obs.rates.erred)}
+                    title="Parties finies où le joueur s'est trompé sur la case"
+                  />
+                  <StatScorePill
+                    kind="vides"
+                    score={formatRate(obs.rates.leftEmpty)}
+                    pillClass={cellRatePillClass(obs.rates.leftEmpty)}
+                    title="Parties finies où la case est restée vide"
+                  />
+                </div>
+              )}
+            </div>
           </div>
         );
       }}

@@ -1,14 +1,7 @@
 import type { LucideIcon } from "lucide-react";
 import type { ReactNode } from "react";
-import { predictionDelta } from "@/features/admin/logic/analytics";
-import { deltaSeverityTextClass } from "@/features/admin/logic/display";
 import { cn } from "@/lib/utils";
-import {
-  deltaStatKind,
-  getStatGlyph,
-  STAT_DELTA_TITLE,
-  type StatKind,
-} from "./StatGlyph";
+import { getStatGlyph, type StatKind } from "./StatGlyph";
 
 type Props = {
   icon: LucideIcon;
@@ -19,7 +12,7 @@ type Props = {
   title?: string;
 };
 
-/** Picto + chiffre + label du header GridDayDetail (engagement et prédiction). */
+/** Picto + chiffre + label du header GridDayDetail (engagement et taux observés). */
 export function GridHeaderStat({
   icon: Icon,
   value,
@@ -61,27 +54,6 @@ export function GridHeaderStatKind({
       label={label}
       tone={tone}
       title={title}
-    />
-  );
-}
-
-/** Écart prédit − observé (facilité vs réussite moyenne par case). */
-export function GridHeaderStatDelta({
-  predicted,
-  observed,
-}: {
-  predicted: number;
-  observed: number;
-}) {
-  const { value, severity } = predictionDelta(predicted, observed);
-  const { Icon, label } = getStatGlyph(deltaStatKind(value));
-  return (
-    <GridHeaderStat
-      icon={Icon}
-      value={Math.abs(value)}
-      label={label}
-      tone={deltaSeverityTextClass(severity)}
-      title={STAT_DELTA_TITLE}
     />
   );
 }

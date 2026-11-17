@@ -42,4 +42,28 @@ describe("summarizeGames", () => {
       failedFirstCell: 5,
     });
   });
+
+  it("compte par case les joueurs trompés et les cases vides des parties finies, hors cases bloquées", () => {
+    const stats = summarizeGames(
+      [
+        // Bloquée en 2,2 : la case n'est pas « laissée vide ».
+        {
+          cells: ["FRA", "ITA", "ESP", "PRT", "BEL", "NLD", "AUT", "CHE", null],
+          failed: [0, 2, 0, 0, 0, 0, 0, 0, 0],
+        },
+        // Perdue aux vies : un joueur trompé en 0,0, quel que soit le nombre d'erreurs.
+        { cells: Array(9).fill(null), failed: [5, 0, 0, 0, 0, 0, 0, 0, 0] },
+        // En cours : ne compte pas.
+        { cells: Array(9).fill(null), failed: [0, 0, 1, 0, 0, 0, 0, 0, 0] },
+      ],
+      ANSWERS,
+    );
+    expect({
+      erred: stats.erredByCell,
+      leftEmpty: stats.leftEmptyByCell,
+    }).toEqual({
+      erred: [1, 1, 0, 0, 0, 0, 0, 0, 0],
+      leftEmpty: [1, 1, 1, 1, 1, 1, 1, 1, 1],
+    });
+  });
 });
