@@ -293,7 +293,8 @@ export const en = {
     faqSourcesA:
       "From dated public sources such as REST Countries, the CIA World Factbook, the World Bank, the FAO and Wikidata. During a game, tap a constraint to see its own.",
     contactTitle: "Contact",
-    contactBodyPre: "A question, an idea, a bug? Write to me at",
+    reportBodyPre: "A bug, a doubtful answer?",
+    contactBodyPre: "A question, an idea? Write to me at",
   },
   howToPlay: {
     title: "How to play?",
@@ -523,7 +524,7 @@ export const en = {
   report: {
     entryLink: "Report a mistake",
     title: "Report a mistake",
-    footerTitle: "Report a problem",
+    generalTitle: "Report a problem",
     backToAnswers: "Back to answers",
     entryShort: "Report",
     gridHint:
@@ -534,8 +535,10 @@ export const en = {
     categoryContent: "Answer or constraint",
     categoryBug: "Bug or other",
     messageLabel: "Your message",
-    placeholderContent: "E.g. this country should count here, because…",
-    placeholderBug: "What happened, and on which screen.",
+    placeholderContent:
+      "Which country is wrong, why, and your source if you have one.",
+    placeholderBug:
+      "What happened, on which screen, on which device and browser, and how to reproduce it.",
     privacyHint:
       "Sent without your name or account. Don't include personal information.",
     counter: "{count}/{max}",

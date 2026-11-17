@@ -59,3 +59,13 @@ test("the footer report opens on « Bug or other »", async ({ page }) => {
     page.getByText("You can report straight from the answer grid"),
   ).toBeVisible();
 });
+
+test("« Report a problem » in About opens on « Bug or other »", async ({
+  page,
+}) => {
+  await page.goto("/en/about");
+  await page.getByRole("button", { name: "Report a problem" }).click();
+  await expect(
+    page.getByRole("button", { name: "Bug or other" }),
+  ).toHaveAttribute("aria-pressed", "true");
+});

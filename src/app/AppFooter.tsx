@@ -1,5 +1,5 @@
 import { useFeatureFlagEnabled, usePostHog } from "@posthog/react";
-import { Coffee, Globe, MessageSquareText } from "lucide-react";
+import { Coffee, Flag, Globe, MessageSquareText } from "lucide-react";
 import type { ReactNode } from "react";
 import { Link } from "react-router";
 import { KOFI_URL } from "@/app/links";
@@ -134,7 +134,19 @@ export default function AppFooter({ className }: { className?: string }) {
       </a>
     ) : null;
   const pages = [about, changelog, privacy, ...(survey ? [survey] : [])];
-  const report = <GeneralReportEntry key="report" className={LINK_CLASS} />;
+  const report = (
+    <GeneralReportEntry
+      key="report"
+      source="footer"
+      className={cn(
+        "inline-flex gap-1 text-[10px] text-on-surface-variant sm:text-xs [&_svg]:size-3 sm:[&_svg]:size-3.5",
+        LINK_CLASS,
+      )}
+    >
+      <Flag aria-hidden="true" />
+      {t("report.entryShort")}
+    </GeneralReportEntry>
+  );
   const language = (
     <span key="language" className="inline-flex items-center">
       <Globe

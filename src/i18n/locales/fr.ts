@@ -303,7 +303,8 @@ export const fr = {
     faqSourcesA:
       "De sources publiques datées, comme REST Countries, le CIA World Factbook, la Banque mondiale, la FAO ou Wikidata. Pendant la partie, touche une contrainte pour voir les siennes.",
     contactTitle: "Contact",
-    contactBodyPre: "Une question, une idée, un bug\u00A0? Écris-moi à",
+    reportBodyPre: "Un bug, une réponse douteuse\u00A0?",
+    contactBodyPre: "Une question, une idée\u00A0? Écris-moi à",
   },
   howToPlay: {
     title: "Comment jouer\u00A0?",
@@ -536,7 +537,7 @@ export const fr = {
   report: {
     entryLink: "Signaler une erreur",
     title: "Signaler une erreur",
-    footerTitle: "Signaler un problème",
+    generalTitle: "Signaler un problème",
     backToAnswers: "Retour aux réponses",
     entryShort: "Signaler",
     gridHint:
@@ -547,8 +548,10 @@ export const fr = {
     categoryContent: "Réponse ou contrainte",
     categoryBug: "Bug ou autre",
     messageLabel: "Ton message",
-    placeholderContent: "Ex.\u00A0: ce pays devrait compter ici, parce que…",
-    placeholderBug: "Ce qui s'est passé, et sur quel écran.",
+    placeholderContent:
+      "Quel pays pose problème, pourquoi, et ta source si tu en as une.",
+    placeholderBug:
+      "Ce qui s'est passé, sur quel écran, avec quel appareil et quel navigateur, et comment le reproduire.",
     privacyHint:
       "Envoyé sans ton nom ni ton compte. N'écris pas d'informations personnelles.",
     counter: "{count}/{max}",

@@ -1,25 +1,34 @@
-import { Flag } from "lucide-react";
+import type { ReactNode } from "react";
 import { useState } from "react";
 import { useLocation } from "react-router";
 import { Button } from "@/components/ui/button";
 import { useLocale } from "@/i18n/LocaleContext";
 import { stripLocale } from "@/i18n/localePath";
 import { cn } from "@/lib/utils";
-import { useReportSubmit } from "../hooks/useReportSubmit";
+import { type ReportSource, useReportSubmit } from "../hooks/useReportSubmit";
 import { reportPage } from "../logic/report";
 import { ReportDrawer } from "./ReportDrawer";
 
 /**
- * « ⚑ Signaler », sur la dernière ligne du pied de page (#127) : un bug ou
- * tout le reste, « Bug ou autre » présélectionné. La page part avec, sans la
- * langue ; aucune case ni contrainte.
+ * Signalement sans case ni contrainte (#127), « Bug ou autre » présélectionné :
+ * « ⚑ Signaler » du pied de page, « Signaler un problème » d'« À propos ».
+ * Le déclencheur prend le texte et le style de l'endroit ; la page part avec,
+ * sans la langue.
  */
-export function GeneralReportEntry({ className }: { className?: string }) {
+export function GeneralReportEntry({
+  source,
+  className,
+  children,
+}: {
+  source: Extract<ReportSource, "footer" | "about">;
+  className?: string;
+  children: ReactNode;
+}) {
   const { t } = useLocale();
   const { pathname } = useLocation();
   const [open, setOpen] = useState(false);
   const report = useReportSubmit({
-    source: "footer",
+    source,
     target: { kind: "general", page: reportPage(stripLocale(pathname)) },
   });
 
@@ -33,18 +42,14 @@ export function GeneralReportEntry({ className }: { className?: string }) {
           report.trackOpened();
           setOpen(true);
         }}
-        className={cn(
-          "inline-flex gap-1 text-[10px] font-normal text-on-surface-variant sm:text-xs [&_svg]:size-3 sm:[&_svg]:size-3.5",
-          className,
-        )}
+        className={cn("rounded-sm font-normal", className)}
       >
-        <Flag aria-hidden />
-        {t("report.entryShort")}
+        {children}
       </Button>
       <ReportDrawer
         open={open}
         onOpenChange={setOpen}
-        title={t("report.footerTitle")}
+        title={t("report.generalTitle")}
         initialCategory="bug"
         onSubmit={report.submit}
       />

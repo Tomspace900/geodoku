@@ -14,7 +14,11 @@ import {
 } from "../logic/submitOutcome";
 
 /** D'où part le signalement, pour les events. */
-export type ReportSource = "solution_cell" | "solution_constraint" | "footer";
+export type ReportSource =
+  | "solution_cell"
+  | "solution_constraint"
+  | "footer"
+  | "about";
 
 /**
  * Envoie un signalement (#127) et dit au formulaire comment ça s'est passé.
