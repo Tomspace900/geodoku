@@ -150,6 +150,10 @@ export const fr = {
     title: "Nouveautés",
     backToGame: "Retour au jeu",
     entries: {
+      reportDate: "17 novembre 2026",
+      reportTitle: "Signaler une erreur et un mois d'entraînement",
+      reportBody:
+        "Un doute sur une réponse\u00A0? Une petite mise à jour qui te permet maintenant de signaler une erreur depuis une case de la grille solution, en cliquant sur le petit drapeau. Ou bien un bug global directement depuis le bas de page. J'ai aussi ouvert l'entraînement aux 30 derniers jours, contre 7 avant.",
       statsDate: "14 novembre 2026",
       statsTitle: "Enfin des stats, et un compte si tu veux\u00A0!",
       statsBody:

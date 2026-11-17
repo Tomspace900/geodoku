@@ -146,6 +146,10 @@ export const en = {
     title: "What's new",
     backToGame: "Back to the game",
     entries: {
+      reportDate: "November 17, 2026",
+      reportTitle: "Report a mistake, and a month of practice",
+      reportBody:
+        "Doubt an answer? A small update that now lets you report a mistake from a cell of the solution grid, by clicking the little flag. Or a general bug, straight from the bottom of the page. I've also opened practice to the last 30 days, up from 7.",
       statsDate: "November 14, 2026",
       statsTitle: "Stats at last, and an account if you like!",
       statsBody:
