@@ -12,6 +12,7 @@ import {
 } from "@/components/ui/dialog";
 import { useT } from "@/i18n/LocaleContext";
 import { STORAGE_KEYS, safeGet, safeSet } from "@/lib/storage";
+import { hasPlayedBefore } from "../logic/returningPlayer";
 import { type IconRule, IconRuleList } from "./IconRuleList";
 import { RarityLegend } from "./RarityLegend";
 
@@ -40,17 +41,32 @@ export const HOW_TO_PLAY_RULES: readonly IconRule[] = [
   },
 ];
 
-function readShow(): boolean {
-  return safeGet(STORAGE_KEYS.howToPlay) !== "false";
+/**
+ * « Comment jouer » s'ouvre seul à l'arrivée tant que « Ne plus afficher »
+ * n'est pas coché. Un joueur qui n'a jamais touché la case mais a déjà joué un
+ * jour passé connaît les règles : la case se coche pour lui, et l'annonce des
+ * nouveautés passe sans attendre.
+ */
+export function shouldAutoOpenHowToPlay(): boolean {
+  const stored = safeGet(STORAGE_KEYS.howToPlay);
+  if (stored !== null) return stored !== "false";
+  if (!hasPlayedBefore()) return true;
+  safeSet(STORAGE_KEYS.howToPlay, "false");
+  return false;
 }
 
 function writeShow(value: boolean) {
   safeSet(STORAGE_KEYS.howToPlay, String(value));
 }
 
-export function HowToPlayLink() {
+type Props = {
+  /** Suit l'ouverture de la fenêtre : l'annonce en jeu attend qu'elle soit fermée. */
+  onOpenChange?: (open: boolean) => void;
+};
+
+export function HowToPlayLink({ onOpenChange }: Props) {
   const posthog = usePostHog();
-  const [show, setShow] = useState<boolean>(() => readShow());
+  const [show, setShow] = useState<boolean>(() => shouldAutoOpenHowToPlay());
   const [open, setOpen] = useState<boolean>(show);
   const openedAtRef = useRef<number | null>(null);
   const openTriggerRef = useRef<"auto_first_visit" | "manual">("manual");
@@ -73,6 +89,11 @@ export function HowToPlayLink() {
     });
     openedAtRef.current = null;
   }
+
+  // biome-ignore lint/correctness/useExhaustiveDependencies: le parent passe une fonction stable (setState)
+  useEffect(() => {
+    onOpenChange?.(open);
+  }, [open]);
 
   // biome-ignore lint/correctness/useExhaustiveDependencies: fire once on mount for auto-popup only
   useEffect(() => {

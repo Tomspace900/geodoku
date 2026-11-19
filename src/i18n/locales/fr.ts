@@ -68,7 +68,6 @@ export const fr = {
     about: "À propos",
     privacy: "Confidentialité",
     changelog: "Nouveautés",
-    changelogNew: "New",
     survey: "Donner mon avis",
     copyright: "©\u00A0{year}\u00A0Geodoku",
   },
@@ -146,92 +145,84 @@ export const fr = {
     contactBodyPre: "Une question\u00A0? Écris-moi à",
   },
   changelog: {
-    eyebrow: "Derni\u00E8re mise \u00E0 jour · Novembre 2026",
+    eyebrow: "Version {version} · {month}",
     title: "Nouveautés",
     backToGame: "Retour au jeu",
+    milestones: {
+      stats: "Stats & compte",
+      scoreClarity: "Score sur 1000",
+      launch: "Lancement public",
+    },
+    spotlight: {
+      badge: "Nouveauté",
+      later: "Plus tard",
+      statsText:
+        "Tes stats sont ici. Et tu peux créer un compte si tu veux, pour les retrouver sur tous tes appareils.",
+      statsCta: "Voir mes stats",
+      accountCta: "Créer un compte",
+    },
     entries: {
-      reportDate: "17 novembre 2026",
       reportTitle: "Signaler une erreur et un mois d'entraînement",
       reportBody:
         "Un doute sur une réponse\u00A0? Une petite mise à jour qui te permet maintenant de signaler une erreur depuis une case de la grille solution, en cliquant sur le petit drapeau. Ou bien un bug global directement depuis le bas de page. J'ai aussi ouvert l'entraînement aux 30 derniers jours, contre 7 avant.",
-      statsDate: "14 novembre 2026",
       statsTitle: "Enfin des stats, et un compte si tu veux\u00A0!",
       statsBody:
         "Une des plus grosses mises à jour, elle ajoute une page de statistiques complètes attendue par beaucoup de joueurs. Entre autres\u00A0: ton score moyen, tes parties passées, ton record, les thématiques où tu brilles... ou pas, etc. Tout se calcule sur ton appareil. Mais si tu veux retrouver tout ça sur ton téléphone comme sur ton ordinateur, tu peux maintenant créer un compte, avec un simple code par e-mail ou ton compte Google. Il reste facultatif\u00A0: on joue toujours sans.",
-      othersDate: "5 novembre 2026",
       othersTitle: "Mieux que les autres joueurs\u00A0?",
       othersBody:
         "\u00C0 la fin de ta partie, fais glisser ta grille d'\u00E9mojis\u00A0: tu vois o\u00F9 se place ton score parmi ceux des joueurs du jour. Aussi, la grille solution a maintenant plusieurs visages, en fonction de ce qui t'int\u00E9resse\u00A0: les r\u00E9ponses, les cases les plus pi\u00E9geuses, la meilleure grille possible ou la tienne.",
-      stabilityDate: "22 octobre 2026",
       stabilityTitle: "Petites corrections",
       stabilityBody:
         "Une mise à jour mineure\u00A0: le jeu supporte mieux une mauvaise connexion, et en entraînement tu peux voir les réponses sans finir la grille. Plus quelques détails et de la stabilité.",
-      answerSourcesDate: "15 octobre 2026",
       answerSourcesTitle: "D'o\u00F9 viennent les donn\u00E9es\u00A0?",
       answerSourcesBody:
         "Enfin un peu de clarification sur les contraintes et les r\u00E9ponses\u00A0! En pleine partie, cliquer sur une contrainte affiche ses sources dat\u00E9es, ainsi que les \u00E9ventuelles conventions retenues. \u00C0 la fin de ta partie, tu peux consulter les pays solutions de chaque case et de chaque contrainte, avec pour chacun ce qui le qualifie\u00A0: population, rang de producteur, ann\u00E9e d'ind\u00E9pendance\u2026",
-      newConstraintsDate: "16 septembre 2026",
       newConstraintsTitle: "Une salve de nouvelles contraintes",
       newConstraintsBody:
         "\u00C7a y est\u00A0! C'est la rentr\u00E9e, le jeu devient plus riche. Le catalogue s'enrichit d'une bonne quinzaine de contraintes suppl\u00E9mentaires, qui arriveront progressivement dans les grilles. Au menu\u00A0: fuseaux horaires, volcans en activit\u00E9, productions agricoles, \u00E9nergies, relief, histoire coloniale et d'autres\u00A0!",
-      archiveDate: "9 ao\u00FBt 2026",
       archiveTitle: "Rejouer les grilles passées",
       archiveBody:
         "Enfin ! Les archives sont là ! Tu peux désormais rejouer les grilles des jours passés, sans limite de vies. Les raretés dépendent des réponses du jour concerné, et tu peux recommencer une grille autant de fois que tu veux. Pour l'instant les sept derniers jours sont disponibles, j'\u00E9largirai peut-\u00EAtre la fen\u00EAtre selon vos retours.",
-      scoreClarityDate: "13 juillet 2026",
       scoreClarityTitle: "Enfin un score compréhensible",
       scoreClarityBody:
         "Le score de fin est maintenant exprimé en points, sur 1000, calculé à partir de trois composantes claires : les cases remplies, la rareté de tes pays, et tes vies restantes. L'affichage est plus visuel et intuitif (j'espère !) avec une révélation animée. Le partage affiche maintenant ton total en points.",
-      countryDataRefreshDate: "25 juin 2026",
       countryDataRefreshTitle:
         "Recherche affin\u00E9e, grilles plus vari\u00E9es",
       countryDataRefreshBody:
         "La recherche tol\u00E8re mieux les tirets et les variantes usuelles quelle que soit la langue du type \u00AB\u00A0Angleterre\u00A0\u00BB, \u00AB\u00A0Hollande\u00A0\u00BB, etc. J'ai aussi fait un gros travail de refonte de la planification des grilles pour limiter la redondance\u00A0: moins de r\u00E9p\u00E9titions d'un jour \u00E0 l'autre, des combinaisons plus diversifi\u00E9es. Quelques corrections et mises \u00E0 jour sur les donn\u00E9es pays en coulisses.",
-      constraintsRefreshDate: "12 juin 2026",
       constraintsRefreshTitle: "Plus de contraintes, plus parlantes",
       constraintsRefreshBody:
         "Les seuils chiffr\u00E9s laissent place \u00E0 des comparaisons avec des pays rep\u00E8res (\u00AB\u00A0plus grand que la France\u00A0\u00BB, \u00AB\u00A0moins dense que le Canada\u00A0\u00BB\u2026). J'ai enrichi le catalogue avec de nouvelles contraintes (déserts, océans, conduite à gauche ...) et clarifi\u00E9 certains libell\u00E9s.",
-      scoringV2Date: "6 juin 2026",
       scoringV2Title: "Cinq vies et un score plus malin",
       scoringV2Body:
         "Tu disposes maintenant de cinq vies au lieu de trois, pour des parties un peu plus cl\u00E9mentes. Et le score d'originalit\u00E9 a \u00E9t\u00E9 repens\u00E9\u00A0: il ne juge plus que la qualit\u00E9 de tes choix, ind\u00E9pendamment du remplissage de la grille.",
-      reliabilityDate: "2 juin 2026",
       reliabilityTitle: "Une grille fiable, tous les jours",
       reliabilityBody:
         "Le jeu se r\u00E9pare d\u00E9sormais tout seul si quelque chose coince c\u00F4t\u00E9 serveur\u00A0: la grille du jour est toujours l\u00E0, \u00E0 l'heure. J'ai aussi publi\u00E9 une page de confidentialit\u00E9 claire et sans blabla, ainsi que cette page de changelog pour suivre les nouveaut\u00E9s.",
-      darkModeDate: "29 mai 2026",
       darkModeTitle: "Mode sombre",
       darkModeBody:
         "Geodoku suit le th\u00E8me de ton syst\u00E8me. En mode sombre, l'ic\u00F4ne et les couleurs s'adaptent automatiquement pour m\u00E9nager tes yeux le soir.",
-      identityDate: "26 mai 2026",
       identityTitle: "Nouvelle identit\u00E9 visuelle",
       identityBody:
         "Refonte \u00E9ditoriale compl\u00E8te de l'interface, nouveau favicon et cartes de partage soign\u00E9es quand tu envoies un lien. Le jeu passe aussi au tutoiement, plus direct et convivial.",
-      comfortDate: "25 mai 2026",
       comfortTitle: "Plus juste, moins frustrant",
       comfortBody:
         "Quand tu te trompes, les contraintes non respect\u00E9es s'\u00E9clairent pour t'aider \u00E0 comprendre. Et une case devenue impossible \u00E0 remplir est simplement bloqu\u00E9e (\u2B1B) au lieu de te co\u00FBter une vie d'un coup.",
-      helpDate: "22 mai 2026",
       helpTitle: "Une aide \u00E0 port\u00E9e de main",
       helpBody:
         "Un rappel \u00AB\u00A0Comment jouer\u00A0\u00BB appara\u00EEt pour les nouveaux venus, et se referme d\u00E8s que tu as compris le principe.",
-      footerDate: "30 avril 2026",
       footerTitle: "Num\u00E9ro de grille & cr\u00E9dits",
       footerBody:
         "Chaque grille quotidienne a d\u00E9sormais son num\u00E9ro d'\u00E9dition, compt\u00E9 depuis le tout premier jour. Un pied de page discret rassemble les cr\u00E9dits et le choix de la langue.",
-      scoringDate: "29 avril 2026",
       scoringTitle: "Un score qui r\u00E9compense l'audace",
       scoringBody:
         "Le calcul du score a \u00E9t\u00E9 repens\u00E9 pour mieux valoriser les r\u00E9ponses rares, et les contraintes g\u00E9ographiques r\u00E9\u00E9quilibr\u00E9es pour une difficult\u00E9 plus juste, jour apr\u00E8s jour.",
-      solutionDate: "17 avril 2026",
       solutionTitle: "La grille solution",
       solutionBody:
         "En fin de partie, tu d\u00E9couvres les r\u00E9ponses possibles pour chaque case et la raret\u00E9 de tes choix face \u00E0 ceux des autres joueurs du jour.",
-      bilingualDate: "15 avril 2026",
       bilingualTitle: "Bilingue, et l\u00E0 o\u00F9 tu t'es arr\u00EAt\u00E9",
       bilingualBody:
         "Geodoku parle fran\u00E7ais et anglais. Ta partie du jour est sauvegard\u00E9e sur ton appareil\u00A0: tu peux fermer l'onglet et revenir la terminer plus tard.",
-      launchDate: "10 avril 2026",
       launchTitle: "Les premiers pas de Geodoku",
       launchBody:
         "Le c\u0153ur du jeu voit le jour\u00A0: une grille 3\u00D73 quotidienne, des contraintes g\u00E9ographiques crois\u00E9es, 3 vies, une recherche de pays tol\u00E9rante aux fautes, un score bas\u00E9 sur la raret\u00E9 et un partage en \u00E9mojis \u00E0 la Wordle.",

@@ -1,120 +1,19 @@
-import { useT } from "@/i18n/LocaleContext";
+import { Eyebrow } from "@/components/editorial/Eyebrow";
+import { useLocale, useT } from "@/i18n/LocaleContext";
 import type { TKey } from "@/i18n/types";
+import { APP_VERSION } from "@/lib/appVersion";
+import { cn } from "@/lib/utils";
 import { LegalBullet } from "./components/LegalBullet";
 import { LegalContactSection } from "./components/LegalContactSection";
 import { LegalLayout } from "./components/LegalLayout";
 import { LegalParagraph } from "./components/LegalParagraph";
 import { LegalSection } from "./components/LegalSection";
-import { LegalSupportSection } from "./components/LegalSupportSection";
-
-// Étapes marquantes côté joueur, de la plus récente à la plus ancienne.
-const ENTRIES: { date: TKey; title: TKey; body: TKey }[] = [
-  {
-    date: "changelog.entries.reportDate",
-    title: "changelog.entries.reportTitle",
-    body: "changelog.entries.reportBody",
-  },
-  {
-    date: "changelog.entries.statsDate",
-    title: "changelog.entries.statsTitle",
-    body: "changelog.entries.statsBody",
-  },
-  {
-    date: "changelog.entries.othersDate",
-    title: "changelog.entries.othersTitle",
-    body: "changelog.entries.othersBody",
-  },
-  {
-    date: "changelog.entries.stabilityDate",
-    title: "changelog.entries.stabilityTitle",
-    body: "changelog.entries.stabilityBody",
-  },
-  {
-    date: "changelog.entries.answerSourcesDate",
-    title: "changelog.entries.answerSourcesTitle",
-    body: "changelog.entries.answerSourcesBody",
-  },
-  {
-    date: "changelog.entries.newConstraintsDate",
-    title: "changelog.entries.newConstraintsTitle",
-    body: "changelog.entries.newConstraintsBody",
-  },
-  {
-    date: "changelog.entries.archiveDate",
-    title: "changelog.entries.archiveTitle",
-    body: "changelog.entries.archiveBody",
-  },
-  {
-    date: "changelog.entries.scoreClarityDate",
-    title: "changelog.entries.scoreClarityTitle",
-    body: "changelog.entries.scoreClarityBody",
-  },
-  {
-    date: "changelog.entries.countryDataRefreshDate",
-    title: "changelog.entries.countryDataRefreshTitle",
-    body: "changelog.entries.countryDataRefreshBody",
-  },
-  {
-    date: "changelog.entries.constraintsRefreshDate",
-    title: "changelog.entries.constraintsRefreshTitle",
-    body: "changelog.entries.constraintsRefreshBody",
-  },
-  {
-    date: "changelog.entries.scoringV2Date",
-    title: "changelog.entries.scoringV2Title",
-    body: "changelog.entries.scoringV2Body",
-  },
-  {
-    date: "changelog.entries.reliabilityDate",
-    title: "changelog.entries.reliabilityTitle",
-    body: "changelog.entries.reliabilityBody",
-  },
-  {
-    date: "changelog.entries.darkModeDate",
-    title: "changelog.entries.darkModeTitle",
-    body: "changelog.entries.darkModeBody",
-  },
-  {
-    date: "changelog.entries.identityDate",
-    title: "changelog.entries.identityTitle",
-    body: "changelog.entries.identityBody",
-  },
-  {
-    date: "changelog.entries.comfortDate",
-    title: "changelog.entries.comfortTitle",
-    body: "changelog.entries.comfortBody",
-  },
-  {
-    date: "changelog.entries.helpDate",
-    title: "changelog.entries.helpTitle",
-    body: "changelog.entries.helpBody",
-  },
-  {
-    date: "changelog.entries.footerDate",
-    title: "changelog.entries.footerTitle",
-    body: "changelog.entries.footerBody",
-  },
-  {
-    date: "changelog.entries.scoringDate",
-    title: "changelog.entries.scoringTitle",
-    body: "changelog.entries.scoringBody",
-  },
-  {
-    date: "changelog.entries.solutionDate",
-    title: "changelog.entries.solutionTitle",
-    body: "changelog.entries.solutionBody",
-  },
-  {
-    date: "changelog.entries.bilingualDate",
-    title: "changelog.entries.bilingualTitle",
-    body: "changelog.entries.bilingualBody",
-  },
-  {
-    date: "changelog.entries.launchDate",
-    title: "changelog.entries.launchTitle",
-    body: "changelog.entries.launchBody",
-  },
-];
+import {
+  CHANGELOG_ENTRIES,
+  formatChangelogDate,
+  formatChangelogMonth,
+  LATEST_CHANGELOG_UPDATE_DATE,
+} from "./logic/changelog";
 
 const ROADMAP: TKey[] = [
   "changelog.roadmapLeagues",
@@ -130,34 +29,67 @@ function closeTitle(title: string): string {
 
 export function ChangelogPage() {
   const t = useT();
+  const { locale } = useLocale();
 
   return (
     <LegalLayout
       title={t("changelog.title")}
-      eyebrow={t("changelog.eyebrow")}
+      eyebrow={t("changelog.eyebrow", {
+        version: APP_VERSION,
+        month: formatChangelogMonth(LATEST_CHANGELOG_UPDATE_DATE, locale),
+      })}
       backLabel={t("changelog.backToGame")}
       analyticsPage="changelog"
     >
-      <div className="flex flex-col gap-6">
-        {ENTRIES.map((entry) => (
-          <article key={entry.date} className="flex flex-col gap-1.5">
-            <div className="flex items-center gap-2.5">
+      <div className="relative flex flex-col gap-6 pl-5">
+        <span
+          aria-hidden="true"
+          className="absolute bottom-3 left-[2.5px] top-3 w-px bg-outline-variant/25"
+        />
+        {CHANGELOG_ENTRIES.map((entry) => {
+          const isMajor = entry.kind === "major";
+          return (
+            <article key={entry.id} className="relative flex flex-col gap-1.5">
               <span
                 aria-hidden="true"
-                className="size-1.5 shrink-0 rounded-full bg-brand"
+                className={cn(
+                  "absolute rounded-full bg-brand",
+                  isMajor
+                    ? "-left-[21px] top-[7px] size-2 ring-4 ring-brand/15"
+                    : "-left-[20px] top-[8px] size-1.5",
+                )}
               />
-              <h2 className="font-serif text-base font-medium text-on-surface">
-                {t(entry.date)}
-              </h2>
-            </div>
-            <p className="pl-4 font-sans text-sm leading-relaxed text-on-surface-variant">
-              <span className="font-medium text-on-surface">
-                {closeTitle(t(entry.title))}
-              </span>{" "}
-              {t(entry.body)}
-            </p>
-          </article>
-        ))}
+              <div className="flex flex-wrap items-center justify-between gap-2">
+                <div className="flex items-center gap-2.5">
+                  <h2 className="font-serif text-base font-medium text-on-surface">
+                    {formatChangelogDate(entry.dateYmd, locale)}
+                  </h2>
+                  <span
+                    className={cn(
+                      "inline-flex items-center rounded-full px-2 py-0.5 font-sans text-[10px] tabular-nums",
+                      isMajor
+                        ? "bg-brand/10 font-semibold text-brand"
+                        : "bg-surface-low font-medium text-on-surface-variant",
+                    )}
+                  >
+                    {`v${entry.version}`}
+                  </span>
+                </div>
+                {entry.milestone ? (
+                  <Eyebrow as="span" className="font-medium text-brand">
+                    {t(entry.milestone)}
+                  </Eyebrow>
+                ) : null}
+              </div>
+              <p className="font-sans text-sm leading-relaxed text-on-surface-variant">
+                <span className="font-medium text-on-surface">
+                  {closeTitle(t(entry.title))}
+                </span>{" "}
+                {t(entry.body)}
+              </p>
+            </article>
+          );
+        })}
       </div>
 
       <div className="flex flex-col gap-7">
@@ -174,8 +106,6 @@ export function ChangelogPage() {
           title="changelog.contactTitle"
           bodyPre="changelog.contactBodyPre"
         />
-
-        <LegalSupportSection />
       </div>
     </LegalLayout>
   );

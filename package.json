@@ -1,7 +1,7 @@
 {
   "name": "geodoku",
   "private": true,
-  "version": "0.1.0",
+  "version": "3.1.1",
   "packageManager": "pnpm@11.7.0",
   "type": "module",
   "engines": {
@@ -14,6 +14,7 @@
     "dev": "vite --host",
     "convex:dev": "convex dev",
     "build": "pnpm typecheck:app && vite build",
+    "release": "tsx scripts/local/release.ts",
     "build:countries": "tsx --env-file=.env.local scripts/countries/build-countries.ts",
     "analyze:pool": "tsx scripts/local/analyze-pool.ts",
     "analyze:observed": "tsx --env-file=.env.local scripts/local/analyze-observed-difficulty.ts",

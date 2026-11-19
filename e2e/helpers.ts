@@ -7,6 +7,7 @@ import {
   pickCountry as pickCountryCode,
   solveGrid as solveGridCore,
 } from "../src/features/game/testing/simulation";
+import { LATEST_CHANGELOG_VERSION } from "../src/features/legal/logic/changelog";
 
 const NAME_BY_CODE: ReadonlyMap<string, string> = new Map(
   COUNTRY_CATALOG.map((country) => [country.iso3, country.names.en]),
@@ -142,14 +143,17 @@ export function pickWrongCountry(
  * - désactive le tutoriel « How to play », qui s'ouvre automatiquement au
  *   premier passage. Sa modale (Radix Dialog) rend tout l'arrière-plan inerte
  *   (`aria-hidden`) → les boutons de cellule sortent de l'arrière-plan
- *   d'accessibilité et `waitForGrid` échoue. On simule donc un joueur déjà revenu.
+ *   d'accessibilité et `waitForGrid` échoue. On simule donc un joueur déjà revenu ;
+ * - marque la dernière nouveauté comme vue : un joueur revenu verrait sinon le
+ *   spotlight du changelog, dont le voile intercepte le premier clic sur la grille.
  */
 export async function prepareSession(page: Page) {
-  await page.addInitScript(() => {
+  await page.addInitScript((seenVersion) => {
     // biome-ignore lint/suspicious/noDocumentCookie: test setup mirrors the app's preference cookie
     document.cookie = "geodoku_locale=en; Path=/";
     localStorage.setItem("geodoku:how-to-play", "false");
-  });
+    localStorage.setItem("geodoku:changelog-seen-v1", seenVersion);
+  }, LATEST_CHANGELOG_VERSION);
 }
 
 /** Wait until the game grid cells are visible (grid loaded from Convex). */
