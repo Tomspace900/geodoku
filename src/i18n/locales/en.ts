@@ -65,7 +65,6 @@ export const en = {
     about: "About",
     privacy: "Privacy",
     changelog: "What's new",
-    changelogNew: "New",
     survey: "Share feedback",
     copyright: "©\u00A0{year}\u00A0Geodoku",
   },
@@ -142,91 +141,82 @@ export const en = {
     contactBodyPre: "A question? Write to me at",
   },
   changelog: {
-    eyebrow: "Last updated · November 2026",
+    eyebrow: "Version {version} · {month}",
     title: "What's new",
     backToGame: "Back to the game",
+    milestones: {
+      stats: "Stats & account",
+      scoreClarity: "Score out of 1000",
+      launch: "Public launch",
+    },
+    spotlight: {
+      badge: "New · v{version}",
+      later: "Later",
+      statsText:
+        "Your stats live here, with an optional account to sync across all your devices.",
+      statsCta: "View my stats",
+    },
     entries: {
-      reportDate: "November 17, 2026",
       reportTitle: "Report a mistake, and a month of practice",
       reportBody:
         "Doubt an answer? A small update that now lets you report a mistake from a cell of the solution grid, by clicking the little flag. Or a general bug, straight from the bottom of the page. I've also opened practice to the last 30 days, up from 7.",
-      statsDate: "November 14, 2026",
       statsTitle: "Stats at last, and an account if you like!",
       statsBody:
         "One of the biggest updates yet, adding a full statistics page that many players were waiting for. Among other things: your average score, your past games, your record, the themes where you shine... or not, and more. It's all computed on your device. But if you want all of it on your phone as well as on your computer, you can now create an account, with a simple email code or your Google account. It stays optional: you can still play without one.",
-      othersDate: "November 5, 2026",
       othersTitle: "Better than the other players?",
       othersBody:
         "At the end of your game, swipe your emoji grid: you see where your score stands among today's players. The solution grid also has several faces now, depending on what interests you: the answers, the trickiest cells, the best possible grid or your own.",
-      stabilityDate: "October 22, 2026",
       stabilityTitle: "Small fixes",
       stabilityBody:
         "A minor update: the game handles a bad connection better, and in practice mode you can see the answers without finishing the grid. Plus a few details and stability work.",
-      answerSourcesDate: "October 15, 2026",
       answerSourcesTitle: "Where does the data come from?",
       answerSourcesBody:
         "Finally, some clarification on constraints and answers! Mid-game, clicking a constraint shows its dated sources, along with any conventions used. After your game, you can browse the solution countries for each cell and each constraint, each with what qualifies it: population, rank as a producer, year of independence\u2026",
-      newConstraintsDate: "September 16, 2026",
       newConstraintsTitle: "A batch of new constraints",
       newConstraintsBody:
         "Here we go! September is here and the game gets richer. The catalogue gains a good fifteen extra constraints, which will show up in grids gradually. On the menu: time zones, active volcanoes, farm produce, energy, terrain, colonial history and more!",
-      archiveDate: "August 9, 2026",
       archiveTitle: "Replay past grids",
       archiveBody:
         "Finally! The archive is here! You can now replay past grids, without limits. Rarities depend on the answers of the day in question, and you can restart a grid as many times as you like. For now, the last seven days are available, I may widen the window depending on your feedback.",
-      scoreClarityDate: "July 13, 2026",
       scoreClarityTitle: "A score that finally makes sense",
       scoreClarityBody:
         "The end score is now shown in points, out of 1000, computed from three clear components: the cells you filled, how rare your countries were, and your remaining lives. The display is more visual and intuitive (I hope!), with an animated reveal. Sharing now shows your total in points.",
-      countryDataRefreshDate: "June 25, 2026",
       countryDataRefreshTitle: "Sharper search, more varied grids",
       countryDataRefreshBody:
         'Search handles hyphens and common variants more gracefully, regardless of language "England", "Holland", and the like. I also reworked daily grid scheduling to limit redundancy: fewer repeats from one day to the next, more diverse pairings. A few behind-the-scenes fixes and country-data updates.',
-      constraintsRefreshDate: "June 12, 2026",
       constraintsRefreshTitle: "More constraints, easier to read",
       constraintsRefreshBody:
         'Raw number thresholds give way to comparisons with familiar countries ("larger than France", "less dense than Canada"…). I expanded the catalogue with new constraints (deserts, oceans, left-hand traffic ...) and clarified some labels.',
-      scoringV2Date: "June 6, 2026",
       scoringV2Title: "Five lives and a smarter score",
       scoringV2Body:
         "You now get five lives instead of three, for slightly more forgiving games. And the originality score was rethought: it now judges only the quality of your picks, regardless of how full the grid is.",
-      reliabilityDate: "June 2, 2026",
       reliabilityTitle: "A reliable grid, every day",
       reliabilityBody:
         "The game now heals itself if something hiccups on the server side: the daily grid is always there, on time. I also published a clear, jargon-free privacy page, plus this changelog page to keep track of what's new.",
-      darkModeDate: "May 29, 2026",
       darkModeTitle: "Dark mode",
       darkModeBody:
         "Geodoku follows your system theme. In dark mode, the icon and colors adapt automatically to go easy on your eyes at night.",
-      identityDate: "May 26, 2026",
       identityTitle: "A fresh visual identity",
       identityBody:
         "A full editorial redesign of the interface, a new favicon, and polished share cards when you send a link around.",
-      comfortDate: "May 25, 2026",
       comfortTitle: "Fairer, less frustrating",
       comfortBody:
         "When you miss, the unmet constraints light up to help you see why. And a cell that has become impossible to fill is simply blocked (⬛) instead of costing you a life outright.",
-      helpDate: "May 22, 2026",
       helpTitle: "Help within reach",
       helpBody:
         'A "How to play" reminder shows up for newcomers and tucks itself away once you\'ve got the hang of it.',
-      footerDate: "April 30, 2026",
       footerTitle: "Issue number & credits",
       footerBody:
         "Each daily grid now carries its issue number, counted from the very first day. A discreet footer gathers the credits and the language switch.",
-      scoringDate: "April 29, 2026",
       scoringTitle: "A score that rewards boldness",
       scoringBody:
         "Scoring was reworked to better reward rare answers, and the geographic constraints rebalanced for fairer difficulty, day after day.",
-      solutionDate: "April 17, 2026",
       solutionTitle: "The solution grid",
       solutionBody:
         "At the end of a game, you uncover the possible answers for each cell and how rare your picks were compared to the day's other players.",
-      bilingualDate: "April 15, 2026",
       bilingualTitle: "Bilingual, right where you left off",
       bilingualBody:
         "Geodoku speaks French and English. Your daily game is saved on your device: close the tab and come back to finish it later.",
-      launchDate: "April 10, 2026",
       launchTitle: "Geodoku's first steps",
       launchBody:
         "The heart of the game comes to life: a daily 3×3 grid, crossing geographic constraints, 3 lives, a typo-tolerant country search, rarity-based scoring, and a Wordle-style emoji share.",

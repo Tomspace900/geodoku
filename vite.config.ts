@@ -1,3 +1,4 @@
+import { readFileSync } from "node:fs";
 import { resolve } from "node:path";
 import { fileURLToPath, URL } from "node:url";
 import react from "@vitejs/plugin-react";
@@ -54,8 +55,17 @@ function prerenderPages(): Plugin {
   };
 }
 
+// Version de l'app (`package.json`), montée à chaque mise en prod (AGENTS.md
+// §11, « Versions ») : elle est donc déjà la bonne sur develop avant la PR.
+const APP_VERSION: string = JSON.parse(
+  readFileSync(new URL("./package.json", import.meta.url), "utf8"),
+).version;
+
 export default defineConfig({
   plugins: [react(), bundleModuleManifest(), prerenderPages()],
+  define: {
+    __APP_VERSION__: JSON.stringify(APP_VERSION),
+  },
   resolve: {
     alias: {
       "@": fileURLToPath(new URL("./src", import.meta.url)),

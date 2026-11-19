@@ -3,10 +3,10 @@ import { Coffee, Flag, Globe, MessageSquareText } from "lucide-react";
 import type { ReactNode } from "react";
 import { Link } from "react-router";
 import { KOFI_URL } from "@/app/links";
-import { isChangelogNewBadgeVisible } from "@/features/legal/logic/changelog";
 import { GeneralReportEntry } from "@/features/reports/components/GeneralReportEntry";
 import { LocaleSwitcher } from "@/i18n/components/LocaleSwitcher";
 import { useLocale, useT } from "@/i18n/LocaleContext";
+import { APP_VERSION } from "@/lib/appVersion";
 import {
   markSurveyClicked,
   SURVEY_FLAG,
@@ -67,8 +67,6 @@ export default function AppFooter({ className }: { className?: string }) {
     });
   }
 
-  const showChangelogNewBadge = isChangelogNewBadgeVisible();
-
   const credit = <p key="credit">{t("footer.loveCredit")}</p>;
   const support = (
     <a
@@ -94,20 +92,14 @@ export default function AppFooter({ className }: { className?: string }) {
     </Link>
   );
   const changelog = (
-    <span key="changelog" className="inline-flex items-center gap-1">
-      {showChangelogNewBadge ? (
-        <span className="rounded-full bg-brand/10 px-1 font-sans text-[8px] font-semibold uppercase tracking-wider text-brand no-underline">
-          {t("footer.changelogNew")}
-        </span>
-      ) : null}
-      <Link
-        to={localizedPath("/changelog")}
-        className={LINK_CLASS}
-        onClick={() => trackFooterLink("changelog")}
-      >
-        {t("footer.changelog")}
-      </Link>
-    </span>
+    <Link
+      key="changelog"
+      to={localizedPath("/changelog")}
+      className={LINK_CLASS}
+      onClick={() => trackFooterLink("changelog")}
+    >
+      {t("footer.changelog")}
+    </Link>
   );
   const privacy = (
     <Link
@@ -159,13 +151,23 @@ export default function AppFooter({ className }: { className?: string }) {
   const copyright = (
     <span key="copyright">{t("footer.copyright", { year })}</span>
   );
+  const version = (
+    <Link
+      key="version"
+      to={localizedPath("/changelog")}
+      className={cn("tabular-nums", LINK_CLASS)}
+      onClick={() => trackFooterLink("changelog")}
+    >
+      {`v${APP_VERSION}`}
+    </Link>
+  );
 
   // Le mot doux et le café d'abord, les pages, puis la ligne utilitaire :
-  // © , « ⚑ Signaler » (#127) et la langue (tranché sur maquettes).
+  // © , version, « ⚑ Signaler » (#127) et la langue.
   const rows: ReactNode[][] = [
     [credit, support],
     pages,
-    [copyright, report, language],
+    [copyright, version, report, language],
   ];
 
   return (
