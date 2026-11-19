@@ -87,20 +87,9 @@ describe("CHANGELOG_ENTRIES", () => {
 });
 
 describe("getPendingAnnouncement", () => {
-  it("ne s'affiche jamais au premier passage (« Comment jouer » prioritaire)", () => {
-    expect(
-      getPendingAnnouncement({
-        seenVersion: null,
-        isFirstVisit: true,
-        now: atOffset(DAY_MS),
-      }),
-    ).toBeNull();
-  });
-
   it("remonte le spotlight actif dans la fenêtre de 21 jours même si une mineure plus récente existe", () => {
     const pending = getPendingAnnouncement({
       seenVersion: null,
-      isFirstVisit: false,
       now: atOffset(5 * DAY_MS),
     });
     expect(pending?.id).toBe("stats");
@@ -111,7 +100,6 @@ describe("getPendingAnnouncement", () => {
     expect(
       getPendingAnnouncement({
         seenVersion: null,
-        isFirstVisit: false,
         now: atOffset(ANNOUNCEMENT_WINDOW_DAYS * DAY_MS),
       }),
     ).toBeNull();
@@ -121,14 +109,12 @@ describe("getPendingAnnouncement", () => {
     expect(
       getPendingAnnouncement({
         seenVersion: "3.0.0",
-        isFirstVisit: false,
         now: atOffset(DAY_MS),
       }),
     ).toBeNull();
     expect(
       getPendingAnnouncement({
         seenVersion: "3.1.0",
-        isFirstVisit: false,
         now: atOffset(DAY_MS),
       }),
     ).toBeNull();
@@ -137,7 +123,6 @@ describe("getPendingAnnouncement", () => {
   it("s'affiche si seenVersion correspond à une version antérieure", () => {
     const pending = getPendingAnnouncement({
       seenVersion: "2.0.0",
-      isFirstVisit: false,
       now: atOffset(DAY_MS),
     });
     expect(pending?.version).toBe("3.0.0");

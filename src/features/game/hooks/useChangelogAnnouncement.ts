@@ -4,7 +4,6 @@ import { useAccount } from "@/features/account/AccountContext";
 import {
   type ChangelogEntry,
   getPendingAnnouncement,
-  LATEST_CHANGELOG_VERSION,
 } from "@/features/legal/logic/changelog";
 import { STORAGE_KEYS, safeGet, safeSet } from "@/lib/storage";
 
@@ -12,17 +11,8 @@ export type AnnouncementCloseAction = "dismiss" | "cta" | "account" | "target";
 
 function resolveInitialAnnouncement(): ChangelogEntry | null {
   if (typeof window === "undefined") return null;
-  const isFirstVisit = safeGet(STORAGE_KEYS.howToPlay) !== "false";
-  if (isFirstVisit) {
-    // Un tout nouveau joueur découvre le jeu tel qu'il est : on mémorise la
-    // version courante pour ne pas l'interrompre le lendemain avec une
-    // nouveauté qui existait déjà à son arrivée.
-    safeSet(STORAGE_KEYS.changelogSeen, LATEST_CHANGELOG_VERSION);
-    return null;
-  }
   return getPendingAnnouncement({
     seenVersion: safeGet(STORAGE_KEYS.changelogSeen),
-    isFirstVisit: false,
   });
 }
 

@@ -28,7 +28,10 @@ import { GameGrid } from "./components/GameGrid";
 import { GridSkeleton } from "./components/GridSkeleton";
 import { GuessModal } from "./components/GuessModal";
 import { Header } from "./components/Header";
-import { HowToPlayLink } from "./components/HowToPlayLink";
+import {
+  HowToPlayLink,
+  shouldAutoOpenHowToPlay,
+} from "./components/HowToPlayLink";
 import { RarityHint } from "./components/RarityHint";
 import { ResultScreen } from "./components/ResultScreen";
 import { SolutionDrawer } from "./components/SolutionDrawer";
@@ -140,12 +143,16 @@ export function GamePage() {
   const contentMaxWidth =
     state.status !== "playing" ? "max-w-2xl" : "max-w-[500px]";
   const isSolutionView = hasGrid && state.status !== "playing";
+  // Lu au premier rendu comme le fait la fenêtre elle-même, pour que la bulle
+  // ne passe pas une image avant elle.
+  const [howToPlayOpen, setHowToPlayOpen] = useState(shouldAutoOpenHowToPlay);
   const announcement = useChangelogAnnouncement(
     hasGrid &&
       state.status === "playing" &&
       !isLoading &&
       !isBackendDown &&
-      state.selectedCell === null,
+      state.selectedCell === null &&
+      !howToPlayOpen,
   );
 
   return (
@@ -246,7 +253,7 @@ export function GamePage() {
           <ErrorScreen variant="no-grid-today" />
         )}
 
-        {!isSolutionView && <HowToPlayLink />}
+        {!isSolutionView && <HowToPlayLink onOpenChange={setHowToPlayOpen} />}
       </main>
 
       <AppFooter className="mt-auto w-full shrink-0" />

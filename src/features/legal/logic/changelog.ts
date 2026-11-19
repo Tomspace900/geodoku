@@ -274,21 +274,18 @@ export function formatChangelogMonth(ymd: string, locale: Locale): string {
 
 /**
  * Retourne la plus récente entrée portant une annonce en jeu encore active
- * (dans la fenêtre de 21 jours) et non vue par ce joueur. Jamais affichée au
- * tout premier passage : « Comment jouer » est prioritaire.
+ * (dans la fenêtre de 21 jours) et non vue par ce joueur. Un nouveau joueur la
+ * voit aussi, après « Comment jouer ».
  */
 export function getPendingAnnouncement({
   entries = CHANGELOG_ENTRIES,
   seenVersion,
-  isFirstVisit,
   now = new Date(),
 }: {
   entries?: readonly ChangelogEntry[];
   seenVersion: string | null;
-  isFirstVisit: boolean;
   now?: Date;
 }): ChangelogEntry | null {
-  if (isFirstVisit) return null;
   const nowMs = now.getTime();
   const windowMs = ANNOUNCEMENT_WINDOW_DAYS * DAY_MS;
 
