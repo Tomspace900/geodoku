@@ -150,11 +150,12 @@ export const en = {
       launch: "Public launch",
     },
     spotlight: {
-      badge: "New · v{version}",
+      badge: "New",
       later: "Later",
       statsText:
-        "Your stats live here, with an optional account to sync across all your devices.",
+        "Your stats live here. And you can create an account if you like, to find them on all your devices.",
       statsCta: "View my stats",
+      accountCta: "Create an account",
     },
     entries: {
       reportTitle: "Report a mistake, and a month of practice",

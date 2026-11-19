@@ -1,7 +1,7 @@
 import { usePostHog } from "@posthog/react";
 import { useQuery } from "convex/react";
 import { type ReactNode, useEffect, useMemo, useState } from "react";
-import { useSearchParams } from "react-router";
+import { useLocation, useNavigate, useSearchParams } from "react-router";
 import AppFooter from "@/app/AppFooter";
 import { BackLink } from "@/components/editorial/BackLink";
 import { DisplayHeader } from "@/components/editorial/DisplayHeader";
@@ -10,6 +10,7 @@ import { useAccount } from "@/features/account/AccountContext";
 import { AccountDialog } from "@/features/account/components/AccountDialog";
 import { AccountDrawer } from "@/features/account/components/AccountDrawer";
 import { forgetGoogleSignIn } from "@/features/account/logic/googleSignIn";
+import { wantsAccountDialog } from "@/features/account/logic/openAccount";
 import { isDailyGameFinished } from "@/features/archive/logic/dailyGate";
 import { loadHistory } from "@/features/game/logic/history";
 import { loadPersistedGame } from "@/features/game/logic/persistence";
@@ -155,6 +156,8 @@ export function StatsPage() {
   const posthog = usePostHog();
   const account = useAccount();
   const [params, setParams] = useSearchParams();
+  const location = useLocation();
+  const navigate = useNavigate();
   const [dialogOpen, setDialogOpen] = useState(false);
   const [accountOpen, setAccountOpen] = useState(false);
   const signedIn = account.status === "signedIn";
@@ -185,10 +188,25 @@ export function StatsPage() {
     );
   }, [params, setParams]);
 
-  const openAccount = (source: "title_link" | "invite_card") => {
+  const openAccount = (source: "title_link" | "invite_card" | "spotlight") => {
     posthog?.capture("account_dialog_opened", { source });
     setDialogOpen(true);
   };
+
+  // « Créer un compte » de l'annonce en jeu : la fenêtre s'ouvre à l'arrivée,
+  // une fois sûr que le joueur n'a pas de compte. L'état est effacé aussitôt,
+  // pour qu'un retour sur la page ne la rouvre pas.
+  // biome-ignore lint/correctness/useExhaustiveDependencies: openAccount change à chaque rendu
+  useEffect(() => {
+    if (!wantsAccountDialog(location.state) || account.status === "loading") {
+      return;
+    }
+    if (account.status === "anonymous") openAccount("spotlight");
+    navigate(`${location.pathname}${location.search}`, {
+      replace: true,
+      state: null,
+    });
+  }, [location, account.status, navigate]);
 
   const footer =
     signedIn && profile ? (

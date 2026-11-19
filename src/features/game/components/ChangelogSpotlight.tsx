@@ -3,6 +3,7 @@ import { type ReactNode, useEffect } from "react";
 import { Link } from "react-router";
 import { Eyebrow } from "@/components/editorial/Eyebrow";
 import { Button } from "@/components/ui/button";
+import { OPEN_ACCOUNT_STATE } from "@/features/account/logic/openAccount";
 import type { AnnouncementCloseAction } from "@/features/game/hooks/useChangelogAnnouncement";
 import type {
   ChangelogEntry,
@@ -70,13 +71,8 @@ export function ChangelogSpotlight({ target, spotlight, children }: Props) {
           <div className="relative flex flex-col gap-2.5">
             <div className="flex items-start justify-between gap-2">
               <div className="flex flex-col gap-1">
-                <Eyebrow
-                  as="p"
-                  className="font-semibold tabular-nums text-brand"
-                >
-                  {t("changelog.spotlight.badge", {
-                    version: spotlight.entry.version,
-                  })}
+                <Eyebrow as="p" className="font-semibold text-brand">
+                  {t("changelog.spotlight.badge")}
                 </Eyebrow>
                 <p className="font-sans text-xs leading-relaxed text-on-surface">
                   {t(announcement.text)}
@@ -94,7 +90,34 @@ export function ChangelogSpotlight({ target, spotlight, children }: Props) {
               </Button>
             </div>
 
-            <div className="flex items-center justify-between gap-2 pt-0.5">
+            <div className="flex flex-col items-center gap-2.5 pt-0.5">
+              <div className="flex w-full gap-2">
+                {announcement.accountCtaLabel ? (
+                  <Button asChild size="sm" className="flex-1 text-xs">
+                    <Link
+                      to={localizedPath("/stats")}
+                      state={OPEN_ACCOUNT_STATE}
+                      onClick={() => spotlight.onDismiss("account")}
+                    >
+                      {t(announcement.accountCtaLabel)}
+                    </Link>
+                  </Button>
+                ) : null}
+                <Button
+                  asChild
+                  variant="secondary"
+                  size="sm"
+                  className="flex-1 text-xs"
+                >
+                  <Link
+                    to={localizedPath(announcement.ctaPath)}
+                    onClick={() => spotlight.onDismiss("cta")}
+                  >
+                    {t(announcement.ctaLabel)}
+                    <ArrowRight className="size-3.5" aria-hidden="true" />
+                  </Link>
+                </Button>
+              </div>
               <Button
                 type="button"
                 variant="link"
@@ -103,15 +126,6 @@ export function ChangelogSpotlight({ target, spotlight, children }: Props) {
                 className="text-xs text-on-surface-variant"
               >
                 {t("changelog.spotlight.later")}
-              </Button>
-              <Button asChild variant="secondary" size="sm">
-                <Link
-                  to={localizedPath(announcement.ctaPath)}
-                  onClick={() => spotlight.onDismiss("cta")}
-                >
-                  {t(announcement.ctaLabel)}
-                  <ArrowRight className="size-3.5" aria-hidden="true" />
-                </Link>
               </Button>
             </div>
           </div>

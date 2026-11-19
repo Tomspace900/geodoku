@@ -1,5 +1,6 @@
 import { usePostHog } from "@posthog/react";
 import { useEffect, useRef, useState } from "react";
+import { useAccount } from "@/features/account/AccountContext";
 import {
   type ChangelogEntry,
   getPendingAnnouncement,
@@ -7,7 +8,7 @@ import {
 } from "@/features/legal/logic/changelog";
 import { STORAGE_KEYS, safeGet, safeSet } from "@/lib/storage";
 
-export type AnnouncementCloseAction = "dismiss" | "cta" | "target";
+export type AnnouncementCloseAction = "dismiss" | "cta" | "account" | "target";
 
 function resolveInitialAnnouncement(): ChangelogEntry | null {
   if (typeof window === "undefined") return null;
@@ -31,8 +32,14 @@ export function useChangelogAnnouncement(enabled: boolean) {
     resolveInitialAnnouncement,
   );
   const shownCapturedRef = useRef(false);
+  const accountStatus = useAccount().status;
 
-  const active = enabled ? pending : null;
+  // Une annonce qui invite à créer un compte attend de savoir que le joueur
+  // n'en a pas, et ne s'affiche jamais à un joueur connecté.
+  const waitsForAnonymous =
+    pending?.announcement?.accountCtaLabel !== undefined &&
+    accountStatus !== "anonymous";
+  const active = enabled && !waitsForAnonymous ? pending : null;
 
   useEffect(() => {
     if (!active?.announcement || shownCapturedRef.current) return;

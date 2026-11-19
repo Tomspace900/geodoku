@@ -10,6 +10,11 @@ export type ChangelogAnnouncement = {
   text: TKey;
   ctaLabel: TKey;
   ctaPath: string;
+  /**
+   * Second bouton qui ouvre la création de compte sur « Mes stats ». Une annonce
+   * qui le porte ne s'affiche qu'aux joueurs sans compte.
+   */
+  accountCtaLabel?: TKey;
 };
 
 export type ChangelogEntry = {
@@ -55,6 +60,7 @@ export const CHANGELOG_ENTRIES: readonly ChangelogEntry[] = [
       text: "changelog.spotlight.statsText",
       ctaLabel: "changelog.spotlight.statsCta",
       ctaPath: "/stats",
+      accountCtaLabel: "changelog.spotlight.accountCta",
     },
   },
   {

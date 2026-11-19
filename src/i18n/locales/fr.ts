@@ -154,11 +154,12 @@ export const fr = {
       launch: "Lancement public",
     },
     spotlight: {
-      badge: "Nouveauté · v{version}",
+      badge: "Nouveauté",
       later: "Plus tard",
       statsText:
-        "Tes stats sont ici, avec un compte facultatif pour tout retrouver sur tous tes appareils.",
+        "Tes stats sont ici. Et tu peux créer un compte si tu veux, pour les retrouver sur tous tes appareils.",
       statsCta: "Voir mes stats",
+      accountCta: "Créer un compte",
     },
     entries: {
       reportTitle: "Signaler une erreur et un mois d'entraînement",
