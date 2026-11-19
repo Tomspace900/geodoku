@@ -7,6 +7,7 @@ import AppFooter from "@/app/AppFooter";
 import { Button } from "@/components/ui/button";
 import { ErrorScreen } from "@/features/errors/components/ErrorScreen";
 import { useBackendDownTimeout } from "@/features/errors/hooks/useBackendDownTimeout";
+import { useChangelogAnnouncement } from "@/features/game/hooks/useChangelogAnnouncement";
 import { useConstraintSourceToast } from "@/features/game/hooks/useConstraintSourceToast";
 import { useGameState } from "@/features/game/hooks/useGameState";
 import { useSolutionDrawer } from "@/features/game/hooks/useSolutionDrawer";
@@ -139,13 +140,29 @@ export function GamePage() {
   const contentMaxWidth =
     state.status !== "playing" ? "max-w-2xl" : "max-w-[500px]";
   const isSolutionView = hasGrid && state.status !== "playing";
+  const announcement = useChangelogAnnouncement(
+    hasGrid &&
+      state.status === "playing" &&
+      !isLoading &&
+      !isBackendDown &&
+      state.selectedCell === null,
+  );
 
   return (
     <div className="min-h-svh bg-surface flex flex-col items-center px-4 py-6">
       <main
         className={cn("w-full flex flex-col gap-5 flex-1", contentMaxWidth)}
       >
-        <Header lives={state.lives} date={state.date} gridNumber={gridNumber} />
+        <Header
+          lives={state.lives}
+          date={state.date}
+          gridNumber={gridNumber}
+          spotlight={
+            announcement.active
+              ? { entry: announcement.active, onDismiss: announcement.dismiss }
+              : null
+          }
+        />
 
         {isBackendDown ? (
           <ErrorScreen variant="backend-down" />

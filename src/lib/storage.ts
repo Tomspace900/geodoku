@@ -34,6 +34,8 @@ export const STORAGE_KEYS = {
   training: "geodoku:training-v1",
   /** Affichage du panneau « Comment jouer ». localStorage. */
   howToPlay: "geodoku:how-to-play",
+  /** Dernière version dont l'annonce en jeu (spotlight) a été vue. localStorage. */
+  changelogSeen: "geodoku:changelog-seen-v1",
   /**
    * Ancienne clé de la langue choisie. Le choix vit désormais dans le cookie
    * `geodoku_locale` (#140) ; la clé n'est plus lue que pour y être recopiée
