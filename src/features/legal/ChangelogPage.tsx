@@ -8,7 +8,6 @@ import { LegalContactSection } from "./components/LegalContactSection";
 import { LegalLayout } from "./components/LegalLayout";
 import { LegalParagraph } from "./components/LegalParagraph";
 import { LegalSection } from "./components/LegalSection";
-import { LegalSupportSection } from "./components/LegalSupportSection";
 import {
   CHANGELOG_ENTRIES,
   formatChangelogDate,
@@ -107,8 +106,6 @@ export function ChangelogPage() {
           title="changelog.contactTitle"
           bodyPre="changelog.contactBodyPre"
         />
-
-        <LegalSupportSection />
       </div>
     </LegalLayout>
   );

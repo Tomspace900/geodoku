@@ -8,6 +8,7 @@ import {
   useLegalPageAnalytics,
 } from "@/features/legal/hooks/useLegalPageAnalytics";
 import { useLocale } from "@/i18n/LocaleContext";
+import { LegalSupportSection } from "./LegalSupportSection";
 
 type Props = {
   title: string;
@@ -20,7 +21,8 @@ type Props = {
 
 /**
  * Coquille éditoriale commune aux pages légales : fond, largeur de lecture,
- * lien retour, en-tête `DisplayHeader` + lead optionnel, et footer collé en bas.
+ * lien retour, en-tête `DisplayHeader` + lead optionnel, la même fin pour toutes
+ * (« Soutenir le projet ») et footer collé en bas.
  */
 export function LegalLayout({
   title,
@@ -55,6 +57,8 @@ export function LegalLayout({
         </header>
 
         {children}
+
+        <LegalSupportSection />
       </div>
 
       <AppFooter className="mt-auto w-full shrink-0" />

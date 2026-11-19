@@ -6,7 +6,6 @@ import { KOFI_URL } from "@/app/links";
 import { GeneralReportEntry } from "@/features/reports/components/GeneralReportEntry";
 import { LocaleSwitcher } from "@/i18n/components/LocaleSwitcher";
 import { useLocale, useT } from "@/i18n/LocaleContext";
-import { APP_VERSION } from "@/lib/appVersion";
 import {
   markSurveyClicked,
   SURVEY_FLAG,
@@ -151,23 +150,12 @@ export default function AppFooter({ className }: { className?: string }) {
   const copyright = (
     <span key="copyright">{t("footer.copyright", { year })}</span>
   );
-  const version = (
-    <Link
-      key="version"
-      to={localizedPath("/changelog")}
-      className={cn("tabular-nums", LINK_CLASS)}
-      onClick={() => trackFooterLink("changelog")}
-    >
-      {`v${APP_VERSION}`}
-    </Link>
-  );
-
   // Le mot doux et le café d'abord, les pages, puis la ligne utilitaire :
-  // © , version, « ⚑ Signaler » (#127) et la langue.
+  // © , « ⚑ Signaler » (#127) et la langue (tranché sur maquettes).
   const rows: ReactNode[][] = [
     [credit, support],
     pages,
-    [copyright, version, report, language],
+    [copyright, report, language],
   ];
 
   return (
