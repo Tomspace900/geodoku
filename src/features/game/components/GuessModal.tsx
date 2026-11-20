@@ -276,7 +276,7 @@ export function GuessModal({
       }}
     >
       <DrawerContent
-        className="mt-10 max-h-[94svh] w-full overflow-x-clip pb-[env(safe-area-inset-bottom)] sm:mx-auto sm:mt-24 sm:max-w-xl"
+        className="mt-10 max-h-[min(94svh,calc(100dvh-2.5rem))] w-full overflow-x-clip pb-[env(safe-area-inset-bottom)] sm:mx-auto sm:mt-24 sm:max-w-xl"
         onCloseAutoFocus={(event) => {
           event.preventDefault();
           focusWithoutVisibleRing(openerRef.current);
@@ -341,9 +341,9 @@ export function GuessModal({
           </div>
           <CommandList
             className={cn(
-              "overflow-y-auto px-2 pb-4 overscroll-contain",
+              "min-h-0 overflow-y-auto px-2 pb-4 overscroll-contain",
               hasMinSearchLength &&
-                "max-h-[calc(100dvh-11rem)] sm:max-h-[min(58vh,calc(100dvh-15rem))]",
+                "max-h-none sm:max-h-[min(58vh,calc(100dvh-15rem))]",
             )}
           >
             {!hasMinSearchLength ? (
