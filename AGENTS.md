@@ -49,7 +49,7 @@ Barème tranché sur données réelles. La rareté d'une case s'appuie sur la **
 - **Tests e2e** : Playwright ([`playwright.config.ts`](playwright.config.ts), [`e2e/`](e2e/))
 - **Hooks / CI** : Git hook `pre-commit` (lint-staged) ; GitHub Actions — voir §8
 - **Recherche fuzzy** : match-sorter (normalisation NFD côté requête)
-- **Fonts** : Newsreader (serif) + Inter (sans-serif)
+- **Fonts** : Newsreader (serif) + Inter (sans-serif), servies par le site (#180, [`src/fonts.css`](src/fonts.css)), jamais par Google Fonts
 
 **Choix assumés et non négociables.** Pas de state manager externe : `useReducer` + `Context`. Pas de TanStack Query. Pas de Zod. Pas de date-fns : dates en `YYYY-MM-DD` ([`src/lib/dates.ts`](src/lib/dates.ts)). Routage déclaratif minimal avec React Router ([`src/App.tsx`](src/App.tsx)) : accueil, `/about`, `/privacy`, `/changelog`, `/stats` et `/archive[/:date]`, chacune sous chaque langue (`/fr/…`, `/en/…`, §4 i18n), plus `/admin`. Jeu et pages éditoriales eager ; « Mes stats » (et les écrans du compte), archive et admin chargées en lazy.
 

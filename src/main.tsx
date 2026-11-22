@@ -10,6 +10,7 @@ import {
 import { isDevHostname } from "@/app/analyticsNoise";
 import { installFlagEmojiFont } from "@/app/flagEmojiFont";
 import { oauthCallbackRelay } from "@/lib/convexSite";
+import "@/fonts.css";
 import "@/index.css";
 
 // Retour de Google (#155) : la page n'est qu'un relais vers Convex. Elle part
