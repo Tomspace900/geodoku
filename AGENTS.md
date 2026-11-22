@@ -38,7 +38,7 @@ Barème tranché sur données réelles. La rareté d'une case s'appuie sur la **
 
 ## 2. Stack technique
 
-- **Frontend** : Vite + React + React Router (mode déclaratif) + TypeScript (strict mode)
+- **Frontend** : Vite + React + React Router (mode déclaratif) + TypeScript 7 (compilateur natif, strict mode)
 - **Styling** : Tailwind CSS + shadcn/ui (install manuelle par composant) + Lucide React
 - **Backend** : Convex (cloud remote, pas local, région `eu-west-1` depuis #70) — DB, mutations, queries, crons ; rate limiting via `@convex-dev/rate-limiter` ([`convex/rateLimit.ts`](convex/rateLimit.ts), [`convex/convex.config.ts`](convex/convex.config.ts))
 - **Compte** : Better Auth via `@convex-dev/better-auth` (composant Convex, plugin cross-domain : la page et `.convex.site` n'ont pas le même domaine) — code par e-mail (`emailOTP`) et Google ([`convex/auth.ts`](convex/auth.ts), [`src/lib/authClient.ts`](src/lib/authClient.ts)). Codes envoyés par **Mailjet** (API Send v3.1, suivi des ouvertures et des clics coupé à chaque envoi), par la fonction partagée [`convex/lib/mailjet.ts`](convex/lib/mailjet.ts), seule à changer pour changer de service : elle sert aussi aux alertes (#127), avec le même gabarit d'e-mail ([`emailLayout.ts`](convex/lib/emailLayout.ts)). Versions épinglées (`better-auth` 1.6.x, intégration 0.12.x) : l'intégration fixe la plage de `better-auth` qu'elle accepte, une montée se fait par paire.
@@ -129,7 +129,7 @@ Détail complet : [`docs/content-pipeline.md`](docs/content-pipeline.md).
 
 ## 4. Conventions de code
 
-**TypeScript.** `strict: true`. Pas de `any`. Préférer `type` aux `interface`. Unions discriminées plutôt qu'optionals. Pas de `// @ts-ignore`.
+**TypeScript.** `strict: true`. Pas de `any`. Préférer `type` aux `interface`. Unions discriminées plutôt qu'optionals. Pas de `// @ts-ignore`. TypeScript 7 (depuis #177) : plus de `baseUrl` (les `paths` se lisent depuis leur tsconfig), et `types` vaut `[]` par défaut, donc chaque tsconfig déclare les types globaux qu'il voit (`node` pour l'app, qui embarque des tests et des fichiers de `convex/`). `pnpm typecheck` lance les quatre configs en parallèle. Le CLI Convex type-checke au déploiement avec ce même `tsc`.
 
 **React.** Fonctions pures > `useMemo`/`useCallback` par défaut. Un module React public principal par fichier, avec exports nommés ; helpers privés colocalisés. Pas de classes, sauf Error Boundaries imposées par l'API React.
 

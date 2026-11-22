@@ -44,7 +44,7 @@
     "typecheck:convex": "tsc --noEmit -p convex/tsconfig.json",
     "typecheck:e2e": "tsc --noEmit -p tsconfig.e2e.json",
     "typecheck:tooling": "tsc --noEmit -p tsconfig.tooling.json",
-    "typecheck": "pnpm typecheck:app && pnpm typecheck:convex && pnpm typecheck:e2e && pnpm typecheck:tooling",
+    "typecheck": "pnpm run \"/^typecheck:/\"",
     "lint": "biome check . && pnpm typecheck",
     "format": "biome format --write .",
     "prepare": "git rev-parse --git-dir >/dev/null 2>&1 && git config core.hooksPath .husky || true"
@@ -90,7 +90,7 @@
     "postcss": "^8.5.32",
     "tailwindcss": "^3.4.19",
     "tsx": "^4.23.15",
-    "typescript": "^5.9.3",
+    "typescript": "^7.0.2",
     "vite": "^8.3.5",
     "vitest": "^4.1.12",
     "world-countries": "^5.1.0"
