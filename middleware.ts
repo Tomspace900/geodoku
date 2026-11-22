@@ -26,8 +26,10 @@ import {
  *
  * Le matcher doit rester un littéral (lu statiquement par Vercel) et ne lister
  * que des chemins sans langue : `/fr/…` et `/en/…` ne passent jamais ici.
+ * Runtime Node.js, déclaré : le runtime `edge` est déprécié par Vercel (#176).
  */
 export const config = {
+  runtime: "nodejs",
   matcher: [
     "/",
     "/about",
