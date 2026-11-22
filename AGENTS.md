@@ -129,7 +129,7 @@ Détail complet : [`docs/content-pipeline.md`](docs/content-pipeline.md).
 
 ## 4. Conventions de code
 
-**TypeScript.** `strict: true`. Pas de `any`. Préférer `type` aux `interface`. Unions discriminées plutôt qu'optionals. Pas de `// @ts-ignore`. TypeScript 7 (depuis #177) : plus de `baseUrl` (les `paths` se lisent depuis leur tsconfig), et `types` vaut `[]` par défaut, donc chaque tsconfig déclare les types globaux qu'il voit (`node` pour l'app, qui embarque des tests et des fichiers de `convex/`). `pnpm typecheck` lance les quatre configs en parallèle. Le CLI Convex type-checke au déploiement avec ce même `tsc`.
+**TypeScript.** `strict: true`. Pas de `any`. Préférer `type` aux `interface`. Unions discriminées plutôt qu'optionals. Pas de `// @ts-ignore`. TypeScript 7 (depuis #177) : plus de `baseUrl` (les `paths` se lisent depuis leur tsconfig), et `types` vaut `[]` par défaut, donc chaque config déclare les types globaux qu'elle voit. L'app reçoit `node` (elle embarque des tests et des fichiers de `convex/`) par `/// <reference types="node" />` dans [`src/vite-env.d.ts`](src/vite-env.d.ts), **pas** par `types` dans `tsconfig.json` : Vercel compile `middleware.ts` avec un tsconfig temporaire, hors du dépôt, qui étend le nôtre, et `types` s'y chercherait depuis ce dossier (`TS2688` au build). `pnpm typecheck` lance les quatre configs en parallèle. Le CLI Convex type-checke au déploiement avec ce même `tsc`.
 
 **React.** Fonctions pures > `useMemo`/`useCallback` par défaut. Un module React public principal par fichier, avec exports nommés ; helpers privés colocalisés. Pas de classes, sauf Error Boundaries imposées par l'API React.
 
