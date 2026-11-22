@@ -53,6 +53,18 @@ Barème tranché sur données réelles. La rareté d'une case s'appuie sur la **
 
 **Choix assumés et non négociables.** Pas de state manager externe : `useReducer` + `Context`. Pas de TanStack Query. Pas de Zod. Pas de date-fns : dates en `YYYY-MM-DD` ([`src/lib/dates.ts`](src/lib/dates.ts)). Routage déclaratif minimal avec React Router ([`src/App.tsx`](src/App.tsx)) : accueil, `/about`, `/privacy`, `/changelog`, `/stats` et `/archive[/:date]`, chacune sous chaque langue (`/fr/…`, `/en/…`, §4 i18n), plus `/admin`. Jeu et pages éditoriales eager ; « Mes stats » (et les écrans du compte), archive et admin chargées en lazy.
 
+**Écartés à l'audit technique de novembre 2026** (#175, mesures dans l'épic). Ne pas les reproposer sans fait nouveau :
+
+- **Bun** : plus rapide sur les scripts CPU (simulation −36 %, sorties identiques) et à l'installation, mais un second runtime à côté de Node, que Vercel, Convex et Playwright gardent, pour une dizaine de secondes par run CI ; `bun test` casse 122 tests (DOM, `vi.mock`, `convex-test`).
+- **Type stripping natif de Node** à la place de `tsx` : exige des extensions `.ts` partout et ignore les `paths`.
+- **Preact** : −35 KiB gzip, mais compatibilité incertaine avec les primitives d'UI et Convex, et hors du chemin React 19.
+- **Rust / WASM** : le seul calcul lourd, la génération du pool, est rare ; WASM casserait « lib pure TS importable partout » (§6).
+- **Docker** hors CI : Vercel et Convex sont managés. Seul usage retenu : un backend Convex local pour isoler l'e2e (#178).
+- **Oxlint, ESLint, Prettier** : Biome tourne en ~1 s.
+- **Autres frameworks** (Next.js, React Router en mode framework, Astro, TanStack Start, Svelte, Solid) et **autres backends** (Supabase, Firebase, PocketBase, Cloudflare D1) : le pré-rendu maison suffit, et les requêtes réactives, mutations transactionnelles, crons et composants de Convex sont au cœur du jeu.
+- **Librairies d'UI stylées** (MUI, Mantine, Chakra, HeroUI) : leurs styles se battent avec les tokens (§5). Les primitives modales passeront sur Base UI (#183), mais pas la recherche de pays : le Combobox de Base UI ajoute 17 KiB gzip de positionnement de popup inutile dans un tiroir, cmdk reste.
+- **Tailwind 4**, pour l'instant : aucun gain de build (1,6 s), plancher Safari 16.4 / Chrome 111 / Firefox 128, v3.4 toujours publiée (`v3-lts`). À rouvrir quand les navigateurs sous ce plancher seront négligeables (#144).
+
 ## 3. Architecture
 
 ```
