@@ -4,7 +4,7 @@ import { beforeEach, describe, expect, it, vi } from "vitest";
 import { useGuessModalAnalytics } from "../useGuessModalAnalytics";
 
 const capture = vi.fn();
-vi.mock("@posthog/react", () => ({ usePostHog: () => ({ capture }) }));
+vi.mock("@/app/analytics", () => ({ useAnalytics: () => ({ capture }) }));
 
 type Props = { query: string; resultCount: number };
 

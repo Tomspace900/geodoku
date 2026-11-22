@@ -1,6 +1,6 @@
-import { usePostHog } from "@posthog/react";
 import { Ban, Gem, Grid3x3, Heart, HelpCircle } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
+import { useAnalytics } from "@/app/analytics";
 import { AccentBar } from "@/components/editorial/AccentBar";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
@@ -65,7 +65,7 @@ type Props = {
 };
 
 export function HowToPlayLink({ onOpenChange }: Props) {
-  const posthog = usePostHog();
+  const analytics = useAnalytics();
   const [show, setShow] = useState<boolean>(() => shouldAutoOpenHowToPlay());
   const [open, setOpen] = useState<boolean>(show);
   const openedAtRef = useRef<number | null>(null);
@@ -76,13 +76,13 @@ export function HowToPlayLink({ onOpenChange }: Props) {
   function beginOpen(trigger: "auto_first_visit" | "manual") {
     openTriggerRef.current = trigger;
     openedAtRef.current = Date.now();
-    posthog?.capture("how_to_play_opened", { trigger });
+    analytics.capture("how_to_play_opened", { trigger });
     setOpen(true);
   }
 
   function captureClosed(dontShowAgain: boolean) {
     if (openedAtRef.current === null) return;
-    posthog?.capture("how_to_play_closed", {
+    analytics.capture("how_to_play_closed", {
       trigger: openTriggerRef.current,
       duration_ms: Date.now() - openedAtRef.current,
       dont_show_again: dontShowAgain,
@@ -101,14 +101,14 @@ export function HowToPlayLink({ onOpenChange }: Props) {
     autoOpenCapturedRef.current = true;
     openTriggerRef.current = "auto_first_visit";
     openedAtRef.current = Date.now();
-    posthog?.capture("how_to_play_opened", { trigger: "auto_first_visit" });
+    analytics.capture("how_to_play_opened", { trigger: "auto_first_visit" });
   }, []);
 
   function handleDontShowChange(checked: boolean) {
     const nextShow = !checked;
     setShow(nextShow);
     writeShow(nextShow);
-    posthog?.capture("how_to_play_dont_show_toggled", {
+    analytics.capture("how_to_play_dont_show_toggled", {
       dont_show_again: checked,
     });
   }

@@ -1,17 +1,17 @@
-import { usePostHog } from "@posthog/react";
 import { useEffect, useRef } from "react";
+import { type Analytics, useAnalytics } from "@/app/analytics";
 
 export type LegalAnalyticsPage = "privacy" | "changelog" | "about";
 
 const READ_SCROLL_THRESHOLD_PERCENT = 80;
 
 function captureLegalPageLeft(
-  posthog: ReturnType<typeof usePostHog>,
+  analytics: Analytics,
   page: LegalAnalyticsPage,
   openedAt: number,
   maxScrollPercent: number,
 ) {
-  posthog?.capture("legal_page_left", {
+  analytics.capture("legal_page_left", {
     page,
     duration_ms: Date.now() - openedAt,
     max_scroll_percent: maxScrollPercent,
@@ -20,17 +20,17 @@ function captureLegalPageLeft(
 }
 
 export function useLegalPageAnalytics(page: LegalAnalyticsPage) {
-  const posthog = usePostHog();
+  const analytics = useAnalytics();
   const openedAtRef = useRef(Date.now());
   const maxScrollRef = useRef(0);
   const leftCapturedRef = useRef(false);
 
-  // biome-ignore lint/correctness/useExhaustiveDependencies: posthog is a stable ref
+  // biome-ignore lint/correctness/useExhaustiveDependencies: analytics is a stable ref
   useEffect(() => {
     leftCapturedRef.current = false;
     openedAtRef.current = Date.now();
     maxScrollRef.current = 0;
-    posthog?.capture("legal_page_viewed", { page });
+    analytics.capture("legal_page_viewed", { page });
 
     function updateScroll() {
       const scrollHeight =
@@ -47,7 +47,7 @@ export function useLegalPageAnalytics(page: LegalAnalyticsPage) {
       if (leftCapturedRef.current) return;
       leftCapturedRef.current = true;
       captureLegalPageLeft(
-        posthog,
+        analytics,
         page,
         openedAtRef.current,
         maxScrollRef.current,

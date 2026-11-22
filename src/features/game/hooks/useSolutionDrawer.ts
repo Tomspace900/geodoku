@@ -1,5 +1,5 @@
-import { usePostHog } from "@posthog/react";
 import { useEffect, useRef, useState } from "react";
+import { useAnalytics } from "@/app/analytics";
 import {
   type ConstraintId,
   constraintAnswers,
@@ -41,11 +41,11 @@ export function useSolutionDrawer({
   mode: GameModeId;
   visible: boolean;
 }) {
-  const posthog = usePostHog();
+  const analytics = useAnalytics();
   const [target, setTarget] = useState<SolutionDrawerTarget | null>(null);
   const visitRef = useRef<SolutionVisit | null>(null);
 
-  // biome-ignore lint/correctness/useExhaustiveDependencies: posthog is a stable ref
+  // biome-ignore lint/correctness/useExhaustiveDependencies: analytics is a stable ref
   useEffect(() => {
     if (!visible) return;
     visitRef.current = startVisit();
@@ -54,7 +54,7 @@ export function useSolutionDrawer({
       const visit = visitRef.current;
       if (!visit) return;
       visitRef.current = null;
-      posthog?.capture(
+      analytics.capture(
         "solution_screen_left",
         {
           grid_date: gridDate,
@@ -82,7 +82,7 @@ export function useSolutionDrawer({
   }, [visible, gridDate, mode]);
 
   function openCell(cell: CellPosition, answerCount: number): void {
-    posthog?.capture("solution_cell_opened", {
+    analytics.capture("solution_cell_opened", {
       grid_date: gridDate,
       mode,
       cell: `${cell.row},${cell.col}`,
@@ -93,7 +93,7 @@ export function useSolutionDrawer({
   }
 
   function openConstraint(constraintId: ConstraintId): void {
-    posthog?.capture("solution_constraint_opened", {
+    analytics.capture("solution_constraint_opened", {
       grid_date: gridDate,
       mode,
       constraint_id: constraintId,

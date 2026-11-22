@@ -4,7 +4,7 @@ import { beforeEach, describe, expect, it, vi } from "vitest";
 import { useSolutionDrawer } from "../useSolutionDrawer";
 
 const capture = vi.fn();
-vi.mock("@posthog/react", () => ({ usePostHog: () => ({ capture }) }));
+vi.mock("@/app/analytics", () => ({ useAnalytics: () => ({ capture }) }));
 
 function render(visible: boolean) {
   return renderHook(

@@ -1,6 +1,6 @@
-import { usePostHog } from "@posthog/react";
 import { Copy, Share2 } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
+import { useAnalytics } from "@/app/analytics";
 import { AccentBar } from "@/components/editorial/AccentBar";
 import { Button } from "@/components/ui/button";
 import {
@@ -57,7 +57,7 @@ export function ResultScreen({
   onDismiss,
   onViewAnswers,
 }: Props) {
-  const posthog = usePostHog();
+  const analytics = useAnalytics();
   const [shareFeedback, setShareFeedback] = useState<
     "shared" | "copied" | "failed" | null
   >(null);
@@ -105,7 +105,7 @@ export function ResultScreen({
   function handleSlideChange(index: number, source: "swipe" | "dots" | "link") {
     if (index !== 1 || comparisonTrackedRef.current) return;
     comparisonTrackedRef.current = true;
-    posthog?.capture("result_comparison_viewed", {
+    analytics.capture("result_comparison_viewed", {
       grid_date: state.date,
       source: source === "link" ? "pill" : source,
       thin: thinCohort,
@@ -117,7 +117,7 @@ export function ResultScreen({
   useEffect(() => {
     if (viewedTrackedRef.current || !scoreReady) return;
     viewedTrackedRef.current = true;
-    posthog?.capture("result_screen_viewed", {
+    analytics.capture("result_screen_viewed", {
       grid_date: state.date,
       grid_number: gridNumber,
       outcome: state.status,
@@ -151,7 +151,7 @@ export function ResultScreen({
     // Un échec presse-papiers (permission refusée, webview exotique) n'a rien
     // partagé : il se dit à l'écran, mais ne compte pas comme un partage.
     if (outcome === "failed") return;
-    posthog?.capture("result_shared", {
+    analytics.capture("result_shared", {
       grid_date: state.date,
       grid_number: gridNumber,
       outcome: state.status,

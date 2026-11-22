@@ -4,7 +4,7 @@ import { beforeEach, describe, expect, it, vi } from "vitest";
 import { useStatsVisit } from "../useStatsVisit";
 
 const capture = vi.fn();
-vi.mock("@posthog/react", () => ({ usePostHog: () => ({ capture }) }));
+vi.mock("@/app/analytics", () => ({ useAnalytics: () => ({ capture }) }));
 
 type Status = "loading" | "signedIn" | "anonymous";
 

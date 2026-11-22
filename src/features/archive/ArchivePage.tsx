@@ -1,9 +1,9 @@
-import { usePostHog } from "@posthog/react";
 import { useQuery } from "convex/react";
 import { Check, ChevronRight, Flag } from "lucide-react";
 import { useEffect, useState } from "react";
 import { Link, Navigate } from "react-router";
 import AppFooter from "@/app/AppFooter";
+import { useAnalytics } from "@/app/analytics";
 import { AppMark } from "@/components/AppMark";
 import { BackLink } from "@/components/editorial/BackLink";
 import { DisplayHeader } from "@/components/editorial/DisplayHeader";
@@ -40,7 +40,7 @@ type ReplayableGrid = {
 
 export function ArchivePage() {
   const t = useT();
-  const posthog = usePostHog();
+  const analytics = useAnalytics();
   const { locale, localizedPath } = useLocale();
   const today = todayUTC();
 
@@ -56,9 +56,9 @@ export function ArchivePage() {
     dailyFinished ? {} : "skip",
   );
 
-  // biome-ignore lint/correctness/useExhaustiveDependencies: posthog is a stable ref
+  // biome-ignore lint/correctness/useExhaustiveDependencies: analytics is a stable ref
   useEffect(() => {
-    if (dailyFinished) posthog?.capture("archive_opened");
+    if (dailyFinished) analytics.capture("archive_opened");
   }, [dailyFinished]);
 
   // L'archive n'ouvre qu'une fois la grille du jour terminée.

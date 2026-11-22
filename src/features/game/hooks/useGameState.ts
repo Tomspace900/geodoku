@@ -1,6 +1,6 @@
-import { usePostHog } from "@posthog/react";
 import { useMutation, useQuery } from "convex/react";
 import { useCallback, useEffect, useReducer, useRef, useState } from "react";
+import { useAnalytics } from "@/app/analytics";
 import { useAccount } from "@/features/account/AccountContext";
 import { api } from "../../../../convex/_generated/api";
 import {
@@ -53,7 +53,7 @@ type GuessSubmitFailure = {
 };
 
 export function useGameState() {
-  const posthog = usePostHog();
+  const analytics = useAnalytics();
   const todayGrid = useQuery(api.grids.getTodayGrid);
   const playMove = useMutation(api.games.playMove);
   const playAccountMove = useMutation(api.games.playAccountMove);
@@ -90,7 +90,7 @@ export function useGameState() {
   // les mutations pendant une coupure ; une erreur serveur laisse le coup en
   // attente jusqu'au prochain coup ou au prochain chargement. Un refus
   // définitif arrête l'envoi : la partie continue en local seulement.
-  // biome-ignore lint/correctness/useExhaustiveDependencies: posthog is a stable ref
+  // biome-ignore lint/correctness/useExhaustiveDependencies: analytics is a stable ref
   const flushMoves = useCallback(async () => {
     if (sendingRef.current) return;
     sendingRef.current = true;
@@ -148,7 +148,7 @@ export function useGameState() {
         updateSync(ackMove(current, pending.moveIndex));
         if (result.kind === "applied" && result.outcome === "success") {
           const replayed = pending.moveIndex < movesAtLoadRef.current;
-          posthog?.capture("guess_submitted", {
+          analytics.capture("guess_submitted", {
             grid_date: sync.date,
             cell: pending.move.cellKey,
             country_code: pending.move.countryCode,
@@ -175,7 +175,7 @@ export function useGameState() {
     void flushMoves();
   }, [account.status, account.synced, flushMoves]);
 
-  // biome-ignore lint/correctness/useExhaustiveDependencies: posthog is a stable ref
+  // biome-ignore lint/correctness/useExhaustiveDependencies: analytics is a stable ref
   useEffect(() => {
     if (!todayGrid || todayGrid.date === state.date) return;
 
@@ -220,7 +220,7 @@ export function useGameState() {
       const filledCells = Object.values(rehydratePayload.cells).filter(
         (cell) => cell.status === "filled",
       ).length;
-      posthog?.capture("session_resumed", {
+      analytics.capture("session_resumed", {
         grid_date: todayGrid.date,
         filled_cells: filledCells,
         lives_left: livesRemaining(rehydratePayload.lives),
@@ -232,7 +232,7 @@ export function useGameState() {
         rows: todayGrid.rows as ConstraintId[],
         cols: todayGrid.cols as ConstraintId[],
       });
-      posthog?.capture("game_started", { grid_date: todayGrid.date });
+      analytics.capture("game_started", { grid_date: todayGrid.date });
     }
     void flushMoves();
   }, [todayGrid, state.date]);
@@ -300,7 +300,7 @@ export function useGameState() {
 
   // `game_completed` une seule fois par partie, même après rechargement : le
   // drapeau `endRecorded` est persisté avec la partie.
-  // biome-ignore lint/correctness/useExhaustiveDependencies: posthog is stable; the payload derives from state fields already in deps
+  // biome-ignore lint/correctness/useExhaustiveDependencies: analytics is stable; the payload derives from state fields already in deps
   useEffect(() => {
     if (!state.date || state.endRecorded) return;
     if (state.status !== "won" && state.status !== "lost") return;
@@ -319,7 +319,7 @@ export function useGameState() {
 
     // Rareté et score de fin non inclus ici (dynamiques, dépendent de la
     // distribution) : captés par `result_screen_viewed`.
-    posthog?.capture("game_completed", {
+    analytics.capture("game_completed", {
       outcome: state.status,
       end_reason: endReason,
       grid_date: state.date,
@@ -333,7 +333,7 @@ export function useGameState() {
     dispatch({ type: "selectCell", cell });
   }, []);
 
-  // biome-ignore lint/correctness/useExhaustiveDependencies: posthog is a stable ref
+  // biome-ignore lint/correctness/useExhaustiveDependencies: analytics is a stable ref
   const submitGuess = useCallback(
     async (cell: CellPosition, countryCode: string) => {
       if (state.status !== "playing" || !todayGrid) return;
@@ -359,7 +359,7 @@ export function useGameState() {
       ): GuessSubmitFailure {
         const remaining = livesRemaining(state.lives) ?? 0;
         dispatch({ type: "guessFailure", cell });
-        posthog?.capture("guess_failed", {
+        analytics.capture("guess_failed", {
           reason,
           grid_date: state.date,
           cell: `${cell.row},${cell.col}`,

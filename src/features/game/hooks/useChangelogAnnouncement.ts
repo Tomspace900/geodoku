@@ -1,5 +1,5 @@
-import { usePostHog } from "@posthog/react";
 import { useEffect, useRef, useState } from "react";
+import { useAnalytics } from "@/app/analytics";
 import { useAccount } from "@/features/account/AccountContext";
 import {
   type ChangelogEntry,
@@ -17,7 +17,7 @@ function resolveInitialAnnouncement(): ChangelogEntry | null {
 }
 
 export function useChangelogAnnouncement(enabled: boolean) {
-  const posthog = usePostHog();
+  const analytics = useAnalytics();
   const [pending, setPending] = useState<ChangelogEntry | null>(
     resolveInitialAnnouncement,
   );
@@ -34,17 +34,17 @@ export function useChangelogAnnouncement(enabled: boolean) {
   useEffect(() => {
     if (!active?.announcement || shownCapturedRef.current) return;
     shownCapturedRef.current = true;
-    posthog?.capture("changelog_announcement_shown", {
+    analytics.capture("changelog_announcement_shown", {
       version: active.version,
       kind: active.announcement.kind,
     });
-  }, [active, posthog]);
+  }, [active, analytics]);
 
   function dismiss(action: AnnouncementCloseAction) {
     if (!pending) return;
     safeSet(STORAGE_KEYS.changelogSeen, pending.version);
     if (pending.announcement) {
-      posthog?.capture("changelog_announcement_closed", {
+      analytics.capture("changelog_announcement_closed", {
         version: pending.version,
         kind: pending.announcement.kind,
         action,
