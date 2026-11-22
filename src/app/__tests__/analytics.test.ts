@@ -49,6 +49,19 @@ describe("analytics", () => {
     expect(client.calls).toEqual(["register", "capture:game_started"]);
   });
 
+  it("garde l'heure de l'event mis en file", async () => {
+    const mod = await freshModule();
+    vi.useFakeTimers({ now: new Date("2026-11-23T10:00:00Z") });
+    mod.analytics.capture("game_started");
+    vi.setSystemTime(new Date("2026-11-23T10:00:05Z"));
+    const client = fakeClient();
+    attach(mod, client);
+    vi.useRealTimers();
+    expect(client.capture.mock.calls[0]?.[2]?.timestamp).toEqual(
+      new Date("2026-11-23T10:00:00Z"),
+    );
+  });
+
   it("envoie directement une fois le client branché", async () => {
     const mod = await freshModule();
     const client = fakeClient();

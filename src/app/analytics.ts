@@ -30,7 +30,9 @@ function run(call: Call) {
 
 export const analytics = {
   capture(event: string, properties?: Properties, options?: CaptureOptions) {
-    run((c) => c.capture(event, properties, options));
+    // Un event mis en file garde l'heure où il a eu lieu, pas celle du rejeu.
+    const timestamp = options?.timestamp ?? new Date();
+    run((c) => c.capture(event, properties, { ...options, timestamp }));
   },
   register(properties: Properties) {
     run((c) => c.register(properties));
