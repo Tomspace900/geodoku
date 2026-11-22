@@ -36,6 +36,8 @@ jobs:
       - run: pnpm test # vitest
       - run: pnpm check:content
       - run: pnpm check:design-system
+      # Files, exports and dependencies nobody uses (knip.jsonc).
+      - run: pnpm check:dead-code
       - run: pnpm check:bundle
       - run: pnpm simulate:scheduling --seed=20260714
       - name: Check SemVer bump on PR to main
