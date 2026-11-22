@@ -130,7 +130,7 @@ export const fr = {
     dataUsageRetention: "ID local jusqu'à effacement · stats sans limite",
     dataDeliveryName: "Affichage et polices",
     dataDeliveryWhere: "Réseau mondial et Google Fonts",
-    dataDeliveryWhy: "Servir le site, audience sans cookie et polices (IP)",
+    dataDeliveryWhy: "Servir le site et les polices (IP)",
     dataDeliveryRetention: "Ponctuel, au chargement",
     rightsTitle: "Tes droits",
     rightsAccountTitle: "Modifier ou supprimer ton compte",

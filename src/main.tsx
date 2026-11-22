@@ -1,6 +1,4 @@
 import { PostHogProvider } from "@posthog/react";
-import { Analytics } from "@vercel/analytics/react";
-import { SpeedInsights } from "@vercel/speed-insights/react";
 import posthog from "posthog-js";
 import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
@@ -43,8 +41,6 @@ if (!relay) {
         <BrowserRouter>
           <App />
         </BrowserRouter>
-        <Analytics />
-        <SpeedInsights />
       </PostHogProvider>
     </StrictMode>,
   );

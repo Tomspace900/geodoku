@@ -126,7 +126,7 @@ export const en = {
     dataUsageRetention: "Local ID until cleared · stats kept",
     dataDeliveryName: "Delivery & fonts",
     dataDeliveryWhere: "Global network & Google Fonts",
-    dataDeliveryWhy: "Serve the site, cookieless audience and fonts (IP)",
+    dataDeliveryWhy: "Serve the site and fonts (IP)",
     dataDeliveryRetention: "Only while loading",
     rightsTitle: "Your rights",
     rightsAccountTitle: "Edit or delete your account",
