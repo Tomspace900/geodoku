@@ -45,7 +45,7 @@ export const LIFE_EXPECTANCY_MAX_YEARS = 95;
  * jamais d'un nom **daté** (année entre parenthèses = monnaie disparue).
  */
 const CURRENCY_CODES_WITHOUT_ICU_NAME: Readonly<Record<string, string>> = {
-  ZWG: "or du Zimbabwe (2024) : nom fr absent de l'ICU de Node 22.x, « Zimbabwean Gold » en anglais",
+  ZWG: "or du Zimbabwe (2024) : nom fr absent de l'ICU 77 (Node 22), présent depuis l'ICU 78 (Node 24)",
 };
 
 /**
