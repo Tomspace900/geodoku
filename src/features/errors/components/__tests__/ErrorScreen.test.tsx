@@ -1,3 +1,4 @@
+// @vitest-environment happy-dom
 import { fireEvent, render, screen } from "@testing-library/react";
 import type { ReactElement } from "react";
 import { MemoryRouter } from "react-router";

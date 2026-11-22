@@ -72,7 +72,10 @@ export default defineConfig({
     },
   },
   test: {
-    environment: "happy-dom",
+    // `node` by default: mounting happy-dom for every file cost ~10 s of the
+    // suite. A test that touches the DOM or web storage opts in on its first
+    // line with `// @vitest-environment happy-dom` (AGENTS.md §4).
+    environment: "node",
     globals: true,
     // Playwright e2e specs (e2e/*.spec.ts) must not be collected by Vitest —
     // they import @playwright/test, which is incompatible with the Vitest runner.

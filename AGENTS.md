@@ -146,6 +146,8 @@ Détail complet : [`docs/content-pipeline.md`](docs/content-pipeline.md).
 - Co-localisés dans `__tests__/`.
 - Priorité logique pure. Peu de tests composants visuels. Pas de tests hooks Convex.
 - Un test = une assertion fonctionnelle.
+- Environnement `node` par défaut ([`vite.config.ts`](vite.config.ts)) : un test qui touche au DOM ou au stockage web (`localStorage`, `sessionStorage`, `window`, rendu React) commence par `// @vitest-environment happy-dom`, comme les tests Convex par `// @vitest-environment edge-runtime`. Monter happy-dom pour les 123 fichiers coûtait ~10 s à chaque `pnpm test`.
+- Pas de génération du pool complet dans un test (~25 s) : `generateDiversePool([], { gridsPerSeed })` en réduit la taille, le pool complet étant vérifié en CI par `pnpm simulate:scheduling`.
 
 **Tests e2e (Playwright).** Dans [`e2e/`](e2e) : vraie app (Vite) contre Convex, grille du jour via `ConvexHttpClient` — **jamais de réponses devinées**. Routage par suffixe (`*.shared` = tous moteurs · `*.desktop` = Chromium seul · `*.mobile` = profils tactiles). `workers: 1` (grille Convex partagée). Helpers clés ([`e2e/helpers.ts`](e2e/helpers.ts)) : `solveGrid`, `pickCountry`, `fillCell`. Les propriétés qui ne sont pas garanties par chaque grille publiée, comme l'existence d'un plan de blocage, restent couvertes par des tests Vitest déterministes plutôt que par des E2E conditionnels.
 
