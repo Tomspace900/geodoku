@@ -205,7 +205,7 @@ pnpm test                         # Vitest (e2e/ exclu)
 pnpm format
 pnpm check:design-system          # audit tokens/DS sur src/**/*.tsx (job quality)
 pnpm check:dead-code              # Knip : fichiers, exports et dépendances que personne n'utilise (knip.jsonc, job quality)
-pnpm check:bundle                 # vite build + budget bundle joueur 400 KiB, bloquant (job quality)
+pnpm check:bundle                 # vite build + budget bundle joueur 300 KiB, bloquant (job quality)
 
 # E2E Playwright — nécessite une grille du jour
 pnpm test:e2e

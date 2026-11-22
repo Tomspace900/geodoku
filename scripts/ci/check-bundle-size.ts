@@ -25,7 +25,9 @@ const MAX_NON_INITIAL_CHUNK_GZIP_BYTES = 150 * 1024;
 // Le garde-fou reste **bloquant** : il sert surtout à attraper une dérive
 // involontaire (le 2026-11-16, posthog-js +44 KiB et une copie de Radix en
 // double). Une nouvelle page se charge à la demande (`LAZY_ROUTE_MODULES`).
-const MAX_PLAYER_INITIAL_GZIP_BYTES = 400 * 1024;
+// Resserré à 300 KiB le 2026-11-23 (#180) : posthog-js chargé après le rendu,
+// le chunk initial est passé de 293 à 217 KiB ; la marge reste de ~80 KiB.
+const MAX_PLAYER_INITIAL_GZIP_BYTES = 300 * 1024;
 
 const chunks = readdirSync(ASSETS_DIRECTORY)
   .filter((file) => file.endsWith(".js"))
