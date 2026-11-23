@@ -17,11 +17,11 @@
       "headers": [
         {
           "key": "Content-Security-Policy-Report-Only",
-          "value": "default-src 'self'; script-src 'self' https://e.geodoku.app; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; font-src 'self'; connect-src 'self' https://*.convex.cloud wss://*.convex.cloud https://*.convex.site https://e.geodoku.app; worker-src 'self' blob:; manifest-src 'self'; object-src 'none'; base-uri 'self'; form-action 'self'; frame-ancestors 'none'; report-uri https://eu.i.posthog.com/report/?token=phc_Cj8UFh9XeTJX5iYQ78T7ELWNiPnmneGaV27E7d9VA9HT&sample_rate=0.1&v=1; report-to posthog"
+          "value": "default-src 'self'; script-src 'self' https://e.geodoku.app; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; font-src 'self'; connect-src 'self' https://*.convex.cloud wss://*.convex.cloud https://*.convex.site https://e.geodoku.app; worker-src 'self' blob:; manifest-src 'self'; object-src 'none'; base-uri 'self'; form-action 'self'; frame-ancestors 'none'; report-uri https://eu.i.posthog.com/report/?token=phc_Cj8UFh9XeTJX5iYQ78T7ELWNiPnmneGaV27E7d9VA9HT&v=1; report-to posthog"
         },
         {
           "key": "Reporting-Endpoints",
-          "value": "posthog=\"https://eu.i.posthog.com/report/?token=phc_Cj8UFh9XeTJX5iYQ78T7ELWNiPnmneGaV27E7d9VA9HT&sample_rate=0.1&v=1\""
+          "value": "posthog=\"https://eu.i.posthog.com/report/?token=phc_Cj8UFh9XeTJX5iYQ78T7ELWNiPnmneGaV27E7d9VA9HT&v=1\""
         }
       ]
     },
