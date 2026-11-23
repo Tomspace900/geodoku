@@ -59,7 +59,8 @@ Barème tranché sur données réelles. La rareté d'une case s'appuie sur la **
 - **Type stripping natif de Node** à la place de `tsx` : exige des extensions `.ts` partout et ignore les `paths`.
 - **Preact** : −35 KiB gzip, mais compatibilité incertaine avec les primitives d'UI et Convex, et hors du chemin React 19.
 - **Rust / WASM** : le seul calcul lourd, la génération du pool, est rare ; WASM casserait « lib pure TS importable partout » (§6).
-- **Docker** hors CI : Vercel et Convex sont managés. Seul usage retenu : un backend Convex local pour isoler l'e2e (#178).
+- **Docker** hors CI : Vercel et Convex sont managés. En CI, seulement l'image officielle de Playwright pour l'e2e (#178).
+- **Backend Convex local pour isoler l'e2e** (#178, étape 4) : il faudrait générer le pool à chaque run, faire tourner Better Auth et le rate limiter en auto-hébergé, couper crons et e-mails, pour des stats de develop propres et des tests en parallèle. L'e2e ne bloque plus les mises en prod (une fois par push sur `develop`, ~7 min) et ses parties sont les seules données de jeu régulières de `preview/develop` : il continue d'y écrire. À rouvrir si l'e2e devient instable ou si ce bruit gêne.
 - **Oxlint, ESLint, Prettier** : Biome tourne en ~1 s.
 - **Autres frameworks** (Next.js, React Router en mode framework, Astro, TanStack Start, Svelte, Solid) et **autres backends** (Supabase, Firebase, PocketBase, Cloudflare D1) : le pré-rendu maison suffit, et les requêtes réactives, mutations transactionnelles, crons et composants de Convex sont au cœur du jeu.
 - **Librairies d'UI stylées** (MUI, Mantine, Chakra, HeroUI) : leurs styles se battent avec les tokens (§5). Les primitives modales passeront sur Base UI (#183), mais pas la recherche de pays : le Combobox de Base UI ajoute 17 KiB gzip de positionnement de popup inutile dans un tiroir, cmdk reste.
