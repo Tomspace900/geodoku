@@ -88,7 +88,7 @@
     "@vitejs/plugin-react": "^6.1.2",
     "autoprefixer": "^10.6.2",
     "convex-test": "^0.0.66",
-    "happy-dom": "^20.14.6",
+    "happy-dom": "^21.0.4",
     "knip": "6.45.1",
     "lint-staged": "^17.6.0",
     "postcss": "^8.5.32",
@@ -96,7 +96,7 @@
     "tsx": "^4.23.15",
     "typescript": "^7.0.2",
     "vite": "^8.3.5",
-    "vitest": "^4.1.12",
+    "vitest": "^5.1.1",
     "world-countries": "^5.1.0"
   }
 }
