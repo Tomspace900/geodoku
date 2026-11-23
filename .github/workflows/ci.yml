@@ -14,6 +14,8 @@ concurrency:
 jobs:
   # No-secrets gate: pre-commit checks plus design-system and bundle budgets.
   # Runs on every push to main/develop and on every PR into main/develop.
+  # The Playwright suite lives in e2e.yml (develop only), the check of each
+  # Vercel deployment in deploy-check.yml.
   quality:
     name: Quality gates
     runs-on: ubuntu-latest
@@ -57,53 +59,3 @@ jobs:
             }
             console.log('✓ Version bump vérifié : ' + process.argv[1] + ' -> ' + process.argv[2]);
           " "$BASE_VERSION" "$HEAD_VERSION"
-
-  # End-to-end suite, run against the existing "develop" Convex deployment (its
-  # URL, exposed in the client bundle anyway, lives in the repo variable
-  # VITE_CONVEX_URL). No deploy key, no seeding: develop is already seeded and
-  # its hourly cron keeps today's grid current. NB: e2e submits real guesses, so
-  # it adds noise to develop's stats/rarity — intended, it's the staging env.
-  #
-  # Runs on every push to develop and main, and on every PR into main/develop.
-  # The workflow-level concurrency cancels superseded runs
-  # so rapid develop pushes don't pile up.
-  # Requires repo variable VITE_CONVEX_URL = <develop Convex URL>.
-  #
-  # Skipped on Dependabot PRs: the suite writes real guesses into develop's
-  # Convex env, so a dependency bump would bruit the staging stats for nothing.
-  # The build itself stays covered — `quality` runs check:bundle, which builds.
-  # The full suite runs anyway as soon as the bump is merged into develop.
-  e2e:
-    name: Playwright e2e
-    needs: quality
-    if: github.actor != 'dependabot[bot]'
-    runs-on: ubuntu-latest
-    # The e2e suite shares the develop Convex env, so never run two at once.
-    concurrency:
-      group: e2e-develop
-      cancel-in-progress: false
-    env:
-      VITE_CONVEX_URL: ${{ vars.VITE_CONVEX_URL }}
-    steps:
-      - uses: actions/checkout@v7
-      - uses: pnpm/action-setup@v6
-        with:
-          # Keep aligned with package.json#packageManager.
-          version: 11.7.0
-      - uses: actions/setup-node@v7
-        with:
-          node-version: 24.22.3
-          cache: pnpm
-      - run: pnpm install --frozen-lockfile
-      # Serve a production build in e2e (see playwright.config.ts webServer): the
-      # dev server's on-the-fly ESM transform saturates the runner CPU and flakes
-      # the latency-sensitive 9-cell fills. VITE_CONVEX_URL is inlined at build.
-      - run: pnpm build
-      - run: pnpm exec playwright install --with-deps chromium firefox webkit
-      - run: pnpm exec playwright test
-      - uses: actions/upload-artifact@v7
-        if: ${{ !cancelled() }}
-        with:
-          name: playwright-report
-          path: playwright-report/
-          retention-days: 7
