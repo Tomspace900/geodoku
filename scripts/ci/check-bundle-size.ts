@@ -125,7 +125,9 @@ const LAZY_ROUTE_MODULES = [
 // module qui importe `content/countries/facts` — cf. `countrySheetData.ts`.
 // Chargé via `import()` depuis `loadCountrySheetData.ts`, préchargé au montage
 // de la grille solution, jamais importé statiquement par `src/`. Et posthog-js
-// (#180), chargé par `startAnalytics` après l'événement `load`.
+// (#180), chargé par `startAnalytics` après l'événement `load`. Sans jeton
+// PostHog au build, Vite retire tout ce chemin : `pnpm check:bundle` construit
+// donc avec un jeton factice, pour mesurer le bundle que sert la prod.
 const LAZY_FEATURE_MODULES = [
   "/src/features/countries/logic/countrySheetData.ts",
   "/src/app/posthogClient.ts",
