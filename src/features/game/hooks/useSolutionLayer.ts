@@ -1,5 +1,5 @@
-import { usePostHog } from "@posthog/react";
 import { useState } from "react";
+import { useAnalytics } from "@/app/analytics";
 import type { GameModeId } from "@/features/game/types";
 
 /** Calques de la grille solution (#70), dans l'ordre du cycle. */
@@ -22,7 +22,7 @@ export function useSolutionLayer({
   gridDate: string;
   mode: GameModeId;
 }) {
-  const posthog = usePostHog();
+  const analytics = useAnalytics();
   const [layer, setLayer] = useState<SolutionLayer>("answers");
 
   function next(): void {
@@ -30,7 +30,7 @@ export function useSolutionLayer({
       SOLUTION_LAYERS[
         (SOLUTION_LAYERS.indexOf(layer) + 1) % SOLUTION_LAYERS.length
       ];
-    posthog?.capture("solution_layer_changed", {
+    analytics.capture("solution_layer_changed", {
       grid_date: gridDate,
       mode,
       layer: following,

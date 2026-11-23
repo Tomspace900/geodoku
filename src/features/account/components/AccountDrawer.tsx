@@ -1,4 +1,3 @@
-import { usePostHog } from "@posthog/react";
 import { useMutation } from "convex/react";
 import {
   ArrowLeft,
@@ -10,6 +9,7 @@ import {
   WifiOff,
 } from "lucide-react";
 import { type FormEvent, type ReactNode, useId, useState } from "react";
+import { useAnalytics } from "@/app/analytics";
 import { Eyebrow } from "@/components/editorial/Eyebrow";
 import { Notice } from "@/components/Notice";
 import { SheetDrawer } from "@/components/SheetDrawer";
@@ -221,7 +221,7 @@ export function AccountDrawer({
   onClose: () => void;
 }) {
   const { t } = useLocale();
-  const posthog = usePostHog();
+  const analytics = useAnalytics();
   const account = useAccount();
   const updateProfile = useMutation(api.account.updateProfile);
   const { send } = useEmailCode("delete-account");
@@ -275,7 +275,7 @@ export function AccountDrawer({
       setDeleteFailed(true);
       return;
     }
-    posthog?.capture("account_deleted");
+    analytics.capture("account_deleted");
     forgetSessionOnDevice();
     close({ commit: false });
   }
@@ -354,7 +354,7 @@ export function AccountDrawer({
               variant="secondary"
               className="h-11 w-full"
               onClick={() => {
-                posthog?.capture("account_signed_out");
+                analytics.capture("account_signed_out");
                 void account.signOut();
                 close({ commit: false });
               }}
@@ -388,7 +388,7 @@ export function AccountDrawer({
             email={newEmail}
             purpose="change-email"
             onVerified={() => {
-              posthog?.capture("account_email_changed");
+              analytics.capture("account_email_changed");
               setNewEmail("");
               backToAccount();
             }}

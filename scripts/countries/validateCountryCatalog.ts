@@ -39,16 +39,6 @@ export const LIFE_EXPECTANCY_MIN_YEARS = 30;
 export const LIFE_EXPECTANCY_MAX_YEARS = 95;
 
 /**
- * Codes récents dont l'ICU embarquée peut ne pas encore avoir le nom dans
- * toutes les langues : `Intl.DisplayNames` renvoie alors le code, et la fiche
- * s'y replie à l'affichage. Une exception se justifie ici ; elle ne dispense
- * jamais d'un nom **daté** (année entre parenthèses = monnaie disparue).
- */
-const CURRENCY_CODES_WITHOUT_ICU_NAME: Readonly<Record<string, string>> = {
-  ZWG: "or du Zimbabwe (2024) : nom fr absent de l'ICU de Node 22.x, « Zimbabwean Gold » en anglais",
-};
-
-/**
  * Un code de monnaie est valable si `Intl` le connaît **et** que son nom fr et
  * en n'est ni le code brut ni un nom daté : « connu de `Intl` » ne suffit pas
  * (SLL est connu, son nom est « leone sierra-léonais (1964—2022) »).
@@ -63,7 +53,7 @@ export function validateCurrencyCode(code: string): string[] {
     if (name === undefined || /\d{4}/.test(name)) {
       return [`monnaie ${code} : nom ${locale} daté (${name})`];
     }
-    if (name === code && !(code in CURRENCY_CODES_WITHOUT_ICU_NAME)) {
+    if (name === code) {
       return [`monnaie ${code} : aucun nom ${locale} dans Intl`];
     }
     return [];

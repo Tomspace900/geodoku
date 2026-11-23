@@ -3,6 +3,7 @@ export type CopyMode = "prod-to-dev" | "develop-to-dev" | "prod-to-develop";
 export type CopyCommands = {
   exportArgs: string[];
   importArgs: string[];
+  clearSigningKeysArgs: string[];
   requiresDevelopConfirmation: boolean;
   requiresPersonalDevTarget: boolean;
 };
@@ -24,9 +25,17 @@ export function parseCopyMode(argv: string[]): CopyMode {
   return mode;
 }
 
+/**
+ * Les clés JWKS de Better Auth sont chiffrées avec le `BETTER_AUTH_SECRET` du
+ * déploiement qui les a créées : copiées ailleurs, elles ne se déchiffrent plus
+ * et toute connexion échoue (« Failed to decrypt private key »). On vide donc
+ * la table après l'import, et Better Auth en recrée une avec le secret de la
+ * cible à la première requête. Les jetons qu'elle signait expirent en 15 min.
+ */
 export function buildCopyCommands(
   mode: CopyMode,
   archivePath: string,
+  emptyFilePath: string,
 ): CopyCommands {
   const sourceArgs =
     mode === "develop-to-dev"
@@ -34,12 +43,22 @@ export function buildCopyCommands(
       : ["export", "--prod"];
   const targetArgs =
     mode === "prod-to-develop"
-      ? ["import", "--preview-name", "develop", "--replace-all", "-y"]
-      : ["import", "--replace-all", "-y"];
+      ? ["import", "--preview-name", "develop"]
+      : ["import"];
 
   return {
     exportArgs: [...sourceArgs, "--path", archivePath],
-    importArgs: [...targetArgs, archivePath],
+    importArgs: [...targetArgs, "--replace-all", "-y", archivePath],
+    clearSigningKeysArgs: [
+      ...targetArgs,
+      "--component",
+      "betterAuth",
+      "--table",
+      "jwks",
+      "--replace",
+      "-y",
+      emptyFilePath,
+    ],
     requiresDevelopConfirmation: mode === "prod-to-develop",
     requiresPersonalDevTarget: mode !== "prod-to-develop",
   };

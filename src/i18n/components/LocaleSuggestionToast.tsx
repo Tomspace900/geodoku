@@ -1,7 +1,7 @@
-import { usePostHog } from "@posthog/react";
 import { X } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import { useLocation } from "react-router";
+import { useAnalytics } from "@/app/analytics";
 import { Button } from "@/components/ui/button";
 import { translate } from "@/i18n";
 import { useLocale } from "@/i18n/LocaleContext";
@@ -27,7 +27,7 @@ import type { TKey } from "@/i18n/types";
  * clic ne ferme pas la modale.
  */
 export function LocaleSuggestionToast() {
-  const posthog = usePostHog();
+  const analytics = useAnalytics();
   const { pathname } = useLocation();
   const { locale, storedLocale, setLocale } = useLocale();
   const [suggestion, setSuggestion] = useState<LocaleSuggestion | null>(null);
@@ -49,19 +49,19 @@ export function LocaleSuggestionToast() {
   useEffect(() => {
     if (suggestion === null || reportedRef.current) return;
     reportedRef.current = true;
-    posthog?.capture("locale_suggestion_shown", {
+    analytics.capture("locale_suggestion_shown", {
       from: locale,
       to: suggestion.locale,
       basis: suggestion.basis,
     });
-  }, [suggestion, locale, posthog]);
+  }, [suggestion, locale, analytics]);
 
   if (suggestion === null) return null;
   const { locale: target, basis } = suggestion;
   const text = (key: TKey) => translate(target, key);
 
   function accept() {
-    posthog?.capture("locale_changed", {
+    analytics.capture("locale_changed", {
       from: locale,
       to: target,
       source: "suggestion",
@@ -71,7 +71,7 @@ export function LocaleSuggestionToast() {
   }
 
   function dismiss() {
-    posthog?.capture("locale_suggestion_dismissed", {
+    analytics.capture("locale_suggestion_dismissed", {
       from: locale,
       to: target,
       basis,

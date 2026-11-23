@@ -1,0 +1,16 @@
+{
+  "$schema": "https://unpkg.com/knip@6/schema.json",
+  // Point d'entrée du pré-rendu : `scripts/build/prerender.ts` le passe par
+  // son chemin au build SSR de Vite, ce que Knip ne suit pas.
+  "entry": ["src/entry-server.tsx"],
+  // Lancé par `.husky/pre-commit` (`pnpm lint-staged`), sans paquet husky.
+  "ignoreDependencies": ["lint-staged"],
+  // Une constante ou un type exporté mais lu seulement dans son fichier n'est
+  // pas du code mort : on ne signale que ce que personne n'utilise.
+  "ignoreExportsUsedInFile": true,
+  // Composants shadcn recopiés tels quels (comme pour Biome) : ils exportent
+  // toutes leurs parties, utilisées ou non.
+  "ignoreIssues": {
+    "src/components/ui/**": ["exports", "types"]
+  }
+}

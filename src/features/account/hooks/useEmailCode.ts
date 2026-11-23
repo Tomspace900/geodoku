@@ -1,5 +1,5 @@
-import { usePostHog } from "@posthog/react";
 import { useCallback } from "react";
+import { useAnalytics } from "@/app/analytics";
 import { useLocale } from "@/i18n/LocaleContext";
 import { authClient } from "@/lib/authClient";
 import {
@@ -40,7 +40,7 @@ export type CodePurpose = "sign-in" | "change-email" | "delete-account";
  */
 export function useEmailCode(purpose: CodePurpose) {
   const { locale } = useLocale();
-  const posthog = usePostHog();
+  const analytics = useAnalytics();
 
   /** Heure d'envoi d'un code encore bon pour cette adresse, sinon `null`. */
   const sentAt = useCallback(
@@ -71,7 +71,7 @@ export function useEmailCode(purpose: CodePurpose) {
                 fetchOptions,
               });
         const outcome = sendOutcome(error);
-        posthog?.capture("account_code_requested", {
+        analytics.capture("account_code_requested", {
           purpose,
           outcome,
           resent: !reuse,
@@ -87,7 +87,7 @@ export function useEmailCode(purpose: CodePurpose) {
         }
         return outcome;
       } catch {
-        posthog?.capture("account_code_requested", {
+        analytics.capture("account_code_requested", {
           purpose,
           outcome: "offline",
           resent: !reuse,
@@ -95,7 +95,7 @@ export function useEmailCode(purpose: CodePurpose) {
         return "offline";
       }
     },
-    [locale, purpose, sentAt, posthog],
+    [locale, purpose, sentAt, analytics],
   );
 
   const verify = useCallback(
@@ -110,7 +110,7 @@ export function useEmailCode(purpose: CodePurpose) {
             : await authClient.signIn.emailOtp({ email: email.trim(), otp });
         const outcome = verifyOutcome(error);
         if (outcome !== "ok") {
-          posthog?.capture("account_code_rejected", {
+          analytics.capture("account_code_rejected", {
             purpose,
             reason: outcome,
           });
@@ -128,14 +128,14 @@ export function useEmailCode(purpose: CodePurpose) {
         }
         return outcome;
       } catch {
-        posthog?.capture("account_code_rejected", {
+        analytics.capture("account_code_rejected", {
           purpose,
           reason: "offline",
         });
         return "offline";
       }
     },
-    [purpose, posthog],
+    [purpose, analytics],
   );
 
   return { send, verify, sentAt };

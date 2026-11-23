@@ -5,7 +5,7 @@ import {
   localizePath,
   parseAcceptLanguage,
   preferredLocale,
-} from "./src/i18n/localePath";
+} from "./src/i18n/localePath.js";
 
 /**
  * Middleware de routage Vercel (#140) : les adresses sans langue (`/`,
@@ -26,8 +26,12 @@ import {
  *
  * Le matcher doit rester un littéral (lu statiquement par Vercel) et ne lister
  * que des chemins sans langue : `/fr/…` et `/en/…` ne passent jamais ici.
+ * Runtime Node.js, déclaré : le runtime `edge` est déprécié par Vercel (#176).
+ * Vercel ne le regroupe pas en un seul fichier : Node le charge en ESM, d'où
+ * l'extension `.js` obligatoire sur les imports relatifs (sans elle, 500).
  */
 export const config = {
+  runtime: "nodejs",
   matcher: [
     "/",
     "/about",

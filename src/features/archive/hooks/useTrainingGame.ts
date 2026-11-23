@@ -1,6 +1,6 @@
-import { usePostHog } from "@posthog/react";
 import { useQuery } from "convex/react";
 import { useCallback, useEffect, useReducer, useRef } from "react";
+import { useAnalytics } from "@/app/analytics";
 import type { ConstraintId } from "@/features/game/logic/constraints";
 import { evaluateGuess } from "@/features/game/logic/guessEvaluation";
 import { failedAttemptCount, isGivenUp } from "@/features/game/logic/lives";
@@ -35,7 +35,7 @@ type TrainingGuessFailure = {
  * ne part donc jamais pour une date future.
  */
 export function useTrainingGame(date: string) {
-  const posthog = usePostHog();
+  const analytics = useAnalytics();
   const today = todayUTC();
   const grid = useQuery(api.grids.getReplayGrid, { date });
 
@@ -49,7 +49,7 @@ export function useTrainingGame(date: string) {
   // deux au moment où la grille arrive, une seule fois par date.
   const startedDateRef = useRef<string | null>(null);
 
-  // biome-ignore lint/correctness/useExhaustiveDependencies: posthog is a stable ref
+  // biome-ignore lint/correctness/useExhaustiveDependencies: analytics is a stable ref
   useEffect(() => {
     if (!grid || grid.date === state.date) return;
 
@@ -79,7 +79,7 @@ export function useTrainingGame(date: string) {
 
     if (startedDateRef.current !== grid.date) {
       startedDateRef.current = grid.date;
-      posthog?.capture("training_started", {
+      analytics.capture("training_started", {
         grid_date: grid.date,
         resumed: rehydratePayload !== null,
         restart: false,
@@ -93,7 +93,7 @@ export function useTrainingGame(date: string) {
   }, [state, today]);
 
   const completedDateRef = useRef<string | null>(null);
-  // biome-ignore lint/correctness/useExhaustiveDependencies: posthog is a stable ref
+  // biome-ignore lint/correctness/useExhaustiveDependencies: analytics is a stable ref
   useEffect(() => {
     if (!state.date || state.status === "playing") return;
     if (completedDateRef.current === state.date) return;
@@ -102,7 +102,7 @@ export function useTrainingGame(date: string) {
     const filledCells = Object.values(state.cells).filter(
       (cell) => cell.status === "filled",
     ).length;
-    posthog?.capture("training_completed", {
+    analytics.capture("training_completed", {
       grid_date: state.date,
       outcome: state.status,
       filled_cells: filledCells,
@@ -125,12 +125,12 @@ export function useTrainingGame(date: string) {
       rows: grid.rows as ConstraintId[],
       cols: grid.cols as ConstraintId[],
     });
-    posthog?.capture("training_started", {
+    analytics.capture("training_started", {
       grid_date: grid.date,
       resumed: false,
       restart: true,
     });
-  }, [grid, today, posthog]);
+  }, [grid, today, analytics]);
 
   const giveUp = useCallback(() => {
     dispatch({ type: "giveUp" });

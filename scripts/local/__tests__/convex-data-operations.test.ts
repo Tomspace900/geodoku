@@ -4,18 +4,34 @@ import {
   requirePersonalDevDeployment,
 } from "../convex-data-operations";
 
+const EMPTY = "/tmp/empty.jsonl";
+
 describe("buildCopyCommands", () => {
   test("copie la production vers le cloud dev personnel", () => {
-    expect(buildCopyCommands("prod-to-dev", "/tmp/geodoku.zip")).toEqual({
-      exportArgs: ["export", "--prod", "--path", "/tmp/geodoku.zip"],
-      importArgs: ["import", "--replace-all", "-y", "/tmp/geodoku.zip"],
-      requiresDevelopConfirmation: false,
-      requiresPersonalDevTarget: true,
-    });
+    expect(buildCopyCommands("prod-to-dev", "/tmp/geodoku.zip", EMPTY)).toEqual(
+      {
+        exportArgs: ["export", "--prod", "--path", "/tmp/geodoku.zip"],
+        importArgs: ["import", "--replace-all", "-y", "/tmp/geodoku.zip"],
+        clearSigningKeysArgs: [
+          "import",
+          "--component",
+          "betterAuth",
+          "--table",
+          "jwks",
+          "--replace",
+          "-y",
+          EMPTY,
+        ],
+        requiresDevelopConfirmation: false,
+        requiresPersonalDevTarget: true,
+      },
+    );
   });
 
   test("copie develop vers le cloud dev personnel", () => {
-    expect(buildCopyCommands("develop-to-dev", "/tmp/geodoku.zip")).toEqual({
+    expect(
+      buildCopyCommands("develop-to-dev", "/tmp/geodoku.zip", EMPTY),
+    ).toEqual({
       exportArgs: [
         "export",
         "--preview-name",
@@ -24,13 +40,25 @@ describe("buildCopyCommands", () => {
         "/tmp/geodoku.zip",
       ],
       importArgs: ["import", "--replace-all", "-y", "/tmp/geodoku.zip"],
+      clearSigningKeysArgs: [
+        "import",
+        "--component",
+        "betterAuth",
+        "--table",
+        "jwks",
+        "--replace",
+        "-y",
+        EMPTY,
+      ],
       requiresDevelopConfirmation: false,
       requiresPersonalDevTarget: true,
     });
   });
 
   test("rend la copie production vers develop explicite", () => {
-    expect(buildCopyCommands("prod-to-develop", "/tmp/geodoku.zip")).toEqual({
+    expect(
+      buildCopyCommands("prod-to-develop", "/tmp/geodoku.zip", EMPTY),
+    ).toEqual({
       exportArgs: ["export", "--prod", "--path", "/tmp/geodoku.zip"],
       importArgs: [
         "import",
@@ -39,6 +67,18 @@ describe("buildCopyCommands", () => {
         "--replace-all",
         "-y",
         "/tmp/geodoku.zip",
+      ],
+      clearSigningKeysArgs: [
+        "import",
+        "--preview-name",
+        "develop",
+        "--component",
+        "betterAuth",
+        "--table",
+        "jwks",
+        "--replace",
+        "-y",
+        EMPTY,
       ],
       requiresDevelopConfirmation: true,
       requiresPersonalDevTarget: false,

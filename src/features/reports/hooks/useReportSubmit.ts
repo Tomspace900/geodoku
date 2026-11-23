@@ -1,5 +1,5 @@
-import { usePostHog } from "@posthog/react";
 import { useMutation } from "convex/react";
+import { useAnalytics } from "@/app/analytics";
 import { getOrCreateClientId } from "@/features/game/logic/clientId";
 import type { GameModeId } from "@/features/game/types";
 import { useLocale } from "@/i18n/LocaleContext";
@@ -35,12 +35,12 @@ export function useReportSubmit({
   mode?: GameModeId;
   target: ReportTarget;
 }) {
-  const posthog = usePostHog();
+  const analytics = useAnalytics();
   const { locale } = useLocale();
   const submitReport = useMutation(api.reports.submit);
 
   function trackOpened(): void {
-    posthog?.capture("report_dialog_opened", { source, mode });
+    analytics.capture("report_dialog_opened", { source, mode });
   }
 
   async function submit(
@@ -65,7 +65,7 @@ export function useReportSubmit({
     } catch {
       result = "failed";
     }
-    posthog?.capture("report_submitted", {
+    analytics.capture("report_submitted", {
       source,
       mode,
       category,

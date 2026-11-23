@@ -1,7 +1,7 @@
-import { useFeatureFlagEnabled, usePostHog } from "@posthog/react";
 import { Coffee, Flag, Globe, MessageSquareText } from "lucide-react";
 import type { ReactNode } from "react";
 import { Link } from "react-router";
+import { useAnalytics, useFeatureFlagEnabled } from "@/app/analytics";
 import { KOFI_URL } from "@/app/links";
 import { GeneralReportEntry } from "@/features/reports/components/GeneralReportEntry";
 import { LocaleSwitcher } from "@/i18n/components/LocaleSwitcher";
@@ -45,21 +45,21 @@ function Row({ items }: { items: ReactNode[] }) {
 }
 
 export default function AppFooter({ className }: { className?: string }) {
-  const posthog = usePostHog();
+  const analytics = useAnalytics();
   const t = useT();
   const { locale, localizedPath } = useLocale();
   const year = new Date().getFullYear();
   const surveyActive = useFeatureFlagEnabled(SURVEY_FLAG);
 
   function trackFooterLink(link: FooterLink) {
-    posthog?.capture("footer_link_clicked", { link });
+    analytics.capture("footer_link_clicked", { link });
   }
 
   function trackSurveyLink() {
     // Un clic vaut réponse/décision prise : masque le CTA banderole partout,
     // comme un clic depuis la banderole elle-même (cf. useSurveyCta).
     markSurveyClicked();
-    posthog?.capture("survey_link_clicked", {
+    analytics.capture("survey_link_clicked", {
       source: "footer",
       locale,
       survey_id: SURVEY_ID,

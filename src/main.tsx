@@ -1,14 +1,16 @@
-import { PostHogProvider } from "@posthog/react";
-import { Analytics } from "@vercel/analytics/react";
-import { SpeedInsights } from "@vercel/speed-insights/react";
-import posthog from "posthog-js";
 import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
 import { BrowserRouter } from "react-router";
 import App from "@/App";
-import { dropNoiseExceptions, isDevHostname } from "@/app/analyticsNoise";
+import {
+  disableAnalytics,
+  startAnalytics,
+  watchEarlyErrors,
+} from "@/app/analytics";
+import { isDevHostname } from "@/app/analyticsNoise";
 import { installFlagEmojiFont } from "@/app/flagEmojiFont";
 import { oauthCallbackRelay } from "@/lib/convexSite";
+import "@/fonts.css";
 import "@/index.css";
 
 // Retour de Google (#155) : la page n'est qu'un relais vers Convex. Elle part
@@ -20,32 +22,27 @@ const relay = oauthCallbackRelay(
 if (relay) window.location.replace(relay);
 
 // Les previews Vercel n'ont volontairement pas de jeton, pour ne pas polluer les
-// stats : sans init, chaque appel posthog est un no-op, sans l'erreur de console
-// qu'un init à jeton vide déclenche. Même règle en local, jeton présent ou non.
+// stats : sans PostHog, chaque appel de la façade est un no-op. Même règle en
+// local, jeton présent ou non. posthog-js n'arrive qu'après le rendu (#180).
 const posthogToken = import.meta.env.VITE_POSTHOG_PROJECT_TOKEN?.trim();
-if (!relay && posthogToken && !isDevHostname(window.location.hostname)) {
-  posthog.init(posthogToken, {
-    api_host: import.meta.env.VITE_POSTHOG_HOST,
-    defaults: "2026-01-30",
-    autocapture: false,
-    // Identifiant anonyme stocké en localStorage uniquement : aucun cookie posé,
-    // donc pas de bandeau de consentement requis (cf. /privacy).
-    persistence: "localStorage",
-    before_send: dropNoiseExceptions,
-  });
-}
+const analyticsOn =
+  !relay && !!posthogToken && !isDevHostname(window.location.hostname);
+if (analyticsOn) watchEarlyErrors();
+else disableAnalytics();
 
 if (!relay) {
   installFlagEmojiFont();
   createRoot(document.getElementById("root")!).render(
     <StrictMode>
-      <PostHogProvider client={posthog}>
-        <BrowserRouter>
-          <App />
-        </BrowserRouter>
-        <Analytics />
-        <SpeedInsights />
-      </PostHogProvider>
+      <BrowserRouter>
+        <App />
+      </BrowserRouter>
     </StrictMode>,
   );
+  if (analyticsOn && posthogToken) {
+    startAnalytics({
+      token: posthogToken,
+      apiHost: import.meta.env.VITE_POSTHOG_HOST,
+    });
+  }
 }

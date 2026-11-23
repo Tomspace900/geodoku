@@ -5,7 +5,6 @@
  */
 import type {
   HighestPointEntry,
-  HighestPointLabel,
   HighestPointOverride,
   HighestPointsSnapshot,
 } from "../data/types.ts";
@@ -164,8 +163,6 @@ function distanceToElevation(peak: WikidataPeak, elevationM: number): number {
     : Math.min(...peak.elevations.map((value) => Math.abs(value - elevationM)));
 }
 
-export type HighestPointFamily = "graphie" | "identique" | "sans_nom";
-
 export type PeakMatch =
   | { kind: "matched"; peak: WikidataPeak & { fr: string; en: string } }
   | { kind: "unnamed" }
@@ -261,29 +258,6 @@ export function buildHighestPoints(
     }
   });
   return { points, unresolved };
-}
-
-/** Libellé retenu : l'override curé d'abord, la récolte ensuite. */
-export function effectiveLabel(
-  iso3: string,
-  snapshot: Pick<HighestPointsSnapshot, "points" | "overrides">,
-): HighestPointLabel | null {
-  const override = snapshot.overrides[iso3];
-  return override ? override.label : (snapshot.points[iso3]?.label ?? null);
-}
-
-/** Famille de correspondance pour le dossier de gate. */
-export function highestPointFamily(
-  entry: HighestPointEntry,
-  override: HighestPointOverride | undefined,
-): HighestPointFamily | "override" {
-  if (override) return "override";
-  if (!entry.label) return "sans_nom";
-  const wanted = normalizePeakName(entry.sourceName);
-  const same = [entry.label.fr, entry.label.en].some(
-    (label) => normalizePeakName(label) === wanted,
-  );
-  return same ? "identique" : "graphie";
 }
 
 /** Sérialise le dataset (le fichier est ensuite normalisé par Biome). */

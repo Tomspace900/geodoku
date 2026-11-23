@@ -184,8 +184,16 @@ describe("tryBuildGridWithSeed", () => {
 describe("generateDiversePool", () => {
   let generated: ReturnType<typeof generateDiversePool>;
 
+  // Reduced pool: the invariants below hold at any size, and the full pool
+  // (~25 s) is already generated and checked by `pnpm simulate:scheduling` in
+  // CI. A smaller pool rejects fewer candidates as too similar, so it is, if
+  // anything, more lenient on seeds than the full pool; at this generation seed
+  // the same single constraint fails in both.
   beforeAll(() => {
-    generated = generateDiversePool([], { seed: GENERATION_SEED });
+    generated = generateDiversePool([], {
+      seed: GENERATION_SEED,
+      gridsPerSeed: MIN_VIABLE_GRIDS_PER_SEED,
+    });
   }, 120_000);
 
   it("produces valid grids that satisfy hard filters", () => {

@@ -1,6 +1,6 @@
-import { usePostHog } from "@posthog/react";
 import { Gem, Grid3x3, Heart, Info } from "lucide-react";
 import { useState } from "react";
+import { useAnalytics } from "@/app/analytics";
 import { AccentBar } from "@/components/editorial/AccentBar";
 import { Button } from "@/components/ui/button";
 import {
@@ -52,7 +52,7 @@ type Props = {
  */
 export function ScoreInfoDialog({ scale = "daily" }: Props) {
   const t = useT();
-  const posthog = usePostHog();
+  const analytics = useAnalytics();
   const [open, setOpen] = useState(false);
   const isTraining = scale === "training";
 
@@ -65,7 +65,7 @@ export function ScoreInfoDialog({ scale = "daily" }: Props) {
 
   function handleOpenChange(nextOpen: boolean) {
     if (nextOpen) {
-      posthog?.capture("scoring_info_opened", {
+      analytics.capture("scoring_info_opened", {
         source: isTraining ? "training_result_screen" : "result_screen",
       });
     }

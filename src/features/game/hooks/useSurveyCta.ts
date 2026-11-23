@@ -1,5 +1,5 @@
-import { useFeatureFlagEnabled, usePostHog } from "@posthog/react";
 import { useSyncExternalStore } from "react";
+import { useAnalytics, useFeatureFlagEnabled } from "@/app/analytics";
 import { useLocale } from "@/i18n/LocaleContext";
 import { todayUTC } from "@/lib/dates";
 import {
@@ -24,7 +24,7 @@ export type SurveySource = "result_screen" | "solution_screen" | "footer";
  */
 export function useSurveyCta(source: SurveySource) {
   const { locale } = useLocale();
-  const posthog = usePostHog();
+  const analytics = useAnalytics();
   const active = useFeatureFlagEnabled(SURVEY_FLAG);
   const rawDone = useSyncExternalStore(
     subscribeSurveyDone,
@@ -35,7 +35,7 @@ export function useSurveyCta(source: SurveySource) {
 
   function onClick() {
     markSurveyClicked();
-    posthog?.capture("survey_link_clicked", {
+    analytics.capture("survey_link_clicked", {
       source,
       locale,
       survey_id: SURVEY_ID,
@@ -44,7 +44,7 @@ export function useSurveyCta(source: SurveySource) {
 
   function onDismiss() {
     markSurveyDismissed(todayUTC());
-    posthog?.capture("survey_dismissed", {
+    analytics.capture("survey_dismissed", {
       source,
       locale,
       survey_id: SURVEY_ID,

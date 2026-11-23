@@ -25,7 +25,9 @@ const MAX_NON_INITIAL_CHUNK_GZIP_BYTES = 150 * 1024;
 // Le garde-fou reste **bloquant** : il sert surtout à attraper une dérive
 // involontaire (le 2026-11-16, posthog-js +44 KiB et une copie de Radix en
 // double). Une nouvelle page se charge à la demande (`LAZY_ROUTE_MODULES`).
-const MAX_PLAYER_INITIAL_GZIP_BYTES = 400 * 1024;
+// Resserré à 300 KiB le 2026-11-23 (#180) : posthog-js chargé après le rendu,
+// le chunk initial est passé de 293 à 217 KiB ; la marge reste de ~80 KiB.
+const MAX_PLAYER_INITIAL_GZIP_BYTES = 300 * 1024;
 
 const chunks = readdirSync(ASSETS_DIRECTORY)
   .filter((file) => file.endsWith(".js"))
@@ -122,9 +124,13 @@ const LAZY_ROUTE_MODULES = [
 // Entrées dynamiques hors routes : le chunk des faits (P4 lot 2), seul
 // module qui importe `content/countries/facts` — cf. `countrySheetData.ts`.
 // Chargé via `import()` depuis `loadCountrySheetData.ts`, préchargé au montage
-// de la grille solution, jamais importé statiquement par `src/`.
+// de la grille solution, jamais importé statiquement par `src/`. Et posthog-js
+// (#180), chargé par `startAnalytics` après l'événement `load`. Sans jeton
+// PostHog au build, Vite retire tout ce chemin : `pnpm check:bundle` construit
+// donc avec un jeton factice, pour mesurer le bundle que sert la prod.
 const LAZY_FEATURE_MODULES = [
   "/src/features/countries/logic/countrySheetData.ts",
+  "/src/app/posthogClient.ts",
 ];
 
 // Les deux listes sont **exhaustives** dans les deux sens : une entrée lazy
@@ -174,6 +180,23 @@ const factsOwner = moduleChunks.find((chunk) =>
 if (!factsOwner || initialFiles.has(factsOwner.fileName)) {
   throw new Error(
     "content/countries/facts.ts doit rester hors du chargement initial (chunk des faits uniquement)",
+  );
+}
+
+// posthog-js pèse plus que react-dom : il ne doit jamais revenir dans le
+// graphe initial, ni par un import statique oublié (#180).
+const posthogInInitial = moduleChunks.filter(
+  (chunk) =>
+    initialFiles.has(chunk.fileName) &&
+    chunk.modules.some((moduleId) =>
+      moduleId.includes("/node_modules/posthog-js/"),
+    ),
+);
+if (posthogInInitial.length > 0) {
+  throw new Error(
+    `posthog-js doit rester hors du chargement initial : ${posthogInInitial
+      .map((chunk) => chunk.fileName)
+      .join(", ")}`,
   );
 }
 

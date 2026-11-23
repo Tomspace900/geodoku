@@ -1,4 +1,3 @@
-import posthog from "posthog-js";
 import {
   createContext,
   type ReactNode,
@@ -8,6 +7,7 @@ import {
   useState,
 } from "react";
 import { useLocation, useNavigate } from "react-router";
+import { analytics } from "@/app/analytics";
 import { translate } from "./index";
 import { readStoredLocale, storeLocale } from "./localeCookie";
 import { FALLBACK_LOCALE, localeFromPath, localizePath } from "./localePath";
@@ -67,7 +67,7 @@ export function LocaleProvider({ children }: { children: ReactNode }) {
     // Porte la langue active sur tous les events PostHog (super-property) :
     // permet de connaître la répartition FR/EN de l'audience, pas seulement
     // les bascules de langue (event locale_changed).
-    posthog.register({ locale });
+    analytics.register({ locale });
   }, [locale]);
 
   const t = useCallback(

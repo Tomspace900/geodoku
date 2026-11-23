@@ -1,5 +1,5 @@
-import { usePostHog } from "@posthog/react";
 import { useEffect, useRef, useState } from "react";
+import { useAnalytics } from "@/app/analytics";
 import { CONSTRAINT_SOURCE_TOAST_MS } from "@/features/game/logic/constants";
 import type { ConstraintId } from "@/features/game/logic/constraints";
 import type { CellKey, CellPosition, GameModeId } from "@/features/game/types";
@@ -36,7 +36,7 @@ export function useConstraintSourceToast({
   mode,
   selectedCell,
 }: Params) {
-  const posthog = usePostHog();
+  const analytics = useAnalytics();
   const [active, setActive] = useState<ConstraintSourceToastTarget | null>(
     null,
   );
@@ -81,7 +81,7 @@ export function useConstraintSourceToast({
       setActive(null);
       return;
     }
-    posthog?.capture("constraint_source_viewed", {
+    analytics.capture("constraint_source_viewed", {
       grid_date: gridDate,
       mode,
       surface: "playing",
@@ -96,7 +96,7 @@ export function useConstraintSourceToast({
       setActive(null);
       return;
     }
-    posthog?.capture("blocked_cell_opened", {
+    analytics.capture("blocked_cell_opened", {
       grid_date: gridDate,
       mode,
       cell,

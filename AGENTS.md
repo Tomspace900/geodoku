@@ -38,20 +38,32 @@ Barème tranché sur données réelles. La rareté d'une case s'appuie sur la **
 
 ## 2. Stack technique
 
-- **Frontend** : Vite + React + React Router (mode déclaratif) + TypeScript (strict mode)
+- **Frontend** : Vite + React + React Router (mode déclaratif) + TypeScript 7 (compilateur natif, strict mode)
 - **Styling** : Tailwind CSS + shadcn/ui (install manuelle par composant) + Lucide React
 - **Backend** : Convex (cloud remote, pas local, région `eu-west-1` depuis #70) — DB, mutations, queries, crons ; rate limiting via `@convex-dev/rate-limiter` ([`convex/rateLimit.ts`](convex/rateLimit.ts), [`convex/convex.config.ts`](convex/convex.config.ts))
-- **Compte** : Better Auth via `@convex-dev/better-auth` (composant Convex, plugin cross-domain : la page et `.convex.site` n'ont pas le même domaine) — code par e-mail (`emailOTP`) et Google ([`convex/auth.ts`](convex/auth.ts), [`src/lib/authClient.ts`](src/lib/authClient.ts)). Codes envoyés par **Mailjet** (API Send v3.1, suivi des ouvertures et des clics coupé à chaque envoi), par la fonction partagée [`convex/lib/mailjet.ts`](convex/lib/mailjet.ts), seule à changer pour changer de service : elle sert aussi aux alertes (#127), avec le même gabarit d'e-mail ([`emailLayout.ts`](convex/lib/emailLayout.ts)). Versions épinglées (`better-auth` 1.6.x, intégration 0.12.x) : l'intégration fixe la plage de `better-auth` qu'elle accepte, une montée se fait par paire.
-- **Observabilité front** : `@vercel/analytics` + `@vercel/speed-insights` + **PostHog** — voir §10 ([`src/main.tsx`](src/main.tsx))
-- **Package manager** : pnpm (Node **≥ 22.12**, Volta 22.19)
+- **Compte** : Better Auth via `@convex-dev/better-auth` (composant Convex, plugin cross-domain : la page et `.convex.site` n'ont pas le même domaine) — code par e-mail (`emailOTP`) et Google ([`convex/auth.ts`](convex/auth.ts), [`src/lib/authClient.ts`](src/lib/authClient.ts)). Codes envoyés par **Mailjet** (API Send v3.1, suivi des ouvertures et des clics coupé à chaque envoi), par la fonction partagée [`convex/lib/mailjet.ts`](convex/lib/mailjet.ts), seule à changer pour changer de service : elle sert aussi aux alertes (#127), avec le même gabarit d'e-mail ([`emailLayout.ts`](convex/lib/emailLayout.ts)). Versions épinglées (`better-auth` 1.7.x, intégration 0.13.x, depuis #176) : l'intégration fixe la plage de `better-auth` qu'elle accepte, une montée se fait par paire.
+- **Observabilité front** : **PostHog** seul, pages vues et Web Vitals compris — chargé après le rendu, voir §10 ([`src/app/analytics.ts`](src/app/analytics.ts)). Vercel Analytics et Speed Insights retirés en 2026-11 (#181) : ils mesuraient la même chose, et PostHog passe déjà par notre propre domaine.
+- **Package manager** : pnpm, sur Node **24** partout : Volta et `.node-version` (24.22.3), la CI, et `engines` borné à `24.x`, qui fixe aussi la version de Vercel (un `engines` ouvert lui faisait suivre seul chaque nouvelle majeure, #176). Volta épingle aussi pnpm (`volta.pnpm`, même version que `packageManager` et la CI) : avec `VOLTA_FEATURE_PNPM=1` dans le profil du shell, pnpm tourne sur le Node du projet. Sans ce réglage, un pnpm installé globalement garde le Node de son installation (22 sur le Mac jusqu'en 2026-11), et les tests locaux divergent de la CI.
 - **Lint/format** : Biome **2.x** (pas ESLint, pas Prettier) — Biome 2 lint aussi le CSS, d'où `css.parser.tailwindDirectives: true` (sans quoi `@apply` ne parse pas) et `noUnknownAtRules: "off"` (`@tailwind` n'est pas standard). `noImportantStyles` est off : le `!important` est un outil délibéré face aux utilitaires Tailwind. `.claude/` est exclu — les worktrees y sont des checkouts d'autres branches, avec leur propre config.
 - **Tests unitaires** : Vitest + @testing-library/react (`e2e/**` exclu dans [`vite.config.ts`](vite.config.ts))
 - **Tests e2e** : Playwright ([`playwright.config.ts`](playwright.config.ts), [`e2e/`](e2e/))
 - **Hooks / CI** : Git hook `pre-commit` (lint-staged) ; GitHub Actions — voir §8
 - **Recherche fuzzy** : match-sorter (normalisation NFD côté requête)
-- **Fonts** : Newsreader (serif) + Inter (sans-serif)
+- **Fonts** : Newsreader (serif) + Inter (sans-serif), servies par le site depuis les paquets Fontsource variables, sous-ensembles latin et latin-ext (#180, [`src/fonts.css`](src/fonts.css)), jamais par Google Fonts
 
 **Choix assumés et non négociables.** Pas de state manager externe : `useReducer` + `Context`. Pas de TanStack Query. Pas de Zod. Pas de date-fns : dates en `YYYY-MM-DD` ([`src/lib/dates.ts`](src/lib/dates.ts)). Routage déclaratif minimal avec React Router ([`src/App.tsx`](src/App.tsx)) : accueil, `/about`, `/privacy`, `/changelog`, `/stats` et `/archive[/:date]`, chacune sous chaque langue (`/fr/…`, `/en/…`, §4 i18n), plus `/admin`. Jeu et pages éditoriales eager ; « Mes stats » (et les écrans du compte), archive et admin chargées en lazy.
+
+**Écartés à l'audit technique de novembre 2026** (#175, mesures dans l'épic). Ne pas les reproposer sans fait nouveau :
+
+- **Bun** : plus rapide sur les scripts CPU (simulation −36 %, sorties identiques) et à l'installation, mais un second runtime à côté de Node, que Vercel, Convex et Playwright gardent, pour une dizaine de secondes par run CI ; `bun test` casse 122 tests (DOM, `vi.mock`, `convex-test`).
+- **Type stripping natif de Node** à la place de `tsx` : exige des extensions `.ts` partout et ignore les `paths`.
+- **Preact** : −35 KiB gzip, mais compatibilité incertaine avec les primitives d'UI et Convex, et hors du chemin React 19.
+- **Rust / WASM** : le seul calcul lourd, la génération du pool, est rare ; WASM casserait « lib pure TS importable partout » (§6).
+- **Docker** hors CI : Vercel et Convex sont managés. Seul usage retenu : un backend Convex local pour isoler l'e2e (#178).
+- **Oxlint, ESLint, Prettier** : Biome tourne en ~1 s.
+- **Autres frameworks** (Next.js, React Router en mode framework, Astro, TanStack Start, Svelte, Solid) et **autres backends** (Supabase, Firebase, PocketBase, Cloudflare D1) : le pré-rendu maison suffit, et les requêtes réactives, mutations transactionnelles, crons et composants de Convex sont au cœur du jeu.
+- **Librairies d'UI stylées** (MUI, Mantine, Chakra, HeroUI) : leurs styles se battent avec les tokens (§5). Les primitives modales passeront sur Base UI (#183), mais pas la recherche de pays : le Combobox de Base UI ajoute 17 KiB gzip de positionnement de popup inutile dans un tiroir, cmdk reste.
+- **Tailwind 4**, pour l'instant : aucun gain de build (1,6 s), plancher Safari 16.4 / Chrome 111 / Firefox 128, v3.4 toujours publiée (`v3-lts`). À rouvrir quand les navigateurs sous ce plancher seront négligeables (#144).
 
 ## 3. Architecture
 
@@ -117,7 +129,7 @@ Détail complet : [`docs/content-pipeline.md`](docs/content-pipeline.md).
 
 ## 4. Conventions de code
 
-**TypeScript.** `strict: true`. Pas de `any`. Préférer `type` aux `interface`. Unions discriminées plutôt qu'optionals. Pas de `// @ts-ignore`.
+**TypeScript.** `strict: true`. Pas de `any`. Préférer `type` aux `interface`. Unions discriminées plutôt qu'optionals. Pas de `// @ts-ignore`. TypeScript 7 (depuis #177) : plus de `baseUrl` (les `paths` se lisent depuis leur tsconfig), et `types` vaut `[]` par défaut, donc chaque config déclare les types globaux qu'elle voit. L'app reçoit `node` (elle embarque des tests et des fichiers de `convex/`) par `/// <reference types="node" />` dans [`src/vite-env.d.ts`](src/vite-env.d.ts), **pas** par `types` dans `tsconfig.json` : Vercel compile `middleware.ts` avec un tsconfig temporaire, hors du dépôt, qui étend le nôtre, et `types` s'y chercherait depuis ce dossier (`TS2688` au build). `pnpm typecheck` lance les quatre configs en parallèle. Le CLI Convex type-checke au déploiement avec ce même `tsc`.
 
 **React.** Fonctions pures > `useMemo`/`useCallback` par défaut. Un module React public principal par fichier, avec exports nommés ; helpers privés colocalisés. Pas de classes, sauf Error Boundaries imposées par l'API React.
 
@@ -134,6 +146,8 @@ Détail complet : [`docs/content-pipeline.md`](docs/content-pipeline.md).
 - Co-localisés dans `__tests__/`.
 - Priorité logique pure. Peu de tests composants visuels. Pas de tests hooks Convex.
 - Un test = une assertion fonctionnelle.
+- Environnement `node` par défaut ([`vite.config.ts`](vite.config.ts)) : un test qui touche au DOM ou au stockage web (`localStorage`, `sessionStorage`, `window`, rendu React) commence par `// @vitest-environment happy-dom`, comme les tests Convex par `// @vitest-environment edge-runtime`. Monter happy-dom pour les 123 fichiers coûtait ~10 s à chaque `pnpm test`.
+- Pas de génération du pool complet dans un test (~25 s) : `generateDiversePool([], { gridsPerSeed })` en réduit la taille, le pool complet étant vérifié en CI par `pnpm simulate:scheduling`.
 
 **Tests e2e (Playwright).** Dans [`e2e/`](e2e) : vraie app (Vite) contre Convex, grille du jour via `ConvexHttpClient` — **jamais de réponses devinées**. Routage par suffixe (`*.shared` = tous moteurs · `*.desktop` = Chromium seul · `*.mobile` = profils tactiles). `workers: 1` (grille Convex partagée). Helpers clés ([`e2e/helpers.ts`](e2e/helpers.ts)) : `solveGrid`, `pickCountry`, `fillCell`. Les propriétés qui ne sont pas garanties par chaque grille publiée, comme l'existence d'un plan de blocage, restent couvertes par des tests Vitest déterministes plutôt que par des E2E conditionnels.
 
@@ -190,7 +204,8 @@ pnpm typecheck
 pnpm test                         # Vitest (e2e/ exclu)
 pnpm format
 pnpm check:design-system          # audit tokens/DS sur src/**/*.tsx (job quality)
-pnpm check:bundle                 # vite build + budget bundle joueur 400 KiB, bloquant (job quality)
+pnpm check:dead-code              # Knip : fichiers, exports et dépendances que personne n'utilise (knip.jsonc, job quality)
+pnpm check:bundle                 # vite build + budget bundle joueur 300 KiB, bloquant (job quality)
 
 # E2E Playwright — nécessite une grille du jour
 pnpm test:e2e
@@ -236,7 +251,7 @@ pnpm exec convex env set ADMIN_TOKEN "xxx"
 
 **GitHub Actions** ([`.github/workflows/ci.yml`](.github/workflows/ci.yml)) :
 
-- `quality` (sans secret) — doublons de dépendances (`pnpm dedupe --check`), lint, typechecks, Vitest, design system et bundle. Push `main`/`develop` + PR vers `main`/`develop`. Le contrôle des doublons compte d'autant plus que l'e2e saute les PR Dependabot : en 2026-11, `vaul` gardait son ancienne copie de `@radix-ui/react-dialog` après une montée, et la page ne répondait plus aux clics une fois la modale de résultat fermée. Une PR qui échoue là se corrige par `pnpm dedupe`.
+- `quality` (sans secret) — doublons de dépendances (`pnpm dedupe --check`), lint, typechecks, Vitest, design system, code mort (Knip) et bundle. Push `main`/`develop` + PR vers `main`/`develop`. Le contrôle des doublons compte d'autant plus que l'e2e saute les PR Dependabot : en 2026-11, `vaul` gardait son ancienne copie de `@radix-ui/react-dialog` après une montée, et la page ne répondait plus aux clics une fois la modale de résultat fermée. Une PR qui échoue là se corrige par `pnpm dedupe`.
 - `e2e` — Playwright contre `vars.VITE_CONVEX_URL` = deploy `preview/develop`, d'adresse fixe (cf. ci-dessous). Pas de deploy key ni seed (develop déjà seedé, cron horaire). **Sérialisé** (`concurrency: e2e-develop`). ⚠️ soumet de vrais guesses → bruite les stats develop (staging assumé). **Sauté sur les PR Dependabot** (`github.actor`) pour cette raison précise : un bump de dépendance ne vaut pas de polluer les stats de staging. Le build reste couvert, `quality` lançant `check:bundle` (qui fait un `vite build`), et la suite complète tourne au merge dans `develop`.
 
 **Mapping branche → environnement :**
@@ -259,6 +274,8 @@ bascule de #70, il a été recréé en `eu-west-1` (même réglage, nouvelle adr
 données reprises de l'ancien déploiement par export, transformation et import). Aucun outil ne
 resynchronise l'adresse : si les e2e ne joignent plus Convex, c'est que ce réglage
 a sauté.
+
+**Content-Security-Policy** (#180), dans les en-têtes de [`vercel.json`](vercel.json) : le site, Convex (`*.convex.cloud` en HTTPS et WebSocket, `*.convex.site` pour Better Auth) et l'hôte PostHog (`https://e.geodoku.app`, events et scripts d'extensions) ; `style-src 'unsafe-inline'` pour les attributs `style` du pré-rendu ; aucun script inline (le JSON-LD n'est pas exécuté) ; `frame-ancestors 'none'`. **En `Report-Only` jusqu'en prod** : `develop` n'a pas de jeton PostHog, une CSP relue sur develop ne voit ni le script, ni les extensions, ni les envois de PostHog. Sur `www.geodoku.app` seulement (`has` / `missing` sur l'hôte, pour que develop n'écrive pas dans le projet de prod), les violations des vrais joueurs partent au point de collecte CSP de PostHog (`eu.i.posthog.com/report/`, jeton public du projet, sans échantillonnage : à 10 %, un parcours rare comme la connexion Google pouvait ne jamais remonter), en `report-uri` et `report-to`. Passage en bloquant (renommer l'en-tête en `Content-Security-Policy` dans les deux entrées, retirer `X-Frame-Options`) **dans une mise en prod suivante**, une fois ces rapports lus, jamais sur la foi de develop. **Toute nouvelle origine** (script, API, police, image) s'ajoute à cette politique.
 
 L'`ignoreCommand` de [`vercel.json`](vercel.json) ne déploie que `main` et `develop` (#149) : toute autre branche poussée (travail, `claude/*` ouvertes par les sessions cloud, Dependabot) ne crée ni preview Vercel ni déploiement Convex preview. Chacun de ces previews était seedé au premier déploiement (`seed:autoSeedIfEmpty` génère un pool complet puis appelle `assignGridForDate` date par date, qui relit tout le pool à chaque fois), pour un environnement jetable que personne n'ouvrait. Pour prévisualiser une branche malgré tout, l'ajouter le temps du besoin au `case` de l'`ignoreCommand`, dans un commit de cette branche.
 
@@ -315,7 +332,7 @@ n'a pas.
 
 ## 9. Anti-patterns à bannir
 
-- 🚫 Over-engineering, features spéculatives, code mort.
+- 🚫 Over-engineering, features spéculatives, code mort (gardé par `pnpm check:dead-code` : un export que seul son fichier lit n'est pas signalé, un symbole que personne ne lit l'est).
 - 🚫 Logique dans les composants au-delà du formatting.
 - 🚫 Données dérivées stockées.
 - 🚫 Tests de composants visuels (low ROI).
@@ -326,9 +343,9 @@ n'a pas.
 
 Complémentaire à Convex (`games`/`cellStats` = santé grilles ; PostHog = parcours joueur). **Convex = source de vérité** en cas de chevauchement.
 
-**Init** ([`src/main.tsx`](src/main.tsx)) : `autocapture: false`, `persistence: "localStorage"` (pas de cookies). **Pas d'init sans jeton** : les previews Vercel n'ont volontairement pas de `VITE_POSTHOG_PROJECT_TOKEN` (stats non polluées), chaque appel posthog y est un no-op. **Pas d'init en local** non plus (`isDevHostname`, [`analyticsNoise.ts`](src/app/analyticsNoise.ts)), jeton présent ou non : le dev envoyait ses events et ses exceptions au projet de prod et déclenchait l'alerte d'exceptions (#151). Le même module fournit le `before_send` qui jette les exceptions inexploitables (`Script error.`, extensions, `ResizeObserver`) : en ajouter une seulement si elle n'a aucune piste d'action. Pas de `identify()`, pas de PII. Tenir [`/privacy`](src/features/legal/PrivacyPage.tsx) à jour.
+**Chargement différé** (#180) : posthog-js pèse plus que react-dom, il n'est donc jamais importé en statique. Tout passe par la façade [`analytics.ts`](src/app/analytics.ts) (`useAnalytics()`, `analytics` hors React, `useFeatureFlagEnabled`), qui met les appels en file et charge [`posthogClient.ts`](src/app/posthogClient.ts) après l'événement `load` ; la file est rejouée dans l'ordre juste après `init`, avant le pageview initial (les `register` y arrivent donc à temps), et une exception levée avant le chargement est attrapée par `watchEarlyErrors`. `pnpm check:bundle` échoue si posthog-js revient dans le graphe initial. **Init** ([`posthogClient.ts`](src/app/posthogClient.ts)) : `autocapture: false`, `persistence: "localStorage"` (pas de cookies). **Pas d'init sans jeton** : les previews Vercel n'ont volontairement pas de `VITE_POSTHOG_PROJECT_TOKEN` (stats non polluées), chaque appel de la façade y est un no-op (`disableAnalytics`). **Pas d'init en local** non plus (`isDevHostname`, [`analyticsNoise.ts`](src/app/analyticsNoise.ts)), jeton présent ou non : le dev envoyait ses events et ses exceptions au projet de prod et déclenchait l'alerte d'exceptions (#151). Le même module fournit le `before_send` qui jette les exceptions inexploitables (`Script error.`, extensions, `ResizeObserver`) : en ajouter une seulement si elle n'a aucune piste d'action. Pas de `identify()`, pas de PII. Tenir [`/privacy`](src/features/legal/PrivacyPage.tsx) à jour.
 
-**Conventions.** Events `snake_case`, passé (`game_completed`). `posthog?.capture(...)` avec optional chaining. `grid_date` sur events partie. **Vérifier le catalogue avant d'en ajouter.**
+**Conventions.** Events `snake_case`, passé (`game_completed`). `analytics.capture(...)` via `useAnalytics()`, jamais `posthog-js` ni `@posthog/react` directement. `grid_date` sur events partie. **Vérifier le catalogue avant d'en ajouter.**
 
 **Super-propriétés** (`posthog.register`, portées par tous les events, persistées en localStorage) : `locale` (langue active, [`LocaleContext`](src/i18n/LocaleContext.tsx)) et `signed_in` (booléen, compte connecté ou non, [`AccountContext`](src/features/account/AccountContext.tsx), mis à jour à la connexion comme à la déconnexion ; rien n'est posé pendant la vérification de la session, les events gardent la dernière valeur). Jamais d'identifiant ni de donnée du compte dans une super-propriété.
 
@@ -348,7 +365,7 @@ Complémentaire à Convex (`games`/`cellStats` = santé grilles ; PostHog = parc
 | Compte | `account_dialog_opened` (`source` : `title_link`/`invite_card`/`spotlight`, ce dernier venu du bouton « Créer un compte » de l'annonce en jeu), `account_sign_in_started` (`method` : `email`/`google`), `account_code_requested` (`purpose` : `sign-in`/`change-email`/`delete-account`, `outcome` : `sent`/`too_many`/`offline`/`invalid_email`, `resent` ; chaque demande partie au serveur, pas un code resservi), `account_code_rejected` (`purpose`, `reason` : `wrong`/`expired`/`too_many_attempts`/`offline`), `account_signed_in` (`method` : `email` au code juste, `google` au retour de Google, grâce à une marque `geodoku:google-sign-in` en sessionStorage, [`googleSignIn.ts`](src/features/account/logic/googleSignIn.ts)), `account_created` (`attached_games` : parties de l'appareil rattachées, `method`), `account_welcome_completed` (`name_changed`, `country_set` : « C'est parti » de la bienvenue ; une bienvenue fermée n'émet rien), `account_signed_out`, `account_email_changed`, `account_deleted`. Funnel : `account_dialog_opened` → `account_sign_in_started` → (`account_code_requested` `sent`) → `account_signed_in` → `account_created` → `account_welcome_completed`. **Toujours anonymes** : pas d'`identify()`, ni e-mail, ni nom, ni pays, ni id de compte (#155). Dashboard PostHog « Geodoku — Mes stats & compte ». |
 | Serveur | `server_health_hourly` (`hour`, `games_created`, `rate_limited`, `max_country_increase`), envoyé par le cron Convex `server health hourly` avec un `distinct_id` fixe et `$process_person_profile: false` : aucune personne, aucun identifiant. Alertes réglées dans PostHog. |
 
-Source de vérité détaillée : grep `posthog?.capture` dans le code.
+Source de vérité détaillée : grep `analytics.capture` dans le code.
 
 ## 11. Checklist avant PR / fin de ticket
 

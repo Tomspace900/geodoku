@@ -1,4 +1,3 @@
-import { usePostHog } from "@posthog/react";
 import { useMutation } from "convex/react";
 import {
   ArrowLeft,
@@ -9,6 +8,7 @@ import {
   WifiOff,
 } from "lucide-react";
 import { type FormEvent, useEffect, useId, useState } from "react";
+import { useAnalytics } from "@/app/analytics";
 import { AccentBar } from "@/components/editorial/AccentBar";
 import { Eyebrow } from "@/components/editorial/Eyebrow";
 import { Notice } from "@/components/Notice";
@@ -73,7 +73,7 @@ function StepBack({ label, onClick }: { label: string; onClick: () => void }) {
 /** Nouveau compte : le nom tiré, le pays, et c'est parti. */
 function WelcomeStep({ onDone }: { onDone: () => void }) {
   const { t } = useLocale();
-  const posthog = usePostHog();
+  const analytics = useAnalytics();
   const account = useAccount();
   const updateProfile = useMutation(api.account.updateProfile);
   const [pseudo, setPseudo] = useState(account.profile?.pseudo ?? "");
@@ -104,7 +104,7 @@ function WelcomeStep({ onDone }: { onDone: () => void }) {
         return;
       }
       // Ni le nom ni le pays : seulement ce que le joueur en a fait.
-      posthog?.capture("account_welcome_completed", {
+      analytics.capture("account_welcome_completed", {
         name_changed: pseudo.trim() !== account.profile?.pseudo,
         country_set: country !== null,
       });
@@ -261,7 +261,7 @@ export function AccountDialog({
   onOpenChange: (open: boolean) => void;
 }) {
   const { t, localizedPath } = useLocale();
-  const posthog = usePostHog();
+  const analytics = useAnalytics();
   const account = useAccount();
   const [step, setStep] = useState<Step>("choice");
   const [email, setEmail] = useState("");
@@ -285,7 +285,7 @@ export function AccountDialog({
   }
 
   function continueWithGoogle() {
-    posthog?.capture("account_sign_in_started", { method: "google" });
+    analytics.capture("account_sign_in_started", { method: "google" });
     markGoogleSignIn();
     const page = `${window.location.origin}${localizedPath("/stats")}`;
     void authClient.signIn.social({
@@ -332,7 +332,7 @@ export function AccountDialog({
                 email={email.trim()}
                 purpose="sign-in"
                 onVerified={() => {
-                  posthog?.capture("account_signed_in", { method: "email" });
+                  analytics.capture("account_signed_in", { method: "email" });
                   setStep("finishing");
                 }}
                 onChangeEmail={() => setStep("email")}
@@ -365,7 +365,7 @@ export function AccountDialog({
                 <Button
                   type="button"
                   onClick={() => {
-                    posthog?.capture("account_sign_in_started", {
+                    analytics.capture("account_sign_in_started", {
                       method: "email",
                     });
                     forgetGoogleSignIn();

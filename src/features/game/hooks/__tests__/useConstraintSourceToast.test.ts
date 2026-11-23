@@ -1,3 +1,4 @@
+// @vitest-environment happy-dom
 import { act, renderHook } from "@testing-library/react";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { CONSTRAINT_SOURCE_TOAST_MS } from "@/features/game/logic/constants";

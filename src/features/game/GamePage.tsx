@@ -1,9 +1,9 @@
-import { usePostHog } from "@posthog/react";
 import { useQuery } from "convex/react";
 import { History } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import { Link } from "react-router";
 import AppFooter from "@/app/AppFooter";
+import { useAnalytics } from "@/app/analytics";
 import { Button } from "@/components/ui/button";
 import { ErrorScreen } from "@/features/errors/components/ErrorScreen";
 import { useBackendDownTimeout } from "@/features/errors/hooks/useBackendDownTimeout";
@@ -39,7 +39,7 @@ import { SolutionGrid } from "./components/SolutionGrid";
 import { SurveyCta } from "./components/SurveyCta";
 
 export function GamePage() {
-  const posthog = usePostHog();
+  const analytics = useAnalytics();
   const t = useT();
   const { localizedPath } = useLocale();
   const {
@@ -124,7 +124,7 @@ export function GamePage() {
     source: "dismiss_modal" | "view_answers_button" = "dismiss_modal",
   ) {
     if (showResultModal) {
-      posthog?.capture("solution_viewed", {
+      analytics.capture("solution_viewed", {
         grid_date: state.date,
         outcome: state.status,
         source,
@@ -133,10 +133,10 @@ export function GamePage() {
     setResultModalDismissed(true);
   }
 
-  // biome-ignore lint/correctness/useExhaustiveDependencies: posthog is a stable ref
+  // biome-ignore lint/correctness/useExhaustiveDependencies: analytics is a stable ref
   useEffect(() => {
     if (isBackendDown) {
-      posthog?.capture("backend_timeout_shown");
+      analytics.capture("backend_timeout_shown");
     }
   }, [isBackendDown]);
 
@@ -236,7 +236,7 @@ export function GamePage() {
                 state={state}
                 distribution={guessDistribution}
                 onCellClick={(cell) => {
-                  posthog?.capture("cell_opened", {
+                  analytics.capture("cell_opened", {
                     grid_date: state.date,
                     cell: `${cell.row},${cell.col}`,
                   });

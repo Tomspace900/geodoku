@@ -1,6 +1,6 @@
-import { usePostHog } from "@posthog/react";
 import { RotateCcw } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
+import { useAnalytics } from "@/app/analytics";
 import { AccentBar } from "@/components/editorial/AccentBar";
 import { Eyebrow } from "@/components/editorial/Eyebrow";
 import { Button } from "@/components/ui/button";
@@ -50,7 +50,7 @@ export function TrainingResultScreen({
   onViewAnswers,
 }: Props) {
   const t = useT();
-  const posthog = usePostHog();
+  const analytics = useAnalytics();
   const scoreBreakdown = computeScoreBreakdown(state, distribution);
   const score = computeScore(scoreBreakdown);
   const scoreReady = scoreBreakdown.shares !== null;
@@ -87,7 +87,7 @@ export function TrainingResultScreen({
     viewedTrackedRef.current = true;
     // Pas de `grid_number` : il se déduit de `grid_date` (cf. `getGridNumberForDate`),
     // et le catalogue proscrit les propriétés dérivées.
-    posthog?.capture("training_result_viewed", {
+    analytics.capture("training_result_viewed", {
       grid_date: state.date,
       outcome: state.status,
       score_total: score.total,

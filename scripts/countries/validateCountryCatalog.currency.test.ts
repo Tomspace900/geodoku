@@ -14,7 +14,10 @@ describe("validateCurrencyCode", () => {
     expect(validateCurrencyCode("SLL")).not.toEqual([]);
   });
 
-  it("tolerates a recent code the ICU may not name yet", () => {
+  // Nom fr absent de l'ICU 77 (Node 22.19, l'ancien Node du projet), présent
+  // depuis l'ICU 78 (Node 22.23, 24.22) : échoue sur un Node dont l'ICU est
+  // antérieure, comme pnpm lancé hors du Node du projet (AGENTS.md §2).
+  it("accepts ZWG (2024), named since ICU 78", () => {
     expect(validateCurrencyCode("ZWG")).toEqual([]);
   });
 });

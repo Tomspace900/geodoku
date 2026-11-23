@@ -7,8 +7,8 @@ export { pageMeta, prerenderedPaths } from "@/app/pageMeta";
 
 /**
  * Point d'entrée du pré-rendu (#139), utilisé par `scripts/build/prerender.ts`
- * au build. Mêmes composants que `main.tsx`, sans PostHog ni Vercel Analytics,
- * qui n'ont de sens que dans le navigateur.
+ * au build. Mêmes composants que `main.tsx`, sans PostHog, qui n'a de sens que
+ * dans le navigateur.
  */
 export function render(url: string): string {
   return renderToString(

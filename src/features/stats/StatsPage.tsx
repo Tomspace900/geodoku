@@ -1,8 +1,8 @@
-import { usePostHog } from "@posthog/react";
 import { useQuery } from "convex/react";
 import { type ReactNode, useEffect, useMemo, useState } from "react";
 import { useLocation, useNavigate, useSearchParams } from "react-router";
 import AppFooter from "@/app/AppFooter";
+import { useAnalytics } from "@/app/analytics";
 import { BackLink } from "@/components/editorial/BackLink";
 import { DisplayHeader } from "@/components/editorial/DisplayHeader";
 import { Button } from "@/components/ui/button";
@@ -153,7 +153,7 @@ function StatsBody({
  */
 export function StatsPage() {
   const { t, localizedPath } = useLocale();
-  const posthog = usePostHog();
+  const analytics = useAnalytics();
   const account = useAccount();
   const [params, setParams] = useSearchParams();
   const location = useLocation();
@@ -189,7 +189,7 @@ export function StatsPage() {
   }, [params, setParams]);
 
   const openAccount = (source: "title_link" | "invite_card" | "spotlight") => {
-    posthog?.capture("account_dialog_opened", { source });
+    analytics.capture("account_dialog_opened", { source });
     setDialogOpen(true);
   };
 

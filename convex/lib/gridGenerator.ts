@@ -285,15 +285,19 @@ export function finalizeGrid(
  * Distinct from the above: MAX_CONSTRAINT_OVERLAP (applied in fillSlots +
  * finalizeGrid) bounds *intra-grid* redundancy — how much two constraints of the
  * same grid overlap — not a constraint's share of the pool.
+ *
+ * `gridsPerSeed` lowers the per-seed target for tests: the per-grid invariants
+ * hold at any pool size, and generating the full pool costs ~25 s.
  */
 export function generateDiversePool(
   existingPool: Array<{ constraintIds: string[] }> = [],
-  options: { seed?: number } = {},
+  options: { seed?: number; gridsPerSeed?: number } = {},
 ): { grids: FinalizedPoolGrid[]; report: GenerationReport } {
   const startMs = Date.now();
   const seed = normalizeSeed(
     options.seed ?? Math.floor(Math.random() * UINT32_RANGE),
   );
+  const gridsPerSeed = options.gridsPerSeed ?? TARGET_GRIDS_PER_SEED;
   console.log(`[generateDiversePool] Generation seed: ${seed}`);
   const rng = mulberry32(seed);
   const matches = buildConstraintMatches();
@@ -311,10 +315,7 @@ export function generateDiversePool(
     let attempted = 0;
     let succeeded = 0;
 
-    while (
-      succeeded < TARGET_GRIDS_PER_SEED &&
-      attempted < MAX_ATTEMPTS_PER_SEED
-    ) {
+    while (succeeded < gridsPerSeed && attempted < MAX_ATTEMPTS_PER_SEED) {
       attempted++;
 
       const gridResult = tryBuildGridWithSeed(
@@ -351,11 +352,11 @@ export function generateDiversePool(
 
     if (succeeded < MIN_VIABLE_GRIDS_PER_SEED) {
       console.warn(
-        `CONSTRAINT ${seedId} FAILED: only ${succeeded}/${TARGET_GRIDS_PER_SEED} grids. This constraint may be structurally orphaned. Consider removing or reworking it.`,
+        `CONSTRAINT ${seedId} FAILED: only ${succeeded}/${gridsPerSeed} grids. This constraint may be structurally orphaned. Consider removing or reworking it.`,
       );
     } else {
       console.log(
-        `[generateDiversePool] Seed ${seedId}: ${succeeded}/${TARGET_GRIDS_PER_SEED} in ${attempted} attempts`,
+        `[generateDiversePool] Seed ${seedId}: ${succeeded}/${gridsPerSeed} in ${attempted} attempts`,
       );
     }
 

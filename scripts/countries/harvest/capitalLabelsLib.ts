@@ -5,11 +5,7 @@
  */
 import type { LocalizedString } from "../../../content/type.ts";
 import { dateLabel } from "../../content/vintageLabels.ts";
-import type {
-  CapitalLabel,
-  CapitalLabelOverride,
-  CapitalLabelsSnapshot,
-} from "../data/types.ts";
+import type { CapitalLabel, CapitalLabelsSnapshot } from "../data/types.ts";
 
 export type WikidataCapitalRow = {
   iso3: string;
@@ -173,8 +169,6 @@ export function renderCapitalLabelsModule(
 export const CAPITAL_LABELS: CapitalLabelsSnapshot = ${JSON.stringify(snapshot, null, 2)};
 `;
 }
-
-export type { CapitalLabelOverride };
 
 /**
  * Millésime des récoltes Wikidata (`wikidata_capital_labels`,

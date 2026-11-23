@@ -1,5 +1,5 @@
 import { spawn } from "node:child_process";
-import { mkdtemp, rm } from "node:fs/promises";
+import { mkdtemp, rm, writeFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { createInterface } from "node:readline/promises";
@@ -55,7 +55,8 @@ async function main(): Promise<void> {
   const mode = parseCopyMode(process.argv.slice(2));
   const tempDirectory = await mkdtemp(join(tmpdir(), "geodoku-convex-"));
   const archivePath = join(tempDirectory, "dump.zip");
-  const commands = buildCopyCommands(mode, archivePath);
+  const emptyFilePath = join(tempDirectory, "empty.jsonl");
+  const commands = buildCopyCommands(mode, archivePath, emptyFilePath);
 
   try {
     if (commands.requiresPersonalDevTarget) {
@@ -71,6 +72,8 @@ async function main(): Promise<void> {
     console.log(`Copie Convex : ${mode}`);
     await runConvex(commands.exportArgs);
     await runConvex(commands.importArgs);
+    await writeFile(emptyFilePath, "");
+    await runConvex(commands.clearSigningKeysArgs);
     console.log("Copie Convex terminée.");
   } finally {
     await rm(tempDirectory, { recursive: true, force: true });

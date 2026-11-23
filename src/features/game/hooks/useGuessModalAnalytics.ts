@@ -1,5 +1,5 @@
-import { usePostHog } from "@posthog/react";
 import { useEffect, useRef } from "react";
+import { useAnalytics } from "@/app/analytics";
 import type { GameModeId } from "@/features/game/types";
 
 /**
@@ -39,7 +39,7 @@ export function useGuessModalAnalytics({
   searchable: boolean;
   resultCount: number;
 }) {
-  const posthog = usePostHog();
+  const analytics = useAnalytics();
   const sessionRef = useRef<Session>({
     openedAt: performance.now(),
     queryEdits: 0,
@@ -65,7 +65,7 @@ export function useGuessModalAnalytics({
     if (closedRef.current) return;
     closedRef.current = true;
     const session = sessionRef.current;
-    posthog?.capture("guess_modal_closed", {
+    analytics.capture("guess_modal_closed", {
       grid_date: gridDate,
       mode,
       cell: cellKey,

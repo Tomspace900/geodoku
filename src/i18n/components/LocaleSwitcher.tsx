@@ -1,11 +1,11 @@
-import { usePostHog } from "@posthog/react";
+import { useAnalytics } from "@/app/analytics";
 import { Button } from "@/components/ui/button";
 import { useLocale } from "@/i18n/LocaleContext";
 import { LOCALES } from "@/i18n/localePath";
 import { cn } from "@/lib/utils";
 
 export function LocaleSwitcher({ className }: { className?: string }) {
-  const posthog = usePostHog();
+  const analytics = useAnalytics();
   const { locale, setLocale } = useLocale();
 
   return (
@@ -22,7 +22,7 @@ export function LocaleSwitcher({ className }: { className?: string }) {
           variant="ghost-label"
           onClick={() => {
             if (l !== locale) {
-              posthog?.capture("locale_changed", {
+              analytics.capture("locale_changed", {
                 from: locale,
                 to: l,
                 source: "footer",

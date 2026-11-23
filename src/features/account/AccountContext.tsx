@@ -1,4 +1,3 @@
-import { usePostHog } from "@posthog/react";
 import { useConvexAuth, useMutation, useQuery } from "convex/react";
 import {
   createContext,
@@ -9,6 +8,7 @@ import {
   useRef,
   useState,
 } from "react";
+import { useAnalytics } from "@/app/analytics";
 import { loadHistory } from "@/features/game/logic/history";
 import { useLocale } from "@/i18n/LocaleContext";
 import { authClient } from "@/lib/authClient";
@@ -63,7 +63,7 @@ const AccountContext = createContext<AccountContextValue | null>(null);
  */
 export function AccountProvider({ children }: { children: ReactNode }) {
   const { locale } = useLocale();
-  const posthog = usePostHog();
+  const analytics = useAnalytics();
   const { isLoading, isAuthenticated } = useConvexAuth();
   const sessionId = authClient.useSession().data?.session.id ?? null;
   const syncAccount = useMutation(api.account.syncAccount);
@@ -80,13 +80,13 @@ export function AccountProvider({ children }: { children: ReactNode }) {
   // Porte l'état du compte sur tous les events PostHog (super-property),
   // comme la langue : un booléen, jamais d'identifiant. Rien pendant la
   // vérification de la session : les events gardent la dernière valeur connue.
-  // biome-ignore lint/correctness/useExhaustiveDependencies: posthog is a stable ref
+  // biome-ignore lint/correctness/useExhaustiveDependencies: analytics is a stable ref
   useEffect(() => {
     if (status === "loading") return;
-    posthog?.register({ signed_in: status === "signedIn" });
+    analytics.register({ signed_in: status === "signedIn" });
   }, [status]);
 
-  // biome-ignore lint/correctness/useExhaustiveDependencies: posthog is a stable ref
+  // biome-ignore lint/correctness/useExhaustiveDependencies: analytics is a stable ref
   useEffect(() => {
     if (!isAuthenticated) {
       setSynced(false);
@@ -97,7 +97,7 @@ export function AccountProvider({ children }: { children: ReactNode }) {
     const method = takeGoogleSignIn() ? "google" : "email";
     // Le code juste est compté par la fenêtre ; Google, seulement au retour.
     if (method === "google") {
-      posthog?.capture("account_signed_in", { method });
+      analytics.capture("account_signed_in", { method });
     }
     (async () => {
       let isNew = false;
@@ -116,7 +116,7 @@ export function AccountProvider({ children }: { children: ReactNode }) {
         if (isNew) {
           setWelcome({ attached });
           // Anonyme : ni identifiant ni e-mail, seulement le fait.
-          posthog?.capture("account_created", {
+          analytics.capture("account_created", {
             attached_games: attached,
             method,
           });

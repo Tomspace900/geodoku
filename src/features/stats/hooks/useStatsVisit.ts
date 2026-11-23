@@ -1,5 +1,5 @@
-import { usePostHog } from "@posthog/react";
 import { useEffect, useRef } from "react";
+import { useAnalytics } from "@/app/analytics";
 
 export type StatsDetail = "day" | "themes";
 
@@ -23,22 +23,22 @@ function startVisit(): StatsVisit {
  * son compte pendant la visite sort connecté.
  */
 export function useStatsVisit(status: "loading" | "signedIn" | "anonymous") {
-  const posthog = usePostHog();
+  const analytics = useAnalytics();
   const visitRef = useRef<StatsVisit | null>(null);
   const viewedRef = useRef(false);
   const signedInRef = useRef(false);
   signedInRef.current = status === "signedIn";
 
-  // biome-ignore lint/correctness/useExhaustiveDependencies: posthog is a stable ref
+  // biome-ignore lint/correctness/useExhaustiveDependencies: analytics is a stable ref
   useEffect(() => {
     if (status === "loading" || viewedRef.current) return;
     viewedRef.current = true;
-    posthog?.capture("stats_page_viewed", {
+    analytics.capture("stats_page_viewed", {
       signed_in: status === "signedIn",
     });
   }, [status]);
 
-  // biome-ignore lint/correctness/useExhaustiveDependencies: posthog is a stable ref
+  // biome-ignore lint/correctness/useExhaustiveDependencies: analytics is a stable ref
   useEffect(() => {
     visitRef.current = startVisit();
 
@@ -46,7 +46,7 @@ export function useStatsVisit(status: "loading" | "signedIn" | "anonymous") {
       const visit = visitRef.current;
       if (!visit) return;
       visitRef.current = null;
-      posthog?.capture(
+      analytics.capture(
         "stats_page_left",
         {
           signed_in: signedInRef.current,
@@ -74,7 +74,7 @@ export function useStatsVisit(status: "loading" | "signedIn" | "anonymous") {
 
   /** Un tiroir ouvert : `stats_detail_opened`, compté dans la visite. */
   function detailOpened(detail: StatsDetail): void {
-    posthog?.capture("stats_detail_opened", { detail });
+    analytics.capture("stats_detail_opened", { detail });
     const visit = visitRef.current;
     if (!visit) return;
     if (detail === "day") visit.daysOpened += 1;

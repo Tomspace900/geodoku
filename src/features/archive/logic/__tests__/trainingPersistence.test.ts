@@ -1,3 +1,4 @@
+// @vitest-environment happy-dom
 import { beforeEach, describe, expect, it } from "vitest";
 import { CELL_KEYS } from "@/features/game/logic/gridTopology";
 import { createInitialState } from "@/features/game/logic/reducer";
