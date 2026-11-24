@@ -59,7 +59,8 @@ Barème tranché sur données réelles. La rareté d'une case s'appuie sur la **
 - **Type stripping natif de Node** à la place de `tsx` : exige des extensions `.ts` partout et ignore les `paths`.
 - **Preact** : −35 KiB gzip, mais compatibilité incertaine avec les primitives d'UI et Convex, et hors du chemin React 19.
 - **Rust / WASM** : le seul calcul lourd, la génération du pool, est rare ; WASM casserait « lib pure TS importable partout » (§6).
-- **Docker** hors CI : Vercel et Convex sont managés. Seul usage retenu : un backend Convex local pour isoler l'e2e (#178).
+- **Docker** hors CI : Vercel et Convex sont managés. En CI, seulement l'image officielle de Playwright pour l'e2e (#178).
+- **Backend Convex local pour isoler l'e2e** (#178, étape 4) : il faudrait générer le pool à chaque run, faire tourner Better Auth et le rate limiter en auto-hébergé, couper crons et e-mails, pour des stats de develop propres et des tests en parallèle. L'e2e ne bloque plus les mises en prod (une fois par push sur `develop`, ~7 min) et ses parties sont les seules données de jeu régulières de `preview/develop` : il continue d'y écrire. À rouvrir si l'e2e devient instable ou si ce bruit gêne.
 - **Oxlint, ESLint, Prettier** : Biome tourne en ~1 s.
 - **Autres frameworks** (Next.js, React Router en mode framework, Astro, TanStack Start, Svelte, Solid) et **autres backends** (Supabase, Firebase, PocketBase, Cloudflare D1) : le pré-rendu maison suffit, et les requêtes réactives, mutations transactionnelles, crons et composants de Convex sont au cœur du jeu.
 - **Librairies d'UI stylées** (MUI, Mantine, Chakra, HeroUI) : leurs styles se battent avec les tokens (§5). Les primitives modales passeront sur Base UI (#183), mais pas la recherche de pays : le Combobox de Base UI ajoute 17 KiB gzip de positionnement de popup inutile dans un tiroir, cmdk reste.
@@ -82,7 +83,7 @@ convex/                   # schema, grids, games, cellStats, health, scheduling,
 convex/lib/               # gridGenerator, gridScheduler, gridConstants (purs)
 scripts/content/            # dérivation & garde du snapshot content/ (check-content, build-answers, emit)
 scripts/build/              # pré-rendu au build (prerender, pageHead), appelé par vite.config.ts
-scripts/ci/                 # exécutés en CI (check-bundle-size, check-design-system)
+scripts/ci/                 # exécutés en CI (check-bundle-size, check-design-system, check-deployment)
 scripts/countries/          # pipeline contenu pays (build-countries, flagData, patches)
   harvest/                # récoltes réseau isolées (Wikidata…) → data/*.ts committé, relu en diff
   data/                   # datasets de faits datés (curés ou récoltés)
@@ -90,7 +91,7 @@ scripts/local/              # outillage local versionné (analytics, simulate, s
 scripts/dev/                # scratch perso (gitignored)
 e2e/                      # Playwright — helpers.ts + *.shared|desktop|mobile.spec.ts
 .husky/pre-commit         # Biome (staged) + tsc + Vitest
-.github/workflows/ci.yml  # quality + e2e
+.github/workflows/        # ci.yml (quality), e2e.yml, deploy-check.yml, release-tag.yml
 ```
 
 **Règles de placement.**
@@ -249,10 +250,11 @@ pnpm exec convex env set ADMIN_TOKEN "xxx"
 
 ## 8. CI, Vercel et `convex/_generated`
 
-**GitHub Actions** ([`.github/workflows/ci.yml`](.github/workflows/ci.yml)) :
+**GitHub Actions** ([`.github/workflows/`](.github/workflows/)) :
 
-- `quality` (sans secret) — doublons de dépendances (`pnpm dedupe --check`), lint, typechecks, Vitest, design system, code mort (Knip) et bundle. Push `main`/`develop` + PR vers `main`/`develop`. Le contrôle des doublons compte d'autant plus que l'e2e saute les PR Dependabot : en 2026-11, `vaul` gardait son ancienne copie de `@radix-ui/react-dialog` après une montée, et la page ne répondait plus aux clics une fois la modale de résultat fermée. Une PR qui échoue là se corrige par `pnpm dedupe`.
-- `e2e` — Playwright contre `vars.VITE_CONVEX_URL` = deploy `preview/develop`, d'adresse fixe (cf. ci-dessous). Pas de deploy key ni seed (develop déjà seedé, cron horaire). **Sérialisé** (`concurrency: e2e-develop`). ⚠️ soumet de vrais guesses → bruite les stats develop (staging assumé). **Sauté sur les PR Dependabot** (`github.actor`) pour cette raison précise : un bump de dépendance ne vaut pas de polluer les stats de staging. Le build reste couvert, `quality` lançant `check:bundle` (qui fait un `vite build`), et la suite complète tourne au merge dans `develop`.
+- `quality` ([`ci.yml`](.github/workflows/ci.yml), sans secret) — doublons de dépendances (`pnpm dedupe --check`), lint, typechecks, Vitest, design system, code mort (Knip) et bundle. Push `main`/`develop` + PR vers `main`/`develop`. Le contrôle des doublons compte d'autant plus que l'e2e saute les PR Dependabot : en 2026-11, `vaul` gardait son ancienne copie de `@radix-ui/react-dialog` après une montée, et la page ne répondait plus aux clics une fois la modale de résultat fermée. Une PR qui échoue là se corrige par `pnpm dedupe`.
+- `Playwright e2e` ([`e2e.yml`](.github/workflows/e2e.yml)) — Playwright contre `vars.VITE_CONVEX_URL` = deploy `preview/develop`, d'adresse fixe (cf. ci-dessous). Pas de deploy key ni seed (develop déjà seedé, cron horaire). **Une fois par commit, au push sur `develop`** (et sur les PR vers `develop`), **jamais sur `main`** (#178) : la PR `develop → main` a pour tête celle de `develop`, dont le check « Playwright e2e » satisfait déjà la règle de `main`. La relancer sur la PR puis sur le commit de merge (même code, même backend) faisait attendre chaque mise en prod ~20 min. Corollaire : une PR vers `main` d'une autre branche que `develop` reste bloquée, faute de ce check. Lancé en parallèle de `quality`, dans l'image Docker officielle de Playwright, dont la version est lue dans le lockfile (rien à changer à une montée de `@playwright/test`). **Sérialisé** (`concurrency: e2e-develop`). ⚠️ soumet de vrais guesses → bruite les stats develop (staging assumé). **Sauté sur les PR Dependabot** (`github.actor`) pour cette raison précise : un bump de dépendance ne vaut pas de polluer les stats de staging. Le build reste couvert, `quality` lançant `check:bundle` (qui fait un `vite build`), et la suite complète tourne au merge dans `develop`.
+- `Deployment check` ([`deploy-check.yml`](.github/workflows/deploy-check.yml), [`check-deployment.sh`](scripts/ci/check-deployment.sh)) — à chaque déploiement Vercel réussi (develop et prod), sur l'adresse propre du déploiement : `/`, `/about` et `/archive` redirigent en 302 vers `/en/…`, ou vers `/fr/…` avec le cookie `geodoku_locale=fr`, et la cible répond 200 ; `/en` porte un en-tête CSP. Seul contrôle automatique du middleware, que l'e2e (`vite preview`) ne sert pas : en #176, il répondait 500 sur develop sans qu'aucun check ne rougisse. Le check se pose sur le commit déployé, donc sur la PR `develop → main` ; en prod, il ne peut que détecter (retour arrière par Instant Rollback de Vercel). Secret `VERCEL_AUTOMATION_BYPASS_SECRET` (clé « Protection Bypass for Automation » de Vercel) : les adresses de déploiement sont protégées, seuls nos domaines sont publics.
 
 **Mapping branche → environnement :**
 

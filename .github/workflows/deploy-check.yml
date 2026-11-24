@@ -1,0 +1,32 @@
+name: Deployment check
+
+# Checks each successful Vercel deployment (develop preview and production) at
+# its own URL: language redirects of the middleware, then the CSP header. The
+# e2e serves `vite preview`, without the Vercel middleware, so this is the only
+# automated check of it (#178). The check run lands on the deployed commit:
+# develop's head is a release PR's head, so a broken middleware shows up red on
+# the PR before it reaches production. On production it can only detect: roll
+# back with Vercel's Instant Rollback.
+#
+# Requires the repo secret VERCEL_AUTOMATION_BYPASS_SECRET (Vercel → Settings →
+# Deployment Protection → Protection Bypass for Automation): deployment URLs
+# are behind Vercel Authentication, only our custom domains are public.
+on: deployment_status
+
+permissions:
+  contents: read
+
+jobs:
+  check:
+    name: Deployment check
+    if: github.event.deployment_status.state == 'success'
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          sparse-checkout: scripts/ci
+      - run: scripts/ci/check-deployment.sh "$DEPLOYMENT_URL"
+        env:
+          DEPLOYMENT_URL: ${{ github.event.deployment_status.environment_url }}
+          VERCEL_AUTOMATION_BYPASS_SECRET: ${{ secrets.VERCEL_AUTOMATION_BYPASS_SECRET }}
