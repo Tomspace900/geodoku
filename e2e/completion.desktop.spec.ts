@@ -196,6 +196,11 @@ test("viewing answers after a loss reveals the solution grid", async ({
   await expect(resultDialog).toBeFocused();
   await page.keyboard.press("Escape");
   await expect(resultDialog).toBeHidden();
+  // La modale fermée ne laisse aucun verrou : en 2026-11, une copie en double
+  // de Radix Dialog gardait la page sourde aux clics après sa fermeture.
+  await expect(page.locator("body")).not.toHaveCSS("pointer-events", "none");
+  await expect(page.locator("#root")).not.toHaveAttribute("inert");
+  await expect(page.locator("#root")).not.toHaveAttribute("aria-hidden");
   await expect(viewResultButton).toBeFocused();
   await expect(viewResultButton).toHaveAttribute("data-silent-focus", "true");
   await page.keyboard.press("Tab");

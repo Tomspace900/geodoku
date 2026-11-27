@@ -1,7 +1,8 @@
 import * as React from "react"
-import * as DialogPrimitive from "@radix-ui/react-dialog"
+import { Dialog as DialogPrimitive } from "@base-ui/react/dialog"
 import { X } from "lucide-react"
 
+import { useSilentFinalFocus } from "@/components/ui/modalFocus"
 import { focusWithoutVisibleRing } from "@/lib/focus"
 import { cn } from "@/lib/utils"
 
@@ -13,104 +14,104 @@ const DialogPortal = DialogPrimitive.Portal
 
 const DialogClose = DialogPrimitive.Close
 
-const DialogOverlay = React.forwardRef<
-  React.ElementRef<typeof DialogPrimitive.Overlay>,
-  React.ComponentPropsWithoutRef<typeof DialogPrimitive.Overlay>
->(({ className, ...props }, ref) => (
-  <DialogPrimitive.Overlay
-    ref={ref}
-    className={cn(
-      "fixed inset-0 z-50 bg-on-surface/40 backdrop-blur-sm data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 motion-reduce:animate-none",
-      className
-    )}
-    {...props}
-  />
-))
-DialogOverlay.displayName = DialogPrimitive.Overlay.displayName
+type DialogOverlayProps = Omit<
+  React.ComponentPropsWithoutRef<typeof DialogPrimitive.Backdrop>,
+  "className"
+> & { className?: string }
 
-type DialogContentProps = React.ComponentPropsWithoutRef<
-  typeof DialogPrimitive.Content
+const DialogOverlay = React.forwardRef<HTMLDivElement, DialogOverlayProps>(
+  ({ className, ...props }, ref) => (
+    <DialogPrimitive.Backdrop
+      ref={ref}
+      className={cn(
+        "fixed inset-0 z-50 bg-on-surface/40 backdrop-blur-sm",
+        className
+      )}
+      {...props}
+    />
+  )
+)
+DialogOverlay.displayName = "DialogOverlay"
+
+type DialogContentProps = Omit<
+  React.ComponentPropsWithoutRef<typeof DialogPrimitive.Popup>,
+  "className"
 > & {
+  className?: string
   closeLabel: string
   placement?: "center" | "bottom-sheet"
 }
 
-const DialogContent = React.forwardRef<
-  React.ElementRef<typeof DialogPrimitive.Content>,
-  DialogContentProps
->(
+/**
+ * Popup monté à chaque ouverture. Par défaut, le focus va au popup lui-même
+ * puis revient, à la fermeture, sur l'élément d'avant : sans ring dans les
+ * deux cas, la modale n'étant pas un champ.
+ */
+const DialogPopup = React.forwardRef<HTMLDivElement, DialogContentProps>(
   (
     {
       className,
       children,
       closeLabel,
       placement = "center",
-      onCloseAutoFocus,
-      onOpenAutoFocus,
+      initialFocus,
+      finalFocus,
       ...props
     },
     ref
   ) => {
-    const contentRef = React.useRef<
-      React.ElementRef<typeof DialogPrimitive.Content> | null
-    >(null)
-    const previouslyFocusedRef = React.useRef<HTMLElement | null>(null)
+    const popupRef = React.useRef<HTMLDivElement | null>(null)
     const setRefs = React.useCallback(
-      (node: React.ElementRef<typeof DialogPrimitive.Content> | null) => {
-        contentRef.current = node
+      (node: HTMLDivElement | null) => {
+        popupRef.current = node
         if (typeof ref === "function") ref(node)
-        else if (ref) {
-          const mutableRef = ref as React.MutableRefObject<
-            React.ElementRef<typeof DialogPrimitive.Content> | null
-          >
-          mutableRef.current = node
-        }
+        else if (ref) ref.current = node
       },
       [ref]
     )
+    const silentFinalFocus = useSilentFinalFocus(finalFocus)
 
     return (
-      <DialogPortal>
-        <DialogOverlay />
-        <DialogPrimitive.Content
-          ref={setRefs}
-          className={cn(
-            "fixed z-50 grid w-full gap-4 border-none bg-surface-lowest p-6 shadow-editorial duration-200 focus:outline-none data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 motion-reduce:animate-none",
-            placement === "center"
-              ? "left-[50%] top-[50%] max-w-lg translate-x-[-50%] translate-y-[-50%] rounded-xl data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 data-[state=closed]:slide-out-to-left-1/2 data-[state=closed]:slide-out-to-top-[48%] data-[state=open]:slide-in-from-left-1/2 data-[state=open]:slide-in-from-top-[48%]"
-              : "bottom-0 left-0 max-w-none translate-x-0 translate-y-0 rounded-t-2xl data-[state=closed]:slide-out-to-bottom-4 data-[state=open]:slide-in-from-bottom-4 sm:bottom-auto sm:left-[50%] sm:top-[50%] sm:max-w-lg sm:translate-x-[-50%] sm:translate-y-[-50%] sm:rounded-xl sm:data-[state=closed]:slide-out-to-bottom-0 sm:data-[state=open]:slide-in-from-bottom-0 sm:data-[state=closed]:zoom-out-95 sm:data-[state=open]:zoom-in-95",
-            className
-          )}
-          {...props}
-          tabIndex={-1}
-          onOpenAutoFocus={(event) => {
-            previouslyFocusedRef.current =
-              document.activeElement instanceof HTMLElement
-                ? document.activeElement
-                : null
-            onOpenAutoFocus?.(event)
-            if (event.defaultPrevented) return
-            event.preventDefault()
-            focusWithoutVisibleRing(contentRef.current)
-          }}
-          onCloseAutoFocus={(event) => {
-            onCloseAutoFocus?.(event)
-            if (event.defaultPrevented) return
-            event.preventDefault()
-            focusWithoutVisibleRing(previouslyFocusedRef.current)
-          }}
-        >
-          {children}
-          <DialogPrimitive.Close className="absolute right-4 top-4 rounded-md p-1.5 text-on-surface-variant ring-offset-surface-lowest transition-colors hover:bg-surface-low hover:text-on-surface focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-on-surface/20 focus-visible:ring-offset-2 disabled:pointer-events-none">
-            <X className="h-4 w-4" />
-            <span className="sr-only">{closeLabel}</span>
-          </DialogPrimitive.Close>
-        </DialogPrimitive.Content>
-      </DialogPortal>
+      <DialogPrimitive.Popup
+        ref={setRefs}
+        className={cn(
+          "fixed z-50 grid w-full gap-4 border-none bg-surface-lowest p-6 shadow-editorial focus:outline-none",
+          placement === "center"
+            ? "left-[50%] top-[50%] max-w-lg translate-x-[-50%] translate-y-[-50%] rounded-xl"
+            : "bottom-0 left-0 max-w-none translate-x-0 translate-y-0 rounded-t-2xl sm:bottom-auto sm:left-[50%] sm:top-[50%] sm:max-w-lg sm:translate-x-[-50%] sm:translate-y-[-50%] sm:rounded-xl",
+          className
+        )}
+        tabIndex={-1}
+        initialFocus={
+          initialFocus ??
+          (() => {
+            focusWithoutVisibleRing(popupRef.current)
+            return false
+          })
+        }
+        finalFocus={silentFinalFocus}
+        {...props}
+      >
+        {children}
+        <DialogPrimitive.Close className="absolute right-4 top-4 rounded-md p-1.5 text-on-surface-variant ring-offset-surface-lowest transition-colors hover:bg-surface-low hover:text-on-surface focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-on-surface/20 focus-visible:ring-offset-2 disabled:pointer-events-none">
+          <X className="h-4 w-4" />
+          <span className="sr-only">{closeLabel}</span>
+        </DialogPrimitive.Close>
+      </DialogPrimitive.Popup>
     )
   }
 )
-DialogContent.displayName = DialogPrimitive.Content.displayName
+DialogPopup.displayName = "DialogPopup"
+
+const DialogContent = React.forwardRef<HTMLDivElement, DialogContentProps>(
+  (props, ref) => (
+    <DialogPortal>
+      <DialogOverlay />
+      <DialogPopup ref={ref} {...props} />
+    </DialogPortal>
+  )
+)
+DialogContent.displayName = "DialogContent"
 
 const DialogHeader = ({
   className,
@@ -140,24 +141,33 @@ const DialogFooter = ({
 )
 DialogFooter.displayName = "DialogFooter"
 
-const DialogTitle = React.forwardRef<
-  React.ElementRef<typeof DialogPrimitive.Title>,
-  React.ComponentPropsWithoutRef<typeof DialogPrimitive.Title>
->(({ className, ...props }, ref) => (
-  <DialogPrimitive.Title
-    ref={ref}
-    className={cn(
-      "text-lg font-semibold leading-none tracking-tight",
-      className
-    )}
-    {...props}
-  />
-))
-DialogTitle.displayName = DialogPrimitive.Title.displayName
+type DialogTitleProps = Omit<
+  React.ComponentPropsWithoutRef<typeof DialogPrimitive.Title>,
+  "className"
+> & { className?: string }
+
+const DialogTitle = React.forwardRef<HTMLHeadingElement, DialogTitleProps>(
+  ({ className, ...props }, ref) => (
+    <DialogPrimitive.Title
+      ref={ref}
+      className={cn(
+        "text-lg font-semibold leading-none tracking-tight",
+        className
+      )}
+      {...props}
+    />
+  )
+)
+DialogTitle.displayName = "DialogTitle"
+
+type DialogDescriptionProps = Omit<
+  React.ComponentPropsWithoutRef<typeof DialogPrimitive.Description>,
+  "className"
+> & { className?: string }
 
 const DialogDescription = React.forwardRef<
-  React.ElementRef<typeof DialogPrimitive.Description>,
-  React.ComponentPropsWithoutRef<typeof DialogPrimitive.Description>
+  HTMLParagraphElement,
+  DialogDescriptionProps
 >(({ className, ...props }, ref) => (
   <DialogPrimitive.Description
     ref={ref}
@@ -165,7 +175,7 @@ const DialogDescription = React.forwardRef<
     {...props}
   />
 ))
-DialogDescription.displayName = DialogPrimitive.Description.displayName
+DialogDescription.displayName = "DialogDescription"
 
 export {
   Dialog,

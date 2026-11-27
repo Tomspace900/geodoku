@@ -148,6 +148,9 @@ test("counts a wrong guess as an attempt without ending the game", async ({
   }
 
   await page.keyboard.press("Escape");
+  // Le tiroir se démonte une fois son animation de fermeture finie : son propre
+  // compteur (« 6 attempts ») doublerait celui de l'en-tête jusque-là.
+  await input.waitFor({ state: "detached" });
   await waitForGrid(page);
   await expect(page.getByText("6 attempts")).toBeAttached();
 

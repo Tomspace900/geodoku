@@ -17,11 +17,11 @@ function getCountryName(code: string): string {
   return NAME_BY_CODE.get(code) ?? code;
 }
 
-// Après un guess réussi, le Drawer (vaul) verrouille `pointer-events` sur le
-// <body> le temps de son animation de fermeture et ne le relâche qu'un poil
-// après le démontage de l'input. Cliquer la case suivante dans cette fenêtre
-// fait avaler le clic (la modale ne se rouvre pas → cycle de 40 s perdu). On
-// laisse l'animation se poser avant de rendre la main. Empirique, tunable.
+// Après un guess réussi, le tiroir joue son animation de fermeture avant de se
+// démonter ; tant qu'il est là, il capte les clics hors de lui. Cliquer la case
+// suivante dans cette fenêtre fait avaler le clic (la modale ne se rouvre pas
+// → cycle de 40 s perdu). On laisse l'animation se poser avant de rendre la
+// main. Empirique, tunable.
 const MODAL_SETTLE_MS = 500;
 
 export type TodayGrid = {

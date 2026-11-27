@@ -33,7 +33,6 @@ import type {
 } from "@/features/game/types";
 import { useLocale, useT } from "@/i18n/LocaleContext";
 import type { TKey } from "@/i18n/types";
-import { focusWithoutVisibleRing } from "@/lib/focus";
 import { cn } from "@/lib/utils";
 
 const ERROR_KEY_MAP: Record<string, TKey> = {
@@ -148,11 +147,7 @@ export function GuessModal({
   const [submitting, setSubmitting] = useState(false);
   const errorTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const lifeFlashTimersRef = useRef<ReturnType<typeof setTimeout>[]>([]);
-  const openerRef = useRef<HTMLElement | null>(
-    document.activeElement instanceof HTMLElement
-      ? document.activeElement
-      : null,
-  );
+  const inputRef = useRef<HTMLInputElement | null>(null);
   const { locale } = useLocale();
   const t = useT();
 
@@ -184,7 +179,6 @@ export function GuessModal({
   function handleClose(outcome: GuessModalOutcome) {
     analytics.recordClose(outcome, query.length);
     setOpen(false);
-    setTimeout(onClose, 300);
   }
 
   function showError(reason: string) {
@@ -274,13 +268,16 @@ export function GuessModal({
       onOpenChange={(v) => {
         if (!v) handleClose("dismissed");
       }}
+      // Démonte une fois l'animation de fermeture finie, quelle que soit sa durée.
+      onOpenChangeComplete={(v) => {
+        if (!v) onClose();
+      }}
     >
       <DrawerContent
         className="mt-10 max-h-[min(94svh,calc(100dvh-2.5rem))] w-full overflow-x-clip pb-[env(safe-area-inset-bottom)] sm:mx-auto sm:mt-24 sm:max-w-xl"
-        onCloseAutoFocus={(event) => {
-          event.preventDefault();
-          focusWithoutVisibleRing(openerRef.current);
-        }}
+        // Sur tactile, Base UI met le focus sur le tiroir lui-même : le champ
+        // le garde, pour que le clavier s'ouvre avec le tiroir.
+        initialFocus={inputRef}
       >
         <DrawerHeader className="text-left px-4 pb-2 pt-3 sm:pt-4">
           <div className="flex items-start justify-between gap-3">
@@ -325,6 +322,7 @@ export function GuessModal({
         <Command shouldFilter={false} className="border-none shadow-none">
           <div className="px-4 pb-2">
             <CommandInput
+              ref={inputRef}
               autoFocus
               placeholder={t("ui.searchPlaceholder")}
               value={query}

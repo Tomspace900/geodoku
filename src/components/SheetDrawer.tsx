@@ -58,24 +58,24 @@ export function SheetDrawer({
   return (
     <Drawer open={open} onOpenChange={onOpenChange}>
       <DrawerContent
-        // Sans sous-titre, rien ne décrit le tiroir : Radix l'attend explicite.
-        {...(subtitle ? {} : { "aria-describedby": undefined })}
         className={cn(
           "mx-auto mt-10 flex max-h-[94svh] w-full flex-col overflow-x-clip pb-[env(safe-area-inset-bottom)] sm:mt-24",
           width === "md" ? "sm:max-w-lg" : "sm:max-w-3xl",
           tall && "h-[88svh] sm:h-[min(680px,88svh)]",
         )}
       >
-        <DrawerClose asChild>
-          <Button
-            type="button"
-            variant="ghost"
-            size="icon"
-            aria-label={closeLabel}
-            className="absolute right-3 top-3 hidden size-8 sm:inline-flex"
-          >
-            <X aria-hidden />
-          </Button>
+        <DrawerClose
+          render={
+            <Button
+              type="button"
+              variant="ghost"
+              size="icon"
+              aria-label={closeLabel}
+              className="absolute right-3 top-3 hidden size-8 sm:inline-flex"
+            />
+          }
+        >
+          <X aria-hidden />
         </DrawerClose>
         {back && !hideTitle && <div className="px-5 pt-3">{back}</div>}
         <div

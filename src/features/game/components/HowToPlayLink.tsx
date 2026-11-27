@@ -174,7 +174,7 @@ export function HowToPlayLink({ onOpenChange }: Props) {
             <Checkbox
               id="howtoplay-dont-show"
               checked={!show}
-              onCheckedChange={(v) => handleDontShowChange(v === true)}
+              onCheckedChange={handleDontShowChange}
             />
             <span>{t("howToPlay.dontShowAgain")}</span>
           </label>

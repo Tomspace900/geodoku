@@ -71,8 +71,39 @@ const PREVIEW_HEADERS = vercelHeadersForHost(
   "localhost",
 );
 
+// cmdk attache `Command.Dialog` (Radix Dialog) à l'objet `Command` par
+// `Object.assign` : impossible à éliminer, il faisait entrer 11 KiB de Radix
+// dans le chargement initial à côté de nos modales Base UI (#183). On ne s'en
+// sert pas ; s'il venait à être rendu, le module de remplacement le dit.
+function cmdkWithoutDialog(): Plugin {
+  const stubId = "\0geodoku-cmdk-dialog-stub";
+  return {
+    name: "geodoku-cmdk-without-dialog",
+    enforce: "pre",
+    resolveId(source, importer) {
+      if (source === "@radix-ui/react-dialog" && importer?.includes("/cmdk/"))
+        return stubId;
+      return null;
+    },
+    load(id) {
+      if (id !== stubId) return null;
+      return [
+        "const Unavailable = () => {",
+        '  throw new Error("Command.Dialog de cmdk n\'est pas servi : utiliser DialogContent (#183)");',
+        "};",
+        "export { Unavailable as Root, Unavailable as Portal, Unavailable as Overlay, Unavailable as Content };",
+      ].join("\n");
+    },
+  };
+}
+
 export default defineConfig({
-  plugins: [react(), bundleModuleManifest(), prerenderPages()],
+  plugins: [
+    cmdkWithoutDialog(),
+    react(),
+    bundleModuleManifest(),
+    prerenderPages(),
+  ],
   preview: {
     headers: PREVIEW_HEADERS,
   },

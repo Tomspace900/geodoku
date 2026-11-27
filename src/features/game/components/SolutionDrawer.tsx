@@ -1,5 +1,5 @@
 import { ArrowLeft, X } from "lucide-react";
-import { useRef, useState } from "react";
+import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import {
   Drawer,
@@ -15,10 +15,7 @@ import { formatConstraintValue } from "@/features/countries/logic/constraintValu
 import { getCountryByIso3 } from "@/features/countries/logic/search";
 import { ConstraintSourceInfo } from "@/features/game/components/ConstraintSourceInfo";
 import type { useSolutionDrawer } from "@/features/game/hooks/useSolutionDrawer";
-import {
-  RARITY_STYLES,
-  UI_ANIMATION_MS,
-} from "@/features/game/logic/constants";
+import { RARITY_STYLES } from "@/features/game/logic/constants";
 import {
   CONSTRAINT_BY_ID,
   constraintAnswers,
@@ -40,7 +37,6 @@ import {
 } from "@/features/reports/logic/report";
 import { useLocale } from "@/i18n/LocaleContext";
 import type { Locale, Translate } from "@/i18n/types";
-import { focusWithoutVisibleRing } from "@/lib/focus";
 import { cn } from "@/lib/utils";
 
 type Props = {
@@ -236,11 +232,6 @@ export function SolutionDrawer({
   const [open, setOpen] = useState(true);
   // Le signalement remplace la liste sur place, avec « ← » pour y revenir.
   const [view, setView] = useState<"answers" | "report">("answers");
-  const openerRef = useRef<HTMLElement | null>(
-    document.activeElement instanceof HTMLElement
-      ? document.activeElement
-      : null,
-  );
 
   const target = drawer.target;
   const cell = target?.kind === "cell" ? target.cell : null;
@@ -302,7 +293,6 @@ export function SolutionDrawer({
 
   function handleClose() {
     setOpen(false);
-    setTimeout(drawer.close, UI_ANIMATION_MS.drawerClose);
   }
 
   if (!target) return null;
@@ -328,14 +318,11 @@ export function SolutionDrawer({
       onOpenChange={(next) => {
         if (!next) handleClose();
       }}
+      onOpenChangeComplete={(next) => {
+        if (!next) drawer.close();
+      }}
     >
-      <DrawerContent
-        className="mt-10 flex max-h-[85svh] w-full flex-col overflow-x-clip pb-[env(safe-area-inset-bottom)] sm:mx-auto sm:mt-24 sm:max-w-xl"
-        onCloseAutoFocus={(event) => {
-          event.preventDefault();
-          focusWithoutVisibleRing(openerRef.current);
-        }}
-      >
+      <DrawerContent className="mt-10 flex max-h-[85svh] w-full flex-col overflow-x-clip pb-[env(safe-area-inset-bottom)] sm:mx-auto sm:mt-24 sm:max-w-xl">
         {view === "report" ? (
           <>
             <div className="px-4 pt-3 sm:pt-4">

@@ -1,20 +1,14 @@
 import * as React from "react"
-import { Drawer as DrawerPrimitive } from "vaul"
+import { Drawer as DrawerPrimitive } from "@base-ui/react/drawer"
 
+import { useSilentFinalFocus } from "@/components/ui/modalFocus"
 import { cn } from "@/lib/utils"
 
-const Drawer = ({
-  shouldScaleBackground = false,
-  repositionInputs = false,
-  ...props
-}: React.ComponentProps<typeof DrawerPrimitive.Root>) => (
-  <DrawerPrimitive.Root
-    repositionInputs={repositionInputs}
-    shouldScaleBackground={shouldScaleBackground}
-    {...props}
-  />
-)
-Drawer.displayName = "Drawer"
+// Courbe et durée reprises de vaul, pour que le tiroir glisse comme avant.
+const SLIDE =
+  "duration-500 ease-[cubic-bezier(0.32,0.72,0,1)] data-[swiping]:duration-0 motion-reduce:transition-none"
+
+const Drawer = DrawerPrimitive.Root
 
 const DrawerTrigger = DrawerPrimitive.Trigger
 
@@ -22,37 +16,79 @@ const DrawerPortal = DrawerPrimitive.Portal
 
 const DrawerClose = DrawerPrimitive.Close
 
-const DrawerOverlay = React.forwardRef<
-  React.ElementRef<typeof DrawerPrimitive.Overlay>,
-  React.ComponentPropsWithoutRef<typeof DrawerPrimitive.Overlay>
->(({ className, ...props }, ref) => (
-  <DrawerPrimitive.Overlay
-    ref={ref}
-    className={cn("fixed inset-0 z-50 bg-on-surface/40 backdrop-blur-sm", className)}
-    {...props}
-  />
-))
-DrawerOverlay.displayName = DrawerPrimitive.Overlay.displayName
+type DrawerOverlayProps = Omit<
+  React.ComponentPropsWithoutRef<typeof DrawerPrimitive.Backdrop>,
+  "className"
+> & { className?: string }
 
-const DrawerContent = React.forwardRef<
-  React.ElementRef<typeof DrawerPrimitive.Content>,
-  React.ComponentPropsWithoutRef<typeof DrawerPrimitive.Content>
->(({ className, children, ...props }, ref) => (
-  <DrawerPortal>
-    <DrawerOverlay />
-    <DrawerPrimitive.Content
+const DrawerOverlay = React.forwardRef<HTMLDivElement, DrawerOverlayProps>(
+  ({ className, ...props }, ref) => (
+    <DrawerPrimitive.Backdrop
       ref={ref}
       className={cn(
-        "fixed inset-x-0 bottom-0 z-50 mt-24 flex h-auto flex-col rounded-t-2xl border-none bg-surface-lowest shadow-editorial",
+        "fixed inset-0 z-50 bg-on-surface/40 backdrop-blur-sm transition-opacity",
+        "opacity-[calc(1_-_var(--drawer-swipe-progress,0))] data-[ending-style]:opacity-0 data-[starting-style]:opacity-0",
+        SLIDE,
         className
       )}
       {...props}
-    >
-      <div className="mx-auto mt-4 h-2 w-[100px] rounded-full bg-on-surface-variant/25" />
-      {children}
-    </DrawerPrimitive.Content>
-  </DrawerPortal>
-))
+    />
+  )
+)
+DrawerOverlay.displayName = "DrawerOverlay"
+
+type DrawerContentProps = Omit<
+  React.ComponentPropsWithoutRef<typeof DrawerPrimitive.Popup>,
+  "className"
+> & { className?: string }
+
+/**
+ * Le popup est monté à chaque ouverture : `useSilentFinalFocus` y retient
+ * l'élément qui avait le focus avant elle.
+ */
+const DrawerPopup = React.forwardRef<HTMLDivElement, DrawerContentProps>(
+  ({ className, children, finalFocus, ...props }, ref) => {
+    const silentFinalFocus = useSilentFinalFocus(finalFocus)
+    return (
+      <DrawerPrimitive.Popup
+        ref={ref}
+        finalFocus={silentFinalFocus}
+        className={cn(
+          "relative mt-24 flex h-auto flex-col rounded-t-2xl border-none bg-surface-lowest shadow-editorial outline-none",
+          "transition-transform [transform:translateY(var(--drawer-swipe-movement-y,0px))] data-[swiping]:select-none",
+          "data-[ending-style]:[transform:translateY(100%)] data-[starting-style]:[transform:translateY(100%)]",
+          "data-[ending-style]:duration-[calc(var(--drawer-swipe-strength,1)*500ms)]",
+          SLIDE,
+          className
+        )}
+        {...props}
+      >
+        <div
+          aria-hidden
+          className="mx-auto mt-4 h-2 w-[100px] shrink-0 rounded-full bg-on-surface-variant/25"
+        />
+        {children}
+      </DrawerPrimitive.Popup>
+    )
+  }
+)
+DrawerPopup.displayName = "DrawerPopup"
+
+/**
+ * Tiroir qui monte du bas et se ferme d'un glissement vers le bas. Le
+ * viewport est obligatoire : c'est lui qui suit le geste et bloque le
+ * défilement tactile de la page.
+ */
+const DrawerContent = React.forwardRef<HTMLDivElement, DrawerContentProps>(
+  (props, ref) => (
+    <DrawerPortal>
+      <DrawerOverlay />
+      <DrawerPrimitive.Viewport className="fixed inset-0 z-50 flex items-end justify-center">
+        <DrawerPopup ref={ref} {...props} />
+      </DrawerPrimitive.Viewport>
+    </DrawerPortal>
+  )
+)
 DrawerContent.displayName = "DrawerContent"
 
 const DrawerHeader = ({
@@ -77,24 +113,33 @@ const DrawerFooter = ({
 )
 DrawerFooter.displayName = "DrawerFooter"
 
-const DrawerTitle = React.forwardRef<
-  React.ElementRef<typeof DrawerPrimitive.Title>,
-  React.ComponentPropsWithoutRef<typeof DrawerPrimitive.Title>
->(({ className, ...props }, ref) => (
-  <DrawerPrimitive.Title
-    ref={ref}
-    className={cn(
-      "text-lg font-semibold leading-none tracking-tight",
-      className
-    )}
-    {...props}
-  />
-))
-DrawerTitle.displayName = DrawerPrimitive.Title.displayName
+type DrawerTitleProps = Omit<
+  React.ComponentPropsWithoutRef<typeof DrawerPrimitive.Title>,
+  "className"
+> & { className?: string }
+
+const DrawerTitle = React.forwardRef<HTMLHeadingElement, DrawerTitleProps>(
+  ({ className, ...props }, ref) => (
+    <DrawerPrimitive.Title
+      ref={ref}
+      className={cn(
+        "text-lg font-semibold leading-none tracking-tight",
+        className
+      )}
+      {...props}
+    />
+  )
+)
+DrawerTitle.displayName = "DrawerTitle"
+
+type DrawerDescriptionProps = Omit<
+  React.ComponentPropsWithoutRef<typeof DrawerPrimitive.Description>,
+  "className"
+> & { className?: string }
 
 const DrawerDescription = React.forwardRef<
-  React.ElementRef<typeof DrawerPrimitive.Description>,
-  React.ComponentPropsWithoutRef<typeof DrawerPrimitive.Description>
+  HTMLParagraphElement,
+  DrawerDescriptionProps
 >(({ className, ...props }, ref) => (
   <DrawerPrimitive.Description
     ref={ref}
@@ -102,7 +147,7 @@ const DrawerDescription = React.forwardRef<
     {...props}
   />
 ))
-DrawerDescription.displayName = DrawerPrimitive.Description.displayName
+DrawerDescription.displayName = "DrawerDescription"
 
 export {
   Drawer,

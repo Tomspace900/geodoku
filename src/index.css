@@ -157,11 +157,5 @@ body {
     .animate-heart-shake {
       animation: none;
     }
-
-    [data-vaul-drawer],
-    [data-vaul-overlay] {
-      animation-duration: 0.01ms !important;
-      transition-duration: 0.01ms !important;
-    }
   }
 }

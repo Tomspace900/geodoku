@@ -79,7 +79,7 @@ test("tapping a cell opens the GuessModal drawer from the bottom", async ({
   await expect(input).toBeVisible({ timeout: 3_000 });
 
   // The drawer element should be positioned at the bottom of the screen
-  const drawerContent = page.locator("[data-vaul-drawer-direction]");
+  const drawerContent = page.locator("[data-swipe-direction]");
   if ((await drawerContent.count()) > 0) {
     const box = await drawerContent.first().boundingBox();
     const viewportSize = page.viewportSize();
@@ -122,7 +122,7 @@ test("drawer can be dismissed by swiping down", async ({ page }) => {
   const input = page.getByPlaceholder("Search for a country…");
   await input.waitFor({ state: "visible" });
 
-  const drawer = page.locator("[data-vaul-drawer]").first();
+  const drawer = page.locator("[data-swipe-direction]").first();
   await drawer.evaluate(async (element) => {
     await Promise.all(
       element
@@ -130,33 +130,37 @@ test("drawer can be dismissed by swiping down", async ({ page }) => {
         .map((animation) => animation.finished.catch(() => undefined)),
     );
   });
-  const box = await drawer.boundingBox();
-  if (!box) throw new Error("Drawer bounds unavailable");
-  await drawer.dispatchEvent("pointerdown", {
-    pointerId: 1,
-    pointerType: "touch",
-    isPrimary: true,
-    clientX: box.x + box.width / 2,
-    clientY: box.y + 32,
-    buttons: 1,
-  });
-  for (const offset of [80, 160, 260, 380]) {
-    await drawer.dispatchEvent("pointermove", {
-      pointerId: 1,
-      pointerType: "touch",
-      isPrimary: true,
-      clientX: box.x + box.width / 2,
-      clientY: box.y + 32 + offset,
-      buttons: 1,
-    });
-  }
-  await drawer.dispatchEvent("pointerup", {
-    pointerId: 1,
-    pointerType: "touch",
-    isPrimary: true,
-    clientX: box.x + box.width / 2,
-    clientY: box.y + 412,
-    buttons: 0,
+  // Un doigt qui glisse : Base UI suit le geste tactile par les événements
+  // `touch*` (les `pointer*` tactiles restent au défilement), d'où des Touch
+  // fabriqués dans la page, posés sur la poignée du tiroir.
+  await drawer.evaluate(async (element) => {
+    const box = element.getBoundingClientRect();
+    const x = box.left + box.width / 2;
+    const startY = box.top + 20;
+    const target = element.firstElementChild ?? element;
+    const touchAt = (y: number) =>
+      new Touch({ identifier: 1, target, clientX: x, clientY: y });
+    const fire = (type: string, y: number, ended = false) => {
+      const touch = touchAt(y);
+      target.dispatchEvent(
+        new TouchEvent(type, {
+          bubbles: true,
+          cancelable: true,
+          touches: ended ? [] : [touch],
+          targetTouches: ended ? [] : [touch],
+          changedTouches: [touch],
+        }),
+      );
+    };
+    const frame = () =>
+      new Promise((resolve) => requestAnimationFrame(resolve));
+    fire("touchstart", startY);
+    for (const offset of [20, 80, 160, 260, 380]) {
+      await frame();
+      fire("touchmove", startY + offset);
+    }
+    await frame();
+    fire("touchend", startY + 380, true);
   });
 
   await expect(input).toBeHidden({ timeout: 3_000 });

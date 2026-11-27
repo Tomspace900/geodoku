@@ -183,22 +183,27 @@ if (!factsOwner || initialFiles.has(factsOwner.fileName)) {
   );
 }
 
-// posthog-js pèse plus que react-dom : il ne doit jamais revenir dans le
-// graphe initial, ni par un import statique oublié (#180).
-const posthogInInitial = moduleChunks.filter(
-  (chunk) =>
-    initialFiles.has(chunk.fileName) &&
-    chunk.modules.some((moduleId) =>
-      moduleId.includes("/node_modules/posthog-js/"),
-    ),
-);
-if (posthogInInitial.length > 0) {
-  throw new Error(
-    `posthog-js doit rester hors du chargement initial : ${posthogInInitial
-      .map((chunk) => chunk.fileName)
-      .join(", ")}`,
+// Paquets qui ne doivent jamais revenir dans le graphe initial :
+// - posthog-js pèse plus que react-dom, chargé après le rendu (#180) ;
+// - Radix Dialog n'y entrerait que par `Command.Dialog` de cmdk, qu'on ne sert
+//   pas (`cmdkWithoutDialog`, vite.config.ts, #183) : nos modales sont sur Base UI.
+const OUT_OF_INITIAL_PACKAGES = ["posthog-js", "@radix-ui/react-dialog"];
+OUT_OF_INITIAL_PACKAGES.forEach((packageName) => {
+  const owners = moduleChunks.filter(
+    (chunk) =>
+      initialFiles.has(chunk.fileName) &&
+      chunk.modules.some((moduleId) =>
+        moduleId.includes(`/node_modules/${packageName}/`),
+      ),
   );
-}
+  if (owners.length > 0) {
+    throw new Error(
+      `${packageName} doit rester hors du chargement initial : ${owners
+        .map((chunk) => chunk.fileName)
+        .join(", ")}`,
+    );
+  }
+});
 
 const adminEntry = dynamicEntryByModule.get(
   "/src/features/admin/AdminPage.tsx",

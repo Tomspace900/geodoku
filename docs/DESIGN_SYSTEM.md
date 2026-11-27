@@ -66,7 +66,7 @@ Tranchée le 2026-11-06 sur maquettes (#155), pour tout le site. Une page a son 
 
 | Contenant | Pour | Composant | Titre |
 | --------- | ---- | --------- | ----- |
-| **Tiroir** | une saisie rapide au clavier, ou une seule sorte d'information qu'on parcourt (une liste, un jour qu'on feuillette) | [`SheetDrawer`](../src/components/SheetDrawer.tsx) (vaul) : monte du bas et se ferme d'un geste, sur téléphone **et** sur ordinateur, où il garde une largeur de lecture (`max-w-lg`, `max-w-3xl` pour une grille et son anneau) et une croix, faute de geste naturel à la souris | **simple** : serif droit, `text-lg`, sans barre ; un sous-titre est une petite ligne en minuscules |
+| **Tiroir** | une saisie rapide au clavier, ou une seule sorte d'information qu'on parcourt (une liste, un jour qu'on feuillette) | [`SheetDrawer`](../src/components/SheetDrawer.tsx) (Base UI) : monte du bas et se ferme d'un geste, sur téléphone **et** sur ordinateur, où il garde une largeur de lecture (`max-w-lg`, `max-w-3xl` pour une grille et son anneau) et une croix, faute de geste naturel à la souris | **simple** : serif droit, `text-lg`, sans barre ; un sous-titre est une petite ligne en minuscules |
 | **Fenêtre** | un contenu riche à lire en entier, un contenu avec lequel on joue, ou un parcours qu'on ne doit pas perdre | `DialogContent placement="bottom-sheet"` (celle du résultat) : monte du bas sur téléphone, centrée sur ordinateur, fermée par la croix | **éditorial** : italique, barre violette, sous-titre en capitales |
 
 - Fenêtres : résultat, « Comment jouer ? », calcul du score, connexion et bienvenue du compte (on y va chercher un code dans sa messagerie : pas de fermeture par mégarde).
