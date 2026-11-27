@@ -5,6 +5,7 @@ import react from "@vitejs/plugin-react";
 import type { Plugin } from "vite";
 import { defineConfig } from "vitest/config";
 import { prerender } from "./scripts/build/prerender.ts";
+import { vercelHeadersForHost } from "./scripts/build/vercelHeaders.ts";
 
 function bundleModuleManifest(): Plugin {
   return {
@@ -61,8 +62,20 @@ const APP_VERSION: string = JSON.parse(
   readFileSync(new URL("./package.json", import.meta.url), "utf8"),
 ).version;
 
+// `vite preview` (l'e2e de la CI) sert les en-têtes que Vercel sert hors de
+// www.geodoku.app, CSP bloquante comprise : une origine oubliée casse l'e2e
+// avant la prod (#180). Pas en `vite dev`, dont le rechargement à chaud
+// injecte un script inline.
+const PREVIEW_HEADERS = vercelHeadersForHost(
+  JSON.parse(readFileSync(new URL("./vercel.json", import.meta.url), "utf8")),
+  "localhost",
+);
+
 export default defineConfig({
   plugins: [react(), bundleModuleManifest(), prerenderPages()],
+  preview: {
+    headers: PREVIEW_HEADERS,
+  },
   define: {
     __APP_VERSION__: JSON.stringify(APP_VERSION),
   },

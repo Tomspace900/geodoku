@@ -78,11 +78,14 @@ for path in / /about /archive; do
   check_redirect "$path" "geodoku_locale=fr" fr
 done
 
-# La CSP (en observation ou bloquante) ne doit pas disparaître d'un déploiement.
+# La CSP est bloquante depuis la 3.1.5 (#180) : un retour en simple observation
+# (`-Report-Only`) ne bloquerait plus rien, sans que rien d'autre ne le voie.
 headers=$(curl -sS -D - -o /dev/null --max-time 20 --retry 2 --retry-delay 3 \
   -H "x-vercel-protection-bypass: $secret" "$base/en" || true)
-if grep -qiE '^content-security-policy(-report-only)?: .*default-src' <<<"$headers"; then
-  echo "✓ /en : en-tête CSP présent"
+if grep -qiE '^content-security-policy: .*default-src' <<<"$headers"; then
+  echo "✓ /en : CSP bloquante"
+elif grep -qiE '^content-security-policy-report-only:' <<<"$headers"; then
+  fail "/en : CSP en observation seulement (Report-Only), pas bloquante"
 else
   fail "/en : aucun en-tête Content-Security-Policy"
 fi
